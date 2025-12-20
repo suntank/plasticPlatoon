@@ -1,0 +1,10 @@
+/build/
+/debug/
+/release/
+*.mk
+*.user
+*.d
+
+/stuff/mapfixes/
+doc/
+/stuff/icon
