@@ -1,0 +1,36 @@
+Loading document from "/home/austin/Documents/PlasticPlatoon/test.map"
+Adding file system path "/home/austin/Documents/TrenchBroom-master/build/app/defaults/assets"
+Adding file system path "/home/austin/Downloads/yquake2-master/release/baseq2"
+Adding file system package "pak0.pak"
+Adding file system package "pak1.pak"
+Adding file system package "pak2.pak"
+Adding file system package "pak3.pak"
+Adding file system path "/home/austin/Documents/TrenchBroom-master/build/app/defaults/assets"
+Adding file system path "/home/austin/Downloads/yquake2-master/release/baseq2"
+Adding file system package "pak0.pak"
+Adding file system package "pak1.pak"
+Adding file system package "pak2.pak"
+Adding file system package "pak3.pak"
+Loaded entity definition file Quake2.fgd
+Found 0 shaders
+Saving document to "/home/austin/Documents/PlasticPlatoon/autosave/test.11.map"
+Created autosave backup at "/home/austin/Documents/PlasticPlatoon/autosave/test.11.map"
+Adding file system path "/home/austin/Documents/TrenchBroom-master/build/app/defaults/assets"
+Adding file system path "/home/austin/Documents/PlasticPlatoon/release/baseq2"
+Adding file system package "pak0.pak"
+Adding file system package "pak1.pak"
+Adding file system package "pak2.pak"
+Adding file system package "pak3.pak"
+Found 0 shaders
+Reloading material collections
+Found 0 shaders
+Adding file system path "/home/austin/Documents/TrenchBroom-master/build/app/defaults/assets"
+Adding file system path "/home/austin/Documents/PlasticPlatoon/release/baseq2/baseq2"
+Found 0 shaders
+Failed to load entity model 'tris.md2': models/objects/barrels/tris.md2 not found
+Failed to load entity model 'tris.md2': models/items/ammo/bullets/medium/tris.md2 not found
+Failed to load entity model 'tris.md2': models/monsters/insane/tris.md2 not found
+Failed to load entity model 'tris.md2': models/items/armor/jacket/tris.md2 not found
+Failed to load entity model 'tris.md2': models/items/healing/large/tris.md2 not found
+Failed to load entity model 'tris.md2': models/weapons/g_machn/tris.md2 not found
+Failed to load entity model 'tris.md2': models/monsters/infantry/tris.md2 not found

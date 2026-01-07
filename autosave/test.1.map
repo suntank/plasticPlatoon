@@ -1,0 +1,54 @@
+// Game: Quake 2
+// Format: Quake2
+// entity 0
+{
+"classname" "worldspawn"
+// brush 0
+{
+( 0 80 16 ) ( 0 -48 16 ) ( 0 -48 -16 ) e1u1/c_met8_2 0 0 0 1 1
+( -192 16 16 ) ( -64 16 16 ) ( -64 16 -16 ) e1u1/c_met8_2 0 0 0 1 1
+( -64 -48 -16 ) ( -64 80 -16 ) ( -192 80 -16 ) e1u1/c_met8_2 0 0 0 1 1
+( -192 80 496 ) ( -64 80 496 ) ( -64 -48 496 ) e1u1/c_met8_2 0 0 0 1 1
+( -64 560 -16 ) ( -64 560 16 ) ( -192 560 16 ) e1u1/c_met8_2 0 0 0 1 1
+( 528 -48 16 ) ( 528 80 16 ) ( 528 80 -16 ) e1u1/c_met8_2 0 0 0 1 1
+}
+// brush 1
+{
+( 768 -64 768 ) ( 768 -63 768 ) ( 768 -64 769 ) e1u1/c_met8_2 0 0 0 1 1
+( 768 -64 768 ) ( 768 -64 769 ) ( 769 -64 768 ) e1u1/c_met8_2 0 0 0 1 1
+( 768 -64 768 ) ( 769 -64 768 ) ( 768 -63 768 ) e1u1/c_met8_2 0 0 0 1 1
+( 784 -32 784 ) ( 784 -31 784 ) ( 785 -32 784 ) e1u1/c_met8_2 0 0 0 1 1
+( 784 -32 784 ) ( 785 -32 784 ) ( 784 -32 785 ) e1u1/c_met8_2 0 0 0 1 1
+( 784 -32 784 ) ( 784 -32 785 ) ( 784 -31 784 ) e1u1/c_met8_2 0 0 0 1 1
+}
+}
+// entity 1
+{
+"classname" "info_player_start"
+"origin" "256 240 520"
+}
+// entity 2
+{
+"classname" "item_armor_jacket"
+"origin" "464 416 512"
+}
+// entity 3
+{
+"classname" "item_health_mega"
+"origin" "464 192 512"
+}
+// entity 4
+{
+"classname" "misc_explobox"
+"origin" "368 80 496"
+}
+// entity 5
+{
+"classname" "ammo_bullets"
+"origin" "432 112 512"
+}
+// entity 6
+{
+"classname" "ammo_shells"
+"origin" "480 320 512"
+}

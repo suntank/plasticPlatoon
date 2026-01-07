@@ -1,0 +1,75 @@
+OS:	Ubuntu 24.04.3 LTS
+Qt:	6.9.2
+GL_VENDOR:	Intel
+GL_RENDERER:	Mesa Intel(R) UHD Graphics 620 (KBL GT2)
+GL_VERSION:	4.6 (Compatibility Profile) Mesa 25.0.7-0ubuntu0.24.04.2
+TrenchBroom Version:	0.0
+TrenchBroom Build:	unknown Release Linux
+Reason:	SIGSEGV
+Stack trace (most recent call first):
+#0  0x00005796d1e9e38b in tb::ui::reportCrashAndExit(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#1  0x00005796d1e9e403 in tb::ui::(anonymous namespace)::CrashHandler(int) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#2  0x00007ba0c624532f at /lib/x86_64-linux-gnu/libc.so.6
+#3  0x00005796d1c6f240 in tb::mdl::getTexture(tb::mdl::Material const*) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#4  0x00005796d1d98072 in tb::render::FaceRenderer::doRender(tb::render::RenderContext&) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#5  0x00005796d1dda2b6 in tb::render::RenderBatch::render(tb::render::RenderContext&) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#6  0x00005796d1f9cfaa in tb::ui::MapViewBase::renderContents() at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#7  0x00005796d1fdf1a7 in tb::ui::RenderView::paintGL() at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#8  0x00007ba0c8b71144 at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6OpenGLWidgets.so.6
+#9  0x00007ba0c83f44ed in QWidget::event(QEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#10 0x00007ba0c8391bea in QApplicationPrivate::notify_helper(QObject*, QEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#11 0x00005796d1e0a041 in std::_Function_handler<void (), tb::ui::TrenchBroomApp::notify(QObject*, QEvent*)::{lambda()#1}>::_M_invoke(std::_Any_data const&) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#12 0x00005796d1e9e443 in tb::ui::runWithCrashReporting(std::function<void ()> const&) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#13 0x00005796d1e032b8 in tb::ui::TrenchBroomApp::notify(QObject*, QEvent*) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#14 0x00007ba0c6b831c9 in QCoreApplication::notifyInternal2(QObject*, QEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Core.so.6
+#15 0x00007ba0c83eb609 in QWidgetPrivate::sendPaintEvent(QRegion const&) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#16 0x00007ba0c84007d1 in QWidgetRepaintManager::paintAndFlush() at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#17 0x00007ba0c83f4637 in QWidget::event(QEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#18 0x00007ba0c8391bea in QApplicationPrivate::notify_helper(QObject*, QEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#19 0x00005796d1e0a041 in std::_Function_handler<void (), tb::ui::TrenchBroomApp::notify(QObject*, QEvent*)::{lambda()#1}>::_M_invoke(std::_Any_data const&) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#20 0x00005796d1e9e443 in tb::ui::runWithCrashReporting(std::function<void ()> const&) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#21 0x00005796d1e032b8 in tb::ui::TrenchBroomApp::notify(QObject*, QEvent*) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#22 0x00007ba0c6b831c9 in QCoreApplication::notifyInternal2(QObject*, QEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Core.so.6
+#23 0x00007ba0c6b869dc in QCoreApplicationPrivate::sendPostedEvents(QObject*, int, QThreadData*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Core.so.6
+#24 0x00007ba0c6e75326 at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Core.so.6
+#25 0x00007ba0c61145c4 at /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#26 0x00007ba0c6173736 at /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#27 0x00007ba0c6113a62 in g_main_context_iteration at /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#28 0x00007ba0c6e749dd in QEventDispatcherGlib::processEvents(QFlags<QEventLoop::ProcessEventsFlag>) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Core.so.6
+#29 0x00007ba0c6b902ba in QEventLoop::exec(QFlags<QEventLoop::ProcessEventsFlag>) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Core.so.6
+#30 0x00007ba0c860f4ec in QDialog::exec() at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#31 0x00005796d1e0319f in tb::ui::TrenchBroomApp::showPreferences() at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#32 0x00005796d1f6f1f5 in std::_Function_handler<void (tb::ui::Action const&), tb::ui::MapFrame::createMenus()::{lambda(tb::ui::Action const&)#1}>::_M_invoke(std::_Any_data const&, tb::ui::Action const&) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#33 0x00007ba0c6be8bd7 at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Core.so.6
+#34 0x00007ba0c7c47215 in QAction::triggered(bool) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Gui.so.6
+#35 0x00007ba0c7c4a35c in QAction::activate(QAction::ActionEvent) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Gui.so.6
+#36 0x00007ba0c8572d5d at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#37 0x00007ba0c857b3a2 at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#38 0x00007ba0c83f44ed in QWidget::event(QEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#39 0x00007ba0c8391bea in QApplicationPrivate::notify_helper(QObject*, QEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#40 0x00007ba0c839a967 in QApplication::notify(QObject*, QEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#41 0x00005796d1e0a041 in std::_Function_handler<void (), tb::ui::TrenchBroomApp::notify(QObject*, QEvent*)::{lambda()#1}>::_M_invoke(std::_Any_data const&) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#42 0x00005796d1e9e443 in tb::ui::runWithCrashReporting(std::function<void ()> const&) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#43 0x00005796d1e032b8 in tb::ui::TrenchBroomApp::notify(QObject*, QEvent*) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#44 0x00007ba0c6b831c9 in QCoreApplication::notifyInternal2(QObject*, QEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Core.so.6
+#45 0x00007ba0c8399d01 in QApplicationPrivate::sendMouseEvent(QWidget*, QMouseEvent*, QWidget*, QWidget*, QWidget**, QPointer<QWidget>&, bool, bool) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#46 0x00007ba0c8408c2e at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#47 0x00007ba0c840afca at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#48 0x00007ba0c8391bea in QApplicationPrivate::notify_helper(QObject*, QEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Widgets.so.6
+#49 0x00005796d1e0a041 in std::_Function_handler<void (), tb::ui::TrenchBroomApp::notify(QObject*, QEvent*)::{lambda()#1}>::_M_invoke(std::_Any_data const&) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#50 0x00005796d1e9e443 in tb::ui::runWithCrashReporting(std::function<void ()> const&) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#51 0x00005796d1e032b8 in tb::ui::TrenchBroomApp::notify(QObject*, QEvent*) at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#52 0x00007ba0c6b831c9 in QCoreApplication::notifyInternal2(QObject*, QEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Core.so.6
+#53 0x00007ba0c77f1faf in QGuiApplicationPrivate::processMouseEvent(QWindowSystemInterfacePrivate::MouseEvent*) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Gui.so.6
+#54 0x00007ba0c785980b in QWindowSystemInterface::sendWindowSystemEvents(QFlags<QEventLoop::ProcessEventsFlag>) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Gui.so.6
+#55 0x00007ba0c2c4e5fd at /home/austin/Qt/6.9.2/gcc_64/plugins/platforms/../../lib/libQt6XcbQpa.so.6
+#56 0x00007ba0c61145c4 at /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#57 0x00007ba0c6173736 at /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#58 0x00007ba0c6113a62 in g_main_context_iteration at /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#59 0x00007ba0c6e749dd in QEventDispatcherGlib::processEvents(QFlags<QEventLoop::ProcessEventsFlag>) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Core.so.6
+#60 0x00007ba0c6b902ba in QEventLoop::exec(QFlags<QEventLoop::ProcessEventsFlag>) at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Core.so.6
+#61 0x00007ba0c6b8bd99 in QCoreApplication::exec() at /home/austin/Qt/6.9.2/gcc_64/lib/libQt6Core.so.6
+#62 0x00005796d19509e3 in main at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
+#63 0x00007ba0c622a1c9 in __libc_start_call_main at ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#64 0x00007ba0c622a28a in __libc_start_main_impl at ./csu/../csu/libc-start.c:360:3
+#65 0x00005796d1958fd4 in _start at /home/austin/Documents/TrenchBroom-master/build/app/trenchbroom
