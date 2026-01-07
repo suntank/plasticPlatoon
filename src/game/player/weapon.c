@@ -1339,9 +1339,12 @@ Machinegun_Fire(edict_t *ent)
 	vec3_t start;
 	vec3_t forward, right;
 	vec3_t angles;
-	int damage = 8;
+	int damage;
 	int kick = 2;
 	vec3_t offset;
+	int hspread, vspread;
+	float spread_mult;
+	const pp_weapon_params_t *params;
 
 	if (!ent)
 	{
@@ -1379,6 +1382,10 @@ Machinegun_Fire(edict_t *ent)
 		return;
 	}
 
+	/* PP: Get tuned damage from SMG params */
+	params = PP_Weapon_GetParams(WEAP_PP_SMG);
+	damage = params ? params->hitscan.damage : 8;
+
 	if (is_quad)
 	{
 		damage *= 4;
@@ -1393,14 +1400,20 @@ Machinegun_Fire(edict_t *ent)
 	ent->client->kick_angles[1] = crandom() * 0.5;
 	ent->client->kick_angles[2] = crandom() * 0.5;
 
-	
+	/* PP: Calculate spread with ADS and bloom modifiers */
+	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_SMG);
+	hspread = (int)(DEFAULT_BULLET_HSPREAD * spread_mult);
+	vspread = (int)(DEFAULT_BULLET_VSPREAD * spread_mult);
+
 	/* get start / end positions */
 	VectorAdd(ent->client->v_angle, ent->client->kick_angles, angles);
 	AngleVectors(angles, forward, right, NULL);
 	VectorSet(offset, 0, 8, ent->viewheight - 8);
 	P_ProjectSource(ent, offset, forward, right, start);
-	fire_bullet(ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD,
-			DEFAULT_BULLET_VSPREAD, MOD_MACHINEGUN);
+	fire_bullet(ent, start, forward, damage, kick, hspread, vspread, MOD_MACHINEGUN);
+
+	/* PP: Add bloom after firing */
+	PP_Weapon_AddBloom(ent, WEAP_PP_SMG);
 
 	gi.WriteByte(svc_muzzleflash);
 	gi.WriteShort(ent - g_edicts);
@@ -1454,20 +1467,18 @@ Chaingun_Fire(edict_t *ent)
 	vec3_t offset;
 	int damage;
 	int kick = 2;
+	int hspread, vspread;
+	float spread_mult;
+	const pp_weapon_params_t *params;
 
 	if (!ent)
 	{
 		return;
 	}
 
-	if (deathmatch->value)
-	{
-		damage = 6;
-	}
-	else
-	{
-		damage = 8;
-	}
+	/* PP: Get tuned damage from M16 params */
+	params = PP_Weapon_GetParams(WEAP_PP_M16);
+	damage = params ? params->hitscan.damage : 8;
 
 	if (ent->client->ps.gunframe == 5)
 	{
@@ -1567,6 +1578,11 @@ Chaingun_Fire(edict_t *ent)
 		ent->client->kick_angles[i] = crandom() * 0.7;
 	}
 
+	/* PP: Calculate spread with ADS and bloom modifiers */
+	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_M16);
+	hspread = (int)(DEFAULT_BULLET_HSPREAD * spread_mult);
+	vspread = (int)(DEFAULT_BULLET_VSPREAD * spread_mult);
+
 	for (i = 0; i < shots; i++)
 	{
 		/* get start / end positions */
@@ -1577,9 +1593,10 @@ Chaingun_Fire(edict_t *ent)
 		P_ProjectSource(ent, offset,
 				forward, right, start);
 
-		fire_bullet(ent, start, forward, damage, kick,
-				DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD,
-				MOD_CHAINGUN);
+		fire_bullet(ent, start, forward, damage, kick, hspread, vspread, MOD_CHAINGUN);
+
+		/* PP: Add bloom after each shot */
+		PP_Weapon_AddBloom(ent, WEAP_PP_M16);
 	}
 
 	/* send muzzle flash */
@@ -1620,8 +1637,11 @@ weapon_shotgun_fire(edict_t *ent)
 	vec3_t start;
 	vec3_t forward, right;
 	vec3_t offset;
-	int damage = 4;
+	int damage;
 	int kick = 8;
+	int hspread, vspread;
+	float spread_mult;
+	const pp_weapon_params_t *params;
 
 	if (!ent)
 	{
@@ -1633,6 +1653,10 @@ weapon_shotgun_fire(edict_t *ent)
 		ent->client->ps.gunframe++;
 		return;
 	}
+
+	/* PP: Get tuned damage from Shotgun params */
+	params = PP_Weapon_GetParams(WEAP_PP_SHOTGUN);
+	damage = params ? params->hitscan.damage : 4;
 
 	AngleVectors(ent->client->v_angle, forward, right, NULL);
 
@@ -1648,16 +1672,21 @@ weapon_shotgun_fire(edict_t *ent)
 		kick *= 4;
 	}
 
+	/* PP: Calculate spread with ADS modifier */
+	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_SHOTGUN);
+	hspread = (int)(500 * spread_mult);
+	vspread = (int)(500 * spread_mult);
+
 	if (deathmatch->value)
 	{
 		fire_shotgun(ent, start, forward, damage, kick,
-				500, 500, DEFAULT_DEATHMATCH_SHOTGUN_COUNT,
+				hspread, vspread, DEFAULT_DEATHMATCH_SHOTGUN_COUNT,
 				MOD_SHOTGUN);
 	}
 	else
 	{
 		fire_shotgun(ent, start, forward, damage, kick,
-				500, 500, DEFAULT_SHOTGUN_COUNT,
+				hspread, vspread, DEFAULT_SHOTGUN_COUNT,
 				MOD_SHOTGUN);
 	}
 

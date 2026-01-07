@@ -388,12 +388,16 @@ set(Game-Source
 	${GAME_SRC_DIR}/player/trail.c
 	${GAME_SRC_DIR}/player/view.c
 	${GAME_SRC_DIR}/player/weapon.c
+	${GAME_SRC_DIR}/player/pp_weapon_tuning.c
+	${GAME_SRC_DIR}/pp_json.c
 	${GAME_SRC_DIR}/savegame/savegame.c
 	)
 
 set(Game-Header
 	${GAME_SRC_DIR}/header/game.h
 	${GAME_SRC_DIR}/header/local.h
+	${GAME_SRC_DIR}/header/pp_weapon_tuning.h
+	${GAME_SRC_DIR}/pp_json.h
 	${GAME_SRC_DIR}/monster/berserker/berserker.h
 	${GAME_SRC_DIR}/monster/boss2/boss2.h
 	${GAME_SRC_DIR}/monster/boss3/boss31.h

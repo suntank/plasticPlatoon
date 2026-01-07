@@ -344,6 +344,19 @@ ServerCommand(void)
 	{
 		SVCmd_WriteIP_f();
 	}
+	/* Plastic Platoon: Weapon tuning commands */
+	else if (Q_stricmp(cmd, "weapon_reload") == 0)
+	{
+		PP_Cmd_WeaponReload();
+	}
+	else if (Q_stricmp(cmd, "weapon_dump") == 0)
+	{
+		PP_Cmd_WeaponDump();
+	}
+	else if (Q_stricmp(cmd, "weapon_profile") == 0)
+	{
+		PP_Cmd_WeaponProfile();
+	}
 	else
 	{
 		gi.cprintf(NULL, PRINT_HIGH, "Unknown server command \"%s\"\n", cmd);

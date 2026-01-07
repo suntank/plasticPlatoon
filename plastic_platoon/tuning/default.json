@@ -1,0 +1,197 @@
+{
+  "meta": {
+    "name": "default",
+    "version": 1,
+    "author": "Plastic Platoon",
+    "description": "Baseline Plastic Platoon weapon tuning"
+  },
+
+  "ammo_caps": {
+    "AMMO_LIGHT_ROUNDS": 999,
+    "AMMO_HEAVY_ROUNDS": 999,
+    "AMMO_SNIPER_ROUNDS": 50,
+    "AMMO_PP_SHELLS": 100,
+    "AMMO_GL_ROUNDS_40MM": 50,
+    "AMMO_PP_ROCKETS": 30,
+    "AMMO_THROWABLE_GRENADE": 6,
+    "AMMO_THROWABLE_MINE": 6,
+    "AMMO_THROWABLE_SATCHEL": 3,
+    "AMMO_FLAME_FUEL": 100,
+    "AMMO_AIRSTRIKE_CHARGE": 1
+  },
+
+  "weapon_overrides": {
+    "PISTOL": {
+      "fire_mode": {
+        "rate_rps": 4.0,
+        "damage": 12,
+        "spread_base": 1.0,
+        "bloom_per_shot": 0.1,
+        "bloom_recover_rate": 1.2
+      },
+      "ads": {
+        "enabled": true,
+        "accuracy_multiplier": 0.85,
+        "move_speed_scale": 0.6
+      }
+    },
+
+    "SMG": {
+      "fire_mode": {
+        "rate_rps": 12.0,
+        "damage": 6,
+        "spread_base": 1.25,
+        "bloom_per_shot": 0.18,
+        "bloom_recover_rate": 1.0
+      },
+      "ads": {
+        "enabled": true,
+        "accuracy_multiplier": 0.85,
+        "move_speed_scale": 0.55
+      }
+    },
+
+    "M16": {
+      "fire_mode": {
+        "rate_rps": 9.0,
+        "damage": 8,
+        "spread_base": 0.9,
+        "bloom_per_shot": 0.08,
+        "bloom_recover_rate": 1.4
+      },
+      "ads": {
+        "enabled": true,
+        "accuracy_multiplier": 0.75,
+        "move_speed_scale": 0.5
+      }
+    },
+
+    "M60": {
+      "fire_mode": {
+        "rate_rps": 10.0,
+        "damage": 9,
+        "spread_standing_hip": 2.0,
+        "spread_crouched_hip": 1.0,
+        "spread_ads": 0.85,
+        "bloom_per_shot": 0.2,
+        "bloom_recover_rate": 0.9
+      },
+      "ads": {
+        "enabled": true,
+        "accuracy_multiplier": 0.70,
+        "move_speed_scale": 0.50
+      }
+    },
+
+    "SHOTGUN": {
+      "ads": {
+        "enabled": true,
+        "accuracy_multiplier": 0.9,
+        "move_speed_scale": 0.6
+      }
+    },
+
+    "DOUBLE_BARREL_SHOTGUN": {
+      "ads": {
+        "enabled": true,
+        "accuracy_multiplier": 0.9,
+        "move_speed_scale": 0.6
+      }
+    },
+
+    "GRENADE_LAUNCHER": {
+      "projectile": {
+        "bounce": true,
+        "contact_detonation": false,
+        "speed_multiplier_vs_q2": 1.10,
+        "fuse_time_sec": 1.80,
+        "damage": 120,
+        "radius": 160
+      },
+      "ads": {
+        "enabled": true,
+        "accuracy_multiplier": 0.9,
+        "move_speed_scale": 0.55
+      }
+    },
+
+    "BAZOOKA": {
+      "projectile": {
+        "speed_multiplier_vs_q2": 1.10,
+        "damage": 100,
+        "radius": 120
+      },
+      "ads": {
+        "enabled": true,
+        "accuracy_multiplier": 0.9,
+        "move_speed_scale": 0.55
+      }
+    },
+
+    "SNIPER_RIFLE": {
+      "fire_mode": {
+        "rate_rps": 1.0,
+        "damage": 150,
+        "spread_base": 0.1
+      },
+      "ads": {
+        "enabled": true,
+        "accuracy_multiplier": 0.3,
+        "move_speed_scale": 0.4
+      }
+    },
+
+    "M1_FLAMETHROWER": {
+      "ads": {
+        "enabled": false
+      }
+    },
+
+    "AIRSTRIKE_MARKER": {
+      "ads": {
+        "enabled": false
+      }
+    }
+  },
+
+  "throwables": {
+    "GRENADE": {
+      "speed": 650,
+      "fuse_time_sec": 2.5,
+      "damage": 120,
+      "radius": 160
+    },
+    "MINE": {
+      "speed": 550,
+      "arm_delay_sec": 0.6,
+      "damage": 160,
+      "radius": 200
+    },
+    "SATCHEL": {
+      "speed": 550,
+      "fuse_time_sec": 1.5,
+      "damage": 240,
+      "radius": 260
+    }
+  },
+
+  "resupply_items": {
+    "BALLISTICS_AMMO_CRATE": {
+      "grants": {
+        "LIGHT_ROUNDS": 200,
+        "HEAVY_ROUNDS": 150,
+        "SHELLS": 30,
+        "SNIPER_ROUNDS": 5
+      }
+    },
+    "EXPLOSIVES_AMMO_CRATE": {
+      "grants": {
+        "GL_ROUNDS_40MM": 10,
+        "ROCKETS": 4,
+        "THROWABLE_GRENADE": 1,
+        "THROWABLE_MINE": 1,
+        "THROWABLE_SATCHEL": 1
+      }
+    }
+  }
+}

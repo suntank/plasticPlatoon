@@ -979,6 +979,8 @@ GAME_OBJS_ = \
 	src/game/player/trail.o \
 	src/game/player/view.o \
 	src/game/player/weapon.o \
+	src/game/player/pp_weapon_tuning.o \
+	src/game/pp_json.o \
 	src/game/savegame/savegame.o
 
 # ----------

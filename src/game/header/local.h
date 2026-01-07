@@ -28,6 +28,7 @@
 #define GAME_LOCAL_H
 
 #include "../../common/header/shared.h"
+#include "pp_weapon_tuning.h"
 
 /* define GAME_INCLUDE so that game.h does not define the
    short, server-visible gclient_t and edict_t structures,
@@ -108,6 +109,9 @@ typedef enum
 	AMMO_CELLS,
 	AMMO_SLUGS
 } ammo_t;
+
+/* Plastic Platoon ammo types are defined in pp_weapon_tuning.h */
+/* pp_ammo_id_t provides the new ammo system */
 
 /* Maximum debris / gibs per frame */
 #define MAX_GIBS 20
@@ -859,13 +863,16 @@ typedef struct
 	int selected_item;
 	int inventory[MAX_ITEMS];
 
-	/* ammo capacities */
+	/* ammo capacities (legacy Q2) */
 	int max_bullets;
 	int max_shells;
 	int max_rockets;
 	int max_grenades;
 	int max_cells;
 	int max_slugs;
+
+	/* Plastic Platoon ammo capacities */
+	int max_ammo_pp[AMMO_PP_MAX];
 
 	gitem_t *weapon;
 	gitem_t *lastweapon;
@@ -974,6 +981,9 @@ struct gclient_s
 
 	edict_t *chase_target; /* player we are chasing */
 	qboolean update_chase; /* need to update chase info? */
+
+	/* Plastic Platoon weapon state */
+	pp_client_weapon_state_t weapon_state;
 };
 
 struct edict_s

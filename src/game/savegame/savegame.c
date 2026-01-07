@@ -284,6 +284,9 @@ InitGame(void)
 
 	/* initialize entities and clients arrays */
 	InitAllocations();
+
+	/* Plastic Platoon: Initialize weapon tuning system */
+	PP_Weapon_Init();
 }
 
 /* ========================================================= */

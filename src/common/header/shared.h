@@ -670,6 +670,7 @@ typedef struct
 /* button bits */
 #define BUTTON_ATTACK 1
 #define BUTTON_USE 2
+#define BUTTON_ADS 4        /* Plastic Platoon: Aim Down Sights (mouse2) */
 #define BUTTON_ANY 128 /* any key whatsoever */
 
 /* usercmd_t is sent to the server each client frame */
