@@ -1322,11 +1322,22 @@ PP_Weapon_LoadProfile(const char *profile_name)
 
 	/* Parse JSON */
 	root = JSON_Parse(file_content, json_error, sizeof(json_error));
+	
+	/* Always free file_content to prevent memory leaks */
 	free(file_content);
+	file_content = NULL;
 
 	if (!root)
 	{
 		gi.dprintf("Failed to parse weapon profile '%s': %s\n", profile_name, json_error);
+		return false;
+	}
+
+	/* Validate JSON structure */
+	if (root->type != JSON_OBJECT)
+	{
+		gi.dprintf("Invalid weapon profile '%s': root must be an object\n", profile_name);
+		JSON_Free(root);
 		return false;
 	}
 
@@ -1364,16 +1375,24 @@ PP_Weapon_LoadProfile(const char *profile_name)
 
 	/* Apply ammo caps */
 	ammo_caps = JSON_GetMember(root, "ammo_caps");
-	if (ammo_caps)
+	if (ammo_caps && ammo_caps->type == JSON_OBJECT)
 	{
 		PP_ApplyAmmoCaps(ammo_caps);
+	}
+	else if (ammo_caps)
+	{
+		gi.dprintf("Warning: ammo_caps section is not a valid object in profile '%s'\n", profile_name);
 	}
 
 	/* Apply weapon overrides */
 	weapon_overrides = JSON_GetMember(root, "weapon_overrides");
-	if (weapon_overrides)
+	if (weapon_overrides && weapon_overrides->type == JSON_OBJECT)
 	{
 		PP_ApplyWeaponOverrides(weapon_overrides);
+	}
+	else if (weapon_overrides)
+	{
+		gi.dprintf("Warning: weapon_overrides section is not a valid object in profile '%s'\n", profile_name);
 	}
 
 	/* Compute checksum (simple sum for now) */

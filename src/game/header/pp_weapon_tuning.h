@@ -37,10 +37,10 @@ typedef enum {
 /* Default ammo caps */
 #define AMMO_CAP_LIGHT_ROUNDS       999
 #define AMMO_CAP_HEAVY_ROUNDS       999
-#define AMMO_CAP_SNIPER_ROUNDS      50
-#define AMMO_CAP_PP_SHELLS          100
-#define AMMO_CAP_GL_ROUNDS_40MM     50
-#define AMMO_CAP_PP_ROCKETS         30
+#define AMMO_CAP_SNIPER_ROUNDS      999
+#define AMMO_CAP_PP_SHELLS          999
+#define AMMO_CAP_GL_ROUNDS_40MM     100
+#define AMMO_CAP_PP_ROCKETS         100
 #define AMMO_CAP_THROWABLE_GRENADE  6
 #define AMMO_CAP_THROWABLE_MINE     6
 #define AMMO_CAP_THROWABLE_SATCHEL  3

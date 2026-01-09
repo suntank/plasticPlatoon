@@ -528,31 +528,44 @@ JSON_Parse(const char *text, char *error_out, int error_size)
 	return result;
 }
 
-void
-JSON_Free(json_value_t *val)
+/* Internal helper to free children without freeing the node itself */
+static void
+json_free_children(json_value_t *val)
 {
 	int i;
 
+	if (!val || !val->children)
+	{
+		return;
+	}
+
+	/* Recursively free any nested children arrays */
+	for (i = 0; i < val->child_count; i++)
+	{
+		if (val->children[i].children)
+		{
+			json_free_children(&val->children[i]);
+		}
+	}
+
+	/* Free the children array itself */
+	free(val->children);
+	val->children = NULL;
+	val->child_count = 0;
+}
+
+void
+JSON_Free(json_value_t *val)
+{
 	if (!val)
 	{
 		return;
 	}
 
-	/* Free children recursively */
-	if (val->children)
-	{
-		for (i = 0; i < val->child_count; i++)
-		{
-			/* Children have inline storage, but may have their own children */
-			if (val->children[i].children)
-			{
-				JSON_Free(&val->children[i]);
-			}
-		}
-		free(val->children);
-	}
+	/* Free all nested children */
+	json_free_children(val);
 
-	/* Only free the root allocation */
+	/* Free the root node */
 	free(val);
 }
 
