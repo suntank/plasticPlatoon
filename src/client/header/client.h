@@ -428,6 +428,7 @@ void CL_WidowSplash (vec3_t org);
 void CL_ParseTEnt (void);
 void CL_AddMuzzleFlash (void);
 void CL_AddMuzzleFlash2 (void);
+extern int pp_viewmodel_muzzle_seq;
 
 void CL_SetLightstyle (int i);
 

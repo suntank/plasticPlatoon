@@ -33,6 +33,8 @@ void CL_ClearLightStyles(void);
 void CL_ClearDlights(void);
 void CL_ClearParticles(void);
 
+int pp_viewmodel_muzzle_seq = 0;
+
 static vec3_t avelocities[NUMVERTEXNORMALS];
 extern struct model_s *cl_mod_smoke;
 extern struct model_s *cl_mod_flash;
@@ -51,6 +53,11 @@ CL_AddMuzzleFlash(void)
 	char soundname[64];
 
 	i = MSG_ReadShort(&net_message);
+
+	if (i == cl.playernum + 1)
+	{
+		pp_viewmodel_muzzle_seq++;
+	}
 
 	if ((i < 1) || (i > MAX_CL_ENTNUM))
 	{

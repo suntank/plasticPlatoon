@@ -47,23 +47,24 @@ typedef enum {
 typedef struct {
 	float strength;     /* recoil kick strength (0-1 scale, multiplied) */
 	float recovery;     /* how fast recoil recovers (higher = faster) */
+	float interval;
 	float pitch_kick;   /* pitch angle kick */
 	float push_back;    /* how far gun pushes back */
 } pp_recoil_config_t;
 
 static const pp_recoil_config_t pp_recoil_configs[] = {
-	/* PP_WEAPON_UNKNOWN */        { 0.3f, 7.5f, 2.0f, 4.0f },
-	/* PP_WEAPON_M9_PISTOL */      { 0.5f, 8.0f, 3.0f, 3.0f },
-	/* PP_WEAPON_SHOTGUN */        { 0.9f, 5.0f, 5.0f, 6.0f },
-	/* PP_WEAPON_SUPER_SHOTGUN */  { 1.0f, 4.0f, 7.0f, 8.0f },
-	/* PP_WEAPON_M16 */            { 0.4f, 12.0f, 1.5f, 2.0f },
-	/* PP_WEAPON_M60 */            { 0.35f, 10.0f, 1.2f, 1.5f },
-	/* PP_WEAPON_HAND_GRENADE */   { 0.2f, 6.0f, 1.0f, 2.0f },
-	/* PP_WEAPON_GRENADE_LAUNCHER */ { 1.0f, 4.5f, 6.0f, 7.0f },
-	/* PP_WEAPON_ROCKET_LAUNCHER */ { 0.8f, 5.0f, 4.0f, 5.0f },
-	/* PP_WEAPON_FLAMETHROWER */   { 0.1f, 15.0f, 0.5f, 0.5f },
-	/* PP_WEAPON_SNIPER */         { 1.0f, 3.5f, 8.0f, 6.0f },
-	/* PP_WEAPON_MORTAR */         { 1.0f, 3.0f, 10.0f, 10.0f }
+	/* PP_WEAPON_UNKNOWN */        { 0.3f, 7.5f, 0.25f, 2.0f, 4.0f },
+	/* PP_WEAPON_M9_PISTOL */      { 0.85f, 10.0f, 0.18f, 5.0f, 5.0f },
+	/* PP_WEAPON_SHOTGUN */        { 1.0f, 6.0f, 0.45f, 6.0f, 7.0f },
+	/* PP_WEAPON_SUPER_SHOTGUN */  { 1.0f, 5.0f, 0.55f, 8.0f, 9.0f },
+	/* PP_WEAPON_M16 */            { 0.75f, 14.0f, 0.10f, 2.8f, 3.2f },
+	/* PP_WEAPON_M60 */            { 0.65f, 12.0f, 0.10f, 2.4f, 3.0f },
+	/* PP_WEAPON_HAND_GRENADE */   { 0.2f, 6.0f, 0.50f, 1.0f, 2.0f },
+	/* PP_WEAPON_GRENADE_LAUNCHER */ { 1.0f, 5.0f, 0.55f, 7.0f, 8.0f },
+	/* PP_WEAPON_ROCKET_LAUNCHER */ { 0.9f, 6.0f, 0.60f, 5.0f, 6.0f },
+	/* PP_WEAPON_FLAMETHROWER */   { 0.2f, 18.0f, 0.12f, 0.8f, 1.2f },
+	/* PP_WEAPON_SNIPER */         { 1.0f, 4.0f, 0.85f, 9.0f, 7.0f },
+	/* PP_WEAPON_MORTAR */         { 1.0f, 3.5f, 1.00f, 12.0f, 12.0f }
 };
 
 /* Procedural viewmodel animation state */
@@ -71,7 +72,7 @@ static float pp_viewmodel_recoil = 0.0f;
 static int pp_viewmodel_last_gunindex = 0;
 static float pp_viewmodel_last_fire_time = 0.0f;
 static float pp_viewmodel_raise_progress = 0.0f; /* 0 = hidden, 1 = fully raised */
-static float pp_viewmodel_last_kick = 0.0f; /* track kick_angles for fire detection */
+static int pp_viewmodel_last_muzzle_seq = 0;
 static pp_weapon_type_t pp_current_weapon = PP_WEAPON_UNKNOWN;
 
 static pp_weapon_type_t
@@ -730,7 +731,7 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 		float hide;
 		float current_time = (float)cl.time * 0.001f;
 		float time_since_fire;
-		float current_kick;
+		int muzzle_seq;
 		const pp_recoil_config_t *recoil_cfg;
 
 		if (dt < 0.0f)
@@ -747,14 +748,15 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 
 		recoil_cfg = &pp_recoil_configs[pp_current_weapon];
 
-		/* Detect firing via kick_angles - server sets these when weapons fire */
-		current_kick = fabs(ps->kick_angles[0]) + fabs(ps->kick_angles[1]) + fabs(ps->kick_angles[2]);
-		if (current_kick > 0.1f && pp_viewmodel_last_kick < 0.1f)
+		/* Detect firing via local-player muzzleflash events */
+		muzzle_seq = pp_viewmodel_muzzle_seq;
+		if ((muzzle_seq != pp_viewmodel_last_muzzle_seq) &&
+			((current_time - pp_viewmodel_last_fire_time) >= recoil_cfg->interval))
 		{
 			pp_viewmodel_recoil = recoil_cfg->strength;
 			pp_viewmodel_last_fire_time = current_time;
 		}
-		pp_viewmodel_last_kick = current_kick;
+		pp_viewmodel_last_muzzle_seq = muzzle_seq;
 
 		pp_viewmodel_recoil -= dt * recoil_cfg->recovery;
 		if (pp_viewmodel_recoil < 0.0f)
@@ -782,7 +784,7 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 
 		raise = pp_viewmodel_raise_progress;
 
-		recoil = pp_viewmodel_recoil * pp_viewmodel_recoil;
+		recoil = pp_viewmodel_recoil;
 		recoil *= raise;
 
 		t = current_time;
