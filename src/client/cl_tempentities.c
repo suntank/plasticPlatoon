@@ -709,6 +709,30 @@ CL_ParseTEnt(void)
 			CL_ParticleEffect(pos, dir, 0xe8, 60);
 			break;
 
+		case TE_MORTAR_EXPLOSION:
+			MSG_ReadPos(&net_message, pos);
+			ex = CL_AllocExplosion();
+			VectorCopy(pos, ex->ent.origin);
+			ex->type = ex_poly;
+			ex->ent.flags = RF_FULLBRIGHT | RF_NOSHADOW;
+			ex->start = cl.frame.servertime - 100.0f;
+			ex->light = 700;
+			ex->lightcolor[0] = 1.0;
+			ex->lightcolor[1] = 0.75;
+			ex->lightcolor[2] = 0.25;
+			ex->ent.angles[1] = (float)(randk() % 360);
+			ex->ent.model = cl_mod_explo4_big;
+
+			if (frandk() < 0.5)
+			{
+				ex->baseframe = 15;
+			}
+
+			ex->frames = 15;
+			EXPLOSION_PARTICLES(pos);
+			S_StartSound(pos, 0, 0, cl_sfx_rockexp, 1, ATTN_NORM, 0);
+			break;
+
 		case TE_GUNSHOT: /* bullet hitting wall */
 		case TE_SPARKS:
 		case TE_BULLET_SPARKS:

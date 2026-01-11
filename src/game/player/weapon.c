@@ -1955,7 +1955,7 @@ weapon_railgun_fire(edict_t *ent)
 	}
 	else
 	{
-		damage = 150;
+		damage = 100;
 		kick = 250;
 	}
 
@@ -1972,7 +1972,7 @@ weapon_railgun_fire(edict_t *ent)
 
 	VectorSet(offset, 0, 7, ent->viewheight - 8);
 	P_ProjectSource(ent, offset, forward, right, start);
-	fire_rail(ent, start, forward, damage, kick);
+	fire_bullet(ent, start, forward, damage, kick, 0, 0, MOD_RAILGUN);
 
 	/* send muzzle flash */
 	gi.WriteByte(svc_muzzleflash);
@@ -2012,7 +2012,7 @@ void
 weapon_bfg_fire(edict_t *ent)
 {
 	vec3_t offset, start, forward, right;
-	float damage_radius = 1000;
+	float damage_radius = 480;
 	int damage;
 
 	if (!ent)
@@ -2027,25 +2027,6 @@ weapon_bfg_fire(edict_t *ent)
 	else
 	{
 		damage = 500;
-	}
-
-	if (ent->client->ps.gunframe == 9)
-	{
-		AngleVectors(ent->client->v_angle, forward, right, NULL);
-
-		VectorSet(offset, 8, 8, ent->viewheight - 8);
-		P_ProjectSource(ent, offset, forward, right, start);
-
-		/* send muzzle flash */
-		gi.WriteByte(svc_muzzleflash);
-		gi.WriteShort(ent - g_edicts);
-		gi.WriteByte(MZ_BFG | is_silenced);
-		gi.multicast(ent->s.origin, MULTICAST_PVS);
-
-		ent->client->ps.gunframe++;
-
-		PlayerNoise(ent, start, PNOISE_WEAPON);
-		return;
 	}
 
 	/* cells can go down during windup (from power armor hits), so
@@ -2072,7 +2053,14 @@ weapon_bfg_fire(edict_t *ent)
 
 	VectorSet(offset, 8, 8, ent->viewheight - 8);
 	P_ProjectSource(ent, offset, forward, right, start);
-	fire_bfg(ent, start, forward, damage, 400, damage_radius);
+
+	/* send muzzle flash */
+	gi.WriteByte(svc_muzzleflash);
+	gi.WriteShort(ent - g_edicts);
+	gi.WriteByte(MZ_ROCKET | is_silenced);
+	gi.multicast(ent->s.origin, MULTICAST_PVS);
+
+	fire_mortar(ent, start, forward, damage, 650, 10.0f, damage_radius);
 
 	ent->client->ps.gunframe++;
 
@@ -2088,7 +2076,7 @@ void
 Weapon_BFG(edict_t *ent)
 {
 	static int pause_frames[] = {39, 45, 50, 55, 0};
-	static int fire_frames[] = {9, 17, 0};
+	static int fire_frames[] = {9, 0};
 
 	if (!ent)
 	{

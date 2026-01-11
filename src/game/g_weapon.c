@@ -744,6 +744,102 @@ fire_grenade2(edict_t *self, vec3_t start, vec3_t aimdir, int damage,
 }
 
 void
+Mortar_Explode(edict_t *ent)
+{
+	vec3_t origin;
+
+	if (!ent)
+	{
+		return;
+	}
+
+	if (ent->owner && ent->owner->client)
+	{
+		PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
+	}
+
+	if (ent->enemy && ent->enemy->takedamage)
+	{
+		T_Damage(ent->enemy, ent, ent->owner, ent->velocity, ent->s.origin,
+				vec3_origin, ent->dmg, 0, 0, MOD_BFG_BLAST);
+	}
+
+	T_RadiusDamage(ent, ent->owner, ent->dmg, ent->enemy, ent->dmg_radius,
+			MOD_BFG_BLAST);
+
+	VectorMA(ent->s.origin, -0.02, ent->velocity, origin);
+	gi.WriteByte(svc_temp_entity);
+	gi.WriteByte(TE_MORTAR_EXPLOSION);
+	gi.WritePosition(origin);
+	gi.multicast(ent->s.origin, MULTICAST_PHS);
+
+	G_FreeEdict(ent);
+}
+
+void
+Mortar_Touch(edict_t *ent, edict_t *other, cplane_t *plane /* unused */, csurface_t *surf)
+{
+	if (!ent || !other) /* plane is unused, surf can be NULL */
+	{
+		G_FreeEdict(ent);
+		return;
+	}
+
+	if (other == ent->owner)
+	{
+		return;
+	}
+
+	if (surf && (surf->flags & SURF_SKY))
+	{
+		G_FreeEdict(ent);
+		return;
+	}
+
+	ent->enemy = other;
+	Mortar_Explode(ent);
+}
+
+void
+fire_mortar(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed,
+		float timer, float damage_radius)
+{
+	edict_t *mortar;
+	vec3_t dir;
+	vec3_t forward, right, up;
+
+	if (!self)
+	{
+		return;
+	}
+
+	vectoangles(aimdir, dir);
+	AngleVectors(dir, forward, right, up);
+
+	mortar = G_Spawn();
+	VectorCopy(start, mortar->s.origin);
+	VectorScale(aimdir, speed, mortar->velocity);
+	VectorMA(mortar->velocity, 650.0f, up, mortar->velocity);
+	VectorSet(mortar->avelocity, 300, 300, 300);
+	mortar->movetype = MOVETYPE_BOUNCE;
+	mortar->clipmask = MASK_SHOT;
+	mortar->solid = SOLID_BBOX;
+	mortar->s.effects |= EF_GRENADE;
+	VectorClear(mortar->mins);
+	VectorClear(mortar->maxs);
+	mortar->s.modelindex = gi.modelindex("models/objects/grenade/tris.md2");
+	mortar->owner = self;
+	mortar->touch = Mortar_Touch;
+	mortar->nextthink = level.time + timer;
+	mortar->think = Mortar_Explode;
+	mortar->dmg = damage;
+	mortar->dmg_radius = damage_radius;
+	mortar->classname = "mortar";
+
+	gi.linkentity(mortar);
+}
+
+void
 rocket_touch(edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
 	vec3_t origin;
