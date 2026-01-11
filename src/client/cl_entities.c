@@ -57,12 +57,12 @@ static const pp_recoil_config_t pp_recoil_configs[] = {
 	/* PP_WEAPON_M9_PISTOL */      { 0.85f, 10.0f, 0.18f, 5.0f, 5.0f },
 	/* PP_WEAPON_SHOTGUN */        { 1.0f, 6.0f, 0.45f, 6.0f, 7.0f },
 	/* PP_WEAPON_SUPER_SHOTGUN */  { 1.0f, 5.0f, 0.55f, 8.0f, 9.0f },
-	/* PP_WEAPON_M16 */            { 0.75f, 14.0f, 0.10f, 2.8f, 3.2f },
-	/* PP_WEAPON_M60 */            { 0.65f, 12.0f, 0.10f, 2.4f, 3.0f },
+	/* PP_WEAPON_M16 */            { 0.75f, 28.0f, 0.06f, 2.8f, 3.2f },
+	/* PP_WEAPON_M60 */            { 0.65f, 26.0f, 0.06f, 2.4f, 3.0f },
 	/* PP_WEAPON_HAND_GRENADE */   { 0.2f, 6.0f, 0.50f, 1.0f, 2.0f },
 	/* PP_WEAPON_GRENADE_LAUNCHER */ { 1.0f, 5.0f, 0.55f, 7.0f, 8.0f },
 	/* PP_WEAPON_ROCKET_LAUNCHER */ { 0.9f, 6.0f, 0.60f, 5.0f, 6.0f },
-	/* PP_WEAPON_FLAMETHROWER */   { 0.2f, 18.0f, 0.12f, 0.8f, 1.2f },
+	/* PP_WEAPON_FLAMETHROWER */   { 0.2f, 35.0f, 0.05f, 0.8f, 1.2f },
 	/* PP_WEAPON_SNIPER */         { 1.0f, 4.0f, 0.85f, 9.0f, 7.0f },
 	/* PP_WEAPON_MORTAR */         { 1.0f, 3.5f, 1.00f, 12.0f, 12.0f }
 };
