@@ -42,6 +42,16 @@
 static qboolean is_quad;
 static byte is_silenced;
 
+#define PP_BLASTER_GF_RAISE_FIRST 1
+#define PP_BLASTER_GF_RAISE_LAST 4
+
+#define PP_BLASTER_GF_READY 5
+
+#define PP_BLASTER_GF_FIRE_BASE 10
+#define PP_BLASTER_GF_FIRE_LAST 12
+#define PP_BLASTER_GF_DROP_BASE 20
+#define PP_BLASTER_GF_DROP_LAST 22
+
 void weapon_grenade_fire(edict_t *ent, qboolean held);
 
 void
@@ -1157,8 +1167,6 @@ Weapon_Blaster_Fire(edict_t *ent)
 
 	if (ent->client->pers.inventory[ent->client->ammo_index] < 1)
 	{
-		ent->client->ps.gunframe++;
-
 		if (level.time >= ent->pain_debounce_time)
 		{
 			gi.sound(ent, CHAN_VOICE, gi.soundindex(
@@ -1192,8 +1200,6 @@ Weapon_Blaster_Fire(edict_t *ent)
 	gi.WriteByte(MZ_BLASTER | is_silenced);
 	gi.multicast(ent->s.origin, MULTICAST_PVS);
 
-	ent->client->ps.gunframe++;
-
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	if (!((int)dmflags->value & DF_INFINITE_AMMO))
@@ -1205,16 +1211,122 @@ Weapon_Blaster_Fire(edict_t *ent)
 void
 Weapon_Blaster(edict_t *ent)
 {
-	static int pause_frames[] = {19, 32, 0};
-	static int fire_frames[] = {5, 0};
+	const unsigned short int change_speed = (g_swap_speed->value > 1)?
+		(g_swap_speed->value < USHRT_MAX)? (unsigned short int)g_swap_speed->value : 1
+		: 1;
 
 	if (!ent)
 	{
 		return;
 	}
 
-	Weapon_Generic(ent, 4, 8, 52, 55, pause_frames,
-			fire_frames, Weapon_Blaster_Fire);
+	if (ent->deadflag || (ent->s.modelindex != 255)) /* VWep animations screw up corpses */
+	{
+		return;
+	}
+
+	if (ent->client->weaponstate == WEAPON_DROPPING)
+	{
+		if (ent->client->ps.gunframe >= PP_BLASTER_GF_DROP_LAST - change_speed + 1)
+		{
+			ChangeWeapon(ent);
+			return;
+		}
+
+		ent->client->ps.gunframe += change_speed;
+		return;
+	}
+
+	if (ent->client->weaponstate == WEAPON_ACTIVATING)
+	{
+		if (ent->client->ps.gunframe == 0)
+		{
+			ent->client->ps.gunframe = PP_BLASTER_GF_RAISE_FIRST;
+			return;
+		}
+
+		if (ent->client->ps.gunframe >= PP_BLASTER_GF_RAISE_LAST - change_speed + 1)
+		{
+			ent->client->weaponstate = WEAPON_READY;
+			ent->client->ps.gunframe = PP_BLASTER_GF_READY;
+			return;
+		}
+
+		ent->client->ps.gunframe += change_speed;
+		return;
+	}
+
+	if ((ent->client->newweapon) && (ent->client->weaponstate != WEAPON_FIRING))
+	{
+		ent->client->weaponstate = WEAPON_DROPPING;
+		ent->client->ps.gunframe = PP_BLASTER_GF_DROP_BASE;
+		Change_Weap_Animation(ent);
+		return;
+	}
+
+	if (ent->client->weaponstate == WEAPON_READY)
+	{
+		if (((ent->client->latched_buttons |
+				  ent->client->buttons) & BUTTON_ATTACK))
+		{
+			ent->client->latched_buttons &= ~BUTTON_ATTACK;
+
+			if ((!ent->client->ammo_index) ||
+				(ent->client->pers.inventory[ent->client->ammo_index] >=
+				 ent->client->pers.weapon->quantity))
+			{
+				ent->client->ps.gunframe = PP_BLASTER_GF_FIRE_BASE;
+				ent->client->weaponstate = WEAPON_FIRING;
+
+				/* start the animation */
+				ent->client->anim_priority = ANIM_ATTACK;
+
+				if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
+				{
+					ent->s.frame = FRAME_crattak1 - 1;
+					ent->client->anim_end = FRAME_crattak9;
+				}
+				else
+				{
+					ent->s.frame = FRAME_attack1 - 1;
+					ent->client->anim_end = FRAME_attack8;
+				}
+			}
+			else
+			{
+				if (level.time >= ent->pain_debounce_time)
+				{
+					gi.sound(ent, CHAN_VOICE, gi.soundindex(
+								"weapons/noammo.wav"), 1, ATTN_NORM, 0);
+					ent->pain_debounce_time = level.time + 1;
+				}
+
+				NoAmmoWeaponChange(ent);
+			}
+		}
+		else
+		{
+			ent->client->ps.gunframe = PP_BLASTER_GF_READY;
+		}
+
+		return;
+	}
+
+	if (ent->client->weaponstate == WEAPON_FIRING)
+	{
+		if (ent->client->ps.gunframe == PP_BLASTER_GF_FIRE_BASE)
+		{
+			Weapon_Blaster_Fire(ent);
+		}
+
+		ent->client->ps.gunframe++;
+
+		if (ent->client->ps.gunframe >= PP_BLASTER_GF_FIRE_LAST)
+		{
+			ent->client->weaponstate = WEAPON_READY;
+			ent->client->ps.gunframe = PP_BLASTER_GF_READY;
+		}
+	}
 }
 
 void

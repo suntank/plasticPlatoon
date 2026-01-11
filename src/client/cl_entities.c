@@ -27,6 +27,84 @@
 #include <math.h>
 #include "header/client.h"
 
+/* Weapon types for per-weapon recoil tuning */
+typedef enum {
+	PP_WEAPON_UNKNOWN = 0,
+	PP_WEAPON_M9_PISTOL,      /* Blaster */
+	PP_WEAPON_SHOTGUN,        /* Shotgun */
+	PP_WEAPON_SUPER_SHOTGUN,  /* Super Shotgun */
+	PP_WEAPON_M16,            /* Machinegun */
+	PP_WEAPON_M60,            /* Chaingun */
+	PP_WEAPON_HAND_GRENADE,   /* Hand Grenades */
+	PP_WEAPON_GRENADE_LAUNCHER,
+	PP_WEAPON_ROCKET_LAUNCHER,
+	PP_WEAPON_FLAMETHROWER,   /* HyperBlaster */
+	PP_WEAPON_SNIPER,         /* Railgun */
+	PP_WEAPON_MORTAR          /* BFG */
+} pp_weapon_type_t;
+
+/* Per-weapon recoil configuration */
+typedef struct {
+	float strength;     /* recoil kick strength (0-1 scale, multiplied) */
+	float recovery;     /* how fast recoil recovers (higher = faster) */
+	float pitch_kick;   /* pitch angle kick */
+	float push_back;    /* how far gun pushes back */
+} pp_recoil_config_t;
+
+static const pp_recoil_config_t pp_recoil_configs[] = {
+	/* PP_WEAPON_UNKNOWN */        { 0.3f, 7.5f, 2.0f, 4.0f },
+	/* PP_WEAPON_M9_PISTOL */      { 0.5f, 8.0f, 3.0f, 3.0f },
+	/* PP_WEAPON_SHOTGUN */        { 0.9f, 5.0f, 5.0f, 6.0f },
+	/* PP_WEAPON_SUPER_SHOTGUN */  { 1.0f, 4.0f, 7.0f, 8.0f },
+	/* PP_WEAPON_M16 */            { 0.4f, 12.0f, 1.5f, 2.0f },
+	/* PP_WEAPON_M60 */            { 0.35f, 10.0f, 1.2f, 1.5f },
+	/* PP_WEAPON_HAND_GRENADE */   { 0.2f, 6.0f, 1.0f, 2.0f },
+	/* PP_WEAPON_GRENADE_LAUNCHER */ { 1.0f, 4.5f, 6.0f, 7.0f },
+	/* PP_WEAPON_ROCKET_LAUNCHER */ { 0.8f, 5.0f, 4.0f, 5.0f },
+	/* PP_WEAPON_FLAMETHROWER */   { 0.1f, 15.0f, 0.5f, 0.5f },
+	/* PP_WEAPON_SNIPER */         { 1.0f, 3.5f, 8.0f, 6.0f },
+	/* PP_WEAPON_MORTAR */         { 1.0f, 3.0f, 10.0f, 10.0f }
+};
+
+/* Procedural viewmodel animation state */
+static float pp_viewmodel_recoil = 0.0f;
+static int pp_viewmodel_last_gunindex = 0;
+static float pp_viewmodel_last_fire_time = 0.0f;
+static float pp_viewmodel_raise_progress = 0.0f; /* 0 = hidden, 1 = fully raised */
+static float pp_viewmodel_last_kick = 0.0f; /* track kick_angles for fire detection */
+static pp_weapon_type_t pp_current_weapon = PP_WEAPON_UNKNOWN;
+
+static pp_weapon_type_t
+PP_DetectWeaponType(player_state_t *ps)
+{
+	const char *model;
+
+	if (!ps || ps->gunindex <= 0)
+	{
+		return PP_WEAPON_UNKNOWN;
+	}
+
+	model = cl.configstrings[CS_MODELS + ps->gunindex];
+	if (!model || !model[0])
+	{
+		return PP_WEAPON_UNKNOWN;
+	}
+
+	if (strstr(model, "v_blast")) return PP_WEAPON_M9_PISTOL;
+	if (strstr(model, "v_shotg2")) return PP_WEAPON_SUPER_SHOTGUN;
+	if (strstr(model, "v_shotg")) return PP_WEAPON_SHOTGUN;
+	if (strstr(model, "v_machn")) return PP_WEAPON_M16;
+	if (strstr(model, "v_chain")) return PP_WEAPON_M60;
+	if (strstr(model, "v_handgr")) return PP_WEAPON_HAND_GRENADE;
+	if (strstr(model, "v_launch")) return PP_WEAPON_GRENADE_LAUNCHER;
+	if (strstr(model, "v_rocket")) return PP_WEAPON_ROCKET_LAUNCHER;
+	if (strstr(model, "v_hyperb")) return PP_WEAPON_FLAMETHROWER;
+	if (strstr(model, "v_rail")) return PP_WEAPON_SNIPER;
+	if (strstr(model, "v_bfg")) return PP_WEAPON_MORTAR;
+
+	return PP_WEAPON_UNKNOWN;
+}
+
 void
 CL_AddPacketEntities(frame_t *frame)
 {
@@ -636,23 +714,113 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 			ps->gunangles[i], cl.lerpfrac);
 	}
 
-	if (gun_frame)
-	{
-		gun.frame = gun_frame;
-		gun.oldframe = gun_frame;
-	}
-	else
-	{
-		gun.frame = ps->gunframe;
+	/* Force static frame 0 for all weapons - we do procedural animation */
+	gun.frame = 0;
+	gun.oldframe = 0;
 
-		if (gun.frame == 0)
+	/* Procedural viewmodel animation for all weapons */
+	{
+		float dt = cls.rframetime;
+		float raise = 1.0f; /* target raise value */
+		float recoil;
+		float t;
+		float bob_up;
+		float bob_right;
+		float bob_scale;
+		float hide;
+		float current_time = (float)cl.time * 0.001f;
+		float time_since_fire;
+		float current_kick;
+		const pp_recoil_config_t *recoil_cfg;
+
+		if (dt < 0.0f)
 		{
-			gun.oldframe = 0; /* just changed weapons, don't lerp from old */
+			dt = 0.0f;
+		}
+
+		/* Detect weapon switch - reset raise progress and update weapon type */
+		if (pp_viewmodel_last_gunindex != ps->gunindex)
+		{
+			pp_viewmodel_raise_progress = 0.0f;
+			pp_current_weapon = PP_DetectWeaponType(ps);
+		}
+
+		recoil_cfg = &pp_recoil_configs[pp_current_weapon];
+
+		/* Detect firing via kick_angles - server sets these when weapons fire */
+		current_kick = fabs(ps->kick_angles[0]) + fabs(ps->kick_angles[1]) + fabs(ps->kick_angles[2]);
+		if (current_kick > 0.1f && pp_viewmodel_last_kick < 0.1f)
+		{
+			pp_viewmodel_recoil = recoil_cfg->strength;
+			pp_viewmodel_last_fire_time = current_time;
+		}
+		pp_viewmodel_last_kick = current_kick;
+
+		pp_viewmodel_recoil -= dt * recoil_cfg->recovery;
+		if (pp_viewmodel_recoil < 0.0f)
+		{
+			pp_viewmodel_recoil = 0.0f;
+		}
+
+		/* Smoothly animate client-side raise progress towards target */
+		if (pp_viewmodel_raise_progress < raise)
+		{
+			pp_viewmodel_raise_progress += dt * 4.0f; /* raise speed */
+			if (pp_viewmodel_raise_progress > raise)
+			{
+				pp_viewmodel_raise_progress = raise;
+			}
+		}
+		else if (pp_viewmodel_raise_progress > raise)
+		{
+			pp_viewmodel_raise_progress -= dt * 6.0f; /* drop speed (faster) */
+			if (pp_viewmodel_raise_progress < raise)
+			{
+				pp_viewmodel_raise_progress = raise;
+			}
+		}
+
+		raise = pp_viewmodel_raise_progress;
+
+		recoil = pp_viewmodel_recoil * pp_viewmodel_recoil;
+		recoil *= raise;
+
+		t = current_time;
+		time_since_fire = current_time - pp_viewmodel_last_fire_time;
+
+		/* Suppress idle bob while firing or shortly after (2 second cooldown) */
+		if (time_since_fire < 2.0f)
+		{
+			bob_scale = time_since_fire / 2.0f;
+			if (bob_scale < 0.0f)
+			{
+				bob_scale = 0.0f;
+			}
 		}
 		else
 		{
-			gun.oldframe = ops->gunframe;
+			bob_scale = 1.0f;
 		}
+
+		bob_up = sinf(t * 2.0f) * 0.45f * raise * bob_scale;
+		bob_right = sinf(t * 1.5f) * 0.35f * raise * bob_scale;
+
+		VectorMA(gun.origin, bob_up, cl.v_up, gun.origin);
+		VectorMA(gun.origin, bob_right, cl.v_right, gun.origin);
+		gun.angles[ROLL] += sinf(t * 1.5f) * 0.75f * raise * bob_scale;
+		gun.angles[YAW] += sinf(t * 1.0f) * 0.5f * raise * bob_scale;
+
+		hide = 1.0f - raise;
+		VectorMA(gun.origin, -hide * 18.0f, cl.v_up, gun.origin);
+		VectorMA(gun.origin, -hide * 10.0f, cl.v_forward, gun.origin);
+		gun.angles[PITCH] += hide * 22.0f;
+		gun.angles[ROLL] += hide * 8.0f;
+
+		VectorMA(gun.origin, -recoil * recoil_cfg->push_back, cl.v_forward, gun.origin);
+		VectorMA(gun.origin, recoil * 1.0f, cl.v_up, gun.origin);
+		gun.angles[PITCH] -= recoil * recoil_cfg->pitch_kick;
+
+		pp_viewmodel_last_gunindex = ps->gunindex;
 	}
 
 	gun.flags = RF_MINLIGHT | RF_DEPTHHACK | RF_WEAPONMODEL;
