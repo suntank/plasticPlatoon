@@ -580,6 +580,17 @@ ClientObituary(edict_t *self, edict_t *inflictor /* unused */,
 					message = "tried to invade";
 					message2 = "'s personal space";
 					break;
+				case MOD_FLAME:
+					message = "was torched by";
+					message2 = "'s flamethrower";
+					break;
+				case MOD_FLAME_SPLASH:
+					message = "was burned in";
+					message2 = "'s fire";
+					break;
+				case MOD_BURNING:
+					message = "was cooked by";
+					break;
 			}
 
 			if (message)
@@ -2416,6 +2427,9 @@ ClientBeginServerFrame(edict_t *ent)
 	{
 		client->weapon_thunk = false;
 	}
+
+	/* tick burn damage over time */
+	Player_TickBurn(ent);
 
 	if (ent->deadflag)
 	{

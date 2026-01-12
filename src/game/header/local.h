@@ -490,6 +490,9 @@ extern int gibsthisframe;
 #define MOD_TRIGGER_HURT 31
 #define MOD_HIT 32
 #define MOD_TARGET_BLASTER 33
+#define MOD_FLAME 34
+#define MOD_FLAME_SPLASH 35
+#define MOD_BURNING 36
 #define MOD_FRIENDLY_FIRE 0x8000000
 
 /* Easier handling of AI skill levels */
@@ -762,6 +765,11 @@ void fire_rocket(edict_t *self, vec3_t start, vec3_t dir, int damage,
 void fire_rail(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick);
 void fire_bfg(edict_t *self, vec3_t start, vec3_t dir, int damage,
 		int speed, float damage_radius);
+void fire_flame(edict_t *self, vec3_t start, vec3_t dir, int damage, int speed);
+
+/* Burn DOT helpers */
+void Player_ApplyBurn(edict_t *target, edict_t *attacker, float duration);
+void Player_TickBurn(edict_t *ent);
 
 /* g_ptrail.c */
 void PlayerTrail_Init(void);
@@ -986,6 +994,11 @@ struct gclient_s
 
 	/* Plastic Platoon weapon state */
 	pp_client_weapon_state_t weapon_state;
+
+	/* Burn damage over time */
+	float burn_damage_time;      /* next time to apply burn damage */
+	float burn_end_time;         /* when burning stops */
+	edict_t *burn_attacker;      /* who set us on fire */
 };
 
 struct edict_s

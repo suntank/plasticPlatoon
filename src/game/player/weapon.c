@@ -1332,24 +1332,29 @@ Weapon_Blaster(edict_t *ent)
 void
 Weapon_HyperBlaster_Fire(edict_t *ent)
 {
-	float rotation;
-	vec3_t offset;
-	int effect;
-	int damage;
+	vec3_t start, forward, right, offset;
+	int damage = 25;
 
 	if (!ent)
 	{
 		return;
 	}
 
-	ent->client->weapon_sound = gi.soundindex("weapons/hyprbl1a.wav");
-
 	if (!(ent->client->buttons & BUTTON_ATTACK))
 	{
 		ent->client->ps.gunframe++;
+		ent->client->weapon_sound = 0;
 	}
 	else
 	{
+		/* Flamethrower cannot fire underwater */
+		if (ent->waterlevel >= 2)
+		{
+			ent->client->ps.gunframe++;
+			ent->client->weapon_sound = 0;
+			return;
+		}
+
 		if (!ent->client->pers.inventory[ent->client->ammo_index])
 		{
 			if (level.time >= ent->pain_debounce_time)
@@ -1360,34 +1365,25 @@ Weapon_HyperBlaster_Fire(edict_t *ent)
 			}
 
 			NoAmmoWeaponChange(ent);
+			ent->client->weapon_sound = 0;
 		}
 		else
 		{
-			rotation = (ent->client->ps.gunframe - 5) * 2 * M_PI / 6;
-			offset[0] = -4 * sin(rotation);
-			offset[1] = 0;
-			offset[2] = 4 * cos(rotation);
+			/* Flamethrower: fire flame projectile */
+			AngleVectors(ent->client->v_angle, forward, right, NULL);
+			VectorSet(offset, 24, 8, ent->viewheight - 8);
+			P_ProjectSource(ent, offset, forward, right, start);
 
-			if ((ent->client->ps.gunframe == 6) ||
-				(ent->client->ps.gunframe == 9))
-			{
-				effect = EF_HYPERBLASTER;
-			}
-			else
-			{
-				effect = 0;
-			}
+			fire_flame(ent, start, forward, damage, 600);
 
-			if (deathmatch->value)
-			{
-				damage = 15;
-			}
-			else
-			{
-				damage = 20;
-			}
+			/* Muzzle flash */
+			gi.WriteByte(svc_muzzleflash);
+			gi.WriteShort(ent - g_edicts);
+			gi.WriteByte(MZ_HYPERBLASTER | is_silenced);
+			gi.multicast(ent->s.origin, MULTICAST_PVS);
 
-			Blaster_Fire(ent, offset, damage, true, effect);
+			/* Flame sound loop */
+			ent->client->weapon_sound = gi.soundindex("weapons/bfg__l1a.wav");
 
 			if (!((int)dmflags->value & DF_INFINITE_AMMO))
 			{
@@ -1419,8 +1415,6 @@ Weapon_HyperBlaster_Fire(edict_t *ent)
 
 	if (ent->client->ps.gunframe == 12)
 	{
-		gi.sound(ent, CHAN_AUTO, gi.soundindex(
-						"weapons/hyprbd1a.wav"), 1, ATTN_NORM, 0);
 		ent->client->weapon_sound = 0;
 	}
 }

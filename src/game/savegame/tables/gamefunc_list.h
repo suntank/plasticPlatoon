@@ -994,4 +994,6 @@
 {"ai_move", (byte *)ai_move},
 {"AI_SetSightClient", (byte *)AI_SetSightClient},
 {"wait_and_change_think", (byte *)wait_and_change_think},
+{"Player_ApplyBurn", (byte *)Player_ApplyBurn},
+{"Player_TickBurn", (byte *)Player_TickBurn},
 {0, 0}

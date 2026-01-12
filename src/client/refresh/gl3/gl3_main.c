@@ -865,9 +865,12 @@ GL3_DrawSpriteModel(entity_t *e, gl3model_t *currentmodel)
 	float alpha = 1.0F;
 	gl3_3D_vtx_t verts[4];
 	dsprframe_t *frame;
-	float *up, *right;
+	vec3_t up, right;
 	dsprite_t *psprite;
 	gl3image_t *skin;
+	float scale = 1.0f;
+	float roll_rad, c, s;
+	vec3_t rotated_up, rotated_right;
 
 	/* don't even bother culling, because it's just
 	   a single polygon without a surface cache */
@@ -876,9 +879,25 @@ GL3_DrawSpriteModel(entity_t *e, gl3model_t *currentmodel)
 	e->frame %= psprite->numframes;
 	frame = &psprite->frames[e->frame];
 
-	/* normal sprite */
-	up = vup;
-	right = vright;
+	/* Apply roll rotation and size variance from skinnum */
+	roll_rad = e->angles[2] * (M_PI / 180.0f);
+	c = cosf(roll_rad);
+	s = sinf(roll_rad);
+
+	/* Rotate up and right vectors around the view direction */
+	VectorScale(vup, c, rotated_up);
+	VectorMA(rotated_up, s, vright, rotated_up);
+	VectorScale(vright, c, rotated_right);
+	VectorMA(rotated_right, -s, vup, rotated_right);
+
+	/* Size variance: skinnum encodes scale (0=1.0, 1-127 smaller, 128-255 larger) */
+	if (e->skinnum > 0 && e->skinnum < 256)
+	{
+		scale = 0.7f + (e->skinnum / 255.0f) * 0.6f;
+	}
+
+	VectorScale(rotated_up, scale, up);
+	VectorScale(rotated_right, scale, right);
 
 	if (e->flags & RF_TRANSLUCENT)
 	{

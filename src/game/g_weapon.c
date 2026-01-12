@@ -1325,3 +1325,271 @@ fire_bfg(edict_t *self, vec3_t start, vec3_t dir, int damage,
 
 	gi.linkentity(bfg);
 }
+
+/* ====================================================================== */
+
+/* FLAMETHROWER */
+
+#define BURN_DAMAGE_PER_TICK 2
+#define BURN_TICK_INTERVAL 0.5f
+#define BURN_DURATION 4.0f
+#define FIRE_PUDDLE_LIFETIME 4.0f
+#define FIRE_PUDDLE_SPAWN_CHANCE 0.25f
+
+void
+Player_ApplyBurn(edict_t *target, edict_t *attacker, float duration)
+{
+	if (!target || !target->client)
+	{
+		return;
+	}
+
+	target->client->burn_end_time = level.time + duration;
+	target->client->burn_damage_time = level.time + BURN_TICK_INTERVAL;
+	target->client->burn_attacker = attacker;
+}
+
+void
+Player_TickBurn(edict_t *ent)
+{
+	if (!ent || !ent->client)
+	{
+		return;
+	}
+
+	if (ent->health <= 0)
+	{
+		ent->client->burn_end_time = 0;
+		return;
+	}
+
+	if (level.time < ent->client->burn_end_time)
+	{
+		if (level.time >= ent->client->burn_damage_time)
+		{
+			edict_t *attacker = ent->client->burn_attacker;
+			if (!attacker || !attacker->inuse)
+			{
+				attacker = ent;
+			}
+
+			T_Damage(ent, world, attacker, vec3_origin, ent->s.origin,
+					vec3_origin, BURN_DAMAGE_PER_TICK, 0, DAMAGE_NO_ARMOR, MOD_BURNING);
+
+			ent->client->burn_damage_time = level.time + BURN_TICK_INTERVAL;
+		}
+	}
+}
+
+static void
+FirePuddle_Think(edict_t *self)
+{
+	edict_t *ent = NULL;
+
+	if (!self)
+	{
+		return;
+	}
+
+	if (level.time >= self->timestamp)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	while ((ent = findradius(ent, self->s.origin, 40)) != NULL)
+	{
+		if (!ent->takedamage)
+		{
+			continue;
+		}
+
+		if (ent == self->owner)
+		{
+			continue;
+		}
+
+		if (ent->client)
+		{
+			Player_ApplyBurn(ent, self->owner, BURN_DURATION);
+		}
+
+		T_Damage(ent, self, self->owner, vec3_origin, ent->s.origin,
+				vec3_origin, self->dmg, 0, DAMAGE_NO_ARMOR, MOD_FLAME_SPLASH);
+	}
+
+	self->nextthink = level.time + 0.2f;
+}
+
+static void
+spawn_fire_puddle(edict_t *owner, vec3_t origin)
+{
+	edict_t *puddle;
+	trace_t tr;
+	vec3_t end;
+	int contents;
+
+	/* Don't spawn fire puddles in water */
+	contents = gi.pointcontents(origin);
+	if (contents & (CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA))
+	{
+		return;
+	}
+
+	VectorCopy(origin, end);
+	end[2] -= 64;
+
+	tr = gi.trace(origin, NULL, NULL, end, NULL, MASK_SOLID);
+
+	/* Check if the ground position is in water */
+	contents = gi.pointcontents(tr.endpos);
+	if (contents & (CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA))
+	{
+		return;
+	}
+
+	puddle = G_Spawn();
+	VectorCopy(tr.endpos, puddle->s.origin);
+	puddle->s.origin[2] += 1;
+	puddle->s.modelindex = gi.modelindex("sprites/flame.sp2");
+	puddle->s.effects = EF_HYPERBLASTER;
+	puddle->s.renderfx = RF_TRANSLUCENT | RF_FULLBRIGHT;
+	puddle->solid = SOLID_NOT;
+	puddle->movetype = MOVETYPE_NONE;
+	VectorSet(puddle->mins, -16, -16, 0);
+	VectorSet(puddle->maxs, 16, 16, 8);
+	puddle->owner = owner;
+	puddle->dmg = 2;
+	puddle->timestamp = level.time + FIRE_PUDDLE_LIFETIME;
+	puddle->think = FirePuddle_Think;
+	puddle->nextthink = level.time + 0.1f;
+	puddle->classname = "fire_puddle";
+
+	gi.linkentity(puddle);
+}
+
+static void
+Flame_Think(edict_t *self)
+{
+	if (!self)
+	{
+		return;
+	}
+
+	/* Flame dies in water */
+	if (self->waterlevel)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	/* Check lifetime */
+	if (level.time >= self->timestamp)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	self->nextthink = level.time + 0.1f;
+}
+
+static void
+Flame_Touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
+{
+	qboolean hit_world;
+
+	if (!self || !other)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	if (other == self->owner)
+	{
+		return;
+	}
+
+	if (surf && (surf->flags & SURF_SKY))
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	/* Flame dies in water */
+	if (self->waterlevel)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	hit_world = !other->takedamage;
+
+	if (other->takedamage)
+	{
+		T_Damage(other, self, self->owner, self->velocity, self->s.origin,
+				plane ? plane->normal : vec3_origin, self->dmg, 0, 0, MOD_FLAME);
+
+		if (other->client)
+		{
+			Player_ApplyBurn(other, self->owner, BURN_DURATION);
+		}
+	}
+
+	if (hit_world && random() < FIRE_PUDDLE_SPAWN_CHANCE)
+	{
+		spawn_fire_puddle(self->owner, self->s.origin);
+	}
+
+	G_FreeEdict(self);
+}
+
+void
+fire_flame(edict_t *self, vec3_t start, vec3_t dir, int damage, int speed)
+{
+	edict_t *flame;
+	vec3_t angles;
+	vec3_t forward, right, up;
+	vec3_t spread_dir;
+	float spread = 0.05f;
+
+	if (!self)
+	{
+		return;
+	}
+
+	vectoangles(dir, angles);
+	AngleVectors(angles, forward, right, up);
+
+	/* Add accuracy variance */
+	VectorCopy(dir, spread_dir);
+	spread_dir[0] += crandom() * spread;
+	spread_dir[1] += crandom() * spread;
+	spread_dir[2] += crandom() * spread * 0.5f;
+	VectorNormalize(spread_dir);
+
+	flame = G_Spawn();
+	VectorCopy(start, flame->s.origin);
+	VectorCopy(start, flame->s.old_origin);
+	vectoangles(spread_dir, flame->s.angles);
+	flame->s.angles[ROLL] = random() * 360.0f;
+	flame->s.skinnum = 100 + (int)(random() * 100);
+	VectorScale(spread_dir, speed, flame->velocity);
+	VectorMA(flame->velocity, 80, up, flame->velocity);
+	flame->movetype = MOVETYPE_TOSS;
+	flame->clipmask = MASK_SHOT;
+	flame->solid = SOLID_BBOX;
+	flame->s.effects = EF_HYPERBLASTER;
+	flame->s.renderfx = RF_TRANSLUCENT | RF_FULLBRIGHT;
+	VectorClear(flame->mins);
+	VectorClear(flame->maxs);
+	flame->s.modelindex = gi.modelindex("sprites/flame.sp2");
+	flame->owner = self;
+	flame->touch = Flame_Touch;
+	flame->nextthink = level.time + 0.1f;
+	flame->think = Flame_Think;
+	flame->timestamp = level.time + 2.0f;
+	flame->dmg = damage;
+	flame->classname = "flame";
+
+	gi.linkentity(flame);
+}
