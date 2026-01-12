@@ -571,7 +571,9 @@ CL_AddPacketEntities(frame_t *frame)
 				}
 				else
 				{
-					V_AddLight(ent.origin, 200, 1, 1, 0);
+					/* Flame projectile: orange trail and light */
+					CL_FlameTrail(cent->lerp_origin, ent.origin);
+					V_AddLight(ent.origin, 150, 1.0f, 0.5f, 0.1f);
 				}
 			}
 			else if (effects & EF_GIB)

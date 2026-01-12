@@ -1313,6 +1313,11 @@ CL_ParseTEnt(void)
 			CL_WidowSplash(pos);
 			break;
 
+		case TE_FLAME:
+			MSG_ReadPos(&net_message, pos);
+			CL_FlameEffect(pos);
+			break;
+
 		default:
 			Com_Error(ERR_DROP, "CL_ParseTEnt: bad type");
 	}

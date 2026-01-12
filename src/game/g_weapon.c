@@ -1328,13 +1328,41 @@ fire_bfg(edict_t *self, vec3_t start, vec3_t dir, int damage,
 
 /* ====================================================================== */
 
-/* FLAMETHROWER */
+/* FLAMETHROWER - Enhanced System */
 
+/* Burn damage configuration */
 #define BURN_DAMAGE_PER_TICK 2
 #define BURN_TICK_INTERVAL 0.5f
-#define BURN_DURATION 4.0f
-#define FIRE_PUDDLE_LIFETIME 4.0f
-#define FIRE_PUDDLE_SPAWN_CHANCE 0.25f
+#define BURN_DURATION_DIRECT 3.0f      /* Shorter, stronger burn from direct hit */
+#define BURN_DURATION_AREA 5.0f        /* Longer, weaker burn from puddles */
+
+/* Fire puddle configuration */
+#define FIRE_PUDDLE_HEAT_THRESHOLD 3.0f  /* Heat needed to ignite a puddle */
+#define FIRE_PUDDLE_HEAT_PER_FLAME 1.0f  /* Heat added per flame impact */
+#define FIRE_PUDDLE_HEAT_DECAY 0.5f      /* Heat decay per second */
+#define FIRE_PUDDLE_MAX_PER_PLAYER 6     /* Max puddles per player */
+#define FIRE_PUDDLE_CHAIN_RANGE 80.0f    /* Range for chain ignition */
+#define FIRE_PUDDLE_CHAIN_DELAY 0.3f     /* Delay between chain ignitions */
+#define FIRE_PUDDLE_MAX_CHAINS 2         /* Max chain ignitions per second */
+
+/* Puddle tier configuration */
+#define PUDDLE_TIER_SMALL 0
+#define PUDDLE_TIER_MEDIUM 1
+#define PUDDLE_TIER_LARGE 2
+
+/* Tier thresholds (heat accumulated beyond ignition) */
+#define PUDDLE_TIER_MEDIUM_HEAT 2.0f
+#define PUDDLE_TIER_LARGE_HEAT 4.0f
+
+/* Tier properties: {radius, damage, lifetime, sprite_frame} */
+static const float puddle_tier_radius[] = {32.0f, 48.0f, 64.0f};
+static const int puddle_tier_damage[] = {2, 3, 4};
+static const float puddle_tier_lifetime[] = {4.0f, 5.0f, 6.0f};
+
+/* Surface types */
+#define SURFACE_NORMAL 0
+#define SURFACE_METAL 1
+#define SURFACE_WATER 2
 
 void
 Player_ApplyBurn(edict_t *target, edict_t *attacker, float duration)
@@ -1344,8 +1372,18 @@ Player_ApplyBurn(edict_t *target, edict_t *attacker, float duration)
 		return;
 	}
 
-	target->client->burn_end_time = level.time + duration;
-	target->client->burn_damage_time = level.time + BURN_TICK_INTERVAL;
+	/* Only extend burn if new duration would be longer */
+	float new_end = level.time + duration;
+	if (new_end > target->client->burn_end_time)
+	{
+		target->client->burn_end_time = new_end;
+	}
+	
+	/* Always update damage tick and attacker */
+	if (level.time >= target->client->burn_damage_time)
+	{
+		target->client->burn_damage_time = level.time + BURN_TICK_INTERVAL;
+	}
 	target->client->burn_attacker = attacker;
 }
 
@@ -1376,15 +1414,131 @@ Player_TickBurn(edict_t *ent)
 			T_Damage(ent, world, attacker, vec3_origin, ent->s.origin,
 					vec3_origin, BURN_DAMAGE_PER_TICK, 0, DAMAGE_NO_ARMOR, MOD_BURNING);
 
+			/* Send burn effect to client for smoke/ember trail */
+			gi.WriteByte(svc_temp_entity);
+			gi.WriteByte(TE_FLAME);
+			gi.WritePosition(ent->s.origin);
+			gi.multicast(ent->s.origin, MULTICAST_PVS);
+
 			ent->client->burn_damage_time = level.time + BURN_TICK_INTERVAL;
 		}
 	}
+}
+
+/* Count active fire puddles owned by a player */
+static int
+count_player_puddles(edict_t *owner)
+{
+	edict_t *ent = NULL;
+	int count = 0;
+
+	while ((ent = G_Find(ent, FOFS(classname), "fire_puddle")) != NULL)
+	{
+		if (ent->owner == owner)
+		{
+			count++;
+		}
+	}
+
+	return count;
+}
+
+/* Find oldest puddle owned by player */
+static edict_t *
+find_oldest_puddle(edict_t *owner)
+{
+	edict_t *ent = NULL;
+	edict_t *oldest = NULL;
+	float oldest_time = level.time;
+
+	while ((ent = G_Find(ent, FOFS(classname), "fire_puddle")) != NULL)
+	{
+		if (ent->owner == owner)
+		{
+			float spawn_time = ent->timestamp - puddle_tier_lifetime[ent->count];
+			if (spawn_time < oldest_time)
+			{
+				oldest_time = spawn_time;
+				oldest = ent;
+			}
+		}
+	}
+
+	return oldest;
+}
+
+/* Determine surface type at position */
+static int
+get_surface_type(vec3_t pos, csurface_t *surf)
+{
+	int contents = gi.pointcontents(pos);
+	
+	if (contents & (CONTENTS_WATER | CONTENTS_SLIME))
+	{
+		return SURFACE_WATER;
+	}
+	
+	/* Check for metal by texture name (starts with "metal" or contains "metal") */
+	if (surf && surf->name[0])
+	{
+		if (Q_strncasecmp(surf->name, "metal", 5) == 0 ||
+			strstr(surf->name, "metal") != NULL)
+		{
+			return SURFACE_METAL;
+		}
+	}
+	
+	return SURFACE_NORMAL;
+}
+
+static void FirePuddle_Think(edict_t *self);
+static void spawn_fire_puddle_at(edict_t *owner, vec3_t origin, int tier, int surface_type);
+
+/* Chain ignition - spread fire to nearby puddles */
+static void
+try_chain_ignition(edict_t *self)
+{
+	edict_t *ent = NULL;
+	int chains_this_frame = 0;
+	
+	if (level.time < self->pain_debounce_time)
+	{
+		return;
+	}
+
+	while ((ent = G_Find(ent, FOFS(classname), "fire_puddle")) != NULL)
+	{
+		if (ent == self || !ent->inuse)
+		{
+			continue;
+		}
+
+		/* Check distance */
+		vec3_t diff;
+		VectorSubtract(ent->s.origin, self->s.origin, diff);
+		float dist = VectorLength(diff);
+
+		if (dist < FIRE_PUDDLE_CHAIN_RANGE)
+		{
+			/* Boost the nearby puddle's tier if possible */
+			if (ent->count < PUDDLE_TIER_LARGE && chains_this_frame < FIRE_PUDDLE_MAX_CHAINS)
+			{
+				ent->count++;
+				ent->timestamp = level.time + puddle_tier_lifetime[ent->count];
+				chains_this_frame++;
+			}
+		}
+	}
+
+	self->pain_debounce_time = level.time + FIRE_PUDDLE_CHAIN_DELAY;
 }
 
 static void
 FirePuddle_Think(edict_t *self)
 {
 	edict_t *ent = NULL;
+	float radius;
+	int tier;
 
 	if (!self)
 	{
@@ -1397,7 +1551,20 @@ FirePuddle_Think(edict_t *self)
 		return;
 	}
 
-	while ((ent = findradius(ent, self->s.origin, 40)) != NULL)
+	tier = self->count;
+	radius = puddle_tier_radius[tier];
+
+	/* Try chain ignition */
+	try_chain_ignition(self);
+
+	/* Emit effects for client (smoke, embers, light flicker) */
+	gi.WriteByte(svc_temp_entity);
+	gi.WriteByte(TE_FLAME);
+	gi.WritePosition(self->s.origin);
+	gi.multicast(self->s.origin, MULTICAST_PVS);
+
+	/* Damage nearby entities */
+	while ((ent = findradius(ent, self->s.origin, radius)) != NULL)
 	{
 		if (!ent->takedamage)
 		{
@@ -1411,31 +1578,132 @@ FirePuddle_Think(edict_t *self)
 
 		if (ent->client)
 		{
-			Player_ApplyBurn(ent, self->owner, BURN_DURATION);
+			Player_ApplyBurn(ent, self->owner, BURN_DURATION_AREA);
 		}
 
 		T_Damage(ent, self, self->owner, vec3_origin, ent->s.origin,
-				vec3_origin, self->dmg, 0, DAMAGE_NO_ARMOR, MOD_FLAME_SPLASH);
+				vec3_origin, puddle_tier_damage[tier], 0, DAMAGE_NO_ARMOR, MOD_FLAME_SPLASH);
 	}
 
 	self->nextthink = level.time + 0.2f;
 }
 
+/* Heat spot tracking for ignition system */
+typedef struct heat_spot_s
+{
+	vec3_t origin;
+	float heat;
+	float last_update;
+	edict_t *owner;
+	qboolean active;
+} heat_spot_t;
+
+#define MAX_HEAT_SPOTS 32
+static heat_spot_t heat_spots[MAX_HEAT_SPOTS];
+
+static heat_spot_t *
+find_or_create_heat_spot(vec3_t origin, edict_t *owner)
+{
+	int i;
+	heat_spot_t *oldest = NULL;
+	float oldest_time = level.time;
+	heat_spot_t *free_spot = NULL;
+
+	/* Find existing spot near this location or find free/oldest spot */
+	for (i = 0; i < MAX_HEAT_SPOTS; i++)
+	{
+		if (heat_spots[i].active)
+		{
+			vec3_t diff;
+			VectorSubtract(heat_spots[i].origin, origin, diff);
+			
+			if (VectorLength(diff) < 32.0f && heat_spots[i].owner == owner)
+			{
+				return &heat_spots[i];
+			}
+
+			if (heat_spots[i].last_update < oldest_time)
+			{
+				oldest_time = heat_spots[i].last_update;
+				oldest = &heat_spots[i];
+			}
+		}
+		else if (!free_spot)
+		{
+			free_spot = &heat_spots[i];
+		}
+	}
+
+	/* Use free spot or recycle oldest */
+	heat_spot_t *spot = free_spot ? free_spot : oldest;
+	if (spot)
+	{
+		VectorCopy(origin, spot->origin);
+		spot->heat = 0;
+		spot->last_update = level.time;
+		spot->owner = owner;
+		spot->active = true;
+	}
+
+	return spot;
+}
+
 static void
-spawn_fire_puddle(edict_t *owner, vec3_t origin)
+update_heat_spots(void)
+{
+	int i;
+	float dt = FRAMETIME;
+
+	for (i = 0; i < MAX_HEAT_SPOTS; i++)
+	{
+		if (heat_spots[i].active)
+		{
+			/* Decay heat over time */
+			heat_spots[i].heat -= FIRE_PUDDLE_HEAT_DECAY * dt;
+			
+			if (heat_spots[i].heat <= 0)
+			{
+				heat_spots[i].active = false;
+			}
+		}
+	}
+}
+
+static void
+spawn_fire_puddle_at(edict_t *owner, vec3_t origin, int tier, int surface_type)
 {
 	edict_t *puddle;
 	trace_t tr;
 	vec3_t end;
 	int contents;
 
-	/* Don't spawn fire puddles in water */
+	/* Don't spawn fire puddles in water/slime */
 	contents = gi.pointcontents(origin);
 	if (contents & (CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA))
 	{
+		/* Create steam effect instead */
+		gi.WriteByte(svc_temp_entity);
+		gi.WriteByte(TE_STEAM);
+		gi.WritePosition(origin);
+		gi.WriteDir(vec3_origin);
+		gi.WriteByte(20); /* count */
+		gi.WriteByte(0xe0); /* color */
+		gi.WriteShort(300); /* magnitude */
+		gi.multicast(origin, MULTICAST_PVS);
 		return;
 	}
 
+	/* Enforce per-player puddle cap */
+	if (count_player_puddles(owner) >= FIRE_PUDDLE_MAX_PER_PLAYER)
+	{
+		edict_t *oldest = find_oldest_puddle(owner);
+		if (oldest)
+		{
+			G_FreeEdict(oldest);
+		}
+	}
+
+	/* Find ground */
 	VectorCopy(origin, end);
 	end[2] -= 64;
 
@@ -1448,29 +1716,99 @@ spawn_fire_puddle(edict_t *owner, vec3_t origin)
 		return;
 	}
 
+	/* Metal surfaces: shorter duration, more intense initial burst */
+	if (surface_type == SURFACE_METAL)
+	{
+		/* Sparks effect for metal */
+		gi.WriteByte(svc_temp_entity);
+		gi.WriteByte(TE_SPARKS);
+		gi.WritePosition(tr.endpos);
+		gi.WriteDir(tr.plane.normal);
+		gi.multicast(tr.endpos, MULTICAST_PVS);
+	}
+
 	puddle = G_Spawn();
 	VectorCopy(tr.endpos, puddle->s.origin);
 	puddle->s.origin[2] += 1;
 	puddle->s.modelindex = gi.modelindex("sprites/flame.sp2");
 	puddle->s.effects = EF_HYPERBLASTER;
 	puddle->s.renderfx = RF_TRANSLUCENT | RF_FULLBRIGHT;
+	puddle->s.frame = tier; /* Use frame to indicate tier for client */
 	puddle->solid = SOLID_NOT;
 	puddle->movetype = MOVETYPE_NONE;
-	VectorSet(puddle->mins, -16, -16, 0);
-	VectorSet(puddle->maxs, 16, 16, 8);
+	
+	/* Size based on tier */
+	float half_radius = puddle_tier_radius[tier] * 0.5f;
+	VectorSet(puddle->mins, -half_radius, -half_radius, 0);
+	VectorSet(puddle->maxs, half_radius, half_radius, 8);
+	
 	puddle->owner = owner;
-	puddle->dmg = 2;
-	puddle->timestamp = level.time + FIRE_PUDDLE_LIFETIME;
+	puddle->dmg = puddle_tier_damage[tier];
+	puddle->count = tier; /* Store tier in count */
+	
+	/* Metal: shorter lifetime */
+	float lifetime = puddle_tier_lifetime[tier];
+	if (surface_type == SURFACE_METAL)
+	{
+		lifetime *= 0.6f;
+	}
+	
+	puddle->timestamp = level.time + lifetime;
 	puddle->think = FirePuddle_Think;
 	puddle->nextthink = level.time + 0.1f;
+	puddle->pain_debounce_time = 0; /* Used for chain ignition timing */
 	puddle->classname = "fire_puddle";
 
 	gi.linkentity(puddle);
 }
 
+/* Add heat to a location, potentially igniting a fire puddle */
+static void
+add_heat_at_location(edict_t *owner, vec3_t origin, csurface_t *surf)
+{
+	heat_spot_t *spot = find_or_create_heat_spot(origin, owner);
+	
+	if (!spot)
+	{
+		return;
+	}
+
+	spot->heat += FIRE_PUDDLE_HEAT_PER_FLAME;
+	spot->last_update = level.time;
+
+	/* Check if we've reached ignition threshold */
+	if (spot->heat >= FIRE_PUDDLE_HEAT_THRESHOLD)
+	{
+		/* Determine tier based on accumulated heat */
+		int tier = PUDDLE_TIER_SMALL;
+		float excess_heat = spot->heat - FIRE_PUDDLE_HEAT_THRESHOLD;
+		
+		if (excess_heat >= PUDDLE_TIER_LARGE_HEAT)
+		{
+			tier = PUDDLE_TIER_LARGE;
+		}
+		else if (excess_heat >= PUDDLE_TIER_MEDIUM_HEAT)
+		{
+			tier = PUDDLE_TIER_MEDIUM;
+		}
+
+		int surface_type = get_surface_type(origin, surf);
+		spawn_fire_puddle_at(owner, spot->origin, tier, surface_type);
+		
+		/* Reset heat spot */
+		spot->active = false;
+	}
+}
+
+#define FLAME_GROWTH_TIME 0.5f
+#define FLAME_GROWTH_FRAMES 5
+
 static void
 Flame_Think(edict_t *self)
 {
+	float age;
+	int growth_frame;
+
 	if (!self)
 	{
 		return;
@@ -1479,6 +1817,16 @@ Flame_Think(edict_t *self)
 	/* Flame dies in water */
 	if (self->waterlevel)
 	{
+		/* Steam effect */
+		gi.WriteByte(svc_temp_entity);
+		gi.WriteByte(TE_STEAM);
+		gi.WritePosition(self->s.origin);
+		gi.WriteDir(vec3_origin);
+		gi.WriteByte(10);
+		gi.WriteByte(0xe0);
+		gi.WriteShort(200);
+		gi.multicast(self->s.origin, MULTICAST_PVS);
+		
 		G_FreeEdict(self);
 		return;
 	}
@@ -1490,6 +1838,24 @@ Flame_Think(edict_t *self)
 		return;
 	}
 
+	/* Calculate age and set frame for growth effect */
+	/* delay stores spawn time, timestamp stores death time */
+	age = level.time - self->delay;
+	if (age < FLAME_GROWTH_TIME)
+	{
+		/* Scale from 0 to FLAME_GROWTH_FRAMES over FLAME_GROWTH_TIME */
+		growth_frame = (int)((age / FLAME_GROWTH_TIME) * FLAME_GROWTH_FRAMES);
+		if (growth_frame > FLAME_GROWTH_FRAMES - 1)
+		{
+			growth_frame = FLAME_GROWTH_FRAMES - 1;
+		}
+	}
+	else
+	{
+		growth_frame = FLAME_GROWTH_FRAMES - 1;
+	}
+	self->s.frame = growth_frame;
+
 	self->nextthink = level.time + 0.1f;
 }
 
@@ -1497,6 +1863,7 @@ static void
 Flame_Touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
 	qboolean hit_world;
+	int surface_type;
 
 	if (!self || !other)
 	{
@@ -1523,21 +1890,50 @@ Flame_Touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 	}
 
 	hit_world = !other->takedamage;
+	surface_type = get_surface_type(self->s.origin, surf);
 
 	if (other->takedamage)
 	{
+		/* Direct hit: stronger initial damage, shorter burn */
 		T_Damage(other, self, self->owner, self->velocity, self->s.origin,
 				plane ? plane->normal : vec3_origin, self->dmg, 0, 0, MOD_FLAME);
 
 		if (other->client)
 		{
-			Player_ApplyBurn(other, self->owner, BURN_DURATION);
+			Player_ApplyBurn(other, self->owner, BURN_DURATION_DIRECT);
+			
+			/* Ignite flash effect */
+			gi.WriteByte(svc_temp_entity);
+			gi.WriteByte(TE_FLAME);
+			gi.WritePosition(other->s.origin);
+			gi.multicast(other->s.origin, MULTICAST_PVS);
+		}
+
+		/* Sparks if hitting armored target */
+		if (other->client && other->client->pers.inventory[ARMOR_BODY])
+		{
+			gi.WriteByte(svc_temp_entity);
+			gi.WriteByte(TE_SPARKS);
+			gi.WritePosition(self->s.origin);
+			gi.WriteDir(plane ? plane->normal : vec3_origin);
+			gi.multicast(self->s.origin, MULTICAST_PVS);
 		}
 	}
 
-	if (hit_world && random() < FIRE_PUDDLE_SPAWN_CHANCE)
+	if (hit_world)
 	{
-		spawn_fire_puddle(self->owner, self->s.origin);
+		/* Add heat to this location (heat accumulation system) */
+		add_heat_at_location(self->owner, self->s.origin, surf);
+
+		/* Sparks on metal surfaces */
+		if (surface_type == SURFACE_METAL)
+		{
+			gi.WriteByte(svc_temp_entity);
+			gi.WriteByte(TE_SPARKS);
+			gi.WritePosition(self->s.origin);
+			gi.WriteDir(plane ? plane->normal : vec3_origin);
+			gi.multicast(self->s.origin, MULTICAST_PVS);
+		}
 	}
 
 	G_FreeEdict(self);
@@ -1557,6 +1953,9 @@ fire_flame(edict_t *self, vec3_t start, vec3_t dir, int damage, int speed)
 		return;
 	}
 
+	/* Update heat spot decay */
+	update_heat_spots();
+
 	vectoangles(dir, angles);
 	AngleVectors(angles, forward, right, up);
 
@@ -1572,7 +1971,11 @@ fire_flame(edict_t *self, vec3_t start, vec3_t dir, int damage, int speed)
 	VectorCopy(start, flame->s.old_origin);
 	vectoangles(spread_dir, flame->s.angles);
 	flame->s.angles[ROLL] = random() * 360.0f;
-	flame->s.skinnum = 100 + (int)(random() * 100);
+	
+	/* Frame 0 = smallest, grows over FLAME_GROWTH_TIME */
+	flame->s.frame = 0;
+	flame->s.skinnum = 0;
+	
 	VectorScale(spread_dir, speed, flame->velocity);
 	VectorMA(flame->velocity, 80, up, flame->velocity);
 	flame->movetype = MOVETYPE_TOSS;
@@ -1587,6 +1990,7 @@ fire_flame(edict_t *self, vec3_t start, vec3_t dir, int damage, int speed)
 	flame->touch = Flame_Touch;
 	flame->nextthink = level.time + 0.1f;
 	flame->think = Flame_Think;
+	flame->delay = level.time;           /* Store spawn time for growth calculation */
 	flame->timestamp = level.time + 2.0f;
 	flame->dmg = damage;
 	flame->classname = "flame";

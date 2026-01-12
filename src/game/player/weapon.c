@@ -2000,7 +2000,7 @@ Weapon_Railgun(edict_t *ent)
 
 /* ====================================================================== */
 
-/* BFG10K */
+/* Mortar Cannon (formerly BFG10K) */
 
 void
 weapon_bfg_fire(edict_t *ent)
@@ -2023,9 +2023,8 @@ weapon_bfg_fire(edict_t *ent)
 		damage = 500;
 	}
 
-	/* cells can go down during windup (from power armor hits), so
-	   check again and abort firing if we don't have enough now */
-	if (ent->client->pers.inventory[ent->client->ammo_index] < 50)
+	/* Check if we have ammo */
+	if (ent->client->pers.inventory[ent->client->ammo_index] < 1)
 	{
 		ent->client->ps.gunframe++;
 		return;
@@ -2062,7 +2061,7 @@ weapon_bfg_fire(edict_t *ent)
 
 	if (!((int)dmflags->value & DF_INFINITE_AMMO))
 	{
-		ent->client->pers.inventory[ent->client->ammo_index] -= 50;
+		ent->client->pers.inventory[ent->client->ammo_index] -= 1;
 	}
 }
 

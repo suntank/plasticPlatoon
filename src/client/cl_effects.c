@@ -121,9 +121,11 @@ CL_AddMuzzleFlash(void)
 				S_RegisterSound("weapons/hyprbf1a.wav"), volume, ATTN_NORM, 0);
 			break;
 		case MZ_HYPERBLASTER:
-			dl->color[0] = 1;
-			dl->color[1] = 1;
-			dl->color[2] = 0;
+			/* Flamethrower: orange/red muzzle flash */
+			dl->color[0] = 1.0f;
+			dl->color[1] = 0.5f;
+			dl->color[2] = 0.1f;
+			dl->radius = 150.0f + (randk() & 31);
 			S_StartSound(NULL, i, CHAN_WEAPON,
 				S_RegisterSound("weapons/hyprbf1a.wav"), volume, ATTN_NORM, 0);
 			break;
@@ -3016,3 +3018,180 @@ CL_BlasterTrail2(vec3_t start, vec3_t end)
 	}
 }
 
+/*
+ * Flame effect for fire puddles and burning entities
+ * Creates smoke, embers, and dynamic flickering light
+ */
+void
+CL_FlameEffect(vec3_t org)
+{
+	int i;
+	cparticle_t *p;
+	float time;
+	cdlight_t *dl;
+
+	time = (float)cl.time;
+
+	/* Dynamic flickering light */
+	dl = CL_AllocDlight(0);
+	VectorCopy(org, dl->origin);
+	dl->radius = 80.0f + (randk() & 31);
+	dl->die = cl.time + 100;
+	dl->decay = 300;
+	dl->minlight = 32;
+	dl->color[0] = 1.0f;
+	dl->color[1] = 0.5f + frandk() * 0.2f;
+	dl->color[2] = 0.1f;
+
+	/* Smoke particles - slow rising, gray */
+	for (i = 0; i < 3; i++)
+	{
+		if (!free_particles)
+		{
+			return;
+		}
+
+		p = free_particles;
+		free_particles = p->next;
+		p->next = active_particles;
+		active_particles = p;
+
+		p->time = time;
+		p->color = 0x00 + (randk() & 3);
+
+		p->org[0] = org[0] + crandk() * 8;
+		p->org[1] = org[1] + crandk() * 8;
+		p->org[2] = org[2] + frandk() * 4;
+
+		p->vel[0] = crandk() * 4;
+		p->vel[1] = crandk() * 4;
+		p->vel[2] = 15 + frandk() * 10;
+
+		p->accel[0] = crandk() * 2;
+		p->accel[1] = crandk() * 2;
+		p->accel[2] = 5;
+
+		p->alpha = 0.6f;
+		p->alphavel = -0.3f;
+	}
+
+	/* Ember particles - bright orange/yellow */
+	for (i = 0; i < 5; i++)
+	{
+		if (!free_particles)
+		{
+			return;
+		}
+
+		p = free_particles;
+		free_particles = p->next;
+		p->next = active_particles;
+		active_particles = p;
+
+		p->time = time;
+		p->color = 0xe0 + (randk() & 7);
+
+		p->org[0] = org[0] + crandk() * 12;
+		p->org[1] = org[1] + crandk() * 12;
+		p->org[2] = org[2] + frandk() * 8;
+
+		p->vel[0] = crandk() * 15;
+		p->vel[1] = crandk() * 15;
+		p->vel[2] = 40 + frandk() * 30;
+
+		p->accel[0] = crandk() * 5;
+		p->accel[1] = crandk() * 5;
+		p->accel[2] = -PARTICLE_GRAVITY * 0.3f;
+
+		p->alpha = 1.0f;
+		p->alphavel = -2.0f;
+	}
+
+	/* Core flame particles - bright yellow/white */
+	for (i = 0; i < 2; i++)
+	{
+		if (!free_particles)
+		{
+			return;
+		}
+
+		p = free_particles;
+		free_particles = p->next;
+		p->next = active_particles;
+		active_particles = p;
+
+		p->time = time;
+		p->color = 0xd0 + (randk() & 7);
+
+		p->org[0] = org[0] + crandk() * 4;
+		p->org[1] = org[1] + crandk() * 4;
+		p->org[2] = org[2] + frandk() * 2;
+
+		p->vel[0] = crandk() * 8;
+		p->vel[1] = crandk() * 8;
+		p->vel[2] = 20 + frandk() * 15;
+
+		p->accel[0] = 0;
+		p->accel[1] = 0;
+		p->accel[2] = 10;
+
+		p->alpha = 1.0f;
+		p->alphavel = -3.0f;
+	}
+}
+
+/*
+ * Trail effect for flame projectiles - orange particles
+ */
+void
+CL_FlameTrail(vec3_t start, vec3_t end)
+{
+	vec3_t move;
+	vec3_t vec;
+	float len;
+	cparticle_t *p;
+	float time;
+
+	time = (float)cl.time;
+
+	VectorCopy(start, move);
+	VectorSubtract(end, start, vec);
+	len = VectorNormalize(vec);
+
+	VectorScale(vec, 8, vec);
+
+	while (len > 0)
+	{
+		len -= 8;
+
+		if (!free_particles)
+		{
+			return;
+		}
+
+		p = free_particles;
+		free_particles = p->next;
+		p->next = active_particles;
+		active_particles = p;
+
+		p->time = time;
+		p->color = 0xe0 + (randk() & 7);
+
+		p->org[0] = move[0] + crandk() * 2;
+		p->org[1] = move[1] + crandk() * 2;
+		p->org[2] = move[2] + crandk() * 2;
+
+		p->vel[0] = crandk() * 10;
+		p->vel[1] = crandk() * 10;
+		p->vel[2] = 15 + frandk() * 10;
+
+		p->accel[0] = 0;
+		p->accel[1] = 0;
+		p->accel[2] = 5;
+
+		p->alpha = 0.8f;
+		p->alphavel = -1.5f;
+
+		VectorAdd(move, vec, move);
+	}
+}

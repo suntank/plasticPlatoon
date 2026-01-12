@@ -29,8 +29,9 @@ typedef enum {
 	AMMO_THROWABLE_GRENADE,     /* Hand grenades */
 	AMMO_THROWABLE_MINE,        /* Mines */
 	AMMO_THROWABLE_SATCHEL,     /* Satchel charges */
-	AMMO_FLAME_FUEL,            /* Flamethrower (no pickups) */
+	AMMO_FLAME_FUEL,            /* Flamethrower (uses cells) */
 	AMMO_AIRSTRIKE_CHARGE,      /* Airstrike marker (single use) */
+	AMMO_MORTAR_ROUNDS,         /* Mortar cannon (no pickup, weapon only) */
 	AMMO_PP_MAX
 } pp_ammo_id_t;
 
@@ -46,6 +47,7 @@ typedef enum {
 #define AMMO_CAP_THROWABLE_SATCHEL  3
 #define AMMO_CAP_FLAME_FUEL         100
 #define AMMO_CAP_AIRSTRIKE_CHARGE   1
+#define AMMO_CAP_MORTAR_ROUNDS      6
 
 /* ============================================================================
  * WEAPON IDS
@@ -58,11 +60,11 @@ typedef enum {
 	WEAP_PP_DOUBLE_BARREL,       /* Replaces Super Shotgun */
 	WEAP_PP_SMG,                 /* Replaces Machinegun */
 	WEAP_PP_M16,                 /* Replaces Chaingun */
-	WEAP_PP_M60,                 /* Replaces Hyperblaster */
+	WEAP_PP_FLAMETHROWER,        /* Replaces Hyperblaster */
 	WEAP_PP_GRENADE_LAUNCHER,    /* Replaces Grenade Launcher */
 	WEAP_PP_BAZOOKA,             /* Replaces Rocket Launcher */
 	WEAP_PP_SNIPER_RIFLE,        /* Replaces Railgun */
-	WEAP_PP_FLAMETHROWER,        /* Replaces BFG */
+	WEAP_PP_MORTAR_CANNON,       /* Replaces BFG */
 	WEAP_PP_AIRSTRIKE_MARKER,    /* New ultimate */
 	WEAP_PP_MAX
 } pp_weapon_id_t;

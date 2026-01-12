@@ -80,7 +80,7 @@ WITH_RPATH:=yes
 
 # WITH_SDL3
 # When disabled SDL 2 is used instead of SDL 3.
-WITH_SDL3:=yes
+WITH_SDL3:=no
 
 # WITH_SYSTEMWIDE
 # Enable systemwide installation of game assets.

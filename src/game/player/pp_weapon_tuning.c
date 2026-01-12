@@ -43,7 +43,8 @@ static const char *ammo_names[AMMO_PP_MAX] = {
 	"Mines",
 	"Satchels",
 	"Fuel",
-	"Airstrike"
+	"Airstrike",
+	"Mortar Rounds"
 };
 
 /* ============================================================================
@@ -61,7 +62,8 @@ static const int default_ammo_caps[AMMO_PP_MAX] = {
 	AMMO_CAP_THROWABLE_MINE,     /* AMMO_THROWABLE_MINE */
 	AMMO_CAP_THROWABLE_SATCHEL,  /* AMMO_THROWABLE_SATCHEL */
 	AMMO_CAP_FLAME_FUEL,         /* AMMO_FLAME_FUEL */
-	AMMO_CAP_AIRSTRIKE_CHARGE    /* AMMO_AIRSTRIKE_CHARGE */
+	AMMO_CAP_AIRSTRIKE_CHARGE,   /* AMMO_AIRSTRIKE_CHARGE */
+	AMMO_CAP_MORTAR_ROUNDS       /* AMMO_MORTAR_ROUNDS */
 };
 
 /* ============================================================================
@@ -239,39 +241,39 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		.frame_deactivate_last = 64
 	},
 
-	/* WEAP_PP_M60 - Replaces Hyperblaster */
+	/* WEAP_PP_FLAMETHROWER - Replaces Hyperblaster */
 	{
-		.id = WEAP_PP_M60,
+		.id = WEAP_PP_FLAMETHROWER,
 		.classname = "weapon_hyperblaster",
-		.ui_name = "M60",
-		.ammo_type = AMMO_HEAVY_ROUNDS,
+		.ui_name = "M1 Flamethrower",
+		.ammo_type = AMMO_FLAME_FUEL,
 		.ammo_per_shot = 1,
-		.fire_mode_type = FIRE_MODE_HITSCAN,
-		.hitscan = {
-			.rate_rps = 10.0f,
-			.damage = 9,
-			.spread_base = 1.0f,
-			.bloom_per_shot = 0.2f,
-			.bloom_recover_rate = 0.9f,
-			.pellet_count = 1,
-			.hspread = DEFAULT_BULLET_HSPREAD,
-			.vspread = DEFAULT_BULLET_VSPREAD
+		.fire_mode_type = FIRE_MODE_CONE_STREAM,
+		.flamethrower = {
+			.fuel_per_tick = 1.0f,
+			.tick_rate_hz = 15.0f,
+			.range_units = 220.0f,
+			.damage_per_tick = 6,
+			.ignite_chance = 1.0f
+		},
+		.burn_piles = {
+			.enabled = true,
+			.spawn_rate_hz = 6.0f,
+			.lifetime_sec = 6.0f,
+			.damage_per_tick = 8,
+			.tick_rate_hz = 5.0f,
+			.max_active = 32
 		},
 		.ads = {
-			.enabled = true,
-			.accuracy_multiplier = 0.7f,
-			.move_speed_scale = 0.5f,
+			.enabled = false,
+			.accuracy_multiplier = 1.0f,
+			.move_speed_scale = 1.0f,
 			.zoom_enabled = false,
 			.zoom_fov = 90.0f,
 			.scope_overlay = false
 		},
-		.bracing = {
-			.enabled = true,
-			.spread_standing_hip = 2.0f,
-			.spread_crouched_hip = 1.0f,
-			.spread_ads = 0.85f
-		},
-		.pickup_ammo_amount = 80,
+		.bracing = { .enabled = false },
+		.pickup_ammo_amount = 100,
 		.frame_activate_last = 5,
 		.frame_fire_last = 20,
 		.frame_idle_last = 49,
@@ -380,39 +382,34 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		.frame_deactivate_last = 61
 	},
 
-	/* WEAP_PP_FLAMETHROWER - Replaces BFG */
+	/* WEAP_PP_MORTAR_CANNON - Replaces BFG */
 	{
-		.id = WEAP_PP_FLAMETHROWER,
+		.id = WEAP_PP_MORTAR_CANNON,
 		.classname = "weapon_bfg",
-		.ui_name = "M1 Flamethrower",
-		.ammo_type = AMMO_FLAME_FUEL,
+		.ui_name = "Mortar Cannon",
+		.ammo_type = AMMO_MORTAR_ROUNDS,
 		.ammo_per_shot = 1,
-		.fire_mode_type = FIRE_MODE_CONE_STREAM,
-		.flamethrower = {
-			.fuel_per_tick = 1.0f,
-			.tick_rate_hz = 15.0f,
-			.range_units = 220.0f,
-			.damage_per_tick = 6,
-			.ignite_chance = 1.0f
-		},
-		.burn_piles = {
-			.enabled = true,
-			.spawn_rate_hz = 6.0f,
-			.lifetime_sec = 6.0f,
-			.damage_per_tick = 8,
-			.tick_rate_hz = 5.0f,
-			.max_active = 32
+		.fire_mode_type = FIRE_MODE_PROJECTILE,
+		.projectile = {
+			.bounce = false,
+			.contact_detonation = true,
+			.speed = 650.0f,
+			.fuse_time_sec = 10.0f,
+			.gravity_scale = 0.3f,
+			.damage = 200,
+			.radius = 480,
+			.radius_damage = 200
 		},
 		.ads = {
-			.enabled = false,
-			.accuracy_multiplier = 1.0f,
-			.move_speed_scale = 1.0f,
+			.enabled = true,
+			.accuracy_multiplier = 0.9f,
+			.move_speed_scale = 0.4f,
 			.zoom_enabled = false,
 			.zoom_fov = 90.0f,
 			.scope_overlay = false
 		},
 		.bracing = { .enabled = false },
-		.pickup_ammo_amount = 100,
+		.pickup_ammo_amount = 3,
 		.frame_activate_last = 8,
 		.frame_fire_last = 32,
 		.frame_idle_last = 55,
@@ -615,11 +612,11 @@ PP_Weapon_FromQ2Weapon(int q2_weapmodel)
 		case WEAP_SUPERSHOTGUN:   return WEAP_PP_DOUBLE_BARREL;
 		case WEAP_MACHINEGUN:     return WEAP_PP_SMG;
 		case WEAP_CHAINGUN:       return WEAP_PP_M16;
-		case WEAP_HYPERBLASTER:   return WEAP_PP_M60;
+		case WEAP_HYPERBLASTER:   return WEAP_PP_FLAMETHROWER;
 		case WEAP_GRENADELAUNCHER: return WEAP_PP_GRENADE_LAUNCHER;
 		case WEAP_ROCKETLAUNCHER: return WEAP_PP_BAZOOKA;
 		case WEAP_RAILGUN:        return WEAP_PP_SNIPER_RIFLE;
-		case WEAP_BFG:            return WEAP_PP_FLAMETHROWER;
+		case WEAP_BFG:            return WEAP_PP_MORTAR_CANNON;
 		default:                  return WEAP_PP_NONE;
 	}
 }
@@ -1036,11 +1033,12 @@ PP_WeaponNameToId(const char *name)
 	if (strcmp(name, "DOUBLE_BARREL_SHOTGUN") == 0) return WEAP_PP_DOUBLE_BARREL;
 	if (strcmp(name, "SMG") == 0) return WEAP_PP_SMG;
 	if (strcmp(name, "M16") == 0) return WEAP_PP_M16;
-	if (strcmp(name, "M60") == 0) return WEAP_PP_M60;
+	if (strcmp(name, "M1_FLAMETHROWER") == 0) return WEAP_PP_FLAMETHROWER;
+	if (strcmp(name, "FLAMETHROWER") == 0) return WEAP_PP_FLAMETHROWER;
 	if (strcmp(name, "GRENADE_LAUNCHER") == 0) return WEAP_PP_GRENADE_LAUNCHER;
 	if (strcmp(name, "BAZOOKA") == 0) return WEAP_PP_BAZOOKA;
 	if (strcmp(name, "SNIPER_RIFLE") == 0) return WEAP_PP_SNIPER_RIFLE;
-	if (strcmp(name, "M1_FLAMETHROWER") == 0) return WEAP_PP_FLAMETHROWER;
+	if (strcmp(name, "MORTAR_CANNON") == 0) return WEAP_PP_MORTAR_CANNON;
 	if (strcmp(name, "AIRSTRIKE_MARKER") == 0) return WEAP_PP_AIRSTRIKE_MARKER;
 
 	return WEAP_PP_NONE;
@@ -1063,6 +1061,7 @@ PP_AmmoNameToId(const char *name)
 	if (strcmp(name, "THROWABLE_SATCHEL") == 0) return AMMO_THROWABLE_SATCHEL;
 	if (strcmp(name, "FLAME_FUEL") == 0) return AMMO_FLAME_FUEL;
 	if (strcmp(name, "AIRSTRIKE_CHARGE") == 0) return AMMO_AIRSTRIKE_CHARGE;
+	if (strcmp(name, "MORTAR_ROUNDS") == 0) return AMMO_MORTAR_ROUNDS;
 
 	return AMMO_NONE;
 }

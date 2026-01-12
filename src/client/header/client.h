@@ -526,6 +526,8 @@ void CL_BfgParticles (entity_t *ent);
 void CL_AddParticles (void);
 void CL_EntityEvent (entity_state_t *ent);
 void CL_TrapParticles (entity_t *ent);
+void CL_FlameEffect (vec3_t org);
+void CL_FlameTrail (vec3_t start, vec3_t end);
 
 void M_Init (void);
 void M_Keydown (int key);

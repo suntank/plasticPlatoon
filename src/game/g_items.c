@@ -1980,6 +1980,7 @@ static const gitem_t gameitemlist[] = {
 	},
 
 	/* QUAKED weapon_hyperblaster (.3 .3 1) (-16 -16 -16) (16 16 16) */
+	/* M1 Flamethrower - uses cells */
 	{
 		"weapon_hyperblaster",
 		Pickup_Weapon,
@@ -1990,7 +1991,7 @@ static const gitem_t gameitemlist[] = {
 		"models/weapons/g_hyperb/tris.md2", EF_ROTATE,
 		"models/weapons/v_hyperb/tris.md2",
 		"w_hyperblaster",
-		"HyperBlaster",
+		"M1 Flamethrower",
 		0,
 		1,
 		"Cells",
@@ -2024,6 +2025,7 @@ static const gitem_t gameitemlist[] = {
 	},
 
 	/* QUAKED weapon_bfg (.3 .3 1) (-16 -16 -16) (16 16 16) */
+	/* Mortar Cannon - uses mortar rounds, no ammo pickups */
 	{
 		"weapon_bfg",
 		Pickup_Weapon,
@@ -2034,10 +2036,10 @@ static const gitem_t gameitemlist[] = {
 		"models/weapons/g_bfg/tris.md2", EF_ROTATE,
 		"models/weapons/v_bfg/tris.md2",
 		"w_bfg",
-		"BFG10K",
+		"Mortar Cannon",
 		0,
-		50,
-		"Cells",
+		1,
+		"Mortar Rounds",
 		IT_WEAPON | IT_STAY_COOP,
 		WEAP_BFG,
 		NULL,
@@ -2152,6 +2154,28 @@ static const gitem_t gameitemlist[] = {
 		0,
 		NULL,
 		AMMO_SLUGS,
+		""
+	},
+
+	/* Mortar Rounds - No pickup, only obtained from weapon pickup */
+	{
+		"ammo_mortar_rounds",
+		Pickup_Ammo,
+		NULL,
+		NULL,
+		NULL,
+		"misc/am_pkup.wav",
+		NULL, 0,
+		NULL,
+		"a_mortar",
+		"Mortar Rounds",
+		3,
+		3,
+		NULL,
+		IT_AMMO,
+		0,
+		NULL,
+		0,
 		""
 	},
 
