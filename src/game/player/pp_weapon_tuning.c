@@ -91,7 +91,7 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		},
 		.ads = {
 			.enabled = true,
-			.accuracy_multiplier = 0.85f,
+			.accuracy_multiplier = 0.5f,
 			.move_speed_scale = 0.6f,
 			.zoom_enabled = false,
 			.zoom_fov = 90.0f,
@@ -125,7 +125,7 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		},
 		.ads = {
 			.enabled = true,
-			.accuracy_multiplier = 0.9f,
+			.accuracy_multiplier = 0.5f,
 			.move_speed_scale = 0.6f,
 			.zoom_enabled = false,
 			.zoom_fov = 90.0f,
@@ -159,7 +159,7 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		},
 		.ads = {
 			.enabled = true,
-			.accuracy_multiplier = 0.9f,
+			.accuracy_multiplier = 0.5f,
 			.move_speed_scale = 0.6f,
 			.zoom_enabled = false,
 			.zoom_fov = 90.0f,
@@ -193,7 +193,7 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		},
 		.ads = {
 			.enabled = true,
-			.accuracy_multiplier = 0.85f,
+			.accuracy_multiplier = 0.5f,
 			.move_speed_scale = 0.55f,
 			.zoom_enabled = false,
 			.zoom_fov = 90.0f,
@@ -227,7 +227,7 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		},
 		.ads = {
 			.enabled = true,
-			.accuracy_multiplier = 0.75f,
+			.accuracy_multiplier = 0.5f,
 			.move_speed_scale = 0.5f,
 			.zoom_enabled = false,
 			.zoom_fov = 90.0f,
@@ -300,7 +300,7 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		},
 		.ads = {
 			.enabled = true,
-			.accuracy_multiplier = 0.9f,
+			.accuracy_multiplier = 0.5f,
 			.move_speed_scale = 0.55f,
 			.zoom_enabled = false,
 			.zoom_fov = 90.0f,
@@ -334,7 +334,7 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		},
 		.ads = {
 			.enabled = true,
-			.accuracy_multiplier = 0.9f,
+			.accuracy_multiplier = 0.5f,
 			.move_speed_scale = 0.55f,
 			.zoom_enabled = false,
 			.zoom_fov = 90.0f,
@@ -368,7 +368,7 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		},
 		.ads = {
 			.enabled = true,
-			.accuracy_multiplier = 0.3f,
+			.accuracy_multiplier = 0.5f,
 			.move_speed_scale = 0.4f,
 			.zoom_enabled = true,
 			.zoom_fov = 25.0f,
@@ -402,7 +402,7 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		},
 		.ads = {
 			.enabled = true,
-			.accuracy_multiplier = 0.9f,
+			.accuracy_multiplier = 0.5f,
 			.move_speed_scale = 0.4f,
 			.zoom_enabled = false,
 			.zoom_fov = 90.0f,

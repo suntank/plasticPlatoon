@@ -59,7 +59,7 @@ static unsigned old_sys_frame_time;
 static kbutton_t in_left, in_right, in_forward, in_back;
 static kbutton_t in_lookup, in_lookdown, in_moveleft, in_moveright;
 static kbutton_t in_up, in_down;
-static kbutton_t in_klook, in_speed, in_use, in_attack;
+static kbutton_t in_klook, in_speed, in_use, in_attack, in_ads;
 kbutton_t in_strafe;
 
 static int in_impulse;
@@ -352,6 +352,18 @@ IN_AttackUp(void)
 }
 
 static void
+IN_ADSDown(void)
+{
+	KeyDown(&in_ads);
+}
+
+static void
+IN_ADSUp(void)
+{
+	KeyUp(&in_ads);
+}
+
+static void
 IN_UseDown(void)
 {
 	KeyDown(&in_use);
@@ -601,6 +613,8 @@ CL_InitInput(void)
 	Cmd_AddCommand("-speed", IN_SpeedUp);
 	Cmd_AddCommand("+attack", IN_AttackDown);
 	Cmd_AddCommand("-attack", IN_AttackUp);
+	Cmd_AddCommand("+ads", IN_ADSDown);
+	Cmd_AddCommand("-ads", IN_ADSUp);
 	Cmd_AddCommand("+use", IN_UseDown);
 	Cmd_AddCommand("-use", IN_UseUp);
 	Cmd_AddCommand("impulse", IN_Impulse);
@@ -609,6 +623,11 @@ CL_InitInput(void)
 
 	cl_nodelta = Cvar_Get("cl_nodelta", "0", 0);
 	cl_centertime = Cvar_Get("cl_centertime", "180", CVAR_ARCHIVE);
+
+	if (!keybindings[K_MOUSE2] || !keybindings[K_MOUSE2][0])
+	{
+		Key_SetBinding(K_MOUSE2, (char *)"+ads");
+	}
 }
 
 void
@@ -658,7 +677,7 @@ CL_RefreshCmd(void)
 	old_sys_frame_time = sys_frame_time;
 
 	// Important events are send immediately
-	if (((in_attack.state & 2)) || (in_use.state & 2))
+	if (((in_attack.state & 2)) || (in_use.state & 2) || (in_ads.state & 2))
 	{
 		cls.forcePacket = true;
 	}
@@ -714,6 +733,13 @@ CL_FinalizeCmd(void)
 	}
 
 	in_use.state &= ~2;
+
+	if (in_ads.state & 3)
+	{
+		cmd->buttons |= BUTTON_ADS;
+	}
+
+	in_ads.state &= ~2;
 
 	// Keyboard events
 	if (anykeydown && cls.key_dest == key_game)

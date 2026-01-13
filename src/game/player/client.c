@@ -2187,10 +2187,21 @@ ClientThink(edict_t *ent, usercmd_t *ucmd)
 		pm.cmd = *ucmd;
 
 		/* Plastic Platoon: Apply ADS movement speed reduction */
-		if (client->weapon_state.ads_active && client->pers.weapon)
+		if ((ucmd->buttons & BUTTON_ADS) && client->pers.weapon)
 		{
 			pp_weapon_id_t weap_id = PP_Weapon_FromQ2Weapon(client->pers.weapon->weapmodel);
-			float speed_scale = PP_Weapon_GetMoveSpeedScale(ent, weap_id);
+			float speed_scale = ADS_MOVE_SPEED_DEFAULT;
+			float tuned_scale;
+
+			if (weap_id != WEAP_PP_NONE)
+			{
+				tuned_scale = PP_Weapon_GetMoveSpeedScale(ent, weap_id);
+				if (tuned_scale < 1.0f)
+				{
+					speed_scale = tuned_scale;
+				}
+			}
+
 			if (speed_scale < 1.0f)
 			{
 				pm.cmd.forwardmove = (short)(pm.cmd.forwardmove * speed_scale);
@@ -2294,6 +2305,7 @@ ClientThink(edict_t *ent, usercmd_t *ucmd)
 		pp_client_weapon_state_t *ws = &client->weapon_state;
 		qboolean ads_button = (client->buttons & BUTTON_ADS) != 0;
 		pp_weapon_id_t weap_id = WEAP_PP_NONE;
+		float base_fov;
 
 		/* Get current weapon ID */
 		if (client->pers.weapon)
@@ -2301,25 +2313,48 @@ ClientThink(edict_t *ent, usercmd_t *ucmd)
 			weap_id = PP_Weapon_FromQ2Weapon(client->pers.weapon->weapmodel);
 		}
 
-		/* Update ADS active state */
+		ws->ads_active = ads_button;
+
 		if (weap_id != WEAP_PP_NONE)
 		{
-			const pp_weapon_params_t *params = PP_Weapon_GetParams(weap_id);
-			if (params && params->ads.enabled)
-			{
-				ws->ads_active = ads_button;
-			}
-			else
-			{
-				ws->ads_active = false;
-			}
-
-			/* Update bloom decay */
 			PP_Weapon_UpdateBloom(ent, weap_id, FRAMETIME);
+		}
+
+		if (deathmatch->value && ((int)dmflags->value & DF_FIXED_FOV))
+		{
+			base_fov = 90.0f;
 		}
 		else
 		{
-			ws->ads_active = false;
+			base_fov = (float)strtol(Info_ValueForKey(client->pers.userinfo, "fov"), (char **)NULL, 10);
+
+			if (base_fov < 1.0f)
+			{
+				base_fov = 90.0f;
+			}
+			else if (base_fov > 160.0f)
+			{
+				base_fov = 160.0f;
+			}
+		}
+
+		client->ps.fov = base_fov;
+
+		if (ws->ads_active)
+		{
+			if (weap_id == WEAP_PP_SNIPER_RIFLE)
+			{
+				client->ps.fov = base_fov / 8.0f;
+			}
+			else
+			{
+				client->ps.fov = base_fov / 2.0f;
+			}
+
+			if (client->ps.fov < 5.0f)
+			{
+				client->ps.fov = 5.0f;
+			}
 		}
 	}
 

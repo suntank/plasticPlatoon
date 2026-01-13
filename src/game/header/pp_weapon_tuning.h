@@ -94,7 +94,7 @@ typedef struct {
 } pp_ads_params_t;
 
 /* Default ADS values */
-#define ADS_ACCURACY_MULT_DEFAULT   0.75f
+#define ADS_ACCURACY_MULT_DEFAULT   0.5f
 #define ADS_MOVE_SPEED_DEFAULT      0.5f
 
 /* ============================================================================

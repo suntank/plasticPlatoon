@@ -735,10 +735,23 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 		float time_since_fire;
 		int muzzle_seq;
 		const pp_recoil_config_t *recoil_cfg;
+		static float pp_viewmodel_last_time = 0.0f;
 
 		if (dt < 0.0f)
 		{
 			dt = 0.0f;
+		}
+
+		/* Map change/reconnect can reset cl.time; our static state persists.
+		 * If time went backwards, reset recoil timing so it can trigger again. */
+		if (current_time < pp_viewmodel_last_time)
+		{
+			pp_viewmodel_recoil = 0.0f;
+			pp_viewmodel_last_fire_time = current_time;
+			pp_viewmodel_last_muzzle_seq = pp_viewmodel_muzzle_seq;
+			pp_viewmodel_raise_progress = 0.0f;
+			pp_viewmodel_last_gunindex = 0;
+			pp_current_weapon = PP_WEAPON_UNKNOWN;
 		}
 
 		/* Detect weapon switch - reset raise progress and update weapon type */
@@ -825,6 +838,7 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 		gun.angles[PITCH] -= recoil * recoil_cfg->pitch_kick;
 
 		pp_viewmodel_last_gunindex = ps->gunindex;
+		pp_viewmodel_last_time = current_time;
 	}
 
 	gun.flags = RF_MINLIGHT | RF_DEPTHHACK | RF_WEAPONMODEL;

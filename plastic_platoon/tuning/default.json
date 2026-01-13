@@ -31,7 +31,7 @@
       },
       "ads": {
         "enabled": true,
-        "accuracy_multiplier": 0.85,
+        "accuracy_multiplier": 0.5,
         "move_speed_scale": 0.6
       }
     },
@@ -46,7 +46,7 @@
       },
       "ads": {
         "enabled": true,
-        "accuracy_multiplier": 0.85,
+        "accuracy_multiplier": 0.5,
         "move_speed_scale": 0.55
       }
     },
@@ -61,7 +61,7 @@
       },
       "ads": {
         "enabled": true,
-        "accuracy_multiplier": 0.75,
+        "accuracy_multiplier": 0.5,
         "move_speed_scale": 0.5
       }
     },
@@ -78,7 +78,7 @@
       },
       "ads": {
         "enabled": true,
-        "accuracy_multiplier": 0.70,
+        "accuracy_multiplier": 0.5,
         "move_speed_scale": 0.50
       }
     },
@@ -86,7 +86,7 @@
     "SHOTGUN": {
       "ads": {
         "enabled": true,
-        "accuracy_multiplier": 0.9,
+        "accuracy_multiplier": 0.5,
         "move_speed_scale": 0.6
       }
     },
@@ -94,7 +94,7 @@
     "DOUBLE_BARREL_SHOTGUN": {
       "ads": {
         "enabled": true,
-        "accuracy_multiplier": 0.9,
+        "accuracy_multiplier": 0.5,
         "move_speed_scale": 0.6
       }
     },
@@ -110,7 +110,7 @@
       },
       "ads": {
         "enabled": true,
-        "accuracy_multiplier": 0.9,
+        "accuracy_multiplier": 0.5,
         "move_speed_scale": 0.55
       }
     },
@@ -123,7 +123,7 @@
       },
       "ads": {
         "enabled": true,
-        "accuracy_multiplier": 0.9,
+        "accuracy_multiplier": 0.5,
         "move_speed_scale": 0.55
       }
     },
@@ -136,7 +136,7 @@
       },
       "ads": {
         "enabled": true,
-        "accuracy_multiplier": 0.3,
+        "accuracy_multiplier": 0.5,
         "move_speed_scale": 0.4
       }
     },

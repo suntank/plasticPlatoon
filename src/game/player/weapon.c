@@ -1159,6 +1159,8 @@ Weapon_Blaster_Fire(edict_t *ent)
 	vec3_t start;
 	vec3_t forward, right;
 	vec3_t offset;
+	int hspread, vspread;
+	float spread_mult;
 
 	if (!ent)
 	{
@@ -1179,8 +1181,12 @@ Weapon_Blaster_Fire(edict_t *ent)
 	ent->client->kick_angles[0] = -1;
 	VectorSet(offset, 0, 8, ent->viewheight - 8);
 	P_ProjectSource(ent, offset, forward, right, start);
-	fire_bullet(ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD,
-			DEFAULT_BULLET_VSPREAD, MOD_BLASTER);
+
+	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_PISTOL);
+	hspread = (int)(DEFAULT_BULLET_HSPREAD * spread_mult);
+	vspread = (int)(DEFAULT_BULLET_VSPREAD * spread_mult);
+	fire_bullet(ent, start, forward, damage, kick, hspread, vspread, MOD_BLASTER);
+	PP_Weapon_AddBloom(ent, WEAP_PP_PISTOL);
 
 	/* send muzzle flash */
 	gi.WriteByte(svc_muzzleflash);
@@ -1818,6 +1824,8 @@ weapon_supershotgun_fire(edict_t *ent)
 	vec3_t v;
 	int damage = 6;
 	int kick = 12;
+	int hspread, vspread;
+	float spread_mult;
 
 	if (!ent)
 	{
@@ -1854,8 +1862,12 @@ weapon_supershotgun_fire(edict_t *ent)
 		P_ProjectSource(ent, offset, forward, right, start);
 	}	
 	
+	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_DOUBLE_BARREL);
+	hspread = (int)(DEFAULT_SHOTGUN_HSPREAD * spread_mult);
+	vspread = (int)(DEFAULT_SHOTGUN_VSPREAD * spread_mult);
+	
 	fire_shotgun(ent, start, forward, damage, kick,
-			DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD,
+			hspread, vspread,
 			DEFAULT_SSHOTGUN_COUNT / 2, MOD_SSHOTGUN);
 	
 	v[YAW] = ent->client->v_angle[YAW] + 5;
@@ -1873,7 +1885,7 @@ weapon_supershotgun_fire(edict_t *ent)
 	}	
 	
 	fire_shotgun(ent, start, forward, damage, kick,
-			DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD,
+			hspread, vspread,
 			DEFAULT_SSHOTGUN_COUNT / 2, MOD_SSHOTGUN);
 
 	/* send muzzle flash */
