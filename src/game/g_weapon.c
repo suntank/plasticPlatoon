@@ -1414,12 +1414,6 @@ Player_TickBurn(edict_t *ent)
 			T_Damage(ent, world, attacker, vec3_origin, ent->s.origin,
 					vec3_origin, BURN_DAMAGE_PER_TICK, 0, DAMAGE_NO_ARMOR, MOD_BURNING);
 
-			/* Send burn effect to client for smoke/ember trail */
-			gi.WriteByte(svc_temp_entity);
-			gi.WriteByte(TE_FLAME);
-			gi.WritePosition(ent->s.origin);
-			gi.multicast(ent->s.origin, MULTICAST_PVS);
-
 			ent->client->burn_damage_time = level.time + BURN_TICK_INTERVAL;
 		}
 	}
@@ -1557,12 +1551,6 @@ FirePuddle_Think(edict_t *self)
 	/* Try chain ignition */
 	try_chain_ignition(self);
 
-	/* Emit effects for client (smoke, embers, light flicker) */
-	gi.WriteByte(svc_temp_entity);
-	gi.WriteByte(TE_FLAME);
-	gi.WritePosition(self->s.origin);
-	gi.multicast(self->s.origin, MULTICAST_PVS);
-
 	/* Damage nearby entities */
 	while ((ent = findradius(ent, self->s.origin, radius)) != NULL)
 	{
@@ -1684,9 +1672,10 @@ spawn_fire_puddle_at(edict_t *owner, vec3_t origin, int tier, int surface_type)
 		/* Create steam effect instead */
 		gi.WriteByte(svc_temp_entity);
 		gi.WriteByte(TE_STEAM);
+		gi.WriteShort(-1);
+		gi.WriteByte(20); /* count */
 		gi.WritePosition(origin);
 		gi.WriteDir(vec3_origin);
-		gi.WriteByte(20); /* count */
 		gi.WriteByte(0xe0); /* color */
 		gi.WriteShort(300); /* magnitude */
 		gi.multicast(origin, MULTICAST_PVS);
@@ -1820,9 +1809,10 @@ Flame_Think(edict_t *self)
 		/* Steam effect */
 		gi.WriteByte(svc_temp_entity);
 		gi.WriteByte(TE_STEAM);
+		gi.WriteShort(-1);
+		gi.WriteByte(10);
 		gi.WritePosition(self->s.origin);
 		gi.WriteDir(vec3_origin);
-		gi.WriteByte(10);
 		gi.WriteByte(0xe0);
 		gi.WriteShort(200);
 		gi.multicast(self->s.origin, MULTICAST_PVS);
@@ -1901,12 +1891,6 @@ Flame_Touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 		if (other->client)
 		{
 			Player_ApplyBurn(other, self->owner, BURN_DURATION_DIRECT);
-			
-			/* Ignite flash effect */
-			gi.WriteByte(svc_temp_entity);
-			gi.WriteByte(TE_FLAME);
-			gi.WritePosition(other->s.origin);
-			gi.multicast(other->s.origin, MULTICAST_PVS);
 		}
 
 		/* Sparks if hitting armored target */

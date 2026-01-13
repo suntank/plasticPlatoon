@@ -105,10 +105,47 @@ FindItem(const char *pickup_name)
 {
 	int i;
 	gitem_t *it;
+	const char *name;
 
 	if (!pickup_name)
 	{
 		return NULL;
+	}
+
+	/* Compatibility aliases: allow old pickup names/shortnames to keep working */
+	name = pickup_name;
+
+	if (!Q_stricmp(name, "Blaster"))
+	{
+		name = "Pistol";
+	}
+	else if (!Q_stricmp(name, "Super Shotgun") || !Q_stricmp(name, "super shotgun"))
+	{
+		name = "Double Barrel Shotgun";
+	}
+	else if (!Q_stricmp(name, "Machinegun") || !Q_stricmp(name, "machinegun"))
+	{
+		name = "Rifle";
+	}
+	else if (!Q_stricmp(name, "Chaingun") || !Q_stricmp(name, "chaingun"))
+	{
+		name = "Heavy Machinegun";
+	}
+	else if (!Q_stricmp(name, "Railgun") || !Q_stricmp(name, "railgun"))
+	{
+		name = "Sniper Rifle";
+	}
+	else if (!Q_stricmp(name, "Cells") || !Q_stricmp(name, "cells"))
+	{
+		name = "Napalm";
+	}
+	else if (!Q_stricmp(name, "Slugs") || !Q_stricmp(name, "slugs"))
+	{
+		name = "Sniper Rounds";
+	}
+	else if (!Q_stricmp(name, "HyperBlaster") || !Q_stricmp(name, "hyperblaster"))
+	{
+		name = "M1 Flamethrower";
 	}
 
 	it = itemlist;
@@ -120,7 +157,7 @@ FindItem(const char *pickup_name)
 			continue;
 		}
 
-		if (!Q_stricmp(it->pickup_name, pickup_name))
+		if (!Q_stricmp(it->pickup_name, name))
 		{
 			return it;
 		}
@@ -1065,7 +1102,7 @@ Use_PowerArmor(edict_t *ent, gitem_t *item)
 
 		if (!ent->client->pers.inventory[index])
 		{
-			gi.cprintf(ent, PRINT_HIGH, "No cells for power armor.\n");
+			gi.cprintf(ent, PRINT_HIGH, "No napalm for power armor.\n");
 			return;
 		}
 
@@ -1814,7 +1851,7 @@ static const gitem_t gameitemlist[] = {
 		NULL, 0,
 		"models/weapons/v_blast/tris.md2",
 		"w_blaster",
-		"Blaster",
+		"Pistol",
 		0,
 		1,
 		"Bullets",
@@ -1858,7 +1895,7 @@ static const gitem_t gameitemlist[] = {
 		"models/weapons/g_shotg2/tris.md2", EF_ROTATE,
 		"models/weapons/v_shotg2/tris.md2",
 		"w_sshotgun",
-		"Super Shotgun",
+		"Double Barrel Shotgun",
 		0,
 		2,
 		"Shells",
@@ -1880,7 +1917,7 @@ static const gitem_t gameitemlist[] = {
 		"models/weapons/g_machn/tris.md2", EF_ROTATE,
 		"models/weapons/v_machn/tris.md2",
 		"w_machinegun",
-		"Machinegun",
+		"Rifle",
 		0,
 		1,
 		"Bullets",
@@ -1902,7 +1939,7 @@ static const gitem_t gameitemlist[] = {
 		"models/weapons/g_chain/tris.md2", EF_ROTATE,
 		"models/weapons/v_chain/tris.md2",
 		"w_chaingun",
-		"Chaingun",
+		"Heavy Machinegun",
 		0,
 		1,
 		"Bullets",
@@ -1994,7 +2031,7 @@ static const gitem_t gameitemlist[] = {
 		"M1 Flamethrower",
 		0,
 		1,
-		"Cells",
+		"Napalm",
 		IT_WEAPON | IT_STAY_COOP,
 		WEAP_HYPERBLASTER,
 		NULL,
@@ -2013,10 +2050,10 @@ static const gitem_t gameitemlist[] = {
 		"models/weapons/g_rail/tris.md2", EF_ROTATE,
 		"models/weapons/v_rail/tris.md2",
 		"w_railgun",
-		"Railgun",
+		"Sniper Rifle",
 		0,
 		1,
-		"Slugs",
+		"Sniper Rounds",
 		IT_WEAPON | IT_STAY_COOP,
 		WEAP_RAILGUN,
 		NULL,
@@ -2102,7 +2139,7 @@ static const gitem_t gameitemlist[] = {
 		"models/items/ammo/cells/medium/tris.md2", 0,
 		NULL,
 		"a_cells",
-		"Cells",
+		"Napalm",
 		3,
 		50,
 		NULL,
@@ -2146,7 +2183,7 @@ static const gitem_t gameitemlist[] = {
 		"models/items/ammo/slugs/medium/tris.md2", 0,
 		NULL,
 		"a_slugs",
-		"Slugs",
+		"Sniper Rounds",
 		3,
 		10,
 		NULL,

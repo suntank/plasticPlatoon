@@ -650,7 +650,7 @@ TossClientWeapon(edict_t *self)
 		item = NULL;
 	}
 
-	if (item && (strcmp(item->pickup_name, "Blaster") == 0))
+	if (item && item->classname && (Q_stricmp(item->classname, "weapon_blaster") == 0))
 	{
 		item = NULL;
 	}

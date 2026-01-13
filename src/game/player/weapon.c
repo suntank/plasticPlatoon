@@ -1165,19 +1165,7 @@ Weapon_Blaster_Fire(edict_t *ent)
 		return;
 	}
 
-	if (ent->client->pers.inventory[ent->client->ammo_index] < 1)
-	{
-		if (level.time >= ent->pain_debounce_time)
-		{
-			gi.sound(ent, CHAN_VOICE, gi.soundindex(
-						"weapons/noammo.wav"), 1, ATTN_NORM, 0);
-			ent->pain_debounce_time = level.time + 1;
-		}
-
-		NoAmmoWeaponChange(ent);
-		return;
-	}
-
+	
 	if (is_quad)
 	{
 		damage *= 4;
@@ -1201,11 +1189,6 @@ Weapon_Blaster_Fire(edict_t *ent)
 	gi.multicast(ent->s.origin, MULTICAST_PVS);
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
-
-	if (!((int)dmflags->value & DF_INFINITE_AMMO))
-	{
-		ent->client->pers.inventory[ent->client->ammo_index]--;
-	}
 }
 
 void
