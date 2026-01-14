@@ -730,6 +730,10 @@ Add_Ammo(edict_t *ent, gitem_t *item, int count)
 	{
 		max = ent->client->pers.max_slugs;
 	}
+	else if (item->tag == AMMO_GL_ROUNDS)
+	{
+		max = ent->client->pers.max_gl_rounds;
+	}
 	else
 	{
 		return false;
@@ -1972,6 +1976,28 @@ static const gitem_t gameitemlist[] = {
 		"weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 	},
 
+	/* QUAKED ammo_gl_rounds (.3 .3 1) (-16 -16 -16) (16 16 16) */
+	{
+		"ammo_gl_rounds",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		"models/items/ammo/gl_ammo/medium/tris.md2", 0,
+		NULL,
+		"a_gl_ammo",
+		"GL Ammo",
+		3,
+		5,
+		NULL,
+		IT_AMMO,
+		0,
+		NULL,
+		AMMO_GL_ROUNDS,
+		""
+	},
+
 	/* QUAKED weapon_grenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16) */
 	{
 		"weapon_grenadelauncher",
@@ -1986,7 +2012,7 @@ static const gitem_t gameitemlist[] = {
 		"Grenade Launcher",
 		0,
 		1,
-		"Grenades",
+		"GL Ammo",
 		IT_WEAPON | IT_STAY_COOP,
 		WEAP_GRENADELAUNCHER,
 		NULL,

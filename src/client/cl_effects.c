@@ -976,6 +976,52 @@ CL_ExplosionParticles(vec3_t org)
 	}
 }
 
+/*
+ * Grey smoke particles that linger after explosions
+ */
+void
+CL_SmokeParticles(vec3_t org, int count)
+{
+	int i, j;
+	cparticle_t *p;
+	float time;
+
+	time = (float)cl.time;
+
+	for (i = 0; i < count; i++)
+	{
+		if (!free_particles)
+		{
+			return;
+		}
+
+		p = free_particles;
+		free_particles = p->next;
+		p->next = active_particles;
+		active_particles = p;
+
+		p->time = time;
+		/* Grey smoke colors (palette indices for grey tones) */
+		p->color = 0x0 + (randk() & 7);  /* dark grey range */
+
+		for (j = 0; j < 3; j++)
+		{
+			p->org[j] = org[j] + ((randk() % 48) - 24);
+			p->vel[j] = (randk() % 60) - 30;
+		}
+
+		/* Smoke rises slowly */
+		p->vel[2] = 20 + (randk() % 40);
+
+		p->accel[0] = p->accel[1] = 0;
+		p->accel[2] = 5;  /* slight upward drift */
+		p->alpha = 0.7f + frandk() * 0.3f;
+
+		/* Smoke fades slowly over ~3 seconds */
+		p->alphavel = -0.25f / (1.5f + frandk() * 1.5f);
+	}
+}
+
 void
 CL_BigTeleportParticles(vec3_t org)
 {

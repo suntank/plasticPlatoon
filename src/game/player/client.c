@@ -909,6 +909,7 @@ InitClientPersistant(gclient_t *client)
 	client->pers.max_grenades = 999;
 	client->pers.max_cells = 999;
 	client->pers.max_slugs = 999;
+	client->pers.max_gl_rounds = 100;
 
 	client->pers.connected = true;
 }

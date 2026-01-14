@@ -107,7 +107,8 @@ typedef enum
 	AMMO_ROCKETS,
 	AMMO_GRENADES,
 	AMMO_CELLS,
-	AMMO_SLUGS
+	AMMO_SLUGS,
+	AMMO_GL_ROUNDS
 } ammo_t;
 
 /* Plastic Platoon ammo types are defined in pp_weapon_tuning.h */
@@ -882,6 +883,7 @@ typedef struct
 	int max_grenades;
 	int max_cells;
 	int max_slugs;
+	int max_gl_rounds;
 
 	/* Plastic Platoon ammo capacities */
 	int max_ammo_pp[AMMO_PP_MAX];

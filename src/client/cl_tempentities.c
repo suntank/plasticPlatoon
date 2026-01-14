@@ -29,7 +29,7 @@
 
 typedef enum
 {
-	ex_free, ex_explosion, ex_misc, ex_flash, ex_mflash, ex_poly, ex_poly2
+	ex_free, ex_explosion, ex_misc, ex_flash, ex_mflash, ex_poly, ex_poly2, ex_sprite_explosion
 } exptype_t;
 
 typedef struct
@@ -42,6 +42,8 @@ typedef struct
 	vec3_t lightcolor;
 	float start;
 	int baseframe;
+	float rotation_speed;  /* degrees per second for sprite rotation */
+	float duration;        /* total duration in milliseconds */
 } explosion_t;
 
 #define MAX_EXPLOSIONS 64
@@ -79,6 +81,7 @@ void CL_BFGExplosionParticles(vec3_t org);
 void CL_BlueBlasterParticles(vec3_t org, vec3_t dir);
 
 void CL_ExplosionParticles(vec3_t org);
+void CL_SmokeParticles(vec3_t org, int count);
 void CL_Explosion_Particle(vec3_t org, float size,
 		qboolean large, qboolean rocket);
 
@@ -119,6 +122,7 @@ static struct model_s *cl_mod_plasmaexplo;
 static struct model_s *cl_mod_lightning;
 static struct model_s *cl_mod_heatbeam;
 static struct model_s *cl_mod_explo4_big;
+static struct model_s *cl_mod_explosion_sprite;
 
 /*
  * Utility functions
@@ -293,6 +297,7 @@ CL_RegisterTEntModels(void)
 	cl_mod_explo4_big = R_RegisterModel("models/objects/r_explode2/tris.md2");
 	cl_mod_lightning = R_RegisterModel("models/proj/lightning/tris.md2");
 	cl_mod_heatbeam = R_RegisterModel("models/proj/beam/tris.md2");
+	cl_mod_explosion_sprite = R_RegisterModel("sprites/explosion.sp2");
 }
 
 /*
@@ -341,6 +346,7 @@ CL_ClearTEntModelVars(void)
 	cl_mod_lightning = NULL;
 	cl_mod_heatbeam = NULL;
 	cl_mod_explo4_big = NULL;
+	cl_mod_explosion_sprite = NULL;
 }
 
 void
@@ -928,18 +934,19 @@ CL_ParseTEnt(void)
 			MSG_ReadPos(&net_message, pos);
 			ex = CL_AllocExplosion();
 			VectorCopy(pos, ex->ent.origin);
-			ex->type = ex_poly;
+			ex->type = ex_sprite_explosion;
 			ex->ent.flags = RF_FULLBRIGHT | RF_NOSHADOW;
-			ex->start = cl.frame.servertime - 100.0f;
+			ex->start = cl.frame.servertime;
+			ex->duration = 2000.0f;  /* 2 seconds */
+			ex->rotation_speed = 90.0f + (float)(randk() % 180);  /* random rotation speed */
 			ex->light = 350;
 			ex->lightcolor[0] = 1.0;
 			ex->lightcolor[1] = 0.5;
-			ex->lightcolor[2] = 0.5;
-			ex->ent.model = cl_mod_explo4;
-			ex->frames = 19;
-			ex->baseframe = 30;
+			ex->lightcolor[2] = 0.2;
+			ex->ent.model = cl_mod_explosion_sprite;
 			ex->ent.angles[1] = (float)(randk() % 360);
-			EXPLOSION_PARTICLES(pos);
+			CL_ExplosionParticles(pos);
+			CL_SmokeParticles(pos, 30);
 
 			if (type == TE_GRENADE_EXPLOSION_WATER)
 			{
@@ -984,34 +991,22 @@ CL_ParseTEnt(void)
 			MSG_ReadPos(&net_message, pos);
 			ex = CL_AllocExplosion();
 			VectorCopy(pos, ex->ent.origin);
-			ex->type = ex_poly;
+			ex->type = ex_sprite_explosion;
 			ex->ent.flags = RF_FULLBRIGHT | RF_NOSHADOW;
-			ex->start = cl.frame.servertime - 100.0f;
+			ex->start = cl.frame.servertime;
+			ex->duration = 2000.0f;  /* 2 seconds */
+			ex->rotation_speed = 90.0f + (float)(randk() % 180);
 			ex->light = 350;
 			ex->lightcolor[0] = 1.0;
 			ex->lightcolor[1] = 0.5;
-			ex->lightcolor[2] = 0.5;
+			ex->lightcolor[2] = 0.2;
+			ex->ent.model = cl_mod_explosion_sprite;
 			ex->ent.angles[1] = (float)(randk() % 360);
-
-			if (type != TE_EXPLOSION1_BIG)
-			{
-				ex->ent.model = cl_mod_explo4;
-			}
-			else
-			{
-				ex->ent.model = cl_mod_explo4_big;
-			}
-
-			if (frandk() < 0.5)
-			{
-				ex->baseframe = 15;
-			}
-
-			ex->frames = 15;
 
 			if ((type != TE_EXPLOSION1_BIG) && (type != TE_EXPLOSION1_NP))
 			{
-				EXPLOSION_PARTICLES(pos);
+				CL_ExplosionParticles(pos);
+				CL_SmokeParticles(pos, 40);
 			}
 
 			if (type == TE_ROCKET_EXPLOSION_WATER)
@@ -1751,6 +1746,36 @@ CL_AddExplosions(void)
 				ent->skinnum = 0;
 				ent->flags |= RF_TRANSLUCENT;
 				break;
+			case ex_sprite_explosion:
+			{
+				float elapsed = cl.time - ex->start;
+				float progress = elapsed / ex->duration;
+
+				if (progress >= 1.0f)
+				{
+					ex->type = ex_free;
+					break;
+				}
+
+				/* Rotate the sprite over time */
+				ent->angles[2] = ex->rotation_speed * (elapsed / 1000.0f);
+
+				/* Fade out: full alpha for first 30%, then fade */
+				if (progress < 0.3f)
+				{
+					ent->alpha = 1.0f;
+				}
+				else
+				{
+					ent->alpha = 1.0f - ((progress - 0.3f) / 0.7f);
+				}
+
+				ent->flags |= RF_TRANSLUCENT;
+				ent->skinnum = 0;
+				ent->frame = 0;
+				ent->oldframe = 0;
+				break;
+			}
 			default:
 				break;
 		}
