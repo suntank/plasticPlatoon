@@ -349,6 +349,166 @@ fire_bullet(edict_t *self, vec3_t start, vec3_t aimdir, int damage,
 }
 
 /*
+ * Fires a precise hitscan round without angle quantization.
+ * Used for sniper rifles where accuracy is critical.
+ * Takes pre-computed forward/right/up vectors to avoid vectoangles precision loss.
+ */
+void
+fire_bullet_precise(edict_t *self, vec3_t start, vec3_t forward, vec3_t right,
+		vec3_t up, int damage, int kick, int hspread, int vspread, int mod)
+{
+	trace_t tr;
+	vec3_t end;
+	vec3_t dir;
+	float r, u;
+	vec3_t water_start;
+	qboolean water = false;
+	int content_mask = MASK_SHOT | MASK_WATER;
+
+	if (!self)
+	{
+		return;
+	}
+
+	tr = gi.trace(self->s.origin, NULL, NULL, start, self, MASK_SHOT);
+
+	if (!(tr.fraction < 1.0))
+	{
+		r = crandom() * hspread;
+		u = crandom() * vspread;
+		VectorMA(start, 8192, forward, end);
+		VectorMA(end, r, right, end);
+		VectorMA(end, u, up, end);
+
+		if (gi.pointcontents(start) & MASK_WATER)
+		{
+			water = true;
+			VectorCopy(start, water_start);
+			content_mask &= ~MASK_WATER;
+		}
+
+		tr = gi.trace(start, NULL, NULL, end, self, content_mask);
+
+		/* see if we hit water */
+		if (tr.contents & MASK_WATER)
+		{
+			int color;
+
+			water = true;
+			VectorCopy(tr.endpos, water_start);
+
+			if (!VectorCompare(start, tr.endpos))
+			{
+				if (tr.contents & CONTENTS_WATER)
+				{
+					if (strcmp(tr.surface->name, "*brwater") == 0)
+					{
+						color = SPLASH_BROWN_WATER;
+					}
+					else
+					{
+						color = SPLASH_BLUE_WATER;
+					}
+				}
+				else if (tr.contents & CONTENTS_SLIME)
+				{
+					color = SPLASH_SLIME;
+				}
+				else if (tr.contents & CONTENTS_LAVA)
+				{
+					color = SPLASH_LAVA;
+				}
+				else
+				{
+					color = SPLASH_UNKNOWN;
+				}
+
+				if (color != SPLASH_UNKNOWN)
+				{
+					gi.WriteByte(svc_temp_entity);
+					gi.WriteByte(TE_SPLASH);
+					gi.WriteByte(8);
+					gi.WritePosition(tr.endpos);
+					gi.WriteDir(tr.plane.normal);
+					gi.WriteByte(color);
+					gi.multicast(tr.endpos, MULTICAST_PVS);
+				}
+
+				/* change bullet's course when it enters water */
+				r = crandom() * hspread * 2;
+				u = crandom() * vspread * 2;
+				VectorMA(water_start, 8192, forward, end);
+				VectorMA(end, r, right, end);
+				VectorMA(end, u, up, end);
+			}
+
+			/* re-trace ignoring water this time */
+			tr = gi.trace(water_start, NULL, NULL, end, self, MASK_SHOT);
+		}
+	}
+
+	/* send gun puff / flash */
+	if (!((tr.surface) && (tr.surface->flags & SURF_SKY)))
+	{
+		if (tr.fraction < 1.0)
+		{
+			if (tr.ent->takedamage)
+			{
+				VectorSubtract(end, start, dir);
+				VectorNormalize(dir);
+				T_Damage(tr.ent, self, self, dir, tr.endpos, tr.plane.normal,
+						damage, kick, DAMAGE_BULLET, mod);
+			}
+			else
+			{
+				if (tr.surface && strncmp(tr.surface->name, "sky", 3) != 0)
+				{
+					gi.WriteByte(svc_temp_entity);
+					gi.WriteByte(TE_GUNSHOT);
+					gi.WritePosition(tr.endpos);
+					gi.WriteDir(tr.plane.normal);
+					gi.multicast(tr.endpos, MULTICAST_PVS);
+
+					if (self->client)
+					{
+						PlayerNoise(self, tr.endpos, PNOISE_IMPACT);
+					}
+				}
+			}
+		}
+	}
+
+	/* if went through water, determine
+	   where the end and make a bubble trail */
+	if (water)
+	{
+		vec3_t pos;
+
+		VectorSubtract(tr.endpos, water_start, dir);
+		VectorNormalize(dir);
+		VectorMA(tr.endpos, -2, dir, pos);
+
+		if (gi.pointcontents(pos) & MASK_WATER)
+		{
+			VectorCopy(pos, tr.endpos);
+		}
+		else
+		{
+			tr = gi.trace(pos, NULL, NULL, water_start, tr.ent, MASK_WATER);
+		}
+
+		VectorAdd(water_start, tr.endpos, pos);
+		VectorScale(pos, 0.5, pos);
+
+		gi.WriteByte(svc_temp_entity);
+		gi.WriteByte(TE_BUBBLETRAIL);
+		gi.WritePosition(water_start);
+		gi.WritePosition(tr.endpos);
+		gi.multicast(pos, MULTICAST_PVS);
+	}
+}
+
+/*
  * Shoots shotgun pellets. Used
  * by shotgun and super shotgun.
  */

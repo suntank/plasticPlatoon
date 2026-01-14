@@ -131,13 +131,15 @@
     "SNIPER_RIFLE": {
       "fire_mode": {
         "rate_rps": 1.0,
-        "damage": 150,
-        "spread_base": 0.1
+        "damage": 100,
+        "spread_base": 1,
+        "bloom_per_shot": 0,
+        "bloom_recover_rate": 1
       },
       "ads": {
         "enabled": true,
-        "accuracy_multiplier": 0.5,
-        "move_speed_scale": 0.4
+        "accuracy_multiplier": 0.1,
+        "move_speed_scale": 0.2
       }
     },
 

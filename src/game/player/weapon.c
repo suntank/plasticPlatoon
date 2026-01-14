@@ -1992,14 +1992,11 @@ void
 weapon_railgun_fire(edict_t *ent)
 {
 	vec3_t start;
-	vec3_t forward, right;
-	vec3_t angles;
-	vec3_t muzzle_forward, muzzle_right;
-	vec3_t view_start, end, aimdir;
-	trace_t tr;
-	vec3_t offset;
+	vec3_t forward, right, up;
 	int damage;
 	int kick;
+	int hspread, vspread;
+	float spread_mult;
 
 	if (!ent)
 	{
@@ -2008,7 +2005,6 @@ weapon_railgun_fire(edict_t *ent)
 
 	if (deathmatch->value)
 	{
-		/* normal damage is too extreme in dm */
 		damage = 100;
 		kick = 200;
 	}
@@ -2024,26 +2020,24 @@ weapon_railgun_fire(edict_t *ent)
 		kick *= 4;
 	}
 
-	VectorCopy(ent->client->v_angle, angles);
-	AngleVectors(angles, forward, right, NULL);
-	VectorCopy(forward, muzzle_forward);
-	VectorCopy(right, muzzle_right);
-	VectorScale(forward, -3, ent->client->kick_origin);
-	ent->client->kick_angles[0] = -3;
-	ent->client->kick_angles[1] = 0;
-	ent->client->kick_angles[2] = 0;
-	VectorSet(offset, 0, 7, ent->viewheight - 8);
-	P_ProjectSource(ent, offset, muzzle_forward, muzzle_right, start);
-	VectorAdd(ent->s.origin, ent->client->ps.viewoffset, view_start);
-	VectorMA(view_start, 8192, forward, end);
-	tr = gi.trace(view_start, NULL, NULL, end, ent, MASK_SHOT);
-	if (tr.fraction < 1.0f)
-	{
-		VectorCopy(tr.endpos, end);
-	}
-	VectorSubtract(end, start, aimdir);
-	VectorNormalize(aimdir);
-	fire_bullet(ent, start, aimdir, damage, kick, 0, 0, MOD_RAILGUN);
+	/* Compute aim from raw view angle for pixel-perfect accuracy */
+	AngleVectors(ent->client->v_angle, forward, right, up);
+
+	/* Apply visual recoil after computing aim */
+	ent->client->kick_angles[0] = -1;
+	VectorScale(forward, -2, ent->client->kick_origin);
+
+	/* Fire from eye position for perfect crosshair alignment */
+	VectorAdd(ent->s.origin, ent->client->ps.viewoffset, start);
+
+	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_SNIPER_RIFLE);
+	hspread = (int)(DEFAULT_BULLET_HSPREAD * spread_mult);
+	vspread = (int)(DEFAULT_BULLET_VSPREAD * spread_mult);
+
+	/* Use precise firing to avoid vectoangles grid-snap */
+	fire_bullet_precise(ent, start, forward, right, up, damage, kick, hspread, vspread, MOD_RAILGUN);
+	PP_Weapon_AddBloom(ent, WEAP_PP_SNIPER_RIFLE);
+
 
 	/* send muzzle flash */
 	gi.WriteByte(svc_muzzleflash);
