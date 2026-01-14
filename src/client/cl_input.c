@@ -628,6 +628,11 @@ CL_InitInput(void)
 	{
 		Key_SetBinding(K_MOUSE2, (char *)"+ads");
 	}
+
+	if (!keybindings[(int)'g'] || !keybindings[(int)'g'][0])
+	{
+		Key_SetBinding((int)'g', (char *)"quickgrenade");
+	}
 }
 
 void

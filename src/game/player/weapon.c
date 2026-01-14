@@ -1158,7 +1158,11 @@ Weapon_Blaster_Fire(edict_t *ent)
 	int kick = 2;
 	vec3_t start;
 	vec3_t forward, right;
+	vec3_t angles;
+	vec3_t muzzle_forward, muzzle_right;
 	vec3_t offset;
+	vec3_t view_start, end, aimdir;
+	trace_t tr;
 	int hspread, vspread;
 	float spread_mult;
 
@@ -1175,17 +1179,30 @@ Weapon_Blaster_Fire(edict_t *ent)
 	}
 
 	/* get start / end positions */
-	AngleVectors(ent->client->v_angle, forward, right, NULL);
+	ent->client->kick_angles[0] = -1;
+	VectorAdd(ent->client->v_angle, ent->client->kick_angles, angles);
+	AngleVectors(angles, forward, right, NULL);
+
+	VectorCopy(forward, muzzle_forward);
+	VectorCopy(right, muzzle_right);
 
 	VectorScale(forward, -2, ent->client->kick_origin);
-	ent->client->kick_angles[0] = -1;
 	VectorSet(offset, 0, 8, ent->viewheight - 8);
-	P_ProjectSource(ent, offset, forward, right, start);
+	P_ProjectSource(ent, offset, muzzle_forward, muzzle_right, start);
+	VectorAdd(ent->s.origin, ent->client->ps.viewoffset, view_start);
+	VectorMA(view_start, 8192, forward, end);
+	tr = gi.trace(view_start, NULL, NULL, end, ent, MASK_SHOT);
+	if (tr.fraction < 1.0f)
+	{
+		VectorCopy(tr.endpos, end);
+	}
+	VectorSubtract(end, start, aimdir);
+	VectorNormalize(aimdir);
 
 	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_PISTOL);
 	hspread = (int)(DEFAULT_BULLET_HSPREAD * spread_mult);
 	vspread = (int)(DEFAULT_BULLET_VSPREAD * spread_mult);
-	fire_bullet(ent, start, forward, damage, kick, hspread, vspread, MOD_BLASTER);
+	fire_bullet(ent, start, aimdir, damage, kick, hspread, vspread, MOD_BLASTER);
 	PP_Weapon_AddBloom(ent, WEAP_PP_PISTOL);
 
 	/* send muzzle flash */
@@ -1430,10 +1447,12 @@ Weapon_HyperBlaster(edict_t *ent)
 void
 Machinegun_Fire(edict_t *ent)
 {
-	int i;
 	vec3_t start;
 	vec3_t forward, right;
 	vec3_t angles;
+	vec3_t muzzle_forward, muzzle_right;
+	vec3_t view_start, end, aimdir;
+	trace_t tr;
 	int damage;
 	int kick = 2;
 	vec3_t offset;
@@ -1503,9 +1522,20 @@ Machinegun_Fire(edict_t *ent)
 	/* get start / end positions */
 	VectorAdd(ent->client->v_angle, ent->client->kick_angles, angles);
 	AngleVectors(angles, forward, right, NULL);
+	VectorCopy(forward, muzzle_forward);
+	VectorCopy(right, muzzle_right);
 	VectorSet(offset, 0, 8, ent->viewheight - 8);
-	P_ProjectSource(ent, offset, forward, right, start);
-	fire_bullet(ent, start, forward, damage, kick, hspread, vspread, MOD_MACHINEGUN);
+	P_ProjectSource(ent, offset, muzzle_forward, muzzle_right, start);
+	VectorAdd(ent->s.origin, ent->client->ps.viewoffset, view_start);
+	VectorMA(view_start, 8192, forward, end);
+	tr = gi.trace(view_start, NULL, NULL, end, ent, MASK_SHOT);
+	if (tr.fraction < 1.0f)
+	{
+		VectorCopy(tr.endpos, end);
+	}
+	VectorSubtract(end, start, aimdir);
+	VectorNormalize(aimdir);
+	fire_bullet(ent, start, aimdir, damage, kick, hspread, vspread, MOD_MACHINEGUN);
 
 	/* PP: Add bloom after firing */
 	PP_Weapon_AddBloom(ent, WEAP_PP_SMG);
@@ -1558,6 +1588,10 @@ Chaingun_Fire(edict_t *ent)
 	int shots;
 	vec3_t start;
 	vec3_t forward, right, up;
+	vec3_t angles;
+	vec3_t muzzle_forward, muzzle_right;
+	vec3_t view_start, end, aimdir;
+	trace_t tr;
 	float r, u;
 	vec3_t offset;
 	int damage;
@@ -1677,18 +1711,30 @@ Chaingun_Fire(edict_t *ent)
 	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_M16);
 	hspread = (int)(DEFAULT_BULLET_HSPREAD * spread_mult);
 	vspread = (int)(DEFAULT_BULLET_VSPREAD * spread_mult);
+	VectorAdd(ent->client->v_angle, ent->client->kick_angles, angles);
 
 	for (i = 0; i < shots; i++)
 	{
 		/* get start / end positions */
-		AngleVectors(ent->client->v_angle, forward, right, up);
+		AngleVectors(angles, forward, right, up);
+		VectorCopy(forward, muzzle_forward);
+		VectorCopy(right, muzzle_right);
 		r = 7 + crandom() * 4;
 		u = crandom() * 4;
 		VectorSet(offset, 0, r, u + ent->viewheight - 8);
 		P_ProjectSource(ent, offset,
-				forward, right, start);
+				muzzle_forward, muzzle_right, start);
+		VectorAdd(ent->s.origin, ent->client->ps.viewoffset, view_start);
+		VectorMA(view_start, 8192, forward, end);
+		tr = gi.trace(view_start, NULL, NULL, end, ent, MASK_SHOT);
+		if (tr.fraction < 1.0f)
+		{
+			VectorCopy(tr.endpos, end);
+		}
+		VectorSubtract(end, start, aimdir);
+		VectorNormalize(aimdir);
 
-		fire_bullet(ent, start, forward, damage, kick, hspread, vspread, MOD_CHAINGUN);
+		fire_bullet(ent, start, aimdir, damage, kick, hspread, vspread, MOD_CHAINGUN);
 
 		/* PP: Add bloom after each shot */
 		PP_Weapon_AddBloom(ent, WEAP_PP_M16);
@@ -1731,6 +1777,10 @@ weapon_shotgun_fire(edict_t *ent)
 {
 	vec3_t start;
 	vec3_t forward, right;
+	vec3_t angles;
+	vec3_t muzzle_forward, muzzle_right;
+	vec3_t view_start, end, aimdir;
+	trace_t tr;
 	vec3_t offset;
 	int damage;
 	int kick = 8;
@@ -1753,13 +1803,24 @@ weapon_shotgun_fire(edict_t *ent)
 	params = PP_Weapon_GetParams(WEAP_PP_SHOTGUN);
 	damage = params ? params->hitscan.damage : 4;
 
-	AngleVectors(ent->client->v_angle, forward, right, NULL);
-
-	VectorScale(forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -2;
+	VectorAdd(ent->client->v_angle, ent->client->kick_angles, angles);
+	AngleVectors(angles, forward, right, NULL);
+	VectorCopy(forward, muzzle_forward);
+	VectorCopy(right, muzzle_right);
+	VectorScale(forward, -2, ent->client->kick_origin);
 
 	VectorSet(offset, 0, 8, ent->viewheight - 8);
-	P_ProjectSource(ent, offset, forward, right, start);
+	P_ProjectSource(ent, offset, muzzle_forward, muzzle_right, start);
+	VectorAdd(ent->s.origin, ent->client->ps.viewoffset, view_start);
+	VectorMA(view_start, 8192, forward, end);
+	tr = gi.trace(view_start, NULL, NULL, end, ent, MASK_SHOT);
+	if (tr.fraction < 1.0f)
+	{
+		VectorCopy(tr.endpos, end);
+	}
+	VectorSubtract(end, start, aimdir);
+	VectorNormalize(aimdir);
 
 	if (is_quad)
 	{
@@ -1774,13 +1835,13 @@ weapon_shotgun_fire(edict_t *ent)
 
 	if (deathmatch->value)
 	{
-		fire_shotgun(ent, start, forward, damage, kick,
+		fire_shotgun(ent, start, aimdir, damage, kick,
 				hspread, vspread, DEFAULT_DEATHMATCH_SHOTGUN_COUNT,
 				MOD_SHOTGUN);
 	}
 	else
 	{
-		fire_shotgun(ent, start, forward, damage, kick,
+		fire_shotgun(ent, start, aimdir, damage, kick,
 				hspread, vspread, DEFAULT_SHOTGUN_COUNT,
 				MOD_SHOTGUN);
 	}
@@ -1820,6 +1881,10 @@ weapon_supershotgun_fire(edict_t *ent)
 {
 	vec3_t start;
 	vec3_t forward, right;
+	vec3_t angles;
+	vec3_t muzzle_forward, muzzle_right;
+	vec3_t view_start, end, aimdir;
+	trace_t tr;
 	vec3_t offset;
 	vec3_t v;
 	int damage = 6;
@@ -1832,13 +1897,10 @@ weapon_supershotgun_fire(edict_t *ent)
 		return;
 	}
 
-	AngleVectors(ent->client->v_angle, forward, right, NULL);
-
-	VectorScale(forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -2;
-
-	VectorSet(offset, 0, 8, ent->viewheight - 8);
-	P_ProjectSource(ent, offset, forward, right, start);
+	VectorAdd(ent->client->v_angle, ent->client->kick_angles, angles);
+	AngleVectors(angles, forward, right, NULL);
+	VectorScale(forward, -2, ent->client->kick_origin);
 
 	if (is_quad)
 	{
@@ -1846,45 +1908,49 @@ weapon_supershotgun_fire(edict_t *ent)
 		kick *= 4;
 	}
 
-	v[PITCH] = ent->client->v_angle[PITCH];
-	v[YAW] = ent->client->v_angle[YAW] - 5;
-	v[ROLL] = ent->client->v_angle[ROLL];
-	AngleVectors(v, forward, NULL, NULL);
-	
-	if (aimfix->value)
-	{	
-		AngleVectors(v, forward, right, NULL);
-
-		VectorScale(forward, -2, ent->client->kick_origin);
-		ent->client->kick_angles[0] = -2;
-
-		VectorSet(offset, 0, 8, ent->viewheight - 8);
-		P_ProjectSource(ent, offset, forward, right, start);
-	}	
+	v[PITCH] = angles[PITCH];
+	v[YAW] = angles[YAW] - 5;
+	v[ROLL] = angles[ROLL];
+	AngleVectors(v, forward, right, NULL);
+	VectorCopy(forward, muzzle_forward);
+	VectorCopy(right, muzzle_right);
+	VectorSet(offset, 0, 8, ent->viewheight - 8);
+	P_ProjectSource(ent, offset, muzzle_forward, muzzle_right, start);
+	VectorAdd(ent->s.origin, ent->client->ps.viewoffset, view_start);
+	VectorMA(view_start, 8192, forward, end);
+	tr = gi.trace(view_start, NULL, NULL, end, ent, MASK_SHOT);
+	if (tr.fraction < 1.0f)
+	{
+		VectorCopy(tr.endpos, end);
+	}
+	VectorSubtract(end, start, aimdir);
+	VectorNormalize(aimdir);
 	
 	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_DOUBLE_BARREL);
 	hspread = (int)(DEFAULT_SHOTGUN_HSPREAD * spread_mult);
 	vspread = (int)(DEFAULT_SHOTGUN_VSPREAD * spread_mult);
 	
-	fire_shotgun(ent, start, forward, damage, kick,
+	fire_shotgun(ent, start, aimdir, damage, kick,
 			hspread, vspread,
 			DEFAULT_SSHOTGUN_COUNT / 2, MOD_SSHOTGUN);
 	
-	v[YAW] = ent->client->v_angle[YAW] + 5;
-	AngleVectors(v, forward, NULL, NULL);
+	v[YAW] = angles[YAW] + 5;
+	AngleVectors(v, forward, right, NULL);
+	VectorCopy(forward, muzzle_forward);
+	VectorCopy(right, muzzle_right);
+	VectorSet(offset, 0, 8, ent->viewheight - 8);
+	P_ProjectSource(ent, offset, muzzle_forward, muzzle_right, start);
+	VectorAdd(ent->s.origin, ent->client->ps.viewoffset, view_start);
+	VectorMA(view_start, 8192, forward, end);
+	tr = gi.trace(view_start, NULL, NULL, end, ent, MASK_SHOT);
+	if (tr.fraction < 1.0f)
+	{
+		VectorCopy(tr.endpos, end);
+	}
+	VectorSubtract(end, start, aimdir);
+	VectorNormalize(aimdir);
 	
-	if (aimfix->value)
-	{	
-		AngleVectors(v, forward, right, NULL);
-
-		VectorScale(forward, -2, ent->client->kick_origin);
-		ent->client->kick_angles[0] = -2;
-
-		VectorSet(offset, 0, 8, ent->viewheight - 8);
-		P_ProjectSource(ent, offset, forward, right, start);
-	}	
-	
-	fire_shotgun(ent, start, forward, damage, kick,
+	fire_shotgun(ent, start, aimdir, damage, kick,
 			hspread, vspread,
 			DEFAULT_SSHOTGUN_COUNT / 2, MOD_SSHOTGUN);
 
@@ -1927,6 +1993,10 @@ weapon_railgun_fire(edict_t *ent)
 {
 	vec3_t start;
 	vec3_t forward, right;
+	vec3_t angles;
+	vec3_t muzzle_forward, muzzle_right;
+	vec3_t view_start, end, aimdir;
+	trace_t tr;
 	vec3_t offset;
 	int damage;
 	int kick;
@@ -1954,14 +2024,26 @@ weapon_railgun_fire(edict_t *ent)
 		kick *= 4;
 	}
 
-	AngleVectors(ent->client->v_angle, forward, right, NULL);
-
+	VectorCopy(ent->client->v_angle, angles);
+	AngleVectors(angles, forward, right, NULL);
+	VectorCopy(forward, muzzle_forward);
+	VectorCopy(right, muzzle_right);
 	VectorScale(forward, -3, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -3;
-
+	ent->client->kick_angles[1] = 0;
+	ent->client->kick_angles[2] = 0;
 	VectorSet(offset, 0, 7, ent->viewheight - 8);
-	P_ProjectSource(ent, offset, forward, right, start);
-	fire_bullet(ent, start, forward, damage, kick, 0, 0, MOD_RAILGUN);
+	P_ProjectSource(ent, offset, muzzle_forward, muzzle_right, start);
+	VectorAdd(ent->s.origin, ent->client->ps.viewoffset, view_start);
+	VectorMA(view_start, 8192, forward, end);
+	tr = gi.trace(view_start, NULL, NULL, end, ent, MASK_SHOT);
+	if (tr.fraction < 1.0f)
+	{
+		VectorCopy(tr.endpos, end);
+	}
+	VectorSubtract(end, start, aimdir);
+	VectorNormalize(aimdir);
+	fire_bullet(ent, start, aimdir, damage, kick, 0, 0, MOD_RAILGUN);
 
 	/* send muzzle flash */
 	gi.WriteByte(svc_muzzleflash);

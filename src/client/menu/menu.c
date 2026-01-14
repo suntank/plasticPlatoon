@@ -928,6 +928,8 @@ M_Menu_Multiplayer_f(void)
 char *bindnames[][2] =
 {
 	{"+attack", "attack"},
+	{"+ads", "aim down sights"},
+	{"quickgrenade", "quick grenade"},
 	{"weapnext", "next weapon"},
 	{"weapprev", "previous weapon"},
 	{"+forward", "walk forward"},
