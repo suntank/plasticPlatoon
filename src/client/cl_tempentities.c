@@ -724,7 +724,11 @@ CL_ParseTEnt(void)
 			ex->ent.alpha = 1.0f;
 			ex->start = cl.frame.servertime;
 			ex->duration = 1000.0f;  /* 1 seconds */
-			ex->rotation_speed = 45.0f + (float)(randk() % 180);
+			/* Randomly choose clockwise or counter-clockwise rotation */
+			if (randk() % 2 == 0)
+				ex->rotation_speed = 45.0f + (float)(randk() % 180);  /* clockwise */
+			else
+				ex->rotation_speed = -(45.0f + (float)(randk() % 180)); /* counter-clockwise */
 			ex->light = 700;
 			ex->lightcolor[0] = 1.0;
 			ex->lightcolor[1] = 0.75;
@@ -936,7 +940,11 @@ CL_ParseTEnt(void)
 			ex->ent.alpha = 1.0f;
 			ex->start = cl.frame.servertime;
 			ex->duration = 1000.0f;  /* 1 seconds */
-			ex->rotation_speed = 45.0f + (float)(randk() % 180);  /* random rotation speed */
+			/* Randomly choose clockwise or counter-clockwise rotation */
+			if (randk() % 2 == 0)
+				ex->rotation_speed = 45.0f + (float)(randk() % 180);  /* clockwise */
+			else
+				ex->rotation_speed = -(45.0f + (float)(randk() % 180)); /* counter-clockwise */  /* random rotation speed */
 			ex->light = 350;
 			ex->lightcolor[0] = 1.0;
 			ex->lightcolor[1] = 0.5;
@@ -994,7 +1002,11 @@ CL_ParseTEnt(void)
 			ex->ent.alpha = 1.0f;
 			ex->start = cl.frame.servertime;
 			ex->duration = 1000.0f;  /* 1 seconds */
-			ex->rotation_speed = 45.0f + (float)(randk() % 180);
+			/* Randomly choose clockwise or counter-clockwise rotation */
+			if (randk() % 2 == 0)
+				ex->rotation_speed = 45.0f + (float)(randk() % 180);  /* clockwise */
+			else
+				ex->rotation_speed = -(45.0f + (float)(randk() % 180)); /* counter-clockwise */
 			ex->light = 350;
 			ex->lightcolor[0] = 1.0;
 			ex->lightcolor[1] = 0.5;
@@ -1769,12 +1781,8 @@ CL_AddExplosions(void)
 					ent->alpha = 0.99f * (1.0f - ((progress - 0.3f) / 0.7f));
 				}
 
-				/* Scale: start at 50%, grow to 100%, shrink to 50% */
-				float scale_progress;
-				if (progress < 0.5f)
-					scale_progress = progress * 2.0f;  /* 0.0 -> 1.0 */
-				else
-					scale_progress = 2.0f - (progress * 2.0f);  /* 1.0 -> 0.0 */
+				/* Scale: start small and grow to full size */
+				float scale_progress = progress;  /* 0.0 -> 1.0 */
 				
 				/* Mortar explosions (light=700) use original large size, others use small size */
 				if (ex->light >= 700)
