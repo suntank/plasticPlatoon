@@ -55,9 +55,9 @@
       "fire_mode": {
         "rate_rps": 9.0,
         "damage": 8,
-        "spread_base": 0.9,
-        "bloom_per_shot": 0.08,
-        "bloom_recover_rate": 1.4
+        "spread_base": 3,
+        "bloom_per_shot": 0.16,
+        "bloom_recover_rate": 1.6
       },
       "ads": {
         "enabled": true,
@@ -72,14 +72,14 @@
         "damage": 9,
         "spread_standing_hip": 2.0,
         "spread_crouched_hip": 1.0,
-        "spread_ads": 0.85,
-        "bloom_per_shot": 0.2,
+        "spread_ads": 0.5,
+        "bloom_per_shot": 0.1,
         "bloom_recover_rate": 0.9
       },
       "ads": {
         "enabled": true,
-        "accuracy_multiplier": 0.5,
-        "move_speed_scale": 0.50
+        "accuracy_multiplier": 0.2,
+        "move_speed_scale": 0.25
       }
     },
 
