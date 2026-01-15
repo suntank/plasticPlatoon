@@ -938,7 +938,7 @@ CL_ParseTEnt(void)
 			ex->ent.flags = RF_FULLBRIGHT | RF_NOSHADOW | RF_TRANSLUCENT;
 			ex->ent.alpha = 1.0f;
 			ex->start = cl.frame.servertime;
-			ex->duration = 2000.0f;  /* 2 seconds */
+			ex->duration = 1000.0f;  /* 1 seconds */
 			ex->rotation_speed = 90.0f + (float)(randk() % 180);  /* random rotation speed */
 			ex->light = 350;
 			ex->lightcolor[0] = 1.0;
@@ -996,7 +996,7 @@ CL_ParseTEnt(void)
 			ex->ent.flags = RF_FULLBRIGHT | RF_NOSHADOW | RF_TRANSLUCENT;
 			ex->ent.alpha = 1.0f;
 			ex->start = cl.frame.servertime;
-			ex->duration = 2000.0f;  /* 2 seconds */
+			ex->duration = 1000.0f;  /* 1 seconds */
 			ex->rotation_speed = 90.0f + (float)(randk() % 180);
 			ex->light = 350;
 			ex->lightcolor[0] = 1.0;
@@ -1762,18 +1762,20 @@ CL_AddExplosions(void)
 				/* Rotate the sprite over time */
 				ent->angles[2] = ex->rotation_speed * (elapsed / 1000.0f);
 
-				/* Fade out: full alpha for first 30%, then fade */
+				/* Fade out: start slightly transparent to ensure blending, then fade */
 				if (progress < 0.3f)
 				{
-					ent->alpha = 1.0f;
+					ent->alpha = 0.99f;
 				}
 				else
 				{
-					ent->alpha = 1.0f - ((progress - 0.3f) / 0.7f);
+					ent->alpha = 0.99f * (1.0f - ((progress - 0.3f) / 0.7f));
 				}
 
+				/* Scale up: skinnum 1-255 maps to scale 0.7-1.3 in renderer */
+				ent->skinnum = 1 + (int)(progress * 254.0f);
+
 				ent->flags |= RF_TRANSLUCENT;
-				ent->skinnum = 0;
 				ent->frame = 0;
 				ent->oldframe = 0;
 				break;
