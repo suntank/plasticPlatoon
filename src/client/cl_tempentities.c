@@ -29,7 +29,7 @@
 
 typedef enum
 {
-	ex_free, ex_explosion, ex_misc, ex_flash, ex_mflash, ex_poly, ex_poly2, ex_sprite_explosion
+	ex_free, ex_explosion, ex_misc, ex_flash, ex_mflash, ex_poly, ex_poly2, ex_sprite_explosion, ex_smoke_sprite
 } exptype_t;
 
 typedef struct
@@ -123,6 +123,7 @@ static struct model_s *cl_mod_lightning;
 static struct model_s *cl_mod_heatbeam;
 static struct model_s *cl_mod_explo4_big;
 static struct model_s *cl_mod_explosion_sprite;
+static struct model_s *cl_mod_smoke_sprite;
 
 /*
  * Utility functions
@@ -298,6 +299,7 @@ CL_RegisterTEntModels(void)
 	cl_mod_lightning = R_RegisterModel("models/proj/lightning/tris.md2");
 	cl_mod_heatbeam = R_RegisterModel("models/proj/beam/tris.md2");
 	cl_mod_explosion_sprite = R_RegisterModel("sprites/explosion.sp2");
+	cl_mod_smoke_sprite = R_RegisterModel("sprites/smoke.sp2");
 }
 
 /*
@@ -347,6 +349,7 @@ CL_ClearTEntModelVars(void)
 	cl_mod_heatbeam = NULL;
 	cl_mod_explo4_big = NULL;
 	cl_mod_explosion_sprite = NULL;
+	cl_mod_smoke_sprite = NULL;
 }
 
 void
@@ -737,6 +740,27 @@ CL_ParseTEnt(void)
 			ex->ent.angles[1] = (float)(randk() % 360);
 			CL_ExplosionParticles(pos);
 			CL_SmokeParticles(pos, 40);
+
+			/* Create smoke sprite that appears halfway through and fades 0.5s after explosion */
+			ex = CL_AllocExplosion();
+			VectorCopy(pos, ex->ent.origin);
+			ex->type = ex_smoke_sprite;
+			ex->ent.flags = RF_TRANSLUCENT;
+			ex->ent.alpha = 0.0f;  /* Start invisible */
+			ex->start = cl.frame.servertime + (500.0f);  /* Start 0.5s in */
+			ex->duration = 1000.0f;  /* Last 1.5s total (0.5s after explosion ends) */
+			/* Randomly choose clockwise or counter-clockwise rotation */
+			if (randk() % 2 == 0)
+				ex->rotation_speed = 15.0f + (float)(randk() % 30);  /* clockwise, slow */
+			else
+				ex->rotation_speed = -(15.0f + (float)(randk() % 30)); /* counter-clockwise, slow */
+			ex->ent.model = cl_mod_smoke_sprite;
+			ex->ent.angles[1] = (float)(randk() % 360);
+			if (!ex->ent.model)
+			{
+				ex->type = ex_free;
+			}
+
 			S_StartSound(pos, 0, 0, cl_sfx_rockexp, 1, ATTN_NORM, 0);
 			break;
 
@@ -954,6 +978,26 @@ CL_ParseTEnt(void)
 			CL_ExplosionParticles(pos);
 			CL_SmokeParticles(pos, 30);
 
+			/* Create smoke sprite that appears halfway through and fades 0.5s after explosion */
+			ex = CL_AllocExplosion();
+			VectorCopy(pos, ex->ent.origin);
+			ex->type = ex_smoke_sprite;
+			ex->ent.flags = RF_TRANSLUCENT;
+			ex->ent.alpha = 0.0f;  /* Start invisible */
+			ex->start = cl.frame.servertime + 500.0f;  /* Start 0.5s in */
+			ex->duration = 1000.0f;  /* Last 1.5s total (0.5s after explosion ends) */
+			/* Randomly choose clockwise or counter-clockwise rotation */
+			if (randk() % 2 == 0)
+				ex->rotation_speed = 15.0f + (float)(randk() % 30);  /* clockwise, slow */
+			else
+				ex->rotation_speed = -(15.0f + (float)(randk() % 30)); /* counter-clockwise, slow */
+			ex->ent.model = cl_mod_smoke_sprite;
+			ex->ent.angles[1] = (float)(randk() % 360);
+			if (!ex->ent.model)
+			{
+				ex->type = ex_free;
+			}
+
 			if (type == TE_GRENADE_EXPLOSION_WATER)
 			{
 				S_StartSound(pos, 0, 0, cl_sfx_watrexp, 1, ATTN_NORM, 0);
@@ -1018,6 +1062,26 @@ CL_ParseTEnt(void)
 			{
 				CL_ExplosionParticles(pos);
 				CL_SmokeParticles(pos, 40);
+
+				/* Create smoke sprite that appears halfway through and fades 0.5s after explosion */
+				ex = CL_AllocExplosion();
+				VectorCopy(pos, ex->ent.origin);
+				ex->type = ex_smoke_sprite;
+				ex->ent.flags = RF_TRANSLUCENT;
+				ex->ent.alpha = 0.0f;  /* Start invisible */
+				ex->start = cl.frame.servertime + (500.0f);  /* Start 0.5s in */
+				ex->duration = 1000.0f;  /* Last 1.5s total (0.5s after explosion ends) */
+				/* Randomly choose clockwise or counter-clockwise rotation */
+				if (randk() % 2 == 0)
+					ex->rotation_speed = 15.0f + (float)(randk() % 30);  /* clockwise, slow */
+				else
+					ex->rotation_speed = -(15.0f + (float)(randk() % 30)); /* counter-clockwise, slow */
+				ex->ent.model = cl_mod_smoke_sprite;
+				ex->ent.angles[1] = (float)(randk() % 360);
+				if (!ex->ent.model)
+				{
+					ex->type = ex_free;
+				}
 			}
 
 			if (type == TE_ROCKET_EXPLOSION_WATER)
@@ -1795,6 +1859,44 @@ CL_AddExplosions(void)
 					/* Small size: 33%-67% scale (1/3 to 2/3 size) */
 					ent->skinnum = 65 + (int)(scale_progress * 64.0f);
 				}
+
+				ent->flags |= RF_TRANSLUCENT;
+				ent->frame = 0;
+				ent->oldframe = 0;
+				break;
+			}
+			case ex_smoke_sprite:
+			{
+				float elapsed = cl.time - ex->start;
+				float progress = elapsed / ex->duration;
+
+				if (elapsed < 0.0f)
+				{
+					ent->alpha = 0.0f;
+					break;
+				}
+
+				if (progress >= 1.0f)
+				{
+					ex->type = ex_free;
+					break;
+				}
+
+				/* Rotate the sprite over time (slow rotation) */
+				ent->angles[2] = ex->rotation_speed * (elapsed / 1000.0f);
+
+				/* Fade in for first 0.33s, then fade out for remaining time */
+				if (progress < 0.33f)
+				{
+					ent->alpha = progress / 0.33f;  /* 0.0 -> 1.0 */
+				}
+				else
+				{
+					ent->alpha = 1.0f - ((progress - 0.33f) / 0.67f);  /* 1.0 -> 0.0 */
+				}
+
+				/* Keep smoke at constant medium size */
+				ent->skinnum = 90;  /* Medium scale */
 
 				ent->flags |= RF_TRANSLUCENT;
 				ent->frame = 0;
