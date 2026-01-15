@@ -890,10 +890,10 @@ GL3_DrawSpriteModel(entity_t *e, gl3model_t *currentmodel)
 	VectorScale(vright, c, rotated_right);
 	VectorMA(rotated_right, -s, vup, rotated_right);
 
-	/* Size variance: skinnum encodes scale (0=1.0, 1-127 smaller, 128-255 larger) */
+	/* Size variance: skinnum encodes scale (0=1.0, 1-255 smaller) */
 	if (e->skinnum > 0 && e->skinnum < 256)
 	{
-		scale = 0.7f + (e->skinnum / 255.0f) * 0.6f;
+		scale = 0.1f + (e->skinnum / 255.0f) * 0.9f;
 	}
 
 	VectorScale(rotated_up, scale, up);

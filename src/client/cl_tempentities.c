@@ -1772,8 +1772,15 @@ CL_AddExplosions(void)
 					ent->alpha = 0.99f * (1.0f - ((progress - 0.3f) / 0.7f));
 				}
 
-				/* Scale up: skinnum 1-255 maps to scale 0.7-1.3 in renderer */
-				ent->skinnum = 1 + (int)(progress * 254.0f);
+				/* Scale: start at 50%, grow to 100%, shrink to 50% */
+				float scale_progress;
+				if (progress < 0.5f)
+					scale_progress = progress * 2.0f;  /* 0.0 -> 1.0 */
+				else
+					scale_progress = 2.0f - (progress * 2.0f);  /* 1.0 -> 0.0 */
+				
+				/* Map 0.0-1.0 to skinnum range that gives 33%-67% scale (1/3 to 2/3 size) */
+				ent->skinnum = 65 + (int)(scale_progress * 64.0f);
 
 				ent->flags |= RF_TRANSLUCENT;
 				ent->frame = 0;
