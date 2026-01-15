@@ -748,7 +748,7 @@ CL_ParseTEnt(void)
 			ex->ent.flags = RF_TRANSLUCENT;
 			ex->ent.alpha = 0.0f;  /* Start invisible */
 			ex->start = cl.frame.servertime + (500.0f);  /* Start 0.5s in */
-			ex->duration = 1000.0f;  /* Last 1.5s total (0.5s after explosion ends) */
+			ex->duration = 2000.0f;  /* Last 2s total (1s after explosion ends) */
 			/* Randomly choose clockwise or counter-clockwise rotation */
 			if (randk() % 2 == 0)
 				ex->rotation_speed = 15.0f + (float)(randk() % 30);  /* clockwise, slow */
@@ -985,7 +985,7 @@ CL_ParseTEnt(void)
 			ex->ent.flags = RF_TRANSLUCENT;
 			ex->ent.alpha = 0.0f;  /* Start invisible */
 			ex->start = cl.frame.servertime + 500.0f;  /* Start 0.5s in */
-			ex->duration = 1000.0f;  /* Last 1.5s total (0.5s after explosion ends) */
+			ex->duration = 2000.0f;  /* Last 2s total (1s after explosion ends) */
 			/* Randomly choose clockwise or counter-clockwise rotation */
 			if (randk() % 2 == 0)
 				ex->rotation_speed = 15.0f + (float)(randk() % 30);  /* clockwise, slow */
@@ -1070,7 +1070,7 @@ CL_ParseTEnt(void)
 				ex->ent.flags = RF_TRANSLUCENT;
 				ex->ent.alpha = 0.0f;  /* Start invisible */
 				ex->start = cl.frame.servertime + (500.0f);  /* Start 0.5s in */
-				ex->duration = 1000.0f;  /* Last 1.5s total (0.5s after explosion ends) */
+				ex->duration = 2000.0f;  /* Last 2s total (1s after explosion ends) */
 				/* Randomly choose clockwise or counter-clockwise rotation */
 				if (randk() % 2 == 0)
 					ex->rotation_speed = 15.0f + (float)(randk() % 30);  /* clockwise, slow */
