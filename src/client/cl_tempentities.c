@@ -935,7 +935,8 @@ CL_ParseTEnt(void)
 			ex = CL_AllocExplosion();
 			VectorCopy(pos, ex->ent.origin);
 			ex->type = ex_sprite_explosion;
-			ex->ent.flags = RF_FULLBRIGHT | RF_NOSHADOW;
+			ex->ent.flags = RF_FULLBRIGHT | RF_NOSHADOW | RF_TRANSLUCENT;
+			ex->ent.alpha = 1.0f;
 			ex->start = cl.frame.servertime;
 			ex->duration = 2000.0f;  /* 2 seconds */
 			ex->rotation_speed = 90.0f + (float)(randk() % 180);  /* random rotation speed */
@@ -992,7 +993,8 @@ CL_ParseTEnt(void)
 			ex = CL_AllocExplosion();
 			VectorCopy(pos, ex->ent.origin);
 			ex->type = ex_sprite_explosion;
-			ex->ent.flags = RF_FULLBRIGHT | RF_NOSHADOW;
+			ex->ent.flags = RF_FULLBRIGHT | RF_NOSHADOW | RF_TRANSLUCENT;
+			ex->ent.alpha = 1.0f;
 			ex->start = cl.frame.servertime;
 			ex->duration = 2000.0f;  /* 2 seconds */
 			ex->rotation_speed = 90.0f + (float)(randk() % 180);
