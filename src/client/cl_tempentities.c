@@ -719,23 +719,20 @@ CL_ParseTEnt(void)
 			MSG_ReadPos(&net_message, pos);
 			ex = CL_AllocExplosion();
 			VectorCopy(pos, ex->ent.origin);
-			ex->type = ex_poly;
-			ex->ent.flags = RF_FULLBRIGHT | RF_NOSHADOW;
-			ex->start = cl.frame.servertime - 100.0f;
+			ex->type = ex_sprite_explosion;
+			ex->ent.flags = RF_FULLBRIGHT | RF_NOSHADOW | RF_TRANSLUCENT;
+			ex->ent.alpha = 1.0f;
+			ex->start = cl.frame.servertime;
+			ex->duration = 1000.0f;  /* 1 seconds */
+			ex->rotation_speed = 45.0f + (float)(randk() % 180);
 			ex->light = 700;
 			ex->lightcolor[0] = 1.0;
 			ex->lightcolor[1] = 0.75;
 			ex->lightcolor[2] = 0.25;
+			ex->ent.model = cl_mod_explosion_sprite;
 			ex->ent.angles[1] = (float)(randk() % 360);
-			ex->ent.model = cl_mod_explo4_big;
-
-			if (frandk() < 0.5)
-			{
-				ex->baseframe = 15;
-			}
-
-			ex->frames = 15;
-			EXPLOSION_PARTICLES(pos);
+			CL_ExplosionParticles(pos);
+			CL_SmokeParticles(pos, 40);
 			S_StartSound(pos, 0, 0, cl_sfx_rockexp, 1, ATTN_NORM, 0);
 			break;
 
@@ -939,7 +936,7 @@ CL_ParseTEnt(void)
 			ex->ent.alpha = 1.0f;
 			ex->start = cl.frame.servertime;
 			ex->duration = 1000.0f;  /* 1 seconds */
-			ex->rotation_speed = 90.0f + (float)(randk() % 180);  /* random rotation speed */
+			ex->rotation_speed = 45.0f + (float)(randk() % 180);  /* random rotation speed */
 			ex->light = 350;
 			ex->lightcolor[0] = 1.0;
 			ex->lightcolor[1] = 0.5;
@@ -997,7 +994,7 @@ CL_ParseTEnt(void)
 			ex->ent.alpha = 1.0f;
 			ex->start = cl.frame.servertime;
 			ex->duration = 1000.0f;  /* 1 seconds */
-			ex->rotation_speed = 90.0f + (float)(randk() % 180);
+			ex->rotation_speed = 45.0f + (float)(randk() % 180);
 			ex->light = 350;
 			ex->lightcolor[0] = 1.0;
 			ex->lightcolor[1] = 0.5;
@@ -1779,8 +1776,17 @@ CL_AddExplosions(void)
 				else
 					scale_progress = 2.0f - (progress * 2.0f);  /* 1.0 -> 0.0 */
 				
-				/* Map 0.0-1.0 to skinnum range that gives 33%-67% scale (1/3 to 2/3 size) */
-				ent->skinnum = 65 + (int)(scale_progress * 64.0f);
+				/* Mortar explosions (light=700) use original large size, others use small size */
+				if (ex->light >= 700)
+				{
+					/* Large size: 70%-130% scale */
+					ent->skinnum = 128 + (int)(scale_progress * 127.0f);
+				}
+				else
+				{
+					/* Small size: 33%-67% scale (1/3 to 2/3 size) */
+					ent->skinnum = 65 + (int)(scale_progress * 64.0f);
+				}
 
 				ent->flags |= RF_TRANSLUCENT;
 				ent->frame = 0;
