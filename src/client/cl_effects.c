@@ -63,7 +63,7 @@ CL_LoadMuzzleFlashConfig(void)
 	json_value_t *root, *mflash;
 	char val_str[32];
 
-	/* Try to load from plastic_platoon game dir first, then baseq2 */
+	/* Try to load from tuning directory */
 	len = FS_LoadFile("tuning/default.json", (void **)&buffer);
 	if (len <= 0 || !buffer)
 	{
@@ -91,12 +91,14 @@ CL_LoadMuzzleFlashConfig(void)
 	/* Load values and set cvars */
 	if (JSON_GetMember(mflash, "enabled"))
 	{
-		Cvar_Set("cl_mflash_enabled", JSON_GetBool(JSON_GetMember(mflash, "enabled"), true) ? "1" : "0");
+		qboolean enabled = JSON_GetBool(JSON_GetMember(mflash, "enabled"), true);
+		Cvar_Set("cl_mflash_enabled", enabled ? "1" : "0");
 	}
 
 	if (JSON_GetMember(mflash, "forward"))
 	{
-		Com_sprintf(val_str, sizeof(val_str), "%.2f", JSON_GetFloat(JSON_GetMember(mflash, "forward"), 18.0f));
+		float forward = JSON_GetFloat(JSON_GetMember(mflash, "forward"), 18.0f);
+		Com_sprintf(val_str, sizeof(val_str), "%.2f", forward);
 		Cvar_Set("cl_mflash_forward", val_str);
 	}
 
