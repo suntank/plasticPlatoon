@@ -1051,7 +1051,8 @@ CLIENT_OBJS_ := \
 	src/server/sv_save.o \
 	src/server/sv_send.o \
 	src/server/sv_user.o \
-	src/server/sv_world.o
+	src/server/sv_world.o \
+	src/common/pp_json.o
 
 ifeq ($(WITH_SDL3),yes)
 CLIENT_OBJS_ += \

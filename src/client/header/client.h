@@ -514,6 +514,8 @@ void V_AddLightStyle (int style, float r, float g, float b);
 void CL_RegisterTEntSounds (void);
 void CL_RegisterTEntModels (void);
 void CL_SmokeAndFlash(vec3_t origin);
+void CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t velocity);
+void CL_InitMuzzleFlashCvars(void);
 
 void CL_CheckPredictionError (void);
 

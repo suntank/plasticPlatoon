@@ -6,6 +6,16 @@
     "description": "Baseline Plastic Platoon weapon tuning"
   },
 
+  "muzzle_flash": {
+    "enabled": true,
+    "forward": 40.0,
+    "right": 40.0,
+    "up": 10.0,
+    "scale": 40,
+    "duration_ms": 150,
+    "velocity_scale": 0.15
+  },
+
   "ammo_caps": {
     "AMMO_LIGHT_ROUNDS": 999,
     "AMMO_HEAVY_ROUNDS": 999,

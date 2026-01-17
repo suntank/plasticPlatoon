@@ -626,6 +626,9 @@ CL_InitLocal(void)
 
 	cl_vwep = Cvar_Get("cl_vwep", "1", CVAR_ARCHIVE);
 
+	/* Muzzle flash sprite cvars */
+	CL_InitMuzzleFlashCvars();
+
 #ifdef USE_CURL
 	cl_http_verifypeer = Cvar_Get("cl_http_verifypeer", "1", CVAR_ARCHIVE);
 	cl_http_proxy = Cvar_Get("cl_http_proxy", "", CVAR_ARCHIVE);

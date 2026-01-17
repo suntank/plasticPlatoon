@@ -44,6 +44,7 @@ typedef struct
 	int baseframe;
 	float rotation_speed;  /* degrees per second for sprite rotation */
 	float duration;        /* total duration in milliseconds */
+	vec3_t velocity;       /* velocity for muzzle flash tracking */
 } explosion_t;
 
 #define MAX_EXPLOSIONS 64
@@ -124,6 +125,7 @@ static struct model_s *cl_mod_heatbeam;
 static struct model_s *cl_mod_explo4_big;
 static struct model_s *cl_mod_explosion_sprite;
 static struct model_s *cl_mod_smoke_sprite;
+static struct model_s *cl_mod_muzzle_flash_sprite;
 
 /*
  * Utility functions
@@ -300,6 +302,7 @@ CL_RegisterTEntModels(void)
 	cl_mod_heatbeam = R_RegisterModel("models/proj/beam/tris.md2");
 	cl_mod_explosion_sprite = R_RegisterModel("sprites/explosion.sp2");
 	cl_mod_smoke_sprite = R_RegisterModel("sprites/smoke.sp2");
+	cl_mod_muzzle_flash_sprite = R_RegisterModel("sprites/muzzleFlash.sp2");
 }
 
 /*
@@ -350,6 +353,7 @@ CL_ClearTEntModelVars(void)
 	cl_mod_explo4_big = NULL;
 	cl_mod_explosion_sprite = NULL;
 	cl_mod_smoke_sprite = NULL;
+	cl_mod_muzzle_flash_sprite = NULL;
 }
 
 void
@@ -400,6 +404,82 @@ CL_SmokeAndFlash(vec3_t origin)
 	ex->frames = 2;
 	ex->start = cl.frame.servertime - 100.0f;
 	ex->ent.model = cl_mod_flash;
+}
+
+/* Muzzle flash cvars (defined in cl_effects.c) */
+extern cvar_t *cl_mflash_forward;
+extern cvar_t *cl_mflash_right;
+extern cvar_t *cl_mflash_up;
+extern cvar_t *cl_mflash_scale;
+extern cvar_t *cl_mflash_duration;
+extern cvar_t *cl_mflash_vel_scale;
+extern cvar_t *cl_mflash_enabled;
+
+/*
+ * Spawn a muzzle flash sprite effect.
+ * Origin is the player origin, forward/right are direction vectors.
+ * Position is calculated using cvars for offset tuning.
+ */
+void
+CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t velocity)
+{
+	explosion_t *ex;
+	vec3_t spawn_origin;
+	float fwd_offset, right_offset, up_offset;
+	float vel_scale, duration;
+	int scale;
+
+	if (!cl_mod_muzzle_flash_sprite)
+	{
+		return;
+	}
+
+	/* Check if muzzle flash sprites are enabled */
+	if (cl_mflash_enabled && cl_mflash_enabled->value < 1)
+	{
+		return;
+	}
+
+	/* Get cvar values with fallback defaults */
+	fwd_offset = cl_mflash_forward ? cl_mflash_forward->value : 18.0f;
+	right_offset = cl_mflash_right ? cl_mflash_right->value : 8.0f;
+	up_offset = cl_mflash_up ? cl_mflash_up->value : 0.0f;
+	scale = cl_mflash_scale ? (int)cl_mflash_scale->value : 40;
+	duration = cl_mflash_duration ? cl_mflash_duration->value : 150.0f;
+	vel_scale = cl_mflash_vel_scale ? cl_mflash_vel_scale->value : 0.15f;
+
+	/* Calculate spawn position from origin + offsets */
+	VectorCopy(origin, spawn_origin);
+	VectorMA(spawn_origin, fwd_offset, forward, spawn_origin);
+	VectorMA(spawn_origin, right_offset, right, spawn_origin);
+	spawn_origin[2] += up_offset;
+
+	ex = CL_AllocExplosion();
+	ex->type = ex_mflash;
+	ex->ent.flags = RF_FULLBRIGHT | RF_TRANSLUCENT | RF_NOSHADOW;
+	ex->ent.model = cl_mod_muzzle_flash_sprite;
+
+	/* Store origin in both origin and oldorigin for velocity tracking */
+	VectorCopy(spawn_origin, ex->ent.origin);
+	VectorCopy(spawn_origin, ex->ent.oldorigin);
+
+	/* Store scaled velocity for position updates */
+	ex->velocity[0] = velocity[0] * vel_scale;
+	ex->velocity[1] = velocity[1] * vel_scale;
+	ex->velocity[2] = velocity[2] * vel_scale;
+
+	/* Random rotation angle (roll) */
+	ex->ent.angles[2] = (float)(randk() % 360);
+
+	/* Duration from cvar */
+	ex->start = cl.time;
+	ex->duration = duration;
+
+	/* Scale from cvar */
+	ex->ent.skinnum = scale;
+
+	ex->ent.alpha = 0.95f;
+	ex->ent.frame = 0;
 }
 
 void
@@ -1747,13 +1827,35 @@ CL_AddExplosions(void)
 		switch (ex->type)
 		{
 			case ex_mflash:
+			{
+				float elapsed = cl.time - ex->start;
+				float progress = elapsed / ex->duration;
 
-				if (f >= ex->frames - 1)
+				if (progress >= 1.0f)
 				{
 					ex->type = ex_free;
+					break;
 				}
 
+				/* Update position based on velocity (follow shooter) */
+				float dt = elapsed / 1000.0f;
+				ent->origin[0] = ex->ent.oldorigin[0] + ex->velocity[0] * dt;
+				ent->origin[1] = ex->ent.oldorigin[1] + ex->velocity[1] * dt;
+				ent->origin[2] = ex->ent.oldorigin[2] + ex->velocity[2] * dt;
+
+				/* Keep the random rotation angle set at spawn */
+				/* (angles[2] was set to random roll at creation) */
+
+				/* Quick fade out over the duration */
+				ent->alpha = 0.95f * (1.0f - progress);
+
+				/* skinnum (scale) was set from cvar at spawn time */
+
+				ent->flags |= RF_TRANSLUCENT | RF_FULLBRIGHT | RF_NOSHADOW;
+				ent->frame = 0;
+				ent->oldframe = 0;
 				break;
+			}
 			case ex_misc:
 
 				if (f >= ex->frames - 1)

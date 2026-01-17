@@ -26,6 +26,7 @@
  */
 
 #include "header/client.h"
+#include "../common/header/pp_json.h"
 
 void CL_LogoutEffect(vec3_t org, int type);
 void CL_ItemRespawnParticles(vec3_t org);
@@ -35,11 +36,122 @@ void CL_ClearParticles(void);
 
 int pp_viewmodel_muzzle_seq = 0;
 
+/* Muzzle flash sprite cvars */
+cvar_t *cl_mflash_forward;   /* Forward offset from player origin */
+cvar_t *cl_mflash_right;     /* Right offset from player origin */
+cvar_t *cl_mflash_up;        /* Up offset from player origin */
+cvar_t *cl_mflash_scale;     /* Scale (skinnum value, 1-255, lower=bigger) */
+cvar_t *cl_mflash_duration;  /* Duration in milliseconds */
+cvar_t *cl_mflash_vel_scale; /* Velocity inheritance factor (0.0-1.0) */
+cvar_t *cl_mflash_enabled;   /* Enable/disable muzzle flash sprites */
+
 static vec3_t avelocities[NUMVERTEXNORMALS];
 extern struct model_s *cl_mod_smoke;
 extern struct model_s *cl_mod_flash;
 
 extern cparticle_t *active_particles, *free_particles;
+
+/*
+ * Load muzzle flash config from default.json tuning file
+ */
+static void
+CL_LoadMuzzleFlashConfig(void)
+{
+	char *buffer;
+	int len;
+	char error[256];
+	json_value_t *root, *mflash;
+	char val_str[32];
+
+	/* Try to load from plastic_platoon game dir first, then baseq2 */
+	len = FS_LoadFile("tuning/default.json", (void **)&buffer);
+	if (len <= 0 || !buffer)
+	{
+		Com_DPrintf("Muzzle flash: No tuning/default.json found, using defaults\n");
+		return;
+	}
+
+	root = JSON_Parse(buffer, error, sizeof(error));
+	FS_FreeFile(buffer);
+
+	if (!root)
+	{
+		Com_Printf("Muzzle flash: JSON parse error: %s\n", error);
+		return;
+	}
+
+	mflash = JSON_GetMember(root, "muzzle_flash");
+	if (!mflash)
+	{
+		Com_DPrintf("Muzzle flash: No muzzle_flash section in tuning file\n");
+		JSON_Free(root);
+		return;
+	}
+
+	/* Load values and set cvars */
+	if (JSON_GetMember(mflash, "enabled"))
+	{
+		Cvar_Set("cl_mflash_enabled", JSON_GetBool(JSON_GetMember(mflash, "enabled"), true) ? "1" : "0");
+	}
+
+	if (JSON_GetMember(mflash, "forward"))
+	{
+		Com_sprintf(val_str, sizeof(val_str), "%.2f", JSON_GetFloat(JSON_GetMember(mflash, "forward"), 18.0f));
+		Cvar_Set("cl_mflash_forward", val_str);
+	}
+
+	if (JSON_GetMember(mflash, "right"))
+	{
+		Com_sprintf(val_str, sizeof(val_str), "%.2f", JSON_GetFloat(JSON_GetMember(mflash, "right"), 8.0f));
+		Cvar_Set("cl_mflash_right", val_str);
+	}
+
+	if (JSON_GetMember(mflash, "up"))
+	{
+		Com_sprintf(val_str, sizeof(val_str), "%.2f", JSON_GetFloat(JSON_GetMember(mflash, "up"), 0.0f));
+		Cvar_Set("cl_mflash_up", val_str);
+	}
+
+	if (JSON_GetMember(mflash, "scale"))
+	{
+		Com_sprintf(val_str, sizeof(val_str), "%d", JSON_GetInt(JSON_GetMember(mflash, "scale"), 40));
+		Cvar_Set("cl_mflash_scale", val_str);
+	}
+
+	if (JSON_GetMember(mflash, "duration_ms"))
+	{
+		Com_sprintf(val_str, sizeof(val_str), "%d", JSON_GetInt(JSON_GetMember(mflash, "duration_ms"), 150));
+		Cvar_Set("cl_mflash_duration", val_str);
+	}
+
+	if (JSON_GetMember(mflash, "velocity_scale"))
+	{
+		Com_sprintf(val_str, sizeof(val_str), "%.3f", JSON_GetFloat(JSON_GetMember(mflash, "velocity_scale"), 0.15f));
+		Cvar_Set("cl_mflash_vel_scale", val_str);
+	}
+
+	Com_DPrintf("Muzzle flash: Loaded config from tuning/default.json\n");
+	JSON_Free(root);
+}
+
+/*
+ * Initialize muzzle flash cvars and load from JSON
+ */
+void
+CL_InitMuzzleFlashCvars(void)
+{
+	/* Register cvars with defaults first */
+	cl_mflash_enabled = Cvar_Get("cl_mflash_enabled", "1", CVAR_ARCHIVE);
+	cl_mflash_forward = Cvar_Get("cl_mflash_forward", "18", CVAR_ARCHIVE);
+	cl_mflash_right = Cvar_Get("cl_mflash_right", "8", CVAR_ARCHIVE);
+	cl_mflash_up = Cvar_Get("cl_mflash_up", "0", CVAR_ARCHIVE);
+	cl_mflash_scale = Cvar_Get("cl_mflash_scale", "40", CVAR_ARCHIVE);
+	cl_mflash_duration = Cvar_Get("cl_mflash_duration", "150", CVAR_ARCHIVE);
+	cl_mflash_vel_scale = Cvar_Get("cl_mflash_vel_scale", "0.15", CVAR_ARCHIVE);
+
+	/* Load from JSON tuning file (overrides defaults) */
+	CL_LoadMuzzleFlashConfig();
+}
 
 void
 CL_AddMuzzleFlash(void)
@@ -331,6 +443,33 @@ CL_AddMuzzleFlash(void)
 			dl->color[2] = 1;
 			dl->die = cl.time + 100;
 			break;
+	}
+
+	/* Spawn muzzle flash sprite for applicable weapons */
+	if (weapon == MZ_MACHINEGUN || weapon == MZ_CHAINGUN1 ||
+		weapon == MZ_CHAINGUN2 || weapon == MZ_CHAINGUN3 ||
+		weapon == MZ_SHOTGUN || weapon == MZ_SSHOTGUN ||
+		weapon == MZ_BLASTER || weapon == MZ_RAILGUN ||
+		weapon == MZ_ETF_RIFLE || weapon == MZ_SHOTGUN2)
+	{
+		vec3_t mflash_velocity;
+		const float vel_scale = 1.0f / 8.0f;  /* pmove velocity is 12.3 fixed point */
+
+		/* Get velocity: use player's velocity if local player, else estimate */
+		if (i == cl.playernum + 1)
+		{
+			mflash_velocity[0] = (float)cl.frame.playerstate.pmove.velocity[0] * vel_scale;
+			mflash_velocity[1] = (float)cl.frame.playerstate.pmove.velocity[1] * vel_scale;
+			mflash_velocity[2] = (float)cl.frame.playerstate.pmove.velocity[2] * vel_scale;
+		}
+		else
+		{
+			/* Estimate velocity from entity position delta */
+			VectorSubtract(pl->current.origin, pl->prev.origin, mflash_velocity);
+			VectorScale(mflash_velocity, 10.0f, mflash_velocity);
+		}
+
+		CL_SpawnMuzzleFlashSprite(pl->current.origin, fv, rv, mflash_velocity);
 	}
 }
 
