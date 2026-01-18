@@ -51,6 +51,103 @@ extern struct model_s *cl_mod_flash;
 
 extern cparticle_t *active_particles, *free_particles;
 
+/* Per-weapon muzzle flash configuration */
+typedef struct muzzle_flash_config_s {
+	qboolean enabled;
+	float forward;
+	float right;
+	float up;
+	int scale;
+	int duration_ms;
+	float velocity_scale;
+	char image[64];
+} muzzle_flash_config_t;
+
+static muzzle_flash_config_t weapon_mflash_configs[32]; /* One for each weapon type */
+
+/*
+ * Get weapon name from weapon ID for JSON lookup
+ */
+static const char *
+CL_GetWeaponNameFromID(int weapon)
+{
+	switch (weapon)
+	{
+		case MZ_MACHINEGUN: return "M16";
+		case MZ_CHAINGUN1:
+		case MZ_CHAINGUN2:
+		case MZ_CHAINGUN3: return "M60";
+		case MZ_SHOTGUN:
+		case MZ_SHOTGUN2: return "SHOTGUN";
+		case MZ_SSHOTGUN: return "DOUBLE_BARREL_SHOTGUN";
+		case MZ_ROCKET: return "BAZOOKA";
+		case MZ_GRENADE: return "GRENADE_LAUNCHER";
+		case MZ_BLASTER: return "PISTOL";
+		case MZ_RAILGUN: return "SNIPER_RIFLE";
+		case MZ_BFG: return "MORTAR_CANNON";
+		case MZ_ETF_RIFLE: return "SMG";
+		default: return NULL;
+	}
+}
+
+/*
+ * Load muzzle flash config for a specific weapon
+ */
+static void
+CL_LoadWeaponMuzzleFlashConfig(json_value_t *weapon_root, const char *weapon_name, int weapon_id)
+{
+	json_value_t *mflash;
+	muzzle_flash_config_t *cfg = &weapon_mflash_configs[weapon_id];
+
+	/* Initialize with defaults */
+	cfg->enabled = true;
+	cfg->forward = 18.0f;
+	cfg->right = 8.0f;
+	cfg->up = 0.0f;
+	cfg->scale = 40;
+	cfg->duration_ms = 150;
+	cfg->velocity_scale = 0.15f;
+	strcpy(cfg->image, "sprites/muzzleFlash.png");
+
+	mflash = JSON_GetMember(weapon_root, "muzzle_flash");
+	if (!mflash)
+	{
+		Com_DPrintf("Muzzle flash: No config for weapon %s, using defaults\n", weapon_name);
+		return;
+	}
+
+	/* Load weapon-specific config */
+	if (JSON_GetMember(mflash, "enabled"))
+		cfg->enabled = JSON_GetBool(JSON_GetMember(mflash, "enabled"), true);
+
+	if (JSON_GetMember(mflash, "forward"))
+		cfg->forward = JSON_GetFloat(JSON_GetMember(mflash, "forward"), 18.0f);
+
+	if (JSON_GetMember(mflash, "right"))
+		cfg->right = JSON_GetFloat(JSON_GetMember(mflash, "right"), 8.0f);
+
+	if (JSON_GetMember(mflash, "up"))
+		cfg->up = JSON_GetFloat(JSON_GetMember(mflash, "up"), 0.0f);
+
+	if (JSON_GetMember(mflash, "scale"))
+		cfg->scale = JSON_GetInt(JSON_GetMember(mflash, "scale"), 40);
+
+	if (JSON_GetMember(mflash, "duration_ms"))
+		cfg->duration_ms = JSON_GetInt(JSON_GetMember(mflash, "duration_ms"), 150);
+
+	if (JSON_GetMember(mflash, "velocity_scale"))
+		cfg->velocity_scale = JSON_GetFloat(JSON_GetMember(mflash, "velocity_scale"), 0.15f);
+
+	if (JSON_GetMember(mflash, "image"))
+	{
+		const char *img = JSON_GetString(JSON_GetMember(mflash, "image"), "sprites/muzzleFlash.png");
+		strncpy(cfg->image, img, sizeof(cfg->image) - 1);
+		cfg->image[sizeof(cfg->image) - 1] = '\0';
+	}
+
+	Com_DPrintf("Muzzle flash: Loaded config for weapon %s\n", weapon_name);
+}
+
 /*
  * Load muzzle flash config from default.json tuning file
  */
@@ -60,8 +157,9 @@ CL_LoadMuzzleFlashConfig(void)
 	char *buffer;
 	int len;
 	char error[256];
-	json_value_t *root, *mflash;
-	char val_str[32];
+	json_value_t *root, *weapons;
+	int weapon_id;
+	const char *weapon_name;
 
 	/* Try to load from tuning directory */
 	len = FS_LoadFile("tuning/default.json", (void **)&buffer);
@@ -80,60 +178,42 @@ CL_LoadMuzzleFlashConfig(void)
 		return;
 	}
 
-	mflash = JSON_GetMember(root, "muzzle_flash");
-	if (!mflash)
+	weapons = JSON_GetMember(root, "weapon_overrides");
+	if (!weapons)
 	{
-		Com_DPrintf("Muzzle flash: No muzzle_flash section in tuning file\n");
+		Com_DPrintf("Muzzle flash: No weapon_overrides section in tuning file\n");
 		JSON_Free(root);
 		return;
 	}
 
-	/* Load values and set cvars */
-	if (JSON_GetMember(mflash, "enabled"))
+	/* Load config for each weapon */
+	for (weapon_id = 0; weapon_id < 32; weapon_id++)
 	{
-		qboolean enabled = JSON_GetBool(JSON_GetMember(mflash, "enabled"), true);
-		Cvar_Set("cl_mflash_enabled", enabled ? "1" : "0");
+		weapon_name = CL_GetWeaponNameFromID(weapon_id);
+		if (!weapon_name)
+			continue;
+
+		json_value_t *weapon_cfg = JSON_GetMember(weapons, weapon_name);
+		if (weapon_cfg)
+		{
+			CL_LoadWeaponMuzzleFlashConfig(weapon_cfg, weapon_name, weapon_id);
+		}
 	}
 
-	if (JSON_GetMember(mflash, "forward"))
-	{
-		float forward = JSON_GetFloat(JSON_GetMember(mflash, "forward"), 18.0f);
-		Com_sprintf(val_str, sizeof(val_str), "%.2f", forward);
-		Cvar_Set("cl_mflash_forward", val_str);
-	}
-
-	if (JSON_GetMember(mflash, "right"))
-	{
-		Com_sprintf(val_str, sizeof(val_str), "%.2f", JSON_GetFloat(JSON_GetMember(mflash, "right"), 8.0f));
-		Cvar_Set("cl_mflash_right", val_str);
-	}
-
-	if (JSON_GetMember(mflash, "up"))
-	{
-		Com_sprintf(val_str, sizeof(val_str), "%.2f", JSON_GetFloat(JSON_GetMember(mflash, "up"), 0.0f));
-		Cvar_Set("cl_mflash_up", val_str);
-	}
-
-	if (JSON_GetMember(mflash, "scale"))
-	{
-		Com_sprintf(val_str, sizeof(val_str), "%d", JSON_GetInt(JSON_GetMember(mflash, "scale"), 40));
-		Cvar_Set("cl_mflash_scale", val_str);
-	}
-
-	if (JSON_GetMember(mflash, "duration_ms"))
-	{
-		Com_sprintf(val_str, sizeof(val_str), "%d", JSON_GetInt(JSON_GetMember(mflash, "duration_ms"), 150));
-		Cvar_Set("cl_mflash_duration", val_str);
-	}
-
-	if (JSON_GetMember(mflash, "velocity_scale"))
-	{
-		Com_sprintf(val_str, sizeof(val_str), "%.3f", JSON_GetFloat(JSON_GetMember(mflash, "velocity_scale"), 0.15f));
-		Cvar_Set("cl_mflash_vel_scale", val_str);
-	}
-
-	Com_DPrintf("Muzzle flash: Loaded config from tuning/default.json\n");
+	Com_DPrintf("Muzzle flash: Loaded per-weapon configs from tuning/default.json\n");
 	JSON_Free(root);
+}
+
+/*
+ * Get muzzle flash config for a weapon
+ */
+muzzle_flash_config_t *
+CL_GetMuzzleFlashConfig(int weapon)
+{
+	if (weapon < 0 || weapon >= 32)
+		return NULL;
+
+	return &weapon_mflash_configs[weapon];
 }
 
 /*
@@ -452,7 +532,8 @@ CL_AddMuzzleFlash(void)
 		weapon == MZ_CHAINGUN2 || weapon == MZ_CHAINGUN3 ||
 		weapon == MZ_SHOTGUN || weapon == MZ_SSHOTGUN ||
 		weapon == MZ_BLASTER || weapon == MZ_RAILGUN ||
-		weapon == MZ_ETF_RIFLE || weapon == MZ_SHOTGUN2)
+		weapon == MZ_ETF_RIFLE || weapon == MZ_SHOTGUN2 ||
+		weapon == MZ_ROCKET || weapon == MZ_GRENADE || weapon == MZ_BFG)
 	{
 		vec3_t mflash_velocity;
 		const float vel_scale = 1.0f / 8.0f;  /* pmove velocity is 12.3 fixed point */
@@ -471,7 +552,7 @@ CL_AddMuzzleFlash(void)
 			VectorScale(mflash_velocity, 10.0f, mflash_velocity);
 		}
 
-		CL_SpawnMuzzleFlashSprite(pl->current.origin, fv, rv, mflash_velocity);
+		CL_SpawnMuzzleFlashSprite(pl->current.origin, fv, rv, mflash_velocity, weapon);
 	}
 }
 

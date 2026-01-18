@@ -514,8 +514,11 @@ void V_AddLightStyle (int style, float r, float g, float b);
 void CL_RegisterTEntSounds (void);
 void CL_RegisterTEntModels (void);
 void CL_SmokeAndFlash(vec3_t origin);
-void CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t velocity);
+typedef struct muzzle_flash_config_s muzzle_flash_config_t;
+
+void CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t velocity, int weapon);
 void CL_InitMuzzleFlashCvars(void);
+muzzle_flash_config_t *CL_GetMuzzleFlashConfig(int weapon);
 
 void CL_CheckPredictionError (void);
 

@@ -43,7 +43,8 @@
       "up": 10.0,
       "scale": 40,
       "duration_ms": 150,
-      "velocity_scale": 0.15
+      "velocity_scale": 0.15,
+      "image": "sprites/muzzleFlash.png"
     }
     },
 
@@ -67,7 +68,8 @@
       "up": 10.0,
       "scale": 40,
       "duration_ms": 150,
-      "velocity_scale": 0.15
+      "velocity_scale": 0.15,
+      "image": "sprites/muzzleFlash.png"
     }
     },
 
@@ -91,7 +93,8 @@
       "up": 10.0,
       "scale": 40,
       "duration_ms": 150,
-      "velocity_scale": 0.15
+      "velocity_scale": 0.15,
+      "image": "sprites/muzzleFlash.png"
     }
     },
 
@@ -117,7 +120,8 @@
       "up": 10.0,
       "scale": 40,
       "duration_ms": 150,
-      "velocity_scale": 0.15
+      "velocity_scale": 0.15,
+      "image": "sprites/muzzleFlash.png"
     }
     },
 
@@ -134,7 +138,8 @@
       "up": 10.0,
       "scale": 40,
       "duration_ms": 150,
-      "velocity_scale": 0.15
+      "velocity_scale": 0.15,
+      "image": "sprites/muzzleFlash.png"
     }
     },
 
@@ -151,7 +156,8 @@
       "up": 10.0,
       "scale": 40,
       "duration_ms": 150,
-      "velocity_scale": 0.15
+      "velocity_scale": 0.15,
+      "image": "sprites/muzzleFlash.png"
     }
     },
 
@@ -176,7 +182,8 @@
       "up": 10.0,
       "scale": 40,
       "duration_ms": 150,
-      "velocity_scale": 0.15
+      "velocity_scale": 0.15,
+      "image": "sprites/muzzleFlash.png"
     }
     },
 
@@ -198,7 +205,8 @@
       "up": 10.0,
       "scale": 40,
       "duration_ms": 150,
-      "velocity_scale": 0.15
+      "velocity_scale": 0.15,
+      "image": "sprites/muzzleFlash.png"
     }
     },
 
@@ -222,7 +230,8 @@
       "up": 10.0,
       "scale": 40,
       "duration_ms": 150,
-      "velocity_scale": 0.15
+      "velocity_scale": 0.15,
+      "image": "sprites/muzzleFlash.png"
     }
     },
 
@@ -237,14 +246,22 @@
       "up": 10.0,
       "scale": 40,
       "duration_ms": 150,
-      "velocity_scale": 0.15
+      "velocity_scale": 0.15,
+      "image": "sprites/muzzleFlash.png"
     }
     },
 
-    "AIRSTRIKE_MARKER": {
-      "ads": {
-        "enabled": false
-      }
+  "MORTAR_CANNON": {
+    "muzzle_flash": {
+      "enabled": true,
+      "forward": 40.0,
+      "right": 40.0,
+      "up": 10.0,
+      "scale": 40,
+      "duration_ms": 150,
+      "velocity_scale": 0.15,
+      "image": "sprites/muzzleFlash.png"
+    }
     }
   },
 

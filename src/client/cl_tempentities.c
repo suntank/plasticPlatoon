@@ -25,6 +25,18 @@
  */
 
 #include "header/client.h"
+
+/* Include the struct definition since we need full access */
+typedef struct muzzle_flash_config_s {
+	qboolean enabled;
+	float forward;
+	float right;
+	float up;
+	int scale;
+	int duration_ms;
+	float velocity_scale;
+	char image[64];
+} muzzle_flash_config_t;
 #include "sound/header/local.h"
 
 typedef enum
@@ -415,38 +427,41 @@ extern cvar_t *cl_mflash_duration;
 extern cvar_t *cl_mflash_vel_scale;
 extern cvar_t *cl_mflash_enabled;
 
+
 /*
  * Spawn a muzzle flash sprite effect.
  * Origin is the player origin, forward/right are direction vectors.
- * Position is calculated using cvars for offset tuning.
+ * Position and appearance are calculated using per-weapon config.
  */
 void
-CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t velocity)
+CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t velocity, int weapon)
 {
 	explosion_t *ex;
 	vec3_t spawn_origin;
 	float fwd_offset, right_offset, up_offset;
 	float vel_scale, duration;
 	int scale;
+	muzzle_flash_config_t *cfg;
 
 	if (!cl_mod_muzzle_flash_sprite)
 	{
 		return;
 	}
 
-	/* Check if muzzle flash sprites are enabled */
-	if (cl_mflash_enabled && cl_mflash_enabled->value < 1)
+	/* Get weapon-specific config */
+	cfg = CL_GetMuzzleFlashConfig(weapon);
+	if (!cfg || !cfg->enabled)
 	{
 		return;
 	}
 
-	/* Get cvar values with fallback defaults */
-	fwd_offset = cl_mflash_forward ? cl_mflash_forward->value : 18.0f;
-	right_offset = cl_mflash_right ? cl_mflash_right->value : 8.0f;
-	up_offset = cl_mflash_up ? cl_mflash_up->value : 0.0f;
-	scale = cl_mflash_scale ? (int)cl_mflash_scale->value : 40;
-	duration = cl_mflash_duration ? cl_mflash_duration->value : 150.0f;
-	vel_scale = cl_mflash_vel_scale ? cl_mflash_vel_scale->value : 0.15f;
+	/* Use config values */
+	fwd_offset = cfg->forward;
+	right_offset = cfg->right;
+	up_offset = cfg->up;
+	scale = cfg->scale;
+	duration = (float)cfg->duration_ms;
+	vel_scale = cfg->velocity_scale;
 
 	/* Calculate spawn position from origin + offsets */
 	VectorCopy(origin, spawn_origin);
@@ -471,11 +486,11 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t ve
 	/* Random rotation angle (roll) */
 	ex->ent.angles[2] = (float)(randk() % 360);
 
-	/* Duration from cvar */
+	/* Duration from config */
 	ex->start = cl.time;
 	ex->duration = duration;
 
-	/* Scale from cvar */
+	/* Scale from config */
 	ex->ent.skinnum = scale;
 
 	ex->ent.alpha = 0.95f;
