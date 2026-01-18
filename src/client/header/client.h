@@ -514,7 +514,28 @@ void V_AddLightStyle (int style, float r, float g, float b);
 void CL_RegisterTEntSounds (void);
 void CL_RegisterTEntModels (void);
 void CL_SmokeAndFlash(vec3_t origin);
-typedef struct muzzle_flash_config_s muzzle_flash_config_t;
+/* Per-weapon muzzle flash configuration */
+typedef struct muzzle_flash_config_s {
+	/* Primary cone flash (always present) */
+	qboolean enabled;
+	float forward;
+	float right;
+	float up;
+	int scale;
+	int duration_ms;
+	float velocity_scale;
+	char image[64];
+
+	/* Secondary billboard flash (optional, for muzzle brakes) */
+	qboolean flash2_enabled;
+	float flash2_forward;
+	float flash2_right;
+	float flash2_up;
+	int flash2_scale;
+	int flash2_duration_ms;
+	float flash2_velocity_scale;
+	char flash2_image[64];
+} muzzle_flash_config_t;
 
 void CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up, vec3_t velocity, int weapon);
 void CL_InitMuzzleFlashCvars(void);

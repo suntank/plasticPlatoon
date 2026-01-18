@@ -26,22 +26,11 @@
 
 #include "header/client.h"
 
-/* Include the struct definition since we need full access */
-typedef struct muzzle_flash_config_s {
-	qboolean enabled;
-	float forward;
-	float right;
-	float up;
-	int scale;
-	int duration_ms;
-	float velocity_scale;
-	char image[64];
-} muzzle_flash_config_t;
 #include "sound/header/local.h"
 
 typedef enum
 {
-	ex_free, ex_explosion, ex_misc, ex_flash, ex_mflash, ex_poly, ex_poly2, ex_sprite_explosion, ex_smoke_sprite
+	ex_free, ex_explosion, ex_misc, ex_flash, ex_mflash, ex_mflash_cone_h, ex_mflash_cone_v, ex_mflash_billboard, ex_poly, ex_poly2, ex_sprite_explosion, ex_smoke_sprite
 } exptype_t;
 
 typedef struct
@@ -57,6 +46,9 @@ typedef struct
 	float rotation_speed;  /* degrees per second for sprite rotation */
 	float duration;        /* total duration in milliseconds */
 	vec3_t velocity;       /* velocity for muzzle flash tracking */
+	vec3_t dir_forward;    /* weapon forward direction for cone sprites */
+	vec3_t dir_right;      /* weapon right direction for cone sprites */
+	vec3_t dir_up;         /* weapon up direction for cone sprites */
 } explosion_t;
 
 #define MAX_EXPLOSIONS 64
@@ -429,19 +421,64 @@ extern cvar_t *cl_mflash_enabled;
 
 
 /*
+ * Helper to spawn a single cone sprite with orientation
+ */
+static void
+CL_SpawnConeSprite(vec3_t spawn_origin, vec3_t forward, vec3_t right, vec3_t up,
+                   vec3_t velocity, float vel_scale, float duration, int scale,
+                   exptype_t type)
+{
+	explosion_t *ex;
+
+	ex = CL_AllocExplosion();
+	ex->type = type;
+	ex->ent.flags = RF_FULLBRIGHT | RF_TRANSLUCENT | RF_NOSHADOW;
+	ex->ent.model = cl_mod_muzzle_flash_sprite;
+
+	/* Store origin for velocity tracking */
+	VectorCopy(spawn_origin, ex->ent.origin);
+	VectorCopy(spawn_origin, ex->ent.oldorigin);
+
+	/* Store scaled velocity for position updates */
+	ex->velocity[0] = velocity[0] * vel_scale;
+	ex->velocity[1] = velocity[1] * vel_scale;
+	ex->velocity[2] = velocity[2] * vel_scale;
+
+	/* Store weapon direction vectors for oriented rendering */
+	VectorCopy(forward, ex->dir_forward);
+	VectorCopy(right, ex->dir_right);
+	VectorCopy(up, ex->dir_up);
+
+	/* Duration and scale from config */
+	ex->start = cl.time;
+	ex->duration = duration;
+	ex->ent.skinnum = scale;
+
+	ex->ent.alpha = 0.95f;
+	ex->ent.frame = 0;
+
+	/* Set angles based on weapon orientation for non-billboarded rendering */
+	/* Horizontal plane: sprite lies flat, faces up */
+	/* Vertical plane: sprite stands up, faces forward */
+	ex->ent.angles[0] = 0;
+	ex->ent.angles[1] = 0;
+	ex->ent.angles[2] = 0;
+}
+
+/*
  * Spawn a muzzle flash sprite effect.
- * Origin is the player origin, forward/right are direction vectors.
- * Position and appearance are calculated using per-weapon config.
+ * Creates multi-sprite cone flash (H+V planes) + optional billboard flash.
+ * Origin is the view origin, forward/right/up are direction vectors.
  */
 void
 CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up, vec3_t velocity, int weapon)
 {
-	explosion_t *ex;
-	vec3_t spawn_origin;
+	vec3_t spawn_origin, spawn_origin2;
 	float fwd_offset, right_offset, up_offset;
 	float vel_scale, duration;
 	int scale;
 	muzzle_flash_config_t *cfg;
+	explosion_t *ex;
 
 	if (!cl_mod_muzzle_flash_sprite)
 	{
@@ -455,7 +492,7 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 		return;
 	}
 
-	/* Use config values */
+	/* Use config values for cone flash */
 	fwd_offset = cfg->forward;
 	right_offset = cfg->right;
 	up_offset = cfg->up;
@@ -469,32 +506,44 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	VectorMA(spawn_origin, right_offset, right, spawn_origin);
 	VectorMA(spawn_origin, up_offset, up, spawn_origin);
 
-	ex = CL_AllocExplosion();
-	ex->type = ex_mflash;
-	ex->ent.flags = RF_FULLBRIGHT | RF_TRANSLUCENT | RF_NOSHADOW;
-	ex->ent.model = cl_mod_muzzle_flash_sprite;
+	/* Spawn horizontal cone sprite (lies in the horizontal plane) */
+	CL_SpawnConeSprite(spawn_origin, forward, right, up, velocity, vel_scale,
+	                   duration, scale, ex_mflash_cone_h);
 
-	/* Store origin in both origin and oldorigin for velocity tracking */
-	VectorCopy(spawn_origin, ex->ent.origin);
-	VectorCopy(spawn_origin, ex->ent.oldorigin);
+	/* Spawn vertical cone sprite (stands in the vertical plane) */
+	CL_SpawnConeSprite(spawn_origin, forward, right, up, velocity, vel_scale,
+	                   duration, scale, ex_mflash_cone_v);
 
-	/* Store scaled velocity for position updates */
-	ex->velocity[0] = velocity[0] * vel_scale;
-	ex->velocity[1] = velocity[1] * vel_scale;
-	ex->velocity[2] = velocity[2] * vel_scale;
+	/* Spawn optional billboard flash (muzzle_flash2) if configured */
+	if (cfg->flash2_enabled)
+	{
+		/* Calculate position for billboard flash */
+		VectorCopy(origin, spawn_origin2);
+		VectorMA(spawn_origin2, cfg->flash2_forward, forward, spawn_origin2);
+		VectorMA(spawn_origin2, cfg->flash2_right, right, spawn_origin2);
+		VectorMA(spawn_origin2, cfg->flash2_up, up, spawn_origin2);
 
-	/* Random rotation angle (roll) */
-	ex->ent.angles[2] = (float)(randk() % 360);
+		ex = CL_AllocExplosion();
+		ex->type = ex_mflash_billboard;
+		ex->ent.flags = RF_FULLBRIGHT | RF_TRANSLUCENT | RF_NOSHADOW;
+		ex->ent.model = cl_mod_muzzle_flash_sprite; /* TODO: support flash2_image */
 
-	/* Duration from config */
-	ex->start = cl.time;
-	ex->duration = duration;
+		VectorCopy(spawn_origin2, ex->ent.origin);
+		VectorCopy(spawn_origin2, ex->ent.oldorigin);
 
-	/* Scale from config */
-	ex->ent.skinnum = scale;
+		ex->velocity[0] = velocity[0] * cfg->flash2_velocity_scale;
+		ex->velocity[1] = velocity[1] * cfg->flash2_velocity_scale;
+		ex->velocity[2] = velocity[2] * cfg->flash2_velocity_scale;
 
-	ex->ent.alpha = 0.95f;
-	ex->ent.frame = 0;
+		/* Random rotation for billboard */
+		ex->ent.angles[2] = (float)(randk() % 360);
+
+		ex->start = cl.time;
+		ex->duration = (float)cfg->flash2_duration_ms;
+		ex->ent.skinnum = cfg->flash2_scale;
+		ex->ent.alpha = 0.95f;
+		ex->ent.frame = 0;
+	}
 }
 
 void
@@ -1842,7 +1891,9 @@ CL_AddExplosions(void)
 		switch (ex->type)
 		{
 			case ex_mflash:
+			case ex_mflash_billboard:
 			{
+				/* Billboard muzzle flash - camera facing with random rotation */
 				float elapsed = cl.time - ex->start;
 				float progress = elapsed / ex->duration;
 
@@ -1858,14 +1909,76 @@ CL_AddExplosions(void)
 				ent->origin[1] = ex->ent.oldorigin[1] + ex->velocity[1] * dt;
 				ent->origin[2] = ex->ent.oldorigin[2] + ex->velocity[2] * dt;
 
-				/* Keep the random rotation angle set at spawn */
-				/* (angles[2] was set to random roll at creation) */
-
 				/* Quick fade out over the duration */
 				ent->alpha = 0.95f * (1.0f - progress);
 
-				/* skinnum (scale) was set from cvar at spawn time */
+				ent->flags |= RF_TRANSLUCENT | RF_FULLBRIGHT | RF_NOSHADOW;
+				ent->frame = 0;
+				ent->oldframe = 0;
+				break;
+			}
+			case ex_mflash_cone_h:
+			{
+				/* Horizontal cone sprite - lies flat, oriented by weapon direction */
+				float elapsed = cl.time - ex->start;
+				float progress = elapsed / ex->duration;
 
+				if (progress >= 1.0f)
+				{
+					ex->type = ex_free;
+					break;
+				}
+
+				/* Update position based on velocity */
+				float dt = elapsed / 1000.0f;
+				ent->origin[0] = ex->ent.oldorigin[0] + ex->velocity[0] * dt;
+				ent->origin[1] = ex->ent.oldorigin[1] + ex->velocity[1] * dt;
+				ent->origin[2] = ex->ent.oldorigin[2] + ex->velocity[2] * dt;
+
+				/* Calculate yaw from forward direction */
+				{
+					float yaw = atan2(ex->dir_forward[1], ex->dir_forward[0]) * 180.0f / M_PI;
+					ent->angles[0] = 0;  /* No pitch - lies flat */
+					ent->angles[1] = yaw;
+					ent->angles[2] = 0;
+				}
+
+				ent->alpha = 0.95f * (1.0f - progress);
+				ent->flags |= RF_TRANSLUCENT | RF_FULLBRIGHT | RF_NOSHADOW;
+				ent->frame = 0;
+				ent->oldframe = 0;
+				break;
+			}
+			case ex_mflash_cone_v:
+			{
+				/* Vertical cone sprite - stands up, oriented by weapon direction */
+				float elapsed = cl.time - ex->start;
+				float progress = elapsed / ex->duration;
+
+				if (progress >= 1.0f)
+				{
+					ex->type = ex_free;
+					break;
+				}
+
+				/* Update position based on velocity */
+				float dt = elapsed / 1000.0f;
+				ent->origin[0] = ex->ent.oldorigin[0] + ex->velocity[0] * dt;
+				ent->origin[1] = ex->ent.oldorigin[1] + ex->velocity[1] * dt;
+				ent->origin[2] = ex->ent.oldorigin[2] + ex->velocity[2] * dt;
+
+				/* Calculate pitch and yaw from forward direction */
+				{
+					float forward_len = sqrt(ex->dir_forward[0] * ex->dir_forward[0] +
+					                         ex->dir_forward[1] * ex->dir_forward[1]);
+					float pitch = atan2(-ex->dir_forward[2], forward_len) * 180.0f / M_PI;
+					float yaw = atan2(ex->dir_forward[1], ex->dir_forward[0]) * 180.0f / M_PI;
+					ent->angles[0] = pitch;
+					ent->angles[1] = yaw;
+					ent->angles[2] = 90;  /* Roll 90 degrees to stand vertical */
+				}
+
+				ent->alpha = 0.95f * (1.0f - progress);
 				ent->flags |= RF_TRANSLUCENT | RF_FULLBRIGHT | RF_NOSHADOW;
 				ent->frame = 0;
 				ent->oldframe = 0;

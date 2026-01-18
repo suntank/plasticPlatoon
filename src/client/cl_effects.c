@@ -51,18 +51,6 @@ extern struct model_s *cl_mod_flash;
 
 extern cparticle_t *active_particles, *free_particles;
 
-/* Per-weapon muzzle flash configuration */
-typedef struct muzzle_flash_config_s {
-	qboolean enabled;
-	float forward;
-	float right;
-	float up;
-	int scale;
-	int duration_ms;
-	float velocity_scale;
-	char image[64];
-} muzzle_flash_config_t;
-
 static muzzle_flash_config_t weapon_mflash_configs[32]; /* One for each weapon type */
 
 /*
@@ -96,10 +84,10 @@ CL_GetWeaponNameFromID(int weapon)
 static void
 CL_LoadWeaponMuzzleFlashConfig(json_value_t *weapon_root, const char *weapon_name, int weapon_id)
 {
-	json_value_t *mflash;
+	json_value_t *mflash, *mflash2;
 	muzzle_flash_config_t *cfg = &weapon_mflash_configs[weapon_id];
 
-	/* Initialize with defaults */
+	/* Initialize cone flash defaults */
 	cfg->enabled = true;
 	cfg->forward = 18.0f;
 	cfg->right = 8.0f;
@@ -109,40 +97,85 @@ CL_LoadWeaponMuzzleFlashConfig(json_value_t *weapon_root, const char *weapon_nam
 	cfg->velocity_scale = 0.15f;
 	strcpy(cfg->image, "sprites/muzzleFlash.png");
 
+	/* Initialize billboard flash defaults (disabled by default) */
+	cfg->flash2_enabled = false;
+	cfg->flash2_forward = 18.0f;
+	cfg->flash2_right = 8.0f;
+	cfg->flash2_up = 0.0f;
+	cfg->flash2_scale = 40;
+	cfg->flash2_duration_ms = 150;
+	cfg->flash2_velocity_scale = 0.15f;
+	strcpy(cfg->flash2_image, "sprites/muzzleFlash2.png");
+
+	/* Load primary cone flash config */
 	mflash = JSON_GetMember(weapon_root, "muzzle_flash");
-	if (!mflash)
+	if (mflash)
 	{
-		Com_DPrintf("Muzzle flash: No config for weapon %s, using defaults\n", weapon_name);
-		return;
+		if (JSON_GetMember(mflash, "enabled"))
+			cfg->enabled = JSON_GetBool(JSON_GetMember(mflash, "enabled"), true);
+
+		if (JSON_GetMember(mflash, "forward"))
+			cfg->forward = JSON_GetFloat(JSON_GetMember(mflash, "forward"), 18.0f);
+
+		if (JSON_GetMember(mflash, "right"))
+			cfg->right = JSON_GetFloat(JSON_GetMember(mflash, "right"), 8.0f);
+
+		if (JSON_GetMember(mflash, "up"))
+			cfg->up = JSON_GetFloat(JSON_GetMember(mflash, "up"), 0.0f);
+
+		if (JSON_GetMember(mflash, "scale"))
+			cfg->scale = JSON_GetInt(JSON_GetMember(mflash, "scale"), 40);
+
+		if (JSON_GetMember(mflash, "duration_ms"))
+			cfg->duration_ms = JSON_GetInt(JSON_GetMember(mflash, "duration_ms"), 150);
+
+		if (JSON_GetMember(mflash, "velocity_scale"))
+			cfg->velocity_scale = JSON_GetFloat(JSON_GetMember(mflash, "velocity_scale"), 0.15f);
+
+		if (JSON_GetMember(mflash, "image"))
+		{
+			const char *img = JSON_GetString(JSON_GetMember(mflash, "image"), "sprites/muzzleFlash.png");
+			strncpy(cfg->image, img, sizeof(cfg->image) - 1);
+			cfg->image[sizeof(cfg->image) - 1] = '\0';
+		}
 	}
 
-	/* Load weapon-specific config */
-	if (JSON_GetMember(mflash, "enabled"))
-		cfg->enabled = JSON_GetBool(JSON_GetMember(mflash, "enabled"), true);
-
-	if (JSON_GetMember(mflash, "forward"))
-		cfg->forward = JSON_GetFloat(JSON_GetMember(mflash, "forward"), 18.0f);
-
-	if (JSON_GetMember(mflash, "right"))
-		cfg->right = JSON_GetFloat(JSON_GetMember(mflash, "right"), 8.0f);
-
-	if (JSON_GetMember(mflash, "up"))
-		cfg->up = JSON_GetFloat(JSON_GetMember(mflash, "up"), 0.0f);
-
-	if (JSON_GetMember(mflash, "scale"))
-		cfg->scale = JSON_GetInt(JSON_GetMember(mflash, "scale"), 40);
-
-	if (JSON_GetMember(mflash, "duration_ms"))
-		cfg->duration_ms = JSON_GetInt(JSON_GetMember(mflash, "duration_ms"), 150);
-
-	if (JSON_GetMember(mflash, "velocity_scale"))
-		cfg->velocity_scale = JSON_GetFloat(JSON_GetMember(mflash, "velocity_scale"), 0.15f);
-
-	if (JSON_GetMember(mflash, "image"))
+	/* Load optional billboard flash config (muzzle_flash2) */
+	mflash2 = JSON_GetMember(weapon_root, "muzzle_flash2");
+	if (mflash2)
 	{
-		const char *img = JSON_GetString(JSON_GetMember(mflash, "image"), "sprites/muzzleFlash.png");
-		strncpy(cfg->image, img, sizeof(cfg->image) - 1);
-		cfg->image[sizeof(cfg->image) - 1] = '\0';
+		/* If muzzle_flash2 section exists, enable it */
+		cfg->flash2_enabled = true;
+
+		if (JSON_GetMember(mflash2, "enabled"))
+			cfg->flash2_enabled = JSON_GetBool(JSON_GetMember(mflash2, "enabled"), true);
+
+		if (JSON_GetMember(mflash2, "forward"))
+			cfg->flash2_forward = JSON_GetFloat(JSON_GetMember(mflash2, "forward"), 18.0f);
+
+		if (JSON_GetMember(mflash2, "right"))
+			cfg->flash2_right = JSON_GetFloat(JSON_GetMember(mflash2, "right"), 8.0f);
+
+		if (JSON_GetMember(mflash2, "up"))
+			cfg->flash2_up = JSON_GetFloat(JSON_GetMember(mflash2, "up"), 0.0f);
+
+		if (JSON_GetMember(mflash2, "scale"))
+			cfg->flash2_scale = JSON_GetInt(JSON_GetMember(mflash2, "scale"), 40);
+
+		if (JSON_GetMember(mflash2, "duration_ms"))
+			cfg->flash2_duration_ms = JSON_GetInt(JSON_GetMember(mflash2, "duration_ms"), 150);
+
+		if (JSON_GetMember(mflash2, "velocity_scale"))
+			cfg->flash2_velocity_scale = JSON_GetFloat(JSON_GetMember(mflash2, "velocity_scale"), 0.15f);
+
+		if (JSON_GetMember(mflash2, "image2"))
+		{
+			const char *img = JSON_GetString(JSON_GetMember(mflash2, "image2"), "sprites/muzzleFlash2.png");
+			strncpy(cfg->flash2_image, img, sizeof(cfg->flash2_image) - 1);
+			cfg->flash2_image[sizeof(cfg->flash2_image) - 1] = '\0';
+		}
+
+		Com_DPrintf("Muzzle flash: Loaded billboard flash for weapon %s\n", weapon_name);
 	}
 
 	Com_DPrintf("Muzzle flash: Loaded config for weapon %s\n", weapon_name);

@@ -44,8 +44,7 @@
       "scale": 1,
       "duration_ms": 50,
       "velocity_scale": 0.3,
-      "image": "sprites/muzzleFlash.png",
-      "image2": "sprites/muzzleFlash.png"
+      "image": "sprites/muzzleFlash2.png"
     }
     },
 
@@ -89,13 +88,23 @@
       },
     "muzzle_flash": {
       "enabled": true,
-      "forward": 40.0,
-      "right": 40.0,
-      "up": 40.0,
-      "scale": 40,
-      "duration_ms": 150,
-      "velocity_scale": 0.15,
-      "image": "sprites/muzzleFlash.png"
+      "forward": 20,
+      "right": 6.0,
+      "up": -5.0,
+      "scale": 1,
+      "duration_ms": 50,
+      "velocity_scale": 0.3,
+      "image": "sprites/muzzleFlash2.png"
+    },
+    "muzzle_flash2": {
+      "enabled": true,
+      "forward": 20,
+      "right": 6.0,
+      "up": -5.0,
+      "scale": 1,
+      "duration_ms": 50,
+      "velocity_scale": 0.3,
+      "image2": "sprites/muzzleFlash2.png"
     }
     },
 
