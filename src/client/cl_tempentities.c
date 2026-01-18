@@ -434,7 +434,7 @@ extern cvar_t *cl_mflash_enabled;
  * Position and appearance are calculated using per-weapon config.
  */
 void
-CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t velocity, int weapon)
+CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up, vec3_t velocity, int weapon)
 {
 	explosion_t *ex;
 	vec3_t spawn_origin;
@@ -467,7 +467,7 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t ve
 	VectorCopy(origin, spawn_origin);
 	VectorMA(spawn_origin, fwd_offset, forward, spawn_origin);
 	VectorMA(spawn_origin, right_offset, right, spawn_origin);
-	spawn_origin[2] += up_offset;
+	VectorMA(spawn_origin, up_offset, up, spawn_origin);
 
 	ex = CL_AllocExplosion();
 	ex->type = ex_mflash;

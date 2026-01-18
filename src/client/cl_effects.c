@@ -238,7 +238,7 @@ CL_InitMuzzleFlashCvars(void)
 void
 CL_AddMuzzleFlash(void)
 {
-	vec3_t fv, rv;
+	vec3_t fv, rv, uv;
 	cdlight_t *dl;
 	int i, weapon;
 	centity_t *pl;
@@ -271,7 +271,7 @@ CL_AddMuzzleFlash(void)
 
 	dl = CL_AllocDlight(i);
 	VectorCopy(pl->current.origin, dl->origin);
-	AngleVectors(pl->current.angles, fv, rv, NULL);
+	AngleVectors(pl->current.angles, fv, rv, uv);
 	VectorMA(dl->origin, 18, fv, dl->origin);
 	VectorMA(dl->origin, 16, rv, dl->origin);
 
@@ -535,24 +535,32 @@ CL_AddMuzzleFlash(void)
 		weapon == MZ_ETF_RIFLE || weapon == MZ_SHOTGUN2 ||
 		weapon == MZ_ROCKET || weapon == MZ_GRENADE || weapon == MZ_BFG)
 	{
+		vec3_t mflash_origin, mflash_fv, mflash_rv, mflash_uv;
 		vec3_t mflash_velocity;
 		const float vel_scale = 1.0f / 8.0f;  /* pmove velocity is 12.3 fixed point */
 
-		/* Get velocity: use player's velocity if local player, else estimate */
+		/* For local player, use actual view position (accounts for crouch, view bob, etc) */
 		if (i == cl.playernum + 1)
 		{
+			VectorCopy(cl.refdef.vieworg, mflash_origin);
+			AngleVectors(cl.refdef.viewangles, mflash_fv, mflash_rv, mflash_uv);
 			mflash_velocity[0] = (float)cl.frame.playerstate.pmove.velocity[0] * vel_scale;
 			mflash_velocity[1] = (float)cl.frame.playerstate.pmove.velocity[1] * vel_scale;
 			mflash_velocity[2] = (float)cl.frame.playerstate.pmove.velocity[2] * vel_scale;
 		}
 		else
 		{
+			/* For other players, use entity origin and angles */
+			VectorCopy(pl->current.origin, mflash_origin);
+			VectorCopy(fv, mflash_fv);
+			VectorCopy(rv, mflash_rv);
+			VectorCopy(uv, mflash_uv);
 			/* Estimate velocity from entity position delta */
 			VectorSubtract(pl->current.origin, pl->prev.origin, mflash_velocity);
 			VectorScale(mflash_velocity, 10.0f, mflash_velocity);
 		}
 
-		CL_SpawnMuzzleFlashSprite(pl->current.origin, fv, rv, mflash_velocity, weapon);
+		CL_SpawnMuzzleFlashSprite(mflash_origin, mflash_fv, mflash_rv, mflash_uv, mflash_velocity, weapon);
 	}
 }
 
