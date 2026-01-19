@@ -426,14 +426,14 @@ extern cvar_t *cl_mflash_enabled;
 static void
 CL_SpawnConeSprite(vec3_t spawn_origin, vec3_t forward, vec3_t right, vec3_t up,
                    vec3_t velocity, float vel_scale, float duration, int scale,
-                   exptype_t type)
+                   exptype_t type, struct model_s *model)
 {
 	explosion_t *ex;
 
 	ex = CL_AllocExplosion();
 	ex->type = type;
 	ex->ent.flags = RF_FULLBRIGHT | RF_TRANSLUCENT | RF_NOSHADOW;
-	ex->ent.model = cl_mod_muzzle_flash_sprite;
+	ex->ent.model = model ? model : cl_mod_muzzle_flash_sprite;
 
 	/* Store origin for velocity tracking */
 	VectorCopy(spawn_origin, ex->ent.origin);
@@ -479,15 +479,30 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	int scale;
 	muzzle_flash_config_t *cfg;
 	explosion_t *ex;
-
-	if (!cl_mod_muzzle_flash_sprite)
-	{
-		return;
-	}
+	struct model_s *cone_model = NULL;
+	struct model_s *billboard_model = NULL;
 
 	/* Get weapon-specific config */
 	cfg = CL_GetMuzzleFlashConfig(weapon);
 	if (!cfg || !cfg->enabled)
+	{
+		return;
+	}
+
+	/* Load cone flash sprite from config image path (supports .sp2, .png, .tga, .pcx, .jpg) */
+	if (cfg->image[0])
+	{
+		cone_model = R_RegisterModel(cfg->image);
+		if (!cone_model)
+		{
+			Com_Printf("Warning: Could not load muzzle_flash image: %s\n", cfg->image);
+		}
+	}
+	if (!cone_model)
+	{
+		cone_model = cl_mod_muzzle_flash_sprite;
+	}
+	if (!cone_model)
 	{
 		return;
 	}
@@ -508,15 +523,29 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 
 	/* Spawn horizontal cone sprite (lies in the horizontal plane) */
 	CL_SpawnConeSprite(spawn_origin, forward, right, up, velocity, vel_scale,
-	                   duration, scale, ex_mflash_cone_h);
+	                   duration, scale, ex_mflash_cone_h, cone_model);
 
 	/* Spawn vertical cone sprite (stands in the vertical plane) */
 	CL_SpawnConeSprite(spawn_origin, forward, right, up, velocity, vel_scale,
-	                   duration, scale, ex_mflash_cone_v);
+	                   duration, scale, ex_mflash_cone_v, cone_model);
 
 	/* Spawn optional billboard flash (muzzle_flash2) if configured */
 	if (cfg->flash2_enabled)
 	{
+		/* Load billboard sprite from flash2 config image path (supports .sp2, .png, .tga, .pcx, .jpg) */
+		if (cfg->flash2_image[0])
+		{
+			billboard_model = R_RegisterModel(cfg->flash2_image);
+			if (!billboard_model)
+			{
+				Com_Printf("Warning: Could not load muzzle_flash2 image: %s\n", cfg->flash2_image);
+			}
+		}
+		if (!billboard_model)
+		{
+			billboard_model = cl_mod_muzzle_flash_sprite;
+		}
+
 		/* Calculate position for billboard flash */
 		VectorCopy(origin, spawn_origin2);
 		VectorMA(spawn_origin2, cfg->flash2_forward, forward, spawn_origin2);
@@ -526,7 +555,7 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 		ex = CL_AllocExplosion();
 		ex->type = ex_mflash_billboard;
 		ex->ent.flags = RF_FULLBRIGHT | RF_TRANSLUCENT | RF_NOSHADOW;
-		ex->ent.model = cl_mod_muzzle_flash_sprite; /* TODO: support flash2_image */
+		ex->ent.model = billboard_model;
 
 		VectorCopy(spawn_origin2, ex->ent.origin);
 		VectorCopy(spawn_origin2, ex->ent.oldorigin);
@@ -1919,7 +1948,7 @@ CL_AddExplosions(void)
 			}
 			case ex_mflash_cone_h:
 			{
-				/* Horizontal cone sprite - lies flat, oriented by weapon direction */
+				/* Horizontal cone sprite - lies flat in horizontal plane, pointing forward */
 				float elapsed = cl.time - ex->start;
 				float progress = elapsed / ex->duration;
 
@@ -1935,23 +1964,24 @@ CL_AddExplosions(void)
 				ent->origin[1] = ex->ent.oldorigin[1] + ex->velocity[1] * dt;
 				ent->origin[2] = ex->ent.oldorigin[2] + ex->velocity[2] * dt;
 
-				/* Calculate yaw from forward direction */
+				/* Orient sprite to point forward along weapon direction, lying flat (horizontal plane) */
 				{
 					float yaw = atan2(ex->dir_forward[1], ex->dir_forward[0]) * 180.0f / M_PI;
-					ent->angles[0] = 0;  /* No pitch - lies flat */
-					ent->angles[1] = yaw;
+					/* Pitch 0, yaw+90 rotates 90 degrees clockwise when viewed from above */
+					ent->angles[0] = 0;
+					ent->angles[1] = yaw + 90;
 					ent->angles[2] = 0;
 				}
 
 				ent->alpha = 0.95f * (1.0f - progress);
-				ent->flags |= RF_TRANSLUCENT | RF_FULLBRIGHT | RF_NOSHADOW;
+				ent->flags |= RF_TRANSLUCENT | RF_FULLBRIGHT | RF_NOSHADOW | RF_ORIENTED_SPRITE;
 				ent->frame = 0;
 				ent->oldframe = 0;
 				break;
 			}
 			case ex_mflash_cone_v:
 			{
-				/* Vertical cone sprite - stands up, oriented by weapon direction */
+				/* Vertical cone sprite - stands vertical, pointing forward */
 				float elapsed = cl.time - ex->start;
 				float progress = elapsed / ex->duration;
 
@@ -1967,19 +1997,20 @@ CL_AddExplosions(void)
 				ent->origin[1] = ex->ent.oldorigin[1] + ex->velocity[1] * dt;
 				ent->origin[2] = ex->ent.oldorigin[2] + ex->velocity[2] * dt;
 
-				/* Calculate pitch and yaw from forward direction */
+				/* Orient sprite to point forward along weapon direction, standing vertical */
 				{
 					float forward_len = sqrt(ex->dir_forward[0] * ex->dir_forward[0] +
 					                         ex->dir_forward[1] * ex->dir_forward[1]);
 					float pitch = atan2(-ex->dir_forward[2], forward_len) * 180.0f / M_PI;
 					float yaw = atan2(ex->dir_forward[1], ex->dir_forward[0]) * 180.0f / M_PI;
+					/* Pitch follows weapon angle, yaw+90 rotates clockwise, roll 90 to stand vertical */
 					ent->angles[0] = pitch;
-					ent->angles[1] = yaw;
-					ent->angles[2] = 90;  /* Roll 90 degrees to stand vertical */
+					ent->angles[1] = yaw + 90;
+					ent->angles[2] = 90;
 				}
 
 				ent->alpha = 0.95f * (1.0f - progress);
-				ent->flags |= RF_TRANSLUCENT | RF_FULLBRIGHT | RF_NOSHADOW;
+				ent->flags |= RF_TRANSLUCENT | RF_FULLBRIGHT | RF_NOSHADOW | RF_ORIENTED_SPRITE;
 				ent->frame = 0;
 				ent->oldframe = 0;
 				break;

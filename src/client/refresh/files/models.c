@@ -217,6 +217,62 @@ SPRITE MODELS
 
 /*
 =================
+Mod_GenerateSP2FromImage
+
+Auto-generate SP2 sprite data from a PNG/TGA/PCX image file.
+This allows using image files directly as sprites without manually creating .sp2 files.
+The caller must provide image dimensions since image_s is opaque here.
+=================
+*/
+void *
+Mod_GenerateSP2FromImage(const char *mod_name, struct image_s **skins,
+	findimage_t find_image, modtype_t *type, int *out_size,
+	int img_width, int img_height)
+{
+	dsprite_t *sprout;
+	void *extradata;
+	struct image_s *img;
+	int sprite_size;
+
+	/* Load the image */
+	img = find_image(mod_name, it_sprite);
+	if (!img)
+	{
+		Com_Printf("Mod_GenerateSP2FromImage: Could not load image %s\n", mod_name);
+		return NULL;
+	}
+
+	/* Allocate SP2 structure for single frame */
+	sprite_size = sizeof(dsprite_t);
+	extradata = Hunk_Begin(sprite_size + 64);
+	sprout = Hunk_Alloc(sprite_size);
+
+	/* Fill in SP2 header */
+	sprout->ident = IDSPRITEHEADER;
+	sprout->version = SPRITE_VERSION;
+	sprout->numframes = 1;
+
+	/* Fill in frame data - use provided dimensions or defaults */
+	sprout->frames[0].width = img_width > 0 ? img_width : 64;
+	sprout->frames[0].height = img_height > 0 ? img_height : 64;
+	sprout->frames[0].origin_x = sprout->frames[0].width / 2;  /* Center origin */
+	sprout->frames[0].origin_y = sprout->frames[0].height / 2;
+	Q_strlcpy(sprout->frames[0].name, mod_name, MAX_SKINNAME);
+
+	/* Store the loaded image */
+	skins[0] = img;
+
+	*type = mod_sprite;
+	*out_size = sprite_size;
+
+	Com_Printf("Auto-generated SP2 sprite from: %s (%dx%d)\n",
+		mod_name, sprout->frames[0].width, sprout->frames[0].height);
+
+	return extradata;
+}
+
+/*
+=================
 Mod_LoadSP2
 
 support for .sp2 sprites

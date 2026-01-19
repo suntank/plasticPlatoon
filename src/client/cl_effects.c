@@ -95,7 +95,7 @@ CL_LoadWeaponMuzzleFlashConfig(json_value_t *weapon_root, const char *weapon_nam
 	cfg->scale = 40;
 	cfg->duration_ms = 150;
 	cfg->velocity_scale = 0.15f;
-	strcpy(cfg->image, "sprites/muzzleFlash.png");
+	strcpy(cfg->image, "sprites/muzzleFlash.sp2");
 
 	/* Initialize billboard flash defaults (disabled by default) */
 	cfg->flash2_enabled = false;
@@ -105,7 +105,7 @@ CL_LoadWeaponMuzzleFlashConfig(json_value_t *weapon_root, const char *weapon_nam
 	cfg->flash2_scale = 40;
 	cfg->flash2_duration_ms = 150;
 	cfg->flash2_velocity_scale = 0.15f;
-	strcpy(cfg->flash2_image, "sprites/muzzleFlash2.png");
+	strcpy(cfg->flash2_image, "sprites/muzzleFlash.sp2"); /* Use existing sprite as fallback */
 
 	/* Load primary cone flash config */
 	mflash = JSON_GetMember(weapon_root, "muzzle_flash");
@@ -134,7 +134,7 @@ CL_LoadWeaponMuzzleFlashConfig(json_value_t *weapon_root, const char *weapon_nam
 
 		if (JSON_GetMember(mflash, "image"))
 		{
-			const char *img = JSON_GetString(JSON_GetMember(mflash, "image"), "sprites/muzzleFlash.png");
+			const char *img = JSON_GetString(JSON_GetMember(mflash, "image"), "sprites/muzzleFlash.sp2");
 			strncpy(cfg->image, img, sizeof(cfg->image) - 1);
 			cfg->image[sizeof(cfg->image) - 1] = '\0';
 		}
@@ -168,9 +168,9 @@ CL_LoadWeaponMuzzleFlashConfig(json_value_t *weapon_root, const char *weapon_nam
 		if (JSON_GetMember(mflash2, "velocity_scale"))
 			cfg->flash2_velocity_scale = JSON_GetFloat(JSON_GetMember(mflash2, "velocity_scale"), 0.15f);
 
-		if (JSON_GetMember(mflash2, "image2"))
+		if (JSON_GetMember(mflash2, "image"))
 		{
-			const char *img = JSON_GetString(JSON_GetMember(mflash2, "image2"), "sprites/muzzleFlash2.png");
+			const char *img = JSON_GetString(JSON_GetMember(mflash2, "image"), "sprites/muzzleFlash.sp2");
 			strncpy(cfg->flash2_image, img, sizeof(cfg->flash2_image) - 1);
 			cfg->flash2_image[sizeof(cfg->flash2_image) - 1] = '\0';
 		}

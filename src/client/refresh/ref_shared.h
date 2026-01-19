@@ -189,6 +189,9 @@ extern void *Mod_LoadMD2 (const char *mod_name, const void *buffer, int modfilel
 	findimage_t find_image, modtype_t *type);
 extern void *Mod_LoadSP2 (const char *mod_name, const void *buffer, int modfilelen,
 	struct image_s **skins, findimage_t find_image, modtype_t *type);
+extern void *Mod_GenerateSP2FromImage(const char *mod_name, struct image_s **skins,
+	findimage_t find_image, modtype_t *type, int *out_size,
+	int img_width, int img_height);
 extern int Mod_ReLoadSkins(struct image_s **skins, findimage_t find_image,
 	void *extradata, modtype_t type);
 extern struct image_s *GetSkyImage(const char *skyname, const char* surfname,

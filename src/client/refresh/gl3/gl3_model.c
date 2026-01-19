@@ -723,8 +723,46 @@ Mod_ForName(const char *name, gl3model_t *parent_model, qboolean crash)
 			break;
 
 		default:
-			Com_Error(ERR_DROP, "%s: unknown fileid for %s",
-					__func__, mod->name);
+			{
+				/* Check if this is an image file (PNG/TGA/PCX) - auto-generate SP2 */
+				size_t namelen = strlen(mod->name);
+				if (namelen > 4 &&
+					(strcmp(mod->name + namelen - 4, ".png") == 0 ||
+					 strcmp(mod->name + namelen - 4, ".tga") == 0 ||
+					 strcmp(mod->name + namelen - 4, ".pcx") == 0 ||
+					 strcmp(mod->name + namelen - 4, ".jpg") == 0))
+				{
+					int out_size;
+					gl3image_t *img;
+
+					ri.FS_FreeFile(buf);
+					buf = NULL;
+
+					/* Pre-load image to get dimensions */
+					img = GL3_FindImage(mod->name, it_sprite);
+					if (!img)
+					{
+						Com_Error(ERR_DROP, "%s: Could not load image %s",
+							__func__, mod->name);
+					}
+
+					mod->extradata = Mod_GenerateSP2FromImage(mod->name,
+						(struct image_s **)mod->skins, (findimage_t)GL3_FindImage,
+						&(mod->type), &out_size, img->width, img->height);
+
+					if (!mod->extradata)
+					{
+						Com_Error(ERR_DROP, "%s: Failed to generate sprite from %s",
+							__func__, mod->name);
+					}
+
+					mod->extradatasize = Hunk_End();
+					return mod;
+				}
+
+				Com_Error(ERR_DROP, "%s: unknown fileid for %s",
+						__func__, mod->name);
+			}
 			break;
 	}
 

@@ -869,8 +869,6 @@ GL3_DrawSpriteModel(entity_t *e, gl3model_t *currentmodel)
 	dsprite_t *psprite;
 	gl3image_t *skin;
 	float scale = 1.0f;
-	float roll_rad, c, s;
-	vec3_t rotated_up, rotated_right;
 
 	/* don't even bother culling, because it's just
 	   a single polygon without a surface cache */
@@ -879,16 +877,52 @@ GL3_DrawSpriteModel(entity_t *e, gl3model_t *currentmodel)
 	e->frame %= psprite->numframes;
 	frame = &psprite->frames[e->frame];
 
-	/* Apply roll rotation and size variance from skinnum */
-	roll_rad = e->angles[2] * (M_PI / 180.0f);
-	c = cosf(roll_rad);
-	s = sinf(roll_rad);
+	if (e->flags & RF_ORIENTED_SPRITE)
+	{
+		/* Oriented sprite: use entity angles to determine orientation
+		 * Sprite EXTENDS along forward direction (cone points forward)
+		 * Roll determines which perpendicular axis is used for width:
+		 *   roll=0: horizontal plane (right vector for width)
+		 *   roll=90: vertical plane (up vector for width)
+		 */
+		vec3_t forward, sprite_right, sprite_up;
 
-	/* Rotate up and right vectors around the view direction */
-	VectorScale(vup, c, rotated_up);
-	VectorMA(rotated_up, s, vright, rotated_up);
-	VectorScale(vright, c, rotated_right);
-	VectorMA(rotated_right, -s, vup, rotated_right);
+		AngleVectors(e->angles, forward, sprite_right, sprite_up);
+
+		/* Sprite extends along forward - use forward as the sprite's "up" (length direction) */
+		VectorCopy(forward, up);
+
+		/* Roll determines which axis is used for sprite width */
+		if (fabs(e->angles[2]) > 45.0f)
+		{
+			/* Vertical plane: use entity up for sprite width */
+			VectorScale(sprite_up, -1, right);
+		}
+		else
+		{
+			/* Horizontal plane: use entity right for sprite width */
+			VectorScale(sprite_right, -1, right);
+		}
+	}
+	else
+	{
+		/* Billboard sprite: face the camera with optional roll */
+		float roll_rad, c, s;
+		vec3_t rotated_up, rotated_right;
+
+		roll_rad = e->angles[2] * (M_PI / 180.0f);
+		c = cosf(roll_rad);
+		s = sinf(roll_rad);
+
+		/* Rotate up and right vectors around the view direction */
+		VectorScale(vup, c, rotated_up);
+		VectorMA(rotated_up, s, vright, rotated_up);
+		VectorScale(vright, c, rotated_right);
+		VectorMA(rotated_right, -s, vup, rotated_right);
+
+		VectorCopy(rotated_up, up);
+		VectorCopy(rotated_right, right);
+	}
 
 	/* Size variance: skinnum encodes scale (0=1.0, 1-255 smaller) */
 	if (e->skinnum > 0 && e->skinnum < 256)
@@ -896,8 +930,8 @@ GL3_DrawSpriteModel(entity_t *e, gl3model_t *currentmodel)
 		scale = 0.1f + (e->skinnum / 255.0f) * 0.9f;
 	}
 
-	VectorScale(rotated_up, scale, up);
-	VectorScale(rotated_right, scale, right);
+	VectorScale(up, scale, up);
+	VectorScale(right, scale, right);
 
 	if (e->flags & RF_TRANSLUCENT)
 	{
@@ -954,7 +988,18 @@ GL3_DrawSpriteModel(entity_t *e, gl3model_t *currentmodel)
 	GL3_BindVAO(gl3state.vao3D);
 	GL3_BindVBO(gl3state.vbo3D);
 
+	/* Disable backface culling for oriented sprites so both sides render */
+	if (e->flags & RF_ORIENTED_SPRITE)
+	{
+		glDisable(GL_CULL_FACE);
+	}
+
 	GL3_BufferAndDraw3D(verts, 4, GL_TRIANGLE_FAN);
+
+	if (e->flags & RF_ORIENTED_SPRITE)
+	{
+		glEnable(GL_CULL_FACE);
+	}
 
 	if (alpha != 1.0F)
 	{

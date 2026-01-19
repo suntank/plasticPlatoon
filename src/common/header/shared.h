@@ -768,6 +768,7 @@ typedef struct
 #define RF_SHELL_DOUBLE 0x00010000          /* 65536 */
 #define RF_SHELL_HALF_DAM 0x00020000
 #define RF_USE_DISGUISE 0x00040000
+#define RF_ORIENTED_SPRITE 0x00080000   /* sprite uses entity angles instead of facing camera */
 
 /* player_state_t->refdef flags */
 #define RDF_UNDERWATER 1            /* warp the screen as apropriate */
