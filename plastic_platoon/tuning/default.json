@@ -103,7 +103,7 @@
       "up": -5.0,
       "scale": 1,
       "duration_ms": 50,
-      "velocity_scale": 0.3,
+      "velocity_scale": 0.5,
       "image": "sprites/muzzleFlashCore.png"
     },
     "muzzle_flash2": {
@@ -113,7 +113,7 @@
       "up": -5.0,
       "scale": 1,
       "duration_ms": 50,
-      "velocity_scale": 0.3,
+      "velocity_scale": 0.5,
       "image": "sprites/muzzleFlashFlare.png"
     }
     },
