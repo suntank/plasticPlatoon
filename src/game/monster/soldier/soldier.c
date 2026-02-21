@@ -43,6 +43,54 @@ static int sound_step;
 static int sound_step2;
 static int sound_step3;
 static int sound_step4;
+static int soldier_weapon_model_blaster;
+static int soldier_weapon_model_shotgun;
+static int soldier_weapon_model_machinegun;
+
+/*
+ * Linked soldier weapon models are expected to use the exact same frame
+ * layout as models/monsters/soldier/tris.md2.
+ */
+#define SOLDIER_WEAPON_MODEL_BLASTER "models/monsters/soldier/weapon_blaster.md2"
+#define SOLDIER_WEAPON_MODEL_SHOTGUN "models/monsters/soldier/weapon_shotgun.md2"
+#define SOLDIER_WEAPON_MODEL_MACHINEGUN "models/monsters/soldier/weapon_machinegun.md2"
+
+static void
+soldier_precache_weapon_models(void)
+{
+	if ((soldier_weapon_model_blaster == 0) ||
+		(soldier_weapon_model_shotgun == 0) ||
+		(soldier_weapon_model_machinegun == 0))
+	{
+		soldier_weapon_model_blaster = gi.modelindex(SOLDIER_WEAPON_MODEL_BLASTER);
+		soldier_weapon_model_shotgun = gi.modelindex(SOLDIER_WEAPON_MODEL_SHOTGUN);
+		soldier_weapon_model_machinegun = gi.modelindex(SOLDIER_WEAPON_MODEL_MACHINEGUN);
+	}
+}
+
+static void
+soldier_set_weapon_model(edict_t *self)
+{
+	if (!self)
+	{
+		return;
+	}
+
+	soldier_precache_weapon_models();
+
+	if (self->s.skinnum < 2)
+	{
+		self->s.modelindex2 = soldier_weapon_model_blaster;
+	}
+	else if (self->s.skinnum < 4)
+	{
+		self->s.modelindex2 = soldier_weapon_model_shotgun;
+	}
+	else
+	{
+		self->s.modelindex2 = soldier_weapon_model_machinegun;
+	}
+}
 
 
 void
@@ -219,6 +267,8 @@ soldier_stand(edict_t *self)
 	{
 		return;
 	}
+
+	soldier_set_weapon_model(self);
 
 	if ((self->monsterinfo.currentmove == &soldier_move_stand3) ||
 		(random() < 0.8))
@@ -1595,8 +1645,12 @@ SP_monster_soldier_x(edict_t *self)
 	sound_step2 = 0;
 	sound_step3 = 0;
 	sound_step4 = 0;
+	soldier_weapon_model_blaster = 0;
+	soldier_weapon_model_shotgun = 0;
+	soldier_weapon_model_machinegun = 0;
 
 	self->s.modelindex = gi.modelindex("models/monsters/soldier/tris.md2");
+	soldier_precache_weapon_models();
 	self->monsterinfo.scale = MODEL_SCALE;
 	VectorSet(self->mins, -16, -16, -24);
 	VectorSet(self->maxs, 16, 16, 32);
@@ -1661,6 +1715,7 @@ SP_monster_soldier_light(edict_t *self)
 	gi.soundindex("soldier/solatck2.wav");
 
 	self->s.skinnum = 0;
+	soldier_set_weapon_model(self);
 }
 
 /*
@@ -1694,6 +1749,7 @@ SP_monster_soldier(edict_t *self)
 	gi.soundindex("soldier/solatck1.wav");
 
 	self->s.skinnum = 2;
+	soldier_set_weapon_model(self);
 }
 
 /*
@@ -1727,4 +1783,5 @@ SP_monster_soldier_ss(edict_t *self)
 	gi.soundindex("soldier/solatck3.wav");
 
 	self->s.skinnum = 4;
+	soldier_set_weapon_model(self);
 }
