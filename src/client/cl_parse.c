@@ -971,6 +971,7 @@ CL_LoadClientinfo(clientinfo_t *ci, char *s)
 	char model_name[MAX_QPATH];
 	char skin_name[MAX_QPATH];
 	char model_filename[MAX_QPATH];
+	char pistol_model_filename[MAX_QPATH];
 	char skin_filename[MAX_QPATH];
 	char weapon_filename[MAX_QPATH];
 
@@ -990,10 +991,18 @@ CL_LoadClientinfo(clientinfo_t *ci, char *s)
 	if (cl_noskins->value || (*s == 0))
 	{
 		strcpy(model_filename, "players/male/tris.md2");
+		strcpy(pistol_model_filename, "players/male/tris_pistol.md2");
 		strcpy(weapon_filename, "players/male/weapon.md2");
 		strcpy(skin_filename, "players/male/grunt.pcx");
 		strcpy(ci->iconname, "/players/male/grunt_i.pcx");
 		ci->model = R_RegisterModel(model_filename);
+		ci->model_pistol = R_RegisterModel(pistol_model_filename);
+
+		if (!ci->model_pistol)
+		{
+			ci->model_pistol = ci->model;
+		}
+
 		memset(ci->weaponmodel, 0, sizeof(ci->weaponmodel));
 		ci->weaponmodel[0] = R_RegisterModel(weapon_filename);
 		ci->skin = R_RegisterSkin(skin_filename);
@@ -1062,6 +1071,16 @@ CL_LoadClientinfo(clientinfo_t *ci, char *s)
 			Com_sprintf(skin_filename, sizeof(skin_filename),
 					"players/%s/grunt.pcx", model_name);
 			ci->skin = R_RegisterSkin(skin_filename);
+		}
+
+		/* optional alternate player model for pistol/blaster */
+		Com_sprintf(pistol_model_filename, sizeof(pistol_model_filename),
+				"players/%s/tris_pistol.md2", model_name);
+		ci->model_pistol = R_RegisterModel(pistol_model_filename);
+
+		if (!ci->model_pistol)
+		{
+			ci->model_pistol = ci->model;
 		}
 
 		/* weapon file */

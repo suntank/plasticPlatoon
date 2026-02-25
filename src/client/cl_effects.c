@@ -27,6 +27,7 @@
 
 #include "header/client.h"
 #include "../common/header/pp_json.h"
+#include "../game/monster/misc/player.h"
 
 void CL_LogoutEffect(vec3_t org, int type);
 void CL_ItemRespawnParticles(vec3_t org);
@@ -44,6 +45,8 @@ cvar_t *cl_mflash_scale;     /* Scale (skinnum value, 1-255, lower=bigger) */
 cvar_t *cl_mflash_duration;  /* Duration in milliseconds */
 cvar_t *cl_mflash_vel_scale; /* Velocity inheritance factor (0.0-1.0) */
 cvar_t *cl_mflash_enabled;   /* Enable/disable muzzle flash sprites */
+cvar_t *cl_mflash_thirdperson_up; /* World-up lift for other players' muzzle sprites */
+cvar_t *cl_mflash_thirdperson_crouch_down; /* Additional downward offset while crouched */
 
 static vec3_t avelocities[NUMVERTEXNORMALS];
 extern struct model_s *cl_mod_smoke;
@@ -76,6 +79,12 @@ CL_GetWeaponNameFromID(int weapon)
 		case MZ_ETF_RIFLE: return "SMG";
 		default: return NULL;
 	}
+}
+
+static qboolean
+CL_IsPlayerCrouchFrame(int frame)
+{
+	return (frame >= FRAME_crstnd01) && (frame <= FRAME_crdeath5);
 }
 
 /*
@@ -263,6 +272,8 @@ CL_InitMuzzleFlashCvars(void)
 	cl_mflash_scale = Cvar_Get("cl_mflash_scale", "40", CVAR_ARCHIVE);
 	cl_mflash_duration = Cvar_Get("cl_mflash_duration", "150", CVAR_ARCHIVE);
 	cl_mflash_vel_scale = Cvar_Get("cl_mflash_vel_scale", "0.15", CVAR_ARCHIVE);
+	cl_mflash_thirdperson_up = Cvar_Get("cl_mflash_thirdperson_up", "25", CVAR_ARCHIVE);
+	cl_mflash_thirdperson_crouch_down = Cvar_Get("cl_mflash_thirdperson_crouch_down", "18", CVAR_ARCHIVE);
 
 	/* Load from JSON tuning file (overrides defaults) */
 	CL_LoadMuzzleFlashConfig();
@@ -584,7 +595,26 @@ CL_AddMuzzleFlash(void)
 		else
 		{
 			/* For other players, use entity origin and angles */
+			float crouch_blend = 0.0f;
+			qboolean was_crouched = CL_IsPlayerCrouchFrame(pl->prev.frame);
+			qboolean is_crouched = CL_IsPlayerCrouchFrame(pl->current.frame);
+
+			if (was_crouched && is_crouched)
+			{
+				crouch_blend = 1.0f;
+			}
+			else if (was_crouched)
+			{
+				crouch_blend = 1.0f - cl.lerpfrac;
+			}
+			else if (is_crouched)
+			{
+				crouch_blend = cl.lerpfrac;
+			}
+
 			VectorCopy(pl->current.origin, mflash_origin);
+			mflash_origin[2] += cl_mflash_thirdperson_up->value;
+			mflash_origin[2] -= cl_mflash_thirdperson_crouch_down->value * crouch_blend;
 			VectorCopy(fv, mflash_fv);
 			VectorCopy(rv, mflash_rv);
 			VectorCopy(uv, mflash_uv);

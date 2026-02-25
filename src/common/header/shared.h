@@ -1210,6 +1210,12 @@ typedef enum
 #define CS_GENERAL (CS_PLAYERSKINS + MAX_CLIENTS)
 #define MAX_CONFIGSTRINGS (CS_GENERAL + MAX_GENERAL)
 
+/* player skinnum bit layout for modelindex==255 player entities */
+#define PP_PLAYER_SKINNUM_PLAYER_MASK 0x000000ff
+#define PP_PLAYER_SKINNUM_WEAPON_SHIFT 8
+#define PP_PLAYER_SKINNUM_WEAPON_MASK 0x0000003f
+#define PP_PLAYER_SKINNUM_PISTOL_FLAG 0x00004000
+
 /* ============================================== */
 
 /* entity_state_t->event values
