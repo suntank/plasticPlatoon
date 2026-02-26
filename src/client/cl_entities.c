@@ -242,9 +242,16 @@ CL_AddPacketEntities(frame_t *frame)
 			{
 				/* use custom player skin */
 				ent.skinnum = 0;
-				ci = &cl.clientinfo[s1->skinnum & 0xff];
+				ci = &cl.clientinfo[s1->skinnum & PP_PLAYER_SKINNUM_PLAYER_MASK];
 				ent.skin = ci->skin;
-				ent.model = ci->model;
+				if (s1->skinnum & PP_PLAYER_SKINNUM_PISTOL_FLAG)
+				{
+					ent.model = ci->model_pistol;
+				}
+				else
+				{
+					ent.model = ci->model;
+				}
 
 				if (!ent.skin || !ent.model)
 				{
@@ -466,8 +473,8 @@ CL_AddPacketEntities(frame_t *frame)
 			if (s1->modelindex2 == 255)
 			{
 				/* custom weapon */
-				ci = &cl.clientinfo[s1->skinnum & 0xff];
-				i = (s1->skinnum >> 8); /* 0 is default weapon model */
+				ci = &cl.clientinfo[s1->skinnum & PP_PLAYER_SKINNUM_PLAYER_MASK];
+				i = (s1->skinnum >> PP_PLAYER_SKINNUM_WEAPON_SHIFT) & PP_PLAYER_SKINNUM_WEAPON_MASK;
 
 				if (!cl_vwep->value || (i > MAX_CLIENTWEAPONMODELS - 1))
 				{

@@ -377,7 +377,13 @@ ChangeWeapon(edict_t *ent)
 	{
 		if (ent->client->pers.weapon)
 		{
-			i = ((ent->client->pers.weapon->weapmodel & 0xff) << 8);
+			i = ((ent->client->pers.weapon->weapmodel & PP_PLAYER_SKINNUM_WEAPON_MASK)
+				 << PP_PLAYER_SKINNUM_WEAPON_SHIFT);
+
+			if (ent->client->pers.weapon->weapmodel == WEAP_BLASTER)
+			{
+				i |= PP_PLAYER_SKINNUM_PISTOL_FLAG;
+			}
 		}
 		else
 		{

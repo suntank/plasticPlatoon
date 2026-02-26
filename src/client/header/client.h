@@ -95,6 +95,7 @@ typedef struct
 	char	iconname[MAX_QPATH];
 
 	struct model_s	*model;
+	struct model_s	*model_pistol;
 
 	struct model_s	*weaponmodel[MAX_CLIENTWEAPONMODELS];
 } clientinfo_t;
