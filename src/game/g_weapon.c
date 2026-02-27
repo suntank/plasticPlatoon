@@ -1497,9 +1497,10 @@ fire_bfg(edict_t *self, vec3_t start, vec3_t dir, int damage,
 #define BURN_DURATION_AREA 5.0f        /* Longer, weaker burn from puddles */
 
 /* Fire puddle configuration */
-#define FIRE_PUDDLE_HEAT_THRESHOLD 3.0f  /* Heat needed to ignite a puddle */
+#define FIRE_PUDDLE_HEAT_THRESHOLD 1.0f  /* Heat needed to ignite a puddle */
 #define FIRE_PUDDLE_HEAT_PER_FLAME 1.0f  /* Heat added per flame impact */
 #define FIRE_PUDDLE_HEAT_DECAY 0.5f      /* Heat decay per second */
+#define FIRE_PUDDLE_SPAWN_CHANCE 0.5f    /* Chance to convert hot spot into a puddle */
 #define FIRE_PUDDLE_MAX_PER_PLAYER 6     /* Max puddles per player */
 #define FIRE_PUDDLE_CHAIN_RANGE 80.0f    /* Range for chain ignition */
 #define FIRE_PUDDLE_CHAIN_DELAY 0.3f     /* Delay between chain ignitions */
@@ -1693,6 +1694,7 @@ FirePuddle_Think(edict_t *self)
 	edict_t *ent = NULL;
 	float radius;
 	int tier;
+	vec3_t flame_pos;
 
 	if (!self)
 	{
@@ -1707,6 +1709,20 @@ FirePuddle_Think(edict_t *self)
 
 	tier = self->count;
 	radius = puddle_tier_radius[tier];
+
+	/* Visual flame tongues rising from puddles */
+	if (random() < 0.5f)
+	{
+		VectorCopy(self->s.origin, flame_pos);
+		flame_pos[0] += crandom() * radius * 0.3f;
+		flame_pos[1] += crandom() * radius * 0.3f;
+		flame_pos[2] += frandk() * 4.0f;
+
+		gi.WriteByte(svc_temp_entity);
+		gi.WriteByte(TE_FLAME);
+		gi.WritePosition(flame_pos);
+		gi.multicast(flame_pos, MULTICAST_PVS);
+	}
 
 	/* Try chain ignition */
 	try_chain_ignition(self);
@@ -1928,6 +1944,12 @@ add_heat_at_location(edict_t *owner, vec3_t origin, csurface_t *surf)
 	/* Check if we've reached ignition threshold */
 	if (spot->heat >= FIRE_PUDDLE_HEAT_THRESHOLD)
 	{
+		/* Puddle formation is intentionally probabilistic now. */
+		if (random() > FIRE_PUDDLE_SPAWN_CHANCE)
+		{
+			return;
+		}
+
 		/* Determine tier based on accumulated heat */
 		int tier = PUDDLE_TIER_SMALL;
 		float excess_heat = spot->heat - FIRE_PUDDLE_HEAT_THRESHOLD;
@@ -1949,13 +1971,16 @@ add_heat_at_location(edict_t *owner, vec3_t origin, csurface_t *surf)
 	}
 }
 
-#define FLAME_GROWTH_TIME 0.5f
+#define FLAME_GROWTH_TIME 0.45f
 #define FLAME_GROWTH_FRAMES 5
+#define FLAME_GROWTH_SKIN_MIN 12
+#define FLAME_GROWTH_SKIN_MAX 255
 
 static void
 Flame_Think(edict_t *self)
 {
 	float age;
+	float growth_progress;
 	int growth_frame;
 
 	if (!self)
@@ -1991,10 +2016,12 @@ Flame_Think(edict_t *self)
 	/* Calculate age and set frame for growth effect */
 	/* delay stores spawn time, timestamp stores death time */
 	age = level.time - self->delay;
-	if (age < FLAME_GROWTH_TIME)
+	growth_progress = age / FLAME_GROWTH_TIME;
+
+	if (growth_progress < 1.0f)
 	{
 		/* Scale from 0 to FLAME_GROWTH_FRAMES over FLAME_GROWTH_TIME */
-		growth_frame = (int)((age / FLAME_GROWTH_TIME) * FLAME_GROWTH_FRAMES);
+		growth_frame = (int)(growth_progress * FLAME_GROWTH_FRAMES);
 		if (growth_frame > FLAME_GROWTH_FRAMES - 1)
 		{
 			growth_frame = FLAME_GROWTH_FRAMES - 1;
@@ -2005,8 +2032,11 @@ Flame_Think(edict_t *self)
 		growth_frame = FLAME_GROWTH_FRAMES - 1;
 	}
 	self->s.frame = growth_frame;
+	self->s.skinnum = FLAME_GROWTH_SKIN_MIN +
+		(int)(Q_clamp(growth_progress, 0.0f, 1.0f) *
+		(float)(FLAME_GROWTH_SKIN_MAX - FLAME_GROWTH_SKIN_MIN));
 
-	self->nextthink = level.time + 0.1f;
+	self->nextthink = level.time + 0.05f;
 }
 
 static void
@@ -2116,9 +2146,9 @@ fire_flame(edict_t *self, vec3_t start, vec3_t dir, int damage, int speed)
 	vectoangles(spread_dir, flame->s.angles);
 	flame->s.angles[ROLL] = random() * 360.0f;
 	
-	/* Frame 0 = smallest, grows over FLAME_GROWTH_TIME */
+	/* Frame and skin start tiny, then grow to full size over FLAME_GROWTH_TIME */
 	flame->s.frame = 0;
-	flame->s.skinnum = 0;
+	flame->s.skinnum = FLAME_GROWTH_SKIN_MIN;
 	
 	VectorScale(spread_dir, speed, flame->velocity);
 	VectorMA(flame->velocity, 80, up, flame->velocity);
@@ -2132,7 +2162,7 @@ fire_flame(edict_t *self, vec3_t start, vec3_t dir, int damage, int speed)
 	flame->s.modelindex = gi.modelindex("sprites/flame.sp2");
 	flame->owner = self;
 	flame->touch = Flame_Touch;
-	flame->nextthink = level.time + 0.1f;
+	flame->nextthink = level.time + 0.05f;
 	flame->think = Flame_Think;
 	flame->delay = level.time;           /* Store spawn time for growth calculation */
 	flame->timestamp = level.time + 2.0f;

@@ -43,7 +43,7 @@
       "up": -5.0,
       "scale": 1,
       "duration_ms": 50,
-      "velocity_scale": 0.3,
+      "velocity_scale": 0.5,
       "image": "sprites/muzzleFlashSmall.png"
     },
     "muzzle_flash2": {
@@ -53,7 +53,7 @@
       "up": -5,
       "scale": 1,
       "duration_ms": 50,
-      "velocity_scale": 0.3,
+      "velocity_scale": 0.5,
       "image": "sprites/muzzleFlashSmall.png"
     },
     "muzzle_flash_thirdperson": {
@@ -129,8 +129,8 @@
     "muzzle_flash": {
       "enabled": true,
       "forward": 20,
-      "right": 6.0,
-      "up": -5.0,
+      "right": 3.0,
+      "up": -2.0,
       "scale": 1,
       "duration_ms": 50,
       "velocity_scale": 0.5,
@@ -139,8 +139,8 @@
     "muzzle_flash2": {
       "enabled": true,
       "forward": 20,
-      "right": 6.0,
-      "up": -5.0,
+      "right": 3.0,
+      "up": -2.0,
       "scale": 1,
       "duration_ms": 50,
       "velocity_scale": 0.5,
@@ -186,12 +186,22 @@
     "muzzle_flash": {
       "enabled": true,
       "forward": 20,
-      "right": 6.0,
-      "up": -5.0,
+      "right": 3.0,
+      "up": -2.0,
       "scale": 1,
       "duration_ms": 50,
-      "velocity_scale": 0.3,
+      "velocity_scale": 0.5,
       "image": "sprites/muzzleFlashCore.png"
+    },
+    "muzzle_flash2": {
+      "enabled": true,
+      "forward": 20,
+      "right": 3.0,
+      "up": -2.0,
+      "scale": 1,
+      "duration_ms": 50,
+      "velocity_scale": 0.5,
+      "image": "sprites/muzzleFlashFlare.png"
     },
     "muzzle_flash_thirdperson": {
       "enabled": true,
@@ -225,7 +235,7 @@
       "enabled": true,
       "forward": 20,
       "right": 6.0,
-      "up": -5.0,
+      "up": -3.0,
       "scale": 2,
       "duration_ms": 50,
       "velocity_scale": 0.3,
@@ -235,7 +245,7 @@
       "enabled": true,
       "forward": 20,
       "right": 6.0,
-      "up": -5.0,
+      "up": -3.0,
       "scale": 2,
       "duration_ms": 50,
       "velocity_scale": 0.3,
@@ -272,12 +282,22 @@
     "muzzle_flash": {
       "enabled": true,
       "forward": 20,
-      "right": 6.0,
-      "up": -5.0,
-      "scale": 1,
+      "right": 3.0,
+      "up": -3.0,
+      "scale": 2,
       "duration_ms": 50,
       "velocity_scale": 0.3,
-      "image": "sprites/muzzleFlashCore.png"
+      "image": "sprites/muzzleFlashSmall.png"
+    },
+    "muzzle_flash2": {
+      "enabled": true,
+      "forward": 20,
+      "right": 3.0,
+      "up": -3.0,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.3,
+      "image": "sprites/muzzleFlashSmall.png"
     },
     "muzzle_flash_thirdperson": {
       "enabled": true,
@@ -318,12 +338,22 @@
     "muzzle_flash": {
       "enabled": true,
       "forward": 20,
-      "right": 6.0,
-      "up": -5.0,
-      "scale": 1,
+      "right": 4.0,
+      "up": -3.0,
+      "scale": 2,
       "duration_ms": 50,
       "velocity_scale": 0.3,
-      "image": "sprites/muzzleFlashCore.png"
+      "image": "sprites/muzzleFlashSmall.png"
+    },
+    "muzzle_flash2": {
+      "enabled": true,
+      "forward": 20,
+      "right": 4.0,
+      "up": -3.0,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.3,
+      "image": "sprites/muzzleFlashSmall.png"
     },
     "muzzle_flash_thirdperson": {
       "enabled": true,
@@ -395,13 +425,23 @@
       },
     "muzzle_flash": {
       "enabled": true,
-      "forward": 20,
-      "right": 6.0,
-      "up": -5.0,
-      "scale": 1,
+      "forward": 38,
+      "right":6.0,
+      "up": -3.0,
+      "scale": 2,
       "duration_ms": 50,
       "velocity_scale": 0.3,
-      "image": "sprites/muzzleFlashCore.png"
+      "image": "sprites/muzzleFlashSmall.png"
+    },
+    "muzzle_flash2": {
+      "enabled": true,
+      "forward": 38,
+      "right": 6.0,
+      "up": -3.0,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.3,
+      "image": "sprites/muzzleFlashSmall.png"
     },
     "muzzle_flash_thirdperson": {
       "enabled": true,
@@ -464,13 +504,23 @@
   "MORTAR_CANNON": {
     "muzzle_flash": {
       "enabled": true,
-      "forward": 20,
-      "right": 6.0,
-      "up": -5.0,
-      "scale": 1,
+      "forward": 38,
+      "right":6.0,
+      "up": -3.0,
+      "scale": 2,
       "duration_ms": 50,
       "velocity_scale": 0.3,
-      "image": "sprites/muzzleFlashCore.png"
+      "image": "sprites/muzzleFlashSmall.png"
+    },
+    "muzzle_flash2": {
+      "enabled": true,
+      "forward": 38,
+      "right": 6.0,
+      "up": -3.0,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.3,
+      "image": "sprites/muzzleFlashSmall.png"
     },
     "muzzle_flash_thirdperson": {
       "enabled": true,

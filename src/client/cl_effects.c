@@ -3833,7 +3833,8 @@ CL_BlasterTrail2(vec3_t start, vec3_t end)
 
 /*
  * Flame effect for fire puddles and burning entities
- * Creates smoke, embers, and dynamic flickering light
+ * Creates rising flame tongues with fade and slight inward pull so
+ * they visually contract before disappearing.
  */
 void
 CL_FlameEffect(vec3_t org)
@@ -3842,54 +3843,23 @@ CL_FlameEffect(vec3_t org)
 	cparticle_t *p;
 	float time;
 	cdlight_t *dl;
+	float vx, vy;
 
 	time = (float)cl.time;
 
 	/* Dynamic flickering light */
 	dl = CL_AllocDlight(0);
 	VectorCopy(org, dl->origin);
-	dl->radius = 80.0f + (randk() & 31);
-	dl->die = cl.time + 100;
-	dl->decay = 300;
+	dl->radius = 48.0f + (randk() & 15);
+	dl->die = cl.time + 80;
+	dl->decay = 420;
 	dl->minlight = 32;
 	dl->color[0] = 1.0f;
-	dl->color[1] = 0.5f + frandk() * 0.2f;
+	dl->color[1] = 0.45f + frandk() * 0.2f;
 	dl->color[2] = 0.1f;
 
-	/* Smoke particles - slow rising, gray */
-	for (i = 0; i < 3; i++)
-	{
-		if (!free_particles)
-		{
-			return;
-		}
-
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
-
-		p->time = time;
-		p->color = 0x00 + (randk() & 3);
-
-		p->org[0] = org[0] + crandk() * 8;
-		p->org[1] = org[1] + crandk() * 8;
-		p->org[2] = org[2] + frandk() * 4;
-
-		p->vel[0] = crandk() * 4;
-		p->vel[1] = crandk() * 4;
-		p->vel[2] = 15 + frandk() * 10;
-
-		p->accel[0] = crandk() * 2;
-		p->accel[1] = crandk() * 2;
-		p->accel[2] = 5;
-
-		p->alpha = 0.6f;
-		p->alphavel = -0.3f;
-	}
-
-	/* Ember particles - bright orange/yellow */
-	for (i = 0; i < 5; i++)
+	/* Flame tongues - rise, fade, and tighten inward over lifetime */
+	for (i = 0; i < 6; i++)
 	{
 		if (!free_particles)
 		{
@@ -3904,23 +3874,26 @@ CL_FlameEffect(vec3_t org)
 		p->time = time;
 		p->color = 0xe0 + (randk() & 7);
 
-		p->org[0] = org[0] + crandk() * 12;
-		p->org[1] = org[1] + crandk() * 12;
-		p->org[2] = org[2] + frandk() * 8;
+		p->org[0] = org[0] + crandk() * 10;
+		p->org[1] = org[1] + crandk() * 10;
+		p->org[2] = org[2] + frandk() * 3;
 
-		p->vel[0] = crandk() * 15;
-		p->vel[1] = crandk() * 15;
-		p->vel[2] = 40 + frandk() * 30;
+		vx = crandk() * 18;
+		vy = crandk() * 18;
+		p->vel[0] = vx;
+		p->vel[1] = vy;
+		p->vel[2] = 36 + frandk() * 26;
 
-		p->accel[0] = crandk() * 5;
-		p->accel[1] = crandk() * 5;
-		p->accel[2] = -PARTICLE_GRAVITY * 0.3f;
+		/* Pull X/Y velocity back in over time to emulate shrinking tongues. */
+		p->accel[0] = -vx * 3.5f;
+		p->accel[1] = -vy * 3.5f;
+		p->accel[2] = -55.0f;
 
-		p->alpha = 1.0f;
-		p->alphavel = -2.0f;
+		p->alpha = 0.95f;
+		p->alphavel = -1.6f;
 	}
 
-	/* Core flame particles - bright yellow/white */
+	/* Small smoke wisps to soften the transition */
 	for (i = 0; i < 2; i++)
 	{
 		if (!free_particles)
@@ -3934,22 +3907,22 @@ CL_FlameEffect(vec3_t org)
 		active_particles = p;
 
 		p->time = time;
-		p->color = 0xd0 + (randk() & 7);
+		p->color = 0x00 + (randk() & 3);
 
-		p->org[0] = org[0] + crandk() * 4;
-		p->org[1] = org[1] + crandk() * 4;
-		p->org[2] = org[2] + frandk() * 2;
+		p->org[0] = org[0] + crandk() * 7;
+		p->org[1] = org[1] + crandk() * 7;
+		p->org[2] = org[2] + frandk() * 4;
 
-		p->vel[0] = crandk() * 8;
-		p->vel[1] = crandk() * 8;
-		p->vel[2] = 20 + frandk() * 15;
+		p->vel[0] = crandk() * 5;
+		p->vel[1] = crandk() * 5;
+		p->vel[2] = 14 + frandk() * 10;
 
 		p->accel[0] = 0;
 		p->accel[1] = 0;
-		p->accel[2] = 10;
+		p->accel[2] = 4;
 
-		p->alpha = 1.0f;
-		p->alphavel = -3.0f;
+		p->alpha = 0.45f;
+		p->alphavel = -0.55f;
 	}
 }
 
