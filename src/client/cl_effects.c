@@ -47,6 +47,8 @@ cvar_t *cl_mflash_vel_scale; /* Velocity inheritance factor (0.0-1.0) */
 cvar_t *cl_mflash_enabled;   /* Enable/disable muzzle flash sprites */
 cvar_t *cl_mflash_thirdperson_up; /* World-up lift for other players' muzzle sprites */
 cvar_t *cl_mflash_thirdperson_crouch_down; /* Additional downward offset while crouched */
+cvar_t *cl_mflash_thirdperson_model_lag_comp; /* Match interpolated third-person model lag (0=off,1=full) */
+cvar_t *cl_mflash_thirdperson_model_lag_max; /* Max ms of lag compensation applied to third-person flashes */
 cvar_t *cl_mflash_tune_mode; /* Debug tuning camera mode: 0=off,1=right side,2=left side,3=rear */
 cvar_t *cl_mflash_tune_cam_back; /* Camera pullback distance in tune mode */
 cvar_t *cl_mflash_tune_cam_right; /* Lateral camera offset in tune mode (mode 1/2) */
@@ -63,6 +65,11 @@ extern cparticle_t *active_particles, *free_particles;
 
 static muzzle_flash_config_t weapon_mflash_configs_firstperson[32];
 static muzzle_flash_config_t weapon_mflash_configs_thirdperson[32];
+static char mflash_config_source[MAX_OSPATH];
+
+#define MFLASH_THIRDPERSON_MODEL_LAG_COMP_DEFAULT "1.0"
+#define MFLASH_THIRDPERSON_MODEL_LAG_MAX_DEFAULT "100"
+#define MFLASH_THIRDPERSON_MODEL_LAG_MAX_FALLBACK 100.0f
 
 typedef enum
 {
@@ -75,6 +82,7 @@ typedef enum
 } mflash_tune_param_t;
 
 static const char *CL_GetWeaponNameFromID(int weapon);
+static void CL_LoadMuzzleFlashConfig(void);
 
 static qboolean
 CL_MFlashTune_ParseAmount(float *out_amount)
@@ -334,6 +342,26 @@ CL_MFlashTune_Print_f(void)
 	Com_Printf("}\n");
 }
 
+static void
+CL_MFlashTune_Source_f(void)
+{
+	if (mflash_config_source[0])
+	{
+		Com_Printf("mflash_tune: config source = %s\n", mflash_config_source);
+	}
+	else
+	{
+		Com_Printf("mflash_tune: config source = defaults (tuning/default.json not found)\n");
+	}
+}
+
+static void
+CL_MFlashTune_Reload_f(void)
+{
+	CL_LoadMuzzleFlashConfig();
+	CL_MFlashTune_Source_f();
+}
+
 void
 CL_MFlashTune_RegisterCommands(void)
 {
@@ -344,6 +372,8 @@ CL_MFlashTune_RegisterCommands(void)
 	Cmd_AddCommand("mflash_tune_duration", CL_MFlashTune_Duration_f);
 	Cmd_AddCommand("mflash_tune_velocity", CL_MFlashTune_Velocity_f);
 	Cmd_AddCommand("mflash_tune_print", CL_MFlashTune_Print_f);
+	Cmd_AddCommand("mflash_tune_source", CL_MFlashTune_Source_f);
+	Cmd_AddCommand("mflash_tune_reload", CL_MFlashTune_Reload_f);
 }
 
 /*
@@ -547,6 +577,9 @@ CL_LoadMuzzleFlashConfig(void)
 {
 	char *buffer;
 	int len;
+	int open_len;
+	fileHandle_t f;
+	const char *resolved_path;
 	char error[256];
 	json_value_t *root, *weapons;
 	int weapon_id;
@@ -557,6 +590,20 @@ CL_LoadMuzzleFlashConfig(void)
 	{
 		CL_SetFirstPersonMuzzleFlashDefaults(&weapon_mflash_configs_firstperson[weapon_id]);
 		CL_SetThirdPersonMuzzleFlashDefaults(&weapon_mflash_configs_thirdperson[weapon_id]);
+	}
+
+	mflash_config_source[0] = '\0';
+
+	open_len = FS_FOpenFile("tuning/default.json", &f, false);
+	if (open_len > 0)
+	{
+		resolved_path = FS_GetFilenameForHandle(f);
+		if (resolved_path && resolved_path[0])
+		{
+			Q_strlcpy(mflash_config_source, resolved_path, sizeof(mflash_config_source));
+		}
+
+		FS_FCloseFile(f);
 	}
 
 	/* Try to load from tuning directory */
@@ -599,6 +646,14 @@ CL_LoadMuzzleFlashConfig(void)
 	}
 
 	Com_DPrintf("Muzzle flash: Loaded per-weapon configs from tuning/default.json\n");
+	if (mflash_config_source[0])
+	{
+		Com_Printf("Muzzle flash: loaded config from %s\n", mflash_config_source);
+	}
+	else
+	{
+		Com_Printf("Muzzle flash: loaded config from tuning/default.json\n");
+	}
 	JSON_Free(root);
 }
 
@@ -633,6 +688,10 @@ CL_InitMuzzleFlashCvars(void)
 	cl_mflash_vel_scale = Cvar_Get("cl_mflash_vel_scale", "0.15", CVAR_ARCHIVE);
 	cl_mflash_thirdperson_up = Cvar_Get("cl_mflash_thirdperson_up", "25", CVAR_ARCHIVE);
 	cl_mflash_thirdperson_crouch_down = Cvar_Get("cl_mflash_thirdperson_crouch_down", "18", CVAR_ARCHIVE);
+	cl_mflash_thirdperson_model_lag_comp = Cvar_Get("cl_mflash_thirdperson_model_lag_comp",
+		MFLASH_THIRDPERSON_MODEL_LAG_COMP_DEFAULT, CVAR_ARCHIVE);
+	cl_mflash_thirdperson_model_lag_max = Cvar_Get("cl_mflash_thirdperson_model_lag_max",
+		MFLASH_THIRDPERSON_MODEL_LAG_MAX_DEFAULT, CVAR_ARCHIVE);
 	cl_mflash_tune_mode = Cvar_Get("cl_mflash_tune_mode", "0", CVAR_ARCHIVE);
 	cl_mflash_tune_cam_back = Cvar_Get("cl_mflash_tune_cam_back", "105", CVAR_ARCHIVE);
 	cl_mflash_tune_cam_right = Cvar_Get("cl_mflash_tune_cam_right", "95", CVAR_ARCHIVE);
@@ -964,9 +1023,30 @@ CL_AddMuzzleFlash(void)
 		else
 		{
 			/* For other players, use entity origin and angles */
+			float lerpfrac = Q_clamp(cl.lerpfrac, 0.0f, 1.0f);
 			float crouch_blend = 0.0f;
-			qboolean was_crouched = CL_IsPlayerCrouchFrame(pl->prev.frame);
-			qboolean is_crouched = CL_IsPlayerCrouchFrame(pl->current.frame);
+			qboolean was_crouched;
+			qboolean is_crouched;
+			vec3_t ent_angles;
+
+			if (local_player)
+			{
+				frame_t *oldframe = &cl.frames[(cl.frame.serverframe - 1) & UPDATE_MASK];
+				player_state_t *ops = &oldframe->playerstate;
+
+				if ((oldframe->serverframe != cl.frame.serverframe - 1) || !oldframe->valid)
+				{
+					ops = &cl.frame.playerstate;
+				}
+
+				was_crouched = (ops->pmove.pm_flags & PMF_DUCKED) != 0;
+				is_crouched = (cl.frame.playerstate.pmove.pm_flags & PMF_DUCKED) != 0;
+			}
+			else
+			{
+				was_crouched = CL_IsPlayerCrouchFrame(pl->prev.frame);
+				is_crouched = CL_IsPlayerCrouchFrame(pl->current.frame);
+			}
 
 			if (was_crouched && is_crouched)
 			{
@@ -974,22 +1054,46 @@ CL_AddMuzzleFlash(void)
 			}
 			else if (was_crouched)
 			{
-				crouch_blend = 1.0f - cl.lerpfrac;
+				crouch_blend = 1.0f - lerpfrac;
 			}
 			else if (is_crouched)
 			{
-				crouch_blend = cl.lerpfrac;
+				crouch_blend = lerpfrac;
 			}
 
-			VectorCopy(pl->current.origin, mflash_origin);
+			mflash_origin[0] = pl->prev.origin[0] + lerpfrac * (pl->current.origin[0] - pl->prev.origin[0]);
+			mflash_origin[1] = pl->prev.origin[1] + lerpfrac * (pl->current.origin[1] - pl->prev.origin[1]);
+			mflash_origin[2] = pl->prev.origin[2] + lerpfrac * (pl->current.origin[2] - pl->prev.origin[2]);
 			mflash_origin[2] += cl_mflash_thirdperson_up->value;
 			mflash_origin[2] -= cl_mflash_thirdperson_crouch_down->value * crouch_blend;
-			VectorCopy(fv, mflash_fv);
-			VectorCopy(rv, mflash_rv);
-			VectorCopy(uv, mflash_uv);
+
+			ent_angles[0] = LerpAngle(pl->prev.angles[0], pl->current.angles[0], lerpfrac);
+			ent_angles[1] = LerpAngle(pl->prev.angles[1], pl->current.angles[1], lerpfrac);
+			ent_angles[2] = LerpAngle(pl->prev.angles[2], pl->current.angles[2], lerpfrac);
+			AngleVectors(ent_angles, mflash_fv, mflash_rv, mflash_uv);
+
 			/* Estimate velocity from entity position delta */
 			VectorSubtract(pl->current.origin, pl->prev.origin, mflash_velocity);
 			VectorScale(mflash_velocity, 10.0f, mflash_velocity);
+
+			/* Optional visual coherence mode: make flash lag with interpolated model. */
+			if (cl_mflash_thirdperson_model_lag_comp &&
+				(cl_mflash_thirdperson_model_lag_comp->value > 0.0f))
+			{
+				float lag_ms = (float)(cl.frame.servertime - cl.time);
+				float lag_strength = cl_mflash_thirdperson_model_lag_comp->value;
+				float lag_max = cl_mflash_thirdperson_model_lag_max ?
+					cl_mflash_thirdperson_model_lag_max->value :
+					MFLASH_THIRDPERSON_MODEL_LAG_MAX_FALLBACK;
+				float lag_seconds;
+
+				lag_max = Q_max(0.0f, lag_max);
+				lag_ms = Q_clamp(lag_ms, 0.0f, lag_max);
+				lag_ms *= lag_strength;
+				lag_seconds = lag_ms * 0.001f;
+
+				VectorMA(mflash_origin, -lag_seconds, mflash_velocity, mflash_origin);
+			}
 		}
 
 		CL_SpawnMuzzleFlashSprite(mflash_origin, mflash_fv, mflash_rv, mflash_uv,
