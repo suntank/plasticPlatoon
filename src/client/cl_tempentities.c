@@ -869,6 +869,8 @@ CL_ParseNuke(void)
 }
 
 static byte splash_color[] = {0x00, 0xe0, 0xb0, 0x50, 0xd0, 0xe0, 0xe8};
+#define PP_BLOOD_COLOR_TAN 0x50
+#define PP_BLOOD_COLOR_HUNTER_GREEN 0xd0
 
 void
 CL_ParseTEnt(void)
@@ -889,7 +891,7 @@ CL_ParseTEnt(void)
 		case TE_BLOOD: /* bullet hitting flesh */
 			MSG_ReadPos(&net_message, pos);
 			MSG_ReadDir(&net_message, dir);
-			CL_ParticleEffect(pos, dir, 0xe8, 60);
+			CL_ParticleEffect(pos, dir, PP_BLOOD_COLOR_TAN, 60);
 			break;
 
 		case TE_MORTAR_EXPLOSION:
@@ -1340,7 +1342,7 @@ CL_ParseTEnt(void)
 		case TE_GREENBLOOD:
 			MSG_ReadPos(&net_message, pos);
 			MSG_ReadDir(&net_message, dir);
-			CL_ParticleEffect2(pos, dir, 0xdf, 30);
+			CL_ParticleEffect(pos, dir, PP_BLOOD_COLOR_HUNTER_GREEN, 60);
 			break;
 
 		case TE_TUNNEL_SPARKS:
@@ -1513,7 +1515,7 @@ CL_ParseTEnt(void)
 		case TE_MOREBLOOD:
 			MSG_ReadPos(&net_message, pos);
 			MSG_ReadDir(&net_message, dir);
-			CL_ParticleEffect(pos, dir, 0xe8, 250);
+			CL_ParticleEffect(pos, dir, PP_BLOOD_COLOR_TAN, 250);
 			break;
 
 		case TE_CHAINFIST_SMOKE:

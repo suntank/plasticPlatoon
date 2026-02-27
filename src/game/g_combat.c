@@ -648,7 +648,9 @@ T_Damage(edict_t *targ, edict_t *inflictor, edict_t *attacker,
 	{
 		if ((targ->svflags & SVF_MONSTER) || (client))
 		{
-			SpawnDamage(TE_BLOOD, point, normal);
+			/* Plastic Platoon blood colors:
+			 * players -> green, enemies -> tan */
+			SpawnDamage(client ? TE_GREENBLOOD : TE_BLOOD, point, normal);
 		}
 		else
 		{

@@ -228,6 +228,35 @@ CL_MFlashTuneResolveWeaponModel(const clientinfo_t *ci)
 	return model;
 }
 
+static qboolean
+CL_BuildPlayerGibSkinPath(const char *model_path, char *skin_path, size_t skin_path_size)
+{
+	const char *slash;
+	size_t dir_len;
+
+	if (!model_path || !model_path[0] || !skin_path || (skin_path_size == 0))
+	{
+		return false;
+	}
+
+	slash = strrchr(model_path, '/');
+	if (!slash)
+	{
+		return false;
+	}
+
+	dir_len = (size_t)(slash - model_path);
+	if (dir_len + sizeof("/player.png") > skin_path_size)
+	{
+		return false;
+	}
+
+	memcpy(skin_path, model_path, dir_len);
+	skin_path[dir_len] = '\0';
+	Q_strlcat(skin_path, "/player.png", skin_path_size);
+	return true;
+}
+
 void
 CL_AddPacketEntities(frame_t *frame)
 {
@@ -405,9 +434,27 @@ CL_AddPacketEntities(frame_t *frame)
 			}
 			else
 			{
+				const char *model_path;
+				char player_gib_skin[MAX_QPATH];
+
 				ent.skinnum = s1->skinnum;
 				ent.skin = NULL;
 				ent.model = cl.model_draw[s1->modelindex];
+
+				if ((s1->skinnum & PP_GIB_PLAYER_SKIN_OVERRIDE) &&
+					(s1->modelindex > 0) && (s1->modelindex < MAX_MODELS))
+				{
+					model_path = cl.configstrings[CS_MODELS + s1->modelindex];
+					if (CL_BuildPlayerGibSkinPath(model_path, player_gib_skin,
+						sizeof(player_gib_skin)))
+					{
+						ent.skin = R_RegisterSkin(player_gib_skin);
+						if (ent.skin)
+						{
+							ent.skinnum = 0;
+						}
+					}
+				}
 			}
 		}
 
@@ -716,7 +763,7 @@ CL_AddPacketEntities(frame_t *frame)
 					V_AddLight(ent.origin, 150, 1.0f, 0.5f, 0.1f);
 				}
 			}
-			else if (effects & EF_GIB)
+			else if (effects & (EF_GIB | EF_GREENGIB))
 			{
 				CL_DiminishingTrail(cent->lerp_origin, ent.origin,
 						cent, effects);

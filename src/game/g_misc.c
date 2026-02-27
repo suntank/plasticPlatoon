@@ -217,6 +217,11 @@ ThrowGib(edict_t *self, char *gibname, int damage, int type)
 	gib->s.origin[2] = origin[2] + crandom() * size[2];
 
 	gi.setmodel(gib, gibname);
+	if (self->client || (self->s.modelindex == 255))
+	{
+		gib->s.skinnum = PP_GIB_PLAYER_SKIN_OVERRIDE;
+		gib->s.effects |= EF_GREENGIB;
+	}
 	gib->solid = SOLID_BBOX;
 	gib->svflags = SVF_DEADMONSTER;
 	gib->s.effects |= EF_GIB;
@@ -321,13 +326,12 @@ ThrowClientHead(edict_t *self, int damage)
 	if (randk() & 1)
 	{
 		gibname = "models/objects/gibs/head2/tris.md2";
-		self->s.skinnum = 1; /* second skin is player */
 	}
 	else
 	{
 		gibname = "models/objects/gibs/skull/tris.md2";
-		self->s.skinnum = 0;
 	}
+	self->s.skinnum = PP_GIB_PLAYER_SKIN_OVERRIDE;
 
 	self->s.origin[2] += 32;
 	self->s.frame = 0;
@@ -337,7 +341,7 @@ ThrowClientHead(edict_t *self, int damage)
 
 	self->takedamage = DAMAGE_NO;
 	self->solid = SOLID_BBOX;
-	self->s.effects = EF_GIB;
+	self->s.effects = EF_GIB | EF_GREENGIB;
 	self->s.sound = 0;
 	self->flags |= FL_NO_KNOCKBACK;
 

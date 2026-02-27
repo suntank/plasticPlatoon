@@ -2094,11 +2094,11 @@ CL_DiminishingTrail(vec3_t start, vec3_t end, centity_t *old, int flags)
 
 			p->time = time;
 
-			if (flags & EF_GIB)
+			if (flags & EF_GREENGIB)
 			{
 				p->alpha = 1.0;
 				p->alphavel = -1.0f / (1 + frandk() * 0.4f);
-				p->color = 0xe8 + (randk() & 7);
+				p->color = 0xd0 + (randk() & 7);
 
 				for (j = 0; j < 3; j++)
 				{
@@ -2109,11 +2109,11 @@ CL_DiminishingTrail(vec3_t start, vec3_t end, centity_t *old, int flags)
 
 				p->vel[2] -= PARTICLE_GRAVITY;
 			}
-			else if (flags & EF_GREENGIB)
+			else if (flags & EF_GIB)
 			{
 				p->alpha = 1.0;
 				p->alphavel = -1.0f / (1 + frandk() * 0.4f);
-				p->color = 0xdb + (randk() & 7);
+				p->color = 0x50 + (randk() & 7);
 
 				for (j = 0; j < 3; j++)
 				{

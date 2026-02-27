@@ -1216,6 +1216,9 @@ typedef enum
 #define PP_PLAYER_SKINNUM_WEAPON_MASK 0x0000003f
 #define PP_PLAYER_SKINNUM_PISTOL_FLAG 0x00004000
 
+/* non-player entity skinnum flag: force gib skin override to ".../player.png" */
+#define PP_GIB_PLAYER_SKIN_OVERRIDE 0x20000000
+
 /* ============================================== */
 
 /* entity_state_t->event values
