@@ -620,6 +620,7 @@ CL_InitInput(void)
 	Cmd_AddCommand("impulse", IN_Impulse);
 	Cmd_AddCommand("+klook", IN_KLookDown);
 	Cmd_AddCommand("-klook", IN_KLookUp);
+	CL_MFlashTune_RegisterCommands();
 
 	cl_nodelta = Cvar_Get("cl_nodelta", "0", 0);
 	cl_centertime = Cvar_Get("cl_centertime", "180", CVAR_ARCHIVE);
@@ -862,4 +863,3 @@ CL_SendCmd(void)
 	cmd = &cl.cmds[cls.netchan.outgoing_sequence & (CMD_BACKUP - 1)];
 	memset(cmd, 0, sizeof(*cmd));
 }
-

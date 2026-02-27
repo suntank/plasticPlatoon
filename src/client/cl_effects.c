@@ -64,6 +64,288 @@ extern cparticle_t *active_particles, *free_particles;
 static muzzle_flash_config_t weapon_mflash_configs_firstperson[32];
 static muzzle_flash_config_t weapon_mflash_configs_thirdperson[32];
 
+typedef enum
+{
+	MFLASH_TUNE_FORWARD,
+	MFLASH_TUNE_RIGHT,
+	MFLASH_TUNE_UP,
+	MFLASH_TUNE_SCALE,
+	MFLASH_TUNE_DURATION,
+	MFLASH_TUNE_VELOCITY
+} mflash_tune_param_t;
+
+static const char *CL_GetWeaponNameFromID(int weapon);
+
+static qboolean
+CL_MFlashTune_ParseAmount(float *out_amount)
+{
+	const char *arg;
+	char *end;
+
+	if (Cmd_Argc() != 2)
+	{
+		return false;
+	}
+
+	arg = Cmd_Argv(1);
+	if (!arg || !arg[0])
+	{
+		return false;
+	}
+
+	*out_amount = (float)strtod(arg, &end);
+	if (end == arg || (end && *end))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+static int
+CL_MFlashTune_GetCurrentWeapon(void)
+{
+	const player_state_t *ps = &cl.frame.playerstate;
+	const char *gun_model;
+
+	if (!ps || ps->gunindex <= 0 || ps->gunindex >= MAX_MODELS)
+	{
+		return -1;
+	}
+
+	gun_model = cl.configstrings[CS_MODELS + ps->gunindex];
+	if (!gun_model || !gun_model[0])
+	{
+		return -1;
+	}
+
+	if (strstr(gun_model, "v_blast")) return MZ_BLASTER;
+	if (strstr(gun_model, "v_shotg2")) return MZ_SSHOTGUN;
+	if (strstr(gun_model, "v_shotg")) return MZ_SHOTGUN;
+	if (strstr(gun_model, "v_machn")) return MZ_MACHINEGUN;
+	if (strstr(gun_model, "v_chain")) return MZ_CHAINGUN1;
+	if (strstr(gun_model, "v_handgr")) return MZ_GRENADE;
+	if (strstr(gun_model, "v_launch")) return MZ_GRENADE;
+	if (strstr(gun_model, "v_rocket")) return MZ_ROCKET;
+	if (strstr(gun_model, "v_rail")) return MZ_RAILGUN;
+	if (strstr(gun_model, "v_bfg")) return MZ_BFG;
+	if (strstr(gun_model, "v_etf")) return MZ_ETF_RIFLE;
+
+	return -1;
+}
+
+static muzzle_flash_config_t *
+CL_MFlashTune_GetCurrentThirdPersonConfig(int *out_weapon)
+{
+	int weapon;
+
+	if (!cl_mflash_tune_mode || (cl_mflash_tune_mode->value <= 0.0f))
+	{
+		Com_Printf("mflash_tune: cl_mflash_tune_mode must be > 0\n");
+		return NULL;
+	}
+
+	weapon = CL_MFlashTune_GetCurrentWeapon();
+	if (weapon < 0 || weapon >= 32)
+	{
+		Com_Printf("mflash_tune: invalid current weapon id (%d), expected 0-31\n", weapon);
+		return NULL;
+	}
+
+	if (out_weapon)
+	{
+		*out_weapon = weapon;
+	}
+
+	return &weapon_mflash_configs_thirdperson[weapon];
+}
+
+static void
+CL_MFlashTune_ModifyValue(mflash_tune_param_t param, float amount)
+{
+	int weapon;
+	muzzle_flash_config_t *cfg;
+	cfg = CL_MFlashTune_GetCurrentThirdPersonConfig(&weapon);
+	if (!cfg)
+	{
+		return;
+	}
+
+	switch (param)
+	{
+		case MFLASH_TUNE_FORWARD:
+			cfg->forward = Q_clamp(cfg->forward + amount, 0.0f, 50.0f);
+			Com_Printf("muzzle_flash_thirdperson.forward = %.3f\n", cfg->forward);
+			break;
+		case MFLASH_TUNE_RIGHT:
+			cfg->right = Q_clamp(cfg->right + amount, -20.0f, 20.0f);
+			Com_Printf("muzzle_flash_thirdperson.right = %.3f\n", cfg->right);
+			break;
+		case MFLASH_TUNE_UP:
+			cfg->up = Q_clamp(cfg->up + amount, -20.0f, 20.0f);
+			Com_Printf("muzzle_flash_thirdperson.up = %.3f\n", cfg->up);
+			break;
+		case MFLASH_TUNE_SCALE:
+			cfg->scale = Q_clamp((int)lroundf((float)cfg->scale + amount), 1, 255);
+			Com_Printf("muzzle_flash_thirdperson.scale = %d\n", cfg->scale);
+			break;
+		case MFLASH_TUNE_DURATION:
+			cfg->duration_ms = Q_clamp((int)lroundf((float)cfg->duration_ms + amount), 10, 500);
+			Com_Printf("muzzle_flash_thirdperson.duration_ms = %d\n", cfg->duration_ms);
+			break;
+		case MFLASH_TUNE_VELOCITY:
+			cfg->velocity_scale = Q_clamp(cfg->velocity_scale + amount, 0.0f, 1.0f);
+			Com_Printf("muzzle_flash_thirdperson.velocity_scale = %.3f\n", cfg->velocity_scale);
+			break;
+	}
+
+	Com_DPrintf("mflash_tune: weapon %d updated\n", weapon);
+}
+
+static void
+CL_MFlashTune_Forward_f(void)
+{
+	float amount;
+
+	if (!CL_MFlashTune_ParseAmount(&amount))
+	{
+		Com_Printf("usage: mflash_tune_forward <amount>\n");
+		return;
+	}
+
+	CL_MFlashTune_ModifyValue(MFLASH_TUNE_FORWARD, amount);
+}
+
+static void
+CL_MFlashTune_Right_f(void)
+{
+	float amount;
+
+	if (!CL_MFlashTune_ParseAmount(&amount))
+	{
+		Com_Printf("usage: mflash_tune_right <amount>\n");
+		return;
+	}
+
+	CL_MFlashTune_ModifyValue(MFLASH_TUNE_RIGHT, amount);
+}
+
+static void
+CL_MFlashTune_Up_f(void)
+{
+	float amount;
+
+	if (!CL_MFlashTune_ParseAmount(&amount))
+	{
+		Com_Printf("usage: mflash_tune_up <amount>\n");
+		return;
+	}
+
+	CL_MFlashTune_ModifyValue(MFLASH_TUNE_UP, amount);
+}
+
+static void
+CL_MFlashTune_Scale_f(void)
+{
+	float amount;
+
+	if (!CL_MFlashTune_ParseAmount(&amount))
+	{
+		Com_Printf("usage: mflash_tune_scale <amount>\n");
+		return;
+	}
+
+	CL_MFlashTune_ModifyValue(MFLASH_TUNE_SCALE, amount);
+}
+
+static void
+CL_MFlashTune_Duration_f(void)
+{
+	float amount;
+
+	if (!CL_MFlashTune_ParseAmount(&amount))
+	{
+		Com_Printf("usage: mflash_tune_duration <amount>\n");
+		return;
+	}
+
+	CL_MFlashTune_ModifyValue(MFLASH_TUNE_DURATION, amount);
+}
+
+static void
+CL_MFlashTune_Velocity_f(void)
+{
+	float amount;
+
+	if (!CL_MFlashTune_ParseAmount(&amount))
+	{
+		Com_Printf("usage: mflash_tune_velocity <amount>\n");
+		return;
+	}
+
+	CL_MFlashTune_ModifyValue(MFLASH_TUNE_VELOCITY, amount);
+}
+
+static void
+CL_MFlashTune_Print_f(void)
+{
+	int weapon;
+	const char *weapon_name;
+	muzzle_flash_config_t *cfg;
+
+	if (Cmd_Argc() != 1)
+	{
+		Com_Printf("usage: mflash_tune_print\n");
+		return;
+	}
+
+	cfg = CL_MFlashTune_GetCurrentThirdPersonConfig(&weapon);
+	if (!cfg)
+	{
+		return;
+	}
+
+	weapon_name = CL_GetWeaponNameFromID(weapon);
+	if (!weapon_name)
+	{
+		weapon_name = "UNKNOWN";
+	}
+
+	Com_Printf("// %s (weapon id %d)\n", weapon_name, weapon);
+	Com_Printf("\"muzzle_flash_thirdperson\": {\n");
+	Com_Printf("  \"enabled\": %s,\n", cfg->enabled ? "true" : "false");
+	Com_Printf("  \"forward\": %.3f,\n", cfg->forward);
+	Com_Printf("  \"right\": %.3f,\n", cfg->right);
+	Com_Printf("  \"up\": %.3f,\n", cfg->up);
+	Com_Printf("  \"scale\": %d,\n", cfg->scale);
+	Com_Printf("  \"duration_ms\": %d,\n", cfg->duration_ms);
+	Com_Printf("  \"velocity_scale\": %.3f,\n", cfg->velocity_scale);
+	Com_Printf("  \"image\": \"%s\"\n", cfg->image);
+	Com_Printf("},\n");
+	Com_Printf("\"muzzle_flash2_thirdperson\": {\n");
+	Com_Printf("  \"enabled\": %s,\n", cfg->flash2_enabled ? "true" : "false");
+	Com_Printf("  \"forward\": %.3f,\n", cfg->flash2_forward);
+	Com_Printf("  \"right\": %.3f,\n", cfg->flash2_right);
+	Com_Printf("  \"up\": %.3f,\n", cfg->flash2_up);
+	Com_Printf("  \"scale\": %d,\n", cfg->flash2_scale);
+	Com_Printf("  \"duration_ms\": %d,\n", cfg->flash2_duration_ms);
+	Com_Printf("  \"velocity_scale\": %.3f,\n", cfg->flash2_velocity_scale);
+	Com_Printf("  \"image\": \"%s\"\n", cfg->flash2_image);
+	Com_Printf("}\n");
+}
+
+void
+CL_MFlashTune_RegisterCommands(void)
+{
+	Cmd_AddCommand("mflash_tune_forward", CL_MFlashTune_Forward_f);
+	Cmd_AddCommand("mflash_tune_right", CL_MFlashTune_Right_f);
+	Cmd_AddCommand("mflash_tune_up", CL_MFlashTune_Up_f);
+	Cmd_AddCommand("mflash_tune_scale", CL_MFlashTune_Scale_f);
+	Cmd_AddCommand("mflash_tune_duration", CL_MFlashTune_Duration_f);
+	Cmd_AddCommand("mflash_tune_velocity", CL_MFlashTune_Velocity_f);
+	Cmd_AddCommand("mflash_tune_print", CL_MFlashTune_Print_f);
+}
+
 /*
  * Get weapon name from weapon ID for JSON lookup
  */

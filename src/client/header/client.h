@@ -549,6 +549,7 @@ void CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3
 	vec3_t velocity, int weapon, qboolean thirdperson);
 void CL_InitMuzzleFlashCvars(void);
 muzzle_flash_config_t *CL_GetMuzzleFlashConfig(int weapon, qboolean thirdperson);
+void CL_MFlashTune_RegisterCommands(void);
 
 void CL_CheckPredictionError (void);
 
