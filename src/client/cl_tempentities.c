@@ -468,10 +468,11 @@ CL_SpawnConeSprite(vec3_t spawn_origin, vec3_t forward, vec3_t right, vec3_t up,
 /*
  * Spawn a muzzle flash sprite effect.
  * Creates multi-sprite cone flash (H+V planes) + optional billboard flash.
- * Origin is the view origin, forward/right/up are direction vectors.
+ * Origin is the muzzle anchor, forward/right/up are direction vectors.
  */
 void
-CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up, vec3_t velocity, int weapon)
+CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up,
+	vec3_t velocity, int weapon, qboolean thirdperson)
 {
 	vec3_t spawn_origin, spawn_origin2;
 	float fwd_offset, right_offset, up_offset;
@@ -483,7 +484,7 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	struct model_s *billboard_model = NULL;
 
 	/* Get weapon-specific config */
-	cfg = CL_GetMuzzleFlashConfig(weapon);
+	cfg = CL_GetMuzzleFlashConfig(weapon, thirdperson);
 	if (!cfg || !cfg->enabled)
 	{
 		return;
@@ -2252,4 +2253,3 @@ CL_PowerScreenModel(void)
 {
 	return cl_mod_powerscreen;
 }
-

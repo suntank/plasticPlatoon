@@ -106,6 +106,128 @@ PP_DetectWeaponType(player_state_t *ps)
 	return PP_WEAPON_UNKNOWN;
 }
 
+static qboolean
+CL_MFlashTuneCameraActive(void)
+{
+	return cl_mflash_tune_mode && (cl_mflash_tune_mode->value > 0.0f);
+}
+
+static const char *
+CL_MFlashTuneWeaponFileForGun(void)
+{
+	const player_state_t *ps = &cl.frame.playerstate;
+	const char *gun_model;
+
+	if (!ps || ps->gunindex <= 0)
+	{
+		return "weapon.md2";
+	}
+
+	gun_model = cl.configstrings[CS_MODELS + ps->gunindex];
+	if (!gun_model || !gun_model[0])
+	{
+		return "weapon.md2";
+	}
+
+	if (strstr(gun_model, "v_blast")) return "w_blaster.md2";
+	if (strstr(gun_model, "v_shotg2")) return "w_sshotgun.md2";
+	if (strstr(gun_model, "v_shotg")) return "w_shotgun.md2";
+	if (strstr(gun_model, "v_machn")) return "w_machinegun.md2";
+	if (strstr(gun_model, "v_chain")) return "w_chaingun.md2";
+	if (strstr(gun_model, "v_handgr")) return "w_glauncher.md2";
+	if (strstr(gun_model, "v_launch")) return "w_glauncher.md2";
+	if (strstr(gun_model, "v_rocket")) return "w_rlauncher.md2";
+	if (strstr(gun_model, "v_hyperb")) return "w_hyperblaster.md2";
+	if (strstr(gun_model, "v_rail")) return "w_railgun.md2";
+	if (strstr(gun_model, "v_bfg")) return "w_bfg.md2";
+	if (strstr(gun_model, "v_etf")) return "w_machinegun.md2";
+
+	return "weapon.md2";
+}
+
+static void
+CL_MFlashTuneGetClientModelName(const clientinfo_t *ci, char *model_name, size_t model_name_size)
+{
+	const char *model_start;
+	const char *sep;
+	size_t copy_len;
+
+	if (!model_name || model_name_size == 0)
+	{
+		return;
+	}
+
+	Q_strlcpy(model_name, "male", model_name_size);
+
+	if (!ci || !ci->cinfo[0])
+	{
+		return;
+	}
+
+	model_start = strchr(ci->cinfo, '\\');
+	if (!model_start || !model_start[1])
+	{
+		return;
+	}
+	model_start++;
+
+	sep = strpbrk(model_start, "/\\");
+	if (!sep || sep <= model_start)
+	{
+		Q_strlcpy(model_name, model_start, model_name_size);
+		return;
+	}
+
+	copy_len = (size_t)(sep - model_start);
+	if (copy_len >= model_name_size)
+	{
+		copy_len = model_name_size - 1;
+	}
+
+	memcpy(model_name, model_start, copy_len);
+	model_name[copy_len] = '\0';
+
+	if (!model_name[0])
+	{
+		Q_strlcpy(model_name, "male", model_name_size);
+	}
+}
+
+static struct model_s *
+CL_MFlashTuneResolveWeaponModel(const clientinfo_t *ci)
+{
+	char model_name[MAX_QPATH];
+	char weapon_filename[MAX_QPATH];
+	const char *weapon_file;
+	struct model_s *model;
+
+	weapon_file = CL_MFlashTuneWeaponFileForGun();
+	CL_MFlashTuneGetClientModelName(ci, model_name, sizeof(model_name));
+
+	Com_sprintf(weapon_filename, sizeof(weapon_filename),
+		"players/%s/%s", model_name, weapon_file);
+	model = R_RegisterModel(weapon_filename);
+
+	if (!model && Q_stricmp(model_name, "male"))
+	{
+		Com_sprintf(weapon_filename, sizeof(weapon_filename),
+			"players/male/%s", weapon_file);
+		model = R_RegisterModel(weapon_filename);
+	}
+
+	if (!model && ci)
+	{
+		model = ci->weaponmodel[0];
+	}
+
+	if (!model)
+	{
+		model = cl.baseclientinfo.weaponmodel[0];
+	}
+
+	return model;
+}
+
 void
 CL_AddPacketEntities(frame_t *frame)
 {
@@ -342,29 +464,32 @@ CL_AddPacketEntities(frame_t *frame)
 
 		if (s1->number == cl.playernum + 1)
 		{
-			ent.flags |= RF_VIEWERMODEL;
-
-			if (effects & EF_FLAG1)
+			if (!CL_MFlashTuneCameraActive())
 			{
-				V_AddLight(ent.origin, 225, 1.0f, 0.1f, 0.1f);
-			}
+				ent.flags |= RF_VIEWERMODEL;
 
-			else if (effects & EF_FLAG2)
-			{
-				V_AddLight(ent.origin, 225, 0.1f, 0.1f, 1.0f);
-			}
+				if (effects & EF_FLAG1)
+				{
+					V_AddLight(ent.origin, 225, 1.0f, 0.1f, 0.1f);
+				}
 
-			else if (effects & EF_TAGTRAIL)
-			{
-				V_AddLight(ent.origin, 225, 1.0f, 1.0f, 0.0f);
-			}
+				else if (effects & EF_FLAG2)
+				{
+					V_AddLight(ent.origin, 225, 0.1f, 0.1f, 1.0f);
+				}
 
-			else if (effects & EF_TRACKERTRAIL)
-			{
-				V_AddLight(ent.origin, 225, -1.0f, -1.0f, -1.0f);
-			}
+				else if (effects & EF_TAGTRAIL)
+				{
+					V_AddLight(ent.origin, 225, 1.0f, 1.0f, 0.0f);
+				}
 
-			continue;
+				else if (effects & EF_TRACKERTRAIL)
+				{
+					V_AddLight(ent.origin, 225, -1.0f, -1.0f, -1.0f);
+				}
+
+				continue;
+			}
 		}
 
 		/* if set to invisible, skip */
@@ -472,27 +597,35 @@ CL_AddPacketEntities(frame_t *frame)
 		{
 			if (s1->modelindex2 == 255)
 			{
-				/* custom weapon */
-				ci = &cl.clientinfo[s1->skinnum & PP_PLAYER_SKINNUM_PLAYER_MASK];
-				i = (s1->skinnum >> PP_PLAYER_SKINNUM_WEAPON_SHIFT) & PP_PLAYER_SKINNUM_WEAPON_MASK;
-
-				if (!cl_vwep->value || (i > MAX_CLIENTWEAPONMODELS - 1))
+				if (CL_MFlashTuneCameraActive() && (s1->number == cl.playernum + 1))
 				{
-					i = 0;
+					ci = &cl.clientinfo[cl.playernum];
+					ent.model = CL_MFlashTuneResolveWeaponModel(ci);
 				}
-
-				ent.model = ci->weaponmodel[i];
-
-				if (!ent.model)
+				else
 				{
-					if (i != 0)
+					/* custom weapon */
+					ci = &cl.clientinfo[s1->skinnum & PP_PLAYER_SKINNUM_PLAYER_MASK];
+					i = (s1->skinnum >> PP_PLAYER_SKINNUM_WEAPON_SHIFT) & PP_PLAYER_SKINNUM_WEAPON_MASK;
+
+					if (!cl_vwep->value || (i > MAX_CLIENTWEAPONMODELS - 1))
 					{
-						ent.model = ci->weaponmodel[0];
+						i = 0;
 					}
+
+					ent.model = ci->weaponmodel[i];
 
 					if (!ent.model)
 					{
-						ent.model = cl.baseclientinfo.weaponmodel[0];
+						if (i != 0)
+						{
+							ent.model = ci->weaponmodel[0];
+						}
+
+						if (!ent.model)
+						{
+							ent.model = cl.baseclientinfo.weaponmodel[0];
+						}
 					}
 				}
 			}
@@ -684,6 +817,12 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 {
 	entity_t gun = {0}; /* view model */
 	int i;
+
+	if (CL_MFlashTuneCameraActive() && (!cl_mflash_tune_show_viewmodel ||
+		(cl_mflash_tune_show_viewmodel->value <= 0.0f)))
+	{
+		return;
+	}
 
 	/* allow the gun to be completely removed */
 	if (!cl_gun->value)
@@ -886,6 +1025,8 @@ CL_CalcViewValues(void)
 	float lerp, backlerp, ifov;
 	frame_t *oldframe;
 	player_state_t *ps, *ops;
+	vec3_t player_origin;
+	vec3_t base_viewangles;
 
 	/* find the previous frame to interpolate from */
 	ps = &cl.frame.playerstate;
@@ -928,6 +1069,7 @@ CL_CalcViewValues(void)
 			cl.refdef.vieworg[i] = cl.predicted_origin[i] + ops->viewoffset[i]
 				+ cl.lerpfrac * (ps->viewoffset[i] - ops->viewoffset[i])
 				- backlerp * cl.prediction_error[i];
+			player_origin[i] = cl.predicted_origin[i];
 		}
 
 		/* smooth out stair climbing */
@@ -947,6 +1089,8 @@ CL_CalcViewValues(void)
 				ops->viewoffset[i] + lerp * (ps->pmove.origin[i] * 0.125 +
 						ps->viewoffset[i] - (ops->pmove.origin[i] * 0.125 +
 							ops->viewoffset[i]));
+			player_origin[i] = ops->pmove.origin[i] * 0.125f +
+				lerp * (ps->pmove.origin[i] * 0.125f - ops->pmove.origin[i] * 0.125f);
 		}
 	}
 
@@ -957,6 +1101,7 @@ CL_CalcViewValues(void)
 		for (i = 0; i < 3; i++)
 		{
 			cl.refdef.viewangles[i] = cl.predicted_angles[i];
+			base_viewangles[i] = cl.predicted_angles[i];
 		}
 	}
 	else
@@ -966,6 +1111,7 @@ CL_CalcViewValues(void)
 		{
 			cl.refdef.viewangles[i] = LerpAngle(ops->viewangles[i],
 					ps->viewangles[i], lerp);
+			base_viewangles[i] = cl.refdef.viewangles[i];
 		}
 	}
 
@@ -975,6 +1121,57 @@ CL_CalcViewValues(void)
 		{
 			cl.refdef.viewangles[i] += LerpAngle(ops->kick_angles[i],
 					ps->kick_angles[i], lerp);
+		}
+	}
+
+	if (CL_MFlashTuneCameraActive())
+	{
+		vec3_t cam_angles, cam_forward, cam_right, cam_up;
+		vec3_t target, desired, to_target;
+		trace_t tr;
+		float cam_back = cl_mflash_tune_cam_back ? cl_mflash_tune_cam_back->value : 105.0f;
+		float cam_right_off = cl_mflash_tune_cam_right ? cl_mflash_tune_cam_right->value : 95.0f;
+		float cam_up_off = cl_mflash_tune_cam_up ? cl_mflash_tune_cam_up->value : 16.0f;
+		float target_up = cl_mflash_tune_target_up ? cl_mflash_tune_target_up->value : 24.0f;
+		int tune_mode = (int)cl_mflash_tune_mode->value;
+
+		if (tune_mode == 2)
+		{
+			cam_right_off = -fabsf(cam_right_off);
+		}
+		else if (tune_mode == 3)
+		{
+			cam_right_off = 0.0f;
+			cam_back *= 1.35f;
+		}
+		else
+		{
+			cam_right_off = fabsf(cam_right_off);
+		}
+
+		VectorCopy(base_viewangles, cam_angles);
+		AngleVectors(cam_angles, cam_forward, cam_right, cam_up);
+
+		VectorCopy(player_origin, target);
+		target[2] += target_up;
+
+		VectorCopy(target, desired);
+		VectorMA(desired, -cam_back, cam_forward, desired);
+		VectorMA(desired, cam_right_off, cam_right, desired);
+		VectorMA(desired, cam_up_off, cam_up, desired);
+
+		tr = CL_PMTrace(target, vec3_origin, vec3_origin, desired);
+		VectorCopy(tr.endpos, cl.refdef.vieworg);
+
+		if (tr.fraction < 1.0f)
+		{
+			VectorMA(cl.refdef.vieworg, 4.0f, tr.plane.normal, cl.refdef.vieworg);
+		}
+
+		if (!cl_mflash_tune_lookat || (cl_mflash_tune_lookat->value > 0.0f))
+		{
+			VectorSubtract(target, cl.refdef.vieworg, to_target);
+			AngleVectors2(to_target, cl.refdef.viewangles);
 		}
 	}
 

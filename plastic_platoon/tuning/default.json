@@ -55,6 +55,26 @@
       "duration_ms": 50,
       "velocity_scale": 0.3,
       "image": "sprites/muzzleFlashSmall.png"
+    },
+    "muzzle_flash_thirdperson": {
+      "enabled": true,
+      "forward": 9.0,
+      "right": 2.5,
+      "up": -2.5,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
+    },
+    "muzzle_flash2_thirdperson": {
+      "enabled": false,
+      "forward": 9.0,
+      "right": 2.5,
+      "up": -2.5,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
     }
     },
 
@@ -80,6 +100,16 @@
       "duration_ms": 150,
       "velocity_scale": 0.15,
       "image": "sprites/muzzleFlashCore.png"
+    },
+    "muzzle_flash_thirdperson": {
+      "enabled": true,
+      "forward": 16.0,
+      "right": 5.5,
+      "up": -2.0,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
     }
     },
 
@@ -115,6 +145,26 @@
       "duration_ms": 50,
       "velocity_scale": 0.5,
       "image": "sprites/muzzleFlashFlare.png"
+    },
+    "muzzle_flash_thirdperson": {
+      "enabled": true,
+      "forward": 20.0,
+      "right": 7.0,
+      "up": -1.5,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
+    },
+    "muzzle_flash2_thirdperson": {
+      "enabled": false,
+      "forward": 20.0,
+      "right": 7.0,
+      "up": -1.5,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
     }
     },
 
@@ -142,6 +192,16 @@
       "duration_ms": 50,
       "velocity_scale": 0.3,
       "image": "sprites/muzzleFlashCore.png"
+    },
+    "muzzle_flash_thirdperson": {
+      "enabled": true,
+      "forward": 20.0,
+      "right": 7.0,
+      "up": -1.5,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
     }
     },
 
@@ -170,6 +230,26 @@
       "duration_ms": 50,
       "velocity_scale": 0.3,
       "image": "sprites/muzzleFlashSmall.png"
+    },
+    "muzzle_flash_thirdperson": {
+      "enabled": true,
+      "forward": 15.0,
+      "right": 5.0,
+      "up": -2.0,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
+    },
+    "muzzle_flash2_thirdperson": {
+      "enabled": false,
+      "forward": 15.0,
+      "right": 5.0,
+      "up": -2.0,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
     }
     },
 
@@ -188,6 +268,16 @@
       "duration_ms": 50,
       "velocity_scale": 0.3,
       "image": "sprites/muzzleFlashCore.png"
+    },
+    "muzzle_flash_thirdperson": {
+      "enabled": true,
+      "forward": 15.0,
+      "right": 5.0,
+      "up": -2.0,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
     }
     },
 
@@ -214,6 +304,16 @@
       "duration_ms": 50,
       "velocity_scale": 0.3,
       "image": "sprites/muzzleFlashCore.png"
+    },
+    "muzzle_flash_thirdperson": {
+      "enabled": true,
+      "forward": 15.0,
+      "right": 5.0,
+      "up": -2.0,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
     }
     },
 
@@ -237,6 +337,16 @@
       "duration_ms": 50,
       "velocity_scale": 0.3,
       "image": "sprites/muzzleFlashCore.png"
+    },
+    "muzzle_flash_thirdperson": {
+      "enabled": true,
+      "forward": 20.0,
+      "right": 7.0,
+      "up": -1.5,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
     }
     },
 
@@ -262,6 +372,16 @@
       "duration_ms": 50,
       "velocity_scale": 0.3,
       "image": "sprites/muzzleFlashCore.png"
+    },
+    "muzzle_flash_thirdperson": {
+      "enabled": true,
+      "forward": 20.0,
+      "right": 7.0,
+      "up": -1.5,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
     }
     },
 
@@ -278,6 +398,16 @@
       "duration_ms": 50,
       "velocity_scale": 0.3,
       "image": "sprites/muzzleFlashCore.png"
+    },
+    "muzzle_flash_thirdperson": {
+      "enabled": true,
+      "forward": 15.0,
+      "right": 5.0,
+      "up": -2.0,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
     }
     },
 
@@ -291,6 +421,16 @@
       "duration_ms": 50,
       "velocity_scale": 0.3,
       "image": "sprites/muzzleFlashCore.png"
+    },
+    "muzzle_flash_thirdperson": {
+      "enabled": true,
+      "forward": 15.0,
+      "right": 5.0,
+      "up": -2.0,
+      "scale": 2,
+      "duration_ms": 50,
+      "velocity_scale": 0.05,
+      "image": "sprites/muzzleFlashSmall.png"
     }
     }
   },

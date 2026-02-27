@@ -317,6 +317,13 @@ extern  cvar_t  *cl_r1q2_lightstyle;
 extern  cvar_t  *cl_limitsparksounds;
 extern	cvar_t	*cl_laseralpha;
 extern	cvar_t	*cl_nodownload_list;
+extern	cvar_t	*cl_mflash_tune_mode;
+extern	cvar_t	*cl_mflash_tune_cam_back;
+extern	cvar_t	*cl_mflash_tune_cam_right;
+extern	cvar_t	*cl_mflash_tune_cam_up;
+extern	cvar_t	*cl_mflash_tune_target_up;
+extern	cvar_t	*cl_mflash_tune_lookat;
+extern	cvar_t	*cl_mflash_tune_show_viewmodel;
 
 typedef struct
 {
@@ -538,9 +545,10 @@ typedef struct muzzle_flash_config_s {
 	char flash2_image[64];
 } muzzle_flash_config_t;
 
-void CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up, vec3_t velocity, int weapon);
+void CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up,
+	vec3_t velocity, int weapon, qboolean thirdperson);
 void CL_InitMuzzleFlashCvars(void);
-muzzle_flash_config_t *CL_GetMuzzleFlashConfig(int weapon);
+muzzle_flash_config_t *CL_GetMuzzleFlashConfig(int weapon, qboolean thirdperson);
 
 void CL_CheckPredictionError (void);
 

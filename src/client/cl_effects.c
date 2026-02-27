@@ -47,6 +47,13 @@ cvar_t *cl_mflash_vel_scale; /* Velocity inheritance factor (0.0-1.0) */
 cvar_t *cl_mflash_enabled;   /* Enable/disable muzzle flash sprites */
 cvar_t *cl_mflash_thirdperson_up; /* World-up lift for other players' muzzle sprites */
 cvar_t *cl_mflash_thirdperson_crouch_down; /* Additional downward offset while crouched */
+cvar_t *cl_mflash_tune_mode; /* Debug tuning camera mode: 0=off,1=right side,2=left side,3=rear */
+cvar_t *cl_mflash_tune_cam_back; /* Camera pullback distance in tune mode */
+cvar_t *cl_mflash_tune_cam_right; /* Lateral camera offset in tune mode (mode 1/2) */
+cvar_t *cl_mflash_tune_cam_up; /* Vertical camera offset in tune mode */
+cvar_t *cl_mflash_tune_target_up; /* Vertical target offset when camera looks at player */
+cvar_t *cl_mflash_tune_lookat; /* Look-at player target when tune camera is active */
+cvar_t *cl_mflash_tune_show_viewmodel; /* Draw first-person weapon model in tune mode */
 
 static vec3_t avelocities[NUMVERTEXNORMALS];
 extern struct model_s *cl_mod_smoke;
@@ -54,7 +61,8 @@ extern struct model_s *cl_mod_flash;
 
 extern cparticle_t *active_particles, *free_particles;
 
-static muzzle_flash_config_t weapon_mflash_configs[32]; /* One for each weapon type */
+static muzzle_flash_config_t weapon_mflash_configs_firstperson[32];
+static muzzle_flash_config_t weapon_mflash_configs_thirdperson[32];
 
 /*
  * Get weapon name from weapon ID for JSON lookup
@@ -87,16 +95,9 @@ CL_IsPlayerCrouchFrame(int frame)
 	return (frame >= FRAME_crstnd01) && (frame <= FRAME_crdeath5);
 }
 
-/*
- * Load muzzle flash config for a specific weapon
- */
 static void
-CL_LoadWeaponMuzzleFlashConfig(json_value_t *weapon_root, const char *weapon_name, int weapon_id)
+CL_SetFirstPersonMuzzleFlashDefaults(muzzle_flash_config_t *cfg)
 {
-	json_value_t *mflash, *mflash2;
-	muzzle_flash_config_t *cfg = &weapon_mflash_configs[weapon_id];
-
-	/* Initialize cone flash defaults */
 	cfg->enabled = true;
 	cfg->forward = 18.0f;
 	cfg->right = 8.0f;
@@ -104,9 +105,8 @@ CL_LoadWeaponMuzzleFlashConfig(json_value_t *weapon_root, const char *weapon_nam
 	cfg->scale = 40;
 	cfg->duration_ms = 150;
 	cfg->velocity_scale = 0.15f;
-	strcpy(cfg->image, "sprites/muzzleFlash.sp2");
+	Q_strlcpy(cfg->image, "sprites/muzzleFlash.sp2", sizeof(cfg->image));
 
-	/* Initialize billboard flash defaults (disabled by default) */
 	cfg->flash2_enabled = false;
 	cfg->flash2_forward = 18.0f;
 	cfg->flash2_right = 8.0f;
@@ -114,80 +114,147 @@ CL_LoadWeaponMuzzleFlashConfig(json_value_t *weapon_root, const char *weapon_nam
 	cfg->flash2_scale = 40;
 	cfg->flash2_duration_ms = 150;
 	cfg->flash2_velocity_scale = 0.15f;
-	strcpy(cfg->flash2_image, "sprites/muzzleFlash.sp2"); /* Use existing sprite as fallback */
+	Q_strlcpy(cfg->flash2_image, "sprites/muzzleFlash.sp2", sizeof(cfg->flash2_image));
+}
 
-	/* Load primary cone flash config */
-	mflash = JSON_GetMember(weapon_root, "muzzle_flash");
-	if (mflash)
+static void
+CL_SetThirdPersonMuzzleFlashDefaults(muzzle_flash_config_t *cfg)
+{
+	cfg->enabled = true;
+	cfg->forward = 14.0f;
+	cfg->right = 4.0f;
+	cfg->up = -2.0f;
+	cfg->scale = 2;
+	cfg->duration_ms = 50;
+	cfg->velocity_scale = 0.05f;
+	Q_strlcpy(cfg->image, "sprites/muzzleFlashSmall.png", sizeof(cfg->image));
+
+	cfg->flash2_enabled = false;
+	cfg->flash2_forward = 14.0f;
+	cfg->flash2_right = 4.0f;
+	cfg->flash2_up = -2.0f;
+	cfg->flash2_scale = 2;
+	cfg->flash2_duration_ms = 50;
+	cfg->flash2_velocity_scale = 0.05f;
+	Q_strlcpy(cfg->flash2_image, "sprites/muzzleFlashSmall.png", sizeof(cfg->flash2_image));
+}
+
+static void
+CL_LoadMuzzleFlashPrimarySection(json_value_t *mflash, muzzle_flash_config_t *cfg)
+{
+	if (!mflash)
 	{
-		if (JSON_GetMember(mflash, "enabled"))
-			cfg->enabled = JSON_GetBool(JSON_GetMember(mflash, "enabled"), true);
-
-		if (JSON_GetMember(mflash, "forward"))
-			cfg->forward = JSON_GetFloat(JSON_GetMember(mflash, "forward"), 18.0f);
-
-		if (JSON_GetMember(mflash, "right"))
-			cfg->right = JSON_GetFloat(JSON_GetMember(mflash, "right"), 8.0f);
-
-		if (JSON_GetMember(mflash, "up"))
-			cfg->up = JSON_GetFloat(JSON_GetMember(mflash, "up"), 0.0f);
-
-		if (JSON_GetMember(mflash, "scale"))
-			cfg->scale = JSON_GetInt(JSON_GetMember(mflash, "scale"), 40);
-
-		if (JSON_GetMember(mflash, "duration_ms"))
-			cfg->duration_ms = JSON_GetInt(JSON_GetMember(mflash, "duration_ms"), 150);
-
-		if (JSON_GetMember(mflash, "velocity_scale"))
-			cfg->velocity_scale = JSON_GetFloat(JSON_GetMember(mflash, "velocity_scale"), 0.15f);
-
-		if (JSON_GetMember(mflash, "image"))
-		{
-			const char *img = JSON_GetString(JSON_GetMember(mflash, "image"), "sprites/muzzleFlash.sp2");
-			strncpy(cfg->image, img, sizeof(cfg->image) - 1);
-			cfg->image[sizeof(cfg->image) - 1] = '\0';
-		}
+		return;
 	}
 
-	/* Load optional billboard flash config (muzzle_flash2) */
+	if (JSON_GetMember(mflash, "enabled"))
+		cfg->enabled = JSON_GetBool(JSON_GetMember(mflash, "enabled"), cfg->enabled);
+
+	if (JSON_GetMember(mflash, "forward"))
+		cfg->forward = JSON_GetFloat(JSON_GetMember(mflash, "forward"), cfg->forward);
+
+	if (JSON_GetMember(mflash, "right"))
+		cfg->right = JSON_GetFloat(JSON_GetMember(mflash, "right"), cfg->right);
+
+	if (JSON_GetMember(mflash, "up"))
+		cfg->up = JSON_GetFloat(JSON_GetMember(mflash, "up"), cfg->up);
+
+	if (JSON_GetMember(mflash, "scale"))
+		cfg->scale = JSON_GetInt(JSON_GetMember(mflash, "scale"), cfg->scale);
+
+	if (JSON_GetMember(mflash, "duration_ms"))
+		cfg->duration_ms = JSON_GetInt(JSON_GetMember(mflash, "duration_ms"), cfg->duration_ms);
+
+	if (JSON_GetMember(mflash, "velocity_scale"))
+		cfg->velocity_scale = JSON_GetFloat(JSON_GetMember(mflash, "velocity_scale"), cfg->velocity_scale);
+
+	if (JSON_GetMember(mflash, "image"))
+	{
+		const char *img = JSON_GetString(JSON_GetMember(mflash, "image"), cfg->image);
+		Q_strlcpy(cfg->image, img, sizeof(cfg->image));
+	}
+}
+
+static void
+CL_LoadMuzzleFlashSecondarySection(json_value_t *mflash2, muzzle_flash_config_t *cfg)
+{
+	if (!mflash2)
+	{
+		return;
+	}
+
+	/* If muzzle_flash2 section exists, enable it unless explicitly disabled */
+	cfg->flash2_enabled = true;
+
+	if (JSON_GetMember(mflash2, "enabled"))
+		cfg->flash2_enabled = JSON_GetBool(JSON_GetMember(mflash2, "enabled"), cfg->flash2_enabled);
+
+	if (JSON_GetMember(mflash2, "forward"))
+		cfg->flash2_forward = JSON_GetFloat(JSON_GetMember(mflash2, "forward"), cfg->flash2_forward);
+
+	if (JSON_GetMember(mflash2, "right"))
+		cfg->flash2_right = JSON_GetFloat(JSON_GetMember(mflash2, "right"), cfg->flash2_right);
+
+	if (JSON_GetMember(mflash2, "up"))
+		cfg->flash2_up = JSON_GetFloat(JSON_GetMember(mflash2, "up"), cfg->flash2_up);
+
+	if (JSON_GetMember(mflash2, "scale"))
+		cfg->flash2_scale = JSON_GetInt(JSON_GetMember(mflash2, "scale"), cfg->flash2_scale);
+
+	if (JSON_GetMember(mflash2, "duration_ms"))
+		cfg->flash2_duration_ms = JSON_GetInt(JSON_GetMember(mflash2, "duration_ms"), cfg->flash2_duration_ms);
+
+	if (JSON_GetMember(mflash2, "velocity_scale"))
+		cfg->flash2_velocity_scale = JSON_GetFloat(JSON_GetMember(mflash2, "velocity_scale"), cfg->flash2_velocity_scale);
+
+	if (JSON_GetMember(mflash2, "image"))
+	{
+		const char *img = JSON_GetString(JSON_GetMember(mflash2, "image"), cfg->flash2_image);
+		Q_strlcpy(cfg->flash2_image, img, sizeof(cfg->flash2_image));
+	}
+}
+
+/*
+ * Load muzzle flash config for a specific weapon
+ */
+static void
+CL_LoadWeaponMuzzleFlashConfig(json_value_t *weapon_root, const char *weapon_name, int weapon_id)
+{
+	json_value_t *mflash, *mflash2, *mflash_thirdperson, *mflash2_thirdperson;
+	json_value_t *thirdperson_root;
+	muzzle_flash_config_t *cfg_firstperson = &weapon_mflash_configs_firstperson[weapon_id];
+	muzzle_flash_config_t *cfg_thirdperson = &weapon_mflash_configs_thirdperson[weapon_id];
+
+	mflash = JSON_GetMember(weapon_root, "muzzle_flash");
 	mflash2 = JSON_GetMember(weapon_root, "muzzle_flash2");
+	CL_LoadMuzzleFlashPrimarySection(mflash, cfg_firstperson);
+	CL_LoadMuzzleFlashSecondarySection(mflash2, cfg_firstperson);
+
+	mflash_thirdperson = JSON_GetMember(weapon_root, "muzzle_flash_thirdperson");
+	mflash2_thirdperson = JSON_GetMember(weapon_root, "muzzle_flash2_thirdperson");
+
+	thirdperson_root = JSON_GetMember(weapon_root, "thirdperson");
+	if (thirdperson_root)
+	{
+		if (!mflash_thirdperson)
+			mflash_thirdperson = JSON_GetMember(thirdperson_root, "muzzle_flash");
+
+		if (!mflash2_thirdperson)
+			mflash2_thirdperson = JSON_GetMember(thirdperson_root, "muzzle_flash2");
+	}
+
+	CL_LoadMuzzleFlashPrimarySection(mflash_thirdperson, cfg_thirdperson);
+	CL_LoadMuzzleFlashSecondarySection(mflash2_thirdperson, cfg_thirdperson);
+
+	Com_DPrintf("Muzzle flash: Loaded first-person config for weapon %s\n", weapon_name);
 	if (mflash2)
 	{
-		/* If muzzle_flash2 section exists, enable it */
-		cfg->flash2_enabled = true;
-
-		if (JSON_GetMember(mflash2, "enabled"))
-			cfg->flash2_enabled = JSON_GetBool(JSON_GetMember(mflash2, "enabled"), true);
-
-		if (JSON_GetMember(mflash2, "forward"))
-			cfg->flash2_forward = JSON_GetFloat(JSON_GetMember(mflash2, "forward"), 18.0f);
-
-		if (JSON_GetMember(mflash2, "right"))
-			cfg->flash2_right = JSON_GetFloat(JSON_GetMember(mflash2, "right"), 8.0f);
-
-		if (JSON_GetMember(mflash2, "up"))
-			cfg->flash2_up = JSON_GetFloat(JSON_GetMember(mflash2, "up"), 0.0f);
-
-		if (JSON_GetMember(mflash2, "scale"))
-			cfg->flash2_scale = JSON_GetInt(JSON_GetMember(mflash2, "scale"), 40);
-
-		if (JSON_GetMember(mflash2, "duration_ms"))
-			cfg->flash2_duration_ms = JSON_GetInt(JSON_GetMember(mflash2, "duration_ms"), 150);
-
-		if (JSON_GetMember(mflash2, "velocity_scale"))
-			cfg->flash2_velocity_scale = JSON_GetFloat(JSON_GetMember(mflash2, "velocity_scale"), 0.15f);
-
-		if (JSON_GetMember(mflash2, "image"))
-		{
-			const char *img = JSON_GetString(JSON_GetMember(mflash2, "image"), "sprites/muzzleFlash.sp2");
-			strncpy(cfg->flash2_image, img, sizeof(cfg->flash2_image) - 1);
-			cfg->flash2_image[sizeof(cfg->flash2_image) - 1] = '\0';
-		}
-
-		Com_DPrintf("Muzzle flash: Loaded billboard flash for weapon %s\n", weapon_name);
+		Com_DPrintf("Muzzle flash: Loaded first-person muzzle_flash2 for weapon %s\n", weapon_name);
 	}
-
-	Com_DPrintf("Muzzle flash: Loaded config for weapon %s\n", weapon_name);
+	if (mflash_thirdperson || mflash2_thirdperson)
+	{
+		Com_DPrintf("Muzzle flash: Loaded third-person config for weapon %s\n", weapon_name);
+	}
 }
 
 /*
@@ -202,6 +269,13 @@ CL_LoadMuzzleFlashConfig(void)
 	json_value_t *root, *weapons;
 	int weapon_id;
 	const char *weapon_name;
+
+	/* Initialize all weapon configs so muzzle flashes still work without tuning/default.json */
+	for (weapon_id = 0; weapon_id < 32; weapon_id++)
+	{
+		CL_SetFirstPersonMuzzleFlashDefaults(&weapon_mflash_configs_firstperson[weapon_id]);
+		CL_SetThirdPersonMuzzleFlashDefaults(&weapon_mflash_configs_thirdperson[weapon_id]);
+	}
 
 	/* Try to load from tuning directory */
 	len = FS_LoadFile("tuning/default.json", (void **)&buffer);
@@ -250,12 +324,15 @@ CL_LoadMuzzleFlashConfig(void)
  * Get muzzle flash config for a weapon
  */
 muzzle_flash_config_t *
-CL_GetMuzzleFlashConfig(int weapon)
+CL_GetMuzzleFlashConfig(int weapon, qboolean thirdperson)
 {
 	if (weapon < 0 || weapon >= 32)
 		return NULL;
 
-	return &weapon_mflash_configs[weapon];
+	if (thirdperson)
+		return &weapon_mflash_configs_thirdperson[weapon];
+
+	return &weapon_mflash_configs_firstperson[weapon];
 }
 
 /*
@@ -274,6 +351,13 @@ CL_InitMuzzleFlashCvars(void)
 	cl_mflash_vel_scale = Cvar_Get("cl_mflash_vel_scale", "0.15", CVAR_ARCHIVE);
 	cl_mflash_thirdperson_up = Cvar_Get("cl_mflash_thirdperson_up", "25", CVAR_ARCHIVE);
 	cl_mflash_thirdperson_crouch_down = Cvar_Get("cl_mflash_thirdperson_crouch_down", "18", CVAR_ARCHIVE);
+	cl_mflash_tune_mode = Cvar_Get("cl_mflash_tune_mode", "0", CVAR_ARCHIVE);
+	cl_mflash_tune_cam_back = Cvar_Get("cl_mflash_tune_cam_back", "105", CVAR_ARCHIVE);
+	cl_mflash_tune_cam_right = Cvar_Get("cl_mflash_tune_cam_right", "95", CVAR_ARCHIVE);
+	cl_mflash_tune_cam_up = Cvar_Get("cl_mflash_tune_cam_up", "16", CVAR_ARCHIVE);
+	cl_mflash_tune_target_up = Cvar_Get("cl_mflash_tune_target_up", "24", CVAR_ARCHIVE);
+	cl_mflash_tune_lookat = Cvar_Get("cl_mflash_tune_lookat", "1", CVAR_ARCHIVE);
+	cl_mflash_tune_show_viewmodel = Cvar_Get("cl_mflash_tune_show_viewmodel", "0", CVAR_ARCHIVE);
 
 	/* Load from JSON tuning file (overrides defaults) */
 	CL_LoadMuzzleFlashConfig();
@@ -582,9 +666,12 @@ CL_AddMuzzleFlash(void)
 		vec3_t mflash_origin, mflash_fv, mflash_rv, mflash_uv;
 		vec3_t mflash_velocity;
 		const float vel_scale = 1.0f / 8.0f;  /* pmove velocity is 12.3 fixed point */
+		qboolean local_player = (i == cl.playernum + 1);
+		qboolean tune_local_as_thirdperson = local_player && cl_mflash_tune_mode &&
+			(cl_mflash_tune_mode->value > 0.0f);
 
 		/* For local player, use actual view position (accounts for crouch, view bob, etc) */
-		if (i == cl.playernum + 1)
+		if (local_player && !tune_local_as_thirdperson)
 		{
 			VectorCopy(cl.refdef.vieworg, mflash_origin);
 			AngleVectors(cl.refdef.viewangles, mflash_fv, mflash_rv, mflash_uv);
@@ -623,7 +710,8 @@ CL_AddMuzzleFlash(void)
 			VectorScale(mflash_velocity, 10.0f, mflash_velocity);
 		}
 
-		CL_SpawnMuzzleFlashSprite(mflash_origin, mflash_fv, mflash_rv, mflash_uv, mflash_velocity, weapon);
+		CL_SpawnMuzzleFlashSprite(mflash_origin, mflash_fv, mflash_rv, mflash_uv,
+			mflash_velocity, weapon, (!local_player || tune_local_as_thirdperson));
 	}
 }
 
