@@ -280,8 +280,16 @@ CL_RequestNextDownload(void)
 		while (precache_check < CS_IMAGES + MAX_IMAGES &&
 			   cl.configstrings[precache_check][0])
 		{
-			Com_sprintf(fn, sizeof(fn), "pics/%s.pcx",
-					cl.configstrings[precache_check++]);
+			const char *image_name = cl.configstrings[precache_check++];
+
+			if (COM_FileExtension(image_name)[0])
+			{
+				Com_sprintf(fn, sizeof(fn), "pics/%s", image_name);
+			}
+			else
+			{
+				Com_sprintf(fn, sizeof(fn), "pics/%s.pcx", image_name);
+			}
 
 			if (!CL_CheckOrDownloadFile(fn))
 			{

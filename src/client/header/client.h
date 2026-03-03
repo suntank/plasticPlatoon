@@ -448,6 +448,9 @@ void CL_AddEntities (void);
 void CL_AddDLights (void);
 void CL_AddTEnts (void);
 void CL_AddLightStyles (void);
+qboolean CL_IsADSActive(void);
+const char *CL_GetADSOverlayPicName(void);
+void CL_TouchADSOverlayPics(void);
 struct sfx_s *CL_RandomFootstepSfx (void);
 struct model_s *CL_PowerScreenModel (void);
 

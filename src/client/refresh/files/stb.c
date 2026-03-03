@@ -467,6 +467,16 @@ LoadHiColorImage(const char *name, const char* namewe, const char *ext,
 	   || LoadSTB(namewe, "png", &pic, &width, &height)
 	   || LoadSTB(namewe, "jpg", &pic, &width, &height) )
 	{
+		if ((type == it_pic) && (realwidth == 0 || realheight == 0))
+		{
+			if (!Q_stricmp(namewe, "pics/a_gl_rounds") ||
+				!Q_stricmp(namewe, "pics/a_mortar"))
+			{
+				realwidth = 24;
+				realheight = 24;
+			}
+		}
+
 		if (width >= realwidth && height >= realheight)
 		{
 			if (realheight == 0 || realwidth == 0)
@@ -635,22 +645,32 @@ R_FindPic(const char *name, findimage_t find_image)
 	if ((name[0] != '/') && (name[0] != '\\'))
 	{
 		char	pathname[MAX_QPATH];
+		const char *ext = COM_FileExtension(name);
 
-		/* Quake 2 */
-		Com_sprintf(pathname, sizeof(pathname), "pics/%s.pcx", name);
-		image = find_image(pathname, it_pic);
-
-		/* Heretic 2 */
-		if (!image)
+		if (ext[0])
 		{
-			Com_sprintf(pathname, sizeof(pathname), "pics/misc/%s.m32", name);
+			/* Explicit extension: load exactly from pics/<name> */
+			Com_sprintf(pathname, sizeof(pathname), "pics/%s", name);
 			image = find_image(pathname, it_pic);
 		}
-
-		if (!image)
+		else
 		{
-			Com_sprintf(pathname, sizeof(pathname), "pics/misc/%s.m8", name);
+			/* Quake 2 */
+			Com_sprintf(pathname, sizeof(pathname), "pics/%s.pcx", name);
 			image = find_image(pathname, it_pic);
+
+			/* Heretic 2 */
+			if (!image)
+			{
+				Com_sprintf(pathname, sizeof(pathname), "pics/misc/%s.m32", name);
+				image = find_image(pathname, it_pic);
+			}
+
+			if (!image)
+			{
+				Com_sprintf(pathname, sizeof(pathname), "pics/misc/%s.m8", name);
+				image = find_image(pathname, it_pic);
+			}
 		}
 	}
 	else

@@ -1042,6 +1042,8 @@ SCR_TouchPics(void)
 		}
 	}
 
+	CL_TouchADSOverlayPics();
+
 	if (crosshair->value)
 	{
 		if ((crosshair->value > 3) || (crosshair->value < 0))
@@ -1496,6 +1498,32 @@ SCR_DrawLayout(void)
 	SCR_ExecuteLayoutString(cl.layout);
 }
 
+static void
+SCR_DrawADSOverlay(void)
+{
+	const char *overlay_pic;
+
+	if (!CL_IsADSActive())
+	{
+		return;
+	}
+
+	overlay_pic = CL_GetADSOverlayPicName();
+	if (!overlay_pic)
+	{
+		return;
+	}
+
+	if (!Draw_FindPic(overlay_pic))
+	{
+		return;
+	}
+
+	Draw_StretchPic(0, 0, viddef.width, viddef.height, overlay_pic);
+	SCR_AddDirtyPoint(0, 0);
+	SCR_AddDirtyPoint(viddef.width - 1, viddef.height - 1);
+}
+
 // ----
 
 static void
@@ -1756,6 +1784,7 @@ SCR_UpdateScreen(void)
 			SCR_TileClear();
 
 			V_RenderView(separation[i]);
+			SCR_DrawADSOverlay();
 
 			SCR_DrawStats();
 			SCR_DrawSpeed();

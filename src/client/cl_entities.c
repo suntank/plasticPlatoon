@@ -106,6 +106,80 @@ PP_DetectWeaponType(player_state_t *ps)
 	return PP_WEAPON_UNKNOWN;
 }
 
+static const char *
+PP_ADSOverlayPicForWeapon(pp_weapon_type_t weapon)
+{
+	switch (weapon)
+	{
+		case PP_WEAPON_M9_PISTOL: return "ads_blaster.png";
+		case PP_WEAPON_SHOTGUN: return "ads_shotgun.png";
+		case PP_WEAPON_SUPER_SHOTGUN: return "ads_supershotgun.png";
+		case PP_WEAPON_M16: return "ads_machinegun.png";
+		case PP_WEAPON_M60: return "ads_chaingun.png";
+		case PP_WEAPON_HAND_GRENADE: return "ads_handgrenade.png";
+		case PP_WEAPON_GRENADE_LAUNCHER: return "ads_grenadelauncher.png";
+		case PP_WEAPON_ROCKET_LAUNCHER: return "ads_rocketlauncher.png";
+		case PP_WEAPON_FLAMETHROWER: return "ads_hyperblaster.png";
+		case PP_WEAPON_SNIPER: return "ads_railgun.png";
+		case PP_WEAPON_MORTAR: return "ads_mortar.png";
+		default: return NULL;
+	}
+}
+
+const char *
+CL_GetADSOverlayPicName(void)
+{
+	pp_weapon_type_t weapon;
+
+	weapon = PP_DetectWeaponType(&cl.frame.playerstate);
+	return PP_ADSOverlayPicForWeapon(weapon);
+}
+
+qboolean
+CL_IsADSActive(void)
+{
+	if (cls.state != ca_active)
+	{
+		return false;
+	}
+
+	if (cls.key_dest != key_game)
+	{
+		return false;
+	}
+
+	if (!(cl.cmd.buttons & BUTTON_ADS))
+	{
+		return false;
+	}
+
+	return CL_GetADSOverlayPicName() != NULL;
+}
+
+void
+CL_TouchADSOverlayPics(void)
+{
+	static const char *ads_overlays[] = {
+		"ads_blaster.png",
+		"ads_shotgun.png",
+		"ads_supershotgun.png",
+		"ads_machinegun.png",
+		"ads_chaingun.png",
+		"ads_handgrenade.png",
+		"ads_grenadelauncher.png",
+		"ads_rocketlauncher.png",
+		"ads_hyperblaster.png",
+		"ads_railgun.png",
+		"ads_mortar.png"
+	};
+	int i;
+
+	for (i = 0; i < (int)ARRLEN(ads_overlays); i++)
+	{
+		Draw_FindPic(ads_overlays[i]);
+	}
+}
+
 static qboolean
 CL_MFlashTuneCameraActive(void)
 {
@@ -873,6 +947,11 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 
 	/* allow the gun to be completely removed */
 	if (!cl_gun->value)
+	{
+		return;
+	}
+
+	if (CL_IsADSActive())
 	{
 		return;
 	}

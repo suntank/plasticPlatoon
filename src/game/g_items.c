@@ -1986,7 +1986,7 @@ static const gitem_t gameitemlist[] = {
 		"misc/am_pkup.wav",
 		"models/items/ammo/gl_ammo/medium/tris.md2", 0,
 		NULL,
-		"a_gl_ammo",
+		"a_gl_rounds.png",
 		"GL Ammo",
 		3,
 		5,
