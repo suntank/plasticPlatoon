@@ -1863,7 +1863,7 @@ static const gitem_t gameitemlist[] = {
 		WEAP_BLASTER,
 		NULL,
 		0,
-		"weapons/blastf1a.wav weapons/machgf1b.wav"
+		"weapons/pistol1.wav weapons/pistol2.wav weapons/pistol3.wav weapons/pistol4.wav"
 	},
 
 	/* QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16) */

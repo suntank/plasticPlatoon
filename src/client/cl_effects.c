@@ -819,8 +819,10 @@ CL_AddMuzzleFlash(void)
 			dl->color[0] = 1;
 			dl->color[1] = 1;
 			dl->color[2] = 0;
+			Com_sprintf(soundname, sizeof(soundname), "weapons/pistol%d.wav",
+				(randk() % 4) + 1);
 			S_StartSound(NULL, i, CHAN_WEAPON,
-				S_RegisterSound("weapons/blastf1a.wav"), volume, ATTN_NORM, 0);
+				S_RegisterSound(soundname), volume, ATTN_NORM, 0);
 			break;
 		case MZ_BLUEHYPERBLASTER:
 			dl->color[0] = 0;
