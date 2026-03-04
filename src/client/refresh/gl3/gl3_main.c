@@ -924,8 +924,17 @@ GL3_DrawSpriteModel(entity_t *e, gl3model_t *currentmodel)
 		VectorCopy(rotated_right, right);
 	}
 
-	/* Size variance: skinnum encodes scale (0=1.0, 1-255 from 0.1 up to 1.0; higher is larger) */
-	if (e->skinnum > 0 && e->skinnum < 256)
+	/*
+	 * Size variance:
+	 *   - Legacy path (positive skinnum): 1..255 => 0.1..1.0
+	 *   - Extended path (negative skinnum): -1..-255 => ~0.004..1.0
+	 */
+	if (e->skinnum < 0)
+	{
+		int code = Q_clamp(-e->skinnum, 1, 255);
+		scale = code / 255.0f;
+	}
+	else if (e->skinnum > 0 && e->skinnum < 256)
 	{
 		scale = 0.1f + (e->skinnum / 255.0f) * 0.9f;
 	}

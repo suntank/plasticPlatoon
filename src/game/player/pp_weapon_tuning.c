@@ -207,7 +207,7 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		.frame_deactivate_last = 49
 	},
 
-	/* WEAP_PP_M16 - Replaces Chaingun */
+	/* WEAP_PP_M16 - M16 profile */
 	{
 		.id = WEAP_PP_M16,
 		.classname = "weapon_chaingun",
@@ -234,6 +234,45 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 			.scope_overlay = false
 		},
 		.bracing = { .enabled = false },
+		.pickup_ammo_amount = 60,
+		.frame_activate_last = 4,
+		.frame_fire_last = 31,
+		.frame_idle_last = 61,
+		.frame_deactivate_last = 64
+	},
+
+	/* WEAP_PP_M60 - Replaces Chaingun */
+	{
+		.id = WEAP_PP_M60,
+		.classname = "weapon_chaingun",
+		.ui_name = "M60",
+		.ammo_type = AMMO_HEAVY_ROUNDS,
+		.ammo_per_shot = 1,
+		.fire_mode_type = FIRE_MODE_HITSCAN,
+		.hitscan = {
+			.rate_rps = 10.0f,
+			.damage = 9,
+			.spread_base = 1.0f,
+			.bloom_per_shot = 0.1f,
+			.bloom_recover_rate = 0.9f,
+			.pellet_count = 1,
+			.hspread = DEFAULT_BULLET_HSPREAD,
+			.vspread = DEFAULT_BULLET_VSPREAD
+		},
+		.ads = {
+			.enabled = true,
+			.accuracy_multiplier = 0.2f,
+			.move_speed_scale = 0.25f,
+			.zoom_enabled = false,
+			.zoom_fov = 90.0f,
+			.scope_overlay = false
+		},
+		.bracing = {
+			.enabled = true,
+			.spread_standing_hip = 2.0f,
+			.spread_crouched_hip = 1.0f,
+			.spread_ads = 0.5f
+		},
 		.pickup_ammo_amount = 60,
 		.frame_activate_last = 4,
 		.frame_fire_last = 31,
@@ -527,7 +566,7 @@ PP_Weapon_Init(void)
 {
 	/* Register cvars */
 	sv_weapon_profile = gi.cvar("sv_weapon_profile", "default", CVAR_SERVERINFO);
-	sv_weapon_profile_dir = gi.cvar("sv_weapon_profile_dir", "plastic_platoon/tuning", 0);
+	sv_weapon_profile_dir = gi.cvar("sv_weapon_profile_dir", "tuning", 0);
 	sv_pure_weapons = gi.cvar("sv_pure_weapons", "1", CVAR_SERVERINFO);
 
 	/* Load defaults */
@@ -611,7 +650,7 @@ PP_Weapon_FromQ2Weapon(int q2_weapmodel)
 		case WEAP_SHOTGUN:        return WEAP_PP_SHOTGUN;
 		case WEAP_SUPERSHOTGUN:   return WEAP_PP_DOUBLE_BARREL;
 		case WEAP_MACHINEGUN:     return WEAP_PP_SMG;
-		case WEAP_CHAINGUN:       return WEAP_PP_M16;
+		case WEAP_CHAINGUN:       return WEAP_PP_M60;
 		case WEAP_HYPERBLASTER:   return WEAP_PP_FLAMETHROWER;
 		case WEAP_GRENADELAUNCHER: return WEAP_PP_GRENADE_LAUNCHER;
 		case WEAP_ROCKETLAUNCHER: return WEAP_PP_BAZOOKA;
@@ -1048,6 +1087,7 @@ PP_WeaponNameToId(const char *name)
 	if (strcmp(name, "DOUBLE_BARREL_SHOTGUN") == 0) return WEAP_PP_DOUBLE_BARREL;
 	if (strcmp(name, "SMG") == 0) return WEAP_PP_SMG;
 	if (strcmp(name, "M16") == 0) return WEAP_PP_M16;
+	if (strcmp(name, "M60") == 0) return WEAP_PP_M60;
 	if (strcmp(name, "M1_FLAMETHROWER") == 0) return WEAP_PP_FLAMETHROWER;
 	if (strcmp(name, "FLAMETHROWER") == 0) return WEAP_PP_FLAMETHROWER;
 	if (strcmp(name, "GRENADE_LAUNCHER") == 0) return WEAP_PP_GRENADE_LAUNCHER;
@@ -1107,7 +1147,7 @@ PP_ApplyFireModeOverrides(pp_hitscan_params_t *hitscan, json_value_t *fire_mode)
 	if (!hitscan || !fire_mode) return;
 
 	val = JSON_GetMember(fire_mode, "rate_rps");
-	if (val) hitscan->rate_rps = PP_ClampFloat(JSON_GetFloat(val, hitscan->rate_rps), 0.1f, 30.0f);
+	if (val) hitscan->rate_rps = PP_ClampFloat(JSON_GetFloat(val, hitscan->rate_rps), 0.1f, 1000.0f);
 
 	val = JSON_GetMember(fire_mode, "damage");
 	if (val) hitscan->damage = PP_ClampInt(JSON_GetInt(val, hitscan->damage), 0, 1000);
@@ -1301,6 +1341,7 @@ qboolean
 PP_Weapon_LoadProfile(const char *profile_name)
 {
 	char filepath[MAX_QPATH * 2];
+	char basedir_path[MAX_QPATH * 2];
 	char *file_content;
 	char json_error[256];
 	json_value_t *root;
@@ -1308,31 +1349,59 @@ PP_Weapon_LoadProfile(const char *profile_name)
 	json_value_t *ammo_caps;
 	json_value_t *weapon_overrides;
 	json_value_t *val;
+	int i;
 	int file_len;
+	const char *search_templates[] = {
+		"%s/%s.json",
+		"baseq2/%s/%s.json",
+		"release/baseq2/%s/%s.json",
+		"plastic_platoon/tuning/%s.json",
+		"baseq2/plastic_platoon/tuning/%s.json",
+		"release/baseq2/plastic_platoon/tuning/%s.json"
+	};
+	const int search_template_count = (int)(sizeof(search_templates) / sizeof(search_templates[0]));
 
 	if (!profile_name || !profile_name[0])
 	{
 		return false;
 	}
 
-	/* Build file path */
-	snprintf(filepath, sizeof(filepath), "%s/%s.json",
-		sv_weapon_profile_dir->string, profile_name);
+	file_content = NULL;
 
-	/* Try to read file */
-	file_content = PP_ReadFile(filepath, &file_len);
+	for (i = 0; i < search_template_count; i++)
+	{
+		if (strstr(search_templates[i], "%s/%s.json"))
+		{
+			snprintf(filepath, sizeof(filepath), search_templates[i],
+				sv_weapon_profile_dir->string, profile_name);
+		}
+		else
+		{
+			snprintf(filepath, sizeof(filepath), search_templates[i], profile_name);
+		}
+
+		file_content = PP_ReadFile(filepath, &file_len);
+		if (file_content)
+		{
+			break;
+		}
+	}
+
 	if (!file_content)
 	{
-		/* Try game directory */
-		snprintf(filepath, sizeof(filepath), "baseq2/%s/%s.json",
+		snprintf(basedir_path, sizeof(basedir_path), "%s/%s.json",
 			sv_weapon_profile_dir->string, profile_name);
-		file_content = PP_ReadFile(filepath, &file_len);
+		file_content = PP_ReadFile(basedir_path, &file_len);
 
 		if (!file_content)
 		{
 			return false;
 		}
+
+		Q_strlcpy(filepath, basedir_path, sizeof(filepath));
 	}
+
+	gi.dprintf("Loaded weapon profile file: %s\n", filepath);
 
 	/* Parse JSON */
 	root = JSON_Parse(file_content, json_error, sizeof(json_error));

@@ -533,6 +533,7 @@ typedef struct muzzle_flash_config_s {
 	float forward;
 	float right;
 	float up;
+	float ads_up; /* first-person ADS-only vertical offset override */
 	int scale;
 	int duration_ms;
 	float velocity_scale;
@@ -543,6 +544,7 @@ typedef struct muzzle_flash_config_s {
 	float flash2_forward;
 	float flash2_right;
 	float flash2_up;
+	float flash2_ads_up; /* first-person ADS-only vertical offset override */
 	int flash2_scale;
 	int flash2_duration_ms;
 	float flash2_velocity_scale;

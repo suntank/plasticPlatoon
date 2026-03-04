@@ -1620,6 +1620,9 @@ Chaingun_Fire(edict_t *ent)
 	int damage;
 	int kick = 2;
 	int hspread, vspread;
+	float rate_rps;
+	int shot_units;
+	int flash_shots;
 	float spread_mult;
 	const pp_weapon_params_t *params;
 
@@ -1628,24 +1631,23 @@ Chaingun_Fire(edict_t *ent)
 		return;
 	}
 
-	/* PP: Get tuned damage from M16 params */
-	params = PP_Weapon_GetParams(WEAP_PP_M16);
+	/* PP: Get tuned damage from M60 params */
+	params = PP_Weapon_GetParams(WEAP_PP_M60);
 	damage = params ? params->hitscan.damage : 8;
 
-	if (ent->client->ps.gunframe == 5)
+	if (!(ent->client->buttons & BUTTON_ATTACK))
 	{
 		gi.sound(ent, CHAN_AUTO, gi.soundindex(
-					"weapons/chngnu1a.wav"), 1, ATTN_IDLE, 0);
-	}
-
-	if ((ent->client->ps.gunframe == 14) &&
-		!(ent->client->buttons & BUTTON_ATTACK))
-	{
+					"weapons/m60end.wav"), 1, ATTN_IDLE, 0);
 		ent->client->ps.gunframe = 32;
+		ent->client->machinegun_shots = 0;
 		ent->client->weapon_sound = 0;
 		return;
 	}
-	else if ((ent->client->ps.gunframe == 21) &&
+
+	ent->client->weapon_sound = 0;
+
+	if ((ent->client->ps.gunframe == 21) &&
 			 (ent->client->buttons & BUTTON_ATTACK) &&
 			 ent->client->pers.inventory[ent->client->ammo_index])
 	{
@@ -1654,17 +1656,6 @@ Chaingun_Fire(edict_t *ent)
 	else
 	{
 		ent->client->ps.gunframe++;
-	}
-
-	if (ent->client->ps.gunframe == 22)
-	{
-		ent->client->weapon_sound = 0;
-		gi.sound(ent, CHAN_AUTO, gi.soundindex(
-					"weapons/chngnd1a.wav"), 1, ATTN_IDLE, 0);
-	}
-	else
-	{
-		ent->client->weapon_sound = gi.soundindex("weapons/chngnl1a.wav");
 	}
 
 	ent->client->anim_priority = ANIM_ATTACK;
@@ -1680,32 +1671,7 @@ Chaingun_Fire(edict_t *ent)
 		ent->client->anim_end = FRAME_attack8;
 	}
 
-	if (ent->client->ps.gunframe <= 9)
-	{
-		shots = 1;
-	}
-	else if (ent->client->ps.gunframe <= 14)
-	{
-		if (ent->client->buttons & BUTTON_ATTACK)
-		{
-			shots = 2;
-		}
-		else
-		{
-			shots = 1;
-		}
-	}
-	else
-	{
-		shots = 3;
-	}
-
-	if (ent->client->pers.inventory[ent->client->ammo_index] < shots)
-	{
-		shots = ent->client->pers.inventory[ent->client->ammo_index];
-	}
-
-	if (!shots)
+	if (ent->client->pers.inventory[ent->client->ammo_index] < 1)
 	{
 		if (level.time >= ent->pain_debounce_time)
 		{
@@ -1714,7 +1680,34 @@ Chaingun_Fire(edict_t *ent)
 			ent->pain_debounce_time = level.time + 1;
 		}
 
+		ent->client->machinegun_shots = 0;
 		NoAmmoWeaponChange(ent);
+		return;
+	}
+
+	rate_rps = (params && params->hitscan.rate_rps > 0.0f) ? params->hitscan.rate_rps : 9.0f;
+	shot_units = (int)(rate_rps * (FRAMETIME * 1000.0f));
+	ent->client->machinegun_shots += shot_units;
+	shots = ent->client->machinegun_shots / 1000;
+	ent->client->machinegun_shots -= shots * 1000;
+
+	if (shots <= 0)
+	{
+		return;
+	}
+
+	if (shots > 64)
+	{
+		shots = 64;
+	}
+
+	if (shots > ent->client->pers.inventory[ent->client->ammo_index])
+	{
+		shots = ent->client->pers.inventory[ent->client->ammo_index];
+	}
+
+	if (shots <= 0)
+	{
 		return;
 	}
 
@@ -1731,7 +1724,7 @@ Chaingun_Fire(edict_t *ent)
 	}
 
 	/* PP: Calculate spread with ADS and bloom modifiers */
-	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_M16);
+	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_M60);
 	hspread = (int)(DEFAULT_BULLET_HSPREAD * spread_mult);
 	vspread = (int)(DEFAULT_BULLET_VSPREAD * spread_mult);
 	VectorAdd(ent->client->v_angle, ent->client->kick_angles, angles);
@@ -1760,13 +1753,19 @@ Chaingun_Fire(edict_t *ent)
 		fire_bullet(ent, start, aimdir, damage, kick, hspread, vspread, MOD_CHAINGUN);
 
 		/* PP: Add bloom after each shot */
-		PP_Weapon_AddBloom(ent, WEAP_PP_M16);
+		PP_Weapon_AddBloom(ent, WEAP_PP_M60);
 	}
 
 	/* send muzzle flash */
+	flash_shots = shots;
+	if (flash_shots > 3)
+	{
+		flash_shots = 3;
+	}
+
 	gi.WriteByte(svc_muzzleflash);
 	gi.WriteShort(ent - g_edicts);
-	gi.WriteByte((MZ_CHAINGUN1 + shots - 1) | is_silenced);
+	gi.WriteByte((MZ_CHAINGUN1 + flash_shots - 1) | is_silenced);
 	gi.multicast(ent->s.origin, MULTICAST_PVS);
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);

@@ -465,6 +465,25 @@ CL_SpawnConeSprite(vec3_t spawn_origin, vec3_t forward, vec3_t right, vec3_t up,
 	ex->ent.angles[2] = 0;
 }
 
+static float
+CL_MFlashCodeToRenderScale(int code)
+{
+	int clamped = Q_clamp(code, 1, 255);
+
+	/* Legacy tuning decode used by existing JSON scale values. */
+	return 0.1f + ((float)clamped / 255.0f) * 0.9f;
+}
+
+static int
+CL_MFlashRenderScaleToSkinNum(float render_scale)
+{
+	float clamped = Q_clamp(render_scale, 0.0f, 1.0f);
+	int code = (int)lroundf(clamped * 255.0f);
+
+	/* Negative skinnum uses extended GL3 scale decoding path. */
+	return -Q_clamp(code, 1, 255);
+}
+
 /*
  * Spawn a muzzle flash sprite effect.
  * Creates multi-sprite cone flash (H+V planes) + optional billboard flash.
@@ -478,6 +497,8 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	float fwd_offset, right_offset, up_offset;
 	float vel_scale, duration;
 	float ads_size_scale = 1.0f;
+	float render_scale;
+	float flash2_render_scale;
 	int scale;
 	int flash2_scale;
 	muzzle_flash_config_t *cfg;
@@ -514,16 +535,21 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	fwd_offset = cfg->forward;
 	right_offset = cfg->right;
 	up_offset = cfg->up;
-	scale = cfg->scale;
+	if (!thirdperson && ads_active)
+	{
+		up_offset = cfg->ads_up;
+	}
 	duration = (float)cfg->duration_ms;
 	vel_scale = cfg->velocity_scale;
+	render_scale = CL_MFlashCodeToRenderScale(cfg->scale);
 
 	if (!thirdperson && ads_active)
 	{
 		ads_size_scale = CL_GetADSMuzzleFlashSizeScale();
-		scale = (int)(scale * ads_size_scale);
-		scale = Q_clamp(scale, 1, 255);
+		render_scale *= ads_size_scale;
 	}
+
+	scale = CL_MFlashRenderScaleToSkinNum(render_scale);
 
 	/* Calculate spawn position from origin + offsets */
 	VectorCopy(origin, spawn_origin);
@@ -560,14 +586,21 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 		VectorCopy(origin, spawn_origin2);
 		VectorMA(spawn_origin2, cfg->flash2_forward, forward, spawn_origin2);
 		VectorMA(spawn_origin2, cfg->flash2_right, right, spawn_origin2);
-		VectorMA(spawn_origin2, cfg->flash2_up, up, spawn_origin2);
-
-		flash2_scale = cfg->flash2_scale;
 		if (!thirdperson && ads_active)
 		{
-			flash2_scale = (int)(flash2_scale * ads_size_scale);
-			flash2_scale = Q_clamp(flash2_scale, 1, 255);
+			VectorMA(spawn_origin2, cfg->flash2_ads_up, up, spawn_origin2);
 		}
+		else
+		{
+			VectorMA(spawn_origin2, cfg->flash2_up, up, spawn_origin2);
+		}
+
+		flash2_render_scale = CL_MFlashCodeToRenderScale(cfg->flash2_scale);
+		if (!thirdperson && ads_active)
+		{
+			flash2_render_scale *= ads_size_scale;
+		}
+		flash2_scale = CL_MFlashRenderScaleToSkinNum(flash2_render_scale);
 
 		ex = CL_AllocExplosion();
 		ex->type = ex_mflash_billboard;

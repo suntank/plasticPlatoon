@@ -1951,7 +1951,7 @@ static const gitem_t gameitemlist[] = {
 		WEAP_CHAINGUN,
 		NULL,
 		0,
-		"weapons/chngnu1a.wav weapons/chngnl1a.wav weapons/machgf3b.wav` weapons/chngnd1a.wav"
+		"weapons/m601.wav weapons/m602.wav weapons/m603.wav weapons/m604.wav weapons/m605.wav"
 	},
 
 	/* QUAKED ammo_grenades (.3 .3 1) (-16 -16 -16) (16 16 16) */

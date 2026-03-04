@@ -415,6 +415,7 @@ CL_SetFirstPersonMuzzleFlashDefaults(muzzle_flash_config_t *cfg)
 	cfg->forward = 18.0f;
 	cfg->right = 8.0f;
 	cfg->up = 0.0f;
+	cfg->ads_up = cfg->up;
 	cfg->scale = 40;
 	cfg->duration_ms = 150;
 	cfg->velocity_scale = 0.15f;
@@ -424,6 +425,7 @@ CL_SetFirstPersonMuzzleFlashDefaults(muzzle_flash_config_t *cfg)
 	cfg->flash2_forward = 18.0f;
 	cfg->flash2_right = 8.0f;
 	cfg->flash2_up = 0.0f;
+	cfg->flash2_ads_up = cfg->flash2_up;
 	cfg->flash2_scale = 40;
 	cfg->flash2_duration_ms = 150;
 	cfg->flash2_velocity_scale = 0.15f;
@@ -472,6 +474,9 @@ CL_LoadMuzzleFlashPrimarySection(json_value_t *mflash, muzzle_flash_config_t *cf
 	if (JSON_GetMember(mflash, "up"))
 		cfg->up = JSON_GetFloat(JSON_GetMember(mflash, "up"), cfg->up);
 
+	if (JSON_GetMember(mflash, "ads_up"))
+		cfg->ads_up = JSON_GetFloat(JSON_GetMember(mflash, "ads_up"), cfg->ads_up);
+
 	if (JSON_GetMember(mflash, "scale"))
 		cfg->scale = JSON_GetInt(JSON_GetMember(mflash, "scale"), cfg->scale);
 
@@ -511,6 +516,9 @@ CL_LoadMuzzleFlashSecondarySection(json_value_t *mflash2, muzzle_flash_config_t 
 	if (JSON_GetMember(mflash2, "up"))
 		cfg->flash2_up = JSON_GetFloat(JSON_GetMember(mflash2, "up"), cfg->flash2_up);
 
+	if (JSON_GetMember(mflash2, "ads_up"))
+		cfg->flash2_ads_up = JSON_GetFloat(JSON_GetMember(mflash2, "ads_up"), cfg->flash2_ads_up);
+
 	if (JSON_GetMember(mflash2, "scale"))
 		cfg->flash2_scale = JSON_GetInt(JSON_GetMember(mflash2, "scale"), cfg->flash2_scale);
 
@@ -533,15 +541,33 @@ CL_LoadMuzzleFlashSecondarySection(json_value_t *mflash2, muzzle_flash_config_t 
 static void
 CL_LoadWeaponMuzzleFlashConfig(json_value_t *weapon_root, const char *weapon_name, int weapon_id)
 {
-	json_value_t *mflash, *mflash2, *mflash_thirdperson, *mflash2_thirdperson;
+	json_value_t *mflash, *mflash2, *mflash_ads, *mflash2_ads, *mflash_thirdperson, *mflash2_thirdperson;
 	json_value_t *thirdperson_root;
+	qboolean has_inline_ads_up = false;
+	qboolean has_inline_flash2_ads_up = false;
 	muzzle_flash_config_t *cfg_firstperson = &weapon_mflash_configs_firstperson[weapon_id];
 	muzzle_flash_config_t *cfg_thirdperson = &weapon_mflash_configs_thirdperson[weapon_id];
 
 	mflash = JSON_GetMember(weapon_root, "muzzle_flash");
 	mflash2 = JSON_GetMember(weapon_root, "muzzle_flash2");
+	mflash_ads = JSON_GetMember(weapon_root, "muzzle_flash_ads");
+	mflash2_ads = JSON_GetMember(weapon_root, "muzzle_flash2_ads");
+	has_inline_ads_up = (mflash && JSON_GetMember(mflash, "ads_up")) ? true : false;
+	has_inline_flash2_ads_up = (mflash2 && JSON_GetMember(mflash2, "ads_up")) ? true : false;
 	CL_LoadMuzzleFlashPrimarySection(mflash, cfg_firstperson);
 	CL_LoadMuzzleFlashSecondarySection(mflash2, cfg_firstperson);
+
+	if (!has_inline_ads_up)
+		cfg_firstperson->ads_up = cfg_firstperson->up;
+
+	if (!has_inline_flash2_ads_up)
+		cfg_firstperson->flash2_ads_up = cfg_firstperson->flash2_up;
+
+	if (mflash_ads && JSON_GetMember(mflash_ads, "up"))
+		cfg_firstperson->ads_up = JSON_GetFloat(JSON_GetMember(mflash_ads, "up"), cfg_firstperson->ads_up);
+
+	if (mflash2_ads && JSON_GetMember(mflash2_ads, "up"))
+		cfg_firstperson->flash2_ads_up = JSON_GetFloat(JSON_GetMember(mflash2_ads, "up"), cfg_firstperson->flash2_ads_up);
 
 	mflash_thirdperson = JSON_GetMember(weapon_root, "muzzle_flash_thirdperson");
 	mflash2_thirdperson = JSON_GetMember(weapon_root, "muzzle_flash2_thirdperson");
@@ -718,7 +744,7 @@ CL_InitMuzzleFlashCvars(void)
 	cl_mflash_tune_target_up = Cvar_Get("cl_mflash_tune_target_up", "24", CVAR_ARCHIVE);
 	cl_mflash_tune_lookat = Cvar_Get("cl_mflash_tune_lookat", "1", CVAR_ARCHIVE);
 	cl_mflash_tune_show_viewmodel = Cvar_Get("cl_mflash_tune_show_viewmodel", "0", CVAR_ARCHIVE);
-	cl_mflash_ads_size_scale = Cvar_Get("cl_mflash_ads_size_scale", "0.5", CVAR_ARCHIVE);
+	cl_mflash_ads_size_scale = Cvar_Get("cl_mflash_ads_size_scale", "0.6", CVAR_ARCHIVE);
 
 	/* Load from JSON tuning file (overrides defaults) */
 	CL_LoadMuzzleFlashConfig();
@@ -842,7 +868,7 @@ CL_AddMuzzleFlash(void)
 			dl->color[0] = 1;
 			dl->color[1] = 0.25;
 			dl->color[2] = 0;
-			Com_sprintf(soundname, sizeof(soundname), "weapons/machgf%db.wav",
+			Com_sprintf(soundname, sizeof(soundname), "weapons/m60%d.wav",
 				(randk() % 5) + 1);
 			S_StartSound(NULL, i, CHAN_WEAPON, S_RegisterSound(
 						soundname), volume, ATTN_NORM, 0);
@@ -853,11 +879,11 @@ CL_AddMuzzleFlash(void)
 			dl->color[1] = 0.5;
 			dl->color[2] = 0;
 			dl->die = cl.time + 0.1;  /* long delay */
-			Com_sprintf(soundname, sizeof(soundname), "weapons/machgf%db.wav",
+			Com_sprintf(soundname, sizeof(soundname), "weapons/m60%d.wav",
 				(randk() % 5) + 1);
 			S_StartSound(NULL, i, CHAN_WEAPON, S_RegisterSound(
 						soundname), volume, ATTN_NORM, 0);
-			Com_sprintf(soundname, sizeof(soundname), "weapons/machgf%db.wav",
+			Com_sprintf(soundname, sizeof(soundname), "weapons/m60%d.wav",
 				(randk() % 5) + 1);
 			S_StartSound(NULL, i, CHAN_WEAPON, S_RegisterSound(
 						soundname), volume, ATTN_NORM, 0.05);
@@ -868,15 +894,15 @@ CL_AddMuzzleFlash(void)
 			dl->color[1] = 1;
 			dl->color[2] = 0;
 			dl->die = cl.time + 0.1;  /* long delay */
-			Com_sprintf(soundname, sizeof(soundname), "weapons/machgf%db.wav",
+			Com_sprintf(soundname, sizeof(soundname), "weapons/m60%d.wav",
 				(randk() % 5) + 1);
 			S_StartSound(NULL, i, CHAN_WEAPON, S_RegisterSound(
 						soundname), volume, ATTN_NORM, 0);
-			Com_sprintf(soundname, sizeof(soundname), "weapons/machgf%db.wav",
+			Com_sprintf(soundname, sizeof(soundname), "weapons/m60%d.wav",
 				(randk() % 5) + 1);
 			S_StartSound(NULL, i, CHAN_WEAPON, S_RegisterSound(
 						soundname), volume, ATTN_NORM, 0.033f);
-			Com_sprintf(soundname, sizeof(soundname), "weapons/machgf%db.wav",
+			Com_sprintf(soundname, sizeof(soundname), "weapons/m60%d.wav",
 				(randk() % 5) + 1);
 			S_StartSound(NULL, i, CHAN_WEAPON, S_RegisterSound(
 						soundname), volume, ATTN_NORM, 0.066f);

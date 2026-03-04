@@ -59,7 +59,8 @@ typedef enum {
 	WEAP_PP_SHOTGUN,             /* Replaces Shotgun */
 	WEAP_PP_DOUBLE_BARREL,       /* Replaces Super Shotgun */
 	WEAP_PP_SMG,                 /* Replaces Machinegun */
-	WEAP_PP_M16,                 /* Replaces Chaingun */
+	WEAP_PP_M16,                 /* M16 profile */
+	WEAP_PP_M60,                 /* Replaces Chaingun */
 	WEAP_PP_FLAMETHROWER,        /* Replaces Hyperblaster */
 	WEAP_PP_GRENADE_LAUNCHER,    /* Replaces Grenade Launcher */
 	WEAP_PP_BAZOOKA,             /* Replaces Rocket Launcher */
