@@ -1858,7 +1858,7 @@ static const gitem_t gameitemlist[] = {
 		"Pistol",
 		0,
 		1,
-		"Bullets",
+		NULL,
 		IT_WEAPON | IT_STAY_COOP,
 		WEAP_BLASTER,
 		NULL,
