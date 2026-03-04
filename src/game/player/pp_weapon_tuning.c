@@ -674,6 +674,21 @@ PP_Weapon_GetSpreadMultiplier(edict_t *ent, pp_weapon_id_t weapon_id)
 	/* Base spread from weapon */
 	spread = params->hitscan.spread_base;
 
+	/* Crouch bonus applies to bullet weapons (pistol/SMG/M16), not sniper. */
+	if (is_crouched)
+	{
+		switch (weapon_id)
+		{
+			case WEAP_PP_PISTOL:
+			case WEAP_PP_SMG:
+			case WEAP_PP_M16:
+				spread *= 0.67f; /* 33% tighter spread */
+				break;
+			default:
+				break;
+		}
+	}
+
 	/* M60 bracing special case */
 	if (params->bracing.enabled)
 	{

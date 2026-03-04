@@ -56,6 +56,7 @@ cvar_t *cl_mflash_tune_cam_up; /* Vertical camera offset in tune mode */
 cvar_t *cl_mflash_tune_target_up; /* Vertical target offset when camera looks at player */
 cvar_t *cl_mflash_tune_lookat; /* Look-at player target when tune camera is active */
 cvar_t *cl_mflash_tune_show_viewmodel; /* Draw first-person weapon model in tune mode */
+cvar_t *cl_mflash_ads_size_scale; /* ADS-only first-person muzzle flash size multiplier */
 
 static vec3_t avelocities[NUMVERTEXNORMALS];
 extern struct model_s *cl_mod_smoke;
@@ -672,6 +673,24 @@ CL_GetMuzzleFlashConfig(int weapon, qboolean thirdperson)
 	return &weapon_mflash_configs_firstperson[weapon];
 }
 
+float
+CL_GetADSMuzzleFlashSizeScale(void)
+{
+	float scale = 1.0f;
+
+	if (cl_mflash_ads_size_scale)
+	{
+		scale = cl_mflash_ads_size_scale->value;
+	}
+
+	if (scale < 0.1f)
+	{
+		scale = 0.1f;
+	}
+
+	return scale;
+}
+
 /*
  * Initialize muzzle flash cvars and load from JSON
  */
@@ -699,6 +718,7 @@ CL_InitMuzzleFlashCvars(void)
 	cl_mflash_tune_target_up = Cvar_Get("cl_mflash_tune_target_up", "24", CVAR_ARCHIVE);
 	cl_mflash_tune_lookat = Cvar_Get("cl_mflash_tune_lookat", "1", CVAR_ARCHIVE);
 	cl_mflash_tune_show_viewmodel = Cvar_Get("cl_mflash_tune_show_viewmodel", "0", CVAR_ARCHIVE);
+	cl_mflash_ads_size_scale = Cvar_Get("cl_mflash_ads_size_scale", "0.5", CVAR_ARCHIVE);
 
 	/* Load from JSON tuning file (overrides defaults) */
 	CL_LoadMuzzleFlashConfig();
@@ -1010,15 +1030,34 @@ CL_AddMuzzleFlash(void)
 		qboolean local_player = (i == cl.playernum + 1);
 		qboolean tune_local_as_thirdperson = local_player && cl_mflash_tune_mode &&
 			(cl_mflash_tune_mode->value > 0.0f);
+		qboolean ads_active = false;
 
 		/* For local player, use actual view position (accounts for crouch, view bob, etc) */
 		if (local_player && !tune_local_as_thirdperson)
 		{
+			muzzle_flash_config_t *cfg;
+			float ads_center_right = 8.0f;
+			const float ads_down = 0.0f;
+
 			VectorCopy(cl.refdef.vieworg, mflash_origin);
 			AngleVectors(cl.refdef.viewangles, mflash_fv, mflash_rv, mflash_uv);
 			mflash_velocity[0] = (float)cl.frame.playerstate.pmove.velocity[0] * vel_scale;
 			mflash_velocity[1] = (float)cl.frame.playerstate.pmove.velocity[1] * vel_scale;
 			mflash_velocity[2] = (float)cl.frame.playerstate.pmove.velocity[2] * vel_scale;
+
+			ads_active = CL_IsADSActive();
+			if (ads_active)
+			{
+				cfg = CL_GetMuzzleFlashConfig(weapon, false);
+				if (cfg)
+				{
+					ads_center_right = cfg->right;
+				}
+
+				/* Re-anchor first-person muzzle flash to centered ADS weapon overlay and lower it. */
+				VectorMA(mflash_origin, -ads_center_right, mflash_rv, mflash_origin);
+				VectorMA(mflash_origin, -ads_down, mflash_uv, mflash_origin);
+			}
 		}
 		else
 		{
@@ -1097,7 +1136,7 @@ CL_AddMuzzleFlash(void)
 		}
 
 		CL_SpawnMuzzleFlashSprite(mflash_origin, mflash_fv, mflash_rv, mflash_uv,
-			mflash_velocity, weapon, (!local_player || tune_local_as_thirdperson));
+			mflash_velocity, weapon, (!local_player || tune_local_as_thirdperson), ads_active);
 	}
 }
 

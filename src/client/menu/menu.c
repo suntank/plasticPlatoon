@@ -5843,11 +5843,9 @@ static menufield_s s_player_name_field;
 static menubitmap_s s_player_icon_bitmap;
 static menulist_s s_player_model_box;
 static menulist_s s_player_skin_box;
-static menulist_s s_player_handedness_box;
 static menulist_s s_player_rate_box;
 static menuseparator_s s_player_skin_title;
 static menuseparator_s s_player_model_title;
-static menuseparator_s s_player_hand_title;
 static menuseparator_s s_player_rate_title;
 static menuaction_s s_player_download_action;
 
@@ -5872,12 +5870,6 @@ static void
 DownloadOptionsFunc(void *self)
 {
 	M_Menu_DownloadOptions_f();
-}
-
-static void
-HandednessCallback(void *unused)
-{
-	Cvar_SetValue("hand", (float)s_player_handedness_box.curvalue);
 }
 
 static void
@@ -6511,8 +6503,6 @@ PlayerConfig_MenuInit(void)
 {
 	extern cvar_t *name;
 	const extern cvar_t *skin;
-	cvar_t *hand = Cvar_Get( "hand", "0", CVAR_USERINFO | CVAR_ARCHIVE );
-	static const char *handedness[] = { "right", "left", "center", 0 };
 	char mdlname[MAX_QPATH];
 	char imgname[MAX_QPATH];
 	int mdlindex = 0;
@@ -6556,11 +6546,6 @@ PlayerConfig_MenuInit(void)
 			imgindex = i;
 			break;
 		}
-	}
-
-	if (hand->value < 0 || hand->value > 2)
-	{
-		Cvar_SetValue("hand", 0);
 	}
 
 	s_player_config_menu.x = viddef.width / 2 - 95 * scale;
@@ -6613,20 +6598,6 @@ PlayerConfig_MenuInit(void)
 	s_player_skin_box.curvalue = imgindex;
 	s_player_skin_box.itemnames = (const char **)s_skinnames[mdlindex].data;
 
-	s_player_hand_title.generic.type = MTYPE_SEPARATOR;
-	s_player_hand_title.generic.name = "handedness";
-	s_player_hand_title.generic.x = 32 * scale;
-	s_player_hand_title.generic.y = 108;
-
-	s_player_handedness_box.generic.type = MTYPE_SPINCONTROL;
-	s_player_handedness_box.generic.x = -56 * scale;
-	s_player_handedness_box.generic.y = 118;
-	s_player_handedness_box.generic.name = 0;
-	s_player_handedness_box.generic.cursor_offset = -48;
-	s_player_handedness_box.generic.callback = HandednessCallback;
-	s_player_handedness_box.curvalue = ClampCvar(0, 2, hand->value);
-	s_player_handedness_box.itemnames = handedness;
-
 	for (i = 0; i < ARRLEN(rate_tbl) - 1; i++)
 	{
 		if (Cvar_VariableValue("rate") == rate_tbl[i])
@@ -6668,8 +6639,6 @@ PlayerConfig_MenuInit(void)
 		Menu_AddItem(&s_player_config_menu, &s_player_skin_box);
 	}
 
-	Menu_AddItem(&s_player_config_menu, &s_player_hand_title);
-	Menu_AddItem(&s_player_config_menu, &s_player_handedness_box);
 	Menu_AddItem(&s_player_config_menu, &s_player_rate_title);
 	Menu_AddItem(&s_player_config_menu, &s_player_rate_box);
 	Menu_AddItem(&s_player_config_menu, &s_player_download_action);

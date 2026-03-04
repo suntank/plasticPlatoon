@@ -1899,13 +1899,9 @@ ClientUserinfoChanged(edict_t *ent, char *userinfo)
 		}
 	}
 
-	/* handedness */
-	s = Info_ValueForKey(userinfo, "hand");
-
-	if (strlen(s))
-	{
-		ent->client->pers.hand = (int)strtol(s, (char **)NULL, 10);
-	}
+	/* Handedness is locked to right-handed for Plastic Platoon. */
+	Info_SetValueForKey(userinfo, "hand", "0");
+	ent->client->pers.hand = RIGHT_HANDED;
 
 	/* save off the userinfo in case we want to check something later */
 	Q_strlcpy(ent->client->pers.userinfo, userinfo, sizeof(ent->client->pers.userinfo));

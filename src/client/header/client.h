@@ -437,6 +437,7 @@ void CL_ParseTEnt (void);
 void CL_AddMuzzleFlash (void);
 void CL_AddMuzzleFlash2 (void);
 extern int pp_viewmodel_muzzle_seq;
+float CL_GetADSMuzzleFlashSizeScale(void);
 
 void CL_SetLightstyle (int i);
 
@@ -549,7 +550,7 @@ typedef struct muzzle_flash_config_s {
 } muzzle_flash_config_t;
 
 void CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up,
-	vec3_t velocity, int weapon, qboolean thirdperson);
+	vec3_t velocity, int weapon, qboolean thirdperson, qboolean ads_active);
 void CL_InitMuzzleFlashCvars(void);
 muzzle_flash_config_t *CL_GetMuzzleFlashConfig(int weapon, qboolean thirdperson);
 void CL_MFlashTune_RegisterCommands(void);

@@ -69,7 +69,12 @@ P_ProjectSource(edict_t *ent, vec3_t distance,
 
 	VectorCopy(distance, _distance);
 
-	if (client->pers.hand == LEFT_HANDED)
+	if (client->weapon_state.ads_active)
+	{
+		/* ADS always uses centered projectile emission. */
+		_distance[1] = 0;
+	}
+	else if (client->pers.hand == LEFT_HANDED)
 	{
 		_distance[1] *= -1;
 	}
@@ -996,6 +1001,7 @@ weapon_grenadelauncher_fire(edict_t *ent)
 	vec3_t forward, right;
 	vec3_t start;
 	int damage = 120;
+	int projectile_speed = 600;
 	float radius;
 
 	if (!ent)
@@ -1017,7 +1023,12 @@ weapon_grenadelauncher_fire(edict_t *ent)
 	VectorScale(forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -1;
 
-	fire_grenade(ent, start, forward, damage, 600, 2.5, radius);
+	if (ent->client->weapon_state.ads_active)
+	{
+		projectile_speed = (int)(projectile_speed * 1.5f);
+	}
+
+	fire_grenade(ent, start, forward, damage, projectile_speed, 2.5, radius);
 
 	gi.WriteByte(svc_muzzleflash);
 	gi.WriteShort(ent - g_edicts);
@@ -1346,6 +1357,7 @@ Weapon_HyperBlaster_Fire(edict_t *ent)
 {
 	vec3_t start, forward, right, offset;
 	int damage = 25;
+	int flame_speed = 600;
 
 	if (!ent)
 	{
@@ -1386,7 +1398,12 @@ Weapon_HyperBlaster_Fire(edict_t *ent)
 			VectorSet(offset, 24, 8, ent->viewheight - 8);
 			P_ProjectSource(ent, offset, forward, right, start);
 
-			fire_flame(ent, start, forward, damage, 600);
+			if (ent->client->weapon_state.ads_active)
+			{
+				flame_speed = (int)(flame_speed * 1.5f);
+			}
+
+			fire_flame(ent, start, forward, damage, flame_speed);
 
 			/* Muzzle flash */
 			gi.WriteByte(svc_muzzleflash);
@@ -2085,6 +2102,7 @@ weapon_bfg_fire(edict_t *ent)
 	vec3_t offset, start, forward, right;
 	float damage_radius = 480;
 	int damage;
+	int projectile_speed = 650;
 
 	if (!ent)
 	{
@@ -2130,7 +2148,12 @@ weapon_bfg_fire(edict_t *ent)
 	gi.WriteByte(MZ_ROCKET | is_silenced);
 	gi.multicast(ent->s.origin, MULTICAST_PVS);
 
-	fire_mortar(ent, start, forward, damage, 650, 10.0f, damage_radius);
+	if (ent->client->weapon_state.ads_active)
+	{
+		projectile_speed = (int)(projectile_speed * 1.5f);
+	}
+
+	fire_mortar(ent, start, forward, damage, projectile_speed, 10.0f, damage_radius);
 
 	ent->client->ps.gunframe++;
 

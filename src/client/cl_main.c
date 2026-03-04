@@ -612,7 +612,7 @@ CL_InitLocal(void)
 	name = Cvar_Get("name", "unnamed", CVAR_USERINFO | CVAR_ARCHIVE);
 	skin = Cvar_Get("skin", "male/grunt", CVAR_USERINFO | CVAR_ARCHIVE);
 	rate = Cvar_Get("rate", "8000", CVAR_USERINFO | CVAR_ARCHIVE);
-	hand = Cvar_Get("hand", "0", CVAR_USERINFO | CVAR_ARCHIVE);
+	hand = Cvar_FullSet("hand", "0", CVAR_USERINFO | CVAR_ARCHIVE | CVAR_NOSET);
 	fov = Cvar_Get("fov", "90", CVAR_USERINFO | CVAR_ARCHIVE);
 	horplus = Cvar_Get("horplus", "1", CVAR_ARCHIVE);
 	windowed_mouse = Cvar_Get("windowed_mouse", "1", CVAR_USERINFO | CVAR_ARCHIVE);

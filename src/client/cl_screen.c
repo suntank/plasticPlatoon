@@ -1502,24 +1502,65 @@ static void
 SCR_DrawADSOverlay(void)
 {
 	const char *overlay_pic;
+	static int ads_last_muzzle_seq = 0;
+	static float ads_kick_offset = 0.0f;
+	const float ads_kick_impulse = 20.0f;
+	const float ads_kick_return_speed = 68.0f;
+	const float ads_kick_max = 40.0f;
+	qboolean kick_enabled;
+	int kick_y = 0;
 
 	if (!CL_IsADSActive())
 	{
+		ads_kick_offset = 0.0f;
+		ads_last_muzzle_seq = pp_viewmodel_muzzle_seq;
 		return;
 	}
 
 	overlay_pic = CL_GetADSOverlayPicName();
 	if (!overlay_pic)
 	{
+		ads_kick_offset = 0.0f;
+		ads_last_muzzle_seq = pp_viewmodel_muzzle_seq;
 		return;
 	}
 
 	if (!Draw_FindPic(overlay_pic))
 	{
+		ads_kick_offset = 0.0f;
+		ads_last_muzzle_seq = pp_viewmodel_muzzle_seq;
 		return;
 	}
 
-	Draw_StretchPic(0, 0, viddef.width, viddef.height, overlay_pic);
+	kick_enabled = Q_stricmp(overlay_pic, "ads_railgun.png") != 0;
+
+	if (kick_enabled)
+	{
+		if (pp_viewmodel_muzzle_seq != ads_last_muzzle_seq)
+		{
+			ads_kick_offset += ads_kick_impulse;
+			if (ads_kick_offset > ads_kick_max)
+			{
+				ads_kick_offset = ads_kick_max;
+			}
+		}
+
+		ads_kick_offset -= ads_kick_return_speed * cls.rframetime;
+		if (ads_kick_offset < 0.0f)
+		{
+			ads_kick_offset = 0.0f;
+		}
+
+		kick_y = (int)(ads_kick_offset + 0.5f);
+	}
+	else
+	{
+		ads_kick_offset = 0.0f;
+	}
+
+	ads_last_muzzle_seq = pp_viewmodel_muzzle_seq;
+
+	Draw_StretchPic(0, kick_y, viddef.width, viddef.height, overlay_pic);
 	SCR_AddDirtyPoint(0, 0);
 	SCR_AddDirtyPoint(viddef.width - 1, viddef.height - 1);
 }

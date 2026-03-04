@@ -472,12 +472,14 @@ CL_SpawnConeSprite(vec3_t spawn_origin, vec3_t forward, vec3_t right, vec3_t up,
  */
 void
 CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up,
-	vec3_t velocity, int weapon, qboolean thirdperson)
+	vec3_t velocity, int weapon, qboolean thirdperson, qboolean ads_active)
 {
 	vec3_t spawn_origin, spawn_origin2;
 	float fwd_offset, right_offset, up_offset;
 	float vel_scale, duration;
+	float ads_size_scale = 1.0f;
 	int scale;
+	int flash2_scale;
 	muzzle_flash_config_t *cfg;
 	explosion_t *ex;
 	struct model_s *cone_model = NULL;
@@ -516,6 +518,13 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	duration = (float)cfg->duration_ms;
 	vel_scale = cfg->velocity_scale;
 
+	if (!thirdperson && ads_active)
+	{
+		ads_size_scale = CL_GetADSMuzzleFlashSizeScale();
+		scale = (int)(scale * ads_size_scale);
+		scale = Q_clamp(scale, 1, 255);
+	}
+
 	/* Calculate spawn position from origin + offsets */
 	VectorCopy(origin, spawn_origin);
 	VectorMA(spawn_origin, fwd_offset, forward, spawn_origin);
@@ -553,6 +562,13 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 		VectorMA(spawn_origin2, cfg->flash2_right, right, spawn_origin2);
 		VectorMA(spawn_origin2, cfg->flash2_up, up, spawn_origin2);
 
+		flash2_scale = cfg->flash2_scale;
+		if (!thirdperson && ads_active)
+		{
+			flash2_scale = (int)(flash2_scale * ads_size_scale);
+			flash2_scale = Q_clamp(flash2_scale, 1, 255);
+		}
+
 		ex = CL_AllocExplosion();
 		ex->type = ex_mflash_billboard;
 		ex->ent.flags = RF_FULLBRIGHT | RF_TRANSLUCENT | RF_NOSHADOW;
@@ -570,7 +586,7 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 
 		ex->start = cl.time;
 		ex->duration = (float)cfg->flash2_duration_ms;
-		ex->ent.skinnum = cfg->flash2_scale;
+		ex->ent.skinnum = flash2_scale;
 		ex->ent.alpha = 0.95f;
 		ex->ent.frame = 0;
 	}
