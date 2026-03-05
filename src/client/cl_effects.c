@@ -910,9 +910,9 @@ CL_AddMuzzleFlash(void)
 						soundname), volume, ATTN_NORM, 0.066f);
 			break;
 		case MZ_RAILGUN:
-			dl->color[0] = 0.5;
-			dl->color[1] = 0.5;
-			dl->color[2] = 1.0;
+			dl->color[0] = 1;
+			dl->color[1] = 1;
+			dl->color[2] = 0;
 			S_StartSound(NULL, i, CHAN_WEAPON,
 				S_RegisterSound("weapons/railgf1a.wav"), volume, ATTN_NORM, 0);
 			break;
@@ -935,9 +935,9 @@ CL_AddMuzzleFlash(void)
 				S_RegisterSound("weapons/grenlr1b.wav"), volume, ATTN_NORM, 0.1f);
 			break;
 		case MZ_BFG:
-			dl->color[0] = 0;
-			dl->color[1] = 1;
-			dl->color[2] = 0;
+			dl->color[0] = 1;
+			dl->color[1] = 0.5;
+			dl->color[2] = 0.2;
 			S_StartSound(NULL, i, CHAN_WEAPON,
 				S_RegisterSound("weapons/bfg__f1y.wav"), volume, ATTN_NORM, 0);
 			break;

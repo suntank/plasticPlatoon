@@ -2144,7 +2144,7 @@ weapon_bfg_fire(edict_t *ent)
 	/* send muzzle flash */
 	gi.WriteByte(svc_muzzleflash);
 	gi.WriteShort(ent - g_edicts);
-	gi.WriteByte(MZ_ROCKET | is_silenced);
+	gi.WriteByte(MZ_BFG | is_silenced);
 	gi.multicast(ent->s.origin, MULTICAST_PVS);
 
 	if (ent->client->weapon_state.ads_active)

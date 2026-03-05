@@ -111,6 +111,7 @@ static struct sfx_s *cl_sfx_footsteps[NUM_FOOTSTEP_SFX];
 
 static struct sfx_s *cl_sfx_lightning;
 static struct sfx_s *cl_sfx_disrexp;
+static struct sfx_s *cl_sfx_mortar_explode;
 
 /* models */
 static struct model_s *cl_mod_explode;
@@ -272,6 +273,7 @@ CL_RegisterTEntSounds(void)
 
 	cl_sfx_lightning = S_RegisterSound("weapons/tesla.wav");
 	cl_sfx_disrexp = S_RegisterSound("weapons/disrupthit.wav");
+	cl_sfx_mortar_explode = S_RegisterSound("weapons/mortar_explode.wav");
 }
 
 void
@@ -336,6 +338,7 @@ CL_ClearTEntSoundVars(void)
 
 	cl_sfx_lightning = NULL;
 	cl_sfx_disrexp = NULL;
+	cl_sfx_mortar_explode = NULL;
 }
 
 static void
@@ -986,7 +989,7 @@ CL_ParseTEnt(void)
 				ex->type = ex_free;
 			}
 
-			S_StartSound(pos, 0, 0, cl_sfx_rockexp, 1, ATTN_NORM, 0);
+			S_StartSound(pos, 0, 0, cl_sfx_mortar_explode, 1, ATTN_NORM, 0);
 			break;
 
 		case TE_GUNSHOT: /* bullet hitting wall */
