@@ -25,6 +25,7 @@
  */
 
 #include "header/client.h"
+#include "cl_splitscreen.h"
 #include "../client/sound/header/local.h"
 
 void CL_ParseStatusMessage(void);
@@ -353,6 +354,7 @@ CL_Disconnect(void)
 #endif
 
 	cls.state = ca_disconnected;
+	SS_EndSession();
 
 	snd_is_underwater = false;
 
@@ -760,6 +762,8 @@ CL_ReadPackets(void)
 		CL_ParseServerMessage();
 	}
 
+	SS_RunLocalClients();
+
 	/* check timeout */
 	if ((cls.state >= ca_connected) &&
 		(cls.realtime - cls.netchan.last_received > cl_timeout->value * 1000))
@@ -777,4 +781,3 @@ CL_ReadPackets(void)
 		cl.timeoutcount = 0;
 	}
 }
-

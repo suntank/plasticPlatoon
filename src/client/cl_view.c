@@ -30,6 +30,7 @@
 /* development tools for weapons */
 int gun_frame;
 struct model_s *gun_model;
+qboolean cl_skip_view_weapon;
 
 cvar_t *crosshair;
 cvar_t *crosshair_3d;
@@ -649,4 +650,3 @@ V_Init(void)
 
 	cl_stats = Cvar_Get("cl_stats", "0", 0);
 }
-

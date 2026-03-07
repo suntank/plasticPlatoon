@@ -54,6 +54,7 @@ typedef struct
 {
 	byte data[MAX_MSGLEN];
 	int datalen;
+	netadr_t from;
 } loopmsg_t;
 
 typedef struct
@@ -62,7 +63,10 @@ typedef struct
 	int get, send;
 } loopback_t;
 
-loopback_t loopbacks[2];
+static loopback_t loopbacks[2][MAX_LOOPBACK_CLIENTS];
+static int loopback_client_count = 1;
+static int loopback_slots[2];
+static int loopback_server_scan;
 int ip_sockets[2];
 int ip6_sockets[2];
 int ipx_sockets[2];
@@ -70,6 +74,85 @@ char *multicast_interface = NULL;
 
 static int NET_Socket(char *net_interface, int port, netsrc_t type, int family);
 static const char *NET_ErrorString(void);
+
+static int
+NET_ClampLoopbackClientCount(int count)
+{
+	if (count < 1)
+	{
+		return 1;
+	}
+
+	if (count > MAX_LOOPBACK_CLIENTS)
+	{
+		return MAX_LOOPBACK_CLIENTS;
+	}
+
+	return count;
+}
+
+static int
+NET_ClampLoopbackSlot(int slot)
+{
+	if (slot < 0)
+	{
+		return 0;
+	}
+
+	if (slot >= loopback_client_count)
+	{
+		return loopback_client_count - 1;
+	}
+
+	return slot;
+}
+
+static netadr_t
+NET_LoopbackServerAdr(void)
+{
+	netadr_t adr;
+
+	memset(&adr, 0, sizeof(adr));
+	adr.type = NA_LOOPBACK;
+	adr.port = htons(0);
+	return adr;
+}
+
+static netadr_t
+NET_LoopbackClientAdr(int slot)
+{
+	netadr_t adr;
+
+	memset(&adr, 0, sizeof(adr));
+	adr.type = NA_LOOPBACK;
+	adr.port = htons(NET_ClampLoopbackSlot(slot) + 1);
+	return adr;
+}
+
+static int
+NET_LoopbackSlotForAdr(netadr_t adr)
+{
+	int slot;
+
+	if (adr.type != NA_LOOPBACK)
+	{
+		return 0;
+	}
+
+	if (ntohs(adr.port) <= 0)
+	{
+		return 0;
+	}
+
+	slot = ntohs(adr.port) - 1;
+
+	if (slot < 0 || slot >= loopback_client_count)
+	{
+		return 0;
+	}
+
+	return slot;
+}
 
 static void
 NetadrToSockadr(netadr_t *a, struct sockaddr_storage *s)
@@ -199,7 +282,7 @@ NET_CompareAdr(netadr_t a, netadr_t b)
 
 	if (a.type == NA_LOOPBACK)
 	{
-		return true;
+		return a.port == b.port;
 	}
 
 	if (a.type == NA_IP)
@@ -235,7 +318,7 @@ NET_CompareBaseAdr(netadr_t a, netadr_t b)
 
 	if (a.type == NA_LOOPBACK)
 	{
-		return true;
+		return a.port == b.port;
 	}
 
 	if (a.type == NA_IP)
@@ -282,9 +365,19 @@ NET_BaseAdrToString(netadr_t a)
 	switch (a.type)
 	{
 		case NA_IP:
-		case NA_LOOPBACK:
 			Com_sprintf(s, sizeof(s), "%i.%i.%i.%i", a.ip[0],
 				a.ip[1], a.ip[2], a.ip[3]);
+			break;
+
+		case NA_LOOPBACK:
+			if (ntohs(a.port) <= 0)
+			{
+				Com_sprintf(s, sizeof(s), "loopback");
+			}
+			else
+			{
+				Com_sprintf(s, sizeof(s), "loopback-client%i", ntohs(a.port));
+			}
 			break;
 
 		case NA_BROADCAST:
@@ -450,7 +543,7 @@ NET_StringToAdr(const char *s, netadr_t *a)
 
 	if (!strcmp(s, "localhost"))
 	{
-		a->type = NA_LOOPBACK;
+		*a = NET_LoopbackServerAdr();
 		return true;
 	}
 
@@ -467,6 +560,11 @@ NET_StringToAdr(const char *s, netadr_t *a)
 qboolean
 NET_IsLocalAddress(netadr_t adr)
 {
+	if (adr.type == NA_LOOPBACK)
+	{
+		return true;
+	}
+
 	return NET_CompareAdr(adr, net_local_adr);
 }
 
@@ -474,27 +572,55 @@ static qboolean
 NET_GetLoopPacket(netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 {
 	int i;
-	loopback_t *loop;
+	int slot;
+	int start_slot;
+	int slot_count;
 
-	loop = &loopbacks[sock];
+	slot_count = NET_ClampLoopbackClientCount(loopback_client_count);
 
-	if (loop->send - loop->get > MAX_LOOPBACK)
+	if (sock == NS_CLIENT)
 	{
-		loop->get = loop->send - MAX_LOOPBACK;
+		start_slot = NET_ClampLoopbackSlot(loopback_slots[sock]);
+		slot_count = 1;
+	}
+	else
+	{
+		start_slot = loopback_server_scan;
 	}
 
-	if (loop->get >= loop->send)
+	for (slot = 0; slot < slot_count; ++slot)
 	{
-		return false;
+		loopback_t *loop;
+		int queue_slot = (start_slot + slot) % NET_ClampLoopbackClientCount(loopback_client_count);
+
+		loop = &loopbacks[sock][queue_slot];
+
+		if (loop->send - loop->get > MAX_LOOPBACK)
+		{
+			loop->get = loop->send - MAX_LOOPBACK;
+		}
+
+		if (loop->get >= loop->send)
+		{
+			continue;
+		}
+
+		i = loop->get & (MAX_LOOPBACK - 1);
+		loop->get++;
+
+		memcpy(net_message->data, loop->msgs[i].data, loop->msgs[i].datalen);
+		net_message->cursize = loop->msgs[i].datalen;
+		*net_from = loop->msgs[i].from;
+
+		if (sock == NS_SERVER)
+		{
+			loopback_server_scan = (queue_slot + 1) % NET_ClampLoopbackClientCount(loopback_client_count);
+		}
+
+		return true;
 	}
 
-	i = loop->get & (MAX_LOOPBACK - 1);
-	loop->get++;
-
-	memcpy(net_message->data, loop->msgs[i].data, loop->msgs[i].datalen);
-	net_message->cursize = loop->msgs[i].datalen;
-	*net_from = net_local_adr;
-	return true;
+	return false;
 }
 
 static void
@@ -502,14 +628,56 @@ NET_SendLoopPacket(netsrc_t sock, int length, void *data, netadr_t to)
 {
 	int i;
 	loopback_t *loop;
+	netadr_t from;
+	int slot;
 
-	loop = &loopbacks[sock ^ 1];
+	if (sock == NS_CLIENT)
+	{
+		slot = NET_ClampLoopbackSlot(loopback_slots[sock]);
+		from = NET_LoopbackClientAdr(slot);
+		loop = &loopbacks[NS_SERVER][slot];
+	}
+	else
+	{
+		slot = NET_LoopbackSlotForAdr(to);
+		from = NET_LoopbackServerAdr();
+		loop = &loopbacks[NS_CLIENT][slot];
+	}
 
 	i = loop->send & (MAX_LOOPBACK - 1);
 	loop->send++;
 
 	memcpy(loop->msgs[i].data, data, length);
 	loop->msgs[i].datalen = length;
+	loop->msgs[i].from = from;
+}
+
+void
+NET_SetLoopbackClientCount(int count)
+{
+	loopback_client_count = NET_ClampLoopbackClientCount(count);
+	loopback_slots[NS_CLIENT] = NET_ClampLoopbackSlot(loopback_slots[NS_CLIENT]);
+	loopback_slots[NS_SERVER] = 0;
+	loopback_server_scan = 0;
+	memset(loopbacks, 0, sizeof(loopbacks));
+}
+
+int
+NET_GetLoopbackClientCount(void)
+{
+	return loopback_client_count;
+}
+
+void
+NET_SetLoopbackSlot(netsrc_t sock, int slot)
+{
+	loopback_slots[sock] = (sock == NS_SERVER) ? 0 : NET_ClampLoopbackSlot(slot);
+}
+
+int
+NET_GetLoopbackSlot(netsrc_t sock)
+{
+	return (sock == NS_SERVER) ? 0 : NET_ClampLoopbackSlot(loopback_slots[sock]);
 }
 
 qboolean
@@ -1022,4 +1190,3 @@ NET_Sleep(int msec)
 	select(MAX(ip_sockets[NS_SERVER],
 					ip6_sockets[NS_SERVER]) + 1, &fdset, NULL, NULL, &timeout);
 }
-

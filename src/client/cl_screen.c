@@ -26,6 +26,7 @@
  */
 
 #include "header/client.h"
+#include "cl_splitscreen.h"
 
 static float scr_con_current; /* aproaches scr_conlines at scr_conspeed */
 static float scr_conlines; /* 0.0 to 1.0 lines of console to display */
@@ -1824,24 +1825,44 @@ SCR_UpdateScreen(void)
 			/* clear any dirty part of the background */
 			SCR_TileClear();
 
-			V_RenderView(separation[i]);
-			SCR_DrawADSOverlay();
-
-			SCR_DrawStats();
-			SCR_DrawSpeed();
-
-			if (cl.frame.playerstate.stats[STAT_LAYOUTS] & 1)
+			if (SS_RenderViews(separation[i]))
 			{
-				SCR_DrawLayout();
-			}
+				SS_DrawGameplayHUD();
 
-			if (cl.frame.playerstate.stats[STAT_LAYOUTS] & 2)
+				if (cl.frame.playerstate.stats[STAT_LAYOUTS] & 1)
+				{
+					SCR_DrawLayout();
+				}
+
+				if (cl.frame.playerstate.stats[STAT_LAYOUTS] & 2)
+				{
+					CL_DrawInventory();
+				}
+
+				SCR_DrawNet();
+				SCR_CheckDrawCenterString();
+			}
+			else
 			{
-				CL_DrawInventory();
-			}
+				V_RenderView(separation[i]);
+				SCR_DrawADSOverlay();
 
-			SCR_DrawNet();
-			SCR_CheckDrawCenterString();
+				SCR_DrawStats();
+				SCR_DrawSpeed();
+
+				if (cl.frame.playerstate.stats[STAT_LAYOUTS] & 1)
+				{
+					SCR_DrawLayout();
+				}
+
+				if (cl.frame.playerstate.stats[STAT_LAYOUTS] & 2)
+				{
+					CL_DrawInventory();
+				}
+
+				SCR_DrawNet();
+				SCR_CheckDrawCenterString();
+			}
 
 			if (scr_timegraph->value)
 			{
@@ -1859,6 +1880,7 @@ SCR_UpdateScreen(void)
 			SCR_DrawConsole();
 
 			M_Draw();
+			SS_DrawSessionOverlay();
 
 			SCR_DrawLoading();
 		}

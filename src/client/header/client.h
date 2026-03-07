@@ -446,6 +446,7 @@ void CL_RunLightStyles (void);
 
 void CL_CalcViewValues(void);
 void CL_AddEntities (void);
+extern qboolean cl_skip_view_weapon;
 void CL_AddDLights (void);
 void CL_AddTEnts (void);
 void CL_AddLightStyles (void);
@@ -517,6 +518,8 @@ extern	int			gun_frame;
 extern	struct model_s	*gun_model;
 
 void V_Init (void);
+void V_ClearScene(void);
+float CalcFov(float fov_x, float width, float height);
 void V_RenderView( float stereo_separation );
 void V_AddEntity (entity_t *ent);
 void V_AddParticle (vec3_t org, unsigned int color, float alpha);

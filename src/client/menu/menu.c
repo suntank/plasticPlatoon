@@ -31,6 +31,8 @@
 
 #include <ctype.h>
 #include "../header/client.h"
+#include "../cl_splitscreen.h"
+#include "../input/header/input.h"
 #include "../input/header/gyro.h"
 #include "../sound/header/local.h"
 #include "header/qmenu.h"
@@ -59,6 +61,7 @@ static void M_Menu_Multiplayer_Keys_f(void);
 static void M_Menu_JoinServer_f(void);
 static void M_Menu_AddressBook_f(void);
 static void M_Menu_StartServer_f(void);
+static void M_Menu_SplitScreenLobby_f(void);
 static void M_Menu_DMOptions_f(void);
 void M_Menu_Video_f(void);
 static void M_Menu_Options_f(void);
@@ -821,14 +824,62 @@ M_Menu_Main_f(void)
  */
 
 static menuframework_s s_multiplayer_menu;
+static menulist_s s_play_mode_box;
+static menulist_s s_split_players_box;
 static menuaction_s s_join_network_server_action;
 static menuaction_s s_start_network_server_action;
 static menuaction_s s_player_setup_action;
 static menuaction_s s_customize_options_action;
 
+static const char *play_mode_names[] =
+{
+	"internet",
+	"local",
+	"split-screen",
+	0
+};
+
+static const char *split_player_count_names[] =
+{
+	"2",
+	"3",
+	"4",
+	0
+};
+
+static void
+MultiplayerPlayModeCallback(void *unused)
+{
+	SS_SetTransport((ss_transport_t)s_play_mode_box.curvalue);
+}
+
+static void
+MultiplayerSplitPlayersCallback(void *unused)
+{
+	SS_SetPlayerCount(s_split_players_box.curvalue + 2);
+}
+
 static void
 Multiplayer_MenuDraw(void)
 {
+	if (SS_GetTransport() == SS_TRANSPORT_INTERNET)
+	{
+		s_join_network_server_action.generic.flags &= ~QMF_INACTIVE;
+	}
+	else
+	{
+		s_join_network_server_action.generic.flags |= QMF_INACTIVE;
+	}
+
+	if (SS_IsSplitScreenSelected())
+	{
+		s_split_players_box.generic.flags &= ~QMF_INACTIVE;
+	}
+	else
+	{
+		s_split_players_box.generic.flags |= QMF_INACTIVE;
+	}
+
 	M_Banner("m_banner_multiplayer");
 
 	Menu_AdjustCursor(&s_multiplayer_menu, 1);
@@ -860,6 +911,14 @@ StartNetworkServerFunc(void *unused)
 }
 
 static void
+SplitScreenMenuBlockedMessage(const char *message)
+{
+	m_popup_string = (char *)message;
+	m_popup_endtime = cls.realtime + 2200;
+	M_Popup();
+}
+
+static void
 Multiplayer_MenuInit(void)
 {
 	float scale = SCR_GetMenuScale();
@@ -867,34 +926,52 @@ Multiplayer_MenuInit(void)
 	s_multiplayer_menu.x = (int)(viddef.width * 0.50f) - 64 * scale;
 	s_multiplayer_menu.nitems = 0;
 
+	s_play_mode_box.generic.type = MTYPE_SPINCONTROL;
+	s_play_mode_box.generic.x = 0;
+	s_play_mode_box.generic.y = 0;
+	s_play_mode_box.generic.name = "play mode";
+	s_play_mode_box.generic.callback = MultiplayerPlayModeCallback;
+	s_play_mode_box.itemnames = play_mode_names;
+	s_play_mode_box.curvalue = (int)SS_GetTransport();
+
+	s_split_players_box.generic.type = MTYPE_SPINCONTROL;
+	s_split_players_box.generic.x = 0;
+	s_split_players_box.generic.y = 10;
+	s_split_players_box.generic.name = "split players";
+	s_split_players_box.generic.callback = MultiplayerSplitPlayersCallback;
+	s_split_players_box.itemnames = split_player_count_names;
+	s_split_players_box.curvalue = SS_GetPlayerCount() - 2;
+
 	s_join_network_server_action.generic.type = MTYPE_ACTION;
 	s_join_network_server_action.generic.flags = QMF_LEFT_JUSTIFY;
 	s_join_network_server_action.generic.x = 0;
-	s_join_network_server_action.generic.y = 0;
+	s_join_network_server_action.generic.y = 24;
 	s_join_network_server_action.generic.name = " join network server";
 	s_join_network_server_action.generic.callback = JoinNetworkServerFunc;
 
 	s_start_network_server_action.generic.type = MTYPE_ACTION;
 	s_start_network_server_action.generic.flags = QMF_LEFT_JUSTIFY;
 	s_start_network_server_action.generic.x = 0;
-	s_start_network_server_action.generic.y = 10;
-	s_start_network_server_action.generic.name = " start network server";
+	s_start_network_server_action.generic.y = 34;
+	s_start_network_server_action.generic.name = " configure session";
 	s_start_network_server_action.generic.callback = StartNetworkServerFunc;
 
 	s_player_setup_action.generic.type = MTYPE_ACTION;
 	s_player_setup_action.generic.flags = QMF_LEFT_JUSTIFY;
 	s_player_setup_action.generic.x = 0;
-	s_player_setup_action.generic.y = 20;
+	s_player_setup_action.generic.y = 44;
 	s_player_setup_action.generic.name = " player setup";
 	s_player_setup_action.generic.callback = PlayerSetupFunc;
 
 	s_customize_options_action.generic.type = MTYPE_ACTION;
 	s_customize_options_action.generic.flags = QMF_LEFT_JUSTIFY;
 	s_customize_options_action.generic.x = 0;
-	s_customize_options_action.generic.y = 30;
+	s_customize_options_action.generic.y = 54;
 	s_customize_options_action.generic.name = " customize controls";
 	s_customize_options_action.generic.callback = MultplayerCustomizeControlsFunc;
 
+	Menu_AddItem(&s_multiplayer_menu, (void *)&s_play_mode_box);
+	Menu_AddItem(&s_multiplayer_menu, (void *)&s_split_players_box);
 	Menu_AddItem(&s_multiplayer_menu, (void *)&s_join_network_server_action);
 	Menu_AddItem(&s_multiplayer_menu, (void *)&s_start_network_server_action);
 	Menu_AddItem(&s_multiplayer_menu, (void *)&s_player_setup_action);
@@ -4103,6 +4180,12 @@ LoadGame_MenuKey(int key)
 static void
 M_Menu_LoadGame_f(void)
 {
+	if (SS_IsSessionActive())
+	{
+		SplitScreenMenuBlockedMessage("Save/load is unavailable in split-screen sessions.");
+		return;
+	}
+
 	LoadSave_AdjustPage(0);
 	LoadGame_MenuInit();
 	s_loadgame_menu.draw = LoadGame_MenuDraw;
@@ -4259,6 +4342,12 @@ M_Menu_SaveGame_f(void)
 	if (!Com_ServerState())
 	{
 		return; /* not playing a game */
+	}
+
+	if (SS_IsSessionActive())
+	{
+		SplitScreenMenuBlockedMessage("Save/load is unavailable in split-screen sessions.");
+		return;
 	}
 
 	LoadSave_AdjustPage(0);
@@ -4519,87 +4608,135 @@ RulesChangeFunc(void *self)
 }
 
 static void
+StartServer_ExecuteConfig(const ss_match_config_t *config, qboolean activate_split_session)
+{
+	if (!config || !config->startmap[0])
+	{
+		return;
+	}
+
+	if (config->has_capturelimit)
+	{
+		Cvar_SetValue("capturelimit",
+			ClampCvar(0, config->capturelimit, config->capturelimit));
+	}
+
+	Cvar_SetValue("maxclients", ClampCvar(0, config->maxclients, config->maxclients));
+	Cvar_SetValue("timelimit", ClampCvar(0, config->timelimit, config->timelimit));
+	Cvar_SetValue("fraglimit", ClampCvar(0, config->fraglimit, config->fraglimit));
+	Cvar_Set("hostname", config->hostname);
+	Cvar_SetValue("singleplayer", 0);
+	Cvar_SetValue("deathmatch", (float)config->deathmatch);
+	Cvar_SetValue("coop", (float)config->coop);
+
+	if (activate_split_session)
+	{
+		SS_ApplyPrimaryProfile();
+		SS_BeginSession();
+	}
+
+	if (config->use_spot)
+	{
+		if (Com_ServerState())
+		{
+			Cbuf_AddText("disconnect\n");
+		}
+
+		Cbuf_AddText(va("gamemap \"*%s$%s\"\n", config->startmap, config->spot));
+	}
+	else
+	{
+		Cbuf_AddText(va("map %s\n", config->startmap));
+	}
+}
+
+static void
 StartServerActionFunc(void *self)
 {
-	char startmap[1024];
+	ss_match_config_t config;
+	char *spot;
+	float maxclients;
 	float timelimit;
 	float fraglimit;
-	float maxclients;
-	char *spot;
 
-	Q_strlcpy(startmap, strchr(mapnames[s_startmap_list.curvalue], '\n') + 1,
-		sizeof(startmap));
+	memset(&config, 0, sizeof(config));
+
+	Q_strlcpy(config.startmap, strchr(mapnames[s_startmap_list.curvalue], '\n') + 1,
+		sizeof(config.startmap));
 
 	maxclients = (float)strtod(s_maxclients_field.buffer, (char **)NULL);
 	timelimit = (float)strtod(s_timelimit_field.buffer, (char **)NULL);
 	fraglimit = (float)strtod(s_fraglimit_field.buffer, (char **)NULL);
+	config.maxclients = maxclients;
+	config.timelimit = timelimit;
+	config.fraglimit = fraglimit;
+	Q_strlcpy(config.hostname, s_hostname_field.buffer, sizeof(config.hostname));
 
 	if (M_IsGame("ctf"))
 	{
-		float capturelimit;
-
-		capturelimit = (float)strtod(s_capturelimit_field.buffer, (char **)NULL);
-		Cvar_SetValue("capturelimit", ClampCvar(0, capturelimit, capturelimit));
+		config.capturelimit = (float)strtod(s_capturelimit_field.buffer, (char **)NULL);
+		config.has_capturelimit = true;
 	}
 
-	Cvar_SetValue("maxclients", ClampCvar(0, maxclients, maxclients));
-	Cvar_SetValue("timelimit", ClampCvar(0, timelimit, timelimit));
-	Cvar_SetValue("fraglimit", ClampCvar(0, fraglimit, fraglimit));
-	Cvar_Set("hostname", s_hostname_field.buffer);
-
-	Cvar_SetValue("singleplayer", 0);
+	if (SS_IsSplitScreenSelected())
+	{
+		if (config.maxclients < SS_GetPlayerCount())
+		{
+			config.maxclients = (float)SS_GetPlayerCount();
+		}
+	}
 
 	if ((s_rules_box.curvalue < 2) || M_IsGame("rogue"))
 	{
-		Cvar_SetValue("deathmatch", (float)!s_rules_box.curvalue);
-		Cvar_SetValue("coop", (float)s_rules_box.curvalue);
+		config.deathmatch = !s_rules_box.curvalue;
+		config.coop = s_rules_box.curvalue;
 	}
 	else
 	{
-		Cvar_SetValue("deathmatch", 1); /* deathmatch is always true for rogue games */
-		Cvar_SetValue("coop", 0); /* This works for at least the main game and both addons */
+		config.deathmatch = 1; /* deathmatch is always true for rogue games */
+		config.coop = 0; /* This works for at least the main game and both addons */
 	}
 
 	spot = NULL;
 
-	if (s_rules_box.curvalue == 1)
+	if (!M_IsGame("ctf") && s_rules_box.curvalue == 1)
 	{
-		if (Q_stricmp(startmap, "bunk1") == 0)
+		if (Q_stricmp(config.startmap, "bunk1") == 0)
 		{
 			spot = "start";
 		}
 
-		else if (Q_stricmp(startmap, "mintro") == 0)
+		else if (Q_stricmp(config.startmap, "mintro") == 0)
 		{
 			spot = "start";
 		}
 
-		else if (Q_stricmp(startmap, "fact1") == 0)
+		else if (Q_stricmp(config.startmap, "fact1") == 0)
 		{
 			spot = "start";
 		}
 
-		else if (Q_stricmp(startmap, "power1") == 0)
+		else if (Q_stricmp(config.startmap, "power1") == 0)
 		{
 			spot = "pstart";
 		}
 
-		else if (Q_stricmp(startmap, "biggun") == 0)
+		else if (Q_stricmp(config.startmap, "biggun") == 0)
 		{
 			spot = "bstart";
 		}
 
-		else if (Q_stricmp(startmap, "hangar1") == 0)
+		else if (Q_stricmp(config.startmap, "hangar1") == 0)
 		{
 			spot = "unitstart";
 		}
 
-		else if (Q_stricmp(startmap, "city1") == 0)
+		else if (Q_stricmp(config.startmap, "city1") == 0)
 		{
 			spot = "unitstart";
 		}
 
-		else if (Q_stricmp(startmap, "boss1") == 0)
+		else if (Q_stricmp(config.startmap, "boss1") == 0)
 		{
 			spot = "bosstart";
 		}
@@ -4607,18 +4744,18 @@ StartServerActionFunc(void *self)
 
 	if (spot)
 	{
-		if (Com_ServerState())
-		{
-			Cbuf_AddText("disconnect\n");
-		}
-
-		Cbuf_AddText(va("gamemap \"*%s$%s\"\n", startmap, spot));
+		config.use_spot = true;
+		Q_strlcpy(config.spot, spot, sizeof(config.spot));
 	}
-	else
+
+	if (SS_IsSplitScreenSelected())
 	{
-		Cbuf_AddText(va("map %s\n", startmap));
+		SS_SetPendingMatch(&config);
+		M_Menu_SplitScreenLobby_f();
+		return;
 	}
 
+	StartServer_ExecuteConfig(&config, false);
 	M_ForceMenuOff();
 }
 
@@ -6498,22 +6635,13 @@ ListModels_f(void)
 	PlayerModelFree();
 }
 
-static qboolean
-PlayerConfig_MenuInit(void)
+static void
+PlayerConfig_GetDefaultSelection(int *mdlindex, int *imgindex)
 {
-	extern cvar_t *name;
 	const extern cvar_t *skin;
 	char mdlname[MAX_QPATH];
 	char imgname[MAX_QPATH];
-	int mdlindex = 0;
-	int imgindex = 0;
 	int i = 0;
-	float scale = SCR_GetMenuScale();
-
-	if (PlayerConfig_ScanDirectories() == false)
-	{
-		return false;
-	}
 
 	Q_strlcpy(mdlname, skin->string, sizeof(mdlname));
 	ReplaceCharacters(mdlname, '\\', '/' );
@@ -6533,20 +6661,37 @@ PlayerConfig_MenuInit(void)
 	{
 		if (Q_stricmp(s_modelname.data[i], mdlname) == 0)
 		{
-			mdlindex = i;
+			*mdlindex = i;
 			break;
 		}
 	}
 
-	for (i = 0; i < s_skinnames[mdlindex].num; i++)
+	for (i = 0; i < s_skinnames[*mdlindex].num; i++)
 	{
-		const char* names = s_skinnames[mdlindex].data[i];
+		const char* names = s_skinnames[*mdlindex].data[i];
 		if (Q_stricmp(names, imgname) == 0)
 		{
-			imgindex = i;
+			*imgindex = i;
 			break;
 		}
 	}
+}
+
+static qboolean
+PlayerConfig_MenuInit(void)
+{
+	extern cvar_t *name;
+	int mdlindex = 0;
+	int imgindex = 0;
+	int i;
+	float scale = SCR_GetMenuScale();
+
+	if (PlayerConfig_ScanDirectories() == false)
+	{
+		return false;
+	}
+
+	PlayerConfig_GetDefaultSelection(&mdlindex, &imgindex);
 
 	s_player_config_menu.x = viddef.width / 2 - 95 * scale;
 	s_player_config_menu.y = viddef.height / (2 * scale) - 97;
@@ -6817,6 +6962,413 @@ M_Menu_PlayerConfig_f(void)
 	s_player_config_menu.key  = PlayerConfig_MenuKey;
 
 	M_PushMenu(&s_player_config_menu);
+}
+
+/*
+ * SPLIT-SCREEN LOBBY MENU
+ */
+
+static menuframework_s s_splitscreen_lobby_menu;
+static int s_splitscreen_lobby_cursor[SS_MAX_LOCAL_PLAYERS];
+
+static int
+SplitScreenLobby_FindSlotForInput(int key)
+{
+	ss_state_t *state = SS_GetState();
+	qboolean controller_input = (key >= K_JOY_FIRST_BTN);
+	int gamepad_index = Key_GetEventGamepadIndex();
+	int device_index;
+	int i;
+
+	if (controller_input)
+	{
+		if (gamepad_index < 0)
+		{
+			return -1;
+		}
+
+		device_index = gamepad_index + 2;
+		for (i = 0; i < SS_GetPlayerCount(); ++i)
+		{
+			ss_local_player_t *slot = &state->slots[i];
+
+			if (slot->active && slot->device_index == device_index)
+			{
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	for (i = 0; i < SS_GetPlayerCount(); ++i)
+	{
+		ss_local_player_t *slot = &state->slots[i];
+
+		if (!slot->active)
+		{
+			continue;
+		}
+
+		if (!controller_input && slot->device_index == 1)
+		{
+			return i;
+		}
+
+	}
+
+	return -1;
+}
+
+static void
+SplitScreenLobby_SyncSlotModelSkin(int slot_index)
+{
+	ss_local_player_t *slot = SS_GetSlot(slot_index);
+
+	if (!slot || slot->model_index < 0 || slot->model_index >= s_modelname.num)
+	{
+		return;
+	}
+
+	if (slot->skin_index < 0 || slot->skin_index >= s_skinnames[slot->model_index].num)
+	{
+		slot->skin_index = 0;
+	}
+
+	SS_AssignSlotModelSkin(slot_index, slot->model_index, slot->skin_index,
+		s_modelname.data[slot->model_index],
+		s_skinnames[slot->model_index].data[slot->skin_index]);
+}
+
+static void
+SplitScreenLobby_CycleModel(int slot_index, int dir)
+{
+	ss_local_player_t *slot = SS_GetSlot(slot_index);
+
+	if (!slot || s_modelname.num <= 0)
+	{
+		return;
+	}
+
+	slot->model_index = (slot->model_index + dir + s_modelname.num) % s_modelname.num;
+	slot->skin_index = 0;
+	SplitScreenLobby_SyncSlotModelSkin(slot_index);
+}
+
+static void
+SplitScreenLobby_CycleSkin(int slot_index, int dir)
+{
+	ss_local_player_t *slot = SS_GetSlot(slot_index);
+	int skin_count;
+
+	if (!slot || slot->model_index < 0 || slot->model_index >= s_modelname.num)
+	{
+		return;
+	}
+
+	skin_count = s_skinnames[slot->model_index].num;
+
+	if (skin_count <= 0)
+	{
+		return;
+	}
+
+	slot->skin_index = (slot->skin_index + dir + skin_count) % skin_count;
+	SplitScreenLobby_SyncSlotModelSkin(slot_index);
+}
+
+static void
+SplitScreenLobby_CycleDevice(int slot_index, int dir)
+{
+	ss_local_player_t *slot = SS_GetSlot(slot_index);
+	int attempts = 0;
+	int device_index;
+
+	if (!slot || SS_GetDeviceCount() <= 0)
+	{
+		return;
+	}
+
+	device_index = slot->device_index;
+
+	do
+	{
+		device_index = (device_index + dir + SS_GetDeviceCount()) % SS_GetDeviceCount();
+		attempts++;
+	}
+	while ((attempts < SS_GetDeviceCount()) &&
+		!SS_IsDeviceSelectable(slot_index, device_index));
+
+	SS_AssignSlotDevice(slot_index, device_index);
+}
+
+static const char *
+SplitScreenLobby_ToggleReady(int slot_index)
+{
+	ss_local_player_t *slot = SS_GetSlot(slot_index);
+
+	if (!slot)
+	{
+		return NULL;
+	}
+
+	if (slot->device_index == 0)
+	{
+		m_popup_string = "Assign a device before readying up.";
+		m_popup_endtime = cls.realtime + 1800;
+		return menu_move_sound;
+	}
+
+	slot->ready = !slot->ready;
+	slot->state = slot->ready ? SS_SLOT_READY : SS_SLOT_SETUP;
+	return slot->ready ? menu_in_sound : menu_out_sound;
+}
+
+static qboolean
+SplitScreenLobby_MenuInit(void)
+{
+	int mdlindex = 0;
+	int imgindex = 0;
+	int i;
+
+	PlayerModelFree();
+
+	if (!PlayerConfig_ScanDirectories())
+	{
+		return false;
+	}
+
+	PlayerConfig_GetDefaultSelection(&mdlindex, &imgindex);
+
+	SS_SetDetectedGamepadCount(IN_GetDetectedGamepadCount());
+
+	for (i = 0; i < IN_GetDetectedGamepadCount(); ++i)
+	{
+		SS_SetDeviceLabel(i + 2, IN_GetDetectedGamepadName(i));
+	}
+
+	SS_BeginLobby();
+
+	for (i = 0; i < SS_GetPlayerCount(); ++i)
+	{
+		ss_local_player_t *slot = SS_GetSlot(i);
+
+		s_splitscreen_lobby_cursor[i] = 0;
+		slot->model_index = mdlindex;
+		slot->skin_index = imgindex;
+		SplitScreenLobby_SyncSlotModelSkin(i);
+	}
+
+	return true;
+}
+
+static void
+SplitScreenLobby_DrawPanel(int slot_index, const ss_viewport_t *viewport, int panel_y_offset)
+{
+	ss_local_player_t *slot;
+	float scale = SCR_GetMenuScale();
+	int x = viewport->x;
+	int y = viewport->y + panel_y_offset;
+	int w = viewport->w;
+	int h = viewport->h;
+	int vx = (int)(x / scale);
+	int vy = (int)(y / scale);
+	int box_width = (int)(w / (8.0f * scale)) - 2;
+	int box_lines = (int)(h / (8.0f * scale)) - 3;
+	char line[128];
+
+	if (box_width < 12)
+	{
+		box_width = 12;
+	}
+
+	if (box_lines < 8)
+	{
+		box_lines = 8;
+	}
+
+	if (viewport->black_fill)
+	{
+		Draw_Fill(x, y, w, h, 0);
+		return;
+	}
+
+	slot = SS_GetSlot(slot_index);
+	if (!slot || !slot->active)
+	{
+		Draw_Fill(x, y, w, h, 0);
+		return;
+	}
+
+	M_DrawTextBox(vx + 1, vy + 1, box_width, box_lines);
+
+	Com_sprintf(line, sizeof(line), "Player %d", slot_index + 1);
+	Menu_DrawString(vx + 4, vy + 3, line);
+	Menu_DrawString(vx + 4, vy + 12, slot->ready ? "READY" : "NOT READY");
+
+	M_DrawCursor(vx + 4, vy + 21 + s_splitscreen_lobby_cursor[slot_index] * 10,
+		(int)(cls.realtime / 100) % NUM_CURSOR_FRAMES);
+
+	Com_sprintf(line, sizeof(line), "model  %s", slot->model[0] ? slot->model : "--");
+	Menu_DrawString(vx + 14, vy + 22, line);
+
+	Com_sprintf(line, sizeof(line), "skin   %s", slot->skin[0] ? slot->skin : "--");
+	Menu_DrawString(vx + 14, vy + 32, line);
+
+	Com_sprintf(line, sizeof(line), "device %s", SS_GetDeviceLabel(slot->device_index));
+	Menu_DrawString(vx + 14, vy + 42, line);
+
+	Com_sprintf(line, sizeof(line), "ready  %s", slot->ready ? "yes" : "no");
+	Menu_DrawString(vx + 14, vy + 52, line);
+
+	Menu_DrawString(vx + 4, vy + box_lines * 8 - 6, SS_GetDeviceLabel(slot->device_index));
+}
+
+static void
+SplitScreenLobby_MenuDraw(void)
+{
+	ss_viewport_t panels[SS_MAX_LOCAL_PLAYERS];
+	int panel_y_offset;
+	int i;
+
+	M_Banner("m_banner_multiplayer");
+
+	panel_y_offset = (int)(36 * SCR_GetMenuScale());
+	SS_CalcViewports(SS_GetPlayerCount(), viddef.width,
+		viddef.height - panel_y_offset - (int)(16 * SCR_GetMenuScale()), panels);
+
+	for (i = 0; i < SS_MAX_LOCAL_PLAYERS; ++i)
+	{
+		SplitScreenLobby_DrawPanel(i, &panels[i], panel_y_offset);
+	}
+
+	if (SS_AreAllSlotsReady())
+	{
+		Menu_DrawString(48, 26, "All players ready - press Enter/Start to continue");
+	}
+
+	Menu_DrawString(24, 226, "Keyboard: arrows/WASD + Enter. ESC backs out.");
+}
+
+static const char *
+SplitScreenLobby_MenuKey(int key)
+{
+	int slot_index;
+	int menu_key = Key_GetMenuKey(key);
+	ss_local_player_t *slot;
+
+	if (menu_key == K_ESCAPE)
+	{
+		PlayerModelFree();
+		SS_ClearPendingMatch();
+		SS_EndLobby();
+		M_PopMenu();
+		return NULL;
+	}
+
+	if (SS_AreAllSlotsReady() && menu_key == K_ENTER)
+	{
+		const ss_match_config_t *config = SS_GetPendingMatch();
+
+		if (!config || !SS_HasPendingMatch())
+		{
+			SplitScreenMenuBlockedMessage("Split-screen session config is missing.");
+			return menu_move_sound;
+		}
+
+		PlayerModelFree();
+		SS_EndLobby();
+		StartServer_ExecuteConfig(config, true);
+		M_ForceMenuOff();
+		SCR_CenterPrint("Split-screen host session started.\n"
+			"Additional local clients are still pending implementation.");
+		return menu_in_sound;
+	}
+
+	slot_index = SplitScreenLobby_FindSlotForInput(key);
+	slot = SS_GetSlot(slot_index);
+
+	if (!slot || !slot->active)
+	{
+		return NULL;
+	}
+
+	switch (menu_key)
+	{
+		case K_UPARROW:
+		case 'w':
+		case 'W':
+			s_splitscreen_lobby_cursor[slot_index] =
+				(s_splitscreen_lobby_cursor[slot_index] + 3) % 4;
+			return menu_move_sound;
+
+		case K_DOWNARROW:
+		case 's':
+		case 'S':
+			s_splitscreen_lobby_cursor[slot_index] =
+				(s_splitscreen_lobby_cursor[slot_index] + 1) % 4;
+			return menu_move_sound;
+
+		case K_LEFTARROW:
+		case 'a':
+		case 'A':
+			switch (s_splitscreen_lobby_cursor[slot_index])
+			{
+				case 0:
+					SplitScreenLobby_CycleModel(slot_index, -1);
+					return menu_move_sound;
+				case 1:
+					SplitScreenLobby_CycleSkin(slot_index, -1);
+					return menu_move_sound;
+				case 2:
+					SplitScreenLobby_CycleDevice(slot_index, -1);
+					return menu_move_sound;
+			}
+			break;
+
+		case K_RIGHTARROW:
+		case 'd':
+		case 'D':
+			switch (s_splitscreen_lobby_cursor[slot_index])
+			{
+				case 0:
+					SplitScreenLobby_CycleModel(slot_index, 1);
+					return menu_move_sound;
+				case 1:
+					SplitScreenLobby_CycleSkin(slot_index, 1);
+					return menu_move_sound;
+				case 2:
+					SplitScreenLobby_CycleDevice(slot_index, 1);
+					return menu_move_sound;
+			}
+			break;
+
+		case K_ENTER:
+		case K_SPACE:
+			if (s_splitscreen_lobby_cursor[slot_index] == 3)
+			{
+				return SplitScreenLobby_ToggleReady(slot_index);
+			}
+			break;
+	}
+
+	return NULL;
+}
+
+static void
+M_Menu_SplitScreenLobby_f(void)
+{
+	if (!SplitScreenLobby_MenuInit())
+	{
+		Menu_SetStatusBar(&s_startserver_menu, "no valid player models found");
+		return;
+	}
+
+	Menu_SetStatusBar(&s_startserver_menu, NULL);
+	s_splitscreen_lobby_menu.draw = SplitScreenLobby_MenuDraw;
+	s_splitscreen_lobby_menu.key = SplitScreenLobby_MenuKey;
+
+	M_PushMenu(&s_splitscreen_lobby_menu);
 }
 
 /*

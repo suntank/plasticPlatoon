@@ -67,4 +67,7 @@ void IN_GetClipboardText(char *out, size_t n);
 /* Copy text to clipboard */
 int IN_SetClipboardText(const char *s);
 
+int IN_GetDetectedGamepadCount(void);
+const char *IN_GetDetectedGamepadName(int index);
+
 #endif

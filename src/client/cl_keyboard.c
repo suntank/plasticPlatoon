@@ -28,6 +28,7 @@
  */
 
 #include "header/client.h"
+#include "cl_splitscreen.h"
 
 void Key_ClearTyping(void);
 void IN_GetClipboardText(char *out, size_t n);
@@ -52,6 +53,7 @@ qboolean consolekeys[K_LAST]; /* if true, can't be rebound while in console */
 qboolean menubound[K_LAST]; /* if true, can't be rebound while in menu */
 int key_repeats[K_LAST]; /* if > 1, it is autorepeating */
 qboolean keydown[K_LAST];
+static int key_event_gamepad_index = -1;
 
 qboolean Cmd_IsComplete(const char *cmd);
 
@@ -1420,6 +1422,16 @@ Key_Event(int key, qboolean down, qboolean special)
 		return;
 	}
 
+	if (SS_HandleSessionKey(key, down))
+	{
+		return;
+	}
+
+	if (SS_HandleGameplayKey(key, down))
+	{
+		return;
+	}
+
 	/* Key is unbound */
 	if ((key >= K_MOUSE1) && !keybindings[key] && (cls.key_dest != key_console) &&
 		(cls.state == ca_active))
@@ -1598,6 +1610,18 @@ Key_Event(int key, qboolean down, qboolean special)
 			Key_Console(key);
 			break;
 	}
+}
+
+void
+Key_SetEventGamepadIndex(int gamepad_index)
+{
+	key_event_gamepad_index = gamepad_index;
+}
+
+int
+Key_GetEventGamepadIndex(void)
+{
+	return key_event_gamepad_index;
 }
 
 /*

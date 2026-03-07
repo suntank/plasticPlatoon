@@ -26,6 +26,7 @@
  */
 
 #include "header/client.h"
+#include "cl_splitscreen.h"
 #include "input/header/input.h"
 
 static cvar_t *cl_nodelta;
@@ -862,4 +863,6 @@ CL_SendCmd(void)
 	/* Reinit the current cmd buffer */
 	cmd = &cl.cmds[cls.netchan.outgoing_sequence & (CMD_BACKUP - 1)];
 	memset(cmd, 0, sizeof(*cmd));
+
+	SS_RunLocalClients();
 }

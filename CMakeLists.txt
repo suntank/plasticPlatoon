@@ -445,6 +445,7 @@ set(Client-Source
 	${CLIENT_SRC_DIR}/cl_particles.c
 	${CLIENT_SRC_DIR}/cl_prediction.c
 	${CLIENT_SRC_DIR}/cl_screen.c
+	${CLIENT_SRC_DIR}/cl_splitscreen.c
 	${CLIENT_SRC_DIR}/cl_tempentities.c
 	${CLIENT_SRC_DIR}/cl_view.c
 	${CLIENT_SRC_DIR}/curl/download.c
@@ -890,4 +891,3 @@ if(SDL3_SUPPORT)
 endif()
 
 endif()
-

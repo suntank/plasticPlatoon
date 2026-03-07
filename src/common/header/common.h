@@ -522,6 +522,7 @@ extern qboolean userinfo_modified;
 #define PORT_ANY -1
 #define MAX_MSGLEN 1400             /* max length of a message */
 #define PACKET_HEADER 10            /* two ints and a short */
+#define MAX_LOOPBACK_CLIENTS 4
 
 typedef enum
 {
@@ -560,6 +561,10 @@ qboolean NET_CompareBaseAdr(netadr_t a, netadr_t b);
 qboolean NET_IsLocalAddress(netadr_t adr);
 char *NET_AdrToString(netadr_t a);
 qboolean NET_StringToAdr(const char *s, netadr_t *a);
+void NET_SetLoopbackClientCount(int count);
+int NET_GetLoopbackClientCount(void);
+void NET_SetLoopbackSlot(netsrc_t sock, int slot);
+int NET_GetLoopbackSlot(netsrc_t sock);
 void NET_Sleep(int msec);
 
 /*=================================================================== */

@@ -939,6 +939,11 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 	entity_t gun = {0}; /* view model */
 	int i;
 
+	if (cl_skip_view_weapon)
+	{
+		return;
+	}
+
 	if (CL_MFlashTuneCameraActive() && (!cl_mflash_tune_show_viewmodel ||
 		(cl_mflash_tune_show_viewmodel->value <= 0.0f)))
 	{

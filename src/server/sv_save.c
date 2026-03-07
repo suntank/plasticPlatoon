@@ -400,6 +400,12 @@ SV_Loadgame_f(void)
 	char *dir;
 	qboolean isautosave;
 
+	if (Cvar_VariableValue("ss_active"))
+	{
+		Com_Printf("Save/load is unavailable in split-screen sessions.\n");
+		return;
+	}
+
 	if (Cmd_Argc() != 2)
 	{
 		Com_Printf("USAGE: loadgame <directory>\n");
@@ -454,6 +460,12 @@ SV_Savegame_f(void)
 {
 	char *dir;
 
+	if (Cvar_VariableValue("ss_active"))
+	{
+		Com_Printf("Save/load is unavailable in split-screen sessions.\n");
+		return;
+	}
+
 	if (sv.state != ss_game)
 	{
 		Com_Printf("You must be in a game to save.\n");
@@ -507,4 +519,3 @@ SV_Savegame_f(void)
 
 	Com_Printf("Done.\n");
 }
-
