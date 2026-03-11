@@ -4,9 +4,9 @@
 # Usage: ./compile_map.sh --map <mapname> [--vis] [--rad]
 
 # Default values
-BASEDIR="/home/austin/Documents/PlasticPlatoon/release/baseq2"
+BASEDIR="/home/austin-morgan/Documents/plasticPlatoon/release/baseq2"
 MAPS_DIR="$BASEDIR/maps"
-Q2TOOL="~/Documents/q2tools-220/build/q2tool"
+Q2TOOL="~/Documents/q2tools/Linux64/q2tool"
 
 # Parse arguments
 VIS=false

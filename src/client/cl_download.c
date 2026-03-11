@@ -65,12 +65,33 @@ static qboolean dont_restart_texture_stage;
 static qboolean gamedirForFilelist;
 
 static const char *env_suf[6] = {"rt", "bk", "lf", "ft", "up", "dn"};
+static const char *sky_exts[] = {"pcx", "tga", "png"};
+static const char *texture_exts[] = {"wal", "png", "tga"};
 
 #define PLAYER_MULT 5
 
 /* ENV_CNT is map load, ENV_CNT+1 is first env map */
 #define ENV_CNT (CS_PLAYERSKINS + MAX_CLIENTS * PLAYER_MULT)
 #define TEXTURE_CNT (ENV_CNT + 13)
+
+static qboolean
+CL_HasFileVariant(const char *basepath, const char *const *exts, size_t num_exts)
+{
+	size_t i;
+	char candidate[MAX_OSPATH];
+
+	for (i = 0; i < num_exts; i++)
+	{
+		Com_sprintf(candidate, sizeof(candidate), "%s.%s", basepath, exts[i]);
+
+		if (FS_LoadFile(candidate, NULL) != -1)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
 
 void
 CL_RequestNextDownload(void)
@@ -459,17 +480,27 @@ CL_RequestNextDownload(void)
 		{
 			while (precache_check < TEXTURE_CNT)
 			{
+				char skybase[MAX_OSPATH];
 				int n = precache_check++ - ENV_CNT - 1;
+				int sky_index = n / 2;
+
+				Com_sprintf(skybase, sizeof(skybase), "env/%s%s",
+						cl.configstrings[CS_SKY], env_suf[sky_index]);
+
+				if (CL_HasFileVariant(skybase, sky_exts, ARRLEN(sky_exts)))
+				{
+					continue;
+				}
 
 				if (n & 1)
 				{
 					Com_sprintf(fn, sizeof(fn), "env/%s%s.pcx",
-							cl.configstrings[CS_SKY], env_suf[n / 2]);
+							cl.configstrings[CS_SKY], env_suf[sky_index]);
 				}
 				else
 				{
 					Com_sprintf(fn, sizeof(fn), "env/%s%s.tga",
-							cl.configstrings[CS_SKY], env_suf[n / 2]);
+							cl.configstrings[CS_SKY], env_suf[sky_index]);
 				}
 
 				if (!CL_CheckOrDownloadFile(fn))
@@ -498,9 +529,19 @@ CL_RequestNextDownload(void)
 		{
 			while (precache_tex < numtexinfo)
 			{
+				char texturebase[MAX_OSPATH];
 				char fn[MAX_OSPATH];
 
-				sprintf(fn, "textures/%s.wal",
+				Com_sprintf(texturebase, sizeof(texturebase), "textures/%s",
+						map_surfaces[precache_tex].rname);
+
+				if (CL_HasFileVariant(texturebase, texture_exts, ARRLEN(texture_exts)))
+				{
+					precache_tex++;
+					continue;
+				}
+
+				Com_sprintf(fn, sizeof(fn), "textures/%s.wal",
 						map_surfaces[precache_tex++].rname);
 
 				if (!CL_CheckOrDownloadFile(fn))
@@ -839,4 +880,3 @@ CL_ParseDownload(void)
 		CL_RequestNextDownload();
 	}
 }
-

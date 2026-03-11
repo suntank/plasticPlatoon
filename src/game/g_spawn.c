@@ -118,6 +118,10 @@ void SP_misc_blackhole(edict_t *self);
 void SP_misc_eastertank(edict_t *self);
 void SP_misc_easterchick(edict_t *self);
 void SP_misc_easterchick2(edict_t *self);
+void SP_misc_tank(edict_t *self);
+void SP_misc_heli(edict_t *self);
+void SP_misc_plane(edict_t *self);
+void SP_misc_jeep(edict_t *self);
 
 void SP_monster_berserk(edict_t *self);
 void SP_monster_gladiator(edict_t *self);
@@ -236,6 +240,10 @@ static spawn_t spawns[] = {
 	{"misc_eastertank", SP_misc_eastertank},
 	{"misc_easterchick", SP_misc_easterchick},
 	{"misc_easterchick2", SP_misc_easterchick2},
+	{"misc_tank", SP_misc_tank},
+	{"misc_heli", SP_misc_heli},
+	{"misc_plane", SP_misc_plane},
+	{"misc_jeep", SP_misc_jeep},
 
 	{"monster_berserk", SP_monster_berserk},
 	{"monster_gladiator", SP_monster_gladiator},

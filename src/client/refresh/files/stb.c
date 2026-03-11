@@ -593,6 +593,13 @@ GetSkyImage(const char *skyname, const char* surfname, qboolean palettedtexture,
 		image = find_image(pathname, it_sky);
 	}
 
+	if (!image)
+	{
+		Com_sprintf(pathname, sizeof(pathname), "env/%s%s.png",
+				skyname, surfname);
+		image = find_image(pathname, it_sky);
+	}
+
 	/* Heretic 2 */
 	if (!image)
 	{
@@ -620,6 +627,18 @@ GetTexImage(const char *name, findimage_t find_image)
 	/* Quake 2 */
 	Com_sprintf(pathname, sizeof(pathname), "textures/%s.wal", name);
 	image = find_image(pathname, it_wall);
+
+	if (!image)
+	{
+		Com_sprintf(pathname, sizeof(pathname), "textures/%s.png", name);
+		image = find_image(pathname, it_wall);
+	}
+
+	if (!image)
+	{
+		Com_sprintf(pathname, sizeof(pathname), "textures/%s.tga", name);
+		image = find_image(pathname, it_wall);
+	}
 
 	/* Heretic 2 */
 	if (!image)

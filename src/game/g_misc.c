@@ -2139,6 +2139,93 @@ SP_misc_satellite_dish(edict_t *ent)
 
 /* ===================================================== */
 
+static void
+misc_static_prop_spawn(edict_t *ent, const char *default_model,
+	float min_x, float min_y, float min_z,
+	float max_x, float max_y, float max_z)
+{
+	if (!ent)
+	{
+		return;
+	}
+
+	ent->movetype = MOVETYPE_NONE;
+	ent->solid = SOLID_NOT;
+	ent->s.renderfx |= RF_FRAMELERP;
+
+	if (!ent->model || !ent->model[0])
+	{
+		ent->model = (char *)default_model;
+	}
+
+	VectorSet(ent->mins, min_x, min_y, min_z);
+	VectorSet(ent->maxs, max_x, max_y, max_z);
+	ent->s.modelindex = gi.modelindex(ent->model);
+	gi.linkentity(ent);
+}
+
+/*
+ * QUAKED misc_tank (1 .5 0) (-64 -32 0) (64 32 48)
+ * Static tank prop.
+ * Optional key:
+ * "model" path to override the default model.
+ */
+void
+SP_misc_tank(edict_t *ent)
+{
+	misc_static_prop_spawn(ent,
+		"models/props/tank/tris.md2",
+		-64, -32, 0,
+		64, 32, 48);
+}
+
+/*
+ * QUAKED misc_heli (1 .5 0) (-96 -96 -16) (96 96 48)
+ * Static helicopter prop.
+ * Optional key:
+ * "model" path to override the default model.
+ */
+void
+SP_misc_heli(edict_t *ent)
+{
+	misc_static_prop_spawn(ent,
+		"models/props/heli/tris.md2",
+		-96, -96, -16,
+		96, 96, 48);
+}
+
+/*
+ * QUAKED misc_plane (1 .5 0) (-128 -128 -24) (128 128 40)
+ * Static plane prop.
+ * Optional key:
+ * "model" path to override the default model.
+ */
+void
+SP_misc_plane(edict_t *ent)
+{
+	misc_static_prop_spawn(ent,
+		"models/props/plane/tris.md2",
+		-128, -128, -24,
+		128, 128, 40);
+}
+
+/*
+ * QUAKED misc_jeep (1 .5 0) (-48 -24 0) (48 24 32)
+ * Static jeep prop.
+ * Optional key:
+ * "model" path to override the default model.
+ */
+void
+SP_misc_jeep(edict_t *ent)
+{
+	misc_static_prop_spawn(ent,
+		"models/props/jeep/tris.md2",
+		-48, -24, 0,
+		48, 24, 32);
+}
+
+/* ===================================================== */
+
 /*
  * QUAKED light_mine1 (0 1 0) (-2 -2 -12) (2 2 12)
  */
