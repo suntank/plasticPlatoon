@@ -1849,8 +1849,8 @@ GL3_RenderFrame(refdef_t *fd)
 	}
 	GL3_SetGL2D();
 
-	int x = (vid.width - r_newrefdef.width)/2;
-	int y = (vid.height - r_newrefdef.height)/2;
+	int x = r_newrefdef.x;
+	int y = r_newrefdef.y;
 	if (usedFBO)
 	{
 		// if we're actually drawing the world and using an FBO, render the FBO's texture

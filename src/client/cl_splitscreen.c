@@ -30,6 +30,11 @@ static ss_state_t ss_state =
 static qboolean SS_FindServerClientForSlot(const ss_local_player_t *slot,
 	client_t **client_out, int *client_num_out);
 static void SS_SendSlotStringCmdNow(ss_local_player_t *slot, const char *cmd);
+static void SS_ParseSharedMuzzleFlash(sizebuf_t *msg, qboolean monster_flash);
+static void SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon);
+static float SS_GetSlotViewLerp(const ss_local_player_t *slot);
+static const player_state_t *SS_GetPreviousPlayerState(const ss_local_player_t *slot,
+	const player_state_t *ps);
 
 static float
 SS_GetDeltaAngle(const player_state_t *ps, int axis)
@@ -828,10 +833,179 @@ SS_SkipSoundPacket(sizebuf_t *msg)
 }
 
 static void
-SS_SkipMuzzleFlash(sizebuf_t *msg)
+SS_ParseSharedMuzzleFlash(sizebuf_t *msg, qboolean monster_flash)
 {
-	(void)MSG_ReadShort(msg);
-	(void)MSG_ReadByte(msg);
+	sizebuf_t saved_message;
+	int previous_playernum;
+
+	if (!msg)
+	{
+		return;
+	}
+
+	saved_message = net_message;
+	net_message = *msg;
+	previous_playernum = cl.playernum;
+
+	/* Split-screen slots use their own local viewmodel path, so treat these
+	 * parsed flashes as third-person effects to avoid disturbing player-one
+	 * recoil and ADS feedback state. */
+	cl.playernum = -1;
+
+	if (monster_flash)
+	{
+		CL_AddMuzzleFlash2();
+	}
+	else
+	{
+		CL_AddMuzzleFlash();
+	}
+
+	cl.playernum = previous_playernum;
+	*msg = net_message;
+	net_message = saved_message;
+}
+
+static void
+SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon)
+{
+	sizebuf_t saved_message;
+	sizebuf_t local_message;
+	byte local_data[8];
+	refdef_t saved_refdef;
+	frame_t saved_frame;
+	usercmd_t saved_cmd;
+	centity_t saved_entity;
+	vec3_t saved_viewangles;
+	vec3_t entity_origin;
+	vec3_t entity_angles;
+	const player_state_t *ps;
+	float yaw_delta;
+	int saved_playernum;
+	int saved_muzzle_seq;
+	int i;
+
+	if (!slot || !slot->snapshot_valid)
+	{
+		return;
+	}
+
+	ps = &slot->frame.playerstate;
+
+	for (i = 0; i < 3; ++i)
+	{
+		entity_origin[i] = ps->pmove.origin[i] * 0.125f;
+		entity_angles[i] = slot->viewangles[i] + SS_GetDeltaAngle(ps, i);
+	}
+
+	yaw_delta = SHORT2ANGLE(ps->pmove.delta_angles[YAW]);
+
+	if (yaw_delta > 180.0f)
+	{
+		yaw_delta -= 360.0f;
+	}
+
+	SZ_Init(&local_message, local_data, sizeof(local_data));
+	MSG_WriteShort(&local_message, entnum);
+	MSG_WriteByte(&local_message, weapon);
+	MSG_BeginReading(&local_message);
+
+	saved_message = net_message;
+	saved_playernum = cl.playernum;
+	saved_refdef = cl.refdef;
+	saved_frame = cl.frame;
+	saved_cmd = cl.cmd;
+	saved_entity = cl_entities[entnum];
+	saved_muzzle_seq = pp_viewmodel_muzzle_seq;
+	VectorCopy(cl.viewangles, saved_viewangles);
+
+	net_message = local_message;
+	cl.playernum = entnum - 1;
+	cl.frame = slot->frame;
+	cl.cmd.buttons &= ~BUTTON_ADS;
+
+	if (slot->ads_down)
+	{
+		cl.cmd.buttons |= BUTTON_ADS;
+	}
+
+	for (i = 0; i < 3; ++i)
+	{
+		cl.refdef.vieworg[i] = ps->pmove.origin[i] * 0.125f + ps->viewoffset[i];
+		cl.refdef.viewangles[i] = entity_angles[i] + ps->kick_angles[i];
+	}
+
+	VectorCopy(entity_origin, cl_entities[entnum].current.origin);
+	VectorCopy(entity_origin, cl_entities[entnum].prev.origin);
+	VectorCopy(entity_origin, cl_entities[entnum].lerp_origin);
+	VectorCopy(entity_angles, cl_entities[entnum].current.angles);
+	VectorCopy(entity_angles, cl_entities[entnum].prev.angles);
+	cl_entities[entnum].current.number = entnum;
+	cl_entities[entnum].prev.number = entnum;
+	cl_entities[entnum].serverframe = slot->frame.serverframe;
+
+	/* Match the normal client's delta-adjusted yaw basis before invoking the
+	 * stock muzzle-flash parser for this split-screen slot. */
+	cl.viewangles[YAW] = entity_angles[YAW] - yaw_delta;
+
+	CL_AddMuzzleFlash();
+
+	pp_viewmodel_muzzle_seq = saved_muzzle_seq;
+	cl_entities[entnum] = saved_entity;
+	cl.cmd = saved_cmd;
+	cl.frame = saved_frame;
+	cl.refdef = saved_refdef;
+	VectorCopy(saved_viewangles, cl.viewangles);
+	cl.playernum = saved_playernum;
+	net_message = saved_message;
+}
+
+static float
+SS_GetSlotViewLerp(const ss_local_player_t *slot)
+{
+	if (!slot)
+	{
+		return 1.0f;
+	}
+
+	if (cl_paused->value)
+	{
+		return 1.0f;
+	}
+
+	return Q_clamp(cl.lerpfrac, 0.0f, 1.0f);
+}
+
+static const player_state_t *
+SS_GetPreviousPlayerState(const ss_local_player_t *slot, const player_state_t *ps)
+{
+	const frame_t *oldframe;
+	const player_state_t *ops;
+	int i;
+
+	if (!slot || !slot->snapshot_valid || !ps)
+	{
+		return ps;
+	}
+
+	oldframe = &slot->frames[(slot->frame.serverframe - 1) & UPDATE_MASK];
+
+	if ((oldframe->serverframe != slot->frame.serverframe - 1) || !oldframe->valid)
+	{
+		return ps;
+	}
+
+	ops = &oldframe->playerstate;
+
+	for (i = 0; i < 3; ++i)
+	{
+		if (abs(ops->pmove.origin[i] - ps->pmove.origin[i]) > 256 * 8)
+		{
+			return ps;
+		}
+	}
+
+	return ops;
 }
 
 static void
@@ -1266,8 +1440,37 @@ SS_ParseServerMessage(ss_local_player_t *slot, sizebuf_t *msg)
 				break;
 
 			case svc_muzzleflash:
+			{
+				sizebuf_t saved_message;
+				sizebuf_t local_message;
+				byte local_data[8];
+				int entnum;
+				int weapon;
+
+				saved_message = net_message;
+				net_message = *msg;
+				entnum = MSG_ReadShort(&net_message);
+				weapon = MSG_ReadByte(&net_message);
+				*msg = net_message;
+				net_message = saved_message;
+
+				if (slot->snapshot_valid && entnum == slot->playernum + 1)
+				{
+					SS_ParseLocalSlotMuzzleFlash(slot, entnum, weapon);
+				}
+				else
+				{
+					SZ_Init(&local_message, local_data, sizeof(local_data));
+					MSG_WriteShort(&local_message, entnum);
+					MSG_WriteByte(&local_message, weapon);
+					MSG_BeginReading(&local_message);
+					SS_ParseSharedMuzzleFlash(&local_message, false);
+				}
+				break;
+			}
+
 			case svc_muzzleflash2:
-				SS_SkipMuzzleFlash(msg);
+				SS_ParseSharedMuzzleFlash(msg, true);
 				break;
 
 			case svc_download:
@@ -2343,7 +2546,7 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	look_x = SS_NormalizeAxis(slot->axis_right_x);
 	look_y = SS_NormalizeAxis(slot->axis_right_y);
 
-	slot->viewangles[YAW] += look_x * cl_yawspeed->value * cls.nframetime * 2.0f;
+	slot->viewangles[YAW] -= look_x * cl_yawspeed->value * cls.nframetime * 2.0f;
 	slot->viewangles[PITCH] -= look_y * cl_pitchspeed->value * cls.nframetime * 2.0f;
 
 	cmd->angles[PITCH] = ANGLE2SHORT(slot->viewangles[PITCH]);
@@ -2494,6 +2697,8 @@ SS_ApplyPlayerView(refdef_t *refdef, const ss_local_player_t *slot,
 	const player_state_t *ps,
 	const byte *areabits, const ss_viewport_t *viewport)
 {
+	const player_state_t *ops;
+	float lerp;
 	int i;
 
 	if (!refdef || !ps || !viewport)
@@ -2501,17 +2706,43 @@ SS_ApplyPlayerView(refdef_t *refdef, const ss_local_player_t *slot,
 		return;
 	}
 
+	if (slot && slot->local_index == 0)
+	{
+		refdef->x = viewport->x;
+		refdef->y = viewport->y;
+		refdef->width = viewport->w;
+		refdef->height = viewport->h;
+
+		if (refdef->fov_x < 1.0f || refdef->fov_x > 179.0f)
+		{
+			refdef->fov_x = 90.0f;
+		}
+
+		refdef->fov_y = CalcFov(refdef->fov_x, (float)refdef->width,
+			(float)refdef->height);
+		return;
+	}
+
+	ops = SS_GetPreviousPlayerState(slot, ps);
+	lerp = SS_GetSlotViewLerp(slot);
+
 	for (i = 0; i < 3; ++i)
 	{
-		refdef->vieworg[i] = ps->pmove.origin[i] * 0.125f + ps->viewoffset[i];
+		refdef->vieworg[i] = ops->pmove.origin[i] * 0.125f + ops->viewoffset[i] +
+			lerp * (ps->pmove.origin[i] * 0.125f + ps->viewoffset[i] -
+				(ops->pmove.origin[i] * 0.125f + ops->viewoffset[i]));
+
 		if (slot && ps->pmove.pm_type < PM_DEAD)
 		{
 			refdef->viewangles[i] = slot->viewangles[i] +
-				SS_GetDeltaAngle(ps, i) + ps->kick_angles[i];
+				SS_GetDeltaAngle(ps, i) +
+				LerpAngle(ops->kick_angles[i], ps->kick_angles[i], lerp);
 		}
 		else
 		{
-			refdef->viewangles[i] = ps->viewangles[i] + ps->kick_angles[i];
+			refdef->viewangles[i] = LerpAngle(ops->viewangles[i],
+				ps->viewangles[i], lerp) +
+				LerpAngle(ops->kick_angles[i], ps->kick_angles[i], lerp);
 		}
 	}
 
@@ -2573,6 +2804,12 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	cl.playernum = slot_playernum;
 	previous_skip_view_weapon = cl_skip_view_weapon;
 	cl_skip_view_weapon = true;
+
+	if (slot->local_index == 0)
+	{
+		VectorCopy(cl.viewangles, slot->viewangles);
+	}
+
 	SS_UpdateSlotCombatVisualState(slot_index, ps,
 		SS_IsSlotADSActive(slot_index, ps));
 
