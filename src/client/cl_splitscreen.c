@@ -31,6 +31,7 @@ static qboolean SS_FindServerClientForSlot(const ss_local_player_t *slot,
 	client_t **client_out, int *client_num_out);
 static void SS_SendSlotStringCmdNow(ss_local_player_t *slot, const char *cmd);
 static void SS_ParseSharedMuzzleFlash(sizebuf_t *msg, qboolean monster_flash);
+static void SS_ParseSharedTempEntity(ss_local_player_t *slot, sizebuf_t *msg);
 static void SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon);
 static float SS_GetSlotViewLerp(const ss_local_player_t *slot);
 static const player_state_t *SS_GetPreviousPlayerState(const ss_local_player_t *slot,
@@ -97,6 +98,24 @@ static const ss_viewmodel_recoil_t ss_default_recoil =
 {
 	0.35f, 8.0f, 4.0f, 2.5f
 };
+
+static float
+SS_ViewmodelAngleOffset(float angle, float base)
+{
+	float delta = angle - base;
+
+	while (delta > 180.0f)
+	{
+		delta -= 360.0f;
+	}
+
+	while (delta < -180.0f)
+	{
+		delta += 360.0f;
+	}
+
+	return delta;
+}
 
 static int
 SS_ClampPlayerCount(int player_count)
@@ -1311,6 +1330,93 @@ SS_SkipTempEntity(sizebuf_t *msg)
 	}
 }
 
+static unsigned int
+SS_HashTempEntityPayload(const byte *data, int len)
+{
+	unsigned int hash = 2166136261u;
+	int i;
+
+	for (i = 0; i < len; ++i)
+	{
+		hash ^= data[i];
+		hash *= 16777619u;
+	}
+
+	return hash;
+}
+
+static void
+SS_ParseSharedTempEntity(ss_local_player_t *slot, sizebuf_t *msg)
+{
+	typedef struct
+	{
+		int framecount;
+		int count;
+		unsigned int hashes[128];
+		int lengths[128];
+	} ss_temp_entity_cache_t;
+
+	static ss_temp_entity_cache_t cache;
+	sizebuf_t saved_message;
+	sizebuf_t probe;
+	frame_t saved_frame;
+	int payload_start;
+	int payload_len;
+	int i;
+
+	if (!slot || !msg)
+	{
+		return;
+	}
+
+	payload_start = msg->readcount;
+	probe = *msg;
+	SS_SkipTempEntity(&probe);
+	payload_len = probe.readcount - payload_start;
+
+	if (payload_len <= 0)
+	{
+		*msg = probe;
+		return;
+	}
+
+	if (cache.framecount != cls.framecount)
+	{
+		cache.framecount = cls.framecount;
+		cache.count = 0;
+	}
+
+	{
+		unsigned int hash = SS_HashTempEntityPayload(&msg->data[payload_start],
+			payload_len);
+
+		for (i = 0; i < cache.count; ++i)
+		{
+			if (cache.hashes[i] == hash && cache.lengths[i] == payload_len)
+			{
+				*msg = probe;
+				return;
+			}
+		}
+
+		if (cache.count < (int)ARRLEN(cache.hashes))
+		{
+			cache.hashes[cache.count] = hash;
+			cache.lengths[cache.count] = payload_len;
+			++cache.count;
+		}
+	}
+
+	saved_message = net_message;
+	saved_frame = cl.frame;
+	net_message = *msg;
+	cl.frame = slot->frame;
+	CL_ParseTEnt();
+	*msg = net_message;
+	net_message = saved_message;
+	cl.frame = saved_frame;
+}
+
 static void
 SS_TrimStuffText(char *text)
 {
@@ -1563,7 +1669,7 @@ SS_ParseServerMessage(ss_local_player_t *slot, sizebuf_t *msg)
 				break;
 
 			case svc_temp_entity:
-				SS_SkipTempEntity(msg);
+				SS_ParseSharedTempEntity(slot, msg);
 				break;
 
 			case svc_muzzleflash:
@@ -2346,6 +2452,7 @@ SS_DrawViewportADSOverlay(int slot_index, const ss_viewport_t *viewport,
 	int draw_h;
 	int draw_x;
 	int draw_y;
+	int max_kick_y;
 	int kick_y = 0;
 
 	if (!viewport || !SS_IsSlotADSActive(slot_index, ps))
@@ -2383,16 +2490,15 @@ SS_DrawViewportADSOverlay(int slot_index, const ss_viewport_t *viewport,
 	draw_w = (int)(pic_w * scale + 0.5f);
 	draw_h = (int)(pic_h * scale + 0.5f);
 	draw_x = viewport->x + (viewport->w - draw_w) / 2;
-	draw_y = viewport->y + (viewport->h - draw_h) / 2 + kick_y;
+	draw_y = viewport->y + (viewport->h - draw_h) / 2;
+	max_kick_y = Q_max((viewport->h - draw_h) / 2, 0);
 
-	if (draw_y < viewport->y)
+	if (kick_y > max_kick_y)
 	{
-		draw_y = viewport->y;
+		kick_y = max_kick_y;
 	}
-	else if (draw_y + draw_h > viewport->y + viewport->h)
-	{
-		draw_y = viewport->y + viewport->h - draw_h;
-	}
+
+	draw_y += kick_y;
 
 	Draw_StretchPic(draw_x, draw_y, draw_w, draw_h, overlay_pic);
 	return true;
@@ -2406,6 +2512,8 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 	ss_local_player_t *slot = SS_GetSlot(slot_index);
 	const player_state_t *ops;
 	const ss_viewmodel_recoil_t *recoil_cfg;
+	vec3_t base_origin;
+	vec3_t base_angles;
 	vec3_t forward;
 	vec3_t right;
 	vec3_t up;
@@ -2459,6 +2567,9 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 			LerpAngle(ops->gunangles[i], ps->gunangles[i], lerp);
 	}
 
+	VectorCopy(gun.origin, base_origin);
+	VectorCopy(gun.angles, base_angles);
+
 	AngleVectors(refdef->viewangles, forward, right, up);
 	recoil_cfg = SS_GetViewmodelRecoil(ps);
 	current_time = cls.realtime * 0.001f;
@@ -2487,12 +2598,18 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 
 	if (slot)
 	{
-		float smooth = Q_clamp(cls.rframetime * 28.0f, 0.0f, 1.0f);
+		vec3_t proc_origin;
+		vec3_t proc_angles;
+		float smooth = Q_clamp(cls.rframetime * 24.0f, 0.0f, 1.0f);
 
 		if (!slot->viewmodel_valid)
 		{
-			VectorCopy(gun.origin, slot->viewmodel_origin);
-			VectorCopy(gun.angles, slot->viewmodel_angles);
+			for (i = 0; i < 3; ++i)
+			{
+				slot->viewmodel_origin[i] = gun.origin[i] - base_origin[i];
+				slot->viewmodel_angles[i] =
+					SS_ViewmodelAngleOffset(gun.angles[i], base_angles[i]);
+			}
 			slot->viewmodel_valid = true;
 		}
 		else
@@ -2501,7 +2618,13 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 
 			for (i = 0; i < 3; ++i)
 			{
-				float origin_error = fabsf(gun.origin[i] - slot->viewmodel_origin[i]);
+				proc_origin[i] = gun.origin[i] - base_origin[i];
+				proc_angles[i] = SS_ViewmodelAngleOffset(gun.angles[i], base_angles[i]);
+			}
+
+			for (i = 0; i < 3; ++i)
+			{
+				float origin_error = fabsf(proc_origin[i] - slot->viewmodel_origin[i]);
 
 				if (origin_error > max_origin_error)
 				{
@@ -2521,14 +2644,17 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 			for (i = 0; i < 3; ++i)
 			{
 				slot->viewmodel_origin[i] +=
-					(gun.origin[i] - slot->viewmodel_origin[i]) * smooth;
+					(proc_origin[i] - slot->viewmodel_origin[i]) * smooth;
 				slot->viewmodel_angles[i] =
-					LerpAngle(slot->viewmodel_angles[i], gun.angles[i], smooth);
+					LerpAngle(slot->viewmodel_angles[i], proc_angles[i], smooth);
 			}
 		}
 
-		VectorCopy(slot->viewmodel_origin, gun.origin);
-		VectorCopy(slot->viewmodel_angles, gun.angles);
+		for (i = 0; i < 3; ++i)
+		{
+			gun.origin[i] = base_origin[i] + slot->viewmodel_origin[i];
+			gun.angles[i] = base_angles[i] + slot->viewmodel_angles[i];
+		}
 	}
 
 	gun.frame = ps->gunframe;

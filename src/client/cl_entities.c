@@ -78,6 +78,24 @@ static vec3_t pp_viewmodel_smoothed_origin;
 static vec3_t pp_viewmodel_smoothed_angles;
 static qboolean pp_viewmodel_smoothed_valid = false;
 
+static float
+PP_ViewmodelAngleOffset(float angle, float base)
+{
+	float delta = angle - base;
+
+	while (delta > 180.0f)
+	{
+		delta -= 360.0f;
+	}
+
+	while (delta < -180.0f)
+	{
+		delta += 360.0f;
+	}
+
+	return delta;
+}
+
 static pp_weapon_type_t
 PP_DetectWeaponType(player_state_t *ps)
 {
@@ -940,6 +958,8 @@ void
 CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 {
 	entity_t gun = {0}; /* view model */
+	vec3_t base_origin;
+	vec3_t base_angles;
 	int i;
 
 	if (cl_skip_view_weapon)
@@ -996,6 +1016,9 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 		gun.angles[i] = cl.refdef.viewangles[i] + LerpAngle(ops->gunangles[i],
 			ps->gunangles[i], cl.lerpfrac);
 	}
+
+	VectorCopy(gun.origin, base_origin);
+	VectorCopy(gun.angles, base_angles);
 
 	/* Force static frame 0 for all weapons - we do procedural animation */
 	gun.frame = 0;
@@ -1124,12 +1147,18 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 	}
 
 	{
-		float smooth = Q_clamp(cls.rframetime * 28.0f, 0.0f, 1.0f);
+		vec3_t proc_origin;
+		vec3_t proc_angles;
+		float smooth = Q_clamp(cls.rframetime * 24.0f, 0.0f, 1.0f);
 
 		if (!pp_viewmodel_smoothed_valid)
 		{
-			VectorCopy(gun.origin, pp_viewmodel_smoothed_origin);
-			VectorCopy(gun.angles, pp_viewmodel_smoothed_angles);
+			for (i = 0; i < 3; ++i)
+			{
+				pp_viewmodel_smoothed_origin[i] = gun.origin[i] - base_origin[i];
+				pp_viewmodel_smoothed_angles[i] =
+					PP_ViewmodelAngleOffset(gun.angles[i], base_angles[i]);
+			}
 			pp_viewmodel_smoothed_valid = true;
 		}
 		else
@@ -1138,7 +1167,13 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 
 			for (i = 0; i < 3; ++i)
 			{
-				float origin_error = fabsf(gun.origin[i] - pp_viewmodel_smoothed_origin[i]);
+				proc_origin[i] = gun.origin[i] - base_origin[i];
+				proc_angles[i] = PP_ViewmodelAngleOffset(gun.angles[i], base_angles[i]);
+			}
+
+			for (i = 0; i < 3; ++i)
+			{
+				float origin_error = fabsf(proc_origin[i] - pp_viewmodel_smoothed_origin[i]);
 
 				if (origin_error > max_origin_error)
 				{
@@ -1158,14 +1193,17 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 			for (i = 0; i < 3; ++i)
 			{
 				pp_viewmodel_smoothed_origin[i] +=
-					(gun.origin[i] - pp_viewmodel_smoothed_origin[i]) * smooth;
+					(proc_origin[i] - pp_viewmodel_smoothed_origin[i]) * smooth;
 				pp_viewmodel_smoothed_angles[i] =
-					LerpAngle(pp_viewmodel_smoothed_angles[i], gun.angles[i], smooth);
+					LerpAngle(pp_viewmodel_smoothed_angles[i], proc_angles[i], smooth);
 			}
 		}
 
-		VectorCopy(pp_viewmodel_smoothed_origin, gun.origin);
-		VectorCopy(pp_viewmodel_smoothed_angles, gun.angles);
+		for (i = 0; i < 3; ++i)
+		{
+			gun.origin[i] = base_origin[i] + pp_viewmodel_smoothed_origin[i];
+			gun.angles[i] = base_angles[i] + pp_viewmodel_smoothed_angles[i];
+		}
 	}
 
 	gun.flags = RF_MINLIGHT | RF_DEPTHHACK | RF_WEAPONMODEL;
