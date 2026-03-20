@@ -31,6 +31,59 @@ static qboolean SS_FindServerClientForSlot(const ss_local_player_t *slot,
 	client_t **client_out, int *client_num_out);
 static void SS_SendSlotStringCmdNow(ss_local_player_t *slot, const char *cmd);
 
+static float
+SS_GetDeltaAngle(const player_state_t *ps, int axis)
+{
+	float angle;
+
+	if (!ps || axis < 0 || axis >= 3)
+	{
+		return 0.0f;
+	}
+
+	angle = SHORT2ANGLE(ps->pmove.delta_angles[axis]);
+
+	if (angle > 180.0f)
+	{
+		angle -= 360.0f;
+	}
+
+	return angle;
+}
+
+static void
+SS_ClampSlotPitch(ss_local_player_t *slot, const player_state_t *ps)
+{
+	float pitch_delta;
+
+	if (!slot || !ps)
+	{
+		return;
+	}
+
+	pitch_delta = SS_GetDeltaAngle(ps, PITCH);
+
+	if (slot->viewangles[PITCH] + pitch_delta < -360.0f)
+	{
+		slot->viewangles[PITCH] += 360.0f;
+	}
+
+	if (slot->viewangles[PITCH] + pitch_delta > 360.0f)
+	{
+		slot->viewangles[PITCH] -= 360.0f;
+	}
+
+	if (slot->viewangles[PITCH] + pitch_delta > 89.0f)
+	{
+		slot->viewangles[PITCH] = 89.0f - pitch_delta;
+	}
+
+	if (slot->viewangles[PITCH] + pitch_delta < -89.0f)
+	{
+		slot->viewangles[PITCH] = -89.0f - pitch_delta;
+	}
+}
+
 static const ss_viewmodel_recoil_t ss_default_recoil =
 {
 	0.35f, 8.0f, 4.0f, 2.5f
@@ -632,6 +685,7 @@ SS_ParsePlayerstate(ss_local_player_t *slot, frame_t *oldframe,
 	else
 	{
 		memset(state, 0, sizeof(*state));
+		state->fov = 90.0f;
 	}
 
 	flags = MSG_ReadShort(msg);
@@ -1047,6 +1101,7 @@ SS_ParseFrame(ss_local_player_t *slot, sizebuf_t *msg)
 	int len;
 	int area_len;
 	int suppress_count;
+	int i;
 
 	if (!slot)
 	{
@@ -1122,12 +1177,19 @@ SS_ParseFrame(ss_local_player_t *slot, sizebuf_t *msg)
 	SS_ParsePacketEntities(slot, old, &newframe, msg);
 	slot->frame = newframe;
 	slot->frames[newframe.serverframe & UPDATE_MASK] = newframe;
-	slot->snapshot_valid = newframe.valid;
 
-	if (newframe.valid)
+	if (newframe.valid && !slot->snapshot_valid)
 	{
-		VectorCopy(newframe.playerstate.viewangles, slot->viewangles);
+		for (i = 0; i < 3; ++i)
+		{
+			slot->viewangles[i] = newframe.playerstate.viewangles[i] -
+				SS_GetDeltaAngle(&newframe.playerstate, i);
+		}
+
+		SS_ClampSlotPitch(slot, &newframe.playerstate);
 	}
+
+	slot->snapshot_valid = newframe.valid;
 }
 
 static void
@@ -2256,6 +2318,22 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 		return;
 	}
 
+	if (slot->snapshot_valid)
+	{
+		SS_ClampSlotPitch(slot, &slot->frame.playerstate);
+	}
+	else
+	{
+		if (slot->viewangles[PITCH] > 89.0f)
+		{
+			slot->viewangles[PITCH] = 89.0f;
+		}
+		else if (slot->viewangles[PITCH] < -89.0f)
+		{
+			slot->viewangles[PITCH] = -89.0f;
+		}
+	}
+
 	cmd_index = slot->netchan.outgoing_sequence & (CMD_BACKUP - 1);
 	cmd = &slot->cmds[cmd_index];
 	memset(cmd, 0, sizeof(*cmd));
@@ -2267,15 +2345,6 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 
 	slot->viewangles[YAW] += look_x * cl_yawspeed->value * cls.nframetime * 2.0f;
 	slot->viewangles[PITCH] -= look_y * cl_pitchspeed->value * cls.nframetime * 2.0f;
-
-	if (slot->viewangles[PITCH] > 89.0f)
-	{
-		slot->viewangles[PITCH] = 89.0f;
-	}
-	else if (slot->viewangles[PITCH] < -89.0f)
-	{
-		slot->viewangles[PITCH] = -89.0f;
-	}
 
 	cmd->angles[PITCH] = ANGLE2SHORT(slot->viewangles[PITCH]);
 	cmd->angles[YAW] = ANGLE2SHORT(slot->viewangles[YAW]);
@@ -2421,7 +2490,8 @@ SS_FindServerClientForSlot(const ss_local_player_t *slot, client_t **client_out,
 }
 
 static void
-SS_ApplyPlayerView(refdef_t *refdef, const player_state_t *ps,
+SS_ApplyPlayerView(refdef_t *refdef, const ss_local_player_t *slot,
+	const player_state_t *ps,
 	const byte *areabits, const ss_viewport_t *viewport)
 {
 	int i;
@@ -2434,7 +2504,15 @@ SS_ApplyPlayerView(refdef_t *refdef, const player_state_t *ps,
 	for (i = 0; i < 3; ++i)
 	{
 		refdef->vieworg[i] = ps->pmove.origin[i] * 0.125f + ps->viewoffset[i];
-		refdef->viewangles[i] = ps->viewangles[i] + ps->kick_angles[i];
+		if (slot && ps->pmove.pm_type < PM_DEAD)
+		{
+			refdef->viewangles[i] = slot->viewangles[i] +
+				SS_GetDeltaAngle(ps, i) + ps->kick_angles[i];
+		}
+		else
+		{
+			refdef->viewangles[i] = ps->viewangles[i] + ps->kick_angles[i];
+		}
 	}
 
 	for (i = 0; i < 4; ++i)
@@ -2447,6 +2525,10 @@ SS_ApplyPlayerView(refdef_t *refdef, const player_state_t *ps,
 	refdef->width = viewport->w;
 	refdef->height = viewport->h;
 	refdef->fov_x = ps->fov;
+	if (refdef->fov_x < 1.0f || refdef->fov_x > 179.0f)
+	{
+		refdef->fov_x = 90.0f;
+	}
 	refdef->fov_y = CalcFov(refdef->fov_x, (float)refdef->width,
 		(float)refdef->height);
 	refdef->rdflags = ps->rdflags;
@@ -2497,7 +2579,7 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	V_ClearScene();
 	CL_AddEntities();
 	refdef = cl.refdef;
-	SS_ApplyPlayerView(&refdef, ps, areabits, viewport);
+	SS_ApplyPlayerView(&refdef, slot, ps, areabits, viewport);
 	SS_AddSlotViewWeapon(slot_index, &refdef, ps);
 
 	if (stereo_separation != 0)
@@ -2513,6 +2595,7 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	refdef.vieworg[1] += 1.0f / 16.0f;
 	refdef.vieworg[2] += 1.0f / 16.0f;
 	refdef.time = cl.time * 0.001f;
+	V_PopulateRefdef(&refdef);
 
 	R_RenderFrame(&refdef);
 

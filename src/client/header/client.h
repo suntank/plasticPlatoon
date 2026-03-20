@@ -519,6 +519,7 @@ extern	struct model_s	*gun_model;
 
 void V_Init (void);
 void V_ClearScene(void);
+void V_PopulateRefdef(refdef_t *refdef);
 float CalcFov(float fov_x, float width, float height);
 void V_RenderView( float stereo_separation );
 void V_AddEntity (entity_t *ent);

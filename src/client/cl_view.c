@@ -414,6 +414,47 @@ entitycmpfnc(const entity_t *a, const entity_t *b)
 	}
 }
 
+void
+V_PopulateRefdef(refdef_t *refdef)
+{
+	if (!refdef)
+	{
+		return;
+	}
+
+	if (!cl_add_entities->value)
+	{
+		r_numentities = 0;
+	}
+
+	if (!cl_add_particles->value)
+	{
+		r_numparticles = 0;
+	}
+
+	if (!cl_add_lights->value)
+	{
+		r_numdlights = 0;
+	}
+
+	if (!cl_add_blend->value)
+	{
+		VectorClear(refdef->blend);
+	}
+
+	refdef->num_entities = r_numentities;
+	refdef->entities = r_entities;
+	refdef->num_particles = r_numparticles;
+	refdef->particles = r_particles;
+	refdef->num_dlights = r_numdlights;
+	refdef->dlights = r_dlights;
+	refdef->lightstyles = r_lightstyles;
+
+	qsort(refdef->entities, refdef->num_entities,
+			sizeof(refdef->entities[0]), (int (*)(const void *, const void *))
+			entitycmpfnc);
+}
+
 static void
 V_Render3dCrosshair(void)
 {
@@ -546,40 +587,8 @@ V_RenderView(float stereo_separation)
 
 		cl.refdef.areabits = cl.frame.areabits;
 
-		if (!cl_add_entities->value)
-		{
-			r_numentities = 0;
-		}
-
-		if (!cl_add_particles->value)
-		{
-			r_numparticles = 0;
-		}
-
-		if (!cl_add_lights->value)
-		{
-			r_numdlights = 0;
-		}
-
-		if (!cl_add_blend->value)
-		{
-			VectorClear(cl.refdef.blend);
-		}
-
-		cl.refdef.num_entities = r_numentities;
-		cl.refdef.entities = r_entities;
-		cl.refdef.num_particles = r_numparticles;
-		cl.refdef.particles = r_particles;
-		cl.refdef.num_dlights = r_numdlights;
-		cl.refdef.dlights = r_dlights;
-		cl.refdef.lightstyles = r_lightstyles;
-
 		cl.refdef.rdflags = cl.frame.playerstate.rdflags;
-
-		/* sort entities for better cache locality */
-		qsort(cl.refdef.entities, cl.refdef.num_entities,
-				sizeof(cl.refdef.entities[0]), (int (*)(const void *, const void *))
-				entitycmpfnc);
+		V_PopulateRefdef(&cl.refdef);
 	} else if (cl.frame.valid && cl_paused->value && gl1_stereo->value) {
 		// We need to adjust the refdef in stereo mode when paused.
 		vec3_t tmp;

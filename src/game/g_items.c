@@ -790,7 +790,7 @@ Pickup_Ammo(edict_t *ent, edict_t *other)
 		return false;
 	}
 
-	if (weapon && !oldcount)
+	if (weapon && ent->item->use && !oldcount)
 	{
 		if ((other->client->pers.weapon != ent->item) &&
 			(!deathmatch->value ||
@@ -1958,7 +1958,7 @@ static const gitem_t gameitemlist[] = {
 	{
 		"ammo_grenades",
 		Pickup_Ammo,
-		Use_Weapon,
+		NULL,
 		Drop_Ammo,
 		Weapon_Grenade,
 		"misc/am_pkup.wav",
@@ -1967,7 +1967,7 @@ static const gitem_t gameitemlist[] = {
 		"a_grenades",
 		"Grenades",
 		3,
-		5,
+		2,
 		"grenades",
 		IT_AMMO | IT_WEAPON,
 		WEAP_GRENADES,

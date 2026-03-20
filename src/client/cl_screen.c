@@ -1743,7 +1743,7 @@ SCR_UpdateScreen(void)
 		return; /* not initialized yet */
 	}
 
-	if ( gl1_stereo->value )
+	if (gl1_stereo->value && !SS_IsSessionActive())
 	{
 		numframes = 2;
 		separation[0] = -gl1_stereo_separation->value / 2;
