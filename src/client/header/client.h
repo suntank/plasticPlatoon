@@ -340,6 +340,7 @@ extern	cdlight_t	cl_dlights[MAX_DLIGHTS];
 
 extern	centity_t	*cl_entities;
 extern	int			cl_numentities;
+extern	entity_state_t	*cl_entity_parse_stream;
 
 /* This limit is due to entnums being sent in signed 16-bit */
 #define MAX_CL_ENTNUM SHRT_MAX
@@ -446,6 +447,7 @@ void CL_RunLightStyles (void);
 
 void CL_CalcViewValues(void);
 void CL_AddEntities (void);
+void CL_AddPacketEntities(frame_t *frame);
 extern qboolean cl_skip_view_weapon;
 void CL_AddDLights (void);
 void CL_AddTEnts (void);

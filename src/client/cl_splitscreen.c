@@ -35,6 +35,10 @@ static void SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, in
 static float SS_GetSlotViewLerp(const ss_local_player_t *slot);
 static const player_state_t *SS_GetPreviousPlayerState(const ss_local_player_t *slot,
 	const player_state_t *ps);
+static centity_t *SS_AllocSlotEntity(ss_local_player_t *slot, int entnum);
+static void SS_FreeSlotEntities(ss_local_player_t *slot);
+static void SS_TriggerSlotViewmodelKick(ss_local_player_t *slot,
+	const ss_viewmodel_recoil_t *recoil_cfg, qboolean ads_active, float current_time);
 
 static float
 SS_GetDeltaAngle(const player_state_t *ps, int axis)
@@ -532,6 +536,7 @@ SS_ParseDelta(sizebuf_t *msg, const entity_state_t *from, entity_state_t *to,
 	if (bits & U_OLDORIGIN) MSG_ReadPos(msg, to->old_origin);
 	if (bits & U_SOUND) to->sound = MSG_ReadByte(msg);
 	if (bits & U_EVENT) to->event = MSG_ReadByte(msg);
+	else to->event = 0;
 	if (bits & U_SOLID) to->solid = MSG_ReadShort(msg);
 }
 
@@ -539,6 +544,8 @@ static void
 SS_DeltaEntity(ss_local_player_t *slot, frame_t *frame, int newnum,
 	const entity_state_t *old, int bits, sizebuf_t *msg)
 {
+	centity_t dummy;
+	centity_t *ent;
 	entity_state_t *state;
 
 	state = &slot->parse_entities[slot->parse_entities_num &
@@ -546,7 +553,52 @@ SS_DeltaEntity(ss_local_player_t *slot, frame_t *frame, int newnum,
 	slot->parse_entities_num++;
 	frame->num_entities++;
 
+	ent = SS_AllocSlotEntity(slot, newnum);
+
+	if (!ent)
+	{
+		memset(&dummy, 0, sizeof(dummy));
+		ent = &dummy;
+	}
+
 	SS_ParseDelta(msg, old, state, newnum, bits);
+
+	if ((state->modelindex != ent->current.modelindex) ||
+		(state->modelindex2 != ent->current.modelindex2) ||
+		(state->modelindex3 != ent->current.modelindex3) ||
+		(state->modelindex4 != ent->current.modelindex4) ||
+		(state->event == EV_PLAYER_TELEPORT) ||
+		(state->event == EV_OTHER_TELEPORT) ||
+		(abs((int)(state->origin[0] - ent->current.origin[0])) > 512) ||
+		(abs((int)(state->origin[1] - ent->current.origin[1])) > 512) ||
+		(abs((int)(state->origin[2] - ent->current.origin[2])) > 512))
+	{
+		ent->serverframe = -99;
+	}
+
+	if (ent->serverframe != frame->serverframe - 1)
+	{
+		ent->trailcount = 1024;
+		ent->prev = *state;
+
+		if (state->event == EV_OTHER_TELEPORT)
+		{
+			VectorCopy(state->origin, ent->prev.origin);
+			VectorCopy(state->origin, ent->lerp_origin);
+		}
+		else
+		{
+			VectorCopy(state->old_origin, ent->prev.origin);
+			VectorCopy(state->old_origin, ent->lerp_origin);
+		}
+	}
+	else
+	{
+		ent->prev = ent->current;
+	}
+
+	ent->serverframe = frame->serverframe;
+	ent->current = *state;
 }
 
 static void
@@ -648,7 +700,7 @@ SS_ParsePacketEntities(ss_local_player_t *slot, frame_t *oldframe,
 
 		if (oldnum > (int)newnum)
 		{
-			centity_t *ent = CL_AllocEntity((int)newnum);
+			centity_t *ent = SS_AllocSlotEntity(slot, (int)newnum);
 			SS_DeltaEntity(slot, newframe, (int)newnum,
 				ent ? &ent->baseline : NULL, bits, msg);
 		}
@@ -802,8 +854,9 @@ SS_ParseConfigString(sizebuf_t *msg)
 }
 
 static void
-SS_ParseBaseline(sizebuf_t *msg)
+SS_ParseBaseline(ss_local_player_t *slot, sizebuf_t *msg)
 {
+	centity_t *ent;
 	entity_state_t baseline;
 	unsigned bits;
 	int newnum;
@@ -811,6 +864,13 @@ SS_ParseBaseline(sizebuf_t *msg)
 	newnum = SS_ParseEntityBits(msg, &bits);
 	memset(&baseline, 0, sizeof(baseline));
 	SS_ParseDelta(msg, NULL, &baseline, newnum, bits);
+
+	ent = SS_AllocSlotEntity(slot, newnum);
+
+	if (ent)
+	{
+		ent->baseline = baseline;
+	}
 }
 
 static void
@@ -830,6 +890,40 @@ SS_SkipSoundPacket(sizebuf_t *msg)
 		vec3_t pos;
 		MSG_ReadPos(msg, pos);
 	}
+}
+
+static void
+SS_FreeSlotEntities(ss_local_player_t *slot)
+{
+	if (!slot || !slot->entities)
+	{
+		return;
+	}
+
+	Z_Free(slot->entities);
+	slot->entities = NULL;
+	slot->entity_count = 0;
+}
+
+static centity_t *
+SS_AllocSlotEntity(ss_local_player_t *slot, int entnum)
+{
+	int nextpow2;
+
+	if (!slot || entnum < 0 || entnum > MAX_CL_ENTNUM)
+	{
+		return NULL;
+	}
+
+	if (entnum >= slot->entity_count)
+	{
+		nextpow2 = (slot->entity_count || (entnum >= 32)) ?
+			(int)NextPow2gt(entnum) : 32;
+		slot->entities = Z_Realloc(slot->entities, nextpow2 * sizeof(*slot->entities));
+		slot->entity_count = nextpow2;
+	}
+
+	return &slot->entities[entnum];
 }
 
 static void
@@ -922,6 +1016,7 @@ SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon)
 	net_message = local_message;
 	cl.playernum = entnum - 1;
 	cl.frame = slot->frame;
+	slot->muzzle_flash_seq++;
 	cl.cmd.buttons &= ~BUTTON_ADS;
 
 	if (slot->ads_down)
@@ -963,6 +1058,8 @@ SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon)
 static float
 SS_GetSlotViewLerp(const ss_local_player_t *slot)
 {
+	float lerp;
+
 	if (!slot)
 	{
 		return 1.0f;
@@ -973,7 +1070,29 @@ SS_GetSlotViewLerp(const ss_local_player_t *slot)
 		return 1.0f;
 	}
 
-	return Q_clamp(cl.lerpfrac, 0.0f, 1.0f);
+	if (!slot->snapshot_valid)
+	{
+		return Q_clamp(cl.lerpfrac, 0.0f, 1.0f);
+	}
+
+	if (cl.time >= slot->frame.servertime)
+	{
+		return 1.0f;
+	}
+
+	if (cl.time <= slot->frame.servertime - 100)
+	{
+		return 0.0f;
+	}
+
+	lerp = 1.0f - (slot->frame.servertime - cl.time) * 0.01f;
+
+	if (cl_timedemo->value)
+	{
+		return 1.0f;
+	}
+
+	return Q_clamp(lerp, 0.0f, 1.0f);
 }
 
 static const player_state_t *
@@ -1263,7 +1382,15 @@ SS_ParseServerData(ss_local_player_t *slot, sizebuf_t *msg)
 	slot->playernum = MSG_ReadShort(msg);
 	(void)MSG_ReadString(msg);
 	slot->snapshot_valid = false;
+	slot->parse_entities_num = 0;
+	slot->muzzle_flash_seq = 0;
+	slot->last_muzzle_flash_seq = 0;
 	memset(&slot->frame, 0, sizeof(slot->frame));
+
+	if (slot->entities && slot->entity_count > 0)
+	{
+		memset(slot->entities, 0, slot->entity_count * sizeof(*slot->entities));
+	}
 }
 
 static void
@@ -1432,7 +1559,7 @@ SS_ParseServerMessage(ss_local_player_t *slot, sizebuf_t *msg)
 				break;
 
 			case svc_spawnbaseline:
-				SS_ParseBaseline(msg);
+				SS_ParseBaseline(slot, msg);
 				break;
 
 			case svc_temp_entity:
@@ -2109,6 +2236,29 @@ SS_GetViewmodelRecoil(const player_state_t *ps)
 }
 
 static void
+SS_TriggerSlotViewmodelKick(ss_local_player_t *slot,
+	const ss_viewmodel_recoil_t *recoil_cfg, qboolean ads_active, float current_time)
+{
+	if (!slot || !recoil_cfg)
+	{
+		return;
+	}
+
+	slot->viewmodel_recoil = recoil_cfg->recoil_strength;
+	slot->last_attack_time = current_time;
+
+	if (ads_active)
+	{
+		slot->ads_kick_offset += 20.0f;
+
+		if (slot->ads_kick_offset > 40.0f)
+		{
+			slot->ads_kick_offset = 40.0f;
+		}
+	}
+}
+
+static void
 SS_UpdateSlotCombatVisualState(int slot_index, const player_state_t *ps,
 	qboolean ads_active)
 {
@@ -2117,6 +2267,7 @@ SS_UpdateSlotCombatVisualState(int slot_index, const player_state_t *ps,
 	float dt;
 	float current_time;
 	qboolean attack_active;
+	int muzzle_seq;
 
 	if (!slot || !ps)
 	{
@@ -2134,35 +2285,31 @@ SS_UpdateSlotCombatVisualState(int slot_index, const player_state_t *ps,
 		dt = 0.1f;
 	}
 
-	current_time = cl.time * 0.001f;
+	current_time = cls.realtime * 0.001f;
 	recoil_cfg = SS_GetViewmodelRecoil(ps);
 	attack_active = SS_IsSlotAttackActive(slot_index);
+	muzzle_seq = (slot_index == 0) ? pp_viewmodel_muzzle_seq : slot->muzzle_flash_seq;
 
 	if (slot->last_gunindex != ps->gunindex)
 	{
 		slot->viewmodel_raise = 0.0f;
 		slot->viewmodel_recoil = 0.0f;
 		slot->ads_kick_offset = 0.0f;
+		slot->viewmodel_valid = false;
 		slot->last_gunindex = ps->gunindex;
 	}
 
-	if (attack_active && !slot->previous_attack_down)
+	if (muzzle_seq != slot->last_muzzle_flash_seq)
 	{
-		slot->viewmodel_recoil = recoil_cfg->recoil_strength;
-		slot->last_attack_time = current_time;
-
-		if (ads_active)
-		{
-			slot->ads_kick_offset += 20.0f;
-
-			if (slot->ads_kick_offset > 40.0f)
-			{
-				slot->ads_kick_offset = 40.0f;
-			}
-		}
+		SS_TriggerSlotViewmodelKick(slot, recoil_cfg, ads_active, current_time);
+	}
+	else if (attack_active && !slot->previous_attack_down)
+	{
+		SS_TriggerSlotViewmodelKick(slot, recoil_cfg, ads_active, current_time);
 	}
 
 	slot->previous_attack_down = attack_active;
+	slot->last_muzzle_flash_seq = muzzle_seq;
 	slot->ads_active = ads_active;
 	slot->viewmodel_recoil -= dt * recoil_cfg->recoil_recovery;
 
@@ -2192,6 +2339,13 @@ SS_DrawViewportADSOverlay(int slot_index, const ss_viewport_t *viewport,
 {
 	const char *overlay_pic;
 	ss_local_player_t *slot = SS_GetSlot(slot_index);
+	float scale;
+	int pic_w = 0;
+	int pic_h = 0;
+	int draw_w;
+	int draw_h;
+	int draw_x;
+	int draw_y;
 	int kick_y = 0;
 
 	if (!viewport || !SS_IsSlotADSActive(slot_index, ps))
@@ -2206,13 +2360,41 @@ SS_DrawViewportADSOverlay(int slot_index, const ss_viewport_t *viewport,
 		return false;
 	}
 
+	Draw_GetPicSize(&pic_w, &pic_h, overlay_pic);
+
+	if (pic_w <= 0 || pic_h <= 0)
+	{
+		return false;
+	}
+
 	if (slot)
 	{
 		kick_y = (int)(slot->ads_kick_offset + 0.5f);
 	}
 
-	Draw_StretchPic(viewport->x, viewport->y + kick_y, viewport->w, viewport->h,
-		overlay_pic);
+	scale = Q_min(viewport->w / (float)pic_w, viewport->h / (float)pic_h);
+	scale *= 0.92f;
+
+	if (scale <= 0.0f)
+	{
+		return false;
+	}
+
+	draw_w = (int)(pic_w * scale + 0.5f);
+	draw_h = (int)(pic_h * scale + 0.5f);
+	draw_x = viewport->x + (viewport->w - draw_w) / 2;
+	draw_y = viewport->y + (viewport->h - draw_h) / 2 + kick_y;
+
+	if (draw_y < viewport->y)
+	{
+		draw_y = viewport->y;
+	}
+	else if (draw_y + draw_h > viewport->y + viewport->h)
+	{
+		draw_y = viewport->y + viewport->h - draw_h;
+	}
+
+	Draw_StretchPic(draw_x, draw_y, draw_w, draw_h, overlay_pic);
 	return true;
 }
 
@@ -2222,6 +2404,7 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 {
 	entity_t gun = {0};
 	ss_local_player_t *slot = SS_GetSlot(slot_index);
+	const player_state_t *ops;
 	const ss_viewmodel_recoil_t *recoil_cfg;
 	vec3_t forward;
 	vec3_t right;
@@ -2232,6 +2415,7 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 	float bob_up;
 	float bob_right;
 	float hide;
+	float lerp;
 	int i;
 
 	if (!refdef || !ps || !cl_gun->value || SS_IsSlotADSActive(slot_index, ps))
@@ -2263,16 +2447,21 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 		return;
 	}
 
+	ops = SS_GetPreviousPlayerState(slot, ps);
+	lerp = SS_GetSlotViewLerp(slot);
+
 	for (i = 0; i < 3; ++i)
 	{
-		gun.origin[i] = refdef->vieworg[i] + ps->gunoffset[i];
+		gun.origin[i] = refdef->vieworg[i] + ops->gunoffset[i] +
+			lerp * (ps->gunoffset[i] - ops->gunoffset[i]);
 		gun.oldorigin[i] = gun.origin[i];
-		gun.angles[i] = refdef->viewangles[i] + ps->gunangles[i];
+		gun.angles[i] = refdef->viewangles[i] +
+			LerpAngle(ops->gunangles[i], ps->gunangles[i], lerp);
 	}
 
 	AngleVectors(refdef->viewangles, forward, right, up);
 	recoil_cfg = SS_GetViewmodelRecoil(ps);
-	current_time = cl.time * 0.001f;
+	current_time = cls.realtime * 0.001f;
 	time_since_fire = current_time - (slot ? slot->last_attack_time : 0.0f);
 	bob_scale = (time_since_fire < 0.25f) ? 0.25f : 1.0f;
 	bob_up = sinf(current_time * 2.0f) * 0.45f * bob_scale;
@@ -2294,6 +2483,52 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 		gun.angles[PITCH] -= slot->viewmodel_recoil * recoil_cfg->recoil_pitch_kick;
 		gun.angles[ROLL] += sinf(current_time * 1.5f) * 0.75f * bob_scale;
 		gun.angles[YAW] += sinf(current_time) * 0.5f * bob_scale;
+	}
+
+	if (slot)
+	{
+		float smooth = Q_clamp(cls.rframetime * 28.0f, 0.0f, 1.0f);
+
+		if (!slot->viewmodel_valid)
+		{
+			VectorCopy(gun.origin, slot->viewmodel_origin);
+			VectorCopy(gun.angles, slot->viewmodel_angles);
+			slot->viewmodel_valid = true;
+		}
+		else
+		{
+			float max_origin_error = 0.0f;
+
+			for (i = 0; i < 3; ++i)
+			{
+				float origin_error = fabsf(gun.origin[i] - slot->viewmodel_origin[i]);
+
+				if (origin_error > max_origin_error)
+				{
+					max_origin_error = origin_error;
+				}
+			}
+
+			if (max_origin_error > 4.0f)
+			{
+				smooth = 1.0f;
+			}
+			else if (max_origin_error > 1.5f)
+			{
+				smooth = Q_max(smooth, 0.6f);
+			}
+
+			for (i = 0; i < 3; ++i)
+			{
+				slot->viewmodel_origin[i] +=
+					(gun.origin[i] - slot->viewmodel_origin[i]) * smooth;
+				slot->viewmodel_angles[i] =
+					LerpAngle(slot->viewmodel_angles[i], gun.angles[i], smooth);
+			}
+		}
+
+		VectorCopy(slot->viewmodel_origin, gun.origin);
+		VectorCopy(slot->viewmodel_angles, gun.angles);
 	}
 
 	gun.frame = ps->gunframe;
@@ -2776,6 +3011,10 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	int previous_playernum;
 	int slot_playernum;
 	qboolean previous_skip_view_weapon;
+	centity_t *previous_entities;
+	entity_state_t *previous_parse_entities;
+	int previous_entity_count;
+	float previous_lerpfrac;
 	const player_state_t *ps;
 	const byte *areabits;
 
@@ -2813,9 +3052,41 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	SS_UpdateSlotCombatVisualState(slot_index, ps,
 		SS_IsSlotADSActive(slot_index, ps));
 
+	previous_entities = cl_entities;
+	previous_entity_count = cl_numentities;
+	previous_parse_entities = cl_entity_parse_stream;
+	previous_lerpfrac = cl.lerpfrac;
+
+	if (slot->local_index > 0)
+	{
+		cl_entities = slot->entities;
+		cl_numentities = slot->entity_count;
+		cl_entity_parse_stream = slot->parse_entities;
+	}
+
 	V_ClearScene();
-	CL_AddEntities();
+
+	if (slot->local_index == 0)
+	{
+		CL_AddEntities();
+	}
+	else
+	{
+		cl.lerpfrac = SS_GetSlotViewLerp(slot);
+		CL_AddPacketEntities(&slot->frame);
+		CL_AddTEnts();
+		CL_AddParticles();
+		CL_AddDLights();
+		CL_AddLightStyles();
+	}
+
 	refdef = cl.refdef;
+
+	cl_entities = previous_entities;
+	cl_numentities = previous_entity_count;
+	cl_entity_parse_stream = previous_parse_entities;
+	cl.lerpfrac = previous_lerpfrac;
+
 	SS_ApplyPlayerView(&refdef, slot, ps, areabits, viewport);
 	SS_AddSlotViewWeapon(slot_index, &refdef, ps);
 
@@ -3038,6 +3309,13 @@ SS_DrawGameplayHUD(void)
 void
 SS_ResetState(void)
 {
+	int i;
+
+	for (i = 0; i < SS_MAX_LOCAL_PLAYERS; ++i)
+	{
+		SS_FreeSlotEntities(&ss_state.slots[i]);
+	}
+
 	memset(&ss_state, 0, sizeof(ss_state));
 	ss_state.transport = SS_TRANSPORT_INTERNET;
 	ss_state.requested_players = 2;
@@ -3408,6 +3686,10 @@ SS_BeginSession(void)
 		slot->exit_hold_active = false;
 		slot->exit_hold_start = 0;
 		slot->connect_time = 0;
+		slot->parse_entities_num = 0;
+		memset(&slot->frame, 0, sizeof(slot->frame));
+		memset(slot->frames, 0, sizeof(slot->frames));
+		memset(slot->parse_entities, 0, sizeof(slot->parse_entities));
 		VectorCopy(cl.viewangles, slot->viewangles);
 		slot->axis_left_x = 0;
 		slot->axis_left_y = 0;
@@ -3422,12 +3704,22 @@ SS_BeginSession(void)
 		slot->crouch_down = false;
 		slot->ads_active = false;
 		slot->last_gunindex = 0;
+		slot->muzzle_flash_seq = 0;
+		slot->last_muzzle_flash_seq = 0;
 		slot->viewmodel_recoil = 0.0f;
 		slot->viewmodel_raise = 0.0f;
 		slot->last_attack_time = 0.0f;
 		slot->ads_kick_offset = 0.0f;
+		VectorClear(slot->viewmodel_origin);
+		VectorClear(slot->viewmodel_angles);
+		slot->viewmodel_valid = false;
 		slot->connection_state = (i == 0) ? cls.state : ca_disconnected;
 		slot->state = SS_SLOT_ACTIVE;
+
+		if (slot->entities && slot->entity_count > 0)
+		{
+			memset(slot->entities, 0, slot->entity_count * sizeof(*slot->entities));
+		}
 	}
 
 	SS_SetSessionCvar("ss_active", 1);
@@ -3451,6 +3743,11 @@ SS_EndSession(void)
 		ss_state.slots[i].exit_hold_active = false;
 		ss_state.slots[i].exit_hold_start = 0;
 		ss_state.slots[i].connect_time = 0;
+		ss_state.slots[i].parse_entities_num = 0;
+		ss_state.slots[i].snapshot_valid = false;
+		memset(&ss_state.slots[i].frame, 0, sizeof(ss_state.slots[i].frame));
+		memset(ss_state.slots[i].frames, 0, sizeof(ss_state.slots[i].frames));
+		memset(ss_state.slots[i].parse_entities, 0, sizeof(ss_state.slots[i].parse_entities));
 		memset(ss_state.slots[i].cmds, 0, sizeof(ss_state.slots[i].cmds));
 		memset(&ss_state.slots[i].cmd, 0, sizeof(ss_state.slots[i].cmd));
 		VectorClear(ss_state.slots[i].viewangles);
@@ -3467,11 +3764,22 @@ SS_EndSession(void)
 		ss_state.slots[i].crouch_down = false;
 		ss_state.slots[i].ads_active = false;
 		ss_state.slots[i].last_gunindex = 0;
+		ss_state.slots[i].muzzle_flash_seq = 0;
+		ss_state.slots[i].last_muzzle_flash_seq = 0;
 		ss_state.slots[i].viewmodel_recoil = 0.0f;
 		ss_state.slots[i].viewmodel_raise = 0.0f;
 		ss_state.slots[i].last_attack_time = 0.0f;
 		ss_state.slots[i].ads_kick_offset = 0.0f;
+		VectorClear(ss_state.slots[i].viewmodel_origin);
+		VectorClear(ss_state.slots[i].viewmodel_angles);
+		ss_state.slots[i].viewmodel_valid = false;
 		ss_state.slots[i].connection_state = ca_disconnected;
+
+		if (ss_state.slots[i].entities && ss_state.slots[i].entity_count > 0)
+		{
+			memset(ss_state.slots[i].entities, 0,
+				ss_state.slots[i].entity_count * sizeof(*ss_state.slots[i].entities));
+		}
 	}
 
 	ss_state.last_local_client_frame = -1;

@@ -95,6 +95,7 @@ centity_t *cl_entities;
 int cl_numentities;
 
 entity_state_t cl_parse_entities[MAX_PARSE_ENTITIES];
+entity_state_t *cl_entity_parse_stream = cl_parse_entities;
 
 /*Evil hack against too many power screen and power
   shield impact sounds. For example if the player

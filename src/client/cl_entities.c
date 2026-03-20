@@ -74,6 +74,9 @@ static float pp_viewmodel_last_fire_time = 0.0f;
 static float pp_viewmodel_raise_progress = 0.0f; /* 0 = hidden, 1 = fully raised */
 static int pp_viewmodel_last_muzzle_seq = 0;
 static pp_weapon_type_t pp_current_weapon = PP_WEAPON_UNKNOWN;
+static vec3_t pp_viewmodel_smoothed_origin;
+static vec3_t pp_viewmodel_smoothed_angles;
+static qboolean pp_viewmodel_smoothed_valid = false;
 
 static pp_weapon_type_t
 PP_DetectWeaponType(player_state_t *ps)
@@ -355,7 +358,7 @@ CL_AddPacketEntities(frame_t *frame)
 
 	for (pnum = 0; pnum < frame->num_entities; pnum++)
 	{
-		s1 = &cl_parse_entities[(frame->parse_entities +
+		s1 = &cl_entity_parse_stream[(frame->parse_entities +
 				pnum) & (MAX_PARSE_ENTITIES - 1)];
 
 		if ((s1->number < 0) || (s1->number >= cl_numentities))
@@ -1008,7 +1011,7 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 		float bob_right;
 		float bob_scale;
 		float hide;
-		float current_time = (float)cl.time * 0.001f;
+		float current_time = (float)cls.realtime * 0.001f;
 		float time_since_fire;
 		int muzzle_seq;
 		const pp_recoil_config_t *recoil_cfg;
@@ -1019,7 +1022,7 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 			dt = 0.0f;
 		}
 
-		/* Map change/reconnect can reset cl.time; our static state persists.
+		/* Map change/reconnect can reset the render clock we use here; our static state persists.
 		 * If time went backwards, reset recoil timing so it can trigger again. */
 		if (current_time < pp_viewmodel_last_time)
 		{
@@ -1029,6 +1032,7 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 			pp_viewmodel_raise_progress = 0.0f;
 			pp_viewmodel_last_gunindex = 0;
 			pp_current_weapon = PP_WEAPON_UNKNOWN;
+			pp_viewmodel_smoothed_valid = false;
 		}
 
 		/* Detect weapon switch - reset raise progress and update weapon type */
@@ -1036,6 +1040,7 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 		{
 			pp_viewmodel_raise_progress = 0.0f;
 			pp_current_weapon = PP_DetectWeaponType(ps);
+			pp_viewmodel_smoothed_valid = false;
 		}
 
 		recoil_cfg = &pp_recoil_configs[pp_current_weapon];
@@ -1116,6 +1121,51 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 
 		pp_viewmodel_last_gunindex = ps->gunindex;
 		pp_viewmodel_last_time = current_time;
+	}
+
+	{
+		float smooth = Q_clamp(cls.rframetime * 28.0f, 0.0f, 1.0f);
+
+		if (!pp_viewmodel_smoothed_valid)
+		{
+			VectorCopy(gun.origin, pp_viewmodel_smoothed_origin);
+			VectorCopy(gun.angles, pp_viewmodel_smoothed_angles);
+			pp_viewmodel_smoothed_valid = true;
+		}
+		else
+		{
+			float max_origin_error = 0.0f;
+
+			for (i = 0; i < 3; ++i)
+			{
+				float origin_error = fabsf(gun.origin[i] - pp_viewmodel_smoothed_origin[i]);
+
+				if (origin_error > max_origin_error)
+				{
+					max_origin_error = origin_error;
+				}
+			}
+
+			if (max_origin_error > 4.0f)
+			{
+				smooth = 1.0f;
+			}
+			else if (max_origin_error > 1.5f)
+			{
+				smooth = Q_max(smooth, 0.6f);
+			}
+
+			for (i = 0; i < 3; ++i)
+			{
+				pp_viewmodel_smoothed_origin[i] +=
+					(gun.origin[i] - pp_viewmodel_smoothed_origin[i]) * smooth;
+				pp_viewmodel_smoothed_angles[i] =
+					LerpAngle(pp_viewmodel_smoothed_angles[i], gun.angles[i], smooth);
+			}
+		}
+
+		VectorCopy(pp_viewmodel_smoothed_origin, gun.origin);
+		VectorCopy(pp_viewmodel_smoothed_angles, gun.angles);
 	}
 
 	gun.flags = RF_MINLIGHT | RF_DEPTHHACK | RF_WEAPONMODEL;

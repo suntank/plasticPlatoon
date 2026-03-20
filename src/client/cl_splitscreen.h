@@ -64,6 +64,8 @@ typedef struct
 	frame_t frames[UPDATE_BACKUP];
 	entity_state_t parse_entities[MAX_PARSE_ENTITIES];
 	int parse_entities_num;
+	centity_t *entities;
+	int entity_count;
 	int servercount;
 	int playernum;
 	int inventory[MAX_ITEMS];
@@ -83,10 +85,15 @@ typedef struct
 	qboolean crouch_down;
 	qboolean ads_active;
 	int last_gunindex;
+	int muzzle_flash_seq;
+	int last_muzzle_flash_seq;
 	float viewmodel_recoil;
 	float viewmodel_raise;
 	float last_attack_time;
 	float ads_kick_offset;
+	vec3_t viewmodel_origin;
+	vec3_t viewmodel_angles;
+	qboolean viewmodel_valid;
 	char userinfo[MAX_INFO_STRING];
 	char model[MAX_QPATH];
 	char skin[MAX_QPATH];
