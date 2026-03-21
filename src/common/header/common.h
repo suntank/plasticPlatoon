@@ -192,6 +192,7 @@ void Info_Print(char *s);
 
 #define UPDATE_BACKUP 16    /* copies of entity_state_t to keep buffered */
 #define UPDATE_MASK (UPDATE_BACKUP - 1)
+#define MAX_PACKET_ENTITIES 256
 
 /* server to client */
 enum svc_ops_e

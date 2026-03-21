@@ -33,7 +33,7 @@
 /* the cl_parse_entities must be large enough to hold UPDATE_BACKUP frames of
    entities, so that when a delta compressed message arives from the server
    it can be un-deltad from the original */
-#define	MAX_PARSE_ENTITIES	1024
+#define	MAX_PARSE_ENTITIES	(UPDATE_BACKUP * MAX_PACKET_ENTITIES)
 
 #define MAX_SUSTAINS		32
 #define	PARTICLE_GRAVITY 40
