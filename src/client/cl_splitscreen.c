@@ -33,6 +33,8 @@ static void SS_SendSlotStringCmdNow(ss_local_player_t *slot, const char *cmd);
 static void SS_ParseSharedMuzzleFlash(sizebuf_t *msg, qboolean monster_flash);
 static void SS_ParseSharedTempEntity(ss_local_player_t *slot, sizebuf_t *msg);
 static void SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon);
+static unsigned int SS_HashTempEntityPayload(const byte *data, int len);
+static int SS_FindSlotIndexForPlayerEntnum(int entnum);
 static float SS_GetSlotViewLerp(const ss_local_player_t *slot);
 static const player_state_t *SS_GetPreviousPlayerState(const ss_local_player_t *slot,
 	const player_state_t *ps);
@@ -945,25 +947,115 @@ SS_AllocSlotEntity(ss_local_player_t *slot, int entnum)
 	return &slot->entities[entnum];
 }
 
+static int
+SS_FindSlotIndexForPlayerEntnum(int entnum)
+{
+	int i;
+
+	for (i = 0; i < SS_GetSlotCount(); ++i)
+	{
+		ss_local_player_t *slot = &ss_state.slots[i];
+
+		if (!slot->active || !slot->snapshot_valid)
+		{
+			continue;
+		}
+
+		if (slot->playernum + 1 == entnum)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
 static void
 SS_ParseSharedMuzzleFlash(sizebuf_t *msg, qboolean monster_flash)
 {
+	typedef struct
+	{
+		int framecount;
+		int count;
+		unsigned int hashes[128];
+		int lengths[128];
+	} ss_muzzle_flash_cache_t;
+
+	static ss_muzzle_flash_cache_t cache;
 	sizebuf_t saved_message;
+	sizebuf_t probe;
+	int payload_start;
+	int payload_len;
 	int previous_playernum;
+	int saved_effect_only_slot;
+	int saved_effect_exclude_slot;
+	int shooter_slot_index;
+	int i;
+	qboolean saved_force_unique_dlight_keys;
 
 	if (!msg)
 	{
 		return;
 	}
 
+	payload_start = msg->readcount;
+	probe = *msg;
+	shooter_slot_index = -1;
+
+	if (monster_flash)
+	{
+		(void)MSG_ReadShort(&probe);
+		(void)MSG_ReadByte(&probe);
+	}
+	else
+	{
+		shooter_slot_index = SS_FindSlotIndexForPlayerEntnum(MSG_ReadShort(&probe));
+		(void)MSG_ReadByte(&probe);
+	}
+
+	payload_len = probe.readcount - payload_start;
+
+	if (payload_len > 0)
+	{
+		unsigned int hash;
+
+		if (cache.framecount != cls.framecount)
+		{
+			cache.framecount = cls.framecount;
+			cache.count = 0;
+		}
+
+		hash = SS_HashTempEntityPayload(&msg->data[payload_start], payload_len);
+
+		for (i = 0; i < cache.count; ++i)
+		{
+			if (cache.hashes[i] == hash && cache.lengths[i] == payload_len)
+			{
+				*msg = probe;
+				return;
+			}
+		}
+
+		if (cache.count < (int)ARRLEN(cache.hashes))
+		{
+			cache.hashes[cache.count] = hash;
+			cache.lengths[cache.count] = payload_len;
+			++cache.count;
+		}
+	}
+
 	saved_message = net_message;
 	net_message = *msg;
 	previous_playernum = cl.playernum;
+	saved_effect_only_slot = cl_effect_only_slot;
+	saved_effect_exclude_slot = cl_effect_exclude_slot;
+	saved_force_unique_dlight_keys = cl_effect_force_unique_dlight_keys;
 
 	/* Split-screen slots use their own local viewmodel path, so treat these
 	 * parsed flashes as third-person effects to avoid disturbing player-one
 	 * recoil and ADS feedback state. */
 	cl.playernum = -1;
+	CL_SetEffectScope(-1, shooter_slot_index, !monster_flash);
 
 	if (monster_flash)
 	{
@@ -975,6 +1067,9 @@ SS_ParseSharedMuzzleFlash(sizebuf_t *msg, qboolean monster_flash)
 	}
 
 	cl.playernum = previous_playernum;
+	cl_effect_only_slot = saved_effect_only_slot;
+	cl_effect_exclude_slot = saved_effect_exclude_slot;
+	cl_effect_force_unique_dlight_keys = saved_force_unique_dlight_keys;
 	*msg = net_message;
 	net_message = saved_message;
 }
@@ -994,9 +1089,12 @@ SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon)
 	vec3_t entity_angles;
 	const player_state_t *ps;
 	float yaw_delta;
+	int saved_effect_only_slot;
+	int saved_effect_exclude_slot;
 	int saved_playernum;
 	int saved_muzzle_seq;
 	int i;
+	qboolean saved_force_unique_dlight_keys;
 
 	if (!slot || !slot->snapshot_valid)
 	{
@@ -1030,12 +1128,16 @@ SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon)
 	saved_cmd = cl.cmd;
 	saved_entity = cl_entities[entnum];
 	saved_muzzle_seq = pp_viewmodel_muzzle_seq;
+	saved_effect_only_slot = cl_effect_only_slot;
+	saved_effect_exclude_slot = cl_effect_exclude_slot;
+	saved_force_unique_dlight_keys = cl_effect_force_unique_dlight_keys;
 	VectorCopy(cl.viewangles, saved_viewangles);
 
 	net_message = local_message;
 	cl.playernum = entnum - 1;
 	cl.frame = slot->frame;
 	slot->muzzle_flash_seq++;
+	CL_SetEffectScope(slot->local_index, -1, true);
 	cl.cmd.buttons &= ~BUTTON_ADS;
 
 	if (slot->ads_down)
@@ -1065,6 +1167,9 @@ SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon)
 	CL_AddMuzzleFlash();
 
 	pp_viewmodel_muzzle_seq = saved_muzzle_seq;
+	cl_effect_only_slot = saved_effect_only_slot;
+	cl_effect_exclude_slot = saved_effect_exclude_slot;
+	cl_effect_force_unique_dlight_keys = saved_force_unique_dlight_keys;
 	cl_entities[entnum] = saved_entity;
 	cl.cmd = saved_cmd;
 	cl.frame = saved_frame;
@@ -3137,6 +3242,7 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	float previous_lerpfrac;
 	const player_state_t *ps;
 	const byte *areabits;
+	int previous_effect_render_slot;
 
 	slot = SS_GetSlot(slot_index);
 
@@ -3176,6 +3282,7 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	previous_entity_count = cl_numentities;
 	previous_parse_entities = cl_entity_parse_stream;
 	previous_lerpfrac = cl.lerpfrac;
+	previous_effect_render_slot = cl_effect_render_slot;
 
 	if (slot->local_index > 0)
 	{
@@ -3184,6 +3291,7 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 		cl_entity_parse_stream = slot->parse_entities;
 	}
 
+	cl_effect_render_slot = slot_index;
 	V_ClearScene();
 
 	if (slot->local_index == 0)
@@ -3206,6 +3314,7 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	cl_numentities = previous_entity_count;
 	cl_entity_parse_stream = previous_parse_entities;
 	cl.lerpfrac = previous_lerpfrac;
+	cl_effect_render_slot = previous_effect_render_slot;
 
 	SS_ApplyPlayerView(&refdef, slot, ps, areabits, viewport);
 	SS_AddSlotViewWeapon(slot_index, &refdef, ps);

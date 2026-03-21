@@ -45,6 +45,8 @@ typedef struct
 	int baseframe;
 	float rotation_speed;  /* degrees per second for sprite rotation */
 	float duration;        /* total duration in milliseconds */
+	int effect_only_slot;
+	int effect_exclude_slot;
 	vec3_t velocity;       /* velocity for muzzle flash tracking */
 	vec3_t dir_forward;    /* weapon forward direction for cone sprites */
 	vec3_t dir_right;      /* weapon right direction for cone sprites */
@@ -219,6 +221,8 @@ CL_AllocExplosion(void)
 		if (cl_explosions[i].type == ex_free)
 		{
 			memset(&cl_explosions[i], 0, sizeof(cl_explosions[i]));
+			cl_explosions[i].effect_only_slot = cl_effect_only_slot;
+			cl_explosions[i].effect_exclude_slot = cl_effect_exclude_slot;
 			return &cl_explosions[i];
 		}
 	}
@@ -237,6 +241,8 @@ CL_AllocExplosion(void)
 	}
 
 	memset(&cl_explosions[index], 0, sizeof(cl_explosions[index]));
+	cl_explosions[index].effect_only_slot = cl_effect_only_slot;
+	cl_explosions[index].effect_exclude_slot = cl_effect_exclude_slot;
 	return &cl_explosions[index];
 }
 
@@ -569,7 +575,7 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	                   duration, scale, ex_mflash_cone_v, cone_model);
 
 	/* Spawn optional billboard flash (muzzle_flash2) if configured */
-	if (cfg->flash2_enabled)
+	if (cfg->flash2_enabled && !thirdperson)
 	{
 		/* Load billboard sprite from flash2 config image path (supports .sp2, .png, .tga, .pcx, .jpg) */
 		if (cfg->flash2_image[0])
@@ -1963,6 +1969,12 @@ CL_AddExplosions(void)
 	for (i = 0, ex = cl_explosions; i < MAX_EXPLOSIONS; i++, ex++)
 	{
 		if (ex->type == ex_free)
+		{
+			continue;
+		}
+
+		if (!CL_EffectVisibleInRenderSlot(ex->effect_only_slot,
+			ex->effect_exclude_slot))
 		{
 			continue;
 		}

@@ -114,6 +114,11 @@ void
 CL_ClearDlights(void)
 {
 	memset(cl_dlights, 0, sizeof(cl_dlights));
+	for (int i = 0; i < MAX_DLIGHTS; ++i)
+	{
+		cl_dlights[i].effect_only_slot = 0;
+		cl_dlights[i].effect_exclude_slot = 0;
+	}
 }
 
 cdlight_t *
@@ -123,7 +128,7 @@ CL_AllocDlight(int key)
 	cdlight_t *dl;
 
 	/* first look for an exact key match */
-	if (key)
+	if (key && !cl_effect_force_unique_dlight_keys)
 	{
 		dl = cl_dlights;
 
@@ -131,6 +136,8 @@ CL_AllocDlight(int key)
 		{
 			if (dl->key == key)
 			{
+				dl->effect_only_slot = cl_effect_only_slot;
+				dl->effect_exclude_slot = cl_effect_exclude_slot;
 				return dl;
 			}
 		}
@@ -143,13 +150,19 @@ CL_AllocDlight(int key)
 	{
 		if (dl->die < cl.time)
 		{
+			memset(dl, 0, sizeof(*dl));
 			dl->key = key;
+			dl->effect_only_slot = cl_effect_only_slot;
+			dl->effect_exclude_slot = cl_effect_exclude_slot;
 			return dl;
 		}
 	}
 
 	dl = &cl_dlights[0];
+	memset(dl, 0, sizeof(*dl));
 	dl->key = key;
+	dl->effect_only_slot = cl_effect_only_slot;
+	dl->effect_exclude_slot = cl_effect_exclude_slot;
 	return dl;
 }
 
@@ -213,6 +226,12 @@ CL_AddDLights(void)
 	for (i = 0; i < MAX_DLIGHTS; i++, dl++)
 	{
 		if (!dl->radius)
+		{
+			continue;
+		}
+
+		if (!CL_EffectVisibleInRenderSlot(dl->effect_only_slot,
+			dl->effect_exclude_slot))
 		{
 			continue;
 		}

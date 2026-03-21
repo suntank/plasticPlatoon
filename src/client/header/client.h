@@ -334,9 +334,15 @@ typedef struct
 	float	die; /* stop lighting after this time */
 	float	decay; /* drop this each second */
 	float	minlight; /* don't add when contributing less */
+	int		effect_only_slot;
+	int		effect_exclude_slot;
 } cdlight_t;
 
 extern	cdlight_t	cl_dlights[MAX_DLIGHTS];
+extern	int			cl_effect_render_slot;
+extern	int			cl_effect_only_slot;
+extern	int			cl_effect_exclude_slot;
+extern	qboolean	cl_effect_force_unique_dlight_keys;
 
 extern	centity_t	*cl_entities;
 extern	int			cl_numentities;
@@ -437,6 +443,9 @@ void CL_WidowSplash (vec3_t org);
 void CL_ParseTEnt (void);
 void CL_AddMuzzleFlash (void);
 void CL_AddMuzzleFlash2 (void);
+void CL_SetEffectScope(int only_slot, int exclude_slot,
+	qboolean force_unique_dlight_keys);
+qboolean CL_EffectVisibleInRenderSlot(int only_slot, int exclude_slot);
 extern int pp_viewmodel_muzzle_seq;
 float CL_GetADSMuzzleFlashSizeScale(void);
 

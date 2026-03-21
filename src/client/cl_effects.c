@@ -36,6 +36,43 @@ void CL_ClearDlights(void);
 void CL_ClearParticles(void);
 
 int pp_viewmodel_muzzle_seq = 0;
+int cl_effect_render_slot = -1;
+int cl_effect_only_slot = 0;
+int cl_effect_exclude_slot = 0;
+qboolean cl_effect_force_unique_dlight_keys = false;
+
+void
+CL_SetEffectScope(int only_slot, int exclude_slot, qboolean force_unique_dlight_keys)
+{
+	cl_effect_only_slot = (only_slot >= 0) ? (only_slot + 1) : 0;
+	cl_effect_exclude_slot = (exclude_slot >= 0) ? (exclude_slot + 1) : 0;
+	cl_effect_force_unique_dlight_keys = force_unique_dlight_keys;
+}
+
+qboolean
+CL_EffectVisibleInRenderSlot(int only_slot, int exclude_slot)
+{
+	int render_slot;
+
+	if (cl_effect_render_slot < 0)
+	{
+		return true;
+	}
+
+	render_slot = cl_effect_render_slot + 1;
+
+	if (only_slot && render_slot != only_slot)
+	{
+		return false;
+	}
+
+	if (exclude_slot && render_slot == exclude_slot)
+	{
+		return false;
+	}
+
+	return true;
+}
 
 /* Muzzle flash sprite cvars */
 cvar_t *cl_mflash_forward;   /* Forward offset from player origin */
