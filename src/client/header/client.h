@@ -35,7 +35,7 @@
    it can be un-deltad from the original */
 #define	MAX_PARSE_ENTITIES	(UPDATE_BACKUP * MAX_PACKET_ENTITIES)
 
-#define MAX_SUSTAINS		32
+#define MAX_SUSTAINS		128
 #define	PARTICLE_GRAVITY 40
 #define INSTANT_PARTICLE -10000.0
 

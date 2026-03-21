@@ -51,9 +51,9 @@ typedef struct
 	vec3_t dir_up;         /* weapon up direction for cone sprites */
 } explosion_t;
 
-#define MAX_EXPLOSIONS 64
-#define MAX_BEAMS 64
-#define MAX_LASERS 64
+#define MAX_EXPLOSIONS 256
+#define MAX_BEAMS 256
+#define MAX_LASERS 256
 
 static explosion_t cl_explosions[MAX_EXPLOSIONS];
 

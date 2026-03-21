@@ -2752,7 +2752,7 @@ SS_QueueSlotStringCmd(ss_local_player_t *slot, const char *cmd)
 static void
 SS_SendSlotStringCmdNow(ss_local_player_t *slot, const char *cmd)
 {
-	if (!slot || !cmd || slot->connection_state < ca_active)
+	if (!slot || !cmd || slot->connection_state < ca_connected)
 	{
 		return;
 	}
@@ -2786,12 +2786,6 @@ SS_HandleSlotConnectionlessPacket(ss_local_player_t *slot, sizebuf_t *message,
 			(int)Cvar_VariableValue("qport"));
 		slot->connection_state = ca_connected;
 		SS_QueueSlotStringCmd(slot, "new");
-
-		if (cl.servercount > 0)
-		{
-			SS_QueueSlotStringCmd(slot, va("begin %i", cl.servercount));
-			slot->connection_state = ca_active;
-		}
 
 		SS_TransmitSlot(slot, 0, NULL);
 	}

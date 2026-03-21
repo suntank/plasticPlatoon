@@ -192,7 +192,7 @@ void Info_Print(char *s);
 
 #define UPDATE_BACKUP 16    /* copies of entity_state_t to keep buffered */
 #define UPDATE_MASK (UPDATE_BACKUP - 1)
-#define MAX_PACKET_ENTITIES 256
+#define MAX_PACKET_ENTITIES 512
 
 /* server to client */
 enum svc_ops_e
@@ -521,7 +521,7 @@ extern qboolean userinfo_modified;
 /* NET */
 
 #define PORT_ANY -1
-#define MAX_MSGLEN 1400             /* max length of a message */
+#define MAX_MSGLEN 4096             /* max length of a message */
 #define PACKET_HEADER 10            /* two ints and a short */
 #define MAX_LOOPBACK_CLIENTS 4
 
