@@ -506,6 +506,8 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 {
 	vec3_t spawn_origin, spawn_origin2;
 	float fwd_offset, right_offset, up_offset;
+	float flash2_forward_offset, flash2_right_offset, flash2_up_offset;
+	float local_split_up_nudge = 0.0f;
 	float vel_scale, duration;
 	float ads_size_scale = 1.0f;
 	float local_split_scale = 1.0f;
@@ -549,6 +551,9 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	fwd_offset = cfg->forward;
 	right_offset = cfg->right;
 	up_offset = cfg->up;
+	flash2_forward_offset = cfg->flash2_forward;
+	flash2_right_offset = cfg->flash2_right;
+	flash2_up_offset = cfg->flash2_up;
 	local_split_firstperson = !thirdperson && (cl_effect_only_slot > 0) &&
 		SS_IsSplitScreenSelected() && (SS_GetPlayerCount() > 1);
 
@@ -556,19 +561,30 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	{
 		local_split_scale = 0.72f;
 		local_split_flash2_scale = 0.55f;
-		fwd_offset += 6.0f;
-		right_offset *= 0.9f;
-		up_offset *= 0.9f;
+		local_split_up_nudge = 2.0f;
+		fwd_offset += 10.0f;
+		right_offset *= 0.6f;
+		up_offset *= 0.92f;
+		flash2_forward_offset += 10.0f;
+		flash2_right_offset *= 0.6f;
+		flash2_up_offset *= 0.92f;
 	}
 
 	if (!thirdperson && ads_active)
 	{
 		up_offset = cfg->ads_up;
+		flash2_up_offset = cfg->flash2_ads_up;
 
 		if (local_split_firstperson)
 		{
-			up_offset *= 0.9f;
+			up_offset *= 0.92f;
+			flash2_up_offset *= 0.92f;
 		}
+	}
+	if (local_split_firstperson)
+	{
+		up_offset += local_split_up_nudge;
+		flash2_up_offset += local_split_up_nudge;
 	}
 	duration = (float)cfg->duration_ms;
 	vel_scale = cfg->velocity_scale;
@@ -644,16 +660,9 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 
 		/* Calculate position for billboard flash */
 		VectorCopy(origin, spawn_origin2);
-		VectorMA(spawn_origin2, cfg->flash2_forward, forward, spawn_origin2);
-		VectorMA(spawn_origin2, cfg->flash2_right, right, spawn_origin2);
-		if (!thirdperson && ads_active)
-		{
-			VectorMA(spawn_origin2, cfg->flash2_ads_up, up, spawn_origin2);
-		}
-		else
-		{
-			VectorMA(spawn_origin2, cfg->flash2_up, up, spawn_origin2);
-		}
+		VectorMA(spawn_origin2, flash2_forward_offset, forward, spawn_origin2);
+		VectorMA(spawn_origin2, flash2_right_offset, right, spawn_origin2);
+		VectorMA(spawn_origin2, flash2_up_offset, up, spawn_origin2);
 
 		flash2_render_scale = CL_MFlashCodeToRenderScale(cfg->flash2_scale);
 		if (!thirdperson && ads_active)

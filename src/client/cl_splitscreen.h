@@ -81,6 +81,7 @@ typedef struct
 	qboolean scoreboard_down;
 	qboolean use_down;
 	qboolean ads_down;
+	qboolean speed_down;
 	qboolean jump_down;
 	qboolean crouch_down;
 	qboolean ads_active;

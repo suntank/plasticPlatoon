@@ -172,7 +172,7 @@ SS_IsDownKey(int key)
 static qboolean
 SS_IsScoreboardKey(int key)
 {
-	return key == K_TAB || key == K_BTN_NORTH;
+	return key == K_TAB || key == K_BTN_BACK;
 }
 
 static void
@@ -3024,6 +3024,7 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	float move_y;
 	float look_x;
 	float look_y;
+	float look_yaw_scale;
 	usercmd_t *cmd;
 	int ms;
 	int cmd_index;
@@ -3057,8 +3058,9 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	move_y = SS_NormalizeAxis(slot->axis_left_y);
 	look_x = SS_NormalizeAxis(slot->axis_right_x);
 	look_y = SS_NormalizeAxis(slot->axis_right_y);
+	look_yaw_scale = 1.5f;
 
-	slot->viewangles[YAW] -= look_x * cl_yawspeed->value * cls.nframetime * 2.0f;
+	slot->viewangles[YAW] -= look_x * cl_yawspeed->value * cls.nframetime * look_yaw_scale;
 	slot->viewangles[PITCH] -= look_y * cl_pitchspeed->value * cls.nframetime * 2.0f;
 
 	cmd->angles[PITCH] = ANGLE2SHORT(slot->viewangles[PITCH]);
@@ -3067,6 +3069,12 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 
 	cmd->forwardmove = (short)(-move_y * cl_forwardspeed->value);
 	cmd->sidemove = (short)(move_x * cl_sidespeed->value);
+
+	if ((slot->speed_down ? 1 : 0) ^ (int)(cl_run->value))
+	{
+		cmd->forwardmove *= 2;
+		cmd->sidemove *= 2;
+	}
 
 	if (slot->jump_down)
 	{
@@ -3981,6 +3989,7 @@ SS_BeginSession(void)
 		slot->scoreboard_down = false;
 		slot->use_down = false;
 		slot->ads_down = false;
+		slot->speed_down = false;
 		slot->jump_down = false;
 		slot->crouch_down = false;
 		slot->ads_active = false;
@@ -4041,6 +4050,7 @@ SS_EndSession(void)
 		ss_state.slots[i].scoreboard_down = false;
 		ss_state.slots[i].use_down = false;
 		ss_state.slots[i].ads_down = false;
+		ss_state.slots[i].speed_down = false;
 		ss_state.slots[i].jump_down = false;
 		ss_state.slots[i].crouch_down = false;
 		ss_state.slots[i].ads_active = false;
@@ -4308,8 +4318,20 @@ SS_HandleGameplayKey(int key, qboolean down)
 			slot->ads_down = down;
 			return true;
 
+		case K_STICK_LEFT:
+			slot->speed_down = down;
+			return true;
+
 		case K_BTN_WEST:
 			slot->use_down = down;
+			return true;
+
+		case K_BTN_NORTH:
+			if (!down)
+			{
+				return true;
+			}
+			SS_SendSlotStringCmdNow(slot, "quickgrenade");
 			return true;
 
 		case K_BTN_SOUTH:
