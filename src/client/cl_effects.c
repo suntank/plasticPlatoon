@@ -26,6 +26,7 @@
  */
 
 #include "header/client.h"
+#include "cl_splitscreen.h"
 #include "../common/header/pp_json.h"
 #include "../game/monster/misc/player.h"
 
@@ -797,6 +798,12 @@ CL_AddMuzzleFlash(void)
 	int silenced;
 	float volume;
 	char soundname[64];
+	qboolean local_player;
+	qboolean tune_local_as_thirdperson;
+	qboolean split_local_firstperson_scope;
+	int saved_effect_only_slot;
+	int saved_effect_exclude_slot;
+	qboolean saved_force_unique_dlight_keys;
 
 	i = MSG_ReadShort(&net_message);
 
@@ -814,10 +821,31 @@ CL_AddMuzzleFlash(void)
 	weapon = MSG_ReadByte(&net_message);
 	silenced = weapon & MZ_SILENCED;
 	weapon &= ~MZ_SILENCED;
+	local_player = (i == cl.playernum + 1);
+	tune_local_as_thirdperson = local_player && cl_mflash_tune_mode &&
+		(cl_mflash_tune_mode->value > 0.0f);
+	split_local_firstperson_scope = local_player && !tune_local_as_thirdperson &&
+		(cl_effect_only_slot == 0) && (cl_effect_exclude_slot == 0) &&
+		SS_IsSplitScreenSelected() && (SS_GetPlayerCount() > 1);
+	saved_effect_only_slot = cl_effect_only_slot;
+	saved_effect_exclude_slot = cl_effect_exclude_slot;
+	saved_force_unique_dlight_keys = cl_effect_force_unique_dlight_keys;
+
+	if (split_local_firstperson_scope)
+	{
+		CL_SetEffectScope(0, -1, true);
+	}
 
 	pl = CL_AllocEntity(i);
 	if (!pl)
 	{
+		if (split_local_firstperson_scope)
+		{
+			cl_effect_only_slot = saved_effect_only_slot;
+			cl_effect_exclude_slot = saved_effect_exclude_slot;
+			cl_effect_force_unique_dlight_keys = saved_force_unique_dlight_keys;
+		}
+
 		return;
 	}
 
@@ -1092,9 +1120,6 @@ CL_AddMuzzleFlash(void)
 		vec3_t mflash_origin, mflash_fv, mflash_rv, mflash_uv;
 		vec3_t mflash_velocity;
 		const float vel_scale = 1.0f / 8.0f;  /* pmove velocity is 12.3 fixed point */
-		qboolean local_player = (i == cl.playernum + 1);
-		qboolean tune_local_as_thirdperson = local_player && cl_mflash_tune_mode &&
-			(cl_mflash_tune_mode->value > 0.0f);
 		qboolean ads_active = false;
 
 		/* For local player, use actual view position (accounts for crouch, view bob, etc) */
@@ -1202,6 +1227,13 @@ CL_AddMuzzleFlash(void)
 
 		CL_SpawnMuzzleFlashSprite(mflash_origin, mflash_fv, mflash_rv, mflash_uv,
 			mflash_velocity, weapon, (!local_player || tune_local_as_thirdperson), ads_active);
+	}
+
+	if (split_local_firstperson_scope)
+	{
+		cl_effect_only_slot = saved_effect_only_slot;
+		cl_effect_exclude_slot = saved_effect_exclude_slot;
+		cl_effect_force_unique_dlight_keys = saved_force_unique_dlight_keys;
 	}
 }
 
