@@ -694,7 +694,9 @@ soldier_fire(edict_t *self, int flash_number)
 
 	if (self->s.skinnum <= 1)
 	{
-		monster_fire_blaster(self, start, aim, 5, 600, flash_index, EF_BLASTER);
+		monster_fire_bullet(self, start, aim, 5, 1,
+				DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD,
+				flash_index);
 	}
 	else if (self->s.skinnum <= 3)
 	{
