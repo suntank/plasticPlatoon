@@ -26,6 +26,8 @@
 
 #include "header/client.h"
 
+#include "cl_splitscreen.h"
+
 #include "sound/header/local.h"
 
 typedef enum
@@ -506,6 +508,8 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	float fwd_offset, right_offset, up_offset;
 	float vel_scale, duration;
 	float ads_size_scale = 1.0f;
+	float local_split_scale = 1.0f;
+	float local_split_flash2_scale = 1.0f;
 	float render_scale;
 	float flash2_render_scale;
 	int scale;
@@ -514,6 +518,7 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	explosion_t *ex;
 	struct model_s *cone_model = NULL;
 	struct model_s *billboard_model = NULL;
+	qboolean local_split_firstperson = false;
 
 	/* Get weapon-specific config */
 	cfg = CL_GetMuzzleFlashConfig(weapon, thirdperson);
@@ -544,9 +549,26 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	fwd_offset = cfg->forward;
 	right_offset = cfg->right;
 	up_offset = cfg->up;
+	local_split_firstperson = !thirdperson && (cl_effect_only_slot > 0) &&
+		SS_IsSplitScreenSelected() && (SS_GetPlayerCount() > 1);
+
+	if (local_split_firstperson)
+	{
+		local_split_scale = 0.72f;
+		local_split_flash2_scale = 0.55f;
+		fwd_offset += 6.0f;
+		right_offset *= 0.9f;
+		up_offset *= 0.9f;
+	}
+
 	if (!thirdperson && ads_active)
 	{
 		up_offset = cfg->ads_up;
+
+		if (local_split_firstperson)
+		{
+			up_offset *= 0.9f;
+		}
 	}
 	duration = (float)cfg->duration_ms;
 	vel_scale = cfg->velocity_scale;
@@ -558,6 +580,11 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 		render_scale *= ads_size_scale;
 	}
 
+	if (local_split_firstperson)
+	{
+		render_scale *= local_split_scale;
+	}
+
 	scale = CL_MFlashRenderScaleToSkinNum(render_scale);
 
 	/* Calculate spawn position from origin + offsets */
@@ -566,13 +593,37 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	VectorMA(spawn_origin, right_offset, right, spawn_origin);
 	VectorMA(spawn_origin, up_offset, up, spawn_origin);
 
-	/* Spawn horizontal cone sprite (lies in the horizontal plane) */
-	CL_SpawnConeSprite(spawn_origin, forward, right, up, velocity, vel_scale,
-	                   duration, scale, ex_mflash_cone_h, cone_model);
+	if (thirdperson)
+	{
+		ex = CL_AllocExplosion();
+		ex->type = ex_mflash_billboard;
+		ex->ent.flags = RF_FULLBRIGHT | RF_TRANSLUCENT | RF_NOSHADOW;
+		ex->ent.model = cone_model;
 
-	/* Spawn vertical cone sprite (stands in the vertical plane) */
-	CL_SpawnConeSprite(spawn_origin, forward, right, up, velocity, vel_scale,
-	                   duration, scale, ex_mflash_cone_v, cone_model);
+		VectorCopy(spawn_origin, ex->ent.origin);
+		VectorCopy(spawn_origin, ex->ent.oldorigin);
+
+		ex->velocity[0] = velocity[0] * vel_scale;
+		ex->velocity[1] = velocity[1] * vel_scale;
+		ex->velocity[2] = velocity[2] * vel_scale;
+
+		ex->ent.angles[2] = (float)(randk() % 360);
+		ex->start = cl.time;
+		ex->duration = duration;
+		ex->ent.skinnum = scale;
+		ex->ent.alpha = 0.95f;
+		ex->ent.frame = 0;
+	}
+	else
+	{
+		/* Spawn horizontal cone sprite (lies in the horizontal plane) */
+		CL_SpawnConeSprite(spawn_origin, forward, right, up, velocity, vel_scale,
+		                   duration, scale, ex_mflash_cone_h, cone_model);
+
+		/* Spawn vertical cone sprite (stands in the vertical plane) */
+		CL_SpawnConeSprite(spawn_origin, forward, right, up, velocity, vel_scale,
+		                   duration, scale, ex_mflash_cone_v, cone_model);
+	}
 
 	/* Spawn optional billboard flash (muzzle_flash2) if configured */
 	if (cfg->flash2_enabled && !thirdperson)
@@ -608,6 +659,10 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 		if (!thirdperson && ads_active)
 		{
 			flash2_render_scale *= ads_size_scale;
+		}
+		if (local_split_firstperson)
+		{
+			flash2_render_scale *= local_split_flash2_scale;
 		}
 		flash2_scale = CL_MFlashRenderScaleToSkinNum(flash2_render_scale);
 
