@@ -3025,6 +3025,7 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	float look_x;
 	float look_y;
 	float look_yaw_scale;
+	float look_pitch_scale;
 	usercmd_t *cmd;
 	int ms;
 	int cmd_index;
@@ -3059,9 +3060,10 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	look_x = SS_NormalizeAxis(slot->axis_right_x);
 	look_y = SS_NormalizeAxis(slot->axis_right_y);
 	look_yaw_scale = 1.5f;
+	look_pitch_scale = 1.5f;
 
 	slot->viewangles[YAW] -= look_x * cl_yawspeed->value * cls.nframetime * look_yaw_scale;
-	slot->viewangles[PITCH] -= look_y * cl_pitchspeed->value * cls.nframetime * 2.0f;
+	slot->viewangles[PITCH] -= look_y * cl_pitchspeed->value * cls.nframetime * look_pitch_scale;
 
 	cmd->angles[PITCH] = ANGLE2SHORT(slot->viewangles[PITCH]);
 	cmd->angles[YAW] = ANGLE2SHORT(slot->viewangles[YAW]);
@@ -3409,11 +3411,12 @@ SS_DrawViewportHUD(int slot_index)
 	qboolean inventory_open;
 	float scale;
 	int margin;
+	int header_height;
 	int line_height;
 	int left_x;
 	int right_x;
 	int icon_w = 0;
-	int unused_h = 0;
+	int icon_h = 0;
 	int value_x;
 	int value_width;
 
@@ -3443,7 +3446,7 @@ SS_DrawViewportHUD(int slot_index)
 	}
 
 	margin = (int)(8 * scale);
-	line_height = (int)(12 * scale);
+	header_height = (int)(12 * scale);
 	left_x = viewport->x + margin;
 	right_x = viewport->x + viewport->w - margin;
 
@@ -3451,25 +3454,35 @@ SS_DrawViewportHUD(int slot_index)
 		ps->stats[STAT_HEALTH_ICON] < MAX_IMAGES &&
 		cl.configstrings[CS_IMAGES + ps->stats[STAT_HEALTH_ICON]][0] != '\0')
 	{
-		Draw_GetPicSize(&icon_w, &unused_h,
+		Draw_GetPicSize(&icon_w, &icon_h,
 			cl.configstrings[CS_IMAGES + ps->stats[STAT_HEALTH_ICON]]);
 	}
 	else
 	{
 		icon_w = 0;
+		icon_h = 0;
 	}
+
+	line_height = (int)((icon_h > 0 ? icon_h : 12) * scale);
+
+	if (line_height < (int)(12 * scale))
+	{
+		line_height = (int)(12 * scale);
+	}
+
+	line_height += (int)(2 * scale);
 
 	value_x = left_x + (int)((icon_w + 6) * scale);
 	value_width = (int)(strlen(va("%d", ps->stats[STAT_HEALTH])) * 8 * scale);
 
 	SS_DrawString(left_x, viewport->y + margin, va("P%d", slot_index + 1), true, scale);
-	SS_DrawViewportStatLine(viewport, left_x, viewport->y + margin + line_height,
+	SS_DrawViewportStatLine(viewport, left_x, viewport->y + margin + header_height,
 		ps->stats[STAT_HEALTH_ICON], "HP", ps->stats[STAT_HEALTH], scale);
 
 	if (ps->stats[STAT_ARMOR] > 0)
 	{
 		SS_DrawViewportStatLine(viewport, left_x,
-			viewport->y + margin + line_height * 2,
+			viewport->y + margin + header_height + line_height,
 			ps->stats[STAT_ARMOR_ICON], "AR", ps->stats[STAT_ARMOR], scale);
 	}
 
@@ -3490,7 +3503,7 @@ SS_DrawViewportHUD(int slot_index)
 			ammo_x -= (int)((ammo_icon_w + 6) * scale);
 		}
 
-		SS_DrawViewportStatLine(viewport, ammo_x, viewport->y + margin + line_height,
+		SS_DrawViewportStatLine(viewport, ammo_x, viewport->y + margin + header_height,
 			ps->stats[STAT_AMMO_ICON], "AM", ps->stats[STAT_AMMO], scale);
 	}
 
@@ -3512,7 +3525,7 @@ SS_DrawViewportHUD(int slot_index)
 		}
 
 		SS_DrawViewportStatLine(viewport, timer_x,
-			viewport->y + margin + line_height * 2,
+			viewport->y + margin + header_height + line_height,
 			ps->stats[STAT_TIMER_ICON], "TM", ps->stats[STAT_TIMER], scale);
 	}
 
@@ -3551,7 +3564,7 @@ SS_DrawViewportHUD(int slot_index)
 	if (ps->stats[STAT_HEALTH] <= 25)
 	{
 		SS_DrawString(value_x + value_width + (int)(6 * scale),
-			viewport->y + margin + line_height, "LOW", true, scale);
+			viewport->y + margin + header_height, "LOW", true, scale);
 	}
 
 	if (!ads_active && !inventory_open)
