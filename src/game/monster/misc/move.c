@@ -164,40 +164,82 @@ SV_movestep(edict_t *ent, vec3_t move, qboolean relink)
 					ent->goalentity = ent->enemy;
 				}
 
-				dz = ent->s.origin[2] - ent->goalentity->s.origin[2];
-
-				if (ent->goalentity->client)
+				if (ent->classname && !strcmp(ent->classname, "monster_boss2"))
 				{
-					if (dz > 40)
+					if (ent->wait <= level.time)
 					{
-						neworg[2] -= 8;
+						float hover_base;
+						float hover_min;
+						float hover_max;
+						float enemy_bias;
+						float desired_hover;
+
+						hover_base = ent->pos1[2];
+						hover_min = hover_base - 48.0f;
+						hover_max = hover_base + 120.0f;
+						enemy_bias = ent->enemy->s.origin[2] + ent->enemy->viewheight + 96.0f;
+						desired_hover = (hover_base * 0.7f) + (enemy_bias * 0.3f) +
+							(crandom() * 28.0f);
+						ent->pos2[2] = Q_clamp(desired_hover, hover_min, hover_max);
+						ent->wait = level.time + 0.8f + (random() * 1.2f);
 					}
 
-					if (!((ent->flags & FL_SWIM) && (ent->waterlevel < 2)))
+					dz = ent->pos2[2] - ent->s.origin[2];
+
+					if (dz > 16.0f)
 					{
-						if (dz < 30)
-						{
-							neworg[2] += 8;
-						}
+						neworg[2] += 8.0f;
+					}
+					else if (dz > 4.0f)
+					{
+						neworg[2] += dz;
+					}
+					else if (dz < -16.0f)
+					{
+						neworg[2] -= 8.0f;
+					}
+					else if (dz < -4.0f)
+					{
+						neworg[2] += dz;
 					}
 				}
 				else
 				{
-					if (dz > 8)
+					dz = ent->s.origin[2] - ent->goalentity->s.origin[2];
+
+					if (ent->goalentity->client)
 					{
-						neworg[2] -= 8;
-					}
-					else if (dz > 0)
-					{
-						neworg[2] -= dz;
-					}
-					else if (dz < -8)
-					{
-						neworg[2] += 8;
+						if (dz > 40)
+						{
+							neworg[2] -= 8;
+						}
+
+						if (!((ent->flags & FL_SWIM) && (ent->waterlevel < 2)))
+						{
+							if (dz < 30)
+							{
+								neworg[2] += 8;
+							}
+						}
 					}
 					else
 					{
-						neworg[2] += dz;
+						if (dz > 8)
+						{
+							neworg[2] -= 8;
+						}
+						else if (dz > 0)
+						{
+							neworg[2] -= dz;
+						}
+						else if (dz < -8)
+						{
+							neworg[2] += 8;
+						}
+						else
+						{
+							neworg[2] += dz;
+						}
 					}
 				}
 			}

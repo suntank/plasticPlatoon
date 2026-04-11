@@ -186,24 +186,24 @@ vec3_t monster_flash_offset[] = {
 	{16.0, -42.8, 83.3},
 
 	/* MZ2_BOSS2_MACHINEGUN_L1			73 */
-	{32, -40, 70},
+	{60, -15, 50},
 	/* MZ2_BOSS2_MACHINEGUN_L2			74 */
-	{32, -40, 70},
+	{60, -15, 50},
 	/* MZ2_BOSS2_MACHINEGUN_L3			75 */
-	{32, -40, 70},
+	{60, -15, 50},
 	/* MZ2_BOSS2_MACHINEGUN_L4			76 */
-	{32, -40, 70},
+	{60, -15, 50},
 	/* MZ2_BOSS2_MACHINEGUN_L5			77 */
-	{32, -40, 70},
+	{60, -15, 50},
 
 	/* MZ2_BOSS2_ROCKET_1				78 */
-	{22.0, 16.0, 10.0},
+	{0, 45, 45},
 	/* MZ2_BOSS2_ROCKET_2				79 */
-	{22.0, 8.0, 10.0},
+	{0, 40, 45},
 	/* MZ2_BOSS2_ROCKET_3				80 */
-	{22.0, -8.0, 10.0},
+	{0, -40, 45},
 	/* MZ2_BOSS2_ROCKET_4				81 */
-	{22.0, -16.0, 10.0},
+	{0, -45, 45},
 
 	/* MZ2_FLOAT_BLASTER_1				82 */
 	{32.5, -0.8, 10},
@@ -312,15 +312,15 @@ vec3_t monster_flash_offset[] = {
 	{6.3, -9, 111.2},
 
 	/* MZ2_BOSS2_MACHINEGUN_R1			73 */
-	{32, 40, 70},
+	{60, 15, 50},
 	/* MZ2_BOSS2_MACHINEGUN_R2			74 */
-	{32, 40, 70},
+	{60, 15, 50},
 	/* MZ2_BOSS2_MACHINEGUN_R3			75 */
-	{32, 40, 70},
+	{60, 15, 50},
 	/* MZ2_BOSS2_MACHINEGUN_R4			76 */
-	{32, 40, 70},
+	{60, 15, 50},
 	/* MZ2_BOSS2_MACHINEGUN_R5			77 */
-	{32, 40, 70},
+	{60, 15, 50},
 
 
 	/* MZ2_CARRIER_MACHINEGUN_L1 */

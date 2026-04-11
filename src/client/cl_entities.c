@@ -96,6 +96,75 @@ PP_ViewmodelAngleOffset(float angle, float base)
 	return delta;
 }
 
+static qboolean
+PP_IsBoss2Helicopter(const entity_state_t *state)
+{
+	const char *model_path;
+
+	if (!state || (state->modelindex <= 0) || (state->modelindex >= MAX_MODELS))
+	{
+		return false;
+	}
+
+	model_path = cl.configstrings[CS_MODELS + state->modelindex];
+
+	return model_path && !Q_stricmp(model_path, "models/monsters/boss2/tris.md2");
+}
+
+static void
+PP_ApplyBoss2PropellerSpin(entity_t *ent)
+{
+	const float spin_rate = 1.8f;
+
+	if (!ent)
+	{
+		return;
+	}
+
+	/* Keep the propeller on a static mesh frame and sell the motion with rotation. */
+	ent->frame = 0;
+	ent->oldframe = 0;
+	ent->backlerp = 0.0f;
+	ent->angles[YAW] = anglemod(ent->angles[YAW] + (cl.time * spin_rate));
+}
+
+static qboolean
+PP_IsBoss2PropellerModel(int modelindex)
+{
+	const char *model_path;
+
+	if ((modelindex <= 0) || (modelindex >= MAX_MODELS))
+	{
+		return false;
+	}
+
+	model_path = cl.configstrings[CS_MODELS + modelindex];
+
+	return model_path && !Q_stricmp(model_path, "models/monsters/boss2/propeller.md2");
+}
+
+static void
+PP_ApplyBoss2HelicopterTransform(const entity_state_t *state,
+		const centity_t *cent, entity_t *ent)
+{
+	vec3_t move_delta;
+	float speed_scale;
+	float bob;
+
+	if (!state || !cent || !ent)
+	{
+		return;
+	}
+
+	VectorSubtract(cent->current.origin, cent->prev.origin, move_delta);
+	speed_scale = Q_clamp(VectorLength(move_delta) * 0.08f, 0.0f, 1.0f);
+
+	bob = sinf((cl.time * 0.0125f) + (state->number * 0.37f)) *
+		(1.0f - speed_scale) * 2.0f;
+	ent->origin[2] += bob;
+	ent->oldorigin[2] += bob;
+}
+
 static pp_weapon_type_t
 PP_DetectWeaponType(player_state_t *ps)
 {
@@ -604,6 +673,11 @@ CL_AddPacketEntities(frame_t *frame)
 			}
 		}
 
+		if (PP_IsBoss2Helicopter(s1))
+		{
+			PP_ApplyBoss2HelicopterTransform(s1, cent, &ent);
+		}
+
 		if (s1->number == cl.playernum + 1)
 		{
 			if (!CL_MFlashTuneCameraActive())
@@ -774,6 +848,11 @@ CL_AddPacketEntities(frame_t *frame)
 			else
 			{
 				ent.model = cl.model_draw[s1->modelindex2];
+			}
+
+			if (PP_IsBoss2Helicopter(s1) && PP_IsBoss2PropellerModel(s1->modelindex2))
+			{
+				PP_ApplyBoss2PropellerSpin(&ent);
 			}
 
 			/* check for the defender sphere shell and make it translucent */
