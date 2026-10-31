@@ -165,6 +165,7 @@ void SS_ApplyPrimaryProfile(void);
 void SS_BeginSession(void);
 void SS_EndSession(void);
 qboolean SS_IsSessionActive(void);
+qboolean SS_LocalEventRecipient(netadr_t address);
 qboolean SS_IsMenuInputActiveForDevice(int device_index);
 qboolean SS_ShouldAcceptSessionKey(int device_index, int key);
 qboolean SS_HandleSessionKey(int key, qboolean down);

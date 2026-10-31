@@ -30,16 +30,85 @@ cparticle_t *active_particles, *free_particles;
 cparticle_t particles[MAX_PARTICLES];
 int cl_numparticles = MAX_PARTICLES;
 
+cl_effect_stats_t cl_effect_stats;
+unsigned int cl_particle_view_mask = ~0u;
+static particle_t prepared_particles[MAX_PARTICLES];
+static unsigned int prepared_view_masks[MAX_PARTICLES];
+static int prepared_particle_count;
+static int shared_effect_frame = -1;
+static int shared_effect_time;
+
+const cl_effect_stats_t *
+CL_GetEffectStats(void)
+{
+	return &cl_effect_stats;
+}
+
+cparticle_t *
+CL_AllocParticle(void)
+{
+	cparticle_t *p = free_particles;
+	if (!p)
+	{
+		return NULL;
+	}
+	free_particles = p->next;
+	p->next = active_particles;
+	active_particles = p;
+	p->view_mask = cl_particle_view_mask;
+	if (cl_effect_only_slot)
+	{
+		p->view_mask &= 1u << (cl_effect_only_slot - 1);
+	}
+	if (cl_effect_exclude_slot)
+	{
+		p->view_mask &= ~(1u << (cl_effect_exclude_slot - 1));
+	}
+	++cl_effect_stats.particles_created;
+	++cl_effect_stats.active_particles;
+	return p;
+}
+
+/* Rendering any additional viewport or stereo eye is read-only. A paused
+ * scene retains the complete prepared output, including instant particles. */
+qboolean
+CL_BeginSharedEffects(void)
+{
+	if (shared_effect_frame == cls.framecount)
+	{
+		return false;
+	}
+	if (shared_effect_frame >= 0 && cl_paused && cl_paused->value &&
+		shared_effect_time == cl.time)
+	{
+		shared_effect_frame = cls.framecount;
+		return false;
+	}
+	shared_effect_frame = cls.framecount;
+	shared_effect_time = cl.time;
+	++cl_effect_stats.shared_preparations;
+	CL_ResetEntityEffectQueue();
+	return true;
+}
+
 void
 CL_ClearParticles(void)
 {
-	if (cl_numparticles == 0)
-		return;
-		
 	int i;
 
+	prepared_particle_count = 0;
+	shared_effect_frame = -1;
+	cl_particle_view_mask = ~0u;
+	cl_effect_stats.active_particles = 0;
+	cl_effect_stats.prepared_particles = 0;
+
+	cl_numparticles = Q_clamp(cl_numparticles, 0, MAX_PARTICLES);
+	active_particles = free_particles = NULL;
+	if (cl_numparticles == 0)
+	{
+		return;
+	}
 	free_particles = &particles[0];
-	active_particles = NULL;
 
 	for (i = 0; i < cl_numparticles; i++)
 	{
@@ -63,10 +132,7 @@ CL_ParticleEffect(vec3_t org, vec3_t dir, int color, int count)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = cl.time;
 		p->color = color + (randk() & 7);
@@ -103,10 +169,7 @@ CL_ParticleEffect2(vec3_t org, vec3_t dir, int color, int count)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = color + (randk() & 7);
@@ -144,10 +207,7 @@ CL_ParticleEffect3(vec3_t org, vec3_t dir, int color, int count)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = color;
@@ -169,7 +229,7 @@ CL_ParticleEffect3(vec3_t org, vec3_t dir, int color, int count)
 }
 
 void
-CL_AddParticles(void)
+CL_PrepareParticles(void)
 {
 	cparticle_t *p, *next;
 	float alpha;
@@ -180,10 +240,12 @@ CL_AddParticles(void)
 
 	active = NULL;
 	tail = NULL;
+	prepared_particle_count = 0;
 
 	for (p = active_particles; p; p = next)
 	{
 		next = p->next;
+		++cl_effect_stats.particle_updates;
 
 		if (p->alphavel != INSTANT_PARTICLE)
 		{
@@ -195,6 +257,8 @@ CL_AddParticles(void)
 				/* faded out */
 				p->next = free_particles;
 				free_particles = p;
+				++cl_effect_stats.particles_expired;
+				--cl_effect_stats.active_particles;
 				continue;
 			}
 		}
@@ -229,7 +293,14 @@ CL_AddParticles(void)
 		org[1] = p->org[1] + p->vel[1] * time + p->accel[1] * time2;
 		org[2] = p->org[2] + p->vel[2] * time + p->accel[2] * time2;
 
-		V_AddParticle(org, color, alpha);
+		if (prepared_particle_count < MAX_PARTICLES)
+		{
+			particle_t *out = &prepared_particles[prepared_particle_count];
+			VectorCopy(org, out->origin);
+			out->color = color;
+			out->alpha = alpha;
+			prepared_view_masks[prepared_particle_count++] = p->view_mask;
+		}
 
 		if (p->alphavel == INSTANT_PARTICLE)
 		{
@@ -239,6 +310,24 @@ CL_AddParticles(void)
 	}
 
 	active_particles = active;
+	cl_effect_stats.prepared_particles = prepared_particle_count;
+}
+
+void
+CL_AddParticles(void)
+{
+	int i;
+	unsigned int mask = cl_effect_render_slot < 0 ? ~0u :
+		1u << cl_effect_render_slot;
+
+	for (i = 0; i < prepared_particle_count; ++i)
+	{
+		particle_t *p = &prepared_particles[i];
+		if (prepared_view_masks[i] & mask)
+		{
+			V_AddParticle(p->origin, p->color, p->alpha);
+		}
+	}
 }
 
 void
@@ -259,10 +348,7 @@ CL_GenericParticleEffect(vec3_t org, vec3_t dir, int color,
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 

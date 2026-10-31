@@ -471,12 +471,21 @@ endif
 # ----------
 
 # Builds everything but the GLES1 renderer
-all: config client server game ref_gl1 ref_gl3 ref_gles3 ref_soft
+all: config client server game ref_gl1 ref_gl3 ref_gles3 ref_soft assets
 
 # ----------
 
 # Builds everything, including the GLES1 renderer
 with_gles1: all ref_gles1
+
+# Fixed-function targets for VideoCore IV; optimized unless DEBUG is requested.
+pi: config client game ref_gl1 ref_gles1 assets
+
+# Numbered stock PAKs precede loose files. A separate project archive ensures
+# Plastic Platoon's models are actually used without repacking commercial data.
+.PHONY: assets pi
+assets:
+	python3 tools/assets/build_overlay.py --output "$(BINDIR)/baseq2/plastic-platoon.pk3"
 
 # ----------
 
@@ -1002,6 +1011,7 @@ CLIENT_OBJS_ := \
 	src/client/cl_network.o \
 	src/client/cl_parse.o \
 	src/client/cl_particles.o \
+	src/client/cl_performance.o \
 	src/client/cl_prediction.o \
 	src/client/cl_screen.o \
 	src/client/cl_splitscreen.o \

@@ -26,6 +26,11 @@
 
 #include "header/server.h"
 
+#ifndef DEDICATED_ONLY
+qboolean SS_IsSessionActive(void);
+qboolean SS_LocalEventRecipient(netadr_t address);
+#endif
+
 /* entnum and channel are sent in the same signed 16-bit value
    3 bits for channel, 13 for entnum, so limit is 4096
 */
@@ -190,15 +195,90 @@ SV_WereConnected(const vec3_t origin, const byte *mask, int area1)
 	return false;
 }
 
+#ifndef DEDICATED_ONLY
+/* Only coalesce complete temp-entity commands. A mod can put several server
+ * commands in one multicast buffer; never accidentally route its per-view
+ * muzzle flashes or other messages as if the whole buffer were one temp effect.
+ * Lengths include the service and effect-type bytes (protocol 34 positions are
+ * three shorts and directions are one byte). Unknown formats retain normal
+ * delivery rather than guessing how to skip them. */
+static qboolean
+SV_SharedTempMessage(const sizebuf_t *message)
+{
+	int offset = 0;
+	while (offset < message->cursize)
+	{
+		int length;
+		const byte *command = message->data + offset;
+		if (message->cursize - offset < 2 || command[0] != svc_temp_entity)
+		{
+			return false;
+		}
+		switch (command[1])
+		{
+			case TE_BLOOD: case TE_GUNSHOT: case TE_SPARKS:
+			case TE_BULLET_SPARKS: case TE_SCREEN_SPARKS: case TE_SHIELD_SPARKS:
+			case TE_SHOTGUN: case TE_BLASTER: case TE_GREENBLOOD:
+			case TE_BLASTER2: case TE_FLECHETTE: case TE_HEATBEAM_SPARKS:
+			case TE_HEATBEAM_STEAM: case TE_MOREBLOOD: case TE_ELECTRIC_SPARKS:
+				length = 9; break;
+			case TE_MORTAR_EXPLOSION: case TE_EXPLOSION2:
+			case TE_GRENADE_EXPLOSION: case TE_GRENADE_EXPLOSION_WATER:
+			case TE_PLASMA_EXPLOSION: case TE_EXPLOSION1_BIG:
+			case TE_EXPLOSION1_NP: case TE_EXPLOSION1: case TE_ROCKET_EXPLOSION:
+			case TE_ROCKET_EXPLOSION_WATER: case TE_BFG_EXPLOSION:
+			case TE_BFG_BIGEXPLOSION: case TE_BOSSTPORT: case TE_PLAIN_EXPLOSION:
+			case TE_CHAINFIST_SMOKE: case TE_TRACKER_EXPLOSION:
+			case TE_TELEPORT_EFFECT: case TE_DBALL_GOAL: case TE_NUKEBLAST:
+			case TE_WIDOWSPLASH: case TE_FLAME:
+				length = 8; break;
+			case TE_SPLASH: case TE_LASER_SPARKS: case TE_WELDING_SPARKS:
+			case TE_TUNNEL_SPARKS:
+				length = 11; break;
+			case TE_BLUEHYPERBLASTER: case TE_RAILTRAIL: case TE_BFG_LASER:
+			case TE_BUBBLETRAIL: case TE_DEBUGTRAIL: case TE_BUBBLETRAIL2:
+				length = 14; break;
+			case TE_PARASITE_ATTACK: case TE_MEDIC_CABLE_ATTACK:
+			case TE_HEATBEAM: case TE_MONSTER_HEATBEAM:
+				length = 16; break;
+			case TE_GRAPPLE_CABLE: length = 22; break;
+			case TE_LIGHTNING: length = 18; break;
+			case TE_FLASHLIGHT: case TE_WIDOWBEAMOUT: length = 10; break;
+			case TE_FORCEWALL: length = 15; break;
+			case TE_STEAM:
+				if (message->cursize - offset < 4) return false;
+				length = command[2] == 255 && command[3] == 255 ? 15 : 19;
+				break;
+			default: return false;
+		}
+		if (length > message->cursize - offset) return false;
+		offset += length;
+	}
+	return offset > 0;
+}
+#endif
+
 void
 SV_Multicast(vec3_t origin, multicast_t to)
 {
 	int leafnum, cluster, area1 = 0, j;
 	qboolean reliable;
+#ifndef DEDICATED_ONLY
+	qboolean shared_local_temp = false;
+	client_t *local_temp_recipient = NULL;
+#endif
 	client_t *client;
 	byte *mask;
 
 	reliable = false;
+#ifndef DEDICATED_ONLY
+	/* One multicast call is one occurrence, even when the bytes are identical
+	 * to another call in this server tick. Coalesce only the shared local
+	 * presentation, after normal visibility eligibility below. The network
+	 * protocol, remote recipients, unicast feedback, and server demos retain
+	 * their original bytes. */
+	shared_local_temp = SS_IsSessionActive() && SV_SharedTempMessage(&sv.multicast);
+#endif
 
 	if ((to != MULTICAST_ALL_R) && (to != MULTICAST_ALL))
 	{
@@ -241,6 +321,37 @@ SV_Multicast(vec3_t origin, multicast_t to)
 			Com_Error(ERR_FATAL, "%s: bad to:%i", __func__, to);
 	}
 
+#ifndef DEDICATED_ONLY
+	if (shared_local_temp)
+	{
+		/* Prefer the primary connection whenever it is eligible, even if a
+		 * reconnect changed server-client array order. This keeps ordinary
+		 * primary-client demo recording intact. Secondary-only visibility
+		 * still selects a consuming secondary connection. */
+		for (j = 0, client = svs.clients; j < maxclients->value; ++j, ++client)
+		{
+			sizebuf_t *destination = reliable ? &client->netchan.message : &client->datagram;
+			if (client->state == cs_free || client->state == cs_zombie ||
+				(client->state != cs_spawned && !reliable) ||
+				!SS_LocalEventRecipient(client->netchan.remote_address) ||
+				destination->overflowed ||
+				destination->cursize + sv.multicast.cursize > destination->maxsize ||
+				(mask && !SV_WereConnected(CL_EDICT(client)->s.origin, mask, area1)))
+			{
+				continue;
+			}
+			if (!local_temp_recipient || client->netchan.remote_address.port == (unsigned short)BigShort(1))
+			{
+				local_temp_recipient = client;
+			}
+			if (client->netchan.remote_address.port == (unsigned short)BigShort(1))
+			{
+				break;
+			}
+		}
+	}
+#endif
+
 	/* send the data to all relevent clients */
 	for (j = 0, client = svs.clients; j < maxclients->value; j++, client++)
 	{
@@ -261,6 +372,14 @@ SV_Multicast(vec3_t origin, multicast_t to)
 				continue;
 			}
 		}
+
+#ifndef DEDICATED_ONLY
+		if (shared_local_temp && client->netchan.remote_address.type == NA_LOOPBACK &&
+			client != local_temp_recipient)
+		{
+			continue;
+		}
+#endif
 
 		SZ_Write(reliable ? &client->netchan.message : &client->datagram,
 				sv.multicast.data, sv.multicast.cursize);

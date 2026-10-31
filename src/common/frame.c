@@ -26,6 +26,9 @@
 
 #include "header/common.h"
 #include "header/zone.h"
+#ifndef DEDICATED_ONLY
+#include "../client/header/performance.h"
+#endif
 #include <setjmp.h>
 
 cvar_t *developer;
@@ -676,7 +679,9 @@ Qcommon_Frame(int usec)
 
 	// Run the serverframe.
 	if (packetframe) {
+		long long perf_begin = CL_PerfEnabled() ? Sys_Microseconds() : 0;
 		SV_Frame(servertimedelta);
+		if (perf_begin) CL_PerfAddServer(Sys_Microseconds() - perf_begin);
 		servertimedelta = 0;
 	}
 

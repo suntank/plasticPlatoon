@@ -27,6 +27,7 @@
 
 #include <errno.h>
 #include "header/client.h"
+#include "header/performance.h"
 #include "input/header/input.h"
 
 void CL_ForwardToServer_f(void);
@@ -825,6 +826,7 @@ void
 CL_Frame(int packetdelta, int renderdelta, int timedelta, qboolean packetframe, qboolean renderframe)
 {
 	static int lasttimecalled;
+	long long perf_update_begin = CL_PerfEnabled() ? Sys_Microseconds() : 0;
 
 	// Dedicated?
 	if (dedicated->value)
@@ -927,7 +929,9 @@ CL_Frame(int packetdelta, int renderdelta, int timedelta, qboolean packetframe, 
 			time_before_ref = Sys_Milliseconds();
 		}
 
+		if (perf_update_begin) CL_PerfAddClient(Sys_Microseconds() - perf_update_begin);
 		SCR_UpdateScreen();
+		perf_update_begin = CL_PerfEnabled() ? Sys_Microseconds() : 0;
 
 		if (host_speeds->value)
 		{
@@ -974,6 +978,7 @@ CL_Frame(int packetdelta, int renderdelta, int timedelta, qboolean packetframe, 
 			}
 		}
 	}
+	if (perf_update_begin) CL_PerfAddClient(Sys_Microseconds() - perf_update_begin);
 }
 
 void
@@ -1010,6 +1015,7 @@ CL_Init(void)
 	cls.disable_screen = true; /* don't draw yet */
 
 	CL_InitLocal();
+	CL_PerfInit();
 
 	Cbuf_Execute();
 
@@ -1028,6 +1034,7 @@ CL_Shutdown(void)
 	}
 
 	isdown = true;
+	CL_PerfShutdown();
 
 #ifdef USE_CURL
 	CL_HTTP_Cleanup(true);

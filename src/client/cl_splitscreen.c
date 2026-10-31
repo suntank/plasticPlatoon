@@ -1,4 +1,5 @@
 #include "cl_splitscreen.h"
+#include "header/performance.h"
 #define client_state_t server_client_state_t
 #include "../server/header/server.h"
 #undef client_state_t
@@ -34,7 +35,6 @@ static void SS_ParseSharedMuzzleFlash(ss_local_player_t *slot, sizebuf_t *msg,
 	qboolean monster_flash);
 static void SS_ParseSharedTempEntity(ss_local_player_t *slot, sizebuf_t *msg);
 static void SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon);
-static unsigned int SS_HashTempEntityPayload(const byte *data, int len);
 static float SS_GetSlotViewLerp(const ss_local_player_t *slot);
 static const player_state_t *SS_GetPreviousPlayerState(const ss_local_player_t *slot,
 	const player_state_t *ps);
@@ -953,28 +953,14 @@ static void
 SS_ParseSharedMuzzleFlash(ss_local_player_t *slot, sizebuf_t *msg,
 	qboolean monster_flash)
 {
-	typedef struct
-	{
-		int framecount;
-		int slot_index;
-		int count;
-		unsigned int hashes[128];
-		int lengths[128];
-	} ss_muzzle_flash_cache_t;
-
-	static ss_muzzle_flash_cache_t cache;
 	sizebuf_t saved_message;
-	sizebuf_t probe;
-	int payload_start;
-	int payload_len;
-	int observer_slot_index;
+	int observer_slot_index = slot ? slot->local_index : -1;
 	int previous_playernum;
 	centity_t *previous_entities;
 	frame_t saved_frame;
 	int saved_effect_only_slot;
 	int saved_effect_exclude_slot;
 	int previous_entity_count;
-	int i;
 	float previous_lerpfrac;
 	qboolean saved_force_unique_dlight_keys;
 
@@ -983,53 +969,8 @@ SS_ParseSharedMuzzleFlash(ss_local_player_t *slot, sizebuf_t *msg,
 		return;
 	}
 
-	payload_start = msg->readcount;
-	probe = *msg;
-	observer_slot_index = slot ? slot->local_index : -1;
-
-	if (monster_flash)
-	{
-		(void)MSG_ReadShort(&probe);
-		(void)MSG_ReadByte(&probe);
-	}
-	else
-	{
-		(void)MSG_ReadShort(&probe);
-		(void)MSG_ReadByte(&probe);
-	}
-
-	payload_len = probe.readcount - payload_start;
-
-	if (payload_len > 0)
-	{
-		unsigned int hash;
-
-		if (cache.framecount != cls.framecount || cache.slot_index != observer_slot_index)
-		{
-			cache.framecount = cls.framecount;
-			cache.slot_index = observer_slot_index;
-			cache.count = 0;
-		}
-
-		hash = SS_HashTempEntityPayload(&msg->data[payload_start], payload_len);
-
-		for (i = 0; i < cache.count; ++i)
-		{
-			if (cache.hashes[i] == hash && cache.lengths[i] == payload_len)
-			{
-				*msg = probe;
-				return;
-			}
-		}
-
-		if (cache.count < (int)ARRLEN(cache.hashes))
-		{
-			cache.hashes[cache.count] = hash;
-			cache.lengths[cache.count] = payload_len;
-			++cache.count;
-		}
-	}
-
+	/* Each command in this observer's stream is a distinct occurrence.
+	 * Payload equality must not discard a second shot in the same tick. */
 	saved_message = net_message;
 	net_message = *msg;
 	previous_playernum = cl.playernum;
@@ -1303,265 +1244,18 @@ SS_GetPreviousPlayerState(const ss_local_player_t *slot, const player_state_t *p
 	return ops;
 }
 
-static void
-SS_SkipBeamPacket(sizebuf_t *msg, qboolean with_offset)
-{
-	vec3_t tmp;
-
-	(void)MSG_ReadShort(msg);
-	MSG_ReadPos(msg, tmp);
-	MSG_ReadPos(msg, tmp);
-
-	if (with_offset)
-	{
-		MSG_ReadPos(msg, tmp);
-	}
-}
-
-static void
-SS_SkipLightningPacket(sizebuf_t *msg)
-{
-	vec3_t tmp;
-
-	(void)MSG_ReadShort(msg);
-	(void)MSG_ReadShort(msg);
-	MSG_ReadPos(msg, tmp);
-	MSG_ReadPos(msg, tmp);
-}
-
-static void
-SS_SkipSteamPacket(sizebuf_t *msg)
-{
-	vec3_t tmp;
-	int id;
-
-	id = MSG_ReadShort(msg);
-
-	if (id == -1)
-	{
-		(void)MSG_ReadByte(msg);
-		MSG_ReadPos(msg, tmp);
-		MSG_ReadDir(msg, tmp);
-		(void)MSG_ReadByte(msg);
-		(void)MSG_ReadShort(msg);
-		return;
-	}
-
-	(void)MSG_ReadByte(msg);
-	MSG_ReadPos(msg, tmp);
-	MSG_ReadDir(msg, tmp);
-	(void)MSG_ReadByte(msg);
-	(void)MSG_ReadShort(msg);
-	(void)MSG_ReadLong(msg);
-}
-
-static void
-SS_SkipTempEntity(sizebuf_t *msg)
-{
-	vec3_t tmp;
-	int type;
-
-	type = MSG_ReadByte(msg);
-
-	switch (type)
-	{
-		case TE_BLOOD:
-		case TE_GUNSHOT:
-		case TE_SPARKS:
-		case TE_BULLET_SPARKS:
-		case TE_SCREEN_SPARKS:
-		case TE_SHIELD_SPARKS:
-		case TE_SHOTGUN:
-		case TE_BLASTER:
-		case TE_GREENBLOOD:
-		case TE_BLASTER2:
-		case TE_FLECHETTE:
-		case TE_MOREBLOOD:
-		case TE_ELECTRIC_SPARKS:
-			MSG_ReadPos(msg, tmp);
-			MSG_ReadDir(msg, tmp);
-			break;
-
-		case TE_MORTAR_EXPLOSION:
-		case TE_EXPLOSION2:
-		case TE_GRENADE_EXPLOSION:
-		case TE_GRENADE_EXPLOSION_WATER:
-		case TE_PLASMA_EXPLOSION:
-		case TE_EXPLOSION1_BIG:
-		case TE_EXPLOSION1_NP:
-		case TE_EXPLOSION1:
-		case TE_ROCKET_EXPLOSION:
-		case TE_ROCKET_EXPLOSION_WATER:
-		case TE_BFG_EXPLOSION:
-		case TE_BFG_BIGEXPLOSION:
-		case TE_BOSSTPORT:
-		case TE_PLAIN_EXPLOSION:
-		case TE_TELEPORT_EFFECT:
-		case TE_DBALL_GOAL:
-		case TE_WIDOWSPLASH:
-		case TE_FLAME:
-			MSG_ReadPos(msg, tmp);
-			break;
-
-		case TE_SPLASH:
-		case TE_LASER_SPARKS:
-		case TE_WELDING_SPARKS:
-		case TE_TUNNEL_SPARKS:
-			(void)MSG_ReadByte(msg);
-			MSG_ReadPos(msg, tmp);
-			MSG_ReadDir(msg, tmp);
-			(void)MSG_ReadByte(msg);
-			break;
-
-		case TE_BLUEHYPERBLASTER:
-		case TE_RAILTRAIL:
-		case TE_RAILTRAIL2:
-		case TE_BUBBLETRAIL:
-		case TE_DEBUGTRAIL:
-		case TE_FORCEWALL:
-		case TE_BUBBLETRAIL2:
-			MSG_ReadPos(msg, tmp);
-			MSG_ReadPos(msg, tmp);
-			break;
-
-		case TE_BFG_LASER:
-			MSG_ReadPos(msg, tmp);
-			MSG_ReadPos(msg, tmp);
-			break;
-
-		case TE_PARASITE_ATTACK:
-		case TE_MEDIC_CABLE_ATTACK:
-			SS_SkipBeamPacket(msg, false);
-			break;
-
-		case TE_GRAPPLE_CABLE:
-			SS_SkipBeamPacket(msg, true);
-			break;
-
-		case TE_LIGHTNING:
-			SS_SkipLightningPacket(msg);
-			break;
-
-		case TE_FLASHLIGHT:
-			MSG_ReadPos(msg, tmp);
-			(void)MSG_ReadShort(msg);
-			break;
-
-		case TE_HEATBEAM:
-		case TE_MONSTER_HEATBEAM:
-			(void)MSG_ReadShort(msg);
-			MSG_ReadPos(msg, tmp);
-			MSG_ReadPos(msg, tmp);
-			break;
-
-		case TE_HEATBEAM_SPARKS:
-		case TE_HEATBEAM_STEAM:
-			MSG_ReadPos(msg, tmp);
-			MSG_ReadDir(msg, tmp);
-			break;
-
-		case TE_STEAM:
-			SS_SkipSteamPacket(msg);
-			break;
-
-		case TE_CHAINFIST_SMOKE:
-			MSG_ReadPos(msg, tmp);
-			break;
-
-		case TE_TRACKER_EXPLOSION:
-			MSG_ReadPos(msg, tmp);
-			break;
-
-		case TE_WIDOWBEAMOUT:
-			(void)MSG_ReadShort(msg);
-			MSG_ReadPos(msg, tmp);
-			break;
-
-		case TE_NUKEBLAST:
-			MSG_ReadPos(msg, tmp);
-			break;
-
-		default:
-			Com_DPrintf("Split-screen got unknown temp entity type %d\n", type);
-			break;
-	}
-}
-
-static unsigned int
-SS_HashTempEntityPayload(const byte *data, int len)
-{
-	unsigned int hash = 2166136261u;
-	int i;
-
-	for (i = 0; i < len; ++i)
-	{
-		hash ^= data[i];
-		hash *= 16777619u;
-	}
-
-	return hash;
-}
-
+/* Shared multicast events are routed once at SV_Multicast, where an
+ * occurrence is known exactly. Unicast events remain specific commands and
+ * are deliberately not deduplicated by payload, server time, or draw frame. */
 static void
 SS_ParseSharedTempEntity(ss_local_player_t *slot, sizebuf_t *msg)
 {
-	typedef struct
-	{
-		int framecount;
-		int count;
-		unsigned int hashes[128];
-		int lengths[128];
-	} ss_temp_entity_cache_t;
-
-	static ss_temp_entity_cache_t cache;
 	sizebuf_t saved_message;
-	sizebuf_t probe;
 	frame_t saved_frame;
-	int payload_start;
-	int payload_len;
-	int i;
 
 	if (!slot || !msg)
 	{
 		return;
-	}
-
-	payload_start = msg->readcount;
-	probe = *msg;
-	SS_SkipTempEntity(&probe);
-	payload_len = probe.readcount - payload_start;
-
-	if (payload_len <= 0)
-	{
-		*msg = probe;
-		return;
-	}
-
-	if (cache.framecount != cls.framecount)
-	{
-		cache.framecount = cls.framecount;
-		cache.count = 0;
-	}
-
-	{
-		unsigned int hash = SS_HashTempEntityPayload(&msg->data[payload_start],
-			payload_len);
-
-		for (i = 0; i < cache.count; ++i)
-		{
-			if (cache.hashes[i] == hash && cache.lengths[i] == payload_len)
-			{
-				*msg = probe;
-				return;
-			}
-		}
-
-		if (cache.count < (int)ARRLEN(cache.hashes))
-		{
-			cache.hashes[cache.count] = hash;
-			cache.lengths[cache.count] = payload_len;
-			++cache.count;
-		}
 	}
 
 	saved_message = net_message;
@@ -1593,6 +1287,43 @@ SS_TrimStuffText(char *text)
 	}
 }
 
+/* Model/configstring indices and delta-frame numbers belong to one server
+ * generation. Never carry them across changing/reconnect/serverdata. Keep the
+ * local player's profile, input bindings and held controls intact. */
+static void
+SS_ClearSlotSnapshot(ss_local_player_t *slot)
+{
+	if (!slot)
+	{
+		return;
+	}
+
+	slot->snapshot_valid = false;
+	slot->servercount = 0;
+	slot->playernum = -1;
+	slot->parse_entities_num = 0;
+	memset(&slot->frame, 0, sizeof(slot->frame));
+	memset(slot->frames, 0, sizeof(slot->frames));
+	memset(slot->parse_entities, 0, sizeof(slot->parse_entities));
+	memset(&slot->cmd, 0, sizeof(slot->cmd));
+	memset(slot->cmds, 0, sizeof(slot->cmds));
+	memset(slot->inventory, 0, sizeof(slot->inventory));
+	slot->layout[0] = '\0';
+	slot->muzzle_flash_seq = slot->last_muzzle_flash_seq = 0;
+	slot->ads_active = false;
+	slot->last_gunindex = 0;
+	slot->viewmodel_recoil = slot->viewmodel_raise = 0.0f;
+	slot->last_attack_time = slot->ads_kick_offset = 0.0f;
+	slot->viewmodel_valid = false;
+	VectorClear(slot->viewmodel_origin);
+	VectorClear(slot->viewmodel_angles);
+
+	if (slot->entities && slot->entity_count > 0)
+	{
+		memset(slot->entities, 0, slot->entity_count * sizeof(*slot->entities));
+	}
+}
+
 static void
 SS_HandleStuffText(ss_local_player_t *slot, const char *text)
 {
@@ -1605,6 +1336,31 @@ SS_HandleStuffText(ss_local_player_t *slot, const char *text)
 
 	Q_strlcpy(command, text, sizeof(command));
 	SS_TrimStuffText(command);
+
+	if (!strcmp(command, "changing"))
+	{
+		SS_ClearSlotSnapshot(slot);
+		slot->connection_state = ca_connected;
+		return;
+	}
+
+	if (!strcmp(command, "reconnect"))
+	{
+		/* The server retains this connection during a level change. Request
+		 * fresh serverdata/configstrings/baselines on its existing netchan. */
+		SS_ClearSlotSnapshot(slot);
+		if (slot->connection_state >= ca_connected)
+		{
+			slot->connection_state = ca_connected;
+			SS_SendSlotStringCmdNow(slot, "new");
+		}
+		else
+		{
+			slot->connection_state = ca_connecting;
+			slot->connect_time = cls.realtime - 1500;
+		}
+		return;
+	}
 
 	if (!strncmp(command, "cmd ", 4))
 	{
@@ -1639,21 +1395,13 @@ SS_ParseServerData(ss_local_player_t *slot, sizebuf_t *msg)
 		return;
 	}
 
+	SS_ClearSlotSnapshot(slot);
+	slot->connection_state = ca_connected;
 	slot->servercount = MSG_ReadLong(msg);
 	(void)MSG_ReadByte(msg);
 	(void)MSG_ReadString(msg);
 	slot->playernum = MSG_ReadShort(msg);
 	(void)MSG_ReadString(msg);
-	slot->snapshot_valid = false;
-	slot->parse_entities_num = 0;
-	slot->muzzle_flash_seq = 0;
-	slot->last_muzzle_flash_seq = 0;
-	memset(&slot->frame, 0, sizeof(slot->frame));
-
-	if (slot->entities && slot->entity_count > 0)
-	{
-		memset(slot->entities, 0, slot->entity_count * sizeof(*slot->entities));
-	}
 }
 
 static void
@@ -1788,10 +1536,12 @@ SS_ParseServerMessage(ss_local_player_t *slot, sizebuf_t *msg)
 				break;
 
 			case svc_disconnect:
+				SS_ClearSlotSnapshot(slot);
 				slot->connection_state = ca_disconnected;
 				return;
 
 			case svc_reconnect:
+				SS_ClearSlotSnapshot(slot);
 				slot->connection_state = ca_connecting;
 				slot->connect_time = cls.realtime - 1500;
 				return;
@@ -2037,6 +1787,17 @@ SS_GetSlotPlayerState(int slot_index, client_t **client_out,
 	client_t *server_client;
 
 	if (!slot || !slot->active || slot->state == SS_SLOT_DROPPED)
+	{
+		return false;
+	}
+
+	/* A secondary snapshot can lag the primary's map registration. Its
+	 * model indices are unsafe against a different generation's model table.
+	 * Wait for its own complete snapshot instead of mixing server playerstate
+	 * with old or empty client entity history. */
+	if (slot_index > 0 && (slot->connection_state != ca_active ||
+		!slot->snapshot_valid || !slot->frame.valid ||
+		slot->servercount != cl.servercount))
 	{
 		return false;
 	}
@@ -3288,6 +3049,86 @@ SS_ApplyPlayerView(refdef_t *refdef, const ss_local_player_t *slot,
 	refdef->areabits = (byte *)areabits;
 }
 
+/* Prepare the union before drawing any camera. No assumption is made that
+ * slot snapshots, interpolation, visibility areas, or first-person exclusions
+ * are the same. Only equivalent effect tasks are shared. */
+static void
+SS_PrepareSharedEffects(void)
+{
+	centity_t *saved_entities = cl_entities;
+	entity_state_t *saved_parse_entities = cl_entity_parse_stream;
+	int saved_entity_count = cl_numentities;
+	int saved_playernum = cl.playernum;
+	int saved_effect_slot = cl_effect_render_slot;
+	qboolean saved_skip_weapon = cl_skip_view_weapon;
+	refdef_t primary_refdef;
+	frame_t primary_frame;
+	float primary_lerp;
+	vec3_t saved_forward, saved_right, saved_up;
+	int i;
+
+	CL_PerfBeginPrepare();
+	CL_CalcRenderLerp();
+	cl_skip_view_weapon = true;
+	CL_CalcViewValues();
+	primary_frame = cl.frame;
+	primary_refdef = cl.refdef;
+	primary_lerp = cl.lerpfrac;
+	VectorCopy(cl.v_forward, saved_forward);
+	VectorCopy(cl.v_right, saved_right);
+	VectorCopy(cl.v_up, saved_up);
+	VectorCopy(cl.viewangles, ss_state.slots[0].viewangles);
+
+	if (CL_BeginSharedEffects())
+	{
+		for (i = 0; i < SS_GetSlotCount(); ++i)
+		{
+			ss_local_player_t *slot = &ss_state.slots[i];
+			client_t *server_client;
+			const player_state_t *ps;
+			const byte *areabits;
+			if (!slot->active || slot->state == SS_SLOT_DROPPED ||
+				!ss_state.viewports[i].active ||
+				!SS_GetSlotPlayerState(i, &server_client, &ps))
+			{
+				continue;
+			}
+			areabits = SS_GetSlotAreaBits(slot, server_client);
+			cl.frame = i == 0 ? primary_frame : slot->frame;
+			cl_entities = i == 0 ? saved_entities : slot->entities;
+			cl_numentities = i == 0 ? saved_entity_count : slot->entity_count;
+			cl_entity_parse_stream = i == 0 ? saved_parse_entities : slot->parse_entities;
+			cl.lerpfrac = i == 0 ? primary_lerp : SS_GetSlotViewLerp(slot);
+			cl.playernum = SS_GetSlotRenderPlayernum(slot, server_client);
+			cl_effect_render_slot = i;
+			cl.refdef = primary_refdef;
+			SS_ApplyPlayerView(&cl.refdef, slot, ps, areabits, &ss_state.viewports[i]);
+			AngleVectors(cl.refdef.viewangles, cl.v_forward, cl.v_right, cl.v_up);
+			CL_QueueEntityEffects(&cl.frame, i);
+			CL_PrepareViewBeamParticles();
+		}
+
+		cl.frame = primary_frame;
+		cl.refdef = primary_refdef;
+		cl_entities = saved_entities;
+		cl_numentities = saved_entity_count;
+		cl_entity_parse_stream = saved_parse_entities;
+		cl.lerpfrac = primary_lerp;
+		cl.playernum = saved_playernum;
+		cl_effect_render_slot = saved_effect_slot;
+		VectorCopy(saved_forward, cl.v_forward);
+		VectorCopy(saved_right, cl.v_right);
+		VectorCopy(saved_up, cl.v_up);
+		CL_EmitQueuedEntityEffects();
+		CL_PrepareTEnts();
+		CL_PrepareParticles();
+	}
+	cl_skip_view_weapon = saved_skip_weapon;
+	CL_PerfEndPrepare();
+}
+
+static int ss_frame_entities, ss_frame_lights, ss_frame_particles;
+
 static void
 SS_RenderSlotView(int slot_index, float stereo_separation)
 {
@@ -3305,6 +3146,9 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	const player_state_t *ps;
 	const byte *areabits;
 	int previous_effect_render_slot;
+	frame_t previous_frame;
+	refdef_t previous_refdef;
+	vec3_t previous_forward, previous_right, previous_up;
 
 	slot = SS_GetSlot(slot_index);
 
@@ -3322,6 +3166,7 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 
 	if (!SS_GetSlotPlayerState(slot_index, &server_client, &ps))
 	{
+		Draw_Fill(viewport->x, viewport->y, viewport->w, viewport->h, 0);
 		return;
 	}
 
@@ -3345,30 +3190,31 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	previous_parse_entities = cl_entity_parse_stream;
 	previous_lerpfrac = cl.lerpfrac;
 	previous_effect_render_slot = cl_effect_render_slot;
+	previous_frame = cl.frame;
+	previous_refdef = cl.refdef;
+	VectorCopy(cl.v_forward, previous_forward);
+	VectorCopy(cl.v_right, previous_right);
+	VectorCopy(cl.v_up, previous_up);
+	CL_PerfBeginPrepare();
 
 	if (slot->local_index > 0)
 	{
 		cl_entities = slot->entities;
 		cl_numentities = slot->entity_count;
 		cl_entity_parse_stream = slot->parse_entities;
+		cl.frame = slot->frame;
+		cl.lerpfrac = SS_GetSlotViewLerp(slot);
 	}
 
 	cl_effect_render_slot = slot_index;
+	SS_ApplyPlayerView(&cl.refdef, slot, ps, areabits, viewport);
+	AngleVectors(cl.refdef.viewangles, cl.v_forward, cl.v_right, cl.v_up);
 	V_ClearScene();
-
-	if (slot->local_index == 0)
-	{
-		CL_AddEntities();
-	}
-	else
-	{
-		cl.lerpfrac = SS_GetSlotViewLerp(slot);
-		CL_AddPacketEntities(&slot->frame);
-		CL_AddTEnts();
-		CL_AddParticles();
-		CL_AddDLights();
-		CL_AddLightStyles();
-	}
+	CL_AddPacketEntities(&cl.frame);
+	CL_AddTEnts();
+	CL_AddParticles();
+	CL_AddDLights();
+	CL_AddLightStyles();
 
 	refdef = cl.refdef;
 
@@ -3377,6 +3223,11 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	cl_entity_parse_stream = previous_parse_entities;
 	cl.lerpfrac = previous_lerpfrac;
 	cl_effect_render_slot = previous_effect_render_slot;
+	cl.frame = previous_frame;
+	cl.refdef = previous_refdef;
+	VectorCopy(previous_forward, cl.v_forward);
+	VectorCopy(previous_right, cl.v_right);
+	VectorCopy(previous_up, cl.v_up);
 
 	SS_ApplyPlayerView(&refdef, slot, ps, areabits, viewport);
 	SS_AddSlotViewWeapon(slot_index, &refdef, ps);
@@ -3395,8 +3246,19 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	refdef.vieworg[2] += 1.0f / 16.0f;
 	refdef.time = cl.time * 0.001f;
 	V_PopulateRefdef(&refdef);
+	CL_PerfEndPrepare();
 
+	CL_PerfBeginView(slot_index);
 	R_RenderFrame(&refdef);
+	CL_PerfEndView(slot_index, &refdef);
+	ss_frame_entities += refdef.num_entities;
+	ss_frame_lights += refdef.num_dlights;
+	ss_frame_particles += refdef.num_particles;
+	if (cl_stats->value)
+	{
+		Com_Printf("view:%d ent:%i lt:%i part:%i\n", slot_index + 1,
+			refdef.num_entities, refdef.num_dlights, refdef.num_particles);
+	}
 
 	cl_skip_view_weapon = previous_skip_view_weapon;
 	cl.playernum = previous_playernum;
@@ -4099,6 +3961,36 @@ SS_IsSessionActive(void)
 	return ss_state.session_active;
 }
 
+/* The primary connection keeps the host alive even if its viewport drops
+ * out. It still parses packets and can own a shared event. Secondary dropped
+ * slots stop consuming packets immediately, before the server sees disconnect. */
+qboolean
+SS_LocalEventRecipient(netadr_t address)
+{
+	int i;
+
+	if (!ss_state.session_active || address.type != NA_LOOPBACK)
+	{
+		return false;
+	}
+
+	for (i = 0; i < SS_GetSlotCount(); ++i)
+	{
+		const ss_local_player_t *slot = &ss_state.slots[i];
+		if (address.port != (unsigned short)BigShort(slot->loopback_slot + 1))
+		{
+			continue;
+		}
+		if (i == 0)
+		{
+			return cls.state >= ca_connected;
+		}
+		return slot->active && slot->state != SS_SLOT_DROPPED &&
+			slot->connection_state >= ca_connected;
+	}
+	return false;
+}
+
 qboolean
 SS_IsMenuInputActiveForDevice(int device_index)
 {
@@ -4401,6 +4293,8 @@ SS_RenderViews(float stereo_separation)
 	}
 
 	SS_UpdateViewports(viddef.width, viddef.height);
+	SS_PrepareSharedEffects();
+	ss_frame_entities = ss_frame_lights = ss_frame_particles = 0;
 
 	for (i = 0; i < SS_GetSlotCount(); ++i)
 	{
@@ -4418,6 +4312,11 @@ SS_RenderViews(float stereo_separation)
 		SS_RenderSlotView(i, stereo_separation);
 	}
 
+	if (log_stats->value && log_stats_file)
+	{
+		fprintf(log_stats_file, "%i,%i,%i,", ss_frame_entities,
+			ss_frame_lights, ss_frame_particles);
+	}
 	return true;
 }
 

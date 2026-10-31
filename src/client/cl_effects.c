@@ -42,6 +42,19 @@ int cl_effect_only_slot = 0;
 int cl_effect_exclude_slot = 0;
 qboolean cl_effect_force_unique_dlight_keys = false;
 
+/* Stateless presentation variation never advances the shared gameplay/effect
+ * random stream just because another camera submits a beam or light. */
+unsigned int
+CL_EffectNoise(unsigned int entity, unsigned int sample)
+{
+	unsigned int x = entity * 0x9e3779b9u ^ sample * 0x85ebca6bu ^ (unsigned int)cl.time;
+	x ^= x >> 16;
+	x *= 0x7feb352du;
+	x ^= x >> 15;
+	x *= 0x846ca68bu;
+	return x ^ (x >> 16);
+}
+
 void
 CL_SetEffectScope(int only_slot, int exclude_slot, qboolean force_unique_dlight_keys)
 {
@@ -1721,10 +1734,7 @@ CL_TeleporterParticles(entity_state_t *ent)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = 0xdb;
@@ -1762,10 +1772,7 @@ CL_LogoutEffect(vec3_t org, int type)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 
@@ -1817,10 +1824,7 @@ CL_ItemRespawnParticles(vec3_t org)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = 0xd4 + (randk() & 3);
@@ -1857,10 +1861,7 @@ CL_ExplosionParticles(vec3_t org)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = 0xe0 + (randk() & 7);
@@ -1898,10 +1899,7 @@ CL_SmokeParticles(vec3_t org, int count)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		/* Grey smoke colors (palette indices for grey tones) */
@@ -1943,10 +1941,7 @@ CL_BigTeleportParticles(vec3_t org)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = colortable[randk() & 3];
@@ -1993,10 +1988,7 @@ CL_BlasterParticles(vec3_t org, vec3_t dir)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = 0xe0 + (randk() & 7);
@@ -2045,10 +2037,7 @@ CL_BlasterTrail(vec3_t start, vec3_t end)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -2097,10 +2086,7 @@ CL_QuadTrail(vec3_t start, vec3_t end)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -2149,10 +2135,7 @@ CL_FlagTrail(vec3_t start, vec3_t end, int color)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -2222,10 +2205,7 @@ CL_DiminishingTrail(vec3_t start, vec3_t end, centity_t *old, int flags)
 		/* drop less particles as it flies */
 		if ((randk() & 1023) < old->trailcount)
 		{
-			p = free_particles;
-			free_particles = p->next;
-			p->next = active_particles;
-			active_particles = p;
+			p = CL_AllocParticle();
 			VectorClear(p->accel);
 
 			p->time = time;
@@ -2339,10 +2319,7 @@ CL_RocketTrail(vec3_t start, vec3_t end, centity_t *old)
 
 		if ((randk() & 7) == 0)
 		{
-			p = free_particles;
-			free_particles = p->next;
-			p->next = active_particles;
-			active_particles = p;
+			p = CL_AllocParticle();
 
 			VectorClear(p->accel);
 			p->time = time;
@@ -2395,10 +2372,7 @@ CL_RailTrail(vec3_t start, vec3_t end)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		VectorClear(p->accel);
@@ -2436,10 +2410,7 @@ CL_RailTrail(vec3_t start, vec3_t end)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		VectorClear(p->accel);
@@ -2489,10 +2460,7 @@ CL_IonripperTrail(vec3_t start, vec3_t ent)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -2551,10 +2519,7 @@ CL_BubbleTrail(vec3_t start, vec3_t end)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		VectorClear(p->accel);
 		p->time = time;
@@ -2624,10 +2589,7 @@ CL_FlyParticles(vec3_t origin, int count)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 
@@ -2733,10 +2695,7 @@ CL_BfgParticles(entity_t *ent)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 
@@ -2792,10 +2751,7 @@ CL_TrapParticles(entity_t *ent)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -2837,10 +2793,7 @@ CL_TrapParticles(entity_t *ent)
 						return;
 					}
 
-					p = free_particles;
-					free_particles = p->next;
-					p->next = active_particles;
-					active_particles = p;
+					p = CL_AllocParticle();
 
 					p->time = time;
 					p->color = 0xe0 + (randk() & 3);
@@ -2883,10 +2836,7 @@ CL_BFGExplosionParticles(vec3_t org)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = 0xd0 + (randk() & 7);
@@ -2927,10 +2877,7 @@ CL_TeleportParticles(vec3_t org)
 					return;
 				}
 
-				p = free_particles;
-				free_particles = p->next;
-				p->next = active_particles;
-				active_particles = p;
+				p = CL_AllocParticle();
 
 				p->time = time;
 				p->color = 7 + (randk() & 7);
@@ -3067,10 +3014,7 @@ CL_DebugTrail(vec3_t start, vec3_t end)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = (float)cl.time;
 		VectorClear(p->accel);
@@ -3110,10 +3054,7 @@ CL_SmokeTrail(vec3_t start, vec3_t end, int colorStart,
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -3163,10 +3104,7 @@ CL_ForceWall(vec3_t start, vec3_t end, int color8)
 
 		if (frandk() > 0.3)
 		{
-			p = free_particles;
-			free_particles = p->next;
-			p->next = active_particles;
-			active_particles = p;
+			p = CL_AllocParticle();
 			VectorClear(p->accel);
 
 			p->time = time;
@@ -3219,10 +3157,7 @@ CL_BubbleTrail2(vec3_t start, vec3_t end, int dist)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		VectorClear(p->accel);
 		p->time = time;
@@ -3299,10 +3234,7 @@ CL_Heatbeam(vec3_t start, vec3_t forward)
 				return;
 			}
 
-			p = free_particles;
-			free_particles = p->next;
-			p->next = active_particles;
-			active_particles = p;
+			p = CL_AllocParticle();
 
 			p->time = time;
 			VectorClear(p->accel);
@@ -3359,10 +3291,7 @@ CL_ParticleSteamEffect(vec3_t org, vec3_t dir, int color,
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = color + (randk() & 7);
@@ -3405,10 +3334,7 @@ CL_ParticleSteamEffect2(cl_sustain_t *self)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = cl.time;
 		p->color = self->color + (randk() & 7);
@@ -3468,10 +3394,7 @@ CL_TrackerTrail(vec3_t start, vec3_t end, int particleColor)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -3511,10 +3434,7 @@ CL_Tracker_Shell(vec3_t origin)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -3548,10 +3468,7 @@ CL_MonsterPlasma_Shell(vec3_t origin)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -3588,10 +3505,7 @@ CL_Widowbeamout(cl_sustain_t *self)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -3628,10 +3542,7 @@ CL_Nukeblast(cl_sustain_t *self)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -3666,10 +3577,7 @@ CL_WidowSplash(vec3_t org)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = colortable[randk() & 3];
@@ -3704,10 +3612,7 @@ CL_Tracker_Explode(vec3_t origin)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -3755,10 +3660,7 @@ CL_TagTrail(vec3_t start, vec3_t end, int color)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -3795,10 +3697,7 @@ CL_ColorExplosionParticles(vec3_t org, int color, int run)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = color + (randk() % run);
@@ -3841,10 +3740,7 @@ CL_ParticleSmokeEffect(vec3_t org, vec3_t dir, int color,
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = color + (randk() & 7);
@@ -3890,10 +3786,7 @@ CL_BlasterParticles2(vec3_t org, vec3_t dir, unsigned int color)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = color + (randk() & 7);
@@ -3945,10 +3838,7 @@ CL_BlasterTrail2(vec3_t start, vec3_t end)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 		VectorClear(p->accel);
 
 		p->time = time;
@@ -4002,10 +3892,7 @@ CL_FlameEffect(vec3_t org)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = 0xe0 + (randk() & 7);
@@ -4037,10 +3924,7 @@ CL_FlameEffect(vec3_t org)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = 0x00 + (randk() & 3);
@@ -4091,10 +3975,7 @@ CL_FlameTrail(vec3_t start, vec3_t end)
 			return;
 		}
 
-		p = free_particles;
-		free_particles = p->next;
-		p->next = active_particles;
-		active_particles = p;
+		p = CL_AllocParticle();
 
 		p->time = time;
 		p->color = 0xe0 + (randk() & 7);
