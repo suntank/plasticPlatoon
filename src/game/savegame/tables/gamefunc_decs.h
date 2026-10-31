@@ -997,3 +997,6 @@ extern void AI_SetSightClient ( void ) ;
 extern void wait_and_change_think(edict_t* ent);
 extern void Player_ApplyBurn ( edict_t * target , edict_t * attacker , float duration ) ;
 extern void Player_TickBurn ( edict_t * ent ) ;
+
+extern void SP_target_screen_image ( edict_t * ent );
+extern void Use_Target_Screen_Image ( edict_t * ent, edict_t * other, edict_t * activator );

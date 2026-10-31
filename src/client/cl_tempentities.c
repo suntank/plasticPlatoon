@@ -50,6 +50,8 @@ typedef struct
 	int effect_only_slot;
 	int effect_exclude_slot;
 	vec3_t velocity;       /* velocity for muzzle flash tracking */
+	vec3_t spawn_origin;   /* immutable muzzle origin for velocity extrapolation */
+	qboolean spawn_origin_valid;
 	vec3_t dir_forward;    /* weapon forward direction for cone sprites */
 	vec3_t dir_right;      /* weapon right direction for cone sprites */
 	vec3_t dir_up;         /* weapon up direction for cone sprites */
@@ -1006,6 +1008,7 @@ CL_ParseTEnt(void)
 	int ent;
 	int magnitude;
 
+	++cl_effect_stats.temp_events_parsed;
 	type = MSG_ReadByte(&net_message);
 
 	switch (type)
@@ -1796,7 +1799,7 @@ CL_AddBeams(void)
 		}
 
 		steps = (float)ceil(d / model_length);
-		len = (d - model_length) / (steps - 1);
+		len = steps > 1 ? (d - model_length) / (steps - 1) : model_length;
 
 		memset(&ent, 0, sizeof(ent));
 
@@ -1813,7 +1816,7 @@ CL_AddBeams(void)
 
 			ent.angles[0] = pitch;
 			ent.angles[1] = yaw;
-			ent.angles[2] = (float)(randk() % 360);
+			ent.angles[2] = (float)(CL_EffectNoise(b->entity, (unsigned int)(d * 8)) % 360);
 
 			V_AddEntity(&ent);
 
@@ -1836,7 +1839,7 @@ CL_AddBeams(void)
 				ent.angles[1] = yaw;
 			}
 
-			ent.angles[2] = (float)(randk() % 360);
+			ent.angles[2] = (float)(CL_EffectNoise(b->entity, (unsigned int)(d * 8)) % 360);
 
 			V_AddEntity(&ent);
 
@@ -1888,7 +1891,14 @@ AdjustToWeapon(const vec3_t ofs, float hand_mul, vec3_t out)
 	/* set up gun position */
 	ps = &cl.frame.playerstate;
 	i = (cl.frame.serverframe - 1) & UPDATE_MASK;
-	oldframe = &cl.frames[i];
+	if (cl_effect_render_slot > 0 && SS_IsSessionActive())
+	{
+		oldframe = &SS_GetSlot(cl_effect_render_slot)->frames[i];
+	}
+	else
+	{
+		oldframe = &cl.frames[i];
+	}
 
 	if ((oldframe->serverframe != cl.frame.serverframe - 1) || !oldframe->valid)
 	{
@@ -1957,14 +1967,11 @@ CL_AddHeatBeams(void)
 		{
 			framenum = 1;
 
-			/* add the rings */
-			CL_Heatbeam(org, dist);
 		}
 		else
 		{
 			framenum = 2;
 
-			CL_MonsterPlasma_Shell(org);
 		}
 
 		/* hack for left-handed weapon
@@ -1989,7 +1996,7 @@ CL_AddHeatBeams(void)
 
 		model_length = 32.0;
 		steps = ceil(d / model_length);
-		len = (d - model_length) / (steps - 1);
+		len = steps > 1 ? (d - model_length) / (steps - 1) : model_length;
 
 		memset(&ent, 0, sizeof(ent));
 
@@ -2019,8 +2026,37 @@ CL_AddHeatBeams(void)
 	}
 }
 
+/* First-person beam rings depend on one local camera. Prepare only the
+ * owner's representation, scoped to that view, before particle evaluation. */
+void
+CL_PrepareViewBeamParticles(void)
+{
+	const beam_t *b;
+	unsigned int saved_mask = cl_particle_view_mask;
+	int view = cl_effect_render_slot < 0 ? 0 : cl_effect_render_slot;
+	float hand_mul = HandMul();
+
+	cl_particle_view_mask = 1u << view;
+	for (b = cl_heatbeams; b < &cl_heatbeams[MAX_BEAMS]; ++b)
+	{
+		vec3_t org, dist;
+		float len;
+		if (!b->model || b->endtime < cl.time || b->entity != cl.playernum + 1)
+		{
+			continue;
+		}
+		AdjustToWeapon(b->offset, hand_mul, org);
+		VectorSubtract(b->end, org, dist);
+		len = VectorLength(dist);
+		VectorScale(cl.v_forward, len, dist);
+		ApplyBeamOffset(b->offset, hand_mul, dist);
+		CL_Heatbeam(org, dist);
+	}
+	cl_particle_view_mask = saved_mask;
+}
+
 static void
-CL_AddExplosions(void)
+CL_PrepareExplosions(void)
 {
 	entity_t *ent;
 	int i;
@@ -2037,12 +2073,12 @@ CL_AddExplosions(void)
 			continue;
 		}
 
-		if (!CL_EffectVisibleInRenderSlot(ex->effect_only_slot,
-			ex->effect_exclude_slot))
+		++cl_effect_stats.sprite_updates;
+		if (!ex->spawn_origin_valid)
 		{
-			continue;
+			VectorCopy(ex->ent.oldorigin, ex->spawn_origin);
+			ex->spawn_origin_valid = true;
 		}
-
 		frac = (cl.time - ex->start) / 100.0;
 		f = (int)floor(frac);
 
@@ -2065,9 +2101,9 @@ CL_AddExplosions(void)
 
 				/* Update position based on velocity (follow shooter) */
 				float dt = elapsed / 1000.0f;
-				ent->origin[0] = ex->ent.oldorigin[0] + ex->velocity[0] * dt;
-				ent->origin[1] = ex->ent.oldorigin[1] + ex->velocity[1] * dt;
-				ent->origin[2] = ex->ent.oldorigin[2] + ex->velocity[2] * dt;
+				ent->origin[0] = ex->spawn_origin[0] + ex->velocity[0] * dt;
+				ent->origin[1] = ex->spawn_origin[1] + ex->velocity[1] * dt;
+				ent->origin[2] = ex->spawn_origin[2] + ex->velocity[2] * dt;
 
 				/* Quick fade out over the duration */
 				ent->alpha = 0.95f * (1.0f - progress);
@@ -2091,9 +2127,9 @@ CL_AddExplosions(void)
 
 				/* Update position based on velocity */
 				float dt = elapsed / 1000.0f;
-				ent->origin[0] = ex->ent.oldorigin[0] + ex->velocity[0] * dt;
-				ent->origin[1] = ex->ent.oldorigin[1] + ex->velocity[1] * dt;
-				ent->origin[2] = ex->ent.oldorigin[2] + ex->velocity[2] * dt;
+				ent->origin[0] = ex->spawn_origin[0] + ex->velocity[0] * dt;
+				ent->origin[1] = ex->spawn_origin[1] + ex->velocity[1] * dt;
+				ent->origin[2] = ex->spawn_origin[2] + ex->velocity[2] * dt;
 
 				/* Orient sprite to point forward along weapon direction, lying flat (horizontal plane) */
 				{
@@ -2124,9 +2160,9 @@ CL_AddExplosions(void)
 
 				/* Update position based on velocity */
 				float dt = elapsed / 1000.0f;
-				ent->origin[0] = ex->ent.oldorigin[0] + ex->velocity[0] * dt;
-				ent->origin[1] = ex->ent.oldorigin[1] + ex->velocity[1] * dt;
-				ent->origin[2] = ex->ent.oldorigin[2] + ex->velocity[2] * dt;
+				ent->origin[0] = ex->spawn_origin[0] + ex->velocity[0] * dt;
+				ent->origin[1] = ex->spawn_origin[1] + ex->velocity[1] * dt;
+				ent->origin[2] = ex->spawn_origin[2] + ex->velocity[2] * dt;
 
 				/* Orient sprite to point forward along weapon direction, standing vertical */
 				{
@@ -2304,12 +2340,6 @@ CL_AddExplosions(void)
 			continue;
 		}
 
-		if (ex->light)
-		{
-			V_AddLight(ent->origin, ex->light * ent->alpha,
-					ex->lightcolor[0], ex->lightcolor[1], ex->lightcolor[2]);
-		}
-
 		VectorCopy(ent->origin, ent->oldorigin);
 
 		if (f < 0)
@@ -2321,7 +2351,30 @@ CL_AddExplosions(void)
 		ent->oldframe = ex->baseframe + f;
 		ent->backlerp = 1.0f - cl.lerpfrac;
 
-		V_AddEntity(ent);
+	}
+}
+
+static void
+CL_AddExplosions(void)
+{
+	int i;
+	for (i = 0; i < MAX_EXPLOSIONS; ++i)
+	{
+		const explosion_t *ex = &cl_explosions[i];
+		entity_t entity;
+		if (ex->type == ex_free ||
+			!CL_EffectVisibleInRenderSlot(ex->effect_only_slot, ex->effect_exclude_slot))
+		{
+			continue;
+		}
+		entity = ex->ent;
+		entity.backlerp = 1.0f - cl.lerpfrac;
+		if (ex->light)
+		{
+			V_AddLight(entity.origin, ex->light * entity.alpha,
+				ex->lightcolor[0], ex->lightcolor[1], ex->lightcolor[2]);
+		}
+		V_AddEntity(&entity);
 	}
 }
 
@@ -2363,13 +2416,58 @@ CL_ProcessSustain()
 }
 
 void
+CL_PrepareTEnts(void)
+{
+	const beam_t *b;
+	unsigned int saved_mask = cl_particle_view_mask;
+
+	CL_PrepareExplosions();
+	CL_ProcessSustain();
+	/* A world heatbeam shell is shared by all observers except its owner,
+	 * whose camera-dependent ring representation is prepared separately. */
+	for (b = cl_heatbeams; b < &cl_heatbeams[MAX_BEAMS]; ++b)
+	{
+		int i;
+		unsigned int mask = ~0u;
+		if (!b->model || b->endtime < cl.time)
+		{
+			continue;
+		}
+		if (!SS_IsSessionActive())
+		{
+			if (b->entity == cl.playernum + 1)
+			{
+				continue;
+			}
+		}
+		else
+		{
+			for (i = 0; i < SS_GetPlayerCount(); ++i)
+			{
+				const ss_local_player_t *slot = SS_GetSlot(i);
+				if (slot && slot->active && b->entity == slot->playernum + 1)
+				{
+					mask &= ~(1u << i);
+				}
+			}
+		}
+		cl_particle_view_mask = mask;
+		{
+			vec3_t origin;
+			VectorCopy(b->start, origin);
+			CL_MonsterPlasma_Shell(origin);
+		}
+	}
+	cl_particle_view_mask = saved_mask;
+}
+
+void
 CL_AddTEnts(void)
 {
 	CL_AddBeams();
 	CL_AddHeatBeams();
 	CL_AddExplosions();
 	CL_AddLasers();
-	CL_ProcessSustain();
 }
 
 struct sfx_s *

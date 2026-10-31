@@ -1,0 +1,274 @@
+The Meson build system
+Version: 1.12.1
+Source dir: <mesa-build>/mesa-25.2.8
+Build dir: <mesa-build>/build
+Build type: native build
+Project name: mesa
+Project version: 25.2.8
+C compiler for the host machine: cc (gcc 13.3.0 "cc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0")
+C linker for the host machine: cc ld.bfd 2.42
+C++ compiler for the host machine: c++ (gcc 13.3.0 "c++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0")
+C++ linker for the host machine: c++ ld.bfd 2.42
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Checking for size of "void*" : 8 
+Checking if "-mtls-dialect=gnu2" runs: YES
+Checking if "split TLSDESC" links: YES 
+Dependency libglvnd for host machine skipped: feature glvnd disabled
+Dependency vdpau for host machine skipped: feature gallium-vdpau disabled
+Program glslangValidator found: NO
+Dependency libva for host machine skipped: feature gallium-va disabled
+Program python3 found: YES 3.12.14 3.12.14 (<mesa-build>/venv/bin/python3)
+Fetching value of define "ETIME" : 62 
+Compiler for C supports arguments -gsplit-dwarf: YES 
+Compiler for C supports link arguments -Wl,--gdb-index: NO 
+Checking for function "bswap32" : YES 
+Checking for function "bswap64" : YES 
+Checking for function "clz" : YES 
+Checking for function "clzll" : YES 
+Checking for function "ctz" : YES 
+Checking for function "expect" : YES 
+Checking for function "ffs" : YES 
+Checking for function "ffsll" : YES 
+Checking for function "popcount" : YES 
+Checking for function "popcountll" : YES 
+Checking for function "unreachable" : YES 
+Checking for function "types_compatible_p" : YES 
+Compiler for C supports function attribute const: YES 
+Compiler for C supports function attribute flatten: YES 
+Compiler for C supports function attribute malloc: YES 
+Compiler for C supports function attribute pure: YES 
+Compiler for C supports function attribute unused: YES 
+Compiler for C supports function attribute warn_unused_result: YES 
+Compiler for C supports function attribute weak: YES 
+Compiler for C supports function attribute format: YES 
+Compiler for C supports function attribute packed: YES 
+Compiler for C supports function attribute returns_nonnull: YES 
+Compiler for C supports function attribute alias: YES 
+Compiler for C supports function attribute noreturn: YES 
+Compiler for C supports function attribute optimize: YES 
+Compiler for C supports function attribute visibility:hidden: YES 
+Checking if "__uint128_t" compiles: YES 
+Checking for function "reallocarray" : YES 
+Checking for function "fmemopen" : YES 
+Checking if "gc-sections" links: YES 
+Compiler for C supports arguments -Werror=implicit-function-declaration: YES 
+Compiler for C supports arguments -Werror=missing-prototypes: YES 
+Compiler for C supports arguments -Werror=return-type: YES 
+Compiler for C supports arguments -Werror=empty-body: YES 
+Compiler for C supports arguments -Werror=incompatible-pointer-types: YES 
+Compiler for C supports arguments -Werror=int-conversion: YES 
+Compiler for C supports arguments -Wimplicit-fallthrough: YES 
+Compiler for C supports arguments -Wmisleading-indentation: YES 
+Compiler for C supports arguments -Wno-missing-field-initializers: YES 
+Compiler for C supports arguments -Wno-format-truncation: YES 
+Compiler for C supports arguments -Wno-nonnull-compare: YES 
+Compiler for C supports arguments -fno-math-errno: YES 
+Compiler for C supports arguments -fno-trapping-math: YES 
+Compiler for C supports arguments -Qunused-arguments: NO 
+Compiler for C supports arguments -fno-common: YES 
+Compiler for C supports arguments -Wno-unknown-pragmas: YES 
+Compiler for C supports arguments -Wno-microsoft-enum-value: NO 
+Compiler for C supports arguments -Wno-unused-function: YES 
+Compiler for C supports arguments -Werror=format: YES 
+Compiler for C supports arguments -Wformat-security: YES 
+Compiler for C supports arguments -Werror=thread-safety: NO 
+Compiler for C supports arguments -ffunction-sections: YES 
+Compiler for C supports arguments -fdata-sections: YES 
+Compiler for C supports arguments -Wno-unused-variable: YES 
+Compiler for C supports arguments -Wno-unused-but-set-variable: YES 
+Compiler for C supports arguments /wd4189: NO 
+Compiler for C++ supports arguments -Werror=return-type: YES 
+Compiler for C++ supports arguments -Werror=empty-body: YES 
+Compiler for C++ supports arguments -Wmisleading-indentation: YES 
+Compiler for C++ supports arguments -Wno-non-virtual-dtor: YES 
+Compiler for C++ supports arguments -Wno-missing-field-initializers: YES 
+Compiler for C++ supports arguments -Wno-format-truncation: YES 
+Compiler for C++ supports arguments -fno-math-errno: YES 
+Compiler for C++ supports arguments -fno-trapping-math: YES 
+Compiler for C++ supports arguments -Qunused-arguments: NO 
+Compiler for C++ supports arguments -flifetime-dse=1: YES 
+Compiler for C++ supports arguments -Wno-unknown-pragmas: YES 
+Compiler for C++ supports arguments -Wno-microsoft-enum-value: NO 
+Compiler for C++ supports arguments -Werror=format: YES 
+Compiler for C++ supports arguments -Wformat-security: YES 
+Compiler for C++ supports arguments -ffunction-sections: YES 
+Compiler for C++ supports arguments -fdata-sections: YES 
+Compiler for C++ supports arguments -Wno-unused-variable: YES 
+Compiler for C++ supports arguments -Wno-unused-but-set-variable: YES 
+Compiler for C++ supports arguments /wd4189: NO 
+Compiler for C supports arguments -Wno-override-init: YES 
+Compiler for C supports arguments -Wno-initializer-overrides: NO 
+Compiler for C supports arguments -Werror=pointer-arith: YES 
+Compiler for C supports arguments -Werror=vla: YES 
+Compiler for C supports arguments -Werror=gnu-empty-initializer: NO 
+Compiler for C++ supports arguments -Werror=pointer-arith: YES 
+Compiler for C++ supports arguments -Werror=vla: YES 
+Compiler for C++ supports arguments -Werror=gnu-empty-initializer: NO 
+Checking for function "__builtin_ia32_clflushopt" : YES 
+Checking if "GCC atomic builtins" compiles: YES 
+Checking if "GCC atomic builtins required -latomic" links: YES 
+Checking if "GCC 64bit atomics" with dependency  links: YES 
+Library ws2_32 found: NO
+Header "sys/sysmacros.h" has symbol "major" : YES 
+Header "sys/sysmacros.h" has symbol "minor" : YES 
+Header "sys/sysmacros.h" has symbol "makedev" : YES 
+Header "sys/mkdev.h" has symbol "major" : NO 
+Check usable header "sched.h" : YES 
+Checking for function "sched_getaffinity" : YES 
+Check usable header "xlocale.h" : NO 
+Check usable header "linux/futex.h" : YES 
+Check usable header "endian.h" : YES 
+Check usable header "dlfcn.h" : YES 
+Check usable header "sys/shm.h" : YES 
+Check usable header "cet.h" : YES 
+Check usable header "pthread_np.h" : NO 
+Check usable header "sys/inotify.h" : YES 
+Check usable header "linux/udmabuf.h" : YES 
+Checking for function "strtof" : YES 
+Checking for function "mkostemp" : YES 
+Checking for function "memfd_create" : YES 
+Checking for function "random_r" : YES 
+Checking for function "flock" : YES 
+Checking for function "strtok_r" : YES 
+Checking for function "getrandom" : YES 
+Checking for function "qsort_s" : NO 
+Checking for function "posix_fallocate" : YES 
+Checking for function "secure_getenv" : YES 
+Checking if "GNU qsort_r" links: YES 
+Header "time.h" has symbol "struct timespec" : YES 
+Checking for function "thrd_create" : YES 
+Header "errno.h" has symbol "program_invocation_name" : YES 
+Header "math.h" has symbol "issignaling" : YES 
+Checking for function "posix_memalign" : YES 
+Checking whether type "struct dirent" has member "d_type" : YES 
+Checking if "strtod has locale support" links: YES 
+Checking if "Bsymbolic" links: YES 
+Checking if "version-script" links: YES 
+Checking if "dynamic-list" links: YES 
+Compiler for C supports link arguments -Wl,--build-id=sha1: YES 
+Checking for function "dlopen" : YES 
+Checking for function "dladdr" with dependency : YES 
+Checking for function "dl_iterate_phdr" : YES 
+Checking for function "clock_gettime" : YES 
+Found pkg-config: YES (/usr/bin/pkg-config) 1.8.1
+Run-time dependency zlib found: YES 1.3
+Run-time dependency libzstd found: YES 1.5.5
+Run-time dependency threads found: YES
+Checking for function "pthread_setaffinity_np" with dependency threads: YES 
+Run-time dependency expat found: YES 2.6.1
+Library m found: YES
+Run-time dependency libdrm found: YES 2.4.125
+Run-time dependency libudev found: YES 255
+Dependency llvm(modules: bitwriter, engine, mcdisassembler, mcjit, core, executionengine, scalaropts, transformutils, instcombine) for host machine skipped: feature llvm disabled
+Found CMake: /usr/bin/cmake (3.28.3)
+Run-time dependency spirv-tools found: NO  (tried pkg-config and cmake)
+Run-time dependency lua54 found: NO  (tried pkg-config and cmake)
+Run-time dependency lua5.4 found: NO  (tried pkg-config and cmake)
+Run-time dependency lua-5.4 found: NO  (tried pkg-config and cmake)
+Run-time dependency lua53 found: NO  (tried pkg-config and cmake)
+Run-time dependency lua5.3 found: NO  (tried pkg-config and cmake)
+Run-time dependency lua-5.3 found: NO  (tried pkg-config and cmake)
+Run-time dependency lua found: NO  (tried pkg-config)
+Run-time dependency libelf found: NO  (tried pkg-config and cmake)
+Library elf found: NO
+Run-time dependency valgrind found: NO  (tried pkg-config)
+Program bison found: YES (/usr/bin/bison)
+Program bison found: YES 3.8.2 3.8.2 (/usr/bin/bison)
+Program flex found: YES (/usr/bin/flex)
+Run-time dependency libunwind found: NO  (tried pkg-config and cmake)
+Run-time dependency OpenMP found: YES 4.5
+Library sensors found: NO
+Program nm found: YES (/usr/bin/nm)
+Program symbols-check.py found: YES (<mesa-build>/venv/bin/python3 <mesa-build>/mesa-25.2.8/bin/symbols-check.py)
+Program install_megadrivers.py found: YES (<mesa-build>/venv/bin/python3 <mesa-build>/mesa-25.2.8/bin/install_megadrivers.py)
+Checking for size of "void *" : 8 
+Compiler for C supports arguments -Wno-misleading-indentation: YES 
+Program decode.py found: YES (<mesa-build>/mesa-25.2.8/src/compiler/isaspec/decode.py)
+Program encode.py found: YES (<mesa-build>/mesa-25.2.8/src/compiler/isaspec/encode.py)
+Found pkg-config: YES (/usr/bin/pkg-config) 1.8.1
+Compiler for C supports link arguments -Wl,--default-symver: YES 
+Configuring dri.sym using configuration
+Checking for function "mincore" : YES 
+Program sphinx-build skipped: feature html-docs disabled
+Build targets in project: 112
+NOTICE: Future-deprecated features used:
+ * 1.12.0: {'"shared_library" keyword argument "name_prefix" of type list'}
+
+mesa 25.2.8
+
+  Directories
+    prefix             : <mesa-build>/install
+    libdir             : lib
+    includedir         : include
+
+  Common C and C++ arguments
+    c_cpp_args         : -mtls-dialect=gnu2
+
+  OpenGL
+    OpenGL             : NO
+    ES1                : YES
+    ES2                : NO
+    GLVND              : NO
+
+  DRI
+    Platform           : drm
+    Driver dir         : <mesa-build>/install/lib/dri
+
+  GLX
+    Enabled            : NO
+    Provider           : None
+
+  EGL
+    Enabled            : YES
+    Drivers            : builtin:egl_dri2 builtin:egl_dri3
+    Platforms          : surfaceless
+
+  GBM
+    Enabled            : NO
+
+  Vulkan
+    Drivers            : NO
+
+  Video
+    Codecs             : NO
+    APIs               : NO
+
+  LLVM
+    Required           : disabled
+
+  Gallium
+    Enabled            : YES
+    Drivers            : softpipe
+    Platforms          : surfaceless
+    Frontends          : mesa
+    HUD lm-sensors     : NO
+
+  Perfetto
+    Enabled            : NO
+
+  Teflon (TensorFlow Lite delegate)
+    Enabled            : NO
+
+  User defined options
+    build-tests        : false
+    buildtype          : release
+    egl                : enabled
+    egl-native-platform: surfaceless
+    gallium-drivers    : softpipe
+    gallium-va         : disabled
+    gallium-vdpau      : disabled
+    gbm                : disabled
+    gles1              : enabled
+    gles2              : disabled
+    glvnd              : disabled
+    glx                : disabled
+    libdir             : lib
+    llvm               : disabled
+    opengl             : false
+    platforms          : []
+    prefix             : <mesa-build>/install
+    video-codecs       : []
+    vulkan-drivers     : []
+
+Found ninja-1.11.1 at /usr/bin/ninja

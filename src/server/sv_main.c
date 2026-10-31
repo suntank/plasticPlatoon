@@ -25,6 +25,9 @@
  */
 
 #include "header/server.h"
+#ifndef DEDICATED_ONLY
+#include "../client/header/performance.h"
+#endif
 
 #define HEARTBEAT_SECONDS 300
 
@@ -445,10 +448,20 @@ SV_Frame(int usec)
 	SV_GiveMsec();
 
 	/* let everything in the world think and move */
+#ifndef DEDICATED_ONLY
+	long long perf_begin = CL_PerfEnabled() ? Sys_Microseconds() : 0;
+#endif
 	SV_RunGameFrame();
+#ifndef DEDICATED_ONLY
+	if (perf_begin) CL_PerfAddSimulation(Sys_Microseconds() - perf_begin);
+	perf_begin = CL_PerfEnabled() ? Sys_Microseconds() : 0;
+#endif
 
 	/* send messages back to the clients that had packets read this frame */
 	SV_SendClientMessages();
+#ifndef DEDICATED_ONLY
+	if (perf_begin) CL_PerfAddSnapshot(Sys_Microseconds() - perf_begin);
+#endif
 
 	/* if not optimizing, send all messages here */
 	if (!opt_sendrate)

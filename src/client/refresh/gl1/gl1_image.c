@@ -25,6 +25,7 @@
  */
 
 #include "header/local.h"
+#include "../files/texture_policy.h"
 
 image_t gltextures[MAX_GLTEXTURES];
 int numgltextures;
@@ -628,11 +629,30 @@ R_BuildPalettedTexture(unsigned char *paletted_texture, unsigned char *scaled,
 static qboolean
 R_Upload32Native(unsigned *data, int width, int height, qboolean mipmap)
 {
-	// This is for GL 2.x so no palettes, no scaling, no messing around with the data here. :)
+	// Keep native NPOT dimensions, with the same requested picmip reduction as POT uploads.
 	int samples;
 	int i, c;
 	byte *scan;
 	int comp;
+	GLint maximum = 0;
+	unsigned *resized = NULL;
+	unsigned levels = mipmap ? PP_PicmipLevels(gl1_picmip->value) : 0;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maximum);
+	int target_width = PP_TextureDimension(width, levels, maximum);
+	int target_height = PP_TextureDimension(height, levels, maximum);
+	if (target_width != width || target_height != height)
+	{
+		resized = malloc((size_t)target_width * target_height * 4);
+		if (!resized || !ResizeSTB((byte *)data, width, height,
+			(byte *)resized, target_width, target_height))
+		{
+			free(resized);
+			Com_Error(ERR_DROP, "%s: texture resize failed", __func__);
+		}
+		data = resized;
+		width = target_width;
+		height = target_height;
+	}
 
 	c = width * height;
 	scan = ((byte *)data) + 3;
@@ -657,6 +677,7 @@ R_Upload32Native(unsigned *data, int width, int height, qboolean mipmap)
 			height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
 			data);
 	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, false);
+	free(resized);
 	return samples == Q2_GL_ALPHA_FORMAT;
 }
 
@@ -691,8 +712,8 @@ R_Upload32Soft(unsigned *data, int width, int height, qboolean mipmap)
 	/* let people sample down the world textures for speed */
 	if (mipmap)
 	{
-		scaled_width >>= (int)gl1_picmip->value;
-		scaled_height >>= (int)gl1_picmip->value;
+		scaled_width = PP_TextureDimension(scaled_width, PP_PicmipLevels(gl1_picmip->value), 256);
+		scaled_height = PP_TextureDimension(scaled_height, PP_PicmipLevels(gl1_picmip->value), 256);
 	}
 
 	/* don't ever bother with >256 textures */

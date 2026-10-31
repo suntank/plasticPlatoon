@@ -77,6 +77,18 @@
 #define GL_MULTISAMPLE_FILTER_HINT_NV     0x8534
 #endif
 
+#include <stddef.h>
+#ifndef GL_ARRAY_BUFFER
+#define GL_ARRAY_BUFFER 0x8892
+#define GL_ELEMENT_ARRAY_BUFFER 0x8893
+#define GL_STATIC_DRAW 0x88E4
+#endif
+extern void (APIENTRY *qglGenBuffers)(GLsizei, GLuint *);
+extern void (APIENTRY *qglDeleteBuffers)(GLsizei, const GLuint *);
+extern void (APIENTRY *qglBindBuffer)(GLenum, GLuint);
+extern void (APIENTRY *qglBufferData)(GLenum, ptrdiff_t, const void *, GLenum);
+void R_InitBufferObjects(void);
+
 // =======================================================================
 
 /*

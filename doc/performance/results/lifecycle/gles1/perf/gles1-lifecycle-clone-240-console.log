@@ -1,0 +1,269 @@
+
+Yamagi Quake II v8.61pre
+========================
+Client build options:
+ + cURL HTTP downloads
+ + OpenAL audio
+ - Systemwide installation
+Platform: Linux
+Architecture: x86_64
+Byte ordering: little endian
+
+Added packfile '<runtime>/baseq2/pak0.pak' (1106 files).
+Added packfile '<runtime>/baseq2/plastic-platoon.pk3' (47 files).
+No Ogg Vorbis music tracks have been found, so there will be no music.
+Using '<runtime>/baseq2' for writing.
+execing default.cfg.
+couldn't exec yq2.cfg
+execing config.cfg.
+couldn't exec autoexec.cfg
+Terminal has no colors support.
+Console initialized.
+
+------- sound initialization -------
+Not initializing.
+------------------------------------
+
+-------- vid initialization --------
+SDL version is: 2.30.0
+SDL video driver is "offscreen".
+SDL display modes:
+ - Mode  0: 0x0@0
+------------------------------------
+
+----- refresher initialization -----
+Loading library: ref_gles1.so
+Byte ordering: little endian
+
+Refresh: Yamagi Quake II OpenGL ES1 Refresher
+Client: 8.61pre
+
+Setting mode -1: 240x240 (vid_fullscreen 0)
+Real display mode: 1024x768@0
+Initialized OpenGL ES version 1.1 context
+Drawable size: 240x240
+
+OpenGL setting:
+GL_VENDOR: Mesa
+GL_RENDERER: softpipe
+GL_VERSION: OpenGL ES-CM 1.1 Mesa 25.2.8
+GL_EXTENSIONS: GL_EXT_blend_minmax GL_EXT_multi_draw_arrays GL_EXT_texture_filter_anisotropic GL_EXT_texture_lod_bias GL_OES_byte_coordinates GL_OES_fixed_point GL_OES_stencil_wrap GL_OES_compressed_paletted_texture GL_OES_query_matrix GL_OES_read_format GL_OES_single_precision GL_EXT_texture_compression_dxt1 GL_OES_draw_texture GL_OES_point_size_array GL_OES_point_sprite GL_EXT_texture_format_BGRA8888 GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth24 GL_OES_element_index_uint GL_OES_fbo_render_mipmap GL_OES_framebuffer_object GL_OES_mapbuffer GL_OES_rgb8_rgba8 GL_OES_stencil8 GL_OES_texture_env_crossbar GL_OES_texture_mirrored_repeat GL_OES_texture_npot GL_OES_EGL_image GL_OES_packed_depth_stencil GL_OES_texture_cube_map GL_APPLE_texture_max_level GL_EXT_discard_framebuffer GL_EXT_read_format_bgra GL_OES_blend_equation_separate GL_OES_blend_func_separate GL_OES_blend_subtract GL_OES_EGL_image_external GL_OES_EGL_sync GL_OES_vertex_array_object GL_ANGLE_texture_compression_dxt3 GL_ANGLE_texture_compression_dxt5 GL_APPLE_sync GL_EXT_map_buffer_range GL_KHR_debug GL_NV_generate_mipmap_sRGB GL_OES_required_internalformat GL_OES_surfaceless_context GL_EXT_debug_label GL_EXT_compressed_ETC1_RGB8_sub_texture GL_KHR_no_error 
+
+
+Probing for OpenGL extensions:
+ - Point parameters: Okay
+ - Paletted texture: Disabled
+ - Anisotropic: 16x
+ - Non power of two textures: Okay
+ - Multitexturing: Okay
+ - Lightmap copies: Okay
+ - Discard framebuffer: Okay
+ - Persistent buffers: available
+Successfully loaded ref_gles1.so as rendering backend.
+------------------------------------
+
+------- input initialization -------
+0 joysticks were found.
+------------------------------------
+
+------- curl initialization -------
+Loading library: libcurl.so.4
+------------------------------------
+
+==== Yamagi Quake II Initialized ====
+
+*************************************
+
+execing perf/gles1-lifecycle-clone-240.cfg.
+Performance capture: <runtime>/baseq2/perf/gles1-lifecycle-clone-240-{frames,views}.csv
+NET_Socket ERROR: getaddrinfo:Address family for hostname not supported
+NET_Socket ERROR: getaddrinfo:Address family for hostname not supported
+-------- game initialization -------
+Loading library: game.so
+Game is starting up.
+Game is baseq2 built on Oct 31 2026.
+Weapon profile 'default' not found, using defaults
+------------------------------------
+
+------- server initialization ------
+No fixes found as 'maps/pp_perf_fixture@833f.ent'
+0 entities inhibited.
+0 teams with 0 entities.
+------------------------------------
+
+Com_sprintf: overflow
+Player connected
+[loopback]:0: client_connect
+
+
+-===================================-
+
+Plastic Platoon diagnostic pickup fixture
+Player P2 connected
+Downloading models/items/ammo/gl_ammo/medium/tris.md2
+Server does not have this file.
+Downloading sound/weapons/pistol1.wav
+Server does not have this file.
+Downloading sound/weapons/pistol3.wav
+Server does not have this file.
+Downloading sound/weapons/pistol4.wav
+Server does not have this file.
+Downloading sound/weapons/m601.wav
+Server does not have this file.
+Downloading sound/weapons/m602.wav
+Server does not have this file.
+Downloading sound/weapons/m604.wav
+Server does not have this file.
+Downloading sound/weapons/m605.wav
+Server does not have this file.
+Downloading pics/a_gl_rounds.png
+Server does not have this file.
+Map: pp_perf_fixture
+pics
+models
+images
+clients
+sky
+                                     
+Player entered the game
+WARNING: Setting Relative Mousemode failed, reason: No relative mode implementation available
+         You should probably update to SDL 2.0.3 or newer!
+Rcon from [127.0.0.1]:43866:
+rcon [local-test-password] screenshot
+Rcon from [127.0.0.1]:43866:
+rcon [local-test-password] set gl1_static_world 0
+Rcon from [127.0.0.1]:43866:
+rcon [local-test-password] screenshot
+Rcon from [127.0.0.1]:43866:
+rcon [local-test-password] set gl1_static_world 1
+Rcon from [127.0.0.1]:43866:
+rcon [local-test-password] vid_restart
+----- refresher initialization -----
+Loading library: ref_gles1.so
+Byte ordering: little endian
+
+Refresh: Yamagi Quake II OpenGL ES1 Refresher
+Client: 8.61pre
+
+Setting mode -1: 240x240 (vid_fullscreen 0)
+Real display mode: 1024x768@0
+Initialized OpenGL ES version 1.1 context
+Drawable size: 240x240
+
+OpenGL setting:
+GL_VENDOR: Mesa
+GL_RENDERER: softpipe
+GL_VERSION: OpenGL ES-CM 1.1 Mesa 25.2.8
+GL_EXTENSIONS: GL_EXT_blend_minmax GL_EXT_multi_draw_arrays GL_EXT_texture_filter_anisotropic GL_EXT_texture_lod_bias GL_OES_byte_coordinates GL_OES_fixed_point GL_OES_stencil_wrap GL_OES_compressed_paletted_texture GL_OES_query_matrix GL_OES_read_format GL_OES_single_precision GL_EXT_texture_compression_dxt1 GL_OES_draw_texture GL_OES_point_size_array GL_OES_point_sprite GL_EXT_texture_format_BGRA8888 GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth24 GL_OES_element_index_uint GL_OES_fbo_render_mipmap GL_OES_framebuffer_object GL_OES_mapbuffer GL_OES_rgb8_rgba8 GL_OES_stencil8 GL_OES_texture_env_crossbar GL_OES_texture_mirrored_repeat GL_OES_texture_npot GL_OES_EGL_image GL_OES_packed_depth_stencil GL_OES_texture_cube_map GL_APPLE_texture_max_level GL_EXT_discard_framebuffer GL_EXT_read_format_bgra GL_OES_blend_equation_separate GL_OES_blend_func_separate GL_OES_blend_subtract GL_OES_EGL_image_external GL_OES_EGL_sync GL_OES_vertex_array_object GL_ANGLE_texture_compression_dxt3 GL_ANGLE_texture_compression_dxt5 GL_APPLE_sync GL_EXT_map_buffer_range GL_KHR_debug GL_NV_generate_mipmap_sRGB GL_OES_required_internalformat GL_OES_surfaceless_context GL_EXT_debug_label GL_EXT_compressed_ETC1_RGB8_sub_texture GL_KHR_no_error 
+
+
+Probing for OpenGL extensions:
+ - Point parameters: Okay
+ - Paletted texture: Disabled
+ - Anisotropic: 16x
+ - Non power of two textures: Okay
+ - Multitexturing: Okay
+ - Lightmap copies: Okay
+ - Discard framebuffer: Okay
+ - Persistent buffers: available
+Successfully loaded ref_gles1.so as rendering backend.
+------------------------------------
+
+Map: pp_perf_fixture
+pics
+models
+images
+clients
+sky
+                                     
+Rcon from [127.0.0.1]:43866:
+rcon [local-test-password] screenshot
+Rcon from [127.0.0.1]:43866:
+rcon [local-test-password] exec perf/gles1-to-clone.cfg
+------- server initialization ------
+No fixes found as 'maps/pp_gles_reload@833f.ent'
+0 entities inhibited.
+0 teams with 0 entities.
+------------------------------------
+
+Com_sprintf: overflow
+
+Changing map...
+reconnecting...
+
+
+-===================================-
+
+Plastic Platoon diagnostic pickup fixture
+Downloading models/items/ammo/gl_ammo/medium/tris.md2
+Server does not have this file.
+Downloading sound/weapons/pistol1.wav
+Server does not have this file.
+Downloading sound/weapons/pistol2.wav
+Server does not have this file.
+Downloading sound/weapons/pistol4.wav
+Server does not have this file.
+Downloading sound/weapons/m601.wav
+Server does not have this file.
+Downloading sound/weapons/m603.wav
+Server does not have this file.
+Downloading sound/weapons/m604.wav
+Server does not have this file.
+Downloading pics/a_gl_rounds.png
+Server does not have this file.
+Map: pp_gles_reload
+pics
+models
+images
+clients
+sky
+                                     
+Player entered the game
+Rcon from [127.0.0.1]:43866:
+rcon [local-test-password] exec perf/gles1-to-fixture.cfg
+------- server initialization ------
+No fixes found as 'maps/pp_perf_fixture@833f.ent'
+0 entities inhibited.
+0 teams with 0 entities.
+------------------------------------
+
+Com_sprintf: overflow
+
+Changing map...
+reconnecting...
+
+
+-===================================-
+
+Plastic Platoon diagnostic pickup fixture
+Downloading models/items/ammo/gl_ammo/medium/tris.md2
+Server does not have this file.
+Downloading sound/weapons/pistol1.wav
+Server does not have this file.
+Downloading sound/weapons/pistol2.wav
+Server does not have this file.
+Downloading sound/weapons/pistol4.wav
+Server does not have this file.
+Downloading sound/weapons/m601.wav
+Server does not have this file.
+Downloading sound/weapons/m603.wav
+Server does not have this file.
+Downloading sound/weapons/m604.wav
+Server does not have this file.
+Downloading pics/a_gl_rounds.png
+Server does not have this file.
+Map: pp_perf_fixture
+pics
+models
+images
+clients
+sky
+                                     
+Player entered the game
+Rcon from [127.0.0.1]:43866:
+rcon [local-test-password] screenshot
+Rcon from [127.0.0.1]:43866:
+rcon [local-test-password] cl_perf_stop
+Rcon from [127.0.0.1]:43866:
+rcon [local-test-password] quit
+------------------------------------

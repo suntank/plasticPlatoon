@@ -27,6 +27,7 @@
 #include <assert.h>
 
 #include "header/local.h"
+#include "../files/visibility_cache.h"
 
 typedef struct
 {
@@ -35,6 +36,11 @@ typedef struct
 
 int c_visible_lightmaps;
 int c_visible_textures;
+static pp_visibility_cache_t visibility_cache;
+static cvar_t *r_viscache;
+static qboolean previous_allvisible;
+void R_ClearVisibilityCache(void) { PP_ClearVisibilityCache(&visibility_cache); previous_allvisible = true; }
+
 static vec3_t modelorg; /* relative to viewpoint */
 msurface_t *r_alpha_surfaces;
 
@@ -53,6 +59,7 @@ R_DrawGLPoly(msurface_t *fa)
 {
 	int i, nv;
 	float *v, scroll;
+	if (R_BufferStaticPoly(fa->polys)) return;
 
 	v = fa->polys->verts[0];
 	nv = fa->polys->numverts;
@@ -123,7 +130,7 @@ R_DrawTriangleOutlines(void)
                     glEnableClientState( GL_VERTEX_ARRAY );
 
                     glVertexPointer( 3, GL_FLOAT, 0, vtx );
-                    glDrawArrays( GL_LINE_STRIP, 0, 4 );
+                    PP_DrawArrays( GL_LINE_STRIP, 0, 4 );
 
                     glDisableClientState( GL_VERTEX_ARRAY );
 				}
@@ -151,7 +158,7 @@ R_DrawGLPolyChain(glpoly_t *p, float soffset, float toffset)
 
             glVertexPointer( 3, GL_FLOAT, VERTEXSIZE*sizeof(GLfloat), v );
             glTexCoordPointer( 2, GL_FLOAT, VERTEXSIZE*sizeof(GLfloat), v+5 );
-            glDrawArrays( GL_TRIANGLE_FAN, 0, p->numverts );
+            PP_DrawArrays( GL_TRIANGLE_FAN, 0, p->numverts );
 
             glDisableClientState( GL_VERTEX_ARRAY );
             glDisableClientState( GL_TEXTURE_COORD_ARRAY );
@@ -196,7 +203,7 @@ R_DrawGLPolyChain(glpoly_t *p, float soffset, float toffset)
 
             glVertexPointer( 3, GL_FLOAT, VERTEXSIZE*sizeof(GLfloat), v );
             glTexCoordPointer( 2, GL_FLOAT, 0, tex );
-            glDrawArrays( GL_TRIANGLE_FAN, 0, p->numverts );
+            PP_DrawArrays( GL_TRIANGLE_FAN, 0, p->numverts );
 
             glDisableClientState( GL_VERTEX_ARRAY );
             glDisableClientState( GL_TEXTURE_COORD_ARRAY );
@@ -454,6 +461,7 @@ R_RenderBrushPoly(msurface_t *fa)
 
 			glTexSubImage2D(GL_TEXTURE_2D, 0, fa->light_s, fa->light_t,
 					smax, tmax, GL_LIGHTMAP_FORMAT, GL_UNSIGNED_BYTE, temp);
+			PP_PERF(lightmap_bytes, smax*tmax*LIGHTMAP_BYTES);
 
 			fa->lightmapchain = gl_lms.lightmap_surfaces[fa->lightmaptexturenum];
 			gl_lms.lightmap_surfaces[fa->lightmaptexturenum] = fa;
@@ -534,6 +542,7 @@ R_RenderLightmappedPoly(msurface_t *surf)
 	float *v;
 
 	c_brush_polys++;
+	if (R_BufferStaticPoly(surf->polys)) return;
 	v = surf->polys->verts[0];
 
 	if (surf->texinfo->flags & SURF_FLOWING)
@@ -731,6 +740,7 @@ dynamic_surf:
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, best.top,
 			BLOCK_WIDTH, best.bottom - best.top,
 			GL_LIGHTMAP_FORMAT, GL_UNSIGNED_BYTE, base);
+		PP_PERF(lightmap_bytes, BLOCK_WIDTH*(best.bottom-best.top)*LIGHTMAP_BYTES);
 #else
 		base += (best.top * BLOCK_WIDTH + best.left) * LIGHTMAP_BYTES;
 
@@ -739,6 +749,7 @@ dynamic_surf:
 		glTexSubImage2D(GL_TEXTURE_2D, 0, best.left, best.top,
 			best.right - best.left, best.bottom - best.top,
 			GL_LIGHTMAP_FORMAT, GL_UNSIGNED_BYTE, base);
+		PP_PERF(lightmap_bytes, (best.right-best.left)*(best.bottom-best.top)*LIGHTMAP_BYTES);
 #endif
 	}
 
@@ -1269,12 +1280,14 @@ R_MarkLeaves(void)
 	int i, c;
 	mleaf_t *leaf;
 	int cluster;
+	if (!r_viscache) r_viscache = ri.Cvar_Get("r_viscache", "1", 0);
 
 	if ((r_oldviewcluster == r_viewcluster) &&
 		(r_oldviewcluster2 == r_viewcluster2) &&
-		!r_novis->value &&
+		!r_novis->value && !previous_allvisible &&
 		(r_viewcluster != -1))
 	{
+		PP_PERF(pvs_hits, 1);
 		return;
 	}
 
@@ -1288,6 +1301,14 @@ R_MarkLeaves(void)
 	r_visframecount++;
 	r_oldviewcluster = r_viewcluster;
 	r_oldviewcluster2 = r_viewcluster2;
+	previous_allvisible = r_novis->value || (r_viewcluster == -1) || !r_worldmodel->vis;
+	if (!previous_allvisible && r_viscache->value &&
+		PP_RestoreVisibility(&visibility_cache, r_viewcluster, r_viewcluster2, r_visframecount))
+	{
+		PP_PERF(pvs_hits, 1);
+		return;
+	}
+	PP_PERF(pvs_builds, 1);
 
 	if (r_novis->value || (r_viewcluster == -1) || !r_worldmodel->vis)
 	{
@@ -1350,4 +1371,7 @@ R_MarkLeaves(void)
 			while (node);
 		}
 	}
+	if (r_viscache->value)
+		PP_SaveVisibility(&visibility_cache, r_viewcluster, r_viewcluster2,
+			r_worldmodel->nodes, r_worldmodel->numnodes, r_worldmodel->leafs, r_worldmodel->numleafs, r_visframecount);
 }

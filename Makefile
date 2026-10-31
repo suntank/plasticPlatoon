@@ -471,12 +471,21 @@ endif
 # ----------
 
 # Builds everything but the GLES1 renderer
-all: config client server game ref_gl1 ref_gl3 ref_gles3 ref_soft
+all: config client server game ref_gl1 ref_gl3 ref_gles3 ref_soft assets
 
 # ----------
 
 # Builds everything, including the GLES1 renderer
 with_gles1: all ref_gles1
+
+# Fixed-function targets for VideoCore IV; optimized unless DEBUG is requested.
+pi: config client game ref_gl1 ref_gles1 assets
+
+# Numbered stock PAKs precede loose files. A separate project archive ensures
+# Plastic Platoon's models are actually used without repacking commercial data.
+.PHONY: assets pi
+assets:
+	python3 tools/assets/build_overlay.py --output "$(BINDIR)/baseq2/plastic-platoon.pk3"
 
 # ----------
 
@@ -498,10 +507,13 @@ config:
 
 # Special target to compile the icon on Windows
 ifeq ($(YQ2_OSTYPE), Windows)
+ifneq ($(wildcard stuff/icon/Quake2.ico),)
+WINDOWS_ICON := $(BUILDROOT)/icon/icon.res
 icon:
 	@echo "===> WR $(BUILDROOT)/icon/icon.res"
 	${Q}mkdir -p $(BUILDROOT)/icon
 	${Q}windres src/backends/windows/icon.rc -O COFF -o $(BUILDROOT)/icon/icon.res
+endif
 endif
 
 # ----------
@@ -1002,6 +1014,7 @@ CLIENT_OBJS_ := \
 	src/client/cl_network.o \
 	src/client/cl_parse.o \
 	src/client/cl_particles.o \
+	src/client/cl_performance.o \
 	src/client/cl_prediction.o \
 	src/client/cl_screen.o \
 	src/client/cl_splitscreen.o \
@@ -1290,10 +1303,10 @@ SERVER_DEPS= $(SERVER_OBJS:.o=.d)
 ifeq ($(YQ2_OSTYPE), Windows)
 $(BINDIR)/yquake2.exe : $(CLIENT_OBJS) icon
 	@echo "===> LD $@"
-	${Q}$(CC) $(LDFLAGS) $(BUILDROOT)/icon/icon.res $(CLIENT_OBJS) $(LDLIBS) $(SDLLDFLAGS) -o $@
+	${Q}$(CC) $(LDFLAGS) $(WINDOWS_ICON) $(CLIENT_OBJS) $(LDLIBS) $(SDLLDFLAGS) -o $@
 	$(Q)strip $@
 $(BINDIR)/quake2.exe : src/win-wrapper/wrapper.c icon
-	$(Q)$(CC) -Wall -mwindows $(BUILDROOT)/icon/icon.res src/win-wrapper/wrapper.c -o $@
+	$(Q)$(CC) -Wall -mwindows $(WINDOWS_ICON) src/win-wrapper/wrapper.c -o $@
 	$(Q)strip $@
 else
 $(BINDIR)/quake2 : $(CLIENT_OBJS)
@@ -1305,7 +1318,7 @@ endif
 ifeq ($(YQ2_OSTYPE), Windows)
 $(BINDIR)/q2ded.exe : $(SERVER_OBJS) icon
 	@echo "===> LD $@"
-	${Q}$(CC) $(LDFLAGS) $(BUILDROOT)/icon/icon.res $(SERVER_OBJS) $(LDLIBS) -o $@
+	${Q}$(CC) $(LDFLAGS) $(WINDOWS_ICON) $(SERVER_OBJS) $(LDLIBS) -o $@
 	$(Q)strip $@
 else
 $(BINDIR)/q2ded : $(SERVER_OBJS)

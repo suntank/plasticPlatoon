@@ -1,0 +1,21 @@
+{
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+  "os_release": "PRETTY_NAME=\"Ubuntu 24.04.3 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.3 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+  "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+  "os_cpu_count": 9,
+  "affinity_cpu_count": 9,
+  "gl_vendor": "Mesa",
+  "gl_renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "gl_version": "4.5 (Compatibility Profile) Mesa25.2.8-0ubuntu0.24.04.2",
+  "physical_gpu_device_available": false,
+  "LP_NUM_THREADS": 2,
+  "LIBGL_ALWAYS_SOFTWARE": 1,
+  "framebuffer": [
+    640,
+    480
+  ],
+  "capture_frames": 600,
+  "warmup_frames": 120,
+  "single_pass": true,
+  "concurrent_builds_during_quiet_captures": false
+}

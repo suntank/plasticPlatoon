@@ -28,6 +28,7 @@
 
 #define TARGET_HELP_PRIMARY 1
 #define TARGET_HELP_THINK_DELAY 0.3f
+#define TARGET_SCREEN_IMAGE_ACTIVATOR_ONLY 1
 
 /*
  * QUAKED target_temp_entity (1 0 0) (-8 -8 -8) (8 8 8)
@@ -58,6 +59,110 @@ SP_target_temp_entity(edict_t *ent)
 	}
 
 	ent->use = Use_Target_Tent;
+}
+
+/* ========================================================== */
+
+static void
+Target_Screen_Image_Send(edict_t *viewer, const edict_t *ent)
+{
+	int duration;
+
+	if (!viewer || !viewer->inuse || !viewer->client || !ent || !ent->message || !ent->message[0])
+	{
+		return;
+	}
+
+	duration = ent->count > 0 ? ent->count : 1;
+	if (duration > 32767)
+	{
+		duration = 32767;
+	}
+
+	gi.WriteByte(svc_screen_image);
+	gi.WriteString(ent->message);
+	gi.WriteShort(ent->style);
+	gi.WriteShort(ent->health);
+	gi.WriteShort(duration);
+	gi.unicast(viewer, true);
+}
+
+/*
+ * QUAKED target_screen_image (1 0 0) (-8 -8 -8) (8 8 8) activator_only
+ *
+ * When triggered, displays a centered image on screen.
+ *
+ * "pic"       relative image path for Draw_FindPic, typically under pics/
+ * "distance"  width in pixels, 0 = use image width
+ * "height"    height in pixels, 0 = use image height
+ * "count"     duration in seconds
+ *
+ * By default it displays on every player's screen. Set the activator_only
+ * flag to show it only to the player who triggered it.
+ */
+void
+Use_Target_Screen_Image(edict_t *ent, edict_t *other /* unused */, edict_t *activator)
+{
+	int i;
+	edict_t *player;
+
+	if (!ent)
+	{
+		return;
+	}
+
+	if (ent->spawnflags & TARGET_SCREEN_IMAGE_ACTIVATOR_ONLY)
+	{
+		if (activator && activator->client)
+		{
+			Target_Screen_Image_Send(activator, ent);
+		}
+
+		return;
+	}
+
+	for (i = 1; i <= game.maxclients; i++)
+	{
+		player = &g_edicts[i];
+
+		if (!player->inuse || !player->client)
+		{
+			continue;
+		}
+
+		Target_Screen_Image_Send(player, ent);
+	}
+}
+
+void
+SP_target_screen_image(edict_t *ent)
+{
+	if (!ent)
+	{
+		return;
+	}
+
+	if (!st.pic || !st.pic[0] || strlen(st.pic) >= MAX_QPATH)
+	{
+		gi.dprintf("target_screen_image without a valid pic set at %s\n",
+				vtos(ent->s.origin));
+		G_FreeEdict(ent);
+		return;
+	}
+
+	/* Reuse generic target fields to preserve the serialized edict layout. */
+	ent->message = st.pic;
+	ent->style = st.distance > 0 ? st.distance : 0;
+	ent->health = st.height > 0 ? st.height : 0;
+	if (ent->style > 32767)
+	{
+		ent->style = 32767;
+	}
+	if (ent->health > 32767)
+	{
+		ent->health = 32767;
+	}
+	ent->use = Use_Target_Screen_Image;
 }
 
 /* ========================================================== */

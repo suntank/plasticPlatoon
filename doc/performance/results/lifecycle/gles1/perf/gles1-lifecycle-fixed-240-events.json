@@ -1,0 +1,52 @@
+[
+  {
+    "command": "screenshot",
+    "frames": 84,
+    "response": "\ufffd\ufffd\ufffd\ufffdprint\nWrote q2_0011.tga\n"
+  },
+  {
+    "command": "set gl1_static_world 0",
+    "frames": 84,
+    "response": "\ufffd\ufffd\ufffd\ufffdprint\n"
+  },
+  {
+    "command": "screenshot",
+    "frames": 137,
+    "response": "\ufffd\ufffd\ufffd\ufffdprint\nWrote q2_0012.tga\n"
+  },
+  {
+    "command": "set gl1_static_world 1",
+    "frames": 137,
+    "response": "\ufffd\ufffd\ufffd\ufffdprint\n"
+  },
+  {
+    "command": "vid_restart",
+    "frames": 137,
+    "response": "\ufffd\ufffd\ufffd\ufffdprint\n"
+  },
+  {
+    "command": "screenshot",
+    "frames": 207,
+    "response": "\ufffd\ufffd\ufffd\ufffdprint\nWrote q2_0013.tga\n"
+  },
+  {
+    "command": "exec perf/gles1-to-demo.cfg",
+    "frames": 207,
+    "response": "\ufffd\ufffd\ufffd\ufffdprint\nexecing perf/gles1-to-demo.cfg.\n"
+  },
+  {
+    "command": "exec perf/gles1-to-fixture.cfg",
+    "frames": 273,
+    "response": "\ufffd\ufffd\ufffd\ufffdprint\nexecing perf/gles1-to-fixture.cfg.\n"
+  },
+  {
+    "command": "screenshot",
+    "frames": 342,
+    "response": "\ufffd\ufffd\ufffd\ufffdprint\nWrote q2_0014.tga\n"
+  },
+  {
+    "command": "cl_perf_stop",
+    "frames": 346,
+    "response": "\ufffd\ufffd\ufffd\ufffdprint\nPerformance capture stopped: 346 complete frames.\n"
+  }
+]

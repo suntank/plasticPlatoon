@@ -1,0 +1,197 @@
+{
+  "source": "pp_sandbox_coop1.map",
+  "sha256": "09dd444a8523b669d31c26940dd630f2ce42e7799ee6745a0622ccf5284bd550",
+  "entities": 470,
+  "brushes": 1738,
+  "world_brushes": 1664,
+  "detail_brushes": 499,
+  "source_faces": 11317,
+  "pickups": 155,
+  "initial_monsters": 37,
+  "spawners": 26,
+  "timers": 13,
+  "placed_lights": 118,
+  "sand_brushes": 1201,
+  "sand_detail": 57,
+  "sand_structural": 1144,
+  "classes": {
+    "ammo_bullets": 24,
+    "ammo_cells": 4,
+    "ammo_gl_rounds": 8,
+    "ammo_grenades": 16,
+    "ammo_rockets": 6,
+    "ammo_shells": 21,
+    "ammo_slugs": 3,
+    "func_explosive": 9,
+    "func_timer": 13,
+    "info_player_coop": 4,
+    "info_player_start": 1,
+    "item_armor_body": 2,
+    "item_armor_combat": 1,
+    "item_armor_jacket": 2,
+    "item_armor_shard": 18,
+    "item_health": 11,
+    "item_health_large": 12,
+    "item_health_small": 15,
+    "light": 118,
+    "monster_soldier_light": 11,
+    "monster_soldier_ss": 26,
+    "path_corner": 6,
+    "target_spawner": 26,
+    "trigger_monsterjump": 38,
+    "trigger_once": 3,
+    "trigger_relay": 59,
+    "weapon_bfg": 1,
+    "weapon_chaingun": 1,
+    "weapon_grenadelauncher": 1,
+    "weapon_hyperblaster": 1,
+    "weapon_machinegun": 2,
+    "weapon_railgun": 1,
+    "weapon_rocketlauncher": 1,
+    "weapon_shotgun": 3,
+    "weapon_supershotgun": 1,
+    "worldspawn": 1
+  },
+  "textures": {
+    "common/caulk": 144,
+    "sandbox/abc_block_a": 52,
+    "sandbox/abc_block_b": 54,
+    "sandbox/abc_block_c": 54,
+    "sandbox/abc_block_d": 54,
+    "sandbox/abc_block_e": 56,
+    "sandbox/abc_block_f": 54,
+    "sandbox/bluesky1": 30,
+    "sandbox/plastic1": 588,
+    "sandbox/sand1": 7055,
+    "sandbox/water1": 18,
+    "sandbox/wood1": 492,
+    "sandbox/wood2": 2666
+  },
+  "player_starts": [
+    {
+      "classname": "info_player_coop",
+      "origin": "-3528 -688 -984",
+      "angle": "45"
+    },
+    {
+      "angle": "45",
+      "origin": "-3464 -720 -984",
+      "classname": "info_player_coop"
+    },
+    {
+      "classname": "info_player_coop",
+      "origin": "-3456 -800 -984",
+      "angle": "45"
+    },
+    {
+      "angle": "45",
+      "origin": "-3400 -752 -984",
+      "classname": "info_player_coop"
+    },
+    {
+      "angle": "45",
+      "origin": "-1696 160 -880",
+      "classname": "info_player_start"
+    }
+  ],
+  "timer_settings": [
+    {
+      "classname": "func_timer",
+      "origin": "-2520 -64 -480",
+      "wait": "30",
+      "target": "wave1",
+      "targetname": "endArea1"
+    },
+    {
+      "wait": "30",
+      "origin": "-2520 -752 -480",
+      "classname": "func_timer",
+      "target": "t1",
+      "targetname": "endArea1"
+    },
+    {
+      "targetname": "endArea1",
+      "target": "wave2",
+      "classname": "func_timer",
+      "origin": "-3480 88 -448",
+      "wait": "30"
+    },
+    {
+      "delay": "60",
+      "targetname": "endArea1",
+      "target": "t34",
+      "wait": "30",
+      "origin": "-2712 32 -480",
+      "classname": "func_timer"
+    },
+    {
+      "delay": "60",
+      "classname": "func_timer",
+      "origin": "-3240 80 -440",
+      "wait": "30",
+      "target": "t37",
+      "targetname": "endArea1"
+    },
+    {
+      "targetname": "t43",
+      "wait": "30",
+      "origin": "-3232 872 -448",
+      "classname": "func_timer",
+      "target": "t51"
+    },
+    {
+      "target": "t55",
+      "targetname": "t43",
+      "wait": "30",
+      "origin": "-2880 1008 -328",
+      "classname": "func_timer",
+      "delay": "120"
+    },
+    {
+      "targetname": "t78",
+      "wait": "30",
+      "target": "t71",
+      "origin": "-1680 -192 -464",
+      "classname": "func_timer"
+    },
+    {
+      "targetname": "t78",
+      "target": "t72",
+      "delay": "60",
+      "classname": "func_timer",
+      "origin": "-1792 -200 -472",
+      "wait": "30"
+    },
+    {
+      "targetname": "t78",
+      "target": "t73",
+      "wait": "30",
+      "origin": "-1872 -248 -448",
+      "classname": "func_timer",
+      "delay": "150"
+    },
+    {
+      "delay": "300",
+      "targetname": "t78",
+      "target": "doors",
+      "classname": "func_timer",
+      "origin": "-1840 -256 -472"
+    },
+    {
+      "targetname": "t78",
+      "target": "t74",
+      "delay": "150",
+      "classname": "func_timer",
+      "origin": "-1896 -208 -448",
+      "wait": "30"
+    },
+    {
+      "targetname": "t43",
+      "wait": "30",
+      "origin": "-3160 872 -448",
+      "classname": "func_timer",
+      "delay": "60",
+      "target": "t54"
+    }
+  ]
+}

@@ -45,6 +45,7 @@
 #define svc_temp_entity 3
 #define svc_layout 4
 #define svc_inventory 5
+#define svc_screen_image 21
 #define svc_stufftext 11
 
 /* ================================================================== */
@@ -355,6 +356,7 @@ typedef struct
 	int distance;
 	int height;
 	char *noise;
+	char *pic;
 	float pausetime;
 	char *item;
 	char *gravity;

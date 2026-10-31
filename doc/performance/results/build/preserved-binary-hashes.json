@@ -1,0 +1,37 @@
+{
+  "note": "Preserved final build artifacts. The client matches the exact live map-transition/lifecycle-tested binary; binaries are not redistributed in this report. After environment recycle the SDL development packages were absent, so a no-op make is not claimed as a new compilation.",
+  "files": {
+    "release/quake2": {
+      "bytes": 3901696,
+      "sha256": "09c43d7c21bcca8fe6242aefdef55342b06e3bd02969f73021ff6d93213a932b"
+    },
+    "release/q2ded": {
+      "bytes": 299864,
+      "sha256": "c5620e3320647b4fed2adb92471da3171d4d397cd6f379a25ec5387ffdb62adf"
+    },
+    "release/baseq2/game.so": {
+      "bytes": 879736,
+      "sha256": "1ef6ea22eb8450c16a9d6c1da07964b2a88fefee1720e538911ee7070c92f8e6"
+    },
+    "release/ref_gl1.so": {
+      "bytes": 335736,
+      "sha256": "b43d8a606708870d94e7d225f24ea792268f6b88cd6eda1842ab8e4689ce5326"
+    },
+    "release/ref_gl3.so": {
+      "bytes": 356880,
+      "sha256": "e5e72841d8c370e19e03399b26220039a858711cbbd9e68d35428fa608d002f7"
+    },
+    "release/ref_gles1.so": {
+      "bytes": 340400,
+      "sha256": "e32907b9e778a9a5c167ea0ad1d000fc3c18560791f949b99bcca4666aa98cfb"
+    },
+    "release/ref_gles3.so": {
+      "bytes": 349880,
+      "sha256": "0cfe99ceadcfc5262bd1b33c321fcf49f4f37d10edd800207e1314a0891e6169"
+    },
+    "release/ref_soft.so": {
+      "bytes": 309160,
+      "sha256": "fee8b1b1cbaf3cc7c4241c72b56c89dbfd2c1f600a5741b0b1a9a7b92c4aab58"
+    }
+  }
+}

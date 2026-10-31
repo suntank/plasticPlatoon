@@ -26,6 +26,8 @@
 
 #include <math.h>
 #include "header/client.h"
+#include "header/performance.h"
+#include "cl_splitscreen.h"
 
 /* Weapon types for per-weapon recoil tuning */
 typedef enum {
@@ -421,6 +423,377 @@ CL_BuildPlayerGibSkinPath(const char *model_path, char *skin_path, size_t skin_p
 	return true;
 }
 
+static void
+CL_EntityEffectLight(qboolean draw, vec3_t origin, float intensity,
+	float red, float green, float blue)
+{
+	if (draw)
+	{
+		V_AddLight(origin, intensity, red, green, blue);
+	}
+}
+
+static void
+CL_EntityEffects(entity_t *entity, centity_t *cent, const entity_state_t *s1,
+	unsigned int effects, qboolean emit_particles, qboolean draw_lights)
+{
+	entity_t ent = *entity;
+	int i;
+	if ((effects & ~EF_ROTATE))
+	{
+		if (effects & EF_ROCKET)
+		{
+			if (emit_particles)
+			{
+				CL_RocketTrail(cent->lerp_origin, ent.origin, cent);
+			}
+
+			if (cl_r1q2_lightstyle->value)
+			{
+				CL_EntityEffectLight(draw_lights, ent.origin, 200, 1, 0.23f, 0);
+			}
+			else
+			{
+				CL_EntityEffectLight(draw_lights, ent.origin, 200, 1, 1, 0);
+			}
+		}
+
+		/* Do not reorder EF_BLASTER and EF_HYPERBLASTER.
+		   EF_BLASTER | EF_TRACKER is a special case for
+		   EF_BLASTER2 */
+		else if (effects & EF_BLASTER)
+		{
+			if (effects & EF_TRACKER)
+			{
+				if (emit_particles)
+				{
+					CL_BlasterTrail2(cent->lerp_origin, ent.origin);
+				}
+				CL_EntityEffectLight(draw_lights, ent.origin, 200, 0, 1, 0);
+			}
+			else
+			{
+				if (emit_particles)
+				{
+					CL_BlasterTrail(cent->lerp_origin, ent.origin);
+				}
+				CL_EntityEffectLight(draw_lights, ent.origin, 200, 1, 1, 0);
+			}
+		}
+		else if (effects & EF_HYPERBLASTER)
+		{
+			if (effects & EF_TRACKER)
+			{
+				CL_EntityEffectLight(draw_lights, ent.origin, 200, 0, 1, 0);
+			}
+			else
+			{
+				/* Flame projectile: orange trail and light */
+				if (emit_particles)
+				{
+					CL_FlameTrail(cent->lerp_origin, ent.origin);
+				}
+				CL_EntityEffectLight(draw_lights, ent.origin, 150, 1.0f, 0.5f, 0.1f);
+			}
+		}
+		else if (effects & (EF_GIB | EF_GREENGIB))
+		{
+			if (emit_particles)
+			{
+				CL_DiminishingTrail(cent->lerp_origin, ent.origin,
+						cent, effects);
+			}
+		}
+		else if (effects & EF_GRENADE)
+		{
+			if (emit_particles)
+			{
+				CL_DiminishingTrail(cent->lerp_origin, ent.origin,
+						cent, effects);
+			}
+		}
+		else if (effects & EF_FLIES)
+		{
+			if (emit_particles)
+			{
+				CL_FlyEffect(cent, ent.origin);
+			}
+		}
+		else if (effects & EF_BFG)
+		{
+			static int bfg_lightramp[6] = {300, 400, 600, 300, 150, 75};
+
+			if (effects & EF_ANIM_ALLFAST)
+			{
+				if (emit_particles)
+				{
+					CL_BfgParticles(&ent);
+				}
+				i = 200;
+			}
+			else
+			{
+				i = bfg_lightramp[Q_clamp(s1->frame, 0, 5)];
+			}
+
+			CL_EntityEffectLight(draw_lights, ent.origin, i, 0, 1, 0);
+		}
+		else if (effects & EF_TRAP)
+		{
+			ent.origin[2] += 32;
+			if (emit_particles)
+			{
+				CL_TrapParticles(&ent);
+			}
+			i = (CL_EffectNoise(s1->number, 1) % 100) + 100;
+			CL_EntityEffectLight(draw_lights, ent.origin, i, 1, 0.8f, 0.1f);
+		}
+		else if (effects & EF_FLAG1)
+		{
+			if (emit_particles)
+			{
+				CL_FlagTrail(cent->lerp_origin, ent.origin, 242);
+			}
+			CL_EntityEffectLight(draw_lights, ent.origin, 225, 1, 0.1f, 0.1f);
+		}
+		else if (effects & EF_FLAG2)
+		{
+			if (emit_particles)
+			{
+				CL_FlagTrail(cent->lerp_origin, ent.origin, 115);
+			}
+			CL_EntityEffectLight(draw_lights, ent.origin, 225, 0.1f, 0.1f, 1);
+		}
+		else if (effects & EF_TAGTRAIL)
+		{
+			if (emit_particles)
+			{
+				CL_TagTrail(cent->lerp_origin, ent.origin, 220);
+			}
+			CL_EntityEffectLight(draw_lights, ent.origin, 225, 1.0, 1.0, 0.0);
+		}
+		else if (effects & EF_TRACKERTRAIL)
+		{
+			if (effects & EF_TRACKER)
+			{
+				float intensity;
+
+				intensity = 50 + (500 * ((float)sin(cl.time / 500.0f) + 1.0f));
+				CL_EntityEffectLight(draw_lights, ent.origin, intensity, -1.0, -1.0, -1.0);
+			}
+			else
+			{
+				if (emit_particles)
+				{
+					CL_Tracker_Shell(cent->lerp_origin);
+				}
+				CL_EntityEffectLight(draw_lights, ent.origin, 155, -1.0, -1.0, -1.0);
+			}
+		}
+		else if (effects & EF_TRACKER)
+		{
+			if (emit_particles)
+			{
+				CL_TrackerTrail(cent->lerp_origin, ent.origin, 0);
+			}
+			CL_EntityEffectLight(draw_lights, ent.origin, 200, -1, -1, -1);
+		}
+		else if (effects & EF_IONRIPPER)
+		{
+			if (emit_particles)
+			{
+				CL_IonripperTrail(cent->lerp_origin, ent.origin);
+			}
+			CL_EntityEffectLight(draw_lights, ent.origin, 100, 1, 0.5, 0.5);
+		}
+		else if (effects & EF_BLUEHYPERBLASTER)
+		{
+			CL_EntityEffectLight(draw_lights, ent.origin, 200, 0, 0, 1);
+		}
+		else if (effects & EF_PLASMA)
+		{
+			if (effects & EF_ANIM_ALLFAST)
+			{
+				if (emit_particles)
+				{
+					CL_BlasterTrail(cent->lerp_origin, ent.origin);
+				}
+			}
+
+			CL_EntityEffectLight(draw_lights, ent.origin, 130, 1, 0.5, 0.5);
+		}
+	}
+
+	*entity = ent;
+}
+
+/* Only effect preparation is shared. Model poses, local-player exclusions,
+ * visibility, and all other camera-dependent entity work retain their own
+ * snapshot and interpolation inputs. */
+typedef struct
+{
+	centity_t *sources[SS_MAX_LOCAL_PLAYERS];
+	const entity_state_t *state;
+	entity_t entity;
+	float lerp;
+	unsigned int view_mask;
+	int source_count;
+	int number;
+	int next;
+} entity_effect_task_t;
+
+static entity_effect_task_t entity_effect_tasks[MAX_PACKET_ENTITIES * SS_MAX_LOCAL_PLAYERS];
+static int entity_effect_heads[MAX_CL_ENTNUM + 1];
+static byte entity_effect_variants[MAX_CL_ENTNUM + 1];
+static int entity_effect_count;
+
+void
+CL_ResetEntityEffectQueue(void)
+{
+	int i;
+	for (i = 0; i < entity_effect_count; ++i)
+	{
+		int number = entity_effect_tasks[i].number;
+		entity_effect_heads[number] = 0;
+		entity_effect_variants[number] = 0;
+	}
+	entity_effect_count = 0;
+}
+
+static qboolean
+CL_EquivalentEntityEffect(const entity_effect_task_t *task,
+	const centity_t *cent, const entity_state_t *state)
+{
+	const centity_t *first = task->sources[0];
+	return task->lerp == cl.lerpfrac &&
+		first->serverframe == cent->serverframe &&
+		first->trailcount == cent->trailcount &&
+		first->fly_stoptime == cent->fly_stoptime &&
+		VectorCompare(first->lerp_origin, cent->lerp_origin) &&
+		!memcmp(&first->current, &cent->current, sizeof(cent->current)) &&
+		!memcmp(&first->prev, &cent->prev, sizeof(cent->prev)) &&
+		!memcmp(task->state, state, sizeof(*state));
+}
+
+void
+CL_QueueEntityEffects(frame_t *frame, int view_slot)
+{
+	int pnum;
+	if (!frame->valid || view_slot < 0 || view_slot >= SS_MAX_LOCAL_PLAYERS)
+	{
+		return;
+	}
+	for (pnum = 0; pnum < frame->num_entities; ++pnum)
+	{
+		const entity_state_t *state = &cl_entity_parse_stream[(frame->parse_entities + pnum) & (MAX_PARSE_ENTITIES - 1)];
+		centity_t *cent;
+		entity_effect_task_t *task;
+		vec3_t origin;
+		int j, index;
+
+		if (state->number < 0 || state->number >= cl_numentities ||
+			state->number > MAX_CL_ENTNUM || !state->modelindex ||
+			(state->number == cl.playernum + 1 && !CL_MFlashTuneCameraActive()))
+		{
+			continue;
+		}
+		cent = &cl_entities[state->number];
+		if (state->renderfx & (RF_FRAMELERP | RF_BEAM))
+		{
+			VectorCopy(cent->current.origin, origin);
+		}
+		else
+		{
+			for (j = 0; j < 3; ++j)
+			{
+				origin[j] = cent->prev.origin[j] + cl.lerpfrac *
+					(cent->current.origin[j] - cent->prev.origin[j]);
+			}
+		}
+		if (!(state->effects & ~EF_ROTATE))
+		{
+			VectorCopy(origin, cent->lerp_origin);
+			continue;
+		}
+		for (index = entity_effect_heads[state->number]; index; index = task->next)
+		{
+			task = &entity_effect_tasks[index - 1];
+			if (CL_EquivalentEntityEffect(task, cent, state))
+			{
+				task->view_mask |= 1u << view_slot;
+				if (task->source_count < SS_MAX_LOCAL_PLAYERS)
+				{
+					task->sources[task->source_count++] = cent;
+				}
+				++cl_effect_stats.entity_effect_reuses;
+				break;
+			}
+		}
+		if (index)
+		{
+			continue;
+		}
+		if (entity_effect_count == (int)ARRLEN(entity_effect_tasks))
+		{
+			/* More than the protocol's maximum entity count is malformed. */
+			Com_Error(ERR_DROP, "Too many local entity effect inputs");
+			return;
+		}
+		task = &entity_effect_tasks[entity_effect_count++];
+		memset(task, 0, sizeof(*task));
+		task->sources[0] = cent;
+		task->source_count = 1;
+		task->state = state;
+		task->number = state->number;
+		task->lerp = cl.lerpfrac;
+		task->view_mask = 1u << view_slot;
+		task->next = entity_effect_heads[state->number];
+		entity_effect_heads[state->number] = entity_effect_count;
+		++entity_effect_variants[state->number];
+		VectorCopy(origin, task->entity.origin);
+		task->entity.frame = state->frame;
+	}
+}
+
+static int
+CL_CompareEntityEffects(const void *left, const void *right)
+{
+	const entity_effect_task_t *a = left, *b = right;
+	if (a->state->number != b->state->number)
+	{
+		return a->state->number < b->state->number ? -1 : 1;
+	}
+	return a->view_mask < b->view_mask ? -1 : a->view_mask != b->view_mask;
+}
+
+void
+CL_EmitQueuedEntityEffects(void)
+{
+	int i, j;
+	unsigned int saved_mask = cl_particle_view_mask;
+
+	/* Stable entity/view ordering is independent of viewport draw order. */
+	qsort(entity_effect_tasks, entity_effect_count, sizeof(entity_effect_tasks[0]), CL_CompareEntityEffects);
+	for (i = 0; i < entity_effect_count; ++i)
+	{
+		entity_effect_task_t *task = &entity_effect_tasks[i];
+		centity_t *cent = task->sources[0];
+		/* A single representation belongs to the union of local views. If
+		 * histories differ, each representation belongs only to its views. */
+		cl_particle_view_mask = entity_effect_variants[task->state->number] > 1 ?
+			task->view_mask : ~0u;
+		CL_EntityEffects(&task->entity, cent, task->state, task->state->effects, true, false);
+		++cl_effect_stats.entity_effect_evaluations;
+		for (j = 0; j < task->source_count; ++j)
+		{
+			task->sources[j]->trailcount = cent->trailcount;
+			task->sources[j]->fly_stoptime = cent->fly_stoptime;
+			VectorCopy(task->entity.origin, task->sources[j]->lerp_origin);
+		}
+	}
+	cl_particle_view_mask = saved_mask;
+}
+
 void
 CL_AddPacketEntities(frame_t *frame)
 {
@@ -547,7 +920,7 @@ CL_AddPacketEntities(frame_t *frame)
 			}
 
 			/* the four beam colors are encoded in 32 bits of skinnum (hack) */
-			ent.skinnum = (s1->skinnum >> ((randk() % 4) * 8)) & 0xff;
+			ent.skinnum = (s1->skinnum >> ((CL_EffectNoise(s1->number, 0) % 4) * 8)) & 0xff;
 			ent.model = NULL;
 		}
 		else
@@ -891,145 +1264,9 @@ CL_AddPacketEntities(frame_t *frame)
 			V_AddEntity(&ent);
 		}
 
-		/* add automatic particle trails */
-		if ((effects & ~EF_ROTATE))
-		{
-			if (effects & EF_ROCKET)
-			{
-				CL_RocketTrail(cent->lerp_origin, ent.origin, cent);
-
-				if (cl_r1q2_lightstyle->value)
-				{
-					V_AddLight(ent.origin, 200, 1, 0.23f, 0);
-				}
-				else
-				{
-					V_AddLight(ent.origin, 200, 1, 1, 0);
-				}
-			}
-
-			/* Do not reorder EF_BLASTER and EF_HYPERBLASTER.
-			   EF_BLASTER | EF_TRACKER is a special case for
-			   EF_BLASTER2 */
-			else if (effects & EF_BLASTER)
-			{
-				if (effects & EF_TRACKER)
-				{
-					CL_BlasterTrail2(cent->lerp_origin, ent.origin);
-					V_AddLight(ent.origin, 200, 0, 1, 0);
-				}
-				else
-				{
-					CL_BlasterTrail(cent->lerp_origin, ent.origin);
-					V_AddLight(ent.origin, 200, 1, 1, 0);
-				}
-			}
-			else if (effects & EF_HYPERBLASTER)
-			{
-				if (effects & EF_TRACKER)
-				{
-					V_AddLight(ent.origin, 200, 0, 1, 0);
-				}
-				else
-				{
-					/* Flame projectile: orange trail and light */
-					CL_FlameTrail(cent->lerp_origin, ent.origin);
-					V_AddLight(ent.origin, 150, 1.0f, 0.5f, 0.1f);
-				}
-			}
-			else if (effects & (EF_GIB | EF_GREENGIB))
-			{
-				CL_DiminishingTrail(cent->lerp_origin, ent.origin,
-						cent, effects);
-			}
-			else if (effects & EF_GRENADE)
-			{
-				CL_DiminishingTrail(cent->lerp_origin, ent.origin,
-						cent, effects);
-			}
-			else if (effects & EF_FLIES)
-			{
-				CL_FlyEffect(cent, ent.origin);
-			}
-			else if (effects & EF_BFG)
-			{
-				static int bfg_lightramp[6] = {300, 400, 600, 300, 150, 75};
-
-				if (effects & EF_ANIM_ALLFAST)
-				{
-					CL_BfgParticles(&ent);
-					i = 200;
-				}
-				else
-				{
-					i = bfg_lightramp[s1->frame];
-				}
-
-				V_AddLight(ent.origin, i, 0, 1, 0);
-			}
-			else if (effects & EF_TRAP)
-			{
-				ent.origin[2] += 32;
-				CL_TrapParticles(&ent);
-				i = (randk() % 100) + 100;
-				V_AddLight(ent.origin, i, 1, 0.8f, 0.1f);
-			}
-			else if (effects & EF_FLAG1)
-			{
-				CL_FlagTrail(cent->lerp_origin, ent.origin, 242);
-				V_AddLight(ent.origin, 225, 1, 0.1f, 0.1f);
-			}
-			else if (effects & EF_FLAG2)
-			{
-				CL_FlagTrail(cent->lerp_origin, ent.origin, 115);
-				V_AddLight(ent.origin, 225, 0.1f, 0.1f, 1);
-			}
-			else if (effects & EF_TAGTRAIL)
-			{
-				CL_TagTrail(cent->lerp_origin, ent.origin, 220);
-				V_AddLight(ent.origin, 225, 1.0, 1.0, 0.0);
-			}
-			else if (effects & EF_TRACKERTRAIL)
-			{
-				if (effects & EF_TRACKER)
-				{
-					float intensity;
-
-					intensity = 50 + (500 * ((float)sin(cl.time / 500.0f) + 1.0f));
-					V_AddLight(ent.origin, intensity, -1.0, -1.0, -1.0);
-				}
-				else
-				{
-					CL_Tracker_Shell(cent->lerp_origin);
-					V_AddLight(ent.origin, 155, -1.0, -1.0, -1.0);
-				}
-			}
-			else if (effects & EF_TRACKER)
-			{
-				CL_TrackerTrail(cent->lerp_origin, ent.origin, 0);
-				V_AddLight(ent.origin, 200, -1, -1, -1);
-			}
-			else if (effects & EF_IONRIPPER)
-			{
-				CL_IonripperTrail(cent->lerp_origin, ent.origin);
-				V_AddLight(ent.origin, 100, 1, 0.5, 0.5);
-			}
-			else if (effects & EF_BLUEHYPERBLASTER)
-			{
-				V_AddLight(ent.origin, 200, 0, 0, 1);
-			}
-			else if (effects & EF_PLASMA)
-			{
-				if (effects & EF_ANIM_ALLFAST)
-				{
-					CL_BlasterTrail(cent->lerp_origin, ent.origin);
-				}
-
-				V_AddLight(ent.origin, 130, 1, 0.5, 0.5);
-			}
-		}
-
-		VectorCopy(ent.origin, cent->lerp_origin);
+		/* Particle/trail state was prepared over the union of local snapshots.
+		 * This per-view call only submits lighting with this view's pose. */
+		CL_EntityEffects(&ent, cent, s1, effects, false, true);
 	}
 }
 
@@ -1500,7 +1737,7 @@ CL_CalcViewValues(void)
  * Emits all entities, particles, and lights to the refresh
  */
 void
-CL_AddEntities(void)
+CL_CalcRenderLerp(void)
 {
 	if (cls.state != ca_active)
 	{
@@ -1537,12 +1774,32 @@ CL_AddEntities(void)
 		cl.lerpfrac = 1.0;
 	}
 
+}
+
+void
+CL_AddEntities(void)
+{
+	if (cls.state != ca_active)
+	{
+		return;
+	}
+	CL_PerfBeginPrepare();
+	CL_CalcRenderLerp();
 	CL_CalcViewValues();
+	if (CL_BeginSharedEffects())
+	{
+		CL_QueueEntityEffects(&cl.frame, 0);
+		CL_EmitQueuedEntityEffects();
+		CL_PrepareTEnts();
+		CL_PrepareViewBeamParticles();
+		CL_PrepareParticles();
+	}
 	CL_AddPacketEntities(&cl.frame);
 	CL_AddTEnts();
 	CL_AddParticles();
 	CL_AddDLights();
 	CL_AddLightStyles();
+	CL_PerfEndPrepare();
 }
 
 /*

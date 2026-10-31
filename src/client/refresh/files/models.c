@@ -859,3 +859,59 @@ Mod_PointInLeaf(const vec3_t p, mnode_t *node)
 
 	return NULL; /* never reached */
 }
+
+/* Build once per model registration, independent of entity and camera state. */
+pp_alias_cache_t *
+Mod_BuildAliasCache(const dmdl_t *header)
+{
+	pp_alias_cache_t *cache = calloc(1, sizeof(*cache));
+	if (!cache) return NULL;
+	cache->num_positions = header->num_xyz;
+	cache->topology = PP_BuildAliasTopology((const int *)((const byte *)header + header->ofs_glcmds),
+		header->num_glcmds, header->num_xyz);
+	if (!cache->topology) { free(cache); return NULL; }
+	if (header->num_frames == 1)
+	{
+		const daliasframe_t *frame = (const daliasframe_t *)((const byte *)header + header->ofs_frames);
+		cache->static_xyz = malloc(cache->topology->num_vertices * 3 * sizeof(float));
+		if (!cache->static_xyz) { Mod_FreeAliasCache(cache); return NULL; }
+		for (unsigned i = 0; i < cache->topology->num_vertices; ++i)
+		{
+			int source = cache->topology->source[i];
+			for (int j = 0; j < 3; ++j)
+				cache->static_xyz[i*3+j] = frame->translate[j] + frame->scale[j] * frame->verts[source].v[j];
+		}
+	}
+	return cache;
+}
+
+void
+Mod_FreeAliasCache(pp_alias_cache_t *cache)
+{
+	if (!cache) return;
+	PP_FreeAliasTopology(cache->topology);
+	free(cache->static_xyz);
+	free(cache->poses[0]); free(cache->poses[1]);
+	free(cache);
+}
+
+const float *
+Mod_FindAliasPose(const pp_alias_cache_t *cache, const pp_alias_pose_key_t *key)
+{
+	if (!cache) return NULL;
+	for (unsigned i = 0; i < 2; ++i)
+		if (cache->poses[i] && !memcmp(cache->pose_keys+i, key, sizeof(*key))) return cache->poses[i];
+	return NULL;
+}
+
+void
+Mod_SaveAliasPose(pp_alias_cache_t *cache, const pp_alias_pose_key_t *key, const float *pose)
+{
+	if (!cache) return;
+	unsigned slot = cache->next_pose++ & 1;
+	size_t bytes = cache->num_positions * 4 * sizeof(float);
+	if (!cache->poses[slot]) cache->poses[slot] = malloc(bytes);
+	if (!cache->poses[slot]) return;
+	cache->pose_keys[slot] = *key;
+	memcpy(cache->poses[slot], pose, bytes);
+}

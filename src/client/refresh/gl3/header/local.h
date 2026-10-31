@@ -55,6 +55,7 @@
 #endif
 
 #include "../../ref_shared.h"
+#include "../../perf.h"
 
 #include "HandmadeMath.h"
 
@@ -355,6 +356,7 @@ GL3_BindVAO(GLuint vao)
 	{
 		gl3state.currentVAO = vao;
 		glBindVertexArray(vao);
+		gl3state.currentEBO = ~0u; /* element binding belongs to the VAO */
 	}
 }
 
@@ -377,6 +379,12 @@ GL3_BindEBO(GLuint ebo)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	}
 }
+
+void GL3_ClearVisibilityCache(void);
+void GL3_BuildWorldBuffers(gl3model_t *model);
+void GL3_FreeWorldBuffers(gl3model_t *model);
+void GL3_CreateAliasBuffers(gl3model_t *model);
+void GL3_FreeAliasBuffers(gl3model_t *model);
 
 extern void GL3_BufferAndDraw3D(const gl3_3D_vtx_t* verts, int numVerts, GLenum drawMode);
 
@@ -554,5 +562,7 @@ extern cvar_t *r_palettedtexture;
 extern cvar_t *r_validation;
 
 extern cvar_t *gl3_debugcontext;
+
+#include "../../draw_stats.h"
 
 #endif /* SRC_CLIENT_REFRESH_GL3_HEADER_LOCAL_H_ */

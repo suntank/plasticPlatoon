@@ -38,6 +38,7 @@
 {"killtarget", FOFS(killtarget), F_LSTRING},
 {"combattarget", FOFS(combattarget), F_LSTRING},
 {"message", FOFS(message), F_LSTRING},
+{"pic", STOFS(pic), F_LSTRING, FFL_SPAWNTEMP},
 {"team", FOFS(team), F_LSTRING},
 {"wait", FOFS(wait), F_FLOAT},
 {"delay", FOFS(delay), F_FLOAT},

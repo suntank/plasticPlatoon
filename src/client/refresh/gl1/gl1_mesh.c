@@ -86,7 +86,7 @@ R_LerpVerts(entity_t *currententity, int nverts, dtrivertx_t *v, dtrivertx_t *ov
  * Interpolates between two frames and origins
  */
 static void
-R_DrawAliasFrameLerp(entity_t *currententity, dmdl_t *paliashdr, float backlerp)
+R_DrawAliasFrameLerp(entity_t *currententity, const model_t *model, dmdl_t *paliashdr, float backlerp)
 {
 	daliasframe_t *frame, *oldframe;
 	dtrivertx_t *v, *ov, *verts;
@@ -96,6 +96,12 @@ R_DrawAliasFrameLerp(entity_t *currententity, dmdl_t *paliashdr, float backlerp)
 	vec3_t move, delta, vectors[3];
 	vec3_t frontv, backv;
 	float *lerp;
+	double prep_started = PP_PerfNow();
+	const pp_alias_cache_t *cache = model->aliascache;
+	const pp_alias_topology_t *mesh = cache ? cache->topology : NULL;
+	qboolean static_pose = cache && cache->static_xyz &&
+		!(currententity->flags & (RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE | RF_SHELL_DOUBLE | RF_SHELL_HALF_DAM)) &&
+		VectorCompare(currententity->origin, currententity->oldorigin);
 
 	frame = (daliasframe_t *)((byte *)paliashdr + paliashdr->ofs_frames
 							  + currententity->frame * paliashdr->framesize);
@@ -141,8 +147,47 @@ R_DrawAliasFrameLerp(entity_t *currententity, dmdl_t *paliashdr, float backlerp)
 
 	lerp = s_lerped[0];
 
-	R_LerpVerts(currententity, paliashdr->num_xyz, v, ov, verts, lerp, move, frontv, backv);
-
+	if (!static_pose || !mesh || mesh->num_vertices > MAX_VERTICES)
+	{
+		pp_alias_pose_key_t key = {0};
+		key.frame = currententity->frame; key.oldframe = currententity->oldframe;
+		key.shell = !!(currententity->flags & (RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE | RF_SHELL_DOUBLE | RF_SHELL_HALF_DAM));
+		VectorCopy(move, key.move); VectorCopy(frontv, key.front); VectorCopy(backv, key.back);
+		const float *cached_pose = Mod_FindAliasPose(model->aliascache, &key);
+		if (cached_pose)
+		{
+			memcpy(s_lerped, cached_pose, paliashdr->num_xyz*sizeof(s_lerped[0]));
+			PP_PERF(pose_cache_hits, 1);
+		}
+		else
+		{
+			R_LerpVerts(currententity, paliashdr->num_xyz, v, ov, verts, lerp, move, frontv, backv);
+			Mod_SaveAliasPose(model->aliascache, &key, lerp);
+			PP_PERF(pose_vertices, paliashdr->num_xyz);
+		}
+	}
+	if (mesh && mesh->num_vertices <= MAX_VERTICES)
+	{
+		qboolean color_only = currententity->flags & (RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE);
+		for (unsigned k = 0; k < mesh->num_vertices; ++k)
+		{
+			int source = mesh->source[k];
+			float brightness = color_only ? 1.0f : shadedots[verts[source].lightnormalindex];
+			if (!static_pose) VectorCopy(s_lerped[source], (gl_buf.vtx + k*3));
+			else if (gl_shadows->value) VectorCopy((cache->static_xyz+k*3), s_lerped[source]);
+			for (int component = 0; component < 3; ++component)
+			{
+				int color = brightness * shadelight[component] * 255;
+				color = Q_clamp(color, 0, 255);
+				gl_buf.clr[k*4+component] = gl_state.minlight_set ? minlight[color] : color;
+			}
+			gl_buf.clr[k*4+3] = alpha * 255;
+		}
+		PP_PERF(model_ms, PP_PerfNow() - prep_started);
+		R_DrawAliasCache(model, static_pose ? cache->static_xyz : gl_buf.vtx, static_pose);
+		return;
+	}
+	PP_PERF(topology_builds, 1);
 	while (1)
 	{
 		int idx[3];
@@ -232,10 +277,11 @@ R_DrawAliasFrameLerp(entity_t *currententity, dmdl_t *paliashdr, float backlerp)
 			while (--count);
 		}
 	}
+	PP_PERF(model_ms, PP_PerfNow() - prep_started);
 }
 
 static void
-R_DrawAliasShadow(entity_t *currententity, dmdl_t *paliashdr, int posenum)
+R_DrawAliasShadow(entity_t *currententity, const model_t *model, dmdl_t *paliashdr, int posenum)
 {
 	// Don't do stencil test on unsupported stereo modes
 	const qboolean stencilt = ( gl_state.stencil && gl1_stencilshadow->value &&
@@ -261,7 +307,22 @@ R_DrawAliasShadow(entity_t *currententity, dmdl_t *paliashdr, int posenum)
 		glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
 	}
 
-	while (1)
+	const pp_alias_topology_t *mesh = model->aliascache ? model->aliascache->topology : NULL;
+	if (mesh && mesh->num_vertices <= MAX_VERTICES)
+	{
+		double started = PP_PerfNow();
+		for (unsigned i = 0; i < mesh->num_vertices; ++i)
+		{
+			VectorCopy(s_lerped[mesh->source[i]], point);
+			point[0] -= shadevector[0] * (point[2]+lheight);
+			point[1] -= shadevector[1] * (point[2]+lheight);
+			point[2] = height;
+			VectorCopy(point, (gl_buf.vtx+i*3));
+		}
+		PP_PERF(model_ms, PP_PerfNow()-started);
+		R_DrawAliasCache(model, gl_buf.vtx, false);
+	}
+	else while (1)
 	{
 		/* get the vertex count and primitive type */
 		count = *order++;
@@ -687,7 +748,7 @@ R_DrawAliasModel(entity_t *currententity, const model_t *currentmodel)
 	}
 
 	R_UpdateGLBuffer(buf_alias, skin->texnum, 0, currententity->flags, 1);
-	R_DrawAliasFrameLerp(currententity, paliashdr, currententity->backlerp);
+	R_DrawAliasFrameLerp(currententity, currentmodel, paliashdr, currententity->backlerp);
 	R_ApplyGLBuffer();
 
 	R_TexEnv(GL_REPLACE);
@@ -703,7 +764,7 @@ R_DrawAliasModel(entity_t *currententity, const model_t *currentmodel)
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glVertexPointer(3, GL_FLOAT, 0, bbox);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 8);
+		PP_DrawArrays(GL_TRIANGLE_STRIP, 0, 8);
 		glDisableClientState(GL_VERTEX_ARRAY);
 
 		glEnable(GL_TEXTURE_2D);
@@ -723,7 +784,7 @@ R_DrawAliasModel(entity_t *currententity, const model_t *currentmodel)
 		glDisable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
 		glColor4f(0, 0, 0, 0.5f);
-		R_DrawAliasShadow(currententity, paliashdr, currententity->frame);
+		R_DrawAliasShadow(currententity, currentmodel, paliashdr, currententity->frame);
 		glEnable(GL_TEXTURE_2D);
 		glDisable(GL_BLEND);
 		glPopMatrix();

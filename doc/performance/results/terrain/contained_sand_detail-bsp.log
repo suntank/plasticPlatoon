@@ -1,0 +1,50 @@
+Using 8 processor threads
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< q2tool >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+threads requested = 1
+moddir = /workspace/scratch/bf32e00d9702/runtime-data/baseq2/
+basedir = /workspace/scratch/bf32e00d9702/runtime-data/baseq2/
+gamedir = /workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/contained_sand_detail/../../
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< BEGIN bsp >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+entering /workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/contained_sand_detail/contained_sand_detail.map
+WARNING: couldn't locate texture sandbox/wood1
+WARNING: couldn't locate texture sandbox/bluesky1
+WARNING: couldn't locate texture sandbox/sand1
+WARNING: couldn't locate texture sandbox/water1
+WARNING: couldn't locate texture sandbox/plastic1
+WARNING: couldn't locate texture sandbox/abc_block_f
+WARNING: couldn't locate texture sandbox/abc_block_c
+WARNING: couldn't locate texture sandbox/abc_block_b
+WARNING: couldn't locate texture sandbox/abc_block_e
+WARNING: couldn't locate texture sandbox/abc_block_a
+WARNING: couldn't locate texture sandbox/abc_block_d
+WARNING: couldn't locate texture sandbox/wood2
+WARNING: couldn't locate texture common/caulk
+0...1...2...3...4...5...6...7...8...9... (1)
+0...1...2...3...4...5...6...7...8...9... (1)
+
+texinfo count: 930 of 16384 maximum
+brushsides count: 25709 of 65536 maximum
+writing /workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/contained_sand_detail/contained_sand_detail.prt
+split not on both sides (x9)
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FILE STATS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+models:           51        size:    2448
+brushes:        1738        size:   20856
+brushsides:    25714        size:  102856
+planes:        28886        size:  577720
+texinfo:         930        size:   70680
+entdata:         470        size:   37045
+vertices:      15712        size:  188544
+nodes:          8259        size:  231252
+faces:         12523        size:  250460
+leafs:          8311        size:  232708
+leaffaces:     14927        size:   29854
+leafbrushes:    5805        size:   11610
+edges:         29310        size:  117240
+surfedges:     58469        size:  233876
+                  lightdata size:       0
+                    visdata size:       0
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< END bsp >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+

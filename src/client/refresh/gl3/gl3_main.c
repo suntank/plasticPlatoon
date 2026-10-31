@@ -28,6 +28,8 @@
 
 #include "../ref_shared.h"
 #include "header/local.h"
+#include "../perf_impl.h"
+#include "../gpu_timer_impl.h"
 
 #define HANDMADE_MATH_IMPLEMENTATION
 #include "header/HandmadeMath.h"
@@ -503,6 +505,8 @@ static qboolean
 GL3_Init(void)
 {
 	byte *colormap;
+	PP_PerfInit();
+	PP_GPUTimerInit();
 
 	Swap_Init(); // FIXME: for fucks sake, this doesn't have to be done at runtime!
 
@@ -676,6 +680,7 @@ GL3_Shutdown(void)
 	ri.Cmd_RemoveCommand("screenshot");
 	ri.Cmd_RemoveCommand("imagelist");
 	ri.Cmd_RemoveCommand("gl_strings");
+	PP_GPUTimerShutdown();
 
 	// only call all these if we have an OpenGL context and the gl function pointers
 	// randomly chose one function that should always be there to test..
@@ -710,10 +715,11 @@ GL3_Shutdown(void)
 void
 GL3_BufferAndDraw3D(const gl3_3D_vtx_t* verts, int numVerts, GLenum drawMode)
 {
+	PP_PERF(dynamic_vertex_bytes, sizeof(gl3_3D_vtx_t)*numVerts);
 	if(!gl3config.useBigVBO)
 	{
 		glBufferData( GL_ARRAY_BUFFER, sizeof(gl3_3D_vtx_t)*numVerts, verts, GL_STREAM_DRAW );
-		glDrawArrays( drawMode, 0, numVerts );
+		PP_DrawArrays( drawMode, 0, numVerts );
 	}
 	else // gl3config.useBigVBO == true
 	{
@@ -751,7 +757,7 @@ GL3_BufferAndDraw3D(const gl3_3D_vtx_t* verts, int numVerts, GLenum drawMode)
 		gl3state.vbo3DcurOffset = curOffset + neededSize;
 
 		glBufferSubData( GL_ARRAY_BUFFER, curOffset, neededSize, verts );
-		glDrawArrays( drawMode, curIdx, numVerts );
+		PP_DrawArrays( drawMode, curIdx, numVerts );
 #else
 		int curOffset = gl3state.vbo3DcurOffset;
 		int neededSize = numVerts*sizeof(gl3_3D_vtx_t);
@@ -771,7 +777,7 @@ GL3_BufferAndDraw3D(const gl3_3D_vtx_t* verts, int numVerts, GLenum drawMode)
 		memcpy(data, verts, neededSize);
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 
-		glDrawArrays(drawMode, curOffset/sizeof(gl3_3D_vtx_t), numVerts);
+		PP_DrawArrays(drawMode, curOffset/sizeof(gl3_3D_vtx_t), numVerts);
 
 		gl3state.vbo3DcurOffset = curOffset + neededSize; // TODO: padding or sth needed?
 #endif
@@ -1135,7 +1141,8 @@ GL3_DrawParticles(void)
 		GL3_BindVAO(gl3state.vaoParticle);
 		GL3_BindVBO(gl3state.vboParticle);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(part_vtx)*numParticles, buf, GL_STREAM_DRAW);
-		glDrawArrays(GL_POINTS, 0, numParticles);
+		PP_PERF(dynamic_vertex_bytes, sizeof(part_vtx)*numParticles);
+			PP_DrawArrays(GL_POINTS, 0, numParticles);
 
 		glDisable(GL_BLEND);
 		glDepthMask(GL_TRUE);
@@ -1737,7 +1744,9 @@ GL3_RenderView(refdef_t *fd)
 
 	SetupGL();
 
+	double vis_started = PP_PerfNow();
 	GL3_MarkLeaves(); /* done here so we know if we're in water */
+	PP_PERF(visibility_ms, PP_PerfNow() - vis_started);
 
 	GL3_DrawWorld();
 
@@ -1839,6 +1848,8 @@ GL3_SetLightLevel(entity_t *currententity)
 static void
 GL3_RenderFrame(refdef_t *fd)
 {
+	PP_PerfBegin();
+	PP_GPUTimerBegin();
 	GL3_RenderView(fd);
 	GL3_SetLightLevel(NULL);
 	qboolean usedFBO = gl3state.ppFBObound; // if it was/is used this frame
@@ -1860,6 +1871,8 @@ GL3_RenderFrame(refdef_t *fd)
 	{
 		GL3_Draw_Flash(v_blend, x, y, r_newrefdef.width, r_newrefdef.height);
 	}
+	PP_GPUTimerEnd();
+	PP_PerfEnd();
 }
 
 

@@ -3,12 +3,13 @@ run-name: testbuild_macos
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
   pull_request:
     types:
       - edited
       - opened
       - synchronize
+      - ready_for_review
 concurrency:
   # Cancel concurrent workflows for the same PR or commit hash.
   group: ${{github.workflow}}-${{github.event_name == 'pull_request' && github.head_ref || github.sha}}
@@ -34,7 +35,7 @@ jobs:
     - name: Build
       run: |
         # Public runners come with 3 CPUs.
-        gmake -j3
+        gmake WITH_SDL3=yes -j3
     - name: Create testbuild package
       run: |
         # Create release directory tree
@@ -43,18 +44,10 @@ jobs:
         cp -r release/* publish/quake2-macos-${{github.sha}}/
         # Copy misc assets
         cp -r stuff/yq2.cfg publish/quake2-macos-${{github.sha}}/misc/yq2.cfg
-        cp -r stuff/mapfixes publish/quake2-macos-${{github.sha}}/misc
+        if [ -d stuff/mapfixes ]; then cp -r stuff/mapfixes publish/quake2-macos-${{github.sha}}/misc; fi
         cp LICENSE publish/quake2-macos-${{github.sha}}/misc/docs/LICENSE.txt
         cp README.md publish/quake2-macos-${{github.sha}}/misc/docs/README.txt
-        cp doc/010_index.md publish/quake2-macos-${{github.sha}}/misc/docs/010_index.txt
-        cp doc/020_installation.md publish/quake2-macos-${{github.sha}}/misc/docs/020_installation.txt
-        cp doc/030_configuration.md publish/quake2-macos-${{github.sha}}/misc/docs/030_configuration.txt
-        cp doc/040_cvarlist.md publish/quake2-macos-${{github.sha}}/misc/docs/040_cvarlist.txt
-        cp doc/050_commands.md publish/quake2-macos-${{github.sha}}/misc/docs/050_commands.txt
-        cp doc/060_multiplayer.md publish/quake2-macos-${{github.sha}}/misc/docs/060_multiplayer.txt
-        cp doc/070_packaging.md publish/quake2-macos-${{github.sha}}/misc/docs/070_packaging.txt
-        cp doc/080_contributing.md publish/quake2-macos-${{github.sha}}/misc/docs/080_contributing.txt
-        cp doc/090_filelists.md publish/quake2-macos-${{github.sha}}/misc/docs/090_filelists.md
+        if [ -d doc ]; then cp -r doc/. publish/quake2-macos-${{github.sha}}/misc/docs/; fi
     - name: Create dmg package
       run: |
         rm -rf build/macos-dmg
@@ -78,7 +71,7 @@ jobs:
         hdiutil create -srcfolder build/macos-dmg -layout SPUD -fs HFS+ -volname "Yamagi Quake II" "release/yquake2.dmg"
         cp release/yquake2.dmg publish/quake2-macos-${{github.sha}}/
     - name: Upload testbuild package
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v7
       with:
         name: quake2-macos-${{github.sha}}
         path: publish/

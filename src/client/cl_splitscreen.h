@@ -70,6 +70,7 @@ typedef struct
 	int playernum;
 	int inventory[MAX_ITEMS];
 	char layout[1024];
+	cl_screen_image_t screen_image;
 	qboolean snapshot_valid;
 	vec3_t viewangles;
 	int axis_left_x;
@@ -165,6 +166,7 @@ void SS_ApplyPrimaryProfile(void);
 void SS_BeginSession(void);
 void SS_EndSession(void);
 qboolean SS_IsSessionActive(void);
+qboolean SS_LocalEventRecipient(netadr_t address);
 qboolean SS_IsMenuInputActiveForDevice(int device_index);
 qboolean SS_ShouldAcceptSessionKey(int device_index, int key);
 qboolean SS_HandleSessionKey(int key, qboolean down);

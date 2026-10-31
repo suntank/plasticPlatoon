@@ -32,6 +32,29 @@ void CL_ParseDownload(void);
 
 static int bitcounts[32]; /* just for protocol profiling */
 
+void
+CL_ParseScreenImage(cl_screen_image_t *image, sizebuf_t *msg)
+{
+	const char *pic = MSG_ReadString(msg);
+	int width = MSG_ReadShort(msg);
+	int height = MSG_ReadShort(msg);
+	int duration = MSG_ReadShort(msg);
+
+	memset(image, 0, sizeof(*image));
+
+	if (msg->readcount > msg->cursize || !pic[0] ||
+		strlen(pic) >= sizeof(image->pic) || duration <= 0)
+	{
+		return;
+	}
+
+	Q_strlcpy(image->pic, pic, sizeof(image->pic));
+	image->width = width > 0 ? width : 0;
+	image->height = height > 0 ? height : 0;
+	image->endtime = (unsigned int)cls.realtime + (unsigned int)duration * 1000U;
+	Draw_FindPic(image->pic);
+}
+
 static const char *svc_strings[] = {
 	"svc_bad",
 
@@ -55,7 +78,8 @@ static const char *svc_strings[] = {
 	"svc_playerinfo",
 	"svc_packetentities",
 	"svc_deltapacketentities",
-	"svc_frame"
+	"svc_frame",
+	"svc_screen_image"
 };
 
 void
@@ -1450,6 +1474,10 @@ CL_ParseServerMessage(void)
 				Q_strlcpy(cl.layout, s, sizeof(cl.layout));
 				break;
 
+			case svc_screen_image:
+				CL_ParseScreenImage(&cl.screen_image, &net_message);
+				break;
+
 			case svc_playerinfo:
 			case svc_packetentities:
 			case svc_deltapacketentities:
@@ -1467,4 +1495,3 @@ CL_ParseServerMessage(void)
 		CL_WriteDemoMessage();
 	}
 }
-

@@ -116,8 +116,9 @@ drawTexturedRectangle(float x, float y, float w, float h,
 	//       implicitly bind the vbo, so I need to explicitly bind it before glBufferData()
 	GL3_BindVBO(vbo2D);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vBuf), vBuf, GL_STREAM_DRAW);
+	PP_PERF(dynamic_vertex_bytes, sizeof(vBuf));
 
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	PP_DrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	//glMultiDrawArrays(mode, first, count, drawcount) ??
 }
@@ -299,8 +300,9 @@ GL3_Draw_Fill(int x, int y, int w, int h, int c)
 
 	GL3_BindVBO(vbo2D);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vBuf), vBuf, GL_STREAM_DRAW);
+	PP_PERF(dynamic_vertex_bytes, sizeof(vBuf));
 
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	PP_DrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
 // in GL1 this is called R_Flash() (which just calls R_PolyBlend())
@@ -336,8 +338,9 @@ GL3_Draw_Flash(const float color[4], float x, float y, float w, float h)
 
 	GL3_BindVBO(vbo2D);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vBuf), vBuf, GL_STREAM_DRAW);
+	PP_PERF(dynamic_vertex_bytes, sizeof(vBuf));
 
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	PP_DrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	glDisable(GL_BLEND);
 }

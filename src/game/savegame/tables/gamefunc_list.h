@@ -701,6 +701,8 @@
 {"Target_Help_Think", (byte *)Target_Help_Think},
 {"SP_target_speaker", (byte *)SP_target_speaker},
 {"Use_Target_Speaker", (byte *)Use_Target_Speaker},
+{"SP_target_screen_image", (byte *)SP_target_screen_image},
+{"Use_Target_Screen_Image", (byte *)Use_Target_Screen_Image},
 {"SP_target_temp_entity", (byte *)SP_target_temp_entity},
 {"Use_Target_Tent", (byte *)Use_Target_Tent},
 {"ServerCommand", (byte *)ServerCommand},

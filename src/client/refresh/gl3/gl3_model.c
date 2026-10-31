@@ -586,11 +586,15 @@ Mod_LoadBrushModel(gl3model_t *mod, void *buffer, int modfilelen)
 		&header->lumps[LUMP_NODES]);
 	Mod_LoadSubmodels (mod, mod_base, &header->lumps[LUMP_MODELS]);
 	mod->numframes = 2; /* regular and alternate animation */
+	GL3_BuildWorldBuffers(mod);
 }
 
 static void
 Mod_Free(gl3model_t *mod)
 {
+	if (mod->type == mod_brush) GL3_ClearVisibilityCache();
+	GL3_FreeWorldBuffers(mod);
+	GL3_FreeAliasBuffers(mod);
 	Hunk_Free(mod->extradata);
 	memset(mod, 0, sizeof(*mod));
 }
@@ -702,6 +706,7 @@ Mod_ForName(const char *name, gl3model_t *parent_model, qboolean crash)
 					Com_Error(ERR_DROP, "%s: Failed to load %s",
 						__func__, mod->name);
 				}
+				GL3_CreateAliasBuffers(mod);
 			};
 			break;
 
@@ -782,6 +787,7 @@ GL3_BeginRegistration(const char *model)
 	char fullname[MAX_QPATH];
 	cvar_t *flushmap;
 
+	GL3_ClearVisibilityCache();
 	registration_sequence++;
 	gl3_oldviewcluster = -1; /* force markleafs */
 
