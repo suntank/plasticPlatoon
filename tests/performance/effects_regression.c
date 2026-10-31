@@ -357,6 +357,7 @@ static void TestMapTransition(void)
     slot->parse_entities[37].modelindex=5; slot->parse_entities_num=38;
     slot->entities[9].current.modelindex=5;
     slot->inventory[7]=9; strcpy(slot->layout,"old-map");
+    strcpy(slot->screen_image.pic,"old-map-image"); slot->screen_image.endtime=5000;
     slot->cmds[5].forwardmove=123; slot->muzzle_flash_seq=44; slot->viewmodel_valid=true;
     slot->axis_left_x=12345; slot->attack_down=true;
     transmit_calls=0; test_loopback_slot=0;
@@ -365,19 +366,24 @@ static void TestMapTransition(void)
     assert(!slot->frame.valid && !slot->frames[8].valid && !slot->parse_entities_num);
     assert(!slot->parse_entities[37].modelindex && !slot->entities[9].current.modelindex);
     assert(!slot->inventory[7] && !slot->layout[0] && !slot->cmds[5].forwardmove);
+    assert(!slot->screen_image.pic[0] && !slot->screen_image.endtime);
     assert(!slot->muzzle_flash_seq && !slot->viewmodel_valid && transmit_calls==0);
     assert(slot->axis_left_x==12345 && slot->attack_down); /* held input survives */
+    strcpy(slot->screen_image.pic,"old-map-image"); slot->screen_image.endtime=5000;
     SS_HandleStuffText(slot,"reconnect\n");
+    assert(!slot->screen_image.pic[0] && !slot->screen_image.endtime);
     assert(transmit_calls==1 && transmitted_slot==1 && test_loopback_slot==0);
     assert(transmitted_length==5 && transmitted_command[0]==clc_stringcmd && !strcmp((char *)transmitted_command+1,"new"));
     /* Even serverdata without a preceding changing command clears all delta
      * history, so a recycled server tick cannot refer to the old map. */
     slot->frames[8].valid=true; slot->frames[8].serverframe=8;
+    strcpy(slot->screen_image.pic,"old-map-image"); slot->screen_image.endtime=5000;
     MSG_WriteLong(&msg,PROTOCOL_VERSION); MSG_WriteLong(&msg,101);
     MSG_WriteByte(&msg,0); MSG_WriteString(&msg,"baseq2");
     MSG_WriteShort(&msg,1); MSG_WriteString(&msg,"new map");
     MSG_BeginReading(&msg); SS_ParseServerData(slot,&msg);
     assert(slot->servercount==101 && slot->playernum==1 && !slot->frames[8].valid);
+    assert(!slot->screen_image.pic[0] && !slot->screen_image.endtime);
     assert(!slot->snapshot_valid && slot->connection_state==ca_connected);
     SS_HandleStuffText(slot,"precache 101\n");
     assert(transmit_calls==2 && !strcmp((char *)transmitted_command+1,"begin 101"));
