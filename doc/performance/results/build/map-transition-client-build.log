@@ -1,0 +1,3 @@
+===> CC src/client/cl_performance.c
+===> CC src/client/cl_splitscreen.c
+===> LD release/quake2

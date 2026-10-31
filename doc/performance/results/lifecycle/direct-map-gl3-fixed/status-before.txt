@@ -1,0 +1,7 @@
+����print
+map              : pp_perf_fixture
+num score ping name            lastmsg address               qport 
+--- ----- ---- --------------- ------- --------------------- ------
+ 0     0    0 Player                0 [loopback-client1]:1  35550
+ 1     0    0 Player P2             0 [loopback-client2]:2  35550
+

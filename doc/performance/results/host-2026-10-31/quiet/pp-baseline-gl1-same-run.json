@@ -1,0 +1,256 @@
+{
+  "command": [
+    "runuser",
+    "-u",
+    "nobody",
+    "--",
+    "xvfb-run",
+    "-a",
+    "-s",
+    "-screen 0 640x480x24",
+    "/tmp/plastic-platoon-perf-dk4rz7xp/baseline/quake2",
+    "-portable",
+    "-datadir",
+    "/tmp/plastic-platoon-perf-dk4rz7xp/baseline",
+    "+set",
+    "vid_renderer",
+    "gl1",
+    "+set",
+    "vid_fullscreen",
+    "0",
+    "+set",
+    "r_mode",
+    "-1",
+    "+set",
+    "r_customwidth",
+    "640",
+    "+set",
+    "r_customheight",
+    "480",
+    "+set",
+    "r_vsync",
+    "0",
+    "+set",
+    "s_initsound",
+    "0",
+    "+set",
+    "r_msaa_samples",
+    "0",
+    "+exec",
+    "perf/pp-baseline-gl1-same.cfg"
+  ],
+  "settings": {
+    "vid_renderer": "gl1",
+    "vid_fullscreen": "0",
+    "r_mode": "-1",
+    "r_customwidth": "640",
+    "r_customheight": "480",
+    "r_vsync": "0",
+    "vid_maxfps": "1000",
+    "cl_maxfps": "60",
+    "cl_async": "1",
+    "s_initsound": "0",
+    "r_perf": "1",
+    "r_perf_gpu": "1",
+    "gl1_picmip": "0",
+    "r_shadows": "0",
+    "r_fullbright": "0",
+    "r_novis": "0",
+    "r_cull": "1",
+    "r_drawentities": "1",
+    "r_drawworld": "1",
+    "r_lerpmodels": "1",
+    "cl_entities": "1",
+    "cl_lights": "1",
+    "cl_particles": "1",
+    "gl_texturemode": "GL_LINEAR_MIPMAP_NEAREST",
+    "r_msaa_samples": "0",
+    "r_anisotropic": "0",
+    "gl_finish": "0",
+    "gl1_dynamic": "1",
+    "r_retexturing": "1",
+    "cl_perf_frames": "600",
+    "cl_perf_quit": "1",
+    "cl_perf_screenshot": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_count": 9,
+  "binary_sha256": "352c524168b988d137be180a86a08a2f51cad6da132af93b906352d3a48bf4b1",
+  "renderer_sha256": "13cc1e73516ba02df3f05217d3d206b576d17bcb6b7b44a577392653301daed8",
+  "game_sha256": "1ef6ea22eb8450c16a9d6c1da07964b2a88fefee1720e538911ee7070c92f8e6",
+  "map_sha256": "5ddd5449d95c6af319982b5b9d940100b246b456ae0475ec89135584dca1d4c6",
+  "pak0_sha256": "cae257182f34d3913f3d663e1d7cf865d668feda6af393d4ecf3e9e408b48d09",
+  "project_overlay_sha256": "f78b6b48cc1306e97d128808fca84e336310b4de38182dd4a55a938c2bfacc00",
+  "software_display_requested": true,
+  "warmup_frames": 120,
+  "environment": {
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "LP_NUM_THREADS": "2",
+    "SDL_VIDEODRIVER": null,
+    "VC4_DEBUG": null
+  },
+  "returncode": 0,
+  "summary": {
+    "capture": "/tmp/plastic-platoon-perf-dk4rz7xp/baseline/baseq2/perf/pp-baseline-gl1-same-frames.csv",
+    "warmup_frames": 120,
+    "frames": 480,
+    "metrics": {
+      "frame_ms": {
+        "median": 37.048,
+        "p95": 46.637299999999996,
+        "p99": 53.79057999999995,
+        "maximum": 105.818,
+        "mean": 38.48614375,
+        "minimum": 33.484
+      },
+      "screen_ms": {
+        "median": 36.9165,
+        "p95": 46.50074999999999,
+        "p99": 53.662459999999946,
+        "maximum": 105.686,
+        "mean": 38.34676458333333,
+        "minimum": 33.342
+      },
+      "server_ms": {
+        "median": 0.027,
+        "p95": 0.07304999999999995,
+        "p99": 0.12167999999999983,
+        "maximum": 0.302,
+        "mean": 0.04149375,
+        "minimum": 0.024
+      },
+      "simulation_ms": {
+        "median": 0.0,
+        "p95": 0.014,
+        "p99": 0.034469999999999855,
+        "maximum": 0.256,
+        "mean": 0.006008333333333333,
+        "minimum": 0.0
+      },
+      "snapshot_send_ms": {
+        "median": 0.0,
+        "p95": 0.015,
+        "p99": 0.053629999999999935,
+        "maximum": 0.1,
+        "mean": 0.00605,
+        "minimum": 0.0
+      },
+      "client_update_ms": {
+        "median": 0.048,
+        "p95": 0.08614999999999985,
+        "p99": 0.17502999999999913,
+        "maximum": 0.427,
+        "mean": 0.055614583333333335,
+        "minimum": 0.041
+      },
+      "prepare_ms": {
+        "median": 0.021,
+        "p95": 0.041,
+        "p99": 0.09746999999999986,
+        "maximum": 0.307,
+        "mean": 0.02439375,
+        "minimum": 0.014
+      },
+      "submit_ms": {
+        "median": 33.316,
+        "p95": 42.59029999999999,
+        "p99": 47.90453999999996,
+        "maximum": 100.498,
+        "mean": 34.76058333333334,
+        "minimum": 28.968
+      },
+      "present_ms": {
+        "median": 2.859,
+        "p95": 5.868199999999999,
+        "p99": 7.417539999999988,
+        "maximum": 16.436,
+        "mean": 3.20830625,
+        "minimum": 1.398
+      },
+      "views": {
+        "median": 2.0,
+        "p95": 2.0,
+        "p99": 2.0,
+        "maximum": 2.0,
+        "mean": 2.0,
+        "minimum": 2.0
+      },
+      "width": {
+        "median": 640.0,
+        "p95": 640.0,
+        "p99": 640.0,
+        "maximum": 640.0,
+        "mean": 640.0,
+        "minimum": 640.0
+      },
+      "height": {
+        "median": 480.0,
+        "p95": 480.0,
+        "p99": 480.0,
+        "maximum": 480.0,
+        "mean": 480.0,
+        "minimum": 480.0
+      },
+      "server_edicts": {
+        "median": 115.0,
+        "p95": 115.0,
+        "p99": 115.0,
+        "maximum": 115.0,
+        "mean": 115.0,
+        "minimum": 115.0
+      },
+      "monsters": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "dead_monsters": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "projectiles_by_effect": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "rss_kib": {
+        "median": 453824.0,
+        "p95": 454280.0,
+        "p99": 454280.0,
+        "maximum": 454280.0,
+        "mean": 453797.0,
+        "minimum": 453280.0
+      }
+    },
+    "over_33_333_ms_percent": 100.0,
+    "elapsed_seconds": 18.473349,
+    "rss_kib_first_last": [
+      453280.0,
+      454280.0
+    ],
+    "server_edicts_first_last": [
+      115.0,
+      115.0
+    ],
+    "monsters_first_last": [
+      0.0,
+      0.0
+    ],
+    "dead_monsters_first_last": [
+      0.0,
+      0.0
+    ]
+  },
+  "seconds": 26.213415256999724
+}

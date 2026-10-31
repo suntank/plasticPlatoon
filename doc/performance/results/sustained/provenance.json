@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "evidence_status": "retained aggregate summaries; original temporary runtime data unavailable after environment recycle",
+  "command_provenance": "Exact launcher commands supplied by the run owner from retained task history, not recovered run.json files.",
+  "build_scope": "Intermediate optimized engine with geometry, asset and shared-effect changes, including capture-exclusive guard, before the final secondary changing/reconnect snapshot-generation and renderer-reload profiler-serial fixes; not final-commit validation.",
+  "environment_scope": "x86-64 development host, Mesa llvmpipe software rendering through Xvfb; LP_NUM_THREADS=2, LIBGL_ALWAYS_SOFTWARE=1. Concurrent map/Mesa/lifecycle functional work; not a controlled timing comparison or Pi test.",
+  "unavailable_original_artifacts": [
+    "frames.csv",
+    "views.csv",
+    "settings.txt",
+    "console.log",
+    "run.json",
+    "command cfg",
+    "requested screenshots"
+  ],
+  "interpretation_limits": [
+    "No reconstruction of time-resolved slopes, last-window plateaus, input/player-state histories or errors absent from retained summaries.",
+    "elapsed_seconds sums retained complete-frame intervals after 120 warmup rows; not process wall time or proven simulation time.",
+    "RSS is process resident memory sampled every 60 display frames, not GPU/system memory or proof of leak freedom.",
+    "No before/after sustained baseline or Pi/Game Bird result."
+  ],
+  "captures": [
+    {
+      "label": "pp-effects-soak",
+      "summary_file": "pp-effects-soak-summary.json",
+      "summary_sha256": "09ba0ca4960c65b8cb8937bb39e6a9b724b36668b139c7cb0ef6b651e8d7877b",
+      "original_capture_path": "/tmp/plastic-platoon-perf-dk4rz7xp/optimized/baseq2/perf/pp-effects-soak-frames.csv",
+      "historical_command": "LP_NUM_THREADS=2 LIBGL_ALWAYS_SOFTWARE=1 python3 tools/performance/run_benchmark.py --binary /tmp/plastic-platoon-perf-dk4rz7xp/optimized/quake2 --data /tmp/plastic-platoon-perf-dk4rz7xp/optimized --label pp-effects-soak --renderer gl1 --map pp_perf_effects --players 2 --size 240x240 --frames 18120 --warmup 120 --timeout 720 --xvfb --unprivileged nobody --set vid_maxfps 30 --set r_perf_gpu 0 --screenshot > ../pp-effects-soak-summary.json",
+      "elapsed_seconds": 604.730355,
+      "timed_frames": 18000,
+      "warmup_frames": 120,
+      "original_artifacts_available": false
+    },
+    {
+      "label": "sandbox-wave-diagnostic",
+      "summary_file": "sandbox-wave-diagnostic-summary.json",
+      "summary_sha256": "c0ef28d01333c05019259006f7c4383f266ff4af408549c37bd7d7c01b242dda",
+      "original_capture_path": "/tmp/plastic-platoon-wave-validation/baseq2/perf/sandbox-wave-diagnostic-frames.csv",
+      "historical_command": "LP_NUM_THREADS=2 LIBGL_ALWAYS_SOFTWARE=1 python3 tools/performance/run_benchmark.py --binary /tmp/plastic-platoon-wave-validation/quake2 --data /tmp/plastic-platoon-wave-validation --label sandbox-wave-diagnostic --renderer gl1 --map pp_sandbox_coop1 --players 2 --size 240x240 --frames 18120 --warmup 120 --timeout 900 --xvfb --unprivileged nobody --set vid_maxfps 30 --set r_perf_gpu 0 --set port 27912 --screenshot > ../sandbox-wave-diagnostic-summary.json",
+      "elapsed_seconds": 601.934127,
+      "timed_frames": 18000,
+      "warmup_frames": 120,
+      "original_artifacts_available": false,
+      "map_source_sha256": "09dd444a8523b669d31c26940dd630f2ce42e7799ee6745a0622ccf5284bd550",
+      "diagnostic_bsp_sha256": "9fab23b549fc863d42c05ca07f106a1f7d524d2c63e7f0f544120472a27457c9",
+      "map_conditions": "Unchanged supplied source, fast VIS, no baked lighting;13 custom texture paths and 3 custom soldier weapon attachments unavailable.",
+      "project_overlay_provenance": "Run owner confirms same optimized project PK3 as quiet benchmark; per-soak run metadata not retained."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+Extracted verbatim from the original release baseline build log.
+The full implementation and lifecycle builds occurred before the temporary environment recycle.
+
+cc -c -O2 -Wall -pipe -fomit-frame-pointer -fno-strict-aliasing -fwrapv -fvisibility=hidden -MMD -DYQ2OSTYPE=\"Linux\" -DYQ2ARCH=\"x86_64\" -mfpmath=sse -ffp-contract=off -fPIC -I/usr/include/SDL2 -D_REENTRANT -I/usr/include -o build/release/ref_gl1/src/client/refresh/gl1/qgl.o src/client/refresh/gl1/qgl.c
+cc -c -O2 -Wall -pipe -fomit-frame-pointer -fno-strict-aliasing -fwrapv -fvisibility=hidden -MMD -DYQ2OSTYPE=\"Linux\" -DYQ2ARCH=\"x86_64\" -mfpmath=sse -ffp-contract=off -Wno-unused-result -DUSE_CURL -DUSE_OPENAL -DDEFAULT_OPENAL_DRIVER='"libopenal.so.1"' -DHAVE_EXECINFO -I/usr/include/SDL2 -D_REENTRANT -DNOUNCRYPT -I/usr/include -o build/release/client/src/backends/generic/misc.o src/backends/generic/misc.c
+cc -c -O2 -Wall -pipe -fomit-frame-pointer -fno-strict-aliasing -fwrapv -fvisibility=hidden -MMD -DYQ2OSTYPE=\"Linux\" -DYQ2ARCH=\"x86_64\" -mfpmath=sse -ffp-contract=off -DYQ2_GL3_GLES3 -DYQ2_GL3_GLES -fPIC -I/usr/include/SDL2 -D_REENTRANT -I/usr/include -Isrc/client/refresh/gl3/glad-gles3/include -o build/release/ref_gles3/src/client/refresh/gl3/gl3_draw.o src/client/refresh/gl3/gl3_draw.c
+cc -c -O2 -Wall -pipe -fomit-frame-pointer -fno-strict-aliasing -fwrapv -fvisibility=hidden -MMD -DYQ2OSTYPE=\"Linux\" -DYQ2ARCH=\"x86_64\" -mfpmath=sse -ffp-contract=off -fPIC -Wno-unused-result -I/usr/include -o build/release/baseq2/src/common/shared/flash.o src/common/shared/flash.c

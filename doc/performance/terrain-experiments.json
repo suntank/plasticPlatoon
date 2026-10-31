@@ -1,0 +1,1162 @@
+{
+  "baseline": {
+    "diagnostic": true,
+    "source_unchanged": true,
+    "missing_all_custom_map_textures": true,
+    "full_vis": false,
+    "stages": [
+      {
+        "name": "bsp",
+        "args": [
+          "/workspace/scratch/bf32e00d9702/q2tools-220/build/q2tool",
+          "-bsp",
+          "-threads",
+          "1",
+          "-moddir",
+          "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+          "-basedir",
+          "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+          "/workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/original_diagnostic/pp_sandbox_coop1.map"
+        ],
+        "returncode": 0,
+        "wall_seconds": 6.410416356000496
+      },
+      {
+        "name": "vis",
+        "args": [
+          "/workspace/scratch/bf32e00d9702/q2tools-220/build/q2tool",
+          "-vis",
+          "-fast",
+          "-threads",
+          "1",
+          "-moddir",
+          "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+          "-basedir",
+          "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+          "/workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/original_diagnostic/pp_sandbox_coop1.bsp"
+        ],
+        "returncode": 0,
+        "wall_seconds": 4.893820531000529
+      },
+      {
+        "name": "rad",
+        "args": [
+          "/workspace/scratch/bf32e00d9702/q2tools-220/build/q2tool",
+          "-rad",
+          "-threads",
+          "1",
+          "-moddir",
+          "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+          "-basedir",
+          "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+          "/workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/original_diagnostic/pp_sandbox_coop1.bsp"
+        ],
+        "returncode": -15,
+        "wall_seconds": 327.7054216249999
+      }
+    ],
+    "fastvis_inventory": {
+      "source": "pp_sandbox_coop1.bsp",
+      "sha256": "9fab23b549fc863d42c05ca07f106a1f7d524d2c63e7f0f544120472a27457c9",
+      "file_bytes": 2553652,
+      "lumps": {
+        "entities": {
+          "bytes": 37045
+        },
+        "planes": {
+          "bytes": 577720,
+          "count": 28886
+        },
+        "vertexes": {
+          "bytes": 188544,
+          "count": 15712
+        },
+        "visibility": {
+          "bytes": 446040
+        },
+        "nodes": {
+          "bytes": 231252,
+          "count": 8259
+        },
+        "texinfo": {
+          "bytes": 70680,
+          "count": 930
+        },
+        "faces": {
+          "bytes": 250460,
+          "count": 12523
+        },
+        "lighting": {
+          "bytes": 0
+        },
+        "leafs": {
+          "bytes": 232708,
+          "count": 8311
+        },
+        "leaffaces": {
+          "bytes": 29854,
+          "count": 14927
+        },
+        "leafbrushes": {
+          "bytes": 11610,
+          "count": 5805
+        },
+        "edges": {
+          "bytes": 117240,
+          "count": 29310
+        },
+        "surfedges": {
+          "bytes": 233876,
+          "count": 58469
+        },
+        "models": {
+          "bytes": 2448,
+          "count": 51
+        },
+        "brushes": {
+          "bytes": 20856,
+          "count": 1738
+        },
+        "brushsides": {
+          "bytes": 102856,
+          "count": 25714
+        },
+        "pop": {
+          "bytes": 256
+        },
+        "areas": {
+          "bytes": 16,
+          "count": 2
+        },
+        "areaportals": {
+          "bytes": 0,
+          "count": 0
+        }
+      },
+      "clusters": 1321,
+      "pvs_visible_clusters_mean": 1143.1907645722938,
+      "pvs_visible_clusters_max": 1302,
+      "pvs_visible_fraction_mean": 0.8653980049752412,
+      "release_lumps_present": false
+    },
+    "rad_interrupted_reason": "Stopped deliberately in favor of completed full-VIS copy; no release lighting claim."
+  },
+  "variants": [
+    {
+      "label": "contained_sand_detail",
+      "experiment": {
+        "source": "maps/source/pp_sandbox_coop1.map",
+        "source_sha256": "09dd444a8523b669d31c26940dd630f2ce42e7799ee6745a0622ccf5284bd550",
+        "variant_sha256": "be9310e5779216419337441a3563b18f92e31d2b831390d0bcc1c423cb6db9eb",
+        "brush_indices": [
+          1215,
+          1216,
+          1217,
+          1228
+        ],
+        "changed_lines": [
+          10830,
+          10831,
+          10832,
+          10833,
+          10834,
+          10838,
+          10839,
+          10840,
+          10841,
+          10842,
+          10846,
+          10847,
+          10848,
+          10849,
+          10850,
+          10941,
+          10942,
+          10943,
+          10944,
+          10945
+        ],
+        "changes": "Only CONTENTS_DETAIL is set; all geometry, texture transforms and entity properties are unchanged."
+      },
+      "compilation": {
+        "diagnostic": true,
+        "source_sha256": "be9310e5779216419337441a3563b18f92e31d2b831390d0bcc1c423cb6db9eb",
+        "missing_all_custom_map_textures": true,
+        "full_vis": false,
+        "stages": [
+          {
+            "name": "bsp",
+            "args": [
+              "/workspace/scratch/bf32e00d9702/q2tools-220/build/q2tool",
+              "-bsp",
+              "-threads",
+              "1",
+              "-moddir",
+              "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+              "-basedir",
+              "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+              "/workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/contained_sand_detail/contained_sand_detail.map"
+            ],
+            "returncode": 0,
+            "wall_seconds": 3.1482691679993877
+          },
+          {
+            "name": "vis",
+            "args": [
+              "/workspace/scratch/bf32e00d9702/q2tools-220/build/q2tool",
+              "-vis",
+              "-fast",
+              "-threads",
+              "1",
+              "-moddir",
+              "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+              "-basedir",
+              "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+              "/workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/contained_sand_detail/contained_sand_detail.bsp"
+            ],
+            "returncode": 0,
+            "wall_seconds": 3.322051463997923
+          }
+        ],
+        "fastvis_inventory": {
+          "source": "contained_sand_detail.bsp",
+          "sha256": "4a673e85f07137aae03c1ede36ac69908f673e2cdda46e38ba11b9f99758c3e8",
+          "file_bytes": 2553652,
+          "lumps": {
+            "entities": {
+              "bytes": 37045
+            },
+            "planes": {
+              "bytes": 577720,
+              "count": 28886
+            },
+            "vertexes": {
+              "bytes": 188544,
+              "count": 15712
+            },
+            "visibility": {
+              "bytes": 446040
+            },
+            "nodes": {
+              "bytes": 231252,
+              "count": 8259
+            },
+            "texinfo": {
+              "bytes": 70680,
+              "count": 930
+            },
+            "faces": {
+              "bytes": 250460,
+              "count": 12523
+            },
+            "lighting": {
+              "bytes": 0
+            },
+            "leafs": {
+              "bytes": 232708,
+              "count": 8311
+            },
+            "leaffaces": {
+              "bytes": 29854,
+              "count": 14927
+            },
+            "leafbrushes": {
+              "bytes": 11610,
+              "count": 5805
+            },
+            "edges": {
+              "bytes": 117240,
+              "count": 29310
+            },
+            "surfedges": {
+              "bytes": 233876,
+              "count": 58469
+            },
+            "models": {
+              "bytes": 2448,
+              "count": 51
+            },
+            "brushes": {
+              "bytes": 20856,
+              "count": 1738
+            },
+            "brushsides": {
+              "bytes": 102856,
+              "count": 25714
+            },
+            "pop": {
+              "bytes": 256
+            },
+            "areas": {
+              "bytes": 16,
+              "count": 2
+            },
+            "areaportals": {
+              "bytes": 0,
+              "count": 0
+            }
+          },
+          "clusters": 1321,
+          "pvs_visible_clusters_mean": 1143.1907645722938,
+          "pvs_visible_clusters_max": 1302,
+          "pvs_visible_fraction_mean": 0.8653980049752412,
+          "release_lumps_present": false
+        },
+        "prt_header": [
+          "PRT1",
+          "1321",
+          "4448"
+        ]
+      }
+    },
+    {
+      "label": "interior_ladders_detail",
+      "experiment": {
+        "source": "maps/source/pp_sandbox_coop1.map",
+        "source_sha256": "09dd444a8523b669d31c26940dd630f2ce42e7799ee6745a0622ccf5284bd550",
+        "variant_sha256": "c0776861e9b1016b8bd1ae5204a42fdd7aae16ba7139682bc60ad8124b79f180",
+        "brush_indices": [
+          502,
+          503,
+          504,
+          505,
+          506,
+          507,
+          508,
+          509,
+          510,
+          511,
+          517,
+          518,
+          519,
+          520,
+          521,
+          522,
+          523,
+          524,
+          525,
+          526
+        ],
+        "changed_lines": [
+          4429,
+          4430,
+          4431,
+          4432,
+          4433,
+          4434,
+          4438,
+          4439,
+          4440,
+          4441,
+          4442,
+          4443,
+          4447,
+          4448,
+          4449,
+          4450,
+          4451,
+          4452,
+          4456,
+          4457,
+          4458,
+          4459,
+          4460,
+          4461,
+          4465,
+          4466,
+          4467,
+          4468,
+          4469,
+          4470,
+          4474,
+          4475,
+          4476,
+          4477,
+          4478,
+          4479,
+          4483,
+          4484,
+          4485,
+          4486,
+          4487,
+          4488,
+          4492,
+          4493,
+          4494,
+          4495,
+          4496,
+          4497,
+          4501,
+          4502,
+          4503,
+          4504,
+          4505,
+          4506,
+          4510,
+          4511,
+          4512,
+          4513,
+          4514,
+          4515,
+          4569,
+          4570,
+          4571,
+          4572,
+          4573,
+          4574,
+          4578,
+          4579,
+          4580,
+          4581,
+          4582,
+          4583,
+          4587,
+          4588,
+          4589,
+          4590,
+          4591,
+          4592,
+          4596,
+          4597,
+          4598,
+          4599,
+          4600,
+          4601,
+          4605,
+          4606,
+          4607,
+          4608,
+          4609,
+          4610,
+          4614,
+          4615,
+          4616,
+          4617,
+          4618,
+          4619,
+          4623,
+          4624,
+          4625,
+          4626,
+          4627,
+          4628,
+          4632,
+          4633,
+          4634,
+          4635,
+          4636,
+          4637,
+          4641,
+          4642,
+          4643,
+          4644,
+          4645,
+          4646,
+          4650,
+          4651,
+          4652,
+          4653,
+          4654,
+          4655
+        ],
+        "changes": "Only CONTENTS_DETAIL is set; all geometry, texture transforms and entity properties are unchanged."
+      },
+      "compilation": {
+        "diagnostic": true,
+        "source_sha256": "c0776861e9b1016b8bd1ae5204a42fdd7aae16ba7139682bc60ad8124b79f180",
+        "missing_all_custom_map_textures": true,
+        "full_vis": false,
+        "stages": [
+          {
+            "name": "bsp",
+            "args": [
+              "/workspace/scratch/bf32e00d9702/q2tools-220/build/q2tool",
+              "-bsp",
+              "-threads",
+              "1",
+              "-moddir",
+              "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+              "-basedir",
+              "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+              "/workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/interior_ladders_detail/interior_ladders_detail.map"
+            ],
+            "returncode": 0,
+            "wall_seconds": 3.2412777750032546
+          },
+          {
+            "name": "vis",
+            "args": [
+              "/workspace/scratch/bf32e00d9702/q2tools-220/build/q2tool",
+              "-vis",
+              "-fast",
+              "-threads",
+              "1",
+              "-moddir",
+              "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+              "-basedir",
+              "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+              "/workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/interior_ladders_detail/interior_ladders_detail.bsp"
+            ],
+            "returncode": 0,
+            "wall_seconds": 3.24071071799699
+          }
+        ],
+        "fastvis_inventory": {
+          "source": "interior_ladders_detail.bsp",
+          "sha256": "e363d7e86a6a3aa16bfc045760a77b50951b4fd66b70f5ab28383516145fea7c",
+          "file_bytes": 2513568,
+          "lumps": {
+            "entities": {
+              "bytes": 37045
+            },
+            "planes": {
+              "bytes": 577720,
+              "count": 28886
+            },
+            "vertexes": {
+              "bytes": 188172,
+              "count": 15681
+            },
+            "visibility": {
+              "bytes": 410861
+            },
+            "nodes": {
+              "bytes": 229684,
+              "count": 8203
+            },
+            "texinfo": {
+              "bytes": 70680,
+              "count": 930
+            },
+            "faces": {
+              "bytes": 249900,
+              "count": 12495
+            },
+            "lighting": {
+              "bytes": 0
+            },
+            "leafs": {
+              "bytes": 231140,
+              "count": 8255
+            },
+            "leaffaces": {
+              "bytes": 29788,
+              "count": 14894
+            },
+            "leafbrushes": {
+              "bytes": 11534,
+              "count": 5767
+            },
+            "edges": {
+              "bytes": 117012,
+              "count": 29253
+            },
+            "surfedges": {
+              "bytes": 233408,
+              "count": 58352
+            },
+            "models": {
+              "bytes": 2448,
+              "count": 51
+            },
+            "brushes": {
+              "bytes": 20856,
+              "count": 1738
+            },
+            "brushsides": {
+              "bytes": 102856,
+              "count": 25714
+            },
+            "pop": {
+              "bytes": 256
+            },
+            "areas": {
+              "bytes": 16,
+              "count": 2
+            },
+            "areaportals": {
+              "bytes": 0,
+              "count": 0
+            }
+          },
+          "clusters": 1270,
+          "pvs_visible_clusters_mean": 1112.2763779527559,
+          "pvs_visible_clusters_max": 1251,
+          "pvs_visible_fraction_mean": 0.8758081716163433,
+          "release_lumps_present": false
+        },
+        "prt_header": [
+          "PRT1",
+          "1270",
+          "4342"
+        ]
+      }
+    },
+    {
+      "label": "contained_and_ladders_detail",
+      "experiment": {
+        "source": "maps/source/pp_sandbox_coop1.map",
+        "source_sha256": "09dd444a8523b669d31c26940dd630f2ce42e7799ee6745a0622ccf5284bd550",
+        "variant_sha256": "8381606140b4a02a7a31709e067bffc3f3f2b774246e4dd44324bfffee3ca419",
+        "brush_indices": [
+          1215,
+          1216,
+          1217,
+          1228,
+          502,
+          503,
+          504,
+          505,
+          506,
+          507,
+          508,
+          509,
+          510,
+          511,
+          517,
+          518,
+          519,
+          520,
+          521,
+          522,
+          523,
+          524,
+          525,
+          526
+        ],
+        "changed_lines": [
+          4429,
+          4430,
+          4431,
+          4432,
+          4433,
+          4434,
+          4438,
+          4439,
+          4440,
+          4441,
+          4442,
+          4443,
+          4447,
+          4448,
+          4449,
+          4450,
+          4451,
+          4452,
+          4456,
+          4457,
+          4458,
+          4459,
+          4460,
+          4461,
+          4465,
+          4466,
+          4467,
+          4468,
+          4469,
+          4470,
+          4474,
+          4475,
+          4476,
+          4477,
+          4478,
+          4479,
+          4483,
+          4484,
+          4485,
+          4486,
+          4487,
+          4488,
+          4492,
+          4493,
+          4494,
+          4495,
+          4496,
+          4497,
+          4501,
+          4502,
+          4503,
+          4504,
+          4505,
+          4506,
+          4510,
+          4511,
+          4512,
+          4513,
+          4514,
+          4515,
+          4569,
+          4570,
+          4571,
+          4572,
+          4573,
+          4574,
+          4578,
+          4579,
+          4580,
+          4581,
+          4582,
+          4583,
+          4587,
+          4588,
+          4589,
+          4590,
+          4591,
+          4592,
+          4596,
+          4597,
+          4598,
+          4599,
+          4600,
+          4601,
+          4605,
+          4606,
+          4607,
+          4608,
+          4609,
+          4610,
+          4614,
+          4615,
+          4616,
+          4617,
+          4618,
+          4619,
+          4623,
+          4624,
+          4625,
+          4626,
+          4627,
+          4628,
+          4632,
+          4633,
+          4634,
+          4635,
+          4636,
+          4637,
+          4641,
+          4642,
+          4643,
+          4644,
+          4645,
+          4646,
+          4650,
+          4651,
+          4652,
+          4653,
+          4654,
+          4655,
+          10830,
+          10831,
+          10832,
+          10833,
+          10834,
+          10838,
+          10839,
+          10840,
+          10841,
+          10842,
+          10846,
+          10847,
+          10848,
+          10849,
+          10850,
+          10941,
+          10942,
+          10943,
+          10944,
+          10945
+        ],
+        "changes": "Only CONTENTS_DETAIL is set; all geometry, texture transforms and entity properties are unchanged."
+      },
+      "compilation": {
+        "diagnostic": true,
+        "source_sha256": "8381606140b4a02a7a31709e067bffc3f3f2b774246e4dd44324bfffee3ca419",
+        "missing_all_custom_map_textures": true,
+        "full_vis": false,
+        "stages": [
+          {
+            "name": "bsp",
+            "args": [
+              "/workspace/scratch/bf32e00d9702/q2tools-220/build/q2tool",
+              "-bsp",
+              "-threads",
+              "1",
+              "-moddir",
+              "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+              "-basedir",
+              "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+              "/workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/contained_and_ladders_detail/contained_and_ladders_detail.map"
+            ],
+            "returncode": 0,
+            "wall_seconds": 3.311723238999548
+          },
+          {
+            "name": "vis",
+            "args": [
+              "/workspace/scratch/bf32e00d9702/q2tools-220/build/q2tool",
+              "-vis",
+              "-fast",
+              "-threads",
+              "1",
+              "-moddir",
+              "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+              "-basedir",
+              "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+              "/workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/contained_and_ladders_detail/contained_and_ladders_detail.bsp"
+            ],
+            "returncode": 0,
+            "wall_seconds": 3.2206759660002717
+          }
+        ],
+        "fastvis_inventory": {
+          "source": "contained_and_ladders_detail.bsp",
+          "sha256": "4bd221605416d29844947daf059adf27ba4dda2340feb6fdce907c4f1038457f",
+          "file_bytes": 2513568,
+          "lumps": {
+            "entities": {
+              "bytes": 37045
+            },
+            "planes": {
+              "bytes": 577720,
+              "count": 28886
+            },
+            "vertexes": {
+              "bytes": 188172,
+              "count": 15681
+            },
+            "visibility": {
+              "bytes": 410861
+            },
+            "nodes": {
+              "bytes": 229684,
+              "count": 8203
+            },
+            "texinfo": {
+              "bytes": 70680,
+              "count": 930
+            },
+            "faces": {
+              "bytes": 249900,
+              "count": 12495
+            },
+            "lighting": {
+              "bytes": 0
+            },
+            "leafs": {
+              "bytes": 231140,
+              "count": 8255
+            },
+            "leaffaces": {
+              "bytes": 29788,
+              "count": 14894
+            },
+            "leafbrushes": {
+              "bytes": 11534,
+              "count": 5767
+            },
+            "edges": {
+              "bytes": 117012,
+              "count": 29253
+            },
+            "surfedges": {
+              "bytes": 233408,
+              "count": 58352
+            },
+            "models": {
+              "bytes": 2448,
+              "count": 51
+            },
+            "brushes": {
+              "bytes": 20856,
+              "count": 1738
+            },
+            "brushsides": {
+              "bytes": 102856,
+              "count": 25714
+            },
+            "pop": {
+              "bytes": 256
+            },
+            "areas": {
+              "bytes": 16,
+              "count": 2
+            },
+            "areaportals": {
+              "bytes": 0,
+              "count": 0
+            }
+          },
+          "clusters": 1270,
+          "pvs_visible_clusters_mean": 1112.2763779527559,
+          "pvs_visible_clusters_max": 1251,
+          "pvs_visible_fraction_mean": 0.8758081716163433,
+          "release_lumps_present": false
+        },
+        "prt_header": [
+          "PRT1",
+          "1270",
+          "4342"
+        ]
+      }
+    }
+  ],
+  "fullvis_original": {
+    "diagnostic": true,
+    "source_sha256": "09dd444a8523b669d31c26940dd630f2ce42e7799ee6745a0622ccf5284bd550",
+    "q2tools_commit": "07d8d893cb04ba5f39a63d7382e8d9979b3f38da",
+    "q2tool_sha256": "7010350ada423cffb057f3895e219b4c61f1319036b4abd5607541befbe50b5b",
+    "fullvis_inventory": {
+      "source": "pp_sandbox_coop1.bsp",
+      "sha256": "f3b6ed2d8dd4533f510c041fbce250fcefa4565702fee0cbc9a7e9d2602cd940",
+      "file_bytes": 2507636,
+      "lumps": {
+        "entities": {
+          "bytes": 37045
+        },
+        "planes": {
+          "bytes": 577720,
+          "count": 28886
+        },
+        "vertexes": {
+          "bytes": 188544,
+          "count": 15712
+        },
+        "visibility": {
+          "bytes": 400024
+        },
+        "nodes": {
+          "bytes": 231252,
+          "count": 8259
+        },
+        "texinfo": {
+          "bytes": 70680,
+          "count": 930
+        },
+        "faces": {
+          "bytes": 250460,
+          "count": 12523
+        },
+        "lighting": {
+          "bytes": 0
+        },
+        "leafs": {
+          "bytes": 232708,
+          "count": 8311
+        },
+        "leaffaces": {
+          "bytes": 29854,
+          "count": 14927
+        },
+        "leafbrushes": {
+          "bytes": 11610,
+          "count": 5805
+        },
+        "edges": {
+          "bytes": 117240,
+          "count": 29310
+        },
+        "surfedges": {
+          "bytes": 233876,
+          "count": 58469
+        },
+        "models": {
+          "bytes": 2448,
+          "count": 51
+        },
+        "brushes": {
+          "bytes": 20856,
+          "count": 1738
+        },
+        "brushsides": {
+          "bytes": 102856,
+          "count": 25714
+        },
+        "pop": {
+          "bytes": 256
+        },
+        "areas": {
+          "bytes": 16,
+          "count": 2
+        },
+        "areaportals": {
+          "bytes": 0,
+          "count": 0
+        }
+      },
+      "clusters": 1321,
+      "pvs_visible_clusters_mean": 450.58743376230126,
+      "pvs_visible_clusters_max": 1155,
+      "pvs_visible_fraction_mean": 0.341095710645194,
+      "release_lumps_present": false
+    },
+    "all_nonvis_lumps_equal_except_node_plane_numbering": true,
+    "referenced_node_planes_equal": true,
+    "leaf_records_identical": true,
+    "pvs_phs_subset_of_fast": true,
+    "fullvis_walltime_note": "Compiler logged 2311s portal flow, including a long process pause for benchmarks; not an active compile-time measurement.",
+    "fullvis_command": [
+      "/workspace/scratch/bf32e00d9702/q2tools-220/build/q2tool",
+      "-bsp",
+      "-vis",
+      "-rad",
+      "-threads",
+      "3",
+      "-basedir",
+      "/workspace/scratch/bf32e00d9702/plasticPlatoon/baseq2",
+      "/workspace/scratch/bf32e00d9702/reference/pp_sandbox_coop1.map"
+    ],
+    "fullvis_log_sha256": "321fee4d59357c4b7321c57aa6c638fdc4ac383959c086b4be7ae12f85b92320",
+    "rad_attempt": {
+      "command": [
+        "/workspace/scratch/bf32e00d9702/q2tools-220/build/q2tool",
+        "-rad",
+        "-threads",
+        "1",
+        "-moddir",
+        "/workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/compile_assets",
+        "-basedir",
+        "/workspace/scratch/bf32e00d9702/runtime-data/baseq2",
+        "/workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/original_fullvis_diagnostic/pp_sandbox_coop1.bsp"
+      ],
+      "returncode": 0,
+      "wall_seconds": 604.8833126789978,
+      "palette": "exact pics/colormap.pcx extracted from official demo PAK"
+    },
+    "lit_inventory": {
+      "source": "pp_sandbox_coop1.bsp",
+      "sha256": "5b431476f8688669e0374449f410b86840ae3aab8bfd78fc9fa1dc96fbdf50be",
+      "file_bytes": 3551012,
+      "lumps": {
+        "entities": {
+          "bytes": 37045
+        },
+        "planes": {
+          "bytes": 577720,
+          "count": 28886
+        },
+        "vertexes": {
+          "bytes": 188544,
+          "count": 15712
+        },
+        "visibility": {
+          "bytes": 400024
+        },
+        "nodes": {
+          "bytes": 231252,
+          "count": 8259
+        },
+        "texinfo": {
+          "bytes": 70680,
+          "count": 930
+        },
+        "faces": {
+          "bytes": 250460,
+          "count": 12523
+        },
+        "lighting": {
+          "bytes": 1043373
+        },
+        "leafs": {
+          "bytes": 232708,
+          "count": 8311
+        },
+        "leaffaces": {
+          "bytes": 29854,
+          "count": 14927
+        },
+        "leafbrushes": {
+          "bytes": 11610,
+          "count": 5805
+        },
+        "edges": {
+          "bytes": 117240,
+          "count": 29310
+        },
+        "surfedges": {
+          "bytes": 233876,
+          "count": 58469
+        },
+        "models": {
+          "bytes": 2448,
+          "count": 51
+        },
+        "brushes": {
+          "bytes": 20856,
+          "count": 1738
+        },
+        "brushsides": {
+          "bytes": 102856,
+          "count": 25714
+        },
+        "pop": {
+          "bytes": 256
+        },
+        "areas": {
+          "bytes": 16,
+          "count": 2
+        },
+        "areaportals": {
+          "bytes": 0,
+          "count": 0
+        }
+      },
+      "clusters": 1321,
+      "pvs_visible_clusters_mean": 450.58743376230126,
+      "pvs_visible_clusters_max": 1155,
+      "pvs_visible_fraction_mean": 0.341095710645194,
+      "release_lumps_present": true
+    },
+    "palette_sha256": "2662f321c8b229aa4ef64fb6dc8cbcb79696977cf5ccf77a96283d8b5ea9d4f7",
+    "palette_bytes": 96927,
+    "diagnostic_only_reason": "All13 custom map texture paths unavailable; compiler uses default reflectivity and unavailable WAL metadata. Successful VIS+RAD does not authorize release publication."
+  },
+  "compiler_commit": "07d8d893cb04ba5f39a63d7382e8d9979b3f38da",
+  "compiler_sha256": "7010350ada423cffb057f3895e219b4c61f1319036b4abd5607541befbe50b5b",
+  "notes": [
+    "No default MAP edits; variants are diagnostics only.",
+    "Missing custom texture WAL metadata means these are not release builds.",
+    "Concurrent jobs and an intentional full-VIS pause invalidate compile-speed comparisons."
+  ],
+  "log_files": [
+    {
+      "path": "results/terrain/contained_and_ladders_detail-bsp.log",
+      "sha256": "dad6d0ac1755922897c9710797a490f2952c46b8c4a1b99b4556dd8d75d7db96"
+    },
+    {
+      "path": "results/terrain/contained_and_ladders_detail-vis.log",
+      "sha256": "1f0249a11c2172b439a60fa2b25695b3277e7c6b0998d985c4eb2e5a9f53745f"
+    },
+    {
+      "path": "results/terrain/contained_sand_detail-bsp.log",
+      "sha256": "f8d751b8eeab1b9d5d0898373a801e93747d32d0834c3076ee83110686bde06d"
+    },
+    {
+      "path": "results/terrain/contained_sand_detail-vis.log",
+      "sha256": "eef336aa0010dd5886c372344a33cf792a7f04cf0aa2583eb1736e4bfa7c2d24"
+    },
+    {
+      "path": "results/terrain/interior_ladders_detail-bsp.log",
+      "sha256": "243c4f6c1cc3b6e694d5fb08e08860fd6957b5eba2bad0c832811b1d1ebd17d5"
+    },
+    {
+      "path": "results/terrain/interior_ladders_detail-vis.log",
+      "sha256": "29cd2b348821ec2f289069f3cb110862e09f212d9121d29518cc5cea25bed23c"
+    },
+    {
+      "path": "results/terrain/original-bsp-fullvis-rad-attempt.log",
+      "sha256": "321fee4d59357c4b7321c57aa6c638fdc4ac383959c086b4be7ae12f85b92320"
+    },
+    {
+      "path": "results/terrain/original-fullvis-diagnostic-rad.log",
+      "sha256": "3fcae4e4b99844a44a1f9a07a2b9cf341486b07f491a66c606a90474843b98d7"
+    },
+    {
+      "path": "results/terrain/original_diagnostic-bsp.log",
+      "sha256": "7011eb0d530c56cd20b0d672476084c943cb15af1739402771def3e869bf25ee"
+    },
+    {
+      "path": "results/terrain/original_diagnostic-vis.log",
+      "sha256": "c9f7ba137d833a7e5c90ac779d1b569a319075416a8f8bbd6d84d88c3a483906"
+    }
+  ]
+}

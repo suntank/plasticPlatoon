@@ -1,0 +1,53 @@
+Build configuration
+============================
+YQ2_ARCH = x86_64 COMPILER = gcc
+WITH_CURL = yes
+WITH_OPENAL = yes
+WITH_RPATH = yes
+WITH_SDL3 = no
+WITH_SYSTEMWIDE = no
+WITH_SYSTEMDIR = 
+============================
+
+===> Building quake2
+make release/quake2
+make[1]: Entering directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+make[1]: 'release/quake2' is up to date.
+make[1]: Leaving directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+===> Building q2ded
+make release/q2ded
+make[1]: Entering directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+make[1]: 'release/q2ded' is up to date.
+make[1]: Leaving directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+===> Building baseq2/game.so
+make release/baseq2/game.so
+make[1]: Entering directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+make[1]: 'release/baseq2/game.so' is up to date.
+make[1]: Leaving directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+===> Building ref_gl1.so
+make release/ref_gl1.so
+make[1]: Entering directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+make[1]: 'release/ref_gl1.so' is up to date.
+make[1]: Leaving directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+===> Building ref_gl3.so
+make release/ref_gl3.so
+make[1]: Entering directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+make[1]: 'release/ref_gl3.so' is up to date.
+make[1]: Leaving directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+===> Building ref_gles3.so
+make release/ref_gles3.so
+make[1]: Entering directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+===> CC src/client/refresh/files/models.c
+===> CC src/client/refresh/files/pcx.c
+===> LD release/ref_gles3.so
+make[1]: Leaving directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+===> Building ref_soft.so
+make release/ref_soft.so
+make[1]: Entering directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+make[1]: 'release/ref_soft.so' is up to date.
+make[1]: Leaving directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+===> Building ref_gles1.so
+make release/ref_gles1.so
+make[1]: Entering directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
+make[1]: 'release/ref_gles1.so' is up to date.
+make[1]: Leaving directory '/workspace/scratch/bf32e00d9702/plasticPlatoon'
