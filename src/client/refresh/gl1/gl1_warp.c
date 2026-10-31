@@ -699,7 +699,7 @@ R_DrawSkyBox(void)
 
         glVertexPointer( 3, GL_FLOAT, 0, vtx_sky );
         glTexCoordPointer( 2, GL_FLOAT, 0, tex_sky );
-        glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+        PP_DrawArrays( GL_TRIANGLE_FAN, 0, 4 );
 
         glDisableClientState( GL_VERTEX_ARRAY );
         glDisableClientState( GL_TEXTURE_COORD_ARRAY );

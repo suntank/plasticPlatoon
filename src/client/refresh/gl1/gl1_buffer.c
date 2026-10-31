@@ -29,7 +29,10 @@
 
 #include "header/local.h"
 
-#define GLBUFFER_RESET	vtx_ptr = idx_ptr = 0; gl_buf.vt = gl_buf.tx = gl_buf.cl = 0;
+#define GLBUFFER_RESET do { vtx_ptr = idx_ptr = 0; gl_buf.vt = gl_buf.tx = gl_buf.cl = 0; \
+	gl_buf.external_xyz = gl_buf.external_st = NULL; gl_buf.external_indices = NULL; \
+	gl_buf.xyz_vbo = gl_buf.st_vbo = gl_buf.index_ebo = 0; \
+	gl_buf.external_index_count = gl_buf.external_vertex_count = 0; gl_buf.external_stride = 0; gl_buf.world_buffer = false; } while (0);
 
 glbuffer_t gl_buf;	// our drawing buffer, used globally
 int cur_lm_copy;	// which lightmap copy to use (when lightmapcopies=on)
@@ -54,7 +57,7 @@ R_ApplyGLBuffer(void)
 	GLint vtx_size;
 	qboolean texture, mtex, alpha, color, alias, texenv_set;
 
-	if (vtx_ptr == 0 || idx_ptr == 0)
+	if (!gl_buf.external_index_count && ((vtx_ptr == 0 && !gl_buf.world_buffer) || idx_ptr == 0))
 	{
 		return;
 	}
@@ -176,7 +179,9 @@ R_ApplyGLBuffer(void)
 	}
 
 	glEnableClientState( GL_VERTEX_ARRAY );
-	glVertexPointer (vtx_size, GL_FLOAT, 0, gl_buf.vtx);
+	if (qglBindBuffer) qglBindBuffer(GL_ARRAY_BUFFER, gl_buf.xyz_vbo);
+	glVertexPointer(vtx_size, GL_FLOAT, gl_buf.external_stride, gl_buf.xyz_vbo ? NULL :
+		(gl_buf.external_xyz ? gl_buf.external_xyz : gl_buf.vtx));
 
 	if (texture)
 	{
@@ -198,7 +203,9 @@ R_ApplyGLBuffer(void)
 			}
 
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glTexCoordPointer(2, GL_FLOAT, 0, gl_buf.tex[1]);
+			if (qglBindBuffer) qglBindBuffer(GL_ARRAY_BUFFER, gl_buf.world_buffer ? gl_buf.st_vbo : 0);
+			glTexCoordPointer(2, GL_FLOAT, gl_buf.external_stride,
+				gl_buf.world_buffer ? (const void *)(5*sizeof(float)) : gl_buf.tex[1]);
 
 			// TMU 0: Color texture
 			R_MBind(GL_TEXTURE0, gl_buf.texture[0]);
@@ -209,17 +216,38 @@ R_ApplyGLBuffer(void)
 		}
 
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glTexCoordPointer(2, GL_FLOAT, 0, gl_buf.tex[0]);
+		if (qglBindBuffer) qglBindBuffer(GL_ARRAY_BUFFER, gl_buf.st_vbo);
+		glTexCoordPointer(2, GL_FLOAT, gl_buf.external_stride, gl_buf.st_vbo ?
+			(gl_buf.world_buffer ? (const void *)(3*sizeof(float)) : NULL) :
+			(gl_buf.external_st ? gl_buf.external_st : gl_buf.tex[0]));
 	}
 
 	if (color)
 	{
 		glEnableClientState(GL_COLOR_ARRAY);
+		if (qglBindBuffer) qglBindBuffer(GL_ARRAY_BUFFER, 0);
 		glColorPointer(4, GL_UNSIGNED_BYTE, 0, gl_buf.clr);
 	}
 
 	// All set, we can finally draw
-	glDrawElements(GL_TRIANGLES, idx_ptr, GL_UNSIGNED_SHORT, gl_buf.idx);
+	GLsizei draw_count = gl_buf.external_index_count ? gl_buf.external_index_count : idx_ptr;
+	if (qglBindBuffer) qglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gl_buf.index_ebo);
+	PP_DrawElements(GL_TRIANGLES, draw_count, GL_UNSIGNED_SHORT, gl_buf.index_ebo ? NULL :
+		(gl_buf.external_indices ? gl_buf.external_indices : gl_buf.idx));
+	if (gl_buf.type == buf_alias || gl_buf.type == buf_shadow) PP_PERF(model_triangles, draw_count / 3);
+	else if (gl_buf.type == buf_mtex || gl_buf.type == buf_singletex || gl_buf.type == buf_alpha)
+		PP_PERF(world_triangles, draw_count / 3);
+	if (!gl_buf.index_ebo) PP_PERF(client_index_bytes, draw_count * sizeof(GLushort));
+	unsigned submitted_vertices = gl_buf.external_vertex_count ? gl_buf.external_vertex_count : vtx_ptr;
+	if (!gl_buf.xyz_vbo) PP_PERF(client_vertex_bytes, submitted_vertices * vtx_size * sizeof(GLfloat));
+	if (texture && !gl_buf.st_vbo) PP_PERF(client_vertex_bytes, submitted_vertices * 2 * sizeof(GLfloat));
+	if (color) PP_PERF(client_vertex_bytes, submitted_vertices * 4);
+	if (mtex && !gl_buf.world_buffer) PP_PERF(client_vertex_bytes, submitted_vertices * 2 * sizeof(GLfloat));
+	if (qglBindBuffer)
+	{
+		qglBindBuffer(GL_ARRAY_BUFFER, 0);
+		qglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
 	// ... and now, turn back everything as it was
 
 	if (color)
@@ -357,6 +385,7 @@ void
 R_SetBufferIndices(GLenum primitive, GLuint vertices_num)
 {
 	int i;
+	if (gl_buf.world_buffer) R_ApplyGLBuffer();
 
 	if ( vtx_ptr + vertices_num >= MAX_VERTICES ||
 		idx_ptr + ( (vertices_num - 2) * 3 ) >= MAX_INDICES )
@@ -400,4 +429,176 @@ R_SetBufferIndices(GLenum primitive, GLuint vertices_num)
 
 	// GLBUFFER_VERTEX() must be called as many times as vertices_num
 	vtx_ptr += vertices_num;
+}
+
+void
+R_CreateAliasBuffers(model_t *model)
+{
+	model->aliascache = Mod_BuildAliasCache(model->extradata);
+	if (!model->aliascache) return;
+	const pp_alias_topology_t *mesh = model->aliascache->topology;
+	if (!qglGenBuffers) return;
+	qglGenBuffers(1, &model->alias_ebo);
+	qglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->alias_ebo);
+	qglBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->num_indices * sizeof(GLushort), mesh->indices, GL_STATIC_DRAW);
+	pp_static_index_total += mesh->num_indices * sizeof(GLushort);
+	qglGenBuffers(1, &model->alias_uv_vbo);
+	qglBindBuffer(GL_ARRAY_BUFFER, model->alias_uv_vbo);
+	qglBufferData(GL_ARRAY_BUFFER, mesh->num_vertices * 2 * sizeof(float), mesh->uv, GL_STATIC_DRAW);
+	pp_static_vertex_total += mesh->num_vertices * 2 * sizeof(float);
+	if (model->aliascache->static_xyz)
+	{
+		qglGenBuffers(1, &model->alias_xyz_vbo);
+		qglBindBuffer(GL_ARRAY_BUFFER, model->alias_xyz_vbo);
+		qglBufferData(GL_ARRAY_BUFFER, mesh->num_vertices * 3 * sizeof(float), model->aliascache->static_xyz, GL_STATIC_DRAW);
+		pp_static_vertex_total += mesh->num_vertices * 3 * sizeof(float);
+	}
+	qglBindBuffer(GL_ARRAY_BUFFER, 0);
+	qglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	if (glGetError() != GL_NO_ERROR)
+	{
+		qglDeleteBuffers(1, &model->alias_ebo);
+		qglDeleteBuffers(1, &model->alias_uv_vbo);
+		qglDeleteBuffers(1, &model->alias_xyz_vbo);
+		model->alias_ebo = model->alias_uv_vbo = model->alias_xyz_vbo = 0;
+		Com_Printf("%s: GPU allocation failed; using cached client arrays\n", model->name);
+	}
+}
+
+void
+R_FreeAliasBuffers(model_t *model)
+{
+	if (qglDeleteBuffers)
+	{
+		qglDeleteBuffers(1, &model->alias_ebo);
+		qglDeleteBuffers(1, &model->alias_uv_vbo);
+		qglDeleteBuffers(1, &model->alias_xyz_vbo);
+	}
+	Mod_FreeAliasCache(model->aliascache);
+	model->aliascache = NULL;
+	model->alias_ebo = model->alias_uv_vbo = model->alias_xyz_vbo = 0;
+}
+
+void
+R_DrawAliasCache(const model_t *model, const float *positions, qboolean static_pose)
+{
+	const pp_alias_topology_t *mesh = model->aliascache->topology;
+	gl_buf.external_xyz = positions;
+	gl_buf.external_st = mesh->uv;
+	gl_buf.external_indices = mesh->indices;
+	gl_buf.external_vertex_count = mesh->num_vertices;
+	gl_buf.external_index_count = mesh->num_indices;
+	gl_buf.xyz_vbo = static_pose ? model->alias_xyz_vbo : 0;
+	gl_buf.st_vbo = model->alias_uv_vbo;
+	gl_buf.index_ebo = model->alias_ebo;
+	R_ApplyGLBuffer();
+}
+
+/* A visible draw packet contains only precomputed ushort indices. Vertices stay
+ * resident across cameras. Partition at 65535 vertices for GLES1 index limits. */
+static model_t *world_buffer_owner;
+static GLuint *world_buffers;
+static int num_world_buffers;
+static GLushort *world_indices;
+static cvar_t *gl1_static_world;
+
+void
+R_FreeWorldBuffers(model_t *model)
+{
+	if (model != world_buffer_owner) return;
+	R_ApplyGLBuffer();
+	if (qglDeleteBuffers && num_world_buffers)
+		qglDeleteBuffers(num_world_buffers, world_buffers);
+	for (int i = 0; i < model->numsurfaces; ++i)
+	{
+		glpoly_t *p = model->surfaces[i].polys;
+		if (!p) continue;
+		p->static_vbo = 0; p->static_indices = NULL; p->static_index_count = 0;
+	}
+	free(world_buffers); free(world_indices);
+	world_buffers = NULL; world_indices = NULL;
+	num_world_buffers = 0; world_buffer_owner = NULL;
+}
+
+void
+R_BuildWorldBuffers(model_t *model)
+{
+	size_t index_count = 0, index_cursor = 0;
+	int vertices = 0;
+	float *staging;
+	if (!gl1_static_world) gl1_static_world = ri.Cvar_Get("gl1_static_world", "1", 0);
+	if (!qglGenBuffers) return;
+	for (int i = 0; i < model->numsurfaces; ++i)
+	{
+		msurface_t *surf = model->surfaces+i;
+		if (!(surf->texinfo->flags & (SURF_SKY | SURF_WARP | SURF_FLOWING)) && surf->polys &&
+			surf->polys->numverts >= 3 && surf->polys->numverts <= 65535)
+			index_count += (surf->polys->numverts-2)*3;
+	}
+	if (!index_count) return;
+	world_buffers = calloc(model->numsurfaces, sizeof(*world_buffers));
+	world_indices = malloc(index_count * sizeof(*world_indices));
+	staging = malloc(65535 * VERTEXSIZE * sizeof(*staging));
+	world_buffer_owner = model;
+	if (!world_buffers || !world_indices || !staging)
+	{
+		free(staging); R_FreeWorldBuffers(model); return;
+	}
+	for (int i = 0; i < model->numsurfaces; ++i)
+	{
+		msurface_t *surf = model->surfaces+i;
+		glpoly_t *p = surf->polys;
+		if ((surf->texinfo->flags & (SURF_SKY | SURF_WARP | SURF_FLOWING)) ||
+			!p || p->numverts < 3 || p->numverts > 65535) continue;
+		if (vertices && vertices + p->numverts > 65535)
+		{
+			qglBindBuffer(GL_ARRAY_BUFFER, world_buffers[num_world_buffers-1]);
+			qglBufferData(GL_ARRAY_BUFFER, vertices * VERTEXSIZE * sizeof(float), staging, GL_STATIC_DRAW);
+			pp_static_vertex_total += vertices * VERTEXSIZE * sizeof(float);
+			vertices = 0;
+		}
+		if (!vertices) qglGenBuffers(1, &world_buffers[num_world_buffers++]);
+		p->static_vbo = world_buffers[num_world_buffers-1];
+		p->static_indices = world_indices + index_cursor;
+		p->static_index_count = (p->numverts-2)*3;
+		for (int triangle = 0; triangle < p->numverts-2; ++triangle)
+		{
+			world_indices[index_cursor++] = vertices;
+			world_indices[index_cursor++] = vertices+triangle+1;
+			world_indices[index_cursor++] = vertices+triangle+2;
+		}
+		memcpy(staging + vertices*VERTEXSIZE, p->verts, p->numverts * VERTEXSIZE * sizeof(float));
+		vertices += p->numverts;
+	}
+	if (vertices)
+	{
+		qglBindBuffer(GL_ARRAY_BUFFER, world_buffers[num_world_buffers-1]);
+		qglBufferData(GL_ARRAY_BUFFER, vertices * VERTEXSIZE * sizeof(float), staging, GL_STATIC_DRAW);
+		pp_static_vertex_total += vertices * VERTEXSIZE * sizeof(float);
+	}
+	free(staging);
+	qglBindBuffer(GL_ARRAY_BUFFER, 0);
+	if (glGetError() != GL_NO_ERROR)
+	{
+		Com_Printf("Persistent world buffer unavailable; using scratch fallback.\n");
+		R_FreeWorldBuffers(model);
+	}
+}
+
+qboolean
+R_BufferStaticPoly(const glpoly_t *poly)
+{
+	if (!poly->static_vbo || !gl1_static_world || !gl1_static_world->value) return false;
+	if (vtx_ptr || (gl_buf.world_buffer && gl_buf.xyz_vbo != poly->static_vbo) ||
+		idx_ptr + poly->static_index_count >= MAX_INDICES)
+		R_ApplyGLBuffer();
+	/* Very large individual faces keep the existing fallback; no ushort wrap. */
+	if (poly->static_index_count >= MAX_INDICES) return false;
+	gl_buf.world_buffer = true;
+	gl_buf.xyz_vbo = gl_buf.st_vbo = poly->static_vbo;
+	gl_buf.external_stride = VERTEXSIZE*sizeof(float);
+	memcpy(gl_buf.idx+idx_ptr, poly->static_indices, poly->static_index_count*sizeof(GLushort));
+	idx_ptr += poly->static_index_count;
+	gl_buf.external_vertex_count += poly->numverts;
+	return true;
 }

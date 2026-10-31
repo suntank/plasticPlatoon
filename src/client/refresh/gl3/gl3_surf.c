@@ -29,11 +29,97 @@
 #include <stddef.h> // ofsetof()
 
 #include "header/local.h"
+#include "../files/visibility_cache.h"
 
 int c_visible_lightmaps;
 int c_visible_textures;
+static pp_visibility_cache_t visibility_cache;
+static cvar_t *r_viscache;
+static qboolean previous_allvisible;
+void GL3_ClearVisibilityCache(void) { PP_ClearVisibilityCache(&visibility_cache); previous_allvisible = true; }
+
 static vec3_t modelorg; /* relative to viewpoint */
 static msurface_t *gl3_alpha_surfaces;
+static GLuint world_vao, world_vbo;
+static gl3model_t *world_buffer_owner;
+static cvar_t *gl3_static_world;
+
+void GL3_FreeWorldBuffers(gl3model_t *model)
+{
+	if (model != world_buffer_owner) return;
+	GL3_BindVAO(gl3state.vao3D);
+	GL3_BindVBO(gl3state.vbo3D);
+	glDeleteBuffers(1, &world_vbo);
+	glDeleteVertexArrays(1, &world_vao);
+	world_vbo = world_vao = 0;
+	world_buffer_owner = NULL;
+}
+
+void GL3_BuildWorldBuffers(gl3model_t *model)
+{
+	size_t count = 0, offset = 0;
+	if (!gl3_static_world) gl3_static_world = ri.Cvar_Get("gl3_static_world", "1", 0);
+	for (int i = 0; i < model->numsurfaces; ++i)
+	{
+		msurface_t *surface = model->surfaces+i;
+		if (!(surface->texinfo->flags & (SURF_WARP | SURF_SKY)) && surface->polys)
+			count += surface->polys->numverts;
+	}
+	if (!count || count > INT_MAX / sizeof(gl3_3D_vtx_t)) return;
+	gl3_3D_vtx_t *vertices = malloc(count * sizeof(*vertices));
+	if (!vertices) return;
+	for (int i = 0; i < model->numsurfaces; ++i)
+	{
+		msurface_t *surface = model->surfaces+i;
+		glpoly_t *p = surface->polys;
+		if ((surface->texinfo->flags & (SURF_WARP | SURF_SKY)) || !p) continue;
+		p->static_first = offset;
+		memcpy(vertices + offset, p->vertices, p->numverts * sizeof(*vertices));
+		offset += p->numverts;
+	}
+	glGenVertexArrays(1, &world_vao);
+	GL3_BindVAO(world_vao);
+	glGenBuffers(1, &world_vbo);
+	GL3_BindVBO(world_vbo);
+	glBufferData(GL_ARRAY_BUFFER, count * sizeof(*vertices), vertices, GL_STATIC_DRAW);
+	free(vertices);
+	world_buffer_owner = model;
+	if (glGetError() != GL_NO_ERROR)
+	{
+		Com_Printf("Persistent world buffer unavailable; using streaming fallback.\n");
+		GL3_FreeWorldBuffers(model);
+		return;
+	}
+	glEnableVertexAttribArray(GL3_ATTRIB_POSITION);
+	qglVertexAttribPointer(GL3_ATTRIB_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(*vertices), 0);
+	glEnableVertexAttribArray(GL3_ATTRIB_TEXCOORD);
+	qglVertexAttribPointer(GL3_ATTRIB_TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(*vertices), offsetof(gl3_3D_vtx_t, texCoord));
+	glEnableVertexAttribArray(GL3_ATTRIB_LMTEXCOORD);
+	qglVertexAttribPointer(GL3_ATTRIB_LMTEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(*vertices), offsetof(gl3_3D_vtx_t, lmTexCoord));
+	glEnableVertexAttribArray(GL3_ATTRIB_NORMAL);
+	qglVertexAttribPointer(GL3_ATTRIB_NORMAL, 3, GL_FLOAT, GL_FALSE, sizeof(*vertices), offsetof(gl3_3D_vtx_t, normal));
+	/* Per-surface light identities change each view, geometry never changes. */
+	glDisableVertexAttribArray(GL3_ATTRIB_LIGHTFLAGS);
+	for (int i = 0; i < model->numsurfaces; ++i)
+	{
+		msurface_t *surface = model->surfaces+i;
+		if (!(surface->texinfo->flags & (SURF_WARP | SURF_SKY)) && surface->polys)
+			surface->polys->static_cached = true;
+	}
+	pp_static_vertex_total += count * sizeof(*vertices);
+	GL3_BindVAO(gl3state.vao3D);
+	GL3_BindVBO(gl3state.vbo3D);
+}
+
+static qboolean DrawStaticPoly(glpoly_t *p)
+{
+	if (!p->static_cached || !world_vbo || !gl3_static_world->value) return false;
+	GL3_BindVAO(world_vao);
+	glVertexAttribI4ui(GL3_ATTRIB_LIGHTFLAGS, p->light_flags, 0, 0, 0);
+	PP_DrawArrays(GL_TRIANGLE_FAN, p->static_first, p->numverts);
+	PP_PERF(world_triangles, p->numverts-2);
+	return true;
+}
 
 gl3lightmapstate_t gl3_lms;
 
@@ -141,6 +227,8 @@ SetLightFlags(msurface_t *surf)
 		lightFlags = surf->dlightbits;
 	}
 
+	surf->polys->light_flags = lightFlags;
+	if (surf->polys->static_cached && gl3_static_world->value) return;
 	gl3_3D_vtx_t* verts = surf->polys->vertices;
 
 	int numVerts = surf->polys->numverts;
@@ -155,6 +243,8 @@ SetAllLightFlags(msurface_t *surf)
 {
 	unsigned int lightFlags = 0xffffffff;
 
+	surf->polys->light_flags = lightFlags;
+	if (surf->polys->static_cached && gl3_static_world->value) return;
 	gl3_3D_vtx_t* verts = surf->polys->vertices;
 
 	int numVerts = surf->polys->numverts;
@@ -168,6 +258,8 @@ void
 GL3_DrawGLPoly(msurface_t *fa)
 {
 	glpoly_t *p = fa->polys;
+	if (DrawStaticPoly(p)) return;
+	PP_PERF(world_triangles, p->numverts-2);
 
 	GL3_BindVAO(gl3state.vao3D);
 	GL3_BindVBO(gl3state.vbo3D);
@@ -196,6 +288,8 @@ GL3_DrawGLFlowingPoly(msurface_t *fa)
 		GL3_UpdateUBO3D();
 	}
 
+	if (DrawStaticPoly(p)) return;
+	PP_PERF(world_triangles, p->numverts-2);
 	GL3_BindVAO(gl3state.vao3D);
 	GL3_BindVBO(gl3state.vbo3D);
 
@@ -247,7 +341,7 @@ DrawTriangleOutlines(void)
 					glEnableClientState( GL_VERTEX_ARRAY );
 
 					glVertexPointer( 3, GL_FLOAT, 0, vtx );
-					glDrawArrays( GL_LINE_STRIP, 0, 4 );
+					PP_DrawArrays( GL_LINE_STRIP, 0, 4 );
 
 					glDisableClientState( GL_VERTEX_ARRAY );
 				}
@@ -800,12 +894,14 @@ GL3_MarkLeaves(void)
 	int i, c;
 	mleaf_t *leaf;
 	int cluster;
+	if (!r_viscache) r_viscache = ri.Cvar_Get("r_viscache", "1", 0);
 
 	if ((gl3_oldviewcluster == gl3_viewcluster) &&
 		(gl3_oldviewcluster2 == gl3_viewcluster2) &&
-		!r_novis->value &&
+		!r_novis->value && !previous_allvisible &&
 		(gl3_viewcluster != -1))
 	{
+		PP_PERF(pvs_hits, 1);
 		return;
 	}
 
@@ -819,6 +915,14 @@ GL3_MarkLeaves(void)
 	gl3_visframecount++;
 	gl3_oldviewcluster = gl3_viewcluster;
 	gl3_oldviewcluster2 = gl3_viewcluster2;
+	previous_allvisible = r_novis->value || (gl3_viewcluster == -1) || !gl3_worldmodel->vis;
+	if (!previous_allvisible && r_viscache->value &&
+		PP_RestoreVisibility(&visibility_cache, gl3_viewcluster, gl3_viewcluster2, gl3_visframecount))
+	{
+		PP_PERF(pvs_hits, 1);
+		return;
+	}
+	PP_PERF(pvs_builds, 1);
 
 	if (r_novis->value || (gl3_viewcluster == -1) || !gl3_worldmodel->vis)
 	{
@@ -881,5 +985,8 @@ GL3_MarkLeaves(void)
 			while (node);
 		}
 	}
+	if (r_viscache->value)
+		PP_SaveVisibility(&visibility_cache, gl3_viewcluster, gl3_viewcluster2,
+			gl3_worldmodel->nodes, gl3_worldmodel->numnodes, gl3_worldmodel->leafs, gl3_worldmodel->numleafs, gl3_visframecount);
 }
 

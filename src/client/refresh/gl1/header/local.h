@@ -32,6 +32,7 @@
 #include <math.h>
 
 #include "../../ref_shared.h"
+#include "../../perf.h"
 #include "qgl.h"
 
 #ifdef YQ2_GL1_GLES
@@ -144,6 +145,13 @@ typedef struct	//	832k aprox.
 
 	GLushort idx[MAX_INDICES];	// indices for the draw call
 
+	/* Immutable model/world resources, or NULL/zero for the scratch path. */
+	const GLfloat *external_xyz, *external_st;
+	const GLushort *external_indices;
+	GLuint xyz_vbo, st_vbo, index_ebo;
+	GLsizei external_index_count, external_vertex_count;
+	GLsizei external_stride;
+	qboolean world_buffer;
 	GLuint vt, tx, cl;	// indices for GLfloat arrays above
 
 	int	texture[MAX_TEXTURE_UNITS];
@@ -154,6 +162,13 @@ typedef struct	//	832k aprox.
 #include "model.h"
 
 extern glbuffer_t gl_buf;
+void R_ClearVisibilityCache(void);
+void R_BuildWorldBuffers(model_t *model);
+void R_FreeWorldBuffers(model_t *model);
+qboolean R_BufferStaticPoly(const glpoly_t *poly);
+void R_CreateAliasBuffers(model_t *model);
+void R_FreeAliasBuffers(model_t *model);
+void R_DrawAliasCache(const model_t *model, const float *positions, qboolean static_pose);
 extern float gldepthmin, gldepthmax;
 
 extern image_t gltextures[MAX_GLTEXTURES];
@@ -507,5 +522,7 @@ extern void RDraw_TileClear(int x, int y, int w, int h, const char *pic);
 extern void RDraw_Fill(int x, int y, int w, int h, int c);
 extern void RDraw_FadeScreen(void);
 extern void RDraw_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int bits);
+
+#include "../../draw_stats.h"
 
 #endif

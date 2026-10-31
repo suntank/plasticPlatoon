@@ -100,6 +100,7 @@ LM_UploadBlock(qboolean dynamic)
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, BLOCK_WIDTH,
 				height, GL_LIGHTMAP_FORMAT, GL_UNSIGNED_BYTE,
 				gl_lms.lightmap_buffer[buffer]);
+		PP_PERF(lightmap_bytes, BLOCK_WIDTH*height*LIGHTMAP_BYTES);
 	}
 	else
 	{
