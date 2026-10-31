@@ -312,12 +312,18 @@ set(Backends-Unix-Source
 	)
 
 set(Backends-Windows-Source
-	${BACKENDS_SRC_DIR}/windows/icon.rc
 	${BACKENDS_SRC_DIR}/windows/main.c
 	${BACKENDS_SRC_DIR}/windows/network.c
 	${BACKENDS_SRC_DIR}/windows/system.c
 	${BACKENDS_SRC_DIR}/windows/shared/hunk.c
 	)
+
+# Source-only checkouts may omit the optional application icon.
+set(Windows-Icon-Source)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/stuff/icon/Quake2.ico")
+	set(Windows-Icon-Source ${BACKENDS_SRC_DIR}/windows/icon.rc)
+	list(APPEND Backends-Windows-Source ${Windows-Icon-Source})
+endif()
 
 set(Backends-Windows-Header
 	${BACKENDS_SRC_DIR}/windows/header/resource.h
@@ -475,6 +481,7 @@ set(Client-Source
 	${COMMON_SRC_DIR}/frame.c
 	${COMMON_SRC_DIR}/netchan.c
 	${COMMON_SRC_DIR}/pmove.c
+	${COMMON_SRC_DIR}/pp_json.c
 	${COMMON_SRC_DIR}/szone.c
 	${COMMON_SRC_DIR}/zone.c
 	${COMMON_SRC_DIR}/shared/flash.c
@@ -750,7 +757,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	# Wrapper for the Windows binary
 	set(Wrapper-Source
 		src/win-wrapper/wrapper.c
-		${BACKENDS_SRC_DIR}/windows/icon.rc
+		${Windows-Icon-Source}
 		)
 	add_executable(quake2 WIN32 ${Wrapper-Source})
 	set_target_properties(quake2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/release)
@@ -799,6 +806,22 @@ else() # single-config, like normal Makefiles
 		)
 endif()
 target_link_libraries(game ${yquake2LinkerFlags})
+
+# Keep CMake distributions consistent with `make all`: project assets must
+# override stock numbered PAKs from the same directory as the game module.
+find_package(Python3 3.9 COMPONENTS Interpreter REQUIRED)
+if(isMultiConfig)
+	set(Project-Assets-Directory "${CMAKE_BINARY_DIR}/release/$<CONFIG>/baseq2")
+else()
+	set(Project-Assets-Directory "${CMAKE_BINARY_DIR}/release/baseq2")
+endif()
+add_custom_target(project_assets ALL
+	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/assets/build_overlay.py"
+		--output "${Project-Assets-Directory}/plastic-platoon.pk3"
+	WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+	COMMENT "Package Plastic Platoon runtime assets"
+	VERBATIM
+)
 
 if(${GL1_RENDERER})
 

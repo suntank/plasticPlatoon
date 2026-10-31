@@ -3,12 +3,13 @@ run-name: testbuild_windows
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
   pull_request:
     types:
       - edited
       - opened
       - synchronize
+      - ready_for_review
 concurrency:
   # Cancel concurrent workflows for the same PR or commit hash.
   group: ${{github.workflow}}-${{github.event_name == 'pull_request' && github.head_ref || github.sha}}
@@ -46,7 +47,7 @@ jobs:
         # build with cmake and visual studio
         #echo $PWD # /d/a/dhewm3/dhewm3
         # NOTE: not setting -G "Visual Studio 17 2022" so it just uses the default VS version it can find
-        cmake -A Win32 -DYQUAKE2LIBS="../dhewm3-libs-master/i686-w64-mingw32/" -S . -B build
+        cmake -A Win32 -DSDL3_SUPPORT=OFF -DYQUAKE2LIBS="../dhewm3-libs-master/i686-w64-mingw32/" -S . -B build
         time cmake --build build/ --config RelWithDebInfo
     - name: Create testbuild package
       run: |
@@ -60,13 +61,13 @@ jobs:
         # Copy release assets
         cd build/release/RelWithDebInfo/
         cp *.exe *.dll ../../../publish/$PKGDIR/
-        cp baseq2/*.dll ../../../publish/$PKGDIR/baseq2/
+        cp baseq2/*.dll baseq2/*.pk3 baseq2/*.manifest.json ../../../publish/$PKGDIR/baseq2/
         cp *.pdb ../../../debug-syms/$PKGDIR/
         cp baseq2/*.pdb ../../../debug-syms/$PKGDIR/
         cd ../../..
         # Copy misc assets
         cp -r stuff/yq2.cfg publish/$PKGDIR/misc/yq2.cfg
-        cp -r stuff/mapfixes publish/$PKGDIR/misc
+        if [ -d stuff/mapfixes ]; then cp -r stuff/mapfixes publish/$PKGDIR/misc; fi
         cp LICENSE publish/$PKGDIR/misc/docs/LICENSE.txt
         cp README.md publish/$PKGDIR/misc/docs/README.txt
         cp doc/010_index.md publish/$PKGDIR/misc/docs/010_index.txt
@@ -141,13 +142,13 @@ jobs:
         # Copy release assets
         cd build/release/RelWithDebInfo/
         cp *.exe *.dll ../../../publish/$PKGDIR/
-        cp baseq2/*.dll ../../../publish/$PKGDIR/baseq2/
+        cp baseq2/*.dll baseq2/*.pk3 baseq2/*.manifest.json ../../../publish/$PKGDIR/baseq2/
         cp *.pdb ../../../debug-syms/$PKGDIR/
         cp baseq2/*.pdb ../../../debug-syms/$PKGDIR/
         cd ../../..
         # Copy misc assets
         cp -r stuff/yq2.cfg publish/$PKGDIR/misc/yq2.cfg
-        cp -r stuff/mapfixes publish/$PKGDIR/misc
+        if [ -d stuff/mapfixes ]; then cp -r stuff/mapfixes publish/$PKGDIR/misc; fi
         cp LICENSE publish/$PKGDIR/misc/docs/LICENSE.txt
         cp README.md publish/$PKGDIR/misc/docs/README.txt
         cp doc/010_index.md publish/$PKGDIR/misc/docs/010_index.txt

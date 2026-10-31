@@ -3,12 +3,13 @@ run-name: testbuild_win32
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
   pull_request:
     types:
       - edited
       - opened
       - synchronize
+      - ready_for_review
 concurrency:
   # Cancel concurrent workflows for the same PR or commit hash.
   group: ${{github.workflow}}-${{github.event_name == 'pull_request' && github.head_ref || github.sha}}
@@ -34,12 +35,11 @@ jobs:
           make
           zip
           unzip
+          python
+          wget
           mingw-w64-${{matrix.env}}-curl
           mingw-w64-${{matrix.env}}-gcc
-          mingw-w64-${{matrix.env}}-make
-          mingw-w64-${{matrix.env}}-openal
           mingw-w64-${{matrix.env}}-pkgconf
-          mingw-w64-${{matrix.env}}-wget
     - name: Check out repository code
       uses: actions/checkout@v6
     - name: Build
@@ -49,9 +49,12 @@ jobs:
         wget -c https://github.com/libsdl-org/SDL/releases/download/release-3.2.24/SDL3-devel-3.2.24-mingw.tar.gz
         tar xf SDL3-devel-3.2.24-mingw.tar.gz
         mv SDL3-3.2.24 SDL3
+        # Use the distribution headers; the retired i686 MSYS OpenAL package is unavailable.
+        wget -c https://github.com/kcat/openal-soft/releases/download/1.24.3/openal-soft-1.24.3-bin.zip
+        unzip -o openal-soft-1.24.3-bin.zip
         # Public runners come with 4 CPUs.
-        PKG_CONFIG_PATH=SDL3/i686-w64-mingw32/lib/pkgconfig make -j4
-        PKG_CONFIG_PATH=SDL3/i686-w64-mingw32/lib/pkgconfig make -j4 ref_gles1
+        PKG_CONFIG_PATH=SDL3/i686-w64-mingw32/lib/pkgconfig make WITH_SDL3=yes INCLUDE=-Iopenal-soft-1.24.3-bin/include -j4
+        PKG_CONFIG_PATH=SDL3/i686-w64-mingw32/lib/pkgconfig make WITH_SDL3=yes INCLUDE=-Iopenal-soft-1.24.3-bin/include -j4 ref_gles1
     - name: Create testbuild package
       shell: msys2 {0}
       run: |
@@ -61,7 +64,7 @@ jobs:
         cp -r release/* publish/quake2-win32-${{github.sha}}/
         # Copy misc assets
         cp -r stuff/yq2.cfg publish/quake2-win32-${{github.sha}}/misc/yq2.cfg
-        cp -r stuff/mapfixes publish/quake2-win32-${{github.sha}}/misc
+        if [ -d stuff/mapfixes ]; then cp -r stuff/mapfixes publish/quake2-win32-${{github.sha}}/misc; fi
         cp LICENSE publish/quake2-win32-${{github.sha}}/misc/docs/LICENSE.txt
         cp README.md publish/quake2-win32-${{github.sha}}/misc/docs/README.txt
         cp doc/010_index.md publish/quake2-win32-${{github.sha}}/misc/docs/010_index.txt
@@ -76,8 +79,6 @@ jobs:
         # SDL3
         cp SDL3/i686-w64-mingw32/bin/SDL3.dll publish/quake2-win32-${{github.sha}}/
         # openal-soft
-        wget -c https://github.com/kcat/openal-soft/releases/download/1.24.3/openal-soft-1.24.3-bin.zip
-        unzip -o openal-soft-1.24.3-bin.zip
         cp openal-soft-1.24.3-bin/bin/Win32/soft_oal.dll publish/quake2-win32-${{github.sha}}/openal32.dll
         # curl (releases use a custom build curl.dll)
         wget -c -O libcurl-4.dll "https://github.com/dhewm/dhewm3-libs/raw/refs/heads/master/i686-w64-mingw32/bin/libcurl-4.dll"

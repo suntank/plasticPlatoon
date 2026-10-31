@@ -507,10 +507,13 @@ config:
 
 # Special target to compile the icon on Windows
 ifeq ($(YQ2_OSTYPE), Windows)
+ifneq ($(wildcard stuff/icon/Quake2.ico),)
+WINDOWS_ICON := $(BUILDROOT)/icon/icon.res
 icon:
 	@echo "===> WR $(BUILDROOT)/icon/icon.res"
 	${Q}mkdir -p $(BUILDROOT)/icon
 	${Q}windres src/backends/windows/icon.rc -O COFF -o $(BUILDROOT)/icon/icon.res
+endif
 endif
 
 # ----------
@@ -1300,10 +1303,10 @@ SERVER_DEPS= $(SERVER_OBJS:.o=.d)
 ifeq ($(YQ2_OSTYPE), Windows)
 $(BINDIR)/yquake2.exe : $(CLIENT_OBJS) icon
 	@echo "===> LD $@"
-	${Q}$(CC) $(LDFLAGS) $(BUILDROOT)/icon/icon.res $(CLIENT_OBJS) $(LDLIBS) $(SDLLDFLAGS) -o $@
+	${Q}$(CC) $(LDFLAGS) $(WINDOWS_ICON) $(CLIENT_OBJS) $(LDLIBS) $(SDLLDFLAGS) -o $@
 	$(Q)strip $@
 $(BINDIR)/quake2.exe : src/win-wrapper/wrapper.c icon
-	$(Q)$(CC) -Wall -mwindows $(BUILDROOT)/icon/icon.res src/win-wrapper/wrapper.c -o $@
+	$(Q)$(CC) -Wall -mwindows $(WINDOWS_ICON) src/win-wrapper/wrapper.c -o $@
 	$(Q)strip $@
 else
 $(BINDIR)/quake2 : $(CLIENT_OBJS)
@@ -1315,7 +1318,7 @@ endif
 ifeq ($(YQ2_OSTYPE), Windows)
 $(BINDIR)/q2ded.exe : $(SERVER_OBJS) icon
 	@echo "===> LD $@"
-	${Q}$(CC) $(LDFLAGS) $(BUILDROOT)/icon/icon.res $(SERVER_OBJS) $(LDLIBS) -o $@
+	${Q}$(CC) $(LDFLAGS) $(WINDOWS_ICON) $(SERVER_OBJS) $(LDLIBS) -o $@
 	$(Q)strip $@
 else
 $(BINDIR)/q2ded : $(SERVER_OBJS)

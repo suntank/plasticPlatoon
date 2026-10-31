@@ -3,12 +3,13 @@ run-name: testbuild_linux_x86_64
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
   pull_request:
     types:
       - edited
       - opened
       - synchronize
+      - ready_for_review
 concurrency:
   # Cancel concurrent workflows for the same PR or commit hash.
   group: ${{github.workflow}}-${{github.event_name == 'pull_request' && github.head_ref || github.sha}}
@@ -29,7 +30,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install libgl1-mesa-dev libopenal-dev libcurl4-openssl-dev \
-            build-essential
+            build-essential python3
     - name: Build SDL3
       uses: libsdl-org/setup-sdl@main
       with:
@@ -40,8 +41,13 @@ jobs:
     - name: Build
       run: |
         # Public runners come with 4 CPUs.
-        make -j4
-        make -j4 ref_gles1
+        make WITH_SDL3=yes -j4
+        make WITH_SDL3=yes -j4 ref_gles1
+    - name: Run production regressions
+      run: |
+        python3 -m unittest discover -s tests/performance -p 'test_*.py' -v
+        python3 tests/run_renderer_tests.py --sanitize
+        TEST_CFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" sh tests/performance/run_effects_tests.sh
     - name: Create testbuild package
       run: |
         # Create release directory tree
@@ -50,7 +56,7 @@ jobs:
         cp -r release/* publish/quake2-linux_x86_64-${{github.sha}}/
         # Copy misc assets
         cp -r stuff/yq2.cfg publish/quake2-linux_x86_64-${{github.sha}}/misc/yq2.cfg
-        cp -r stuff/mapfixes publish/quake2-linux_x86_64-${{github.sha}}/misc
+        if [ -d stuff/mapfixes ]; then cp -r stuff/mapfixes publish/quake2-linux_x86_64-${{github.sha}}/misc; fi
         cp LICENSE publish/quake2-linux_x86_64-${{github.sha}}/misc/docs/LICENSE.txt
         cp README.md publish/quake2-linux_x86_64-${{github.sha}}/misc/docs/README.txt
         cp doc/010_index.md publish/quake2-linux_x86_64-${{github.sha}}/misc/docs/010_index.txt
