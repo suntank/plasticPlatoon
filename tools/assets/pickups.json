@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "source_commit": "f2d9366ec7d2bbd256b5d103f1a57c6a5e1b011b",
+  "source_map_sha256": "09dd444a8523b669d31c26940dd630f2ce42e7799ee6745a0622ccf5284bd550",
+  "algorithm": "meshing_decimation_quadric_edge_collapse_with_texture",
+  "parameters": {
+    "qualitythr": 0.3,
+    "extratcoordw": 2.0,
+    "preserveboundary": true,
+    "boundaryweight": 5.0,
+    "optimalplacement": true,
+    "preservenormal": true,
+    "planarquadric": true
+  },
+  "assets": [
+    {
+      "model": "models/items/armor/shard/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "item_armor_shard",
+      "instances": 18
+    },
+    {
+      "model": "models/items/healing/stimpack/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "item_health_small",
+      "instances": 15
+    },
+    {
+      "model": "models/items/healing/medium/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "item_health",
+      "instances": 11
+    },
+    {
+      "model": "models/items/healing/large/tris.md2",
+      "triangles": 1000,
+      "texture_size": 256,
+      "classname": "item_health_large",
+      "instances": 12
+    },
+    {
+      "model": "models/items/armor/combat/tris.md2",
+      "triangles": 1000,
+      "texture_size": 256,
+      "classname": "item_armor_combat",
+      "instances": 1
+    },
+    {
+      "model": "models/items/armor/body/tris.md2",
+      "triangles": 1000,
+      "texture_size": 256,
+      "classname": "item_armor_body",
+      "instances": 2
+    },
+    {
+      "model": "models/items/armor/jacket/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "item_armor_jacket",
+      "instances": 2
+    },
+    {
+      "model": "models/items/ammo/grenades/medium/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "ammo_grenades",
+      "instances": 16
+    },
+    {
+      "model": "models/items/ammo/rockets/medium/tris.md2",
+      "triangles": 500,
+      "texture_size": 256,
+      "classname": "ammo_rockets",
+      "instances": 6
+    },
+    {
+      "model": "models/items/mega_h/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "item_health_mega",
+      "instances": 0
+    },
+    {
+      "model": "models/weapons/g_chain/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "weapon_chaingun",
+      "instances": 1
+    },
+    {
+      "model": "models/weapons/g_launch/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "weapon_grenadelauncher",
+      "instances": 1
+    },
+    {
+      "model": "models/weapons/g_machn/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "weapon_machinegun",
+      "instances": 2,
+      "output_skin": "models/weapons/g_machn/skin_pickup.png"
+    },
+    {
+      "model": "models/weapons/g_rocket/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "weapon_rocketlauncher",
+      "instances": 1
+    },
+    {
+      "model": "models/weapons/g_shotg/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "weapon_shotgun",
+      "instances": 3
+    },
+    {
+      "model": "models/weapons/g_shotg2/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "weapon_supershotgun",
+      "instances": 1
+    }
+  ]
+}
