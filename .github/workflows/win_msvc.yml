@@ -70,15 +70,7 @@ jobs:
         if [ -d stuff/mapfixes ]; then cp -r stuff/mapfixes publish/$PKGDIR/misc; fi
         cp LICENSE publish/$PKGDIR/misc/docs/LICENSE.txt
         cp README.md publish/$PKGDIR/misc/docs/README.txt
-        cp doc/010_index.md publish/$PKGDIR/misc/docs/010_index.txt
-        cp doc/020_installation.md publish/$PKGDIR/misc/docs/020_installation.txt
-        cp doc/030_configuration.md publish/$PKGDIR/misc/docs/030_configuration.txt
-        cp doc/040_cvarlist.md publish/$PKGDIR/misc/docs/040_cvarlist.txt
-        cp doc/050_commands.md publish/$PKGDIR/misc/docs/050_commands.txt
-        cp doc/060_multiplayer.md publish/$PKGDIR/misc/docs/060_multiplayer.txt
-        cp doc/070_packaging.md publish/$PKGDIR/misc/docs/070_packaging.txt
-        cp doc/080_contributing.md publish/$PKGDIR/misc/docs/080_contributing.txt
-        cp doc/090_filelists.md publish/$PKGDIR/misc/docs/090_filelists.md
+        if [ -d doc ]; then cp -r doc/. publish/$PKGDIR/misc/docs/; fi
         # copy runtime libraries (SDL, OpenAL, cURL)
         cp ../dhewm3-libs-master/i686-w64-mingw32/bin/OpenAL32.dll publish/$PKGDIR/
         cp ../dhewm3-libs-master/i686-w64-mingw32/bin/SDL2.dll publish/$PKGDIR/
@@ -151,15 +143,7 @@ jobs:
         if [ -d stuff/mapfixes ]; then cp -r stuff/mapfixes publish/$PKGDIR/misc; fi
         cp LICENSE publish/$PKGDIR/misc/docs/LICENSE.txt
         cp README.md publish/$PKGDIR/misc/docs/README.txt
-        cp doc/010_index.md publish/$PKGDIR/misc/docs/010_index.txt
-        cp doc/020_installation.md publish/$PKGDIR/misc/docs/020_installation.txt
-        cp doc/030_configuration.md publish/$PKGDIR/misc/docs/030_configuration.txt
-        cp doc/040_cvarlist.md publish/$PKGDIR/misc/docs/040_cvarlist.txt
-        cp doc/050_commands.md publish/$PKGDIR/misc/docs/050_commands.txt
-        cp doc/060_multiplayer.md publish/$PKGDIR/misc/docs/060_multiplayer.txt
-        cp doc/070_packaging.md publish/$PKGDIR/misc/docs/070_packaging.txt
-        cp doc/080_contributing.md publish/$PKGDIR/misc/docs/080_contributing.txt
-        cp doc/090_filelists.md publish/$PKGDIR/misc/docs/090_filelists.md
+        if [ -d doc ]; then cp -r doc/. publish/$PKGDIR/misc/docs/; fi
         # copy runtime libraries (SDL, OpenAL, cURL)
         cp ../dhewm3-libs-master/x86_64-w64-mingw32/bin/OpenAL32.dll publish/$PKGDIR/
         cp ../dhewm3-libs-master/x86_64-w64-mingw32/bin/SDL2.dll publish/$PKGDIR/
