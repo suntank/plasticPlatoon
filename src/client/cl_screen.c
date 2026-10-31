@@ -1567,6 +1567,58 @@ SCR_DrawADSOverlay(void)
 	SCR_AddDirtyPoint(viddef.width - 1, viddef.height - 1);
 }
 
+void
+SCR_DrawScreenImageOverlay(const cl_screen_image_t *image,
+	int x, int y, int width, int height)
+{
+	int pic_w = 0, pic_h = 0;
+	int draw_w, draw_h, draw_x, draw_y;
+	double w, h, scale;
+
+	if (!image || !image->pic[0] || width <= 0 || height <= 0 ||
+		(int)(image->endtime - (unsigned int)cls.realtime) <= 0)
+	{
+		return;
+	}
+
+	if (!Draw_FindPic(image->pic))
+	{
+		return;
+	}
+
+	Draw_GetPicSize(&pic_w, &pic_h, image->pic);
+	if (pic_w <= 0 || pic_h <= 0)
+	{
+		return;
+	}
+
+	w = image->width > 0 ? image->width : pic_w;
+	h = image->height > 0 ? image->height : pic_h;
+	if (image->width <= 0 && image->height > 0)
+	{
+		w = (double)pic_w * h / pic_h;
+	}
+	else if (image->height <= 0 && image->width > 0)
+	{
+		h = (double)pic_h * w / pic_w;
+	}
+
+	/* Fit the complete image inside this player's viewport, preserving aspect. */
+	scale = fmin(1.0, fmin(width / w, height / h));
+	draw_w = (int)(w * scale);
+	draw_h = (int)(h * scale);
+	if (draw_w <= 0 || draw_h <= 0)
+	{
+		return;
+	}
+
+	draw_x = x + (width - draw_w) / 2;
+	draw_y = y + (height - draw_h) / 2;
+	Draw_StretchPic(draw_x, draw_y, draw_w, draw_h, image->pic);
+	SCR_AddDirtyPoint(draw_x, draw_y);
+	SCR_AddDirtyPoint(draw_x + draw_w - 1, draw_y + draw_h - 1);
+}
+
 // ----
 
 static void
@@ -1841,6 +1893,7 @@ SCR_UpdateScreen(void)
 					CL_DrawInventory();
 				}
 
+				SCR_DrawScreenImageOverlay(&cl.screen_image, 0, 0, viddef.width, viddef.height);
 				SCR_DrawNet();
 				SCR_CheckDrawCenterString();
 			}
@@ -1862,6 +1915,7 @@ SCR_UpdateScreen(void)
 					CL_DrawInventory();
 				}
 
+				SCR_DrawScreenImageOverlay(&cl.screen_image, 0, 0, viddef.width, viddef.height);
 				SCR_DrawNet();
 				SCR_CheckDrawCenterString();
 			}

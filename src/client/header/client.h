@@ -102,6 +102,18 @@ typedef struct
 	struct model_s	*weaponmodel[MAX_CLIENTWEAPONMODELS];
 } clientinfo_t;
 
+typedef struct
+{
+	char pic[MAX_QPATH];
+	int width;
+	int height;
+	unsigned int endtime;
+} cl_screen_image_t;
+
+void CL_ParseScreenImage(cl_screen_image_t *image, sizebuf_t *msg);
+void SCR_DrawScreenImageOverlay(const cl_screen_image_t *image,
+	int x, int y, int width, int height);
+
 extern char cl_weaponmodels[MAX_CLIENTWEAPONMODELS][MAX_QPATH];
 extern int num_cl_weaponmodels;
 
@@ -152,6 +164,7 @@ typedef struct
 
 	/* transient data from server */
 	char		layout[1024]; /* general 2D overlay */
+	cl_screen_image_t screen_image;
 	int			inventory[MAX_ITEMS];
 
 	/* non-gameserver infornamtion */

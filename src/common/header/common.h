@@ -221,7 +221,10 @@ enum svc_ops_e
 	svc_playerinfo,             /* variable */
 	svc_packetentities,         /* [...] */
 	svc_deltapacketentities,    /* [...] */
-	svc_frame
+	svc_frame,
+
+	/* Plastic Platoon extension; preserve all original protocol opcodes. */
+	svc_screen_image
 };
 
 /* ============================================== */

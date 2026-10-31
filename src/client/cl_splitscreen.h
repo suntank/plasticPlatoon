@@ -70,6 +70,7 @@ typedef struct
 	int playernum;
 	int inventory[MAX_ITEMS];
 	char layout[1024];
+	cl_screen_image_t screen_image;
 	qboolean snapshot_valid;
 	vec3_t viewangles;
 	int axis_left_x;

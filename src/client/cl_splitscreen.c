@@ -1309,6 +1309,7 @@ SS_ClearSlotSnapshot(ss_local_player_t *slot)
 	memset(slot->cmds, 0, sizeof(slot->cmds));
 	memset(slot->inventory, 0, sizeof(slot->inventory));
 	slot->layout[0] = '\0';
+	memset(&slot->screen_image, 0, sizeof(slot->screen_image));
 	slot->muzzle_flash_seq = slot->last_muzzle_flash_seq = 0;
 	slot->ads_active = false;
 	slot->last_gunindex = 0;
@@ -1402,6 +1403,7 @@ SS_ParseServerData(ss_local_player_t *slot, sizebuf_t *msg)
 	(void)MSG_ReadString(msg);
 	slot->playernum = MSG_ReadShort(msg);
 	(void)MSG_ReadString(msg);
+
 }
 
 static void
@@ -1628,6 +1630,10 @@ SS_ParseServerMessage(ss_local_player_t *slot, sizebuf_t *msg)
 
 			case svc_layout:
 				Q_strlcpy(slot->layout, MSG_ReadString(msg), sizeof(slot->layout));
+				break;
+
+			case svc_screen_image:
+				CL_ParseScreenImage(&slot->screen_image, msg);
 				break;
 
 			case svc_playerinfo:
@@ -3438,6 +3444,10 @@ SS_DrawViewportHUD(int slot_index)
 	{
 		SS_DrawViewportInventory(slot_index, viewport, scale);
 	}
+
+	SCR_DrawScreenImageOverlay(slot_index == 0 ? &cl.screen_image :
+		&ss_state.slots[slot_index].screen_image,
+		viewport->x, viewport->y, viewport->w, viewport->h);
 }
 
 void
@@ -3850,6 +3860,7 @@ SS_BeginSession(void)
 		slot->exit_hold_active = false;
 		slot->exit_hold_start = 0;
 		slot->connect_time = 0;
+		memset(&slot->screen_image, 0, sizeof(slot->screen_image));
 		slot->parse_entities_num = 0;
 		memset(&slot->frame, 0, sizeof(slot->frame));
 		memset(slot->frames, 0, sizeof(slot->frames));
