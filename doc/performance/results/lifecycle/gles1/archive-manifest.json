@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "source_root": "build/lifecycle/gles1",
+  "purpose": "GLES1 functional validation only; software softpipe; not Pi or comparative performance evidence",
+  "notes": [
+    "No executables, driver libraries, dependencies, demo PAKs or BSP binaries are included.",
+    "Text archives redact ephemeral runtime/build/repository paths and the local validation password; recorded binary/content hashes are preserved.",
+    "The three one-line transition configs are explicitly reconstructed; other listed files preserve source hashes.",
+    "Original CSV bytes can be verified after gzip decompression against source_sha256."
+  ],
+  "files": [
+    {
+      "path": "mesa-configure.log",
+      "source": "build/lifecycle/gles1/mesa-configure.log",
+      "source_sha256": "c7131a8f742dccaef18f07cc327505ed296ec39a1a749bb3969750f5cd318dda",
+      "source_bytes": 12280,
+      "sha256": "78660887730149f9a896d5f494c67512150349f59c466230156513b17d2332a3",
+      "bytes": 12208,
+      "transformations": [
+        "redacted temporary/local validation value as <mesa-build>"
+      ]
+    },
+    {
+      "path": "perf/gles1-functional-240-console.log",
+      "source": "build/lifecycle/gles1/perf/gles1-functional-240-console.log",
+      "source_sha256": "5d81a0b49e05e8de7518dd8d286b4eef0379e3c0193c7241165d3b88e1105a42",
+      "source_bytes": 5120,
+      "sha256": "235d5d5cb6a48234851132db930ba87ef0cee6524f60e8aaa54c1ef6afda837f",
+      "bytes": 5072,
+      "transformations": [
+        "redacted temporary/local validation value as <runtime>"
+      ]
+    },
+    {
+      "path": "perf/gles1-functional-240-frames.csv.gz",
+      "source": "build/lifecycle/gles1/perf/gles1-functional-240-frames.csv",
+      "source_sha256": "6db70485d1e65f33a8a8273bd828336e42011e4b1f0e15ad61d5bdb00c9a9b17",
+      "source_bytes": 42893,
+      "sha256": "22fa9f600ffd4fca08b115d4be23630bc3f958b7f4e13ae0f2a8f3a067713cad",
+      "bytes": 6040,
+      "transformations": [
+        "gzip, level 9, mtime 0; decompressed CSV is byte-identical to source"
+      ]
+    },
+    {
+      "path": "perf/gles1-functional-240-run.json",
+      "source": "build/lifecycle/gles1/perf/gles1-functional-240-run.json",
+      "source_sha256": "54a89532f6dbfdd8379092dbe5515cec83cea3aa2f020604c361b8d09b1d5d91",
+      "source_bytes": 10951,
+      "sha256": "70082d6feede53a8411282b3e650f6a628092e8880663ba60240fe4bece96b25",
+      "bytes": 10915,
+      "transformations": [
+        "redacted temporary/local validation value as <runtime>"
+      ]
+    },
+    {
+      "path": "perf/gles1-functional-240-settings.txt",
+      "source": "build/lifecycle/gles1/perf/gles1-functional-240-settings.txt",
+      "source_sha256": "9dca9d2373657bfe35346b9b6ae207d7985bcb5020e6b1846ecd10792f6bdcfa",
+      "source_bytes": 1396,
+      "sha256": "9dca9d2373657bfe35346b9b6ae207d7985bcb5020e6b1846ecd10792f6bdcfa",
+      "bytes": 1396,
+      "transformations": []
+    },
+    {
+      "path": "perf/gles1-functional-240-views.csv.gz",
+      "source": "build/lifecycle/gles1/perf/gles1-functional-240-views.csv",
+      "source_sha256": "c8075758cff98ef7f32963ebb5e2af228a26f305c8a09d3e8c814045a3c6046d",
+      "source_bytes": 75431,
+      "sha256": "23139639bdf0fa39f574ba4ba8668e803130158793af71618847607f3d49dd7d",
+      "bytes": 6609,
+      "transformations": [
+        "gzip, level 9, mtime 0; decompressed CSV is byte-identical to source"
+      ]
+    },
+    {
+      "path": "perf/gles1-functional-240.cfg",
+      "source": "build/lifecycle/gles1/perf/gles1-functional-240.cfg",
+      "source_sha256": "dada28fde8379030faa47ef658427f56d96788a50d5a9ea802431ab2525b656b",
+      "source_bytes": 745,
+      "sha256": "dada28fde8379030faa47ef658427f56d96788a50d5a9ea802431ab2525b656b",
+      "bytes": 745,
+      "transformations": []
+    },
+    {
+      "path": "perf/gles1-lifecycle-clone-240-console.log",
+      "source": "build/lifecycle/gles1/perf/gles1-lifecycle-clone-240-console.log",
+      "source_sha256": "6933c80482d3a1ac809fb4bd18745c049c7c3a6d3ebc2df4e1e77d72dc5e78f9",
+      "source_bytes": 9758,
+      "sha256": "c91c627cb5bc6ca04d78220d72fa50b13e07d4f3f394152bbd4f356c257b90ae",
+      "bytes": 9710,
+      "transformations": [
+        "redacted temporary/local validation value as <runtime>"
+      ]
+    },
+    {
+      "path": "perf/gles1-lifecycle-clone-240-events.json",
+      "source": "build/lifecycle/gles1/perf/gles1-lifecycle-clone-240-events.json",
+      "source_sha256": "bad484107f7e72b08132016689927929657b201cc026b0a3658d853861a58c3f",
+      "source_bytes": 1333,
+      "sha256": "bad484107f7e72b08132016689927929657b201cc026b0a3658d853861a58c3f",
+      "bytes": 1333,
+      "transformations": []
+    },
+    {
+      "path": "perf/gles1-lifecycle-clone-240-frames.csv.gz",
+      "source": "build/lifecycle/gles1/perf/gles1-lifecycle-clone-240-frames.csv",
+      "source_sha256": "d7c23b391f08be25ec4ee46427e2eb1852e2d8fae0707614411a79185152fd93",
+      "source_bytes": 82553,
+      "sha256": "9d71fb4066d46a5ce290575a5b6e2230f7a442e0662c8c090d0582c1f9fea9bc",
+      "bytes": 10757,
+      "transformations": [
+        "gzip, level 9, mtime 0; decompressed CSV is byte-identical to source"
+      ]
+    },
+    {
+      "path": "perf/gles1-lifecycle-clone-240-settings.txt",
+      "source": "build/lifecycle/gles1/perf/gles1-lifecycle-clone-240-settings.txt",
+      "source_sha256": "e7a932049edfd03f640f0d2761b9962608e08c84127866f0bb636dc31562be34",
+      "source_bytes": 1396,
+      "sha256": "e7a932049edfd03f640f0d2761b9962608e08c84127866f0bb636dc31562be34",
+      "bytes": 1396,
+      "transformations": []
+    },
+    {
+      "path": "perf/gles1-lifecycle-clone-240-views.csv.gz",
+      "source": "build/lifecycle/gles1/perf/gles1-lifecycle-clone-240-views.csv",
+      "source_sha256": "0d966fe2e56159ab2c1df12ecb45eb798017d6f5c73f23a64eade34569c3067d",
+      "source_bytes": 146186,
+      "sha256": "e5cebd87888169ce29ea0fe3aaded9020a38d6594b5782e14c530ec20e411084",
+      "bytes": 12023,
+      "transformations": [
+        "gzip, level 9, mtime 0; decompressed CSV is byte-identical to source"
+      ]
+    },
+    {
+      "path": "perf/gles1-lifecycle-clone-240.cfg",
+      "source": "build/lifecycle/gles1/perf/gles1-lifecycle-clone-240.cfg",
+      "source_sha256": "3315192aa83e06e14afa95c868176bc07a8f028b8a6a24ba4161fc7cd952bbb6",
+      "source_bytes": 208,
+      "sha256": "3315192aa83e06e14afa95c868176bc07a8f028b8a6a24ba4161fc7cd952bbb6",
+      "bytes": 208,
+      "transformations": []
+    },
+    {
+      "path": "perf/gles1-lifecycle-fixed-240-console.log",
+      "source": "build/lifecycle/gles1/perf/gles1-lifecycle-fixed-240-console.log",
+      "source_sha256": "6a3668eca34937fe0a51af385a29b19f0a9f4ff80e7f3e9fab86cdcf3eb04da7",
+      "source_bytes": 9579,
+      "sha256": "143a82979cd33cc1cc47a278c045e74c6c017076c476416f9c87cbe824d0ebd1",
+      "bytes": 9531,
+      "transformations": [
+        "redacted temporary/local validation value as <runtime>"
+      ]
+    },
+    {
+      "path": "perf/gles1-lifecycle-fixed-240-events.json",
+      "source": "build/lifecycle/gles1/perf/gles1-lifecycle-fixed-240-events.json",
+      "source_sha256": "0e098e6139d42e1efbe1b6e49002e5a44f477b78f7a12d24c914cbfb84cd937c",
+      "source_bytes": 1331,
+      "sha256": "0e098e6139d42e1efbe1b6e49002e5a44f477b78f7a12d24c914cbfb84cd937c",
+      "bytes": 1331,
+      "transformations": []
+    },
+    {
+      "path": "perf/gles1-lifecycle-fixed-240-frames.csv.gz",
+      "source": "build/lifecycle/gles1/perf/gles1-lifecycle-fixed-240-frames.csv",
+      "source_sha256": "4fbe7f4188c336294c23c158accb52b62ae55e18c99b74e9bf91bff54b76ca29",
+      "source_bytes": 82841,
+      "sha256": "072b0e58025f0823997a9434ef0f9de62a18852d0ef9a549b99e3bda3e636190",
+      "bytes": 11821,
+      "transformations": [
+        "gzip, level 9, mtime 0; decompressed CSV is byte-identical to source"
+      ]
+    },
+    {
+      "path": "perf/gles1-lifecycle-fixed-240-settings.txt",
+      "source": "build/lifecycle/gles1/perf/gles1-lifecycle-fixed-240-settings.txt",
+      "source_sha256": "a80cb8d605f28fdf7e9c02800e31cde3e04220af925ea7ba0151e9a4f9543629",
+      "source_bytes": 1740,
+      "sha256": "a80cb8d605f28fdf7e9c02800e31cde3e04220af925ea7ba0151e9a4f9543629",
+      "bytes": 1740,
+      "transformations": []
+    },
+    {
+      "path": "perf/gles1-lifecycle-fixed-240-views.csv.gz",
+      "source": "build/lifecycle/gles1/perf/gles1-lifecycle-fixed-240-views.csv",
+      "source_sha256": "726162b372a785ea6e123b3ac588bd8de1c87db4939f0bf7faae0653c6ab761f",
+      "source_bytes": 146037,
+      "sha256": "1e299edcfa209ae26a5d9dea677049160aa45a669b53a02a4884ceb41c151b87",
+      "bytes": 13075,
+      "transformations": [
+        "gzip, level 9, mtime 0; decompressed CSV is byte-identical to source"
+      ]
+    },
+    {
+      "path": "perf/gles1-lifecycle-fixed-240.cfg",
+      "source": "build/lifecycle/gles1/perf/gles1-lifecycle-fixed-240.cfg",
+      "source_sha256": "3a700dc61ef0c676e46b401e923e3eb07a779342b1fbeb0e780da19f9c72166e",
+      "source_bytes": 208,
+      "sha256": "3a700dc61ef0c676e46b401e923e3eb07a779342b1fbeb0e780da19f9c72166e",
+      "bytes": 208,
+      "transformations": []
+    },
+    {
+      "path": "probes/pp-egl-gles-context.c",
+      "source": "build/lifecycle/gles1/pp-egl-gles-context.c",
+      "source_sha256": "e792dfcc8b2c60b709b2908dea529e4007e5e12aacb02f7fca9e4221b6d0804f",
+      "source_bytes": 1759,
+      "sha256": "e792dfcc8b2c60b709b2908dea529e4007e5e12aacb02f7fca9e4221b6d0804f",
+      "bytes": 1759,
+      "transformations": []
+    },
+    {
+      "path": "probes/pp-sdl-gles-context.c",
+      "source": "build/lifecycle/gles1/pp-sdl-gles-context.c",
+      "source_sha256": "82174f55e54e39c6674467985bca449f7b2548426a6c4b77d450cbef7b46eb89",
+      "source_bytes": 1835,
+      "sha256": "82174f55e54e39c6674467985bca449f7b2548426a6c4b77d450cbef7b46eb89",
+      "bytes": 1835,
+      "transformations": []
+    },
+    {
+      "path": "run.json",
+      "source": "build/lifecycle/gles1/run.json",
+      "source_sha256": "11c44b623330ed41fc0e6479a7bf68d97e76bd9d13eef4e854946c74c4c480bf",
+      "source_bytes": 2324,
+      "sha256": "11c44b623330ed41fc0e6479a7bf68d97e76bd9d13eef4e854946c74c4c480bf",
+      "bytes": 2324,
+      "transformations": []
+    },
+    {
+      "path": "screenshots/different-map-return.png",
+      "source": "build/lifecycle/gles1/screenshots/different-map-return.png",
+      "source_sha256": "a75b006d847f950c30a293c42329f4ba588d0b41460478171bdc656cd76c9cf2",
+      "source_bytes": 54389,
+      "sha256": "a75b006d847f950c30a293c42329f4ba588d0b41460478171bdc656cd76c9cf2",
+      "bytes": 54389,
+      "transformations": []
+    },
+    {
+      "path": "screenshots/fallback.png",
+      "source": "build/lifecycle/gles1/screenshots/fallback.png",
+      "source_sha256": "bd5f6d39b67f497db5905a7a7cbb6629a7fef0fa7158b16951bc92bb3b0aa44e",
+      "source_bytes": 54145,
+      "sha256": "bd5f6d39b67f497db5905a7a7cbb6629a7fef0fa7158b16951bc92bb3b0aa44e",
+      "bytes": 54145,
+      "transformations": []
+    },
+    {
+      "path": "screenshots/initial.png",
+      "source": "build/lifecycle/gles1/screenshots/initial.png",
+      "source_sha256": "0f70b355c202ba5574617befb1e0166e56e8380ca9b6368f347621ddbf95ac97",
+      "source_bytes": 54726,
+      "sha256": "0f70b355c202ba5574617befb1e0166e56e8380ca9b6368f347621ddbf95ac97",
+      "bytes": 54726,
+      "transformations": []
+    },
+    {
+      "path": "screenshots/persistent.png",
+      "source": "build/lifecycle/gles1/screenshots/persistent.png",
+      "source_sha256": "e8111abbb18433fd79817d7ee0cd329ffcb8bd570810071d2c027e76f40118d1",
+      "source_bytes": 54846,
+      "sha256": "e8111abbb18433fd79817d7ee0cd329ffcb8bd570810071d2c027e76f40118d1",
+      "bytes": 54846,
+      "transformations": []
+    },
+    {
+      "path": "screenshots/reloaded.png",
+      "source": "build/lifecycle/gles1/screenshots/reloaded.png",
+      "source_sha256": "f32443c5192bf017f215ba7f5e11a302d0ea5c5c9b8d27069d78c1b62630cb9d",
+      "source_bytes": 54873,
+      "sha256": "f32443c5192bf017f215ba7f5e11a302d0ea5c5c9b8d27069d78c1b62630cb9d",
+      "bytes": 54873,
+      "transformations": []
+    },
+    {
+      "path": "screenshots/restarted.png",
+      "source": "build/lifecycle/gles1/screenshots/restarted.png",
+      "source_sha256": "b29d837edc68eec07ee183487ee3e808489150a99272909549779451628f8bde",
+      "source_bytes": 54774,
+      "sha256": "b29d837edc68eec07ee183487ee3e808489150a99272909549779451628f8bde",
+      "bytes": 54774,
+      "transformations": []
+    },
+    {
+      "path": "perf/gles1-to-demo.cfg",
+      "source": "reconstructed from the recorded validation command sequence",
+      "source_sha256": null,
+      "source_bytes": null,
+      "sha256": "6b5d43608c85cd9346b168051fa9637590610b9531449d20eaee5edf4a9e508c",
+      "bytes": 14,
+      "transformations": [
+        "One-line map command restored for the exec references in the retained events JSON."
+      ]
+    },
+    {
+      "path": "perf/gles1-to-fixture.cfg",
+      "source": "reconstructed from the recorded validation command sequence",
+      "source_sha256": null,
+      "source_bytes": null,
+      "sha256": "ee0780e6cbcec303001bac8af55b27fee15aadf55f5e32e4f799f54c352db2cf",
+      "bytes": 24,
+      "transformations": [
+        "One-line map command restored for the exec references in the retained events JSON."
+      ]
+    },
+    {
+      "path": "perf/gles1-to-clone.cfg",
+      "source": "reconstructed from the recorded validation command sequence",
+      "source_sha256": null,
+      "source_bytes": null,
+      "sha256": "0d12131505ca5d08eabd1da2d3d8967f06c1ffc477bfe85a21f4b1a28c1a693a",
+      "bytes": 23,
+      "transformations": [
+        "One-line map command restored for the exec references in the retained events JSON."
+      ]
+    }
+  ]
+}

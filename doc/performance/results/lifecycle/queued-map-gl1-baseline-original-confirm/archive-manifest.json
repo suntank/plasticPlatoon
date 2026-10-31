@@ -1,0 +1,158 @@
+{
+  "schema": 1,
+  "source": "build/lifecycle/queued-map-gl1-baseline-original-confirm",
+  "purpose": "Functional lifecycle evidence; not equivalent-quality timing or Pi performance measurements.",
+  "packaging": {
+    "python": "3.12.14",
+    "zlib": "1.3.2",
+    "csv": "gzip level 9, mtime 0, no original filename",
+    "text_redactions": [
+      "Local test-only rcon token replaced with LOCAL_RCON_TOKEN_REDACTED",
+      "Temporary validation runtime roots replaced with TEMP_VALIDATION_RUNTIME"
+    ],
+    "png": "Original PNG bytes preserved; decoded and verified. Screenshots may display original temporary capture paths."
+  },
+  "files": [
+    {
+      "source": "console.log",
+      "source_bytes": 14784,
+      "source_sha256": "31da4112e3ea668859291d246a421e10bb387d32d736872b36088ed3c65ace41",
+      "decoded_bytes": 14738,
+      "decoded_sha256": "46fc8ba48d56497532bc1177048e14cc3ae41786a6492db3ccc2bc9b0d8b1134",
+      "text_redacted": true,
+      "path": "console.log",
+      "bytes": 14738,
+      "sha256": "46fc8ba48d56497532bc1177048e14cc3ae41786a6492db3ccc2bc9b0d8b1134"
+    },
+    {
+      "source": "direct-map-reply.txt",
+      "source_bytes": 42,
+      "source_sha256": "a697b4ccc660d4e302bc201c86832a1cdc6485fec155e0e026881df1ed0a9ba0",
+      "decoded_bytes": 42,
+      "decoded_sha256": "a697b4ccc660d4e302bc201c86832a1cdc6485fec155e0e026881df1ed0a9ba0",
+      "text_redacted": false,
+      "path": "direct-map-reply.txt",
+      "bytes": 42,
+      "sha256": "a697b4ccc660d4e302bc201c86832a1cdc6485fec155e0e026881df1ed0a9ba0"
+    },
+    {
+      "source": "frames-before.csv",
+      "source_bytes": 8192,
+      "source_sha256": "0018298fc5cf22af7a6e47eade475382de8f81ecb35b4307a955bd33f4aa3bb2",
+      "decoded_bytes": 8192,
+      "decoded_sha256": "0018298fc5cf22af7a6e47eade475382de8f81ecb35b4307a955bd33f4aa3bb2",
+      "text_redacted": false,
+      "complete_final_line": false,
+      "path": "frames-before.csv.gz",
+      "bytes": 1190,
+      "sha256": "376f76aa4142adbd73f403700b70493341b652a2a880f14d06b6a69e452969ff"
+    },
+    {
+      "source": "lifecycle-start.cfg",
+      "source_bytes": 787,
+      "source_sha256": "298ae9a5e172502171fef36eb0bf59fe8cae3b0d808f5ea58f54f65aae002f03",
+      "decoded_bytes": 789,
+      "decoded_sha256": "29de791d578ed81bbc2864febaa8b7c64727703ab247d35678581dc05d3a9e59",
+      "text_redacted": true,
+      "path": "lifecycle-start.cfg",
+      "bytes": 789,
+      "sha256": "29de791d578ed81bbc2864febaa8b7c64727703ab247d35678581dc05d3a9e59"
+    },
+    {
+      "source": "perf/transition-probe-frames.csv",
+      "source_bytes": 8192,
+      "source_sha256": "0018298fc5cf22af7a6e47eade475382de8f81ecb35b4307a955bd33f4aa3bb2",
+      "decoded_bytes": 8192,
+      "decoded_sha256": "0018298fc5cf22af7a6e47eade475382de8f81ecb35b4307a955bd33f4aa3bb2",
+      "text_redacted": false,
+      "complete_final_line": false,
+      "path": "perf/transition-probe-frames.csv.gz",
+      "bytes": 1190,
+      "sha256": "376f76aa4142adbd73f403700b70493341b652a2a880f14d06b6a69e452969ff"
+    },
+    {
+      "source": "perf/transition-probe-settings.txt",
+      "source_bytes": 1725,
+      "source_sha256": "660c59866923b4ff0d73922ec815bc7d82919057ba4f974e5a8d1ad86c77f44a",
+      "decoded_bytes": 1725,
+      "decoded_sha256": "660c59866923b4ff0d73922ec815bc7d82919057ba4f974e5a8d1ad86c77f44a",
+      "text_redacted": false,
+      "path": "perf/transition-probe-settings.txt",
+      "bytes": 1725,
+      "sha256": "660c59866923b4ff0d73922ec815bc7d82919057ba4f974e5a8d1ad86c77f44a"
+    },
+    {
+      "source": "perf/transition-probe-views.csv",
+      "source_bytes": 16384,
+      "source_sha256": "f622e045b04459c8fcab494d04909e5e0f90ac7eec488c554ab4da6fdcf91cb9",
+      "decoded_bytes": 16384,
+      "decoded_sha256": "f622e045b04459c8fcab494d04909e5e0f90ac7eec488c554ab4da6fdcf91cb9",
+      "text_redacted": false,
+      "complete_final_line": false,
+      "path": "perf/transition-probe-views.csv.gz",
+      "bytes": 955,
+      "sha256": "ae5a16093143d9b77dd1b48e6db3ced9db3ee7e6afca2b5fb17baa292ef1d385"
+    },
+    {
+      "source": "qconsole.log",
+      "source_bytes": 8666,
+      "source_sha256": "d7bf79ce316f9156b7b5c1ac5988f6114cfd8cdd2b414fec33968bb6fc75d32c",
+      "decoded_bytes": 8684,
+      "decoded_sha256": "a482f05ac7d9f1553a751a059d06b6a378cc7a3a4ab958d68ed7beb726255b1c",
+      "text_redacted": true,
+      "path": "qconsole.log",
+      "bytes": 8684,
+      "sha256": "a482f05ac7d9f1553a751a059d06b6a378cc7a3a4ab958d68ed7beb726255b1c"
+    },
+    {
+      "source": "run.json",
+      "source_bytes": 1511,
+      "source_sha256": "8bada4908906a8a357bc210b8c1dfaf78c639736bc68b0603e07df271fbc205a",
+      "decoded_bytes": 1476,
+      "decoded_sha256": "ca4f993965b528d14ec1ee3aef9b2760241e2755e24bc40527620944ab4be1bd",
+      "text_redacted": true,
+      "path": "run.json",
+      "bytes": 1476,
+      "sha256": "ca4f993965b528d14ec1ee3aef9b2760241e2755e24bc40527620944ab4be1bd"
+    },
+    {
+      "source": "scrnshot/q2_0000.png",
+      "source_bytes": 54576,
+      "source_sha256": "b598327639a70743af8d32e72bc6bc11eaf4674111c5763e60b39c04aa456b81",
+      "image": {
+        "format": "PNG",
+        "width": 240,
+        "height": 240,
+        "mode": "RGB"
+      },
+      "decoded_bytes": 54576,
+      "decoded_sha256": "b598327639a70743af8d32e72bc6bc11eaf4674111c5763e60b39c04aa456b81",
+      "text_redacted": false,
+      "path": "scrnshot/q2_0000.png",
+      "bytes": 54576,
+      "sha256": "b598327639a70743af8d32e72bc6bc11eaf4674111c5763e60b39c04aa456b81"
+    },
+    {
+      "source": "status-after.txt",
+      "source_bytes": 8,
+      "source_sha256": "1d44ad7979d972dfc94da20b9f633c6b08f23c70ea01ec5d5b1f46222d275a6c",
+      "decoded_bytes": 8,
+      "decoded_sha256": "1d44ad7979d972dfc94da20b9f633c6b08f23c70ea01ec5d5b1f46222d275a6c",
+      "text_redacted": false,
+      "path": "status-after.txt",
+      "bytes": 8,
+      "sha256": "1d44ad7979d972dfc94da20b9f633c6b08f23c70ea01ec5d5b1f46222d275a6c"
+    },
+    {
+      "source": "status-before.txt",
+      "source_bytes": 322,
+      "source_sha256": "129f5aa8ecd8991111c16b1a95f7f7fb7091a078e1ba6d16394bdd501b889182",
+      "decoded_bytes": 322,
+      "decoded_sha256": "129f5aa8ecd8991111c16b1a95f7f7fb7091a078e1ba6d16394bdd501b889182",
+      "text_redacted": false,
+      "path": "status-before.txt",
+      "bytes": 322,
+      "sha256": "129f5aa8ecd8991111c16b1a95f7f7fb7091a078e1ba6d16394bdd501b889182"
+    }
+  ]
+}

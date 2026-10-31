@@ -104,13 +104,103 @@ LerpVerts(qboolean powerUpEffect, int nverts, dtrivertx_t *v, dtrivertx_t *ov,
 	}
 }
 
+
+void
+GL3_CreateAliasBuffers(gl3model_t *model)
+{
+	model->aliascache = Mod_BuildAliasCache(model->extradata);
+	if (!model->aliascache) return;
+	const pp_alias_topology_t *mesh = model->aliascache->topology;
+	GL3_BindVAO(gl3state.vaoAlias);
+	glGenBuffers(1, &model->alias_ebo);
+	GL3_BindEBO(model->alias_ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->num_indices * sizeof(GLushort), mesh->indices, GL_STATIC_DRAW);
+	pp_static_index_total += mesh->num_indices * sizeof(GLushort);
+	glGenBuffers(1, &model->alias_uv_vbo);
+	GL3_BindVBO(model->alias_uv_vbo);
+	glBufferData(GL_ARRAY_BUFFER, mesh->num_vertices * 2 * sizeof(float), mesh->uv, GL_STATIC_DRAW);
+	pp_static_vertex_total += mesh->num_vertices * 2 * sizeof(float);
+	if (model->aliascache->static_xyz)
+	{
+		glGenBuffers(1, &model->alias_xyz_vbo);
+		GL3_BindVBO(model->alias_xyz_vbo);
+		glBufferData(GL_ARRAY_BUFFER, mesh->num_vertices * 3 * sizeof(float), model->aliascache->static_xyz, GL_STATIC_DRAW);
+		pp_static_vertex_total += mesh->num_vertices * 3 * sizeof(float);
+	}
+	GL3_BindVBO(gl3state.vboAlias);
+	GL3_BindEBO(gl3state.eboAlias);
+	if (glGetError() != GL_NO_ERROR)
+	{
+		Com_Printf("%s: GPU allocation failed; using streaming fallback\n", model->name);
+		GL3_FreeAliasBuffers(model);
+	}
+}
+
+void
+GL3_FreeAliasBuffers(gl3model_t *model)
+{
+	/* Deleting the currently bound name also changes GL's binding state. */
+	GL3_BindVAO(gl3state.vaoAlias);
+	GL3_BindVBO(gl3state.vboAlias);
+	GL3_BindEBO(gl3state.eboAlias);
+	glDeleteBuffers(1, &model->alias_ebo);
+	glDeleteBuffers(1, &model->alias_uv_vbo);
+	glDeleteBuffers(1, &model->alias_xyz_vbo);
+	Mod_FreeAliasCache(model->aliascache);
+	model->aliascache = NULL;
+	model->alias_ebo = model->alias_uv_vbo = model->alias_xyz_vbo = 0;
+}
+
+/* Dynamic color remains instance-specific. Static position/UV/index data is shared. */
+static void
+DrawAliasCached(const gl3model_t *model, const dtrivertx_t *verts,
+	const float *shadedots, const vec3_t shadelight, float alpha,
+	qboolean color_only, qboolean static_pose, double prep_started)
+{
+	const pp_alias_topology_t *mesh = model->aliascache->topology;
+	da_clear(vtxBuf);
+	gl3_alias_vtx_t *buf = da_addn_uninit(vtxBuf, mesh->num_vertices);
+	float *colors = (float *)buf;
+	for (unsigned i = 0; i < mesh->num_vertices; ++i)
+	{
+		unsigned source = mesh->source[i];
+		float brightness = color_only ? 1.0f : shadedots[verts[source].lightnormalindex];
+		float *color = static_pose ? colors+i*4 : buf[i].color;
+		if (!static_pose) VectorCopy(s_lerped[source], buf[i].pos);
+		for (int j = 0; j < 3; ++j) color[j] = brightness * shadelight[j];
+		color[3] = alpha;
+	}
+	PP_PERF(model_ms, PP_PerfNow()-prep_started);
+	GL3_BindVAO(gl3state.vaoAlias);
+	GL3_BindVBO(gl3state.vboAlias);
+	size_t bytes = mesh->num_vertices * (static_pose ? 4*sizeof(float) : sizeof(*buf));
+	glBufferData(GL_ARRAY_BUFFER, bytes, buf, GL_STREAM_DRAW);
+	PP_PERF(dynamic_vertex_bytes, bytes);
+	qglVertexAttribPointer(GL3_ATTRIB_COLOR, 4, GL_FLOAT, GL_FALSE,
+		static_pose ? 4*sizeof(float) : sizeof(*buf), static_pose ? 0 : offsetof(gl3_alias_vtx_t, color));
+	if (static_pose) GL3_BindVBO(model->alias_xyz_vbo);
+	qglVertexAttribPointer(GL3_ATTRIB_POSITION, 3, GL_FLOAT, GL_FALSE,
+		static_pose ? 3*sizeof(float) : sizeof(*buf), 0);
+	GL3_BindVBO(model->alias_uv_vbo);
+	qglVertexAttribPointer(GL3_ATTRIB_TEXCOORD, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float), 0);
+	GL3_BindEBO(model->alias_ebo);
+	PP_DrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_SHORT, NULL);
+	PP_PERF(model_triangles, mesh->num_indices/3);
+	/* Shadow and fallback paths use the original interleaved layout. */
+	GL3_BindVBO(gl3state.vboAlias);
+	qglVertexAttribPointer(GL3_ATTRIB_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(*buf), 0);
+	qglVertexAttribPointer(GL3_ATTRIB_TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(*buf), offsetof(gl3_alias_vtx_t, texCoord));
+	qglVertexAttribPointer(GL3_ATTRIB_COLOR, 4, GL_FLOAT, GL_FALSE, sizeof(*buf), offsetof(gl3_alias_vtx_t, color));
+}
+
 /*
  * Interpolates between two frames and origins
  */
 static void
-DrawAliasFrameLerp(dmdl_t *paliashdr, entity_t* entity, vec3_t shadelight)
+DrawAliasFrameLerp(const gl3model_t *model, dmdl_t *paliashdr, entity_t* entity, vec3_t shadelight)
 {
 	GLenum type;
+	double prep_started = PP_PerfNow();
 	float l;
 	daliasframe_t *frame, *oldframe;
 	dtrivertx_t *v, *ov, *verts;
@@ -187,7 +277,32 @@ DrawAliasFrameLerp(dmdl_t *paliashdr, entity_t* entity, vec3_t shadelight)
 
 	lerp = s_lerped[0];
 
-	LerpVerts(colorOnly, paliashdr->num_xyz, v, ov, verts, lerp, move, frontv, backv);
+	qboolean static_pose = model->aliascache && model->aliascache->static_xyz &&
+		!colorOnly && VectorCompare(entity->origin, entity->oldorigin);
+	if (!static_pose)
+	{
+		pp_alias_pose_key_t key = {0};
+		key.frame = entity->frame; key.oldframe = entity->oldframe; key.shell = colorOnly;
+		VectorCopy(move, key.move); VectorCopy(frontv, key.front); VectorCopy(backv, key.back);
+		const float *cached_pose = Mod_FindAliasPose(model->aliascache, &key);
+		if (cached_pose)
+		{
+			memcpy(s_lerped, cached_pose, paliashdr->num_xyz*sizeof(s_lerped[0]));
+			PP_PERF(pose_cache_hits, 1);
+		}
+		else
+		{
+			LerpVerts(colorOnly, paliashdr->num_xyz, v, ov, verts, lerp, move, frontv, backv);
+			Mod_SaveAliasPose(model->aliascache, &key, lerp);
+			PP_PERF(pose_vertices, paliashdr->num_xyz);
+		}
+	}
+	if (model->aliascache)
+	{
+		DrawAliasCached(model, verts, shadedots, shadelight, alpha, colorOnly, static_pose, prep_started);
+		return;
+	}
+	PP_PERF(topology_builds, 1);
 
 	YQ2_STATIC_ASSERT(sizeof(gl3_alias_vtx_t) == 9*sizeof(GLfloat), "invalid gl3_alias_vtx_t size");
 
@@ -320,9 +435,12 @@ DrawAliasFrameLerp(dmdl_t *paliashdr, entity_t* entity, vec3_t shadelight)
 	GL3_BindVBO(gl3state.vboAlias);
 
 	glBufferData(GL_ARRAY_BUFFER, da_count(vtxBuf)*sizeof(gl3_alias_vtx_t), vtxBuf.p, GL_STREAM_DRAW);
+	PP_PERF(dynamic_vertex_bytes, da_count(vtxBuf)*sizeof(gl3_alias_vtx_t));
 	GL3_BindEBO(gl3state.eboAlias);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, da_count(idxBuf)*sizeof(GLushort), idxBuf.p, GL_STREAM_DRAW);
-	glDrawElements(GL_TRIANGLES, da_count(idxBuf), GL_UNSIGNED_SHORT, NULL);
+	PP_PERF(dynamic_index_bytes, da_count(idxBuf)*sizeof(GLushort));
+	PP_DrawElements(GL_TRIANGLES, da_count(idxBuf), GL_UNSIGNED_SHORT, NULL);
+	PP_PERF(model_triangles, da_count(idxBuf)/3);
 }
 
 static void
@@ -336,6 +454,10 @@ DrawAliasShadow(gl3_shadowinfo_t* shadowInfo)
 
 	dmdl_t* paliashdr = shadowInfo->paliashdr;
 	entity_t* entity = shadowInfo->entity;
+	const gl3model_t *model = entity->model;
+	const pp_alias_cache_t *cache = model->aliascache;
+	qboolean static_pose = cache && cache->static_xyz && VectorCompare(entity->origin, entity->oldorigin);
+	double prep_started = PP_PerfNow();
 
 	vec3_t shadevector;
 	VectorCopy(shadowInfo->shadevector, shadevector);
@@ -378,7 +500,24 @@ DrawAliasShadow(gl3_shadowinfo_t* shadowInfo)
 
 		// false: don't extrude vertices for powerup - this means the powerup shell
 		//  is not seen in the shadow, only the underlying model..
-		LerpVerts(false, paliashdr->num_xyz, v, ov, verts, s_lerped[0], move, frontv, backv);
+		if (!static_pose)
+		{
+			pp_alias_pose_key_t key = {0};
+			key.frame = entity->frame; key.oldframe = entity->oldframe;
+			VectorCopy(move, key.move); VectorCopy(frontv, key.front); VectorCopy(backv, key.back);
+			const float *cached_pose = Mod_FindAliasPose(model->aliascache, &key);
+			if (cached_pose)
+			{
+				memcpy(s_lerped, cached_pose, paliashdr->num_xyz*sizeof(s_lerped[0]));
+				PP_PERF(pose_cache_hits, 1);
+			}
+			else
+			{
+				LerpVerts(false, paliashdr->num_xyz, v, ov, verts, s_lerped[0], move, frontv, backv);
+				Mod_SaveAliasPose(model->aliascache, &key, s_lerped[0]);
+				PP_PERF(pose_vertices, paliashdr->num_xyz);
+			}
+		}
 	}
 
 	lheight = entity->origin[2] - shadowInfo->lightspot[2];
@@ -392,7 +531,29 @@ DrawAliasShadow(gl3_shadowinfo_t* shadowInfo)
 
 	da_clear(vtxBuf);
 	da_clear(idxBuf);
-
+	if (cache)
+	{
+		const pp_alias_topology_t *mesh = cache->topology;
+		gl3_alias_vtx_t *buf = da_addn_uninit(vtxBuf, mesh->num_vertices);
+		for (unsigned i = 0; i < mesh->num_vertices; ++i)
+		{
+			const float *position = static_pose ? cache->static_xyz+i*3 : s_lerped[mesh->source[i]];
+			buf[i].pos[0] = position[0]-shadevector[0]*(position[2]+lheight);
+			buf[i].pos[1] = position[1]-shadevector[1]*(position[2]+lheight);
+			buf[i].pos[2] = height;
+			memcpy(buf[i].color, color, sizeof(color));
+		}
+		PP_PERF(model_ms, PP_PerfNow()-prep_started);
+		GL3_BindVAO(gl3state.vaoAlias);
+		GL3_BindVBO(gl3state.vboAlias);
+		glBufferData(GL_ARRAY_BUFFER, mesh->num_vertices*sizeof(*buf), buf, GL_STREAM_DRAW);
+		GL3_BindEBO(model->alias_ebo);
+		PP_DrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_SHORT, NULL);
+		PP_PERF(dynamic_vertex_bytes, mesh->num_vertices*sizeof(*buf));
+		PP_PERF(model_triangles, mesh->num_indices/3);
+			return;
+	}
+	PP_PERF(topology_builds, 1);
 	while (1)
 	{
 		int i, j;
@@ -481,9 +642,12 @@ DrawAliasShadow(gl3_shadowinfo_t* shadowInfo)
 	GL3_BindVBO(gl3state.vboAlias);
 
 	glBufferData(GL_ARRAY_BUFFER, da_count(vtxBuf)*sizeof(gl3_alias_vtx_t), vtxBuf.p, GL_STREAM_DRAW);
+	PP_PERF(dynamic_vertex_bytes, da_count(vtxBuf)*sizeof(gl3_alias_vtx_t));
 	GL3_BindEBO(gl3state.eboAlias);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, da_count(idxBuf)*sizeof(GLushort), idxBuf.p, GL_STREAM_DRAW);
-	glDrawElements(GL_TRIANGLES, da_count(idxBuf), GL_UNSIGNED_SHORT, NULL);
+	PP_PERF(dynamic_index_bytes, da_count(idxBuf)*sizeof(GLushort));
+	PP_DrawElements(GL_TRIANGLES, da_count(idxBuf), GL_UNSIGNED_SHORT, NULL);
+	PP_PERF(model_triangles, da_count(idxBuf)/3);
 }
 
 static qboolean
@@ -900,7 +1064,7 @@ GL3_DrawAliasModel(entity_t *entity)
 		entity->oldframe = 0;
 	}
 
-	DrawAliasFrameLerp(paliashdr, entity, shadelight);
+	DrawAliasFrameLerp(model, paliashdr, entity, shadelight);
 
 	//glPopMatrix();
 	gl3state.uni3DData.transModelMat4 = origModelMat;

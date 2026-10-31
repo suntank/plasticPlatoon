@@ -1,0 +1,17 @@
+����print
+==== ShutdownGame ====
+NET_Socket ERROR: getaddrinfo:Address family for hostname not supported
+NET_Socket ERROR: getaddrinfo:Address family for hostname not supported
+-------- game initialization -------
+Loading library: game.so
+Game is starting up.
+Game is baseq2 built on Oct 31 2026.
+Weapon profile 'default' not found, using defaults
+------------------------------------
+
+------- server initialization ------
+No fixes found as 'maps/demo1@4604.ent'
+38 entities inhibited.
+1 teams with 2 entities.
+------------------------------------
+

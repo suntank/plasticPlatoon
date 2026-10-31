@@ -1,0 +1,480 @@
+{
+  "command": [
+    "runuser",
+    "-u",
+    "nobody",
+    "--",
+    "<runtime>/quake2",
+    "-portable",
+    "-datadir",
+    "<runtime>",
+    "+set",
+    "vid_renderer",
+    "gles1",
+    "+set",
+    "vid_fullscreen",
+    "0",
+    "+set",
+    "r_mode",
+    "-1",
+    "+set",
+    "r_customwidth",
+    "240",
+    "+set",
+    "r_customheight",
+    "240",
+    "+set",
+    "r_vsync",
+    "0",
+    "+set",
+    "s_initsound",
+    "0",
+    "+set",
+    "r_msaa_samples",
+    "0",
+    "+exec",
+    "perf/gles1-functional-240.cfg"
+  ],
+  "settings": {
+    "vid_renderer": "gles1",
+    "vid_fullscreen": "0",
+    "r_mode": "-1",
+    "r_customwidth": "240",
+    "r_customheight": "240",
+    "r_vsync": "0",
+    "vid_maxfps": "1000",
+    "cl_maxfps": "60",
+    "cl_async": "1",
+    "s_initsound": "0",
+    "r_perf": "1",
+    "r_perf_gpu": "1",
+    "gl1_picmip": "0",
+    "r_shadows": "0",
+    "r_fullbright": "0",
+    "r_novis": "0",
+    "r_cull": "1",
+    "r_drawentities": "1",
+    "r_drawworld": "1",
+    "r_lerpmodels": "1",
+    "cl_entities": "1",
+    "cl_lights": "1",
+    "cl_particles": "1",
+    "gl_texturemode": "GL_LINEAR_MIPMAP_NEAREST",
+    "r_msaa_samples": "0",
+    "r_anisotropic": "0",
+    "gl_finish": "0",
+    "gl1_dynamic": "1",
+    "r_retexturing": "1",
+    "cl_perf_frames": "180",
+    "cl_perf_quit": "1",
+    "cl_perf_screenshot": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_count": 9,
+  "binary_sha256": "aded2eabd7c2517dd1b59b84633385f9d45a9ae834d8b98df6f5f9371e0c451d",
+  "renderer_sha256": "1cb2af9c0bcdabc19e627f2ecc6a1c5d12ebdd483125b8bb49acf1dc6cf425ac",
+  "game_sha256": "1ef6ea22eb8450c16a9d6c1da07964b2a88fefee1720e538911ee7070c92f8e6",
+  "map_sha256": "5ddd5449d95c6af319982b5b9d940100b246b456ae0475ec89135584dca1d4c6",
+  "pak0_sha256": "cae257182f34d3913f3d663e1d7cf865d668feda6af393d4ecf3e9e408b48d09",
+  "project_overlay_sha256": "0a6b8f8133497ce1e5bfccbc1d2804c18adf47d3b0b03b3be99636a507ed4313",
+  "software_display_requested": false,
+  "warmup_frames": 30,
+  "environment": {
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "LP_NUM_THREADS": null,
+    "SDL_VIDEODRIVER": "offscreen",
+    "VC4_DEBUG": null
+  },
+  "returncode": 0,
+  "summary": {
+    "capture": "<runtime>/baseq2/perf/gles1-functional-240-frames.csv",
+    "warmup_frames": 30,
+    "frames": 150,
+    "metrics": {
+      "frame_ms": {
+        "median": 70.4315,
+        "p95": 103.68499999999995,
+        "p99": 115.30442999999997,
+        "maximum": 118.672,
+        "mean": 77.17799333333333,
+        "minimum": 65.637
+      },
+      "screen_ms": {
+        "median": 70.286,
+        "p95": 102.29784999999998,
+        "p99": 115.14203999999997,
+        "maximum": 118.485,
+        "mean": 77.0205,
+        "minimum": 65.496
+      },
+      "server_ms": {
+        "median": 0.055,
+        "p95": 0.07719999999999994,
+        "p99": 0.1241199999999999,
+        "maximum": 2.289,
+        "mean": 0.06757333333333333,
+        "minimum": 0.024
+      },
+      "simulation_ms": {
+        "median": 0.013,
+        "p95": 0.017,
+        "p99": 0.04050999999999999,
+        "maximum": 0.088,
+        "mean": 0.01132,
+        "minimum": 0.0
+      },
+      "snapshot_send_ms": {
+        "median": 0.014,
+        "p95": 0.018549999999999983,
+        "p99": 0.04756999999999993,
+        "maximum": 2.243,
+        "mean": 0.026413333333333334,
+        "minimum": 0.0
+      },
+      "client_update_ms": {
+        "median": 0.054,
+        "p95": 0.08364999999999996,
+        "p99": 0.11551,
+        "maximum": 0.141,
+        "mean": 0.05547333333333333,
+        "minimum": 0.034
+      },
+      "prepare_ms": {
+        "median": 0.055,
+        "p95": 0.084,
+        "p99": 0.13539999999999963,
+        "maximum": 0.158,
+        "mean": 0.05946666666666667,
+        "minimum": 0.047
+      },
+      "submit_ms": {
+        "median": 69.6285,
+        "p95": 101.68539999999999,
+        "p99": 114.57052999999996,
+        "maximum": 117.821,
+        "mean": 76.48068,
+        "minimum": 65.041
+      },
+      "present_ms": {
+        "median": 0.032,
+        "p95": 0.0836499999999996,
+        "p99": 0.5309299999999978,
+        "maximum": 0.953,
+        "mean": 0.05710666666666667,
+        "minimum": 0.031
+      },
+      "views": {
+        "median": 2.0,
+        "p95": 2.0,
+        "p99": 2.0,
+        "maximum": 2.0,
+        "mean": 2.0,
+        "minimum": 2.0
+      },
+      "width": {
+        "median": 240.0,
+        "p95": 240.0,
+        "p99": 240.0,
+        "maximum": 240.0,
+        "mean": 240.0,
+        "minimum": 240.0
+      },
+      "height": {
+        "median": 240.0,
+        "p95": 240.0,
+        "p99": 240.0,
+        "maximum": 240.0,
+        "mean": 240.0,
+        "minimum": 240.0
+      },
+      "server_edicts": {
+        "median": 115.0,
+        "p95": 115.0,
+        "p99": 115.0,
+        "maximum": 115.0,
+        "mean": 115.0,
+        "minimum": 115.0
+      },
+      "monsters": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "dead_monsters": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "projectiles_by_effect": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "rss_kib": {
+        "median": 136420.0,
+        "p95": 136720.0,
+        "p99": 136720.0,
+        "maximum": 136720.0,
+        "mean": 136416.0,
+        "minimum": 135800.0
+      },
+      "cpu_ms": {
+        "median": 69.463,
+        "p95": 101.50154999999998,
+        "p99": 114.37123999999997,
+        "maximum": 117.644,
+        "mean": 76.30468,
+        "minimum": 64.894
+      },
+      "visibility_ms": {
+        "median": 0.002,
+        "p95": 0.002,
+        "p99": 0.003,
+        "maximum": 0.025,
+        "mean": 0.0020533333333333332,
+        "minimum": 0.001
+      },
+      "model_ms": {
+        "median": 0.7235,
+        "p95": 1.11895,
+        "p99": 1.2519299999999995,
+        "maximum": 1.507,
+        "mean": 0.79038,
+        "minimum": 0.644
+      },
+      "draws": {
+        "median": 169.0,
+        "p95": 169.0,
+        "p99": 169.0,
+        "maximum": 169.0,
+        "mean": 169.0,
+        "minimum": 169.0
+      },
+      "world_triangles": {
+        "median": 650.0,
+        "p95": 650.0,
+        "p99": 650.0,
+        "maximum": 650.0,
+        "mean": 650.0,
+        "minimum": 650.0
+      },
+      "model_triangles": {
+        "median": 129360.0,
+        "p95": 129360.0,
+        "p99": 129360.0,
+        "maximum": 129360.0,
+        "mean": 129360.0,
+        "minimum": 129360.0
+      },
+      "static_vertex_bytes": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "static_index_bytes": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "dynamic_vertex_bytes": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "dynamic_index_bytes": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "client_vertex_bytes": {
+        "median": 672880.0,
+        "p95": 672880.0,
+        "p99": 672880.0,
+        "maximum": 672880.0,
+        "mean": 672880.0,
+        "minimum": 672880.0
+      },
+      "client_index_bytes": {
+        "median": 3900.0,
+        "p95": 3900.0,
+        "p99": 3900.0,
+        "maximum": 3900.0,
+        "mean": 3900.0,
+        "minimum": 3900.0
+      },
+      "pose_vertices": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "topology_builds": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "pvs_builds": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "pvs_hits": {
+        "median": 2.0,
+        "p95": 2.0,
+        "p99": 2.0,
+        "maximum": 2.0,
+        "mean": 2.0,
+        "minimum": 2.0
+      },
+      "lightmap_bytes": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "pose_cache_hits": {
+        "median": 2.0,
+        "p95": 2.0,
+        "p99": 2.0,
+        "maximum": 2.0,
+        "mean": 2.0,
+        "minimum": 2.0
+      },
+      "particles_created": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "particle_updates": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "particles_expired": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "shared_preparations": {
+        "median": 1.0,
+        "p95": 1.0,
+        "p99": 1.0,
+        "maximum": 1.0,
+        "mean": 1.0,
+        "minimum": 1.0
+      },
+      "entity_effect_evaluations": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "entity_effect_reuses": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "temp_events_parsed": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "sprite_updates": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "active_particles": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      },
+      "prepared_particles": {
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0
+      }
+    },
+    "over_33_333_ms_percent": 100.0,
+    "elapsed_seconds": 11.576699000000001,
+    "rss_kib_first_last": [
+      135800.0,
+      136720.0
+    ],
+    "server_edicts_first_last": [
+      115.0,
+      115.0
+    ],
+    "monsters_first_last": [
+      0.0,
+      0.0
+    ],
+    "dead_monsters_first_last": [
+      0.0,
+      0.0
+    ],
+    "active_particles_first_last": [
+      0.0,
+      0.0
+    ]
+  },
+  "seconds": 15.631388663001417
+}

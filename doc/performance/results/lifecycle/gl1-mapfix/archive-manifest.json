@@ -1,0 +1,354 @@
+{
+  "schema": 1,
+  "source": "build/lifecycle/gl1-mapfix",
+  "purpose": "Functional lifecycle evidence; not equivalent-quality timing or Pi performance measurements.",
+  "packaging": {
+    "python": "3.12.14",
+    "zlib": "1.3.2",
+    "csv": "gzip level 9, mtime 0, no original filename",
+    "text_redactions": [
+      "Local test-only rcon token replaced with LOCAL_RCON_TOKEN_REDACTED",
+      "Temporary validation runtime roots replaced with TEMP_VALIDATION_RUNTIME"
+    ],
+    "png": "Original PNG bytes preserved; decoded and verified. Screenshots may display original temporary capture paths."
+  },
+  "files": [
+    {
+      "source": "console.log",
+      "source_bytes": 21528,
+      "source_sha256": "8a0c060357bda468ea11599451d97feb29a5d27e23b9ac381dc5f473aabeaf3b",
+      "decoded_bytes": 21476,
+      "decoded_sha256": "e7d770c3cb32d46ede42c642d45c6ba67e2abd826c9ca69ecfec791ae2abf1f9",
+      "text_redacted": true,
+      "path": "console.log",
+      "bytes": 21476,
+      "sha256": "e7d770c3cb32d46ede42c642d45c6ba67e2abd826c9ca69ecfec791ae2abf1f9"
+    },
+    {
+      "source": "control-reply.txt",
+      "source_bytes": 50,
+      "source_sha256": "6d7fa42cb5d17eb191c9693c1c828e876847be9bc090d68c4efee5de19d717e0",
+      "decoded_bytes": 50,
+      "decoded_sha256": "6d7fa42cb5d17eb191c9693c1c828e876847be9bc090d68c4efee5de19d717e0",
+      "text_redacted": false,
+      "path": "control-reply.txt",
+      "bytes": 50,
+      "sha256": "6d7fa42cb5d17eb191c9693c1c828e876847be9bc090d68c4efee5de19d717e0"
+    },
+    {
+      "source": "initial-status.txt",
+      "source_bytes": 322,
+      "source_sha256": "0b5eed317ee9efaa4bce25f12df2c105149398854e99a1d9a7855616af58144f",
+      "decoded_bytes": 322,
+      "decoded_sha256": "0b5eed317ee9efaa4bce25f12df2c105149398854e99a1d9a7855616af58144f",
+      "text_redacted": false,
+      "path": "initial-status.txt",
+      "bytes": 322,
+      "sha256": "0b5eed317ee9efaa4bce25f12df2c105149398854e99a1d9a7855616af58144f"
+    },
+    {
+      "source": "lifecycle-sequence.cfg",
+      "source_bytes": 1051,
+      "source_sha256": "7f6a7c0cf143e1bcd5c44b9ce589e543b5545e09e650f5a82d3bd362bfec5063",
+      "decoded_bytes": 1051,
+      "decoded_sha256": "7f6a7c0cf143e1bcd5c44b9ce589e543b5545e09e650f5a82d3bd362bfec5063",
+      "text_redacted": false,
+      "path": "lifecycle-sequence.cfg",
+      "bytes": 1051,
+      "sha256": "7f6a7c0cf143e1bcd5c44b9ce589e543b5545e09e650f5a82d3bd362bfec5063"
+    },
+    {
+      "source": "lifecycle-start.cfg",
+      "source_bytes": 787,
+      "source_sha256": "298ae9a5e172502171fef36eb0bf59fe8cae3b0d808f5ea58f54f65aae002f03",
+      "decoded_bytes": 789,
+      "decoded_sha256": "29de791d578ed81bbc2864febaa8b7c64727703ab247d35678581dc05d3a9e59",
+      "text_redacted": true,
+      "path": "lifecycle-start.cfg",
+      "bytes": 789,
+      "sha256": "29de791d578ed81bbc2864febaa8b7c64727703ab247d35678581dc05d3a9e59"
+    },
+    {
+      "source": "perf/gl1-fallback-frames.csv",
+      "source_bytes": 28748,
+      "source_sha256": "b211c80348aa32a7a50a666c42a32cc28055d4ee5b8af5b2f87c4003fe94fc45",
+      "decoded_bytes": 28748,
+      "decoded_sha256": "b211c80348aa32a7a50a666c42a32cc28055d4ee5b8af5b2f87c4003fe94fc45",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl1-fallback-frames.csv.gz",
+      "bytes": 4094,
+      "sha256": "038c2b3d416098f54c3d9973b251d550310750b71f6e9a23610d81181f923d98"
+    },
+    {
+      "source": "perf/gl1-fallback-settings.txt",
+      "source_bytes": 1742,
+      "source_sha256": "4b245b28c783294a7aa737b6d0d26b1fba234f977cfec3c9a43e12bcbbbcc7cc",
+      "decoded_bytes": 1742,
+      "decoded_sha256": "4b245b28c783294a7aa737b6d0d26b1fba234f977cfec3c9a43e12bcbbbcc7cc",
+      "text_redacted": false,
+      "path": "perf/gl1-fallback-settings.txt",
+      "bytes": 1742,
+      "sha256": "4b245b28c783294a7aa737b6d0d26b1fba234f977cfec3c9a43e12bcbbbcc7cc"
+    },
+    {
+      "source": "perf/gl1-fallback-views.csv",
+      "source_bytes": 51677,
+      "source_sha256": "87cfae601411df6a300d199a1cbae9b54189be1118f23dafa43715d756027c99",
+      "decoded_bytes": 51677,
+      "decoded_sha256": "87cfae601411df6a300d199a1cbae9b54189be1118f23dafa43715d756027c99",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl1-fallback-views.csv.gz",
+      "bytes": 5069,
+      "sha256": "5f9c6102faf820bd3037209e3259697f5cf431da47bdbc0a767ba9958e21c149"
+    },
+    {
+      "source": "perf/gl1-initial-frames.csv",
+      "source_bytes": 28748,
+      "source_sha256": "4818a7930610bdcd282083dfcb924b2a057872e59e968871cfcbcf9eed1fc6cc",
+      "decoded_bytes": 28748,
+      "decoded_sha256": "4818a7930610bdcd282083dfcb924b2a057872e59e968871cfcbcf9eed1fc6cc",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl1-initial-frames.csv.gz",
+      "bytes": 3750,
+      "sha256": "1e4e93f0c6a0990b339459df4f528c20240ec0afca8c4d5eafdd2b91ddbc5d04"
+    },
+    {
+      "source": "perf/gl1-initial-settings.txt",
+      "source_bytes": 1738,
+      "source_sha256": "e936d4bba1e3a12054b9c8fb88444e4861f6587ce86e5214e9e9e6dc84b4d640",
+      "decoded_bytes": 1738,
+      "decoded_sha256": "e936d4bba1e3a12054b9c8fb88444e4861f6587ce86e5214e9e9e6dc84b4d640",
+      "text_redacted": false,
+      "path": "perf/gl1-initial-settings.txt",
+      "bytes": 1738,
+      "sha256": "e936d4bba1e3a12054b9c8fb88444e4861f6587ce86e5214e9e9e6dc84b4d640"
+    },
+    {
+      "source": "perf/gl1-initial-views.csv",
+      "source_bytes": 50973,
+      "source_sha256": "f1d19296689f793f9a0181bffd8e6d278289e90dda3d6d22a245f138cb167ab5",
+      "decoded_bytes": 50973,
+      "decoded_sha256": "f1d19296689f793f9a0181bffd8e6d278289e90dda3d6d22a245f138cb167ab5",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl1-initial-views.csv.gz",
+      "bytes": 4801,
+      "sha256": "f27e488b9deab9f68ff1426a7277f19986a82c063475360a619af144ca3245ea"
+    },
+    {
+      "source": "perf/gl1-map-reload-frames.csv",
+      "source_bytes": 28748,
+      "source_sha256": "4bc6fa382dd2cab16ca84d6ddef2b2753fe438f42ef51a387b3e5c1fec519dae",
+      "decoded_bytes": 28748,
+      "decoded_sha256": "4bc6fa382dd2cab16ca84d6ddef2b2753fe438f42ef51a387b3e5c1fec519dae",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl1-map-reload-frames.csv.gz",
+      "bytes": 3950,
+      "sha256": "6ae783068cbb1f218d53fffb7e655e0fd165a7328cbdc8d91201eba161ff5ef8"
+    },
+    {
+      "source": "perf/gl1-map-reload-settings.txt",
+      "source_bytes": 1742,
+      "source_sha256": "5de55f773f90ae453390ed2bc1eda5f68c2912388658f55f94c9ef71acc462b4",
+      "decoded_bytes": 1742,
+      "decoded_sha256": "5de55f773f90ae453390ed2bc1eda5f68c2912388658f55f94c9ef71acc462b4",
+      "text_redacted": false,
+      "path": "perf/gl1-map-reload-settings.txt",
+      "bytes": 1742,
+      "sha256": "5de55f773f90ae453390ed2bc1eda5f68c2912388658f55f94c9ef71acc462b4"
+    },
+    {
+      "source": "perf/gl1-map-reload-views.csv",
+      "source_bytes": 51184,
+      "source_sha256": "c669879cf4400df3f8057377d9efd9b67340063bf86d7cbab711ff0e834ade60",
+      "decoded_bytes": 51184,
+      "decoded_sha256": "c669879cf4400df3f8057377d9efd9b67340063bf86d7cbab711ff0e834ade60",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl1-map-reload-views.csv.gz",
+      "bytes": 4953,
+      "sha256": "49da6a546cc4d2423c0ee4a9f68b8b6eb272c92c32c972cde09f0032c7f4ebe2"
+    },
+    {
+      "source": "perf/gl1-restart-frames.csv",
+      "source_bytes": 28749,
+      "source_sha256": "7ae2070a4d8fe5c2035888390b73e12286eb1b25946be0a739531fc82c9670eb",
+      "decoded_bytes": 28749,
+      "decoded_sha256": "7ae2070a4d8fe5c2035888390b73e12286eb1b25946be0a739531fc82c9670eb",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl1-restart-frames.csv.gz",
+      "bytes": 3934,
+      "sha256": "c376d6889cb57b42098aba0c55ebb82ae546c7f2172d3e7a1af7c95dffcdce27"
+    },
+    {
+      "source": "perf/gl1-restart-settings.txt",
+      "source_bytes": 1742,
+      "source_sha256": "b9c7084115cda2550e3b9eebea4d4609bb7319bfe3757eb3ebd1a4c4b9480a60",
+      "decoded_bytes": 1742,
+      "decoded_sha256": "b9c7084115cda2550e3b9eebea4d4609bb7319bfe3757eb3ebd1a4c4b9480a60",
+      "text_redacted": false,
+      "path": "perf/gl1-restart-settings.txt",
+      "bytes": 1742,
+      "sha256": "b9c7084115cda2550e3b9eebea4d4609bb7319bfe3757eb3ebd1a4c4b9480a60"
+    },
+    {
+      "source": "perf/gl1-restart-views.csv",
+      "source_bytes": 51603,
+      "source_sha256": "0b8c5f16b05dc7406d0d3e8046bc695f960a257ed38e59484974004126d4ac4d",
+      "decoded_bytes": 51603,
+      "decoded_sha256": "0b8c5f16b05dc7406d0d3e8046bc695f960a257ed38e59484974004126d4ac4d",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl1-restart-views.csv.gz",
+      "bytes": 4892,
+      "sha256": "a21cf97bb813c6f0171b6f9463dd3a8f7852d51cf77412465feb942c09515a46"
+    },
+    {
+      "source": "perf/gl1-restored-frames.csv",
+      "source_bytes": 28748,
+      "source_sha256": "959e6db3fc4f9eb398f00624c75804cba87a4cb52fb821f3814447f44bfbeacb",
+      "decoded_bytes": 28748,
+      "decoded_sha256": "959e6db3fc4f9eb398f00624c75804cba87a4cb52fb821f3814447f44bfbeacb",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl1-restored-frames.csv.gz",
+      "bytes": 3972,
+      "sha256": "94470bdeb6ca3549790acb41de09892a974eb93a007d666b563d81d6aa3a771c"
+    },
+    {
+      "source": "perf/gl1-restored-settings.txt",
+      "source_bytes": 1742,
+      "source_sha256": "b9c7084115cda2550e3b9eebea4d4609bb7319bfe3757eb3ebd1a4c4b9480a60",
+      "decoded_bytes": 1742,
+      "decoded_sha256": "b9c7084115cda2550e3b9eebea4d4609bb7319bfe3757eb3ebd1a4c4b9480a60",
+      "text_redacted": false,
+      "path": "perf/gl1-restored-settings.txt",
+      "bytes": 1742,
+      "sha256": "b9c7084115cda2550e3b9eebea4d4609bb7319bfe3757eb3ebd1a4c4b9480a60"
+    },
+    {
+      "source": "perf/gl1-restored-views.csv",
+      "source_bytes": 51652,
+      "source_sha256": "26b52e25a5adeef2ebf6ea579883149bb636018d5f23d2b1dfc88ca7889d0e7a",
+      "decoded_bytes": 51652,
+      "decoded_sha256": "26b52e25a5adeef2ebf6ea579883149bb636018d5f23d2b1dfc88ca7889d0e7a",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl1-restored-views.csv.gz",
+      "bytes": 5050,
+      "sha256": "6bb9a93929d77328756f3d6347ac12a669ba028c9ea932977dc4b0deaaadda06"
+    },
+    {
+      "source": "qconsole.log",
+      "source_bytes": 20863,
+      "source_sha256": "d8b18768f3528cde09654f2669f49b2be47a595219c903a8058993c100337109",
+      "decoded_bytes": 20832,
+      "decoded_sha256": "fb2c37dcb522d93c6d953163225ba3a0ad105e522c562be7a2749a4a537347b0",
+      "text_redacted": true,
+      "path": "qconsole.log",
+      "bytes": 20832,
+      "sha256": "fb2c37dcb522d93c6d953163225ba3a0ad105e522c562be7a2749a4a537347b0"
+    },
+    {
+      "source": "run.json",
+      "source_bytes": 4228,
+      "source_sha256": "2a0bc6a9e8d6ab3a5a8164fa09d11d98f58b965e924f2f6ccb02ef4f96015d81",
+      "decoded_bytes": 4207,
+      "decoded_sha256": "59c27e875f210daeb50d3fa6cffaafe4e4a2b4ad8100cc8068e6db9870aa9e6f",
+      "text_redacted": true,
+      "path": "run.json",
+      "bytes": 4207,
+      "sha256": "59c27e875f210daeb50d3fa6cffaafe4e4a2b4ad8100cc8068e6db9870aa9e6f"
+    },
+    {
+      "source": "screenshots/q2_0000.png",
+      "source_bytes": 57770,
+      "source_sha256": "9460354266beb287ad60458e87b83c6825ff31dde89f0ef85961b57149c33a93",
+      "image": {
+        "format": "PNG",
+        "width": 240,
+        "height": 240,
+        "mode": "RGB"
+      },
+      "decoded_bytes": 57770,
+      "decoded_sha256": "9460354266beb287ad60458e87b83c6825ff31dde89f0ef85961b57149c33a93",
+      "text_redacted": false,
+      "path": "screenshots/q2_0000.png",
+      "bytes": 57770,
+      "sha256": "9460354266beb287ad60458e87b83c6825ff31dde89f0ef85961b57149c33a93"
+    },
+    {
+      "source": "screenshots/q2_0001.png",
+      "source_bytes": 57758,
+      "source_sha256": "b241536254871d0cab298d3975a78b44a708fe70226f66aee64710f748cde8f3",
+      "image": {
+        "format": "PNG",
+        "width": 240,
+        "height": 240,
+        "mode": "RGB"
+      },
+      "decoded_bytes": 57758,
+      "decoded_sha256": "b241536254871d0cab298d3975a78b44a708fe70226f66aee64710f748cde8f3",
+      "text_redacted": false,
+      "path": "screenshots/q2_0001.png",
+      "bytes": 57758,
+      "sha256": "b241536254871d0cab298d3975a78b44a708fe70226f66aee64710f748cde8f3"
+    },
+    {
+      "source": "screenshots/q2_0002.png",
+      "source_bytes": 57692,
+      "source_sha256": "e0edf5f99c4a3e80fe8c36498fba9b0fcded7706d8c6f2e23ae8566c48bf9049",
+      "image": {
+        "format": "PNG",
+        "width": 240,
+        "height": 240,
+        "mode": "RGB"
+      },
+      "decoded_bytes": 57692,
+      "decoded_sha256": "e0edf5f99c4a3e80fe8c36498fba9b0fcded7706d8c6f2e23ae8566c48bf9049",
+      "text_redacted": false,
+      "path": "screenshots/q2_0002.png",
+      "bytes": 57692,
+      "sha256": "e0edf5f99c4a3e80fe8c36498fba9b0fcded7706d8c6f2e23ae8566c48bf9049"
+    },
+    {
+      "source": "screenshots/q2_0003.png",
+      "source_bytes": 56912,
+      "source_sha256": "4537fdc629c1fb6b0a6e670f6a2aaf9a48afa99ed5b8784317c151da62dbea37",
+      "image": {
+        "format": "PNG",
+        "width": 240,
+        "height": 240,
+        "mode": "RGB"
+      },
+      "decoded_bytes": 56912,
+      "decoded_sha256": "4537fdc629c1fb6b0a6e670f6a2aaf9a48afa99ed5b8784317c151da62dbea37",
+      "text_redacted": false,
+      "path": "screenshots/q2_0003.png",
+      "bytes": 56912,
+      "sha256": "4537fdc629c1fb6b0a6e670f6a2aaf9a48afa99ed5b8784317c151da62dbea37"
+    },
+    {
+      "source": "screenshots/q2_0004.png",
+      "source_bytes": 56642,
+      "source_sha256": "eaf79f5a403d5f98010d8471eb295ea0d5fd53fc3d21be94c3df01dfec69c7bf",
+      "image": {
+        "format": "PNG",
+        "width": 240,
+        "height": 240,
+        "mode": "RGB"
+      },
+      "decoded_bytes": 56642,
+      "decoded_sha256": "eaf79f5a403d5f98010d8471eb295ea0d5fd53fc3d21be94c3df01dfec69c7bf",
+      "text_redacted": false,
+      "path": "screenshots/q2_0004.png",
+      "bytes": 56642,
+      "sha256": "eaf79f5a403d5f98010d8471eb295ea0d5fd53fc3d21be94c3df01dfec69c7bf"
+    }
+  ]
+}

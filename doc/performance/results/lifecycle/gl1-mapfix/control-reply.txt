@@ -1,0 +1,2 @@
+����print
+execing lifecycle-sequence.cfg.

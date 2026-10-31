@@ -1,0 +1,40 @@
+Using 8 processor threads
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< q2tool >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+fastvis = true
+threads requested = 1
+moddir = /workspace/scratch/bf32e00d9702/runtime-data/baseq2/
+basedir = /workspace/scratch/bf32e00d9702/runtime-data/baseq2/
+gamedir = /workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/interior_ladders_detail/../../
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< BEGIN vis >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+reading /workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/interior_ladders_detail/interior_ladders_detail.bsp
+reading /workspace/scratch/bf32e00d9702/plasticPlatoon/build/map-experiments/interior_ladders_detail/interior_ladders_detail.prt
+1270 portalclusters
+4342 numportals
+0...1...2...3...4...5...6...7...8...9... (3)
+Average clusters visible: 1112
+Building PHS...
+0...1...2...3...4...5...6...7...8...9... (0)
+Average clusters hearable: 1269
+visdatasize: 410861 compressed from 406400
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FILE STATS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+models:           51        size:    2448
+brushes:        1738        size:   20856
+brushsides:    25714        size:  102856
+planes:        28886        size:  577720
+texinfo:         930        size:   70680
+entdata:         470        size:   37045
+vertices:      15681        size:  188172
+nodes:          8203        size:  229684
+faces:         12495        size:  249900
+leafs:          8255        size:  231140
+leaffaces:     14894        size:   29788
+leafbrushes:    5767        size:   11534
+edges:         29253        size:  117012
+surfedges:     58352        size:  233408
+                  lightdata size:       0
+                    visdata size:  410861
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< END vis >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+

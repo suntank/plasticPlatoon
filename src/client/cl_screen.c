@@ -26,6 +26,7 @@
  */
 
 #include "header/client.h"
+#include "header/performance.h"
 #include "cl_splitscreen.h"
 
 static float scr_con_current; /* aproaches scr_conlines at scr_conspeed */
@@ -1743,6 +1744,7 @@ SCR_UpdateScreen(void)
 		return; /* not initialized yet */
 	}
 
+	CL_PerfBeginDisplay();
 	if (gl1_stereo->value && !SS_IsSessionActive())
 	{
 		numframes = 2;
@@ -1887,7 +1889,10 @@ SCR_UpdateScreen(void)
 	}
 
 	SCR_Framecounter();
+	CL_PerfBeginPresent();
 	R_EndFrame();
+	CL_PerfEndPresent();
+	CL_PerfEndDisplay();
 }
 
 static float

@@ -40,6 +40,8 @@
 #define INSTANT_PARTICLE -10000.0
 
 #include <math.h>
+#include <stdint.h>
+#include <limits.h>
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -307,6 +309,7 @@ extern	cvar_t	*cl_loadpaused;
 extern  cvar_t  *cl_audiopaused;
 extern  cvar_t  *cl_unpaused_scvis;
 extern	cvar_t	*cl_timedemo;
+extern	cvar_t	*cl_stats;
 extern	cvar_t	*cl_vwep;
 extern	cvar_t  *horplus;
 extern	cvar_t	*cin_force43;
@@ -405,7 +408,37 @@ typedef struct particle_s
 	float		colorvel;
 	float		alpha;
 	float		alphavel;
+	unsigned int view_mask; /* local views allowed to draw this representation */
 } cparticle_t;
+
+/* Cumulative diagnostics, sampled once per complete display frame. */
+typedef struct
+{
+	uint64_t particles_created;
+	uint64_t particle_updates;
+	uint64_t particles_expired;
+	uint64_t shared_preparations;
+	uint64_t entity_effect_evaluations;
+	uint64_t entity_effect_reuses;
+	uint64_t temp_events_parsed;
+	uint64_t sprite_updates;
+	unsigned int active_particles;
+	unsigned int prepared_particles;
+} cl_effect_stats_t;
+
+extern cl_effect_stats_t cl_effect_stats;
+extern unsigned int cl_particle_view_mask;
+const cl_effect_stats_t *CL_GetEffectStats(void);
+cparticle_t *CL_AllocParticle(void);
+qboolean CL_BeginSharedEffects(void);
+void CL_PrepareParticles(void);
+void CL_CalcRenderLerp(void);
+void CL_ResetEntityEffectQueue(void);
+void CL_QueueEntityEffects(frame_t *frame, int view_slot);
+void CL_EmitQueuedEntityEffects(void);
+void CL_PrepareTEnts(void);
+void CL_PrepareViewBeamParticles(void);
+unsigned int CL_EffectNoise(unsigned int entity, unsigned int sample);
 
 void CL_ClearEffects (void);
 void CL_ClearTEnts (void);

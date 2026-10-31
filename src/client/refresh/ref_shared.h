@@ -182,6 +182,27 @@ typedef struct mleaf_s
 extern refdef_t r_newrefdef;
 extern viddef_t vid;
 
+/* Renderer-owned presentation data; the on-disk MD2 layout is unchanged. */
+#include "files/alias_topology.h"
+typedef struct
+{
+	int frame, oldframe, shell;
+	float move[3], front[3], back[3];
+} pp_alias_pose_key_t;
+typedef struct pp_alias_cache_s
+{
+	pp_alias_topology_t *topology;
+	float *static_xyz; /* expanded frame zero, only for one-frame models */
+	pp_alias_pose_key_t pose_keys[2];
+	float *poses[2]; /* bounded cache, four floats per source position */
+	unsigned next_pose;
+	int num_positions;
+} pp_alias_cache_t;
+extern pp_alias_cache_t *Mod_BuildAliasCache(const dmdl_t *header);
+extern void Mod_FreeAliasCache(pp_alias_cache_t *cache);
+extern const float *Mod_FindAliasPose(const pp_alias_cache_t *cache, const pp_alias_pose_key_t *key);
+extern void Mod_SaveAliasPose(pp_alias_cache_t *cache, const pp_alias_pose_key_t *key, const float *pose);
+
 /* Shared models func */
 typedef struct image_s* (*findimage_t)(const char *name, imagetype_t type);
 extern void *Mod_LoadMD2 (const char *mod_name, const void *buffer, int modfilelen,

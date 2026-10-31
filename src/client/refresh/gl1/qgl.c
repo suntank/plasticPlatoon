@@ -57,6 +57,8 @@ void QGL_EXT_Reset ( void )
 	qglActiveTexture       = NULL;
 	qglClientActiveTexture = NULL;
 	qglDiscardFramebufferEXT = NULL;
+	qglGenBuffers = NULL; qglDeleteBuffers = NULL;
+	qglBindBuffer = NULL; qglBufferData = NULL;
 }
 
 /* ========================================================================= */
@@ -77,3 +79,36 @@ QGL_Init (void)
 	QGL_EXT_Reset();
 }
 
+
+void (APIENTRY *qglGenBuffers)(GLsizei, GLuint *);
+void (APIENTRY *qglDeleteBuffers)(GLsizei, const GLuint *);
+void (APIENTRY *qglBindBuffer)(GLenum, GLuint);
+void (APIENTRY *qglBufferData)(GLenum, ptrdiff_t, const void *, GLenum);
+
+void R_InitBufferObjects(void)
+{
+	qboolean supported;
+#ifdef YQ2_GL1_GLES
+	/* The ES context is 1.1. Still require all entry points below. */
+	supported = true;
+#else
+	int major = 0, minor = 0;
+	sscanf(gl_config.version_string, "%d.%d", &major, &minor);
+	supported = major > 1 || (major == 1 && minor >= 5) ||
+		strstr(gl_config.extensions_string, "GL_ARB_vertex_buffer_object") != NULL;
+#endif
+	if (!supported) return;
+#define PP_LOAD_BUFFER(name, signature) do { 	qgl##name = (signature)RI_GetProcAddress("gl" #name); 	if (!qgl##name) qgl##name = (signature)RI_GetProcAddress("gl" #name "ARB"); } while (0)
+	PP_LOAD_BUFFER(GenBuffers, void (APIENTRY *)(GLsizei, GLuint *));
+	PP_LOAD_BUFFER(DeleteBuffers, void (APIENTRY *)(GLsizei, const GLuint *));
+	PP_LOAD_BUFFER(BindBuffer, void (APIENTRY *)(GLenum, GLuint));
+	PP_LOAD_BUFFER(BufferData, void (APIENTRY *)(GLenum, ptrdiff_t, const void *, GLenum));
+#undef PP_LOAD_BUFFER
+	if (!qglGenBuffers || !qglDeleteBuffers || !qglBindBuffer || !qglBufferData)
+	{
+		qglGenBuffers = NULL; qglDeleteBuffers = NULL;
+		qglBindBuffer = NULL; qglBufferData = NULL;
+		Com_Printf(" - Persistent buffers: unavailable; using client arrays\n");
+	}
+	else Com_Printf(" - Persistent buffers: available\n");
+}

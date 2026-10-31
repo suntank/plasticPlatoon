@@ -1,0 +1,354 @@
+{
+  "schema": 1,
+  "source": "build/lifecycle/gl3-mapfix",
+  "purpose": "Functional lifecycle evidence; not equivalent-quality timing or Pi performance measurements.",
+  "packaging": {
+    "python": "3.12.14",
+    "zlib": "1.3.2",
+    "csv": "gzip level 9, mtime 0, no original filename",
+    "text_redactions": [
+      "Local test-only rcon token replaced with LOCAL_RCON_TOKEN_REDACTED",
+      "Temporary validation runtime roots replaced with TEMP_VALIDATION_RUNTIME"
+    ],
+    "png": "Original PNG bytes preserved; decoded and verified. Screenshots may display original temporary capture paths."
+  },
+  "files": [
+    {
+      "source": "console.log",
+      "source_bytes": 27747,
+      "source_sha256": "f785a36d85430ac581b60b4aec152c1645aac34ee2bf32b84dac7700c79518d0",
+      "decoded_bytes": 27695,
+      "decoded_sha256": "7e4eeccea05578de3cc1f32c405ea8e7c6e6af8f87265607347c985ff44cb1cc",
+      "text_redacted": true,
+      "path": "console.log",
+      "bytes": 27695,
+      "sha256": "7e4eeccea05578de3cc1f32c405ea8e7c6e6af8f87265607347c985ff44cb1cc"
+    },
+    {
+      "source": "control-reply.txt",
+      "source_bytes": 50,
+      "source_sha256": "6d7fa42cb5d17eb191c9693c1c828e876847be9bc090d68c4efee5de19d717e0",
+      "decoded_bytes": 50,
+      "decoded_sha256": "6d7fa42cb5d17eb191c9693c1c828e876847be9bc090d68c4efee5de19d717e0",
+      "text_redacted": false,
+      "path": "control-reply.txt",
+      "bytes": 50,
+      "sha256": "6d7fa42cb5d17eb191c9693c1c828e876847be9bc090d68c4efee5de19d717e0"
+    },
+    {
+      "source": "initial-status.txt",
+      "source_bytes": 322,
+      "source_sha256": "09037b7d4634243eb376afb3babae516b30333b44bc18abaf0a16739f8d3a76c",
+      "decoded_bytes": 322,
+      "decoded_sha256": "09037b7d4634243eb376afb3babae516b30333b44bc18abaf0a16739f8d3a76c",
+      "text_redacted": false,
+      "path": "initial-status.txt",
+      "bytes": 322,
+      "sha256": "09037b7d4634243eb376afb3babae516b30333b44bc18abaf0a16739f8d3a76c"
+    },
+    {
+      "source": "lifecycle-sequence.cfg",
+      "source_bytes": 1051,
+      "source_sha256": "53c693ef66007a61884de1940d84b74f64f2b32dae300b72e3e4e7e77bf28a98",
+      "decoded_bytes": 1051,
+      "decoded_sha256": "53c693ef66007a61884de1940d84b74f64f2b32dae300b72e3e4e7e77bf28a98",
+      "text_redacted": false,
+      "path": "lifecycle-sequence.cfg",
+      "bytes": 1051,
+      "sha256": "53c693ef66007a61884de1940d84b74f64f2b32dae300b72e3e4e7e77bf28a98"
+    },
+    {
+      "source": "lifecycle-start.cfg",
+      "source_bytes": 787,
+      "source_sha256": "c162a8bc4db0e5b2ef4aba74bd4a2a74a7d4118d086f182117a7ae75931a4a3a",
+      "decoded_bytes": 789,
+      "decoded_sha256": "514b8df81cffbe3e7a16366a42e3d54f3b6494cad212bc35ea0ddb767c4e21c7",
+      "text_redacted": true,
+      "path": "lifecycle-start.cfg",
+      "bytes": 789,
+      "sha256": "514b8df81cffbe3e7a16366a42e3d54f3b6494cad212bc35ea0ddb767c4e21c7"
+    },
+    {
+      "source": "perf/gl3-fallback-frames.csv",
+      "source_bytes": 28388,
+      "source_sha256": "36623dd2b37a8ecc883bc332dd0a57d534129ec7ea148545f1056839881c0ec0",
+      "decoded_bytes": 28388,
+      "decoded_sha256": "36623dd2b37a8ecc883bc332dd0a57d534129ec7ea148545f1056839881c0ec0",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl3-fallback-frames.csv.gz",
+      "bytes": 4125,
+      "sha256": "e3a8cebc8093bf341ce211016b5a37062122cabf2ca432f3a40ba70feae6e0fe"
+    },
+    {
+      "source": "perf/gl3-fallback-settings.txt",
+      "source_bytes": 1745,
+      "source_sha256": "a8b19a345e300e6887d5a2ff8d005e78fe3a2f0ee663535a78d315b478a75062",
+      "decoded_bytes": 1745,
+      "decoded_sha256": "a8b19a345e300e6887d5a2ff8d005e78fe3a2f0ee663535a78d315b478a75062",
+      "text_redacted": false,
+      "path": "perf/gl3-fallback-settings.txt",
+      "bytes": 1745,
+      "sha256": "a8b19a345e300e6887d5a2ff8d005e78fe3a2f0ee663535a78d315b478a75062"
+    },
+    {
+      "source": "perf/gl3-fallback-views.csv",
+      "source_bytes": 51442,
+      "source_sha256": "5498e6e29ece173fc835f7e5ec5ea7584b566fc137eb4de2183a18ba3245f200",
+      "decoded_bytes": 51442,
+      "decoded_sha256": "5498e6e29ece173fc835f7e5ec5ea7584b566fc137eb4de2183a18ba3245f200",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl3-fallback-views.csv.gz",
+      "bytes": 5230,
+      "sha256": "1b9772984a550a6532c991365bf8c37cd8313f635e083432bcce9c6995ca734e"
+    },
+    {
+      "source": "perf/gl3-initial-frames.csv",
+      "source_bytes": 28388,
+      "source_sha256": "b1059a9081ee4740b5a4d6703e9396d8a0e75aba2e560799ade62a6f5bb7d172",
+      "decoded_bytes": 28388,
+      "decoded_sha256": "b1059a9081ee4740b5a4d6703e9396d8a0e75aba2e560799ade62a6f5bb7d172",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl3-initial-frames.csv.gz",
+      "bytes": 4210,
+      "sha256": "252d046e63f92a56513c1ee474778d852a9550f255887dcd46a0167a228638df"
+    },
+    {
+      "source": "perf/gl3-initial-settings.txt",
+      "source_bytes": 1741,
+      "source_sha256": "827ddeb02531b010c8df35f091c1d306d2014743a51bc649e7fee792ba29e3f6",
+      "decoded_bytes": 1741,
+      "decoded_sha256": "827ddeb02531b010c8df35f091c1d306d2014743a51bc649e7fee792ba29e3f6",
+      "text_redacted": false,
+      "path": "perf/gl3-initial-settings.txt",
+      "bytes": 1741,
+      "sha256": "827ddeb02531b010c8df35f091c1d306d2014743a51bc649e7fee792ba29e3f6"
+    },
+    {
+      "source": "perf/gl3-initial-views.csv",
+      "source_bytes": 50962,
+      "source_sha256": "370dfc59af50719319ea142267daa6ec684298ffe36601565ac5e7eb43060b65",
+      "decoded_bytes": 50962,
+      "decoded_sha256": "370dfc59af50719319ea142267daa6ec684298ffe36601565ac5e7eb43060b65",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl3-initial-views.csv.gz",
+      "bytes": 5262,
+      "sha256": "1355c6c5a9323355aa465c3cfb85b8e0f2530d25d67f8fd6b3dab104cdbf4074"
+    },
+    {
+      "source": "perf/gl3-map-reload-frames.csv",
+      "source_bytes": 28388,
+      "source_sha256": "929d363d8ab8b98cc0a27d9890f19270e27f27b21f454af3d324db377a59c1ed",
+      "decoded_bytes": 28388,
+      "decoded_sha256": "929d363d8ab8b98cc0a27d9890f19270e27f27b21f454af3d324db377a59c1ed",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl3-map-reload-frames.csv.gz",
+      "bytes": 4080,
+      "sha256": "b721df6bfffa2f10f5ba922c8ba7e7bb3b12abafbf68aa54e67dccf93ec6fd22"
+    },
+    {
+      "source": "perf/gl3-map-reload-settings.txt",
+      "source_bytes": 1745,
+      "source_sha256": "5e34658b6a09a1bbbb25e6ebc68d0e3e97a867b98c1454c6371ab46e759b4d86",
+      "decoded_bytes": 1745,
+      "decoded_sha256": "5e34658b6a09a1bbbb25e6ebc68d0e3e97a867b98c1454c6371ab46e759b4d86",
+      "text_redacted": false,
+      "path": "perf/gl3-map-reload-settings.txt",
+      "bytes": 1745,
+      "sha256": "5e34658b6a09a1bbbb25e6ebc68d0e3e97a867b98c1454c6371ab46e759b4d86"
+    },
+    {
+      "source": "perf/gl3-map-reload-views.csv",
+      "source_bytes": 50962,
+      "source_sha256": "10bc8ca701ec3a0fee806f79e0e855a89cc41b021e1460d4b8e23db676d8ffcf",
+      "decoded_bytes": 50962,
+      "decoded_sha256": "10bc8ca701ec3a0fee806f79e0e855a89cc41b021e1460d4b8e23db676d8ffcf",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl3-map-reload-views.csv.gz",
+      "bytes": 5257,
+      "sha256": "9b61af4989952d29eeb6295cf6ee43440e25e1451b6c6f330d71daa478a40f42"
+    },
+    {
+      "source": "perf/gl3-restart-frames.csv",
+      "source_bytes": 28388,
+      "source_sha256": "e1a5ca19a7cfd96b32ff6604af3df0cff8e606fbd847275eb1f976ef8c9c3603",
+      "decoded_bytes": 28388,
+      "decoded_sha256": "e1a5ca19a7cfd96b32ff6604af3df0cff8e606fbd847275eb1f976ef8c9c3603",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl3-restart-frames.csv.gz",
+      "bytes": 4143,
+      "sha256": "33637f97267469c62486b5f84a984b09c87c74a7686d6f45db89470348310ff2"
+    },
+    {
+      "source": "perf/gl3-restart-settings.txt",
+      "source_bytes": 1745,
+      "source_sha256": "f05e29f3737f8233732cd267c48b3b232335467a9f9d07f0ca9b535d39231463",
+      "decoded_bytes": 1745,
+      "decoded_sha256": "f05e29f3737f8233732cd267c48b3b232335467a9f9d07f0ca9b535d39231463",
+      "text_redacted": false,
+      "path": "perf/gl3-restart-settings.txt",
+      "bytes": 1745,
+      "sha256": "f05e29f3737f8233732cd267c48b3b232335467a9f9d07f0ca9b535d39231463"
+    },
+    {
+      "source": "perf/gl3-restart-views.csv",
+      "source_bytes": 51442,
+      "source_sha256": "2e9200ed37552ed1a9018f417d270c3b726434af8353c84fbb305a5a6e2f8e77",
+      "decoded_bytes": 51442,
+      "decoded_sha256": "2e9200ed37552ed1a9018f417d270c3b726434af8353c84fbb305a5a6e2f8e77",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl3-restart-views.csv.gz",
+      "bytes": 5238,
+      "sha256": "b1454033f09ceffb60d1357df696910862c31f2fea3c23d5bc771ed8bb42e009"
+    },
+    {
+      "source": "perf/gl3-restored-frames.csv",
+      "source_bytes": 28388,
+      "source_sha256": "708b83b977041d58adf1ff7d0e83c12354540e9cb94992e3e934a44c8bec3758",
+      "decoded_bytes": 28388,
+      "decoded_sha256": "708b83b977041d58adf1ff7d0e83c12354540e9cb94992e3e934a44c8bec3758",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl3-restored-frames.csv.gz",
+      "bytes": 3918,
+      "sha256": "9c69167dd1d362c2f133625ce2a420a22cdcc82e445741ad89df141b7f141238"
+    },
+    {
+      "source": "perf/gl3-restored-settings.txt",
+      "source_bytes": 1745,
+      "source_sha256": "f05e29f3737f8233732cd267c48b3b232335467a9f9d07f0ca9b535d39231463",
+      "decoded_bytes": 1745,
+      "decoded_sha256": "f05e29f3737f8233732cd267c48b3b232335467a9f9d07f0ca9b535d39231463",
+      "text_redacted": false,
+      "path": "perf/gl3-restored-settings.txt",
+      "bytes": 1745,
+      "sha256": "f05e29f3737f8233732cd267c48b3b232335467a9f9d07f0ca9b535d39231463"
+    },
+    {
+      "source": "perf/gl3-restored-views.csv",
+      "source_bytes": 51442,
+      "source_sha256": "7f37c58d4f7bf0e3dff9c0e652ea05fd721e4b608cd6100f411f567c5e1ee592",
+      "decoded_bytes": 51442,
+      "decoded_sha256": "7f37c58d4f7bf0e3dff9c0e652ea05fd721e4b608cd6100f411f567c5e1ee592",
+      "text_redacted": false,
+      "complete_final_line": true,
+      "path": "perf/gl3-restored-views.csv.gz",
+      "bytes": 5076,
+      "sha256": "6f9daba1bc8f693bf318ffbcdbe5113c0b8af873a0398ab09356d8fc2941cab1"
+    },
+    {
+      "source": "qconsole.log",
+      "source_bytes": 27082,
+      "source_sha256": "74e54603e56cf0a1b9423d03164b1300e8277be83a06cc8ff09dd3e29fe15856",
+      "decoded_bytes": 27051,
+      "decoded_sha256": "8db0559a32cbdb6a63a257408966089f8c11be3829f03d30aa7903497254652a",
+      "text_redacted": true,
+      "path": "qconsole.log",
+      "bytes": 27051,
+      "sha256": "8db0559a32cbdb6a63a257408966089f8c11be3829f03d30aa7903497254652a"
+    },
+    {
+      "source": "run.json",
+      "source_bytes": 4237,
+      "source_sha256": "a8386597e5cfcee1cf60f063555171712dfb3b9ed8e1fcf7b2219cc0e2a94b36",
+      "decoded_bytes": 4216,
+      "decoded_sha256": "7e8dabc96411fab5b35c375cc6dae25274b782b97acd21c0c623d4cc09784a1c",
+      "text_redacted": true,
+      "path": "run.json",
+      "bytes": 4216,
+      "sha256": "7e8dabc96411fab5b35c375cc6dae25274b782b97acd21c0c623d4cc09784a1c"
+    },
+    {
+      "source": "screenshots/q2_0000.png",
+      "source_bytes": 56745,
+      "source_sha256": "2a5607ad34f940fd55847d79f8e7f427682aa0a6f23f7f20eec81f1512fe1dda",
+      "image": {
+        "format": "PNG",
+        "width": 240,
+        "height": 240,
+        "mode": "RGB"
+      },
+      "decoded_bytes": 56745,
+      "decoded_sha256": "2a5607ad34f940fd55847d79f8e7f427682aa0a6f23f7f20eec81f1512fe1dda",
+      "text_redacted": false,
+      "path": "screenshots/q2_0000.png",
+      "bytes": 56745,
+      "sha256": "2a5607ad34f940fd55847d79f8e7f427682aa0a6f23f7f20eec81f1512fe1dda"
+    },
+    {
+      "source": "screenshots/q2_0001.png",
+      "source_bytes": 56107,
+      "source_sha256": "ca8ed78eb031467e4f587d666b978133f55bb28d2a2f110772a76bfab19de683",
+      "image": {
+        "format": "PNG",
+        "width": 240,
+        "height": 240,
+        "mode": "RGB"
+      },
+      "decoded_bytes": 56107,
+      "decoded_sha256": "ca8ed78eb031467e4f587d666b978133f55bb28d2a2f110772a76bfab19de683",
+      "text_redacted": false,
+      "path": "screenshots/q2_0001.png",
+      "bytes": 56107,
+      "sha256": "ca8ed78eb031467e4f587d666b978133f55bb28d2a2f110772a76bfab19de683"
+    },
+    {
+      "source": "screenshots/q2_0002.png",
+      "source_bytes": 56162,
+      "source_sha256": "b6bcca1484643d4315f3fb2a24e337626af10fb4f227f0d1c43729cb86385254",
+      "image": {
+        "format": "PNG",
+        "width": 240,
+        "height": 240,
+        "mode": "RGB"
+      },
+      "decoded_bytes": 56162,
+      "decoded_sha256": "b6bcca1484643d4315f3fb2a24e337626af10fb4f227f0d1c43729cb86385254",
+      "text_redacted": false,
+      "path": "screenshots/q2_0002.png",
+      "bytes": 56162,
+      "sha256": "b6bcca1484643d4315f3fb2a24e337626af10fb4f227f0d1c43729cb86385254"
+    },
+    {
+      "source": "screenshots/q2_0003.png",
+      "source_bytes": 56338,
+      "source_sha256": "b1cfd5ad466c6f245b8c5b59dd562d61df8dd1ab7cb0e7afecaa2e6652be1849",
+      "image": {
+        "format": "PNG",
+        "width": 240,
+        "height": 240,
+        "mode": "RGB"
+      },
+      "decoded_bytes": 56338,
+      "decoded_sha256": "b1cfd5ad466c6f245b8c5b59dd562d61df8dd1ab7cb0e7afecaa2e6652be1849",
+      "text_redacted": false,
+      "path": "screenshots/q2_0003.png",
+      "bytes": 56338,
+      "sha256": "b1cfd5ad466c6f245b8c5b59dd562d61df8dd1ab7cb0e7afecaa2e6652be1849"
+    },
+    {
+      "source": "screenshots/q2_0004.png",
+      "source_bytes": 55394,
+      "source_sha256": "724366ab3f06ab4f62a2f567d06a363db7398ca9698a4d73165e214ac2958ea3",
+      "image": {
+        "format": "PNG",
+        "width": 240,
+        "height": 240,
+        "mode": "RGB"
+      },
+      "decoded_bytes": 55394,
+      "decoded_sha256": "724366ab3f06ab4f62a2f567d06a363db7398ca9698a4d73165e214ac2958ea3",
+      "text_redacted": false,
+      "path": "screenshots/q2_0004.png",
+      "bytes": 55394,
+      "sha256": "724366ab3f06ab4f62a2f567d06a363db7398ca9698a4d73165e214ac2958ea3"
+    }
+  ]
+}

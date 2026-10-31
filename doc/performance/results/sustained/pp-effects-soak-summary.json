@@ -1,0 +1,389 @@
+{
+  "capture": "/tmp/plastic-platoon-perf-dk4rz7xp/optimized/baseq2/perf/pp-effects-soak-frames.csv",
+  "warmup_frames": 120,
+  "frames": 18000,
+  "metrics": {
+    "frame_ms": {
+      "median": 33.3625,
+      "p95": 39.61374999999999,
+      "p99": 45.50903999999999,
+      "maximum": 133.652,
+      "mean": 33.59613083333333,
+      "minimum": 16.328
+    },
+    "screen_ms": {
+      "median": 22.018,
+      "p95": 34.13739999999999,
+      "p99": 38.93703999999999,
+      "maximum": 128.293,
+      "mean": 23.154614777777777,
+      "minimum": 14.288
+    },
+    "server_ms": {
+      "median": 0.033,
+      "p95": 0.105,
+      "p99": 0.1660099999999984,
+      "maximum": 3.073,
+      "mean": 0.05343105555555556,
+      "minimum": 0.02
+    },
+    "simulation_ms": {
+      "median": 0.0,
+      "p95": 0.044,
+      "p99": 0.068,
+      "maximum": 2.321,
+      "mean": 0.013097333333333334,
+      "minimum": 0.0
+    },
+    "snapshot_send_ms": {
+      "median": 0.0,
+      "p95": 0.02,
+      "p99": 0.037,
+      "maximum": 1.4,
+      "mean": 0.006287555555555556,
+      "minimum": 0.0
+    },
+    "client_update_ms": {
+      "median": 0.056,
+      "p95": 0.167,
+      "p99": 0.233,
+      "maximum": 3.794,
+      "mean": 0.07202372222222223,
+      "minimum": 0.033
+    },
+    "prepare_ms": {
+      "median": 0.322,
+      "p95": 0.437,
+      "p99": 0.5990099999999984,
+      "maximum": 18.103,
+      "mean": 0.33825333333333335,
+      "minimum": 0.189
+    },
+    "submit_ms": {
+      "median": 18.078000000000003,
+      "p95": 29.046349999999993,
+      "p99": 33.295049999999996,
+      "maximum": 124.842,
+      "mean": 19.121671444444445,
+      "minimum": 12.018
+    },
+    "present_ms": {
+      "median": 3.162,
+      "p95": 5.574,
+      "p99": 8.086049999999993,
+      "maximum": 66.493,
+      "mean": 3.3707438888888888,
+      "minimum": 1.559
+    },
+    "views": {
+      "median": 2.0,
+      "p95": 2.0,
+      "p99": 2.0,
+      "maximum": 2.0,
+      "mean": 2.0,
+      "minimum": 2.0
+    },
+    "width": {
+      "median": 240.0,
+      "p95": 240.0,
+      "p99": 240.0,
+      "maximum": 240.0,
+      "mean": 240.0,
+      "minimum": 240.0
+    },
+    "height": {
+      "median": 240.0,
+      "p95": 240.0,
+      "p99": 240.0,
+      "maximum": 240.0,
+      "mean": 240.0,
+      "minimum": 240.0
+    },
+    "server_edicts": {
+      "median": 135.0,
+      "p95": 135.0,
+      "p99": 135.0,
+      "maximum": 135.0,
+      "mean": 134.00011111111112,
+      "minimum": 133.0
+    },
+    "monsters": {
+      "median": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "maximum": 0.0,
+      "mean": 0.0,
+      "minimum": 0.0
+    },
+    "dead_monsters": {
+      "median": 12.0,
+      "p95": 12.0,
+      "p99": 12.0,
+      "maximum": 12.0,
+      "mean": 11.000111111111112,
+      "minimum": 10.0
+    },
+    "projectiles_by_effect": {
+      "median": 12.0,
+      "p95": 12.0,
+      "p99": 12.0,
+      "maximum": 12.0,
+      "mean": 11.000111111111112,
+      "minimum": 10.0
+    },
+    "rss_kib": {
+      "median": 157626.0,
+      "p95": 157888.2,
+      "p99": 158080.0,
+      "maximum": 158136.0,
+      "mean": 157501.33333333334,
+      "minimum": 156652.0
+    },
+    "cpu_ms": {
+      "median": 17.924,
+      "p95": 28.88715,
+      "p99": 33.139039999999994,
+      "maximum": 124.666,
+      "mean": 18.97016188888889,
+      "minimum": 11.913
+    },
+    "visibility_ms": {
+      "median": 0.002,
+      "p95": 0.002,
+      "p99": 0.003,
+      "maximum": 0.554,
+      "mean": 0.0018300555555555557,
+      "minimum": 0.001
+    },
+    "model_ms": {
+      "median": 0.792,
+      "p95": 1.335,
+      "p99": 1.5320199999999968,
+      "maximum": 12.958,
+      "mean": 0.9142353333333333,
+      "minimum": 0.629
+    },
+    "draws": {
+      "median": 223.0,
+      "p95": 231.0,
+      "p99": 234.0,
+      "maximum": 234.0,
+      "mean": 225.0342777777778,
+      "minimum": 223.0
+    },
+    "world_triangles": {
+      "median": 650.0,
+      "p95": 650.0,
+      "p99": 650.0,
+      "maximum": 650.0,
+      "mean": 650.0,
+      "minimum": 650.0
+    },
+    "model_triangles": {
+      "median": 129792.0,
+      "p95": 129972.0,
+      "p99": 129972.0,
+      "maximum": 129972.0,
+      "mean": 129869.23,
+      "minimum": 129792.0
+    },
+    "static_vertex_bytes": {
+      "median": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "maximum": 0.0,
+      "mean": 0.0,
+      "minimum": 0.0
+    },
+    "static_index_bytes": {
+      "median": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "maximum": 0.0,
+      "mean": 0.0,
+      "minimum": 0.0
+    },
+    "dynamic_vertex_bytes": {
+      "median": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "maximum": 0.0,
+      "mean": 0.0,
+      "minimum": 0.0
+    },
+    "dynamic_index_bytes": {
+      "median": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "maximum": 0.0,
+      "mean": 0.0,
+      "minimum": 0.0
+    },
+    "client_vertex_bytes": {
+      "median": 763040.0,
+      "p95": 770960.0,
+      "p99": 771920.0,
+      "maximum": 774640.0,
+      "mean": 762101.5291111111,
+      "minimum": 741792.0
+    },
+    "client_index_bytes": {
+      "median": 3900.0,
+      "p95": 3900.0,
+      "p99": 3900.0,
+      "maximum": 3900.0,
+      "mean": 3900.0,
+      "minimum": 3900.0
+    },
+    "pose_vertices": {
+      "median": 26.0,
+      "p95": 52.0,
+      "p99": 52.0,
+      "maximum": 52.0,
+      "mean": 38.998555555555555,
+      "minimum": 26.0
+    },
+    "topology_builds": {
+      "median": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "maximum": 0.0,
+      "mean": 0.0,
+      "minimum": 0.0
+    },
+    "pvs_builds": {
+      "median": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "maximum": 0.0,
+      "mean": 0.0,
+      "minimum": 0.0
+    },
+    "pvs_hits": {
+      "median": 2.0,
+      "p95": 2.0,
+      "p99": 2.0,
+      "maximum": 2.0,
+      "mean": 2.0,
+      "minimum": 2.0
+    },
+    "lightmap_bytes": {
+      "median": 193528.0,
+      "p95": 193528.0,
+      "p99": 193528.0,
+      "maximum": 193528.0,
+      "mean": 193528.0,
+      "minimum": 193528.0
+    },
+    "pose_cache_hits": {
+      "median": 5.0,
+      "p95": 8.0,
+      "p99": 8.0,
+      "maximum": 8.0,
+      "mean": 6.499833333333333,
+      "minimum": 5.0
+    },
+    "particles_created": {
+      "median": 24.0,
+      "p95": 614.0,
+      "p99": 692.0,
+      "maximum": 732.0,
+      "mean": 74.93477777777778,
+      "minimum": 20.0
+    },
+    "particle_updates": {
+      "median": 2733.0,
+      "p95": 2919.0,
+      "p99": 2972.0,
+      "maximum": 3110.0,
+      "mean": 2695.1266666666666,
+      "minimum": 2014.0
+    },
+    "particles_expired": {
+      "median": 81.0,
+      "p95": 101.0,
+      "p99": 111.0,
+      "maximum": 280.0,
+      "mean": 74.90844444444444,
+      "minimum": 17.0
+    },
+    "shared_preparations": {
+      "median": 1.0,
+      "p95": 1.0,
+      "p99": 1.0,
+      "maximum": 1.0,
+      "mean": 1.0,
+      "minimum": 1.0
+    },
+    "entity_effect_evaluations": {
+      "median": 12.0,
+      "p95": 12.0,
+      "p99": 12.0,
+      "maximum": 12.0,
+      "mean": 11.000111111111112,
+      "minimum": 10.0
+    },
+    "entity_effect_reuses": {
+      "median": 12.0,
+      "p95": 12.0,
+      "p99": 12.0,
+      "maximum": 12.0,
+      "mean": 11.000111111111112,
+      "minimum": 10.0
+    },
+    "temp_events_parsed": {
+      "median": 0.0,
+      "p95": 2.0,
+      "p99": 4.0,
+      "maximum": 4.0,
+      "mean": 0.46544444444444444,
+      "minimum": 0.0
+    },
+    "sprite_updates": {
+      "median": 18.0,
+      "p95": 22.0,
+      "p99": 22.0,
+      "maximum": 22.0,
+      "mean": 18.397222222222222,
+      "minimum": 16.0
+    },
+    "active_particles": {
+      "median": 2646.0,
+      "p95": 2858.0,
+      "p99": 2886.0,
+      "maximum": 2970.0,
+      "mean": 2620.2182222222223,
+      "minimum": 1945.0
+    },
+    "prepared_particles": {
+      "median": 2646.0,
+      "p95": 2858.0,
+      "p99": 2886.0,
+      "maximum": 2970.0,
+      "mean": 2620.2182222222223,
+      "minimum": 1945.0
+    }
+  },
+  "over_33_333_ms_percent": 50.55,
+  "elapsed_seconds": 604.730355,
+  "rss_kib_first_last": [
+    157312.0,
+    157784.0
+  ],
+  "server_edicts_first_last": [
+    133.0,
+    133.0
+  ],
+  "monsters_first_last": [
+    0.0,
+    0.0
+  ],
+  "dead_monsters_first_last": [
+    10.0,
+    10.0
+  ],
+  "active_particles_first_last": [
+    1994.0,
+    2511.0
+  ]
+}

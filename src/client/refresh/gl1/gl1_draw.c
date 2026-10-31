@@ -177,7 +177,7 @@ RDraw_PicScaled(int x, int y, const char *pic, float factor)
 
 	glVertexPointer( 2, GL_FLOAT, 0, vtx );
 	glTexCoordPointer( 2, GL_FLOAT, 0, tex );
-	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	PP_DrawArrays( GL_TRIANGLE_FAN, 0, 4 );
 
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
@@ -240,7 +240,7 @@ RDraw_Fill(int x, int y, int w, int h, int c)
 	glEnableClientState( GL_VERTEX_ARRAY );
 
 	glVertexPointer( 2, GL_FLOAT, 0, vtx );
-	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	PP_DrawArrays( GL_TRIANGLE_FAN, 0, 4 );
 
 	glDisableClientState( GL_VERTEX_ARRAY );
 
@@ -266,7 +266,7 @@ RDraw_FadeScreen(void)
 	glEnableClientState( GL_VERTEX_ARRAY );
 
 	glVertexPointer( 2, GL_FLOAT, 0, vtx );
-	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	PP_DrawArrays( GL_TRIANGLE_FAN, 0, 4 );
 
 	glDisableClientState( GL_VERTEX_ARRAY );
 
@@ -454,7 +454,7 @@ RDraw_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *dat
 
 	glVertexPointer( 2, GL_FLOAT, 0, vtx );
 	glTexCoordPointer( 2, GL_FLOAT, 0, tex );
-	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	PP_DrawArrays( GL_TRIANGLE_FAN, 0, 4 );
 
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState( GL_TEXTURE_COORD_ARRAY );

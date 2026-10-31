@@ -1,0 +1,127 @@
+
+Yamagi Quake II v8.61pre
+========================
+Client build options:
+ + cURL HTTP downloads
+ + OpenAL audio
+ - Systemwide installation
+Platform: Linux
+Architecture: x86_64
+Byte ordering: little endian
+
+Added packfile '/tmp/plastic-platoon-perf-dk4rz7xp/baseline/baseq2/pak0.pak' (1106 files).
+Added packfile '/tmp/plastic-platoon-perf-dk4rz7xp/baseline/baseq2/plastic-platoon.pk3' (44 files).
+No Ogg Vorbis music tracks have been found, so there will be no music.
+Using '/tmp/plastic-platoon-perf-dk4rz7xp/baseline/baseq2' for writing.
+execing default.cfg.
+couldn't exec yq2.cfg
+execing config.cfg.
+couldn't exec autoexec.cfg
+Terminal has no colors support.
+Console initialized.
+
+------- sound initialization -------
+Not initializing.
+------------------------------------
+
+Failed to create /nonexistent for shader cache (Permission denied)---disabling.
+-------- vid initialization --------
+SDL version is: 2.30.0
+SDL video driver is "x11".
+SDL display modes:
+ - Mode  0: 640x480@0
+------------------------------------
+
+----- refresher initialization -----
+Loading library: ref_gl1.so
+Byte ordering: little endian
+
+Refresh: Yamagi Quake II OpenGL Refresher
+Client: 8.61pre
+
+Setting mode -1: 640x480 (vid_fullscreen 0)
+Real display mode: 640x480@0
+Drawable size: 640x480
+
+OpenGL setting:
+GL_VENDOR: Mesa
+GL_RENDERER: llvmpipe (LLVM 20.1.2, 256 bits)
+GL_VERSION: 4.5 (Compatibility Profile) Mesa 25.2.8-0ubuntu0.24.04.2
+GL_EXTENSIONS: GL_ARB_multisample GL_EXT_abgr GL_EXT_bgra GL_EXT_blend_color GL_EXT_blend_minmax GL_EXT_blend_subtract GL_EXT_copy_texture GL_EXT_subtexture GL_EXT_texture_object GL_EXT_vertex_array GL_EXT_compiled_vertex_array GL_EXT_texture GL_EXT_texture3D GL_IBM_rasterpos_clip GL_ARB_point_parameters GL_EXT_draw_range_elements GL_EXT_packed_pixels GL_EXT_point_parameters GL_EXT_rescale_normal GL_EXT_separate_specular_color GL_EXT_texture_edge_clamp GL_SGIS_generate_mipmap GL_SGIS_texture_border_clamp GL_SGIS_texture_edge_clamp GL_SGIS_texture_lod GL_ARB_framebuffer_sRGB GL_ARB_multitexture GL_EXT_framebuffer_sRGB GL_IBM_multimode_draw_arrays GL_IBM_texture_mirrored_repeat GL_3DFX_texture_compression_FXT1 GL_ARB_texture_cube_map GL_ARB_texture_env_add GL_ARB_transpose_matrix GL_EXT_blend_func_separate GL_EXT_fog_coord GL_EXT_multi_draw_arrays GL_EXT_secondary_color GL_EXT_texture_env_add GL_EXT_texture_filter_anisotropic GL_EXT_texture_lod_bias GL_INGR_blend_func_separate GL_NV_blend_square GL_NV_light_max_exponent GL_NV_texgen_reflection GL_NV_texture_env_combine4 GL_S3_s3tc GL_SUN_multi_draw_arrays GL_ARB_texture_border_clamp GL_ARB_texture_compression GL_EXT_framebuffer_object GL_EXT_texture_compression_s3tc GL_EXT_texture_env_combine GL_EXT_texture_env_dot3 GL_MESA_window_pos GL_NV_packed_depth_stencil GL_NV_texture_rectangle GL_ARB_depth_texture GL_ARB_occlusion_query GL_ARB_shadow GL_ARB_texture_env_combine GL_ARB_texture_env_crossbar GL_ARB_texture_env_dot3 GL_ARB_texture_mirrored_repeat GL_ARB_window_pos GL_ATI_fragment_shader GL_EXT_stencil_two_side GL_EXT_texture_cube_map GL_NV_copy_depth_to_color GL_NV_depth_clamp GL_NV_fog_distance GL_NV_half_float GL_APPLE_packed_pixels GL_ARB_draw_buffers GL_ARB_fragment_program GL_ARB_fragment_shader GL_ARB_shader_objects GL_ARB_vertex_program GL_ARB_vertex_shader GL_ATI_draw_buffers GL_ATI_texture_env_combine3 GL_ATI_texture_float GL_EXT_shadow_funcs GL_EXT_stencil_wrap GL_MESA_pack_invert GL_NV_primitive_restart GL_ARB_depth_clamp GL_ARB_fragment_program_shadow GL_ARB_half_float_pixel GL_ARB_occlusion_query2 GL_ARB_point_sprite GL_ARB_shading_language_100 GL_ARB_sync GL_ARB_texture_non_power_of_two GL_ARB_vertex_buffer_object GL_ATI_blend_equation_separate GL_EXT_blend_equation_separate GL_OES_read_format GL_ARB_color_buffer_float GL_ARB_pixel_buffer_object GL_ARB_texture_compression_rgtc GL_ARB_texture_float GL_ARB_texture_rectangle GL_ATI_texture_compression_3dc GL_EXT_packed_float GL_EXT_pixel_buffer_object GL_EXT_texture_compression_dxt1 GL_EXT_texture_compression_rgtc GL_EXT_texture_mirror_clamp GL_EXT_texture_rectangle GL_EXT_texture_sRGB GL_EXT_texture_shared_exponent GL_ARB_framebuffer_object GL_EXT_framebuffer_blit GL_EXT_framebuffer_multisample GL_EXT_packed_depth_stencil GL_ARB_vertex_array_object GL_ATI_separate_stencil GL_ATI_texture_mirror_once GL_EXT_draw_buffers2 GL_EXT_draw_instanced GL_EXT_gpu_program_parameters GL_EXT_gpu_shader4 GL_EXT_texture_array GL_EXT_texture_compression_latc GL_EXT_texture_integer GL_EXT_texture_sRGB_decode GL_EXT_timer_query GL_OES_EGL_image GL_EXT_texture_buffer_object GL_AMD_texture_texture4 GL_ARB_copy_buffer GL_ARB_depth_buffer_float GL_ARB_draw_instanced GL_ARB_half_float_vertex GL_ARB_instanced_arrays GL_ARB_map_buffer_range GL_ARB_texture_buffer_object GL_ARB_texture_rg GL_ARB_texture_swizzle GL_ARB_vertex_array_bgra GL_EXT_texture_swizzle GL_EXT_vertex_array_bgra GL_NV_conditional_render GL_AMD_conservative_depth GL_AMD_draw_buffers_blend GL_AMD_seamless_cubemap_per_texture GL_AMD_shader_stencil_export GL_ARB_ES2_compatibility GL_ARB_blend_func_extended GL_ARB_compatibility GL_ARB_debug_output GL_ARB_draw_buffers_blend GL_ARB_draw_elements_base_vertex GL_ARB_explicit_attrib_location GL_ARB_fragment_coord_conventions GL_ARB_provoking_vertex GL_ARB_sample_shading GL_ARB_sampler_objects GL_ARB_seamless_cube_map GL_ARB_shader_stencil_export GL_ARB_shader_texture_lod GL_ARB_tessellation_shader GL_ARB_texture_buffer_object_rgb32 GL_ARB_texture_cube_map_array GL_ARB_texture_gather GL_ARB_texture_multisample GL_ARB_texture_
+
+Probing for OpenGL extensions:
+ - Point parameters: Okay
+ - Paletted texture: Disabled
+ - Anisotropic: 16x
+ - Non power of two textures: Okay
+ - Multitexturing: Okay
+ - Lightmap copies: Disabled
+Successfully loaded ref_gl1.so as rendering backend.
+------------------------------------
+
+------- input initialization -------
+0 joysticks were found.
+------------------------------------
+
+------- curl initialization -------
+Loading library: libcurl.so.4
+------------------------------------
+
+==== Yamagi Quake II Initialized ====
+
+*************************************
+
+execing perf/pp-baseline-gl1-same.cfg.
+Performance capture: /tmp/plastic-platoon-perf-dk4rz7xp/baseline/baseq2/perf/pp-baseline-gl1-same-{frames,views}.csv
+-------- game initialization -------
+Loading library: game.so
+Game is starting up.
+Game is baseq2 built on Oct 31 2026.
+Weapon profile 'default' not found, using defaults
+------------------------------------
+
+------- server initialization ------
+No fixes found as 'maps/pp_perf_fixture@833f.ent'
+0 entities inhibited.
+0 teams with 0 entities.
+------------------------------------
+
+Com_sprintf: overflow
+Player connected
+[loopback]:0: client_connect
+
+
+-===================================-
+
+Plastic Platoon diagnostic pickup fixture
+Player P2 connected
+Refusing to download a path containing '..' or ':' or starting with '.' or '/': .
+Refusing to download a path containing '..' or ':' or starting with '.' or '/': /home/austin-morgan/Downloads/Meshy_AI_Toy_Grenade_Launcher_01
+Downloading models/items/ammo/gl_ammo/medium/tris.md2
+Server does not have this file.
+Downloading sound/weapons/pistol1.wav
+Server does not have this file.
+Downloading sound/weapons/pistol3.wav
+Server does not have this file.
+Downloading sound/weapons/pistol4.wav
+Server does not have this file.
+Downloading sound/weapons/m601.wav
+Server does not have this file.
+Downloading sound/weapons/m602.wav
+Server does not have this file.
+Downloading sound/weapons/m604.wav
+Server does not have this file.
+Downloading sound/weapons/m605.wav
+Server does not have this file.
+Downloading pics/a_gl_rounds.png
+Server does not have this file.
+Map: pp_perf_fixturepicsmodelsimagesclientssky                                     Player entered the game
+Player P2 entered the game
+Performance capture stopped: 600 complete frames.
+Wrote q2_0004.tga
+
+----------- shutting down ----------
+==== ShutdownGame ====
+Shutting down curl.
+Shutting down input.
+------------------------------------

@@ -25,6 +25,8 @@
  */
 
 #include "header/local.h"
+#include "../perf_impl.h"
+#include "../gpu_timer_impl.h"
 
 #define NUM_BEAM_SEGS 6
 
@@ -239,7 +241,7 @@ R_DrawSpriteModel(entity_t *currententity, const model_t *currentmodel)
 
 	glVertexPointer( 3, GL_FLOAT, 0, point );
 	glTexCoordPointer( 2, GL_FLOAT, 0, tex );
-	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	PP_DrawArrays( GL_TRIANGLE_FAN, 0, 4 );
 
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
@@ -288,7 +290,7 @@ R_DrawNullModel(entity_t *currententity)
     glEnableClientState( GL_VERTEX_ARRAY );
 
     glVertexPointer( 3, GL_FLOAT, 0, vtxA );
-    glDrawArrays( GL_TRIANGLE_FAN, 0, 6 );
+    PP_DrawArrays( GL_TRIANGLE_FAN, 0, 6 );
 
     glDisableClientState( GL_VERTEX_ARRAY );
 
@@ -304,7 +306,7 @@ R_DrawNullModel(entity_t *currententity)
 	glEnableClientState( GL_VERTEX_ARRAY );
 
 	glVertexPointer( 3, GL_FLOAT, 0, vtxB );
-	glDrawArrays( GL_TRIANGLE_FAN, 0, 6 );
+	PP_DrawArrays( GL_TRIANGLE_FAN, 0, 6 );
 
 	glDisableClientState( GL_VERTEX_ARRAY );
 
@@ -500,7 +502,8 @@ R_DrawParticles2(int num_particles, const particle_t particles[],
 	glVertexPointer( 3, GL_FLOAT, 0, vtx );
 	glTexCoordPointer( 2, GL_FLOAT, 0, tex );
 	glColorPointer( 4, GL_UNSIGNED_BYTE, 0, clr );
-	glDrawArrays( GL_TRIANGLES, 0, num_particles*3 );
+	PP_DrawArrays( GL_TRIANGLES, 0, num_particles*3 );
+	PP_PERF(client_vertex_bytes, num_particles*3*(5*sizeof(float)+4));
 
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
@@ -564,7 +567,8 @@ R_DrawParticles(void)
 
 		glVertexPointer( 3, GL_FLOAT, 0, vtx );
 		glColorPointer( 4, GL_UNSIGNED_BYTE, 0, clr );
-		glDrawArrays( GL_POINTS, 0, r_newrefdef.num_particles );
+		PP_DrawArrays( GL_POINTS, 0, r_newrefdef.num_particles );
+		PP_PERF(client_vertex_bytes, r_newrefdef.num_particles*(3*sizeof(float)+4));
 
 		glDisableClientState( GL_VERTEX_ARRAY );
 		glDisableClientState( GL_COLOR_ARRAY );
@@ -619,7 +623,7 @@ R_PolyBlend(void)
 	glEnableClientState( GL_VERTEX_ARRAY );
 
 	glVertexPointer( 3, GL_FLOAT, 0, vtx );
-	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	PP_DrawArrays( GL_TRIANGLE_FAN, 0, 4 );
 
 	glDisableClientState( GL_VERTEX_ARRAY );
 
@@ -1033,7 +1037,7 @@ R_RenderView(refdef_t *fd)
 
 					glEnableClientState(GL_VERTEX_ARRAY);
 					glVertexPointer(2, GL_SHORT, 0, screen);
-					glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+					PP_DrawArrays(GL_TRIANGLE_FAN, 0, 4);
 					glDisableClientState(GL_VERTEX_ARRAY);
 
 					glStencilOp(GL_INVERT, GL_KEEP, GL_KEEP);
@@ -1067,7 +1071,7 @@ R_RenderView(refdef_t *fd)
 
 					glEnableClientState(GL_VERTEX_ARRAY);
 					glVertexPointer(2, GL_FLOAT, 0, gl_buf.vtx);
-					glDrawArrays(GL_LINES, 0, gl_buf.vt / 2);
+					PP_DrawArrays(GL_LINES, 0, gl_buf.vt / 2);
 					glDisableClientState(GL_VERTEX_ARRAY);
 					gl_buf.vt = 0;
 
@@ -1115,7 +1119,9 @@ R_RenderView(refdef_t *fd)
 
 	R_SetupGL();
 
+	double vis_started = PP_PerfNow();
 	R_MarkLeaves(); /* done here so we know if we're in water */
+	PP_PERF(visibility_ms, PP_PerfNow() - vis_started);
 
 	R_DrawWorld();
 
@@ -1213,9 +1219,13 @@ static void
 RI_RenderFrame(refdef_t *fd)
 {
 	R_ApplyGLBuffer();	// menu rendering when needed
+	PP_PerfBegin();
+	PP_GPUTimerBegin();
 	R_RenderView(fd);
 	R_SetLightLevel (NULL);
 	R_SetGL2D();
+	PP_GPUTimerEnd();
+	PP_PerfEnd();
 }
 
 #ifdef YQ2_GL1_GLES
@@ -1485,6 +1495,8 @@ RI_Init(void)
 	static const refresher_t refresher = rf_opengl14;
 #endif
 
+	PP_PerfInit();
+	PP_GPUTimerInit();
 	Swap_Init();
 
 	for (j = 0; j < 256; j++)
@@ -1762,6 +1774,7 @@ RI_Init(void)
 
 	// ----
 
+	R_InitBufferObjects();
 	R_ResetClearColor();
 	R_SetDefaultState();
 
@@ -1783,6 +1796,7 @@ RI_Shutdown(void)
 	ri.Cmd_RemoveCommand("imagelist");
 	ri.Cmd_RemoveCommand("gl_strings");
 
+	PP_GPUTimerShutdown();
 	LM_FreeLightmapBuffers();
 	Mod_FreeAll();
 
@@ -2069,7 +2083,7 @@ R_DrawBeam(entity_t *e)
 	glEnableClientState( GL_VERTEX_ARRAY );
 
 	glVertexPointer( 3, GL_FLOAT, 0, vtx );
-	glDrawArrays( GL_TRIANGLE_STRIP, 0, NUM_BEAM_SEGS*4 );
+	PP_DrawArrays( GL_TRIANGLE_STRIP, 0, NUM_BEAM_SEGS*4 );
 
 	glDisableClientState( GL_VERTEX_ARRAY );
 

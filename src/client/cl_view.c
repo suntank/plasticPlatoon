@@ -25,6 +25,7 @@
  */
 
 #include "header/client.h"
+#include "header/performance.h"
 #include "input/header/input.h"
 
 /* development tools for weapons */
@@ -610,7 +611,9 @@ V_RenderView(float stereo_separation)
 	cl.refdef.fov_y = CalcFov(cl.refdef.fov_x, (float)cl.refdef.width,
 				(float)cl.refdef.height);
 
+	CL_PerfBeginView(0);
 	R_RenderFrame(&cl.refdef);
+	CL_PerfEndView(0, &cl.refdef);
 
 	if (cl_stats->value)
 	{

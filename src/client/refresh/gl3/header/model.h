@@ -52,6 +52,9 @@ typedef struct glpoly_s
 	struct  glpoly_s *chain;
 	int numverts;
 	int flags; /* for SURF_UNDERWATER (not needed anymore?) */
+	int static_first;
+	qboolean static_cached;
+	GLuint light_flags;
 	gl3_3D_vtx_t vertices[4]; /* variable sized */
 } glpoly_t;
 
@@ -155,6 +158,8 @@ typedef struct model_s
 
 	int extradatasize;
 	void *extradata;
+	pp_alias_cache_t *aliascache;
+	GLuint alias_ebo, alias_uv_vbo, alias_xyz_vbo;
 
 	// submodules
 	vec3_t		origin;	// for sounds or lights

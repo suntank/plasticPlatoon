@@ -220,6 +220,7 @@ Mod_ForName(const char *name, model_t *parent_model, qboolean crash)
 					Com_Error(ERR_DROP, "%s: Failed to load %s",
 						__func__, mod->name);
 				}
+				R_CreateAliasBuffers(mod);
 			};
 			break;
 
@@ -754,11 +755,15 @@ Mod_LoadBrushModel(model_t *mod, void *buffer, int modfilelen)
 		&header->lumps[LUMP_NODES]);
 	Mod_LoadSubmodels (mod, mod_base, &header->lumps[LUMP_MODELS]);
 	mod->numframes = 2; /* regular and alternate animation */
+	R_BuildWorldBuffers(mod);
 }
 
 void
 Mod_Free(model_t *mod)
 {
+	if (mod->type == mod_brush) R_ClearVisibilityCache();
+	R_FreeWorldBuffers(mod);
+	R_FreeAliasBuffers(mod);
 	Hunk_Free(mod->extradata);
 	memset(mod, 0, sizeof(*mod));
 }
@@ -786,6 +791,7 @@ RI_BeginRegistration(const char *model)
 	char fullname[MAX_QPATH];
 	cvar_t *flushmap;
 
+	R_ClearVisibilityCache();
 	registration_sequence++;
 	r_oldviewcluster = -1; /* force markleafs */
 

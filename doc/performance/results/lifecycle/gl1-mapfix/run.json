@@ -1,0 +1,195 @@
+{
+  "runtime": "TEMP_VALIDATION_RUNTIME",
+  "command": [
+    "runuser",
+    "-u",
+    "nobody",
+    "--",
+    "xvfb-run",
+    "-a",
+    "-s",
+    "-screen 0 640x480x24",
+    "TEMP_VALIDATION_RUNTIME/quake2",
+    "-portable",
+    "-datadir",
+    "TEMP_VALIDATION_RUNTIME",
+    "+set",
+    "ip",
+    "127.0.0.1",
+    "+set",
+    "port",
+    "60004",
+    "+set",
+    "vid_renderer",
+    "gl1",
+    "+set",
+    "vid_fullscreen",
+    "0",
+    "+set",
+    "r_mode",
+    "-1",
+    "+set",
+    "r_customwidth",
+    "240",
+    "+set",
+    "r_customheight",
+    "240",
+    "+set",
+    "r_vsync",
+    "0",
+    "+set",
+    "s_initsound",
+    "0",
+    "+exec",
+    "lifecycle-start.cfg"
+  ],
+  "software_renderer": true,
+  "binary_sha256": "09c43d7c21bcca8fe6242aefdef55342b06e3bd02969f73021ff6d93213a932b",
+  "renderer_sha256": "b43d8a606708870d94e7d225f24ea792268f6b88cd6eda1842ab8e4689ce5326",
+  "game_sha256": "1ef6ea22eb8450c16a9d6c1da07964b2a88fefee1720e538911ee7070c92f8e6",
+  "overlay_sha256": "0a6b8f8133497ce1e5bfccbc1d2804c18adf47d3b0b03b3be99636a507ed4313",
+  "map_sha256": "5ddd5449d95c6af319982b5b9d940100b246b456ae0475ec89135584dca1d4c6",
+  "returncode": 0,
+  "validation": {
+    "initial": {
+      "frames": 120,
+      "views": 240,
+      "framebuffer": [
+        240,
+        240
+      ],
+      "viewport": [
+        240,
+        120
+      ],
+      "elapsed_ms": 2358.339,
+      "median_world_triangles": 650.0,
+      "median_model_triangles": 258200.0,
+      "median_client_vertex_bytes": 2666464.0,
+      "median_dynamic_vertex_bytes": 0.0,
+      "serial_range": [
+        245,
+        484
+      ],
+      "rss_kib_first_last": [
+        "184740",
+        "184824"
+      ],
+      "both_clients_spawned": true
+    },
+    "map-reload": {
+      "frames": 120,
+      "views": 240,
+      "framebuffer": [
+        240,
+        240
+      ],
+      "viewport": [
+        240,
+        120
+      ],
+      "elapsed_ms": 2739.859,
+      "median_world_triangles": 650.0,
+      "median_model_triangles": 258200.0,
+      "median_client_vertex_bytes": 2666464.0,
+      "median_dynamic_vertex_bytes": 0.0,
+      "serial_range": [
+        621,
+        860
+      ],
+      "rss_kib_first_last": [
+        "184908",
+        "182924"
+      ],
+      "both_clients_spawned": true
+    },
+    "restart": {
+      "frames": 120,
+      "views": 240,
+      "framebuffer": [
+        240,
+        240
+      ],
+      "viewport": [
+        240,
+        120
+      ],
+      "elapsed_ms": 2702.105,
+      "median_world_triangles": 650.0,
+      "median_model_triangles": 258200.0,
+      "median_client_vertex_bytes": 2666464.0,
+      "median_dynamic_vertex_bytes": 0.0,
+      "serial_range": [
+        1101,
+        1340
+      ],
+      "rss_kib_first_last": [
+        "196104",
+        "196232"
+      ],
+      "both_clients_spawned": true
+    },
+    "fallback": {
+      "frames": 120,
+      "views": 240,
+      "framebuffer": [
+        240,
+        240
+      ],
+      "viewport": [
+        240,
+        120
+      ],
+      "elapsed_ms": 2865.45,
+      "median_world_triangles": 650.0,
+      "median_model_triangles": 258200.0,
+      "median_client_vertex_bytes": 2699560.0,
+      "median_dynamic_vertex_bytes": 0.0,
+      "serial_range": [
+        1341,
+        1580
+      ],
+      "rss_kib_first_last": [
+        "196296",
+        "196544"
+      ],
+      "both_clients_spawned": true
+    },
+    "restored": {
+      "frames": 120,
+      "views": 240,
+      "framebuffer": [
+        240,
+        240
+      ],
+      "viewport": [
+        240,
+        120
+      ],
+      "elapsed_ms": 2772.892,
+      "median_world_triangles": 650.0,
+      "median_model_triangles": 258200.0,
+      "median_client_vertex_bytes": 2666464.0,
+      "median_dynamic_vertex_bytes": 0.0,
+      "serial_range": [
+        1821,
+        2060
+      ],
+      "rss_kib_first_last": [
+        "197060",
+        "197060"
+      ],
+      "both_clients_spawned": true
+    },
+    "screenshots": {
+      "initial": "q2_0000.png",
+      "map-reload": "q2_0001.png",
+      "restart": "q2_0002.png",
+      "fallback": "q2_0003.png",
+      "restored": "q2_0004.png"
+    },
+    "renderer_loads": 3,
+    "duplicate_capture_preserved": true
+  },
+  "elapsed_seconds": 28.306493032003345
+}

@@ -1,0 +1,70 @@
+{
+  "purpose": "functional validation only; software softpipe, no Pi performance claim",
+  "driver": {
+    "vendor": "Mesa",
+    "renderer": "softpipe",
+    "version": "OpenGL ES-CM 1.1 Mesa 25.2.8",
+    "SDL": "2.30.0",
+    "video_driver": "offscreen",
+    "source_sha256": "097842f3e49d996868b38688db87b006f7d4541e93ce86d2f341d8b3e7be7c93"
+  },
+  "binary_sha256": "aded2eabd7c2517dd1b59b84633385f9d45a9ae834d8b98df6f5f9371e0c451d",
+  "lifecycle_renderer_sha256": "e32907b9e778a9a5c167ea0ad1d000fc3c18560791f949b99bcca4666aa98cfb",
+  "project_pk3_sha256": "0a6b8f8133497ce1e5bfccbc1d2804c18adf47d3b0b03b3be99636a507ed4313",
+  "fixture_bsp_sha256": "5ddd5449d95c6af319982b5b9d940100b246b456ae0475ec89135584dca1d4c6",
+  "smoke_display_frames": 180,
+  "smoke_warmup_frames": 30,
+  "lifecycle_display_frames": 348,
+  "lifecycle_views": 696,
+  "framebuffer": [
+    240,
+    240
+  ],
+  "viewport": [
+    240,
+    120
+  ],
+  "serial_range": [
+    1,
+    696
+  ],
+  "serial_strictly_increasing": true,
+  "lifecycle_operations": [
+    "static-world on to off",
+    "static-world off to on",
+    "vid_restart",
+    "gamemap differently named byte-identical BSP",
+    "gamemap original fixture"
+  ],
+  "stable_total_view_client_vertex_bytes": {
+    "persistent": 672880,
+    "fallback": 705976,
+    "restored": 672880
+  },
+  "stable_total_world_triangles": 650,
+  "notes": [
+    "Equivalent geometry and quality for world-toggle byte-count comparison. Client-array payload is not driver DMA.",
+    "CPU frame timings were collected during concurrent functional work and must not be used as comparative or Pi performance results.",
+    "The fixture-to-demo1 transition previously stalled on baseline and updated clients; secondary changing/reconnect handling and generation gating fixed it. The final GLES run completes both map transitions."
+  ],
+  "different_map_regression_fixed": {
+    "client_sha256": "09c43d7c21bcca8fe6242aefdef55342b06e3bd02969f73021ff6d93213a932b",
+    "label": "gles1-lifecycle-fixed-240",
+    "display_frames": 346,
+    "views": 692,
+    "serial_range": [
+      1,
+      692
+    ],
+    "strictly_increasing_serials": true,
+    "two_views_after_both_map_transitions": true,
+    "map_sequence": [
+      "pp_perf_fixture",
+      "demo1",
+      "pp_perf_fixture"
+    ],
+    "view_counts": [
+      2
+    ]
+  }
+}
