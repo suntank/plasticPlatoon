@@ -1893,7 +1893,6 @@ SCR_UpdateScreen(void)
 					CL_DrawInventory();
 				}
 
-				SCR_DrawScreenImageOverlay(&cl.screen_image, 0, 0, viddef.width, viddef.height);
 				SCR_DrawNet();
 				SCR_CheckDrawCenterString();
 			}
