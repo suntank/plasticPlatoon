@@ -1,0 +1,56 @@
+[
+  {
+    "name": "launcher_standing",
+    "pose": [
+      0,
+      -256,
+      24,
+      0,
+      90
+    ]
+  },
+  {
+    "name": "launcher_crouched",
+    "pose": [
+      0,
+      -448,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "notarget",
+        "wait": 1.3
+      }
+    ]
+  },
+  {
+    "name": "rocket_in_flight",
+    "pose": [
+      0,
+      -448,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "wait": 0.1
+      }
+    ]
+  },
+  {
+    "name": "launcher_flank",
+    "pose": [
+      -320,
+      -180,
+      24,
+      0,
+      15
+    ],
+    "commands": [
+      "notarget"
+    ]
+  }
+]

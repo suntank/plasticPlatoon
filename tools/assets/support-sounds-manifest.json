@@ -1,0 +1,742 @@
+{
+  "schema": 1,
+  "purpose": "Original temporary support sounds for standalone runtime testing.",
+  "source": "Deterministic oscillators and seeded noise in tools/assets/build_support_sounds.py; no sampled or external sound input.",
+  "license": "GPL-2.0-or-later",
+  "quality_note": "Audible procedural replacements; these are not final voice acting or authored sound-design recordings.",
+  "sample_rate_hz": 22050,
+  "channels": 1,
+  "sample_width_bytes": 2,
+  "files": [
+    {
+      "path": "sound/gunner/death1.wav",
+      "role": "Toy heavy enemy destruction",
+      "synthesis": "impact",
+      "duration_seconds": 0.48,
+      "loop": false,
+      "bytes": 21212,
+      "sha256": "69e792812b884ee0772284ec1ce63f2bc807b072caca88ec720f96b808f7c25b",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/gunner/gunatck1.wav",
+      "role": "Toy heavy enemy weapon report one",
+      "synthesis": "impact",
+      "duration_seconds": 0.22,
+      "loop": false,
+      "bytes": 9746,
+      "sha256": "2435afeed5b1fe8173bd58dccf866c5cb5f61299c69c3d25394ace5c8e2a8e54",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/gunner/gunatck2.wav",
+      "role": "Toy heavy enemy weapon report two",
+      "synthesis": "impact",
+      "duration_seconds": 0.170023,
+      "loop": false,
+      "bytes": 7542,
+      "sha256": "ded3493ba3cb1f72c134107c31908fae76267b76467b1498ab5540e3bca0e4a3",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/gunner/gunatck3.wav",
+      "role": "Toy heavy enemy weapon report three",
+      "synthesis": "impact",
+      "duration_seconds": 0.24,
+      "loop": false,
+      "bytes": 10628,
+      "sha256": "63b10c0bfeee013834bb86940dcf14c013a5b521bfdebc2b30ca5d23adfad5f5",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/gunner/gunidle1.wav",
+      "role": "Toy heavy enemy idle electronic chatter",
+      "synthesis": "chatter",
+      "duration_seconds": 0.36,
+      "loop": false,
+      "bytes": 15920,
+      "sha256": "a3df124457ac1c4744d0a15a89f45ddf25860989130029a32f8d48df48df6c8c",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/gunner/gunpain1.wav",
+      "role": "Toy heavy enemy damage alert one",
+      "synthesis": "chatter",
+      "duration_seconds": 0.209977,
+      "loop": false,
+      "bytes": 9304,
+      "sha256": "285f79482b5c7860e8ab4aea29015b367669f917961cd3065ce34a74ea39b099",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/gunner/gunpain2.wav",
+      "role": "Toy heavy enemy damage alert two",
+      "synthesis": "chatter",
+      "duration_seconds": 0.270023,
+      "loop": false,
+      "bytes": 11952,
+      "sha256": "def964178e424ef8e60a7a878b42a94239072a9c3dc9da38b919e6051f3e6468",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/gunner/gunsrch1.wav",
+      "role": "Toy heavy enemy search electronic chatter",
+      "synthesis": "chatter",
+      "duration_seconds": 0.42,
+      "loop": false,
+      "bytes": 18566,
+      "sha256": "81f8cee57f99f8dc0eaf6bcd814bac298f405b353a7d233439ed4d6183bcf709",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/gunner/sight1.wav",
+      "role": "Toy heavy enemy sight alert",
+      "synthesis": "alert",
+      "duration_seconds": 0.3,
+      "loop": false,
+      "bytes": 13274,
+      "sha256": "62180dba1be30fb81ee5e05d555e1fd74636b3b09af600fe8ffd506282b3b617",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/infantry/infatck3.wav",
+      "role": "Toy weapon cock / shotgun pump",
+      "synthesis": "impact",
+      "duration_seconds": 0.18,
+      "loop": false,
+      "bytes": 7982,
+      "sha256": "80f6b3d0422f7a1c6e08a9995bf4f301e27159cea1baf1963d74da1e77dc458b",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/infantry/inflies1.wav",
+      "role": "Quiet synthetic insect / mechanical idle loop",
+      "synthesis": "buzz",
+      "duration_seconds": 1.0,
+      "loop": true,
+      "bytes": 44144,
+      "sha256": "02872926a72b7343f72858e5e24c1996898b536a68035cdaa3aff88b6c6bdf56",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/items/damage.wav",
+      "role": "Damage-powerup ascending signal",
+      "synthesis": "tone",
+      "duration_seconds": 0.42,
+      "loop": false,
+      "bytes": 18566,
+      "sha256": "4eb40cd9bbef1729b37f1878b7c93c554fdf6cf385f2a89eae726abe6451b76b",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/items/l_health.wav",
+      "role": "Large health pickup rising chime",
+      "synthesis": "tone",
+      "duration_seconds": 0.249977,
+      "loop": false,
+      "bytes": 11068,
+      "sha256": "9ef926356bdf5b5fee1248960c65ad956b3500093310030ae0a142af8f6cb1de",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/items/m_health.wav",
+      "role": "Mega health pickup rising chime",
+      "synthesis": "tone",
+      "duration_seconds": 0.36,
+      "loop": false,
+      "bytes": 15920,
+      "sha256": "88cbf3a3ec8fd9b62c9639db7e53115026d594621699666e48dee6eb499b009c",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/items/n_health.wav",
+      "role": "Normal health pickup rising chime",
+      "synthesis": "tone",
+      "duration_seconds": 0.190023,
+      "loop": false,
+      "bytes": 8424,
+      "sha256": "252fb49f325834579a95f22a14f2214992dc9efd9c6078cc94736b0d873c292f",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/items/pkup.wav",
+      "role": "Generic item pickup chirp",
+      "synthesis": "tone",
+      "duration_seconds": 0.18,
+      "loop": false,
+      "bytes": 7982,
+      "sha256": "51e95e202b9d2cc82f3b4c8f8c183788aaf04f32eaf6ba123f693142ca9c4988",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/items/protect.wav",
+      "role": "Protection powerup signal",
+      "synthesis": "tone",
+      "duration_seconds": 0.44,
+      "loop": false,
+      "bytes": 19448,
+      "sha256": "10c5a904e9a819d90d6170e3053a6d1e636259d30633d31f20146c55c306f982",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/items/protect4.wav",
+      "role": "Protection powerup expiration signal",
+      "synthesis": "tone_down",
+      "duration_seconds": 0.32,
+      "loop": false,
+      "bytes": 14156,
+      "sha256": "61885bde4ce3a7e6b35a84e10acb6d367de7b156c5c620cbfcd74a9e153d075f",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/items/respawn1.wav",
+      "role": "Item materialization signal",
+      "synthesis": "tone",
+      "duration_seconds": 0.34,
+      "loop": false,
+      "bytes": 15038,
+      "sha256": "8f473d2a8f6d9412c3a967bc3248ecb82918fc54a980df2894476edb322d6b03",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/items/s_health.wav",
+      "role": "Small health pickup chirp",
+      "synthesis": "tone",
+      "duration_seconds": 0.14,
+      "loop": false,
+      "bytes": 6218,
+      "sha256": "a472d83bd6a5a32484003a52f387c34ff847c42060843186aca3a6fb379adc3e",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/ar1_pkup.wav",
+      "role": "Light armor pickup plastic click and chime",
+      "synthesis": "impact_tone",
+      "duration_seconds": 0.209977,
+      "loop": false,
+      "bytes": 9304,
+      "sha256": "b7d7a138a9740042dd88ed22f6345b736fd26824c7cc8448125fc9709c2cf261",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/ar2_pkup.wav",
+      "role": "Heavy armor pickup plastic click and chime",
+      "synthesis": "impact_tone",
+      "duration_seconds": 0.28,
+      "loop": false,
+      "bytes": 12392,
+      "sha256": "252460de3245b5c297d97c934409b7710e78ce62c9fd7bb06dd900a3ea297a91",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/h2ohit1.wav",
+      "role": "Water splash / landing noise",
+      "synthesis": "water",
+      "duration_seconds": 0.38,
+      "loop": false,
+      "bytes": 16802,
+      "sha256": "de8d22a903637750ca5e3cc2631ae536de139b300ea5683b5b8c671c3de9106e",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/keytry.wav",
+      "role": "Locked interaction denied chime",
+      "synthesis": "tone_down",
+      "duration_seconds": 0.170023,
+      "loop": false,
+      "bytes": 7542,
+      "sha256": "a60ed6e55e532929e19d27c3dbc8bc69782022e2d0ca6a106213a685b274d8f6",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/keyuse.wav",
+      "role": "Key interaction accepted chime",
+      "synthesis": "tone",
+      "duration_seconds": 0.209977,
+      "loop": false,
+      "bytes": 9304,
+      "sha256": "1c1a164651ca644a365a84a3f88a8f3e44ae35ae17f6649b87e62ef82a323241",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/lasfly.wav",
+      "role": "Toy energy projectile flight loop",
+      "synthesis": "energy",
+      "duration_seconds": 1.0,
+      "loop": true,
+      "bytes": 44144,
+      "sha256": "2bd97535880edf36886fa257bf4286dcefa2266319eee7f0cba06808ebcd59b7",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/menu1.wav",
+      "role": "Menu move tick",
+      "synthesis": "tone",
+      "duration_seconds": 0.075011,
+      "loop": false,
+      "bytes": 3352,
+      "sha256": "93fad6274621f4ac98a9d1dde9a5185fdb97d314377d73b7bf9844fac4b49dcf",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/menu2.wav",
+      "role": "Menu confirm chirp",
+      "synthesis": "tone",
+      "duration_seconds": 0.12,
+      "loop": false,
+      "bytes": 5336,
+      "sha256": "1c8eff4970358f561f478f7126e840ade35c6bff2a5ee892ca7971d9dde2bc90",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/menu3.wav",
+      "role": "Menu back chirp",
+      "synthesis": "tone_down",
+      "duration_seconds": 0.1,
+      "loop": false,
+      "bytes": 4454,
+      "sha256": "9441f3a292a1eb421f96661299d12c1af090e4d9e276144cc628776e34ace8b6",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/pc_up.wav",
+      "role": "Objective / computer interaction chime",
+      "synthesis": "tone",
+      "duration_seconds": 0.22,
+      "loop": false,
+      "bytes": 9746,
+      "sha256": "42651e7cc43bf914db980fdd7a142f7c39c370ebf62f82374d30d81736965501",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/secret.wav",
+      "role": "Secret discovery ascending chime",
+      "synthesis": "tone",
+      "duration_seconds": 0.449977,
+      "loop": false,
+      "bytes": 19888,
+      "sha256": "19da8d433eab1382ffced6023c39ece7b407c438b85930ed53f9a3939d7d948b",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/talk1.wav",
+      "role": "Chat notification beep",
+      "synthesis": "tone",
+      "duration_seconds": 0.1,
+      "loop": false,
+      "bytes": 4454,
+      "sha256": "c240a191245fa0fb421cec6dba7c0d0cc10a1f433c0917c81fc002a3f4c3e89b",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/misc/udeath.wav",
+      "role": "Plastic shatter / gib event",
+      "synthesis": "impact",
+      "duration_seconds": 0.44,
+      "loop": false,
+      "bytes": 19448,
+      "sha256": "4cbc9e1a8b7a31a6f203f9539d84078ee2b4125d760767437991609db5871650",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/player/fall1.wav",
+      "role": "Light fall landing impact",
+      "synthesis": "impact",
+      "duration_seconds": 0.22,
+      "loop": false,
+      "bytes": 9746,
+      "sha256": "0e07aa202992d21f9de251fc422c454d45dba754a9f78f831b34f1bc301aba30",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/player/fall2.wav",
+      "role": "Heavy fall landing impact",
+      "synthesis": "impact",
+      "duration_seconds": 0.329977,
+      "loop": false,
+      "bytes": 14596,
+      "sha256": "2f7ac2531453322c11e3ffc254575d5105d70bb2fc3d1fca7224005e40968c5c",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/player/u_breath1.wav",
+      "role": "Underwater breathing wind inhale",
+      "synthesis": "breath",
+      "duration_seconds": 0.649977,
+      "loop": false,
+      "bytes": 28708,
+      "sha256": "b53bb2e2cd20cd5b09f46720f13e364f29e4876987be2a6089266ae43cf43955",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/player/u_breath2.wav",
+      "role": "Underwater breathing wind exhale",
+      "synthesis": "breath",
+      "duration_seconds": 0.750023,
+      "loop": false,
+      "bytes": 33120,
+      "sha256": "29477fb2d9faabce8e73052fe978fc249d9c9df4b314031326447c5224fe4fb3",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/soldier/solidle1.wav",
+      "role": "Toy soldier idle radio chirps; no speech",
+      "synthesis": "chatter",
+      "duration_seconds": 0.36,
+      "loop": false,
+      "bytes": 15920,
+      "sha256": "3132cbd84776a3d93ecbbb8e67ae1cf3d8ed437daffbed5d362e790f868dbb14",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/soldier/solsght1.wav",
+      "role": "Toy soldier sight alert double beep",
+      "synthesis": "alert",
+      "duration_seconds": 0.28,
+      "loop": false,
+      "bytes": 12392,
+      "sha256": "45da3042ff71b0ff50d5f3602d80d71630a08d176f609e099c8f9295cee1fece",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/soldier/solsrch1.wav",
+      "role": "Toy soldier search radio chirps; no speech",
+      "synthesis": "chatter",
+      "duration_seconds": 0.42,
+      "loop": false,
+      "bytes": 18566,
+      "sha256": "73d605aac7d9aea20735a85f2dbe4316d9b5c9958e1fc15d9a49b64e21d37ac1",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/switches/butn2.wav",
+      "role": "Mission switch press click",
+      "synthesis": "impact_tone",
+      "duration_seconds": 0.129977,
+      "loop": false,
+      "bytes": 5776,
+      "sha256": "bba6188b581e8aa3f663bd4cfaf72744f0c2d4fb4caaee69152081b1f16dab9f",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/death.wav",
+      "role": "Toy tank destruction burst",
+      "synthesis": "energy_hit",
+      "duration_seconds": 0.8,
+      "loop": false,
+      "bytes": 35324,
+      "sha256": "b56dd0dd3763655b17c54979f18865735f2c6318f18d8135a02ac334086cef60",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/sight1.wav",
+      "role": "Toy tank target acquisition alert",
+      "synthesis": "alert",
+      "duration_seconds": 0.44,
+      "loop": false,
+      "bytes": 19448,
+      "sha256": "fa1f29e12050dbb907e77e02c441da756b32ab6e07e2cf5a6e3b4a51fffbe93c",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/step.wav",
+      "role": "Toy tank tread / step impact",
+      "synthesis": "impact",
+      "duration_seconds": 0.2,
+      "loop": false,
+      "bytes": 8864,
+      "sha256": "9923c34734b803f9e7e4c725cb5ac3db22442d07eabdd5553d60955ae329cb72",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/tnkatck1.wav",
+      "role": "Toy tank attack mechanical report one",
+      "synthesis": "impact",
+      "duration_seconds": 0.24,
+      "loop": false,
+      "bytes": 10628,
+      "sha256": "954663a4b54a54b7fee847d6191cfd0223166affea481391d609acb7b2b6c906",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/tnkatck3.wav",
+      "role": "Toy tank cannon report",
+      "synthesis": "impact",
+      "duration_seconds": 0.32,
+      "loop": false,
+      "bytes": 14156,
+      "sha256": "f0dc82f260e78ea1a81b3746038e8a105d4d2a3fa86d7956fe5619e727b55bb4",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/tnkatck4.wav",
+      "role": "Toy tank attack mechanical report four",
+      "synthesis": "impact",
+      "duration_seconds": 0.26,
+      "loop": false,
+      "bytes": 11510,
+      "sha256": "e6a5ffad55e45d3ee5d1b5080878931777f1a97960f5410f9f69a58074b1a5ba",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/tnkatck5.wav",
+      "role": "Toy tank attack mechanical report five",
+      "synthesis": "impact",
+      "duration_seconds": 0.28,
+      "loop": false,
+      "bytes": 12392,
+      "sha256": "8de1bfde0481c6dfc43bee8bc6d36f36b55d708b6d81dcb22c248e11baa3ecb9",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/tnkatk2a.wav",
+      "role": "Toy tank machinegun report A",
+      "synthesis": "impact",
+      "duration_seconds": 0.14,
+      "loop": false,
+      "bytes": 6218,
+      "sha256": "3ad71b676de496928442e39f46f323c3fa68e30c794c33891277f8dedfaa8a1f",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/tnkatk2b.wav",
+      "role": "Toy tank machinegun report B",
+      "synthesis": "impact",
+      "duration_seconds": 0.14,
+      "loop": false,
+      "bytes": 6218,
+      "sha256": "f6370a564a45ed8d5f93e17c797b57143508d644bf2a905b56e797ee12acd52a",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/tnkatk2c.wav",
+      "role": "Toy tank machinegun report C",
+      "synthesis": "impact",
+      "duration_seconds": 0.14,
+      "loop": false,
+      "bytes": 6218,
+      "sha256": "c1743296718fa12d73a69947b2ee9a78aadb722592da4cac8144311309bd02d3",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/tnkatk2d.wav",
+      "role": "Toy tank machinegun report D",
+      "synthesis": "impact",
+      "duration_seconds": 0.14,
+      "loop": false,
+      "bytes": 6218,
+      "sha256": "5ed828e75a32426a2208480f9d0fe0e6273f9158401c5723f9134b02afefe48b",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/tnkatk2e.wav",
+      "role": "Toy tank machinegun report E",
+      "synthesis": "impact",
+      "duration_seconds": 0.14,
+      "loop": false,
+      "bytes": 6218,
+      "sha256": "f0250687a3012fd7b9b97e90df07163336878ae6b203054bd1f70fa7dede9200",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/tnkdeth2.wav",
+      "role": "Toy tank debris and hull impact",
+      "synthesis": "impact",
+      "duration_seconds": 0.550023,
+      "loop": false,
+      "bytes": 24300,
+      "sha256": "62b84fbda026519a9b1df27c93f31bf85684578b3b4a3a2dc996f7d74bdd54b6",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/tnkidle1.wav",
+      "role": "Toy tank low motor idle loop",
+      "synthesis": "buzz",
+      "duration_seconds": 1.0,
+      "loop": true,
+      "bytes": 44144,
+      "sha256": "f4d29bbea1c4b1ca01ff9bf52cf80cd0fe39b272498f0157bea80a6401902cb2",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/tank/tnkpain2.wav",
+      "role": "Toy tank hull damage signal",
+      "synthesis": "chatter",
+      "duration_seconds": 0.28,
+      "loop": false,
+      "bytes": 12392,
+      "sha256": "c1606cb5d2ae00250252be8d17a2e6f956712b7c91ed994140fd17cfec3065d5",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/weapons/bfg__l1a.wav",
+      "role": "Large toy energy weapon flight loop",
+      "synthesis": "energy",
+      "duration_seconds": 1.0,
+      "loop": true,
+      "bytes": 44144,
+      "sha256": "ce2a3125d920f84c2ac71460bdabe88d0a541778c871bb4a23afc12accf6e7cb",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/weapons/bfg__x1b.wav",
+      "role": "Large toy energy weapon impact",
+      "synthesis": "energy_hit",
+      "duration_seconds": 0.649977,
+      "loop": false,
+      "bytes": 28708,
+      "sha256": "87e2b76dfa123ad20b4f98e415b89a1d05750f9f23f8e1bbcc39289377fd2ed5",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/weapons/disrupthit.wav",
+      "role": "Toy disruptor impact",
+      "synthesis": "energy_hit",
+      "duration_seconds": 0.270023,
+      "loop": false,
+      "bytes": 11952,
+      "sha256": "da57efa8d3afc5713718466c1e1df614bfdb508f56660a74005fe4b4b02fe1e9",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/weapons/hyprbd1a.wav",
+      "role": "Toy energy weapon spin down",
+      "synthesis": "tone_down",
+      "duration_seconds": 0.3,
+      "loop": false,
+      "bytes": 13274,
+      "sha256": "5a80a226c766599d5b4eedd07e887c1c3064818b0983b4cd162f2f5fa8faac85",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/weapons/hyprbl1a.wav",
+      "role": "Toy energy weapon operating loop",
+      "synthesis": "energy",
+      "duration_seconds": 1.0,
+      "loop": true,
+      "bytes": 44144,
+      "sha256": "5c81a1c8d21b23f36d89f08c4f7773cc8dadf7206f7a6d8cd45946caf7f10fb2",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/weapons/hyprbu1a.wav",
+      "role": "Toy energy weapon spin up",
+      "synthesis": "tone",
+      "duration_seconds": 0.28,
+      "loop": false,
+      "bytes": 12392,
+      "sha256": "d45f12ec7b50908206b795beb2b9186eb2217a33026326097eab160f191dddf9",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/weapons/lashit.wav",
+      "role": "Toy laser impact",
+      "synthesis": "energy_hit",
+      "duration_seconds": 0.170023,
+      "loop": false,
+      "bytes": 7542,
+      "sha256": "8ee3e036dcfc1ec972b8169f1aabcda05183ecbc3d681523588f65fa42ee5af5",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/weapons/rockfly.wav",
+      "role": "Toy rocket motor flight loop",
+      "synthesis": "rocket",
+      "duration_seconds": 1.0,
+      "loop": true,
+      "bytes": 44144,
+      "sha256": "ec079fc45205fc76c4241987ec5917e076bf9c77774437322b8063ebe77a00f5",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/weapons/tesla.wav",
+      "role": "Toy electrical beam loop",
+      "synthesis": "energy",
+      "duration_seconds": 1.0,
+      "loop": true,
+      "bytes": 44144,
+      "sha256": "95e7255889703ddd5e3f51a5fb45a915bc6b5b2c25868472c4ac350625e0bea7",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/world/klaxon1.wav",
+      "role": "Mission alarm alternating electronic klaxon",
+      "synthesis": "klaxon",
+      "duration_seconds": 1.0,
+      "loop": true,
+      "bytes": 44144,
+      "sha256": "f6ecebe7e1b07aaf5deb603bbca383fec59dda130b08d6d1aabb934572d4a9e7",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/world/land.wav",
+      "role": "World landing thud",
+      "synthesis": "impact",
+      "duration_seconds": 0.150023,
+      "loop": false,
+      "bytes": 6660,
+      "sha256": "3ffc0bf2f7417580bf8708bb3637661011077af16191b5105eee1bf0f5aa7cf0",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/world/ric1.wav",
+      "role": "Plastic ricochet variant one",
+      "synthesis": "ricochet",
+      "duration_seconds": 0.16,
+      "loop": false,
+      "bytes": 7100,
+      "sha256": "336faec9f0295e533611b392aafb2f2857c239bc21462a715d175887d79a276b",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/world/ric2.wav",
+      "role": "Plastic ricochet variant two",
+      "synthesis": "ricochet",
+      "duration_seconds": 0.190023,
+      "loop": false,
+      "bytes": 8424,
+      "sha256": "63ca0a64859c9482cae695de2343bbeb826d01bd113fe3616c11e46a255be48f",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/world/ric3.wav",
+      "role": "Plastic ricochet variant three",
+      "synthesis": "ricochet",
+      "duration_seconds": 0.14,
+      "loop": false,
+      "bytes": 6218,
+      "sha256": "f158345ed994893eaf251b3f8a8677f0d0b82130305070090090a5b693778dea",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/world/spark5.wav",
+      "role": "Electrical spark variant one",
+      "synthesis": "spark",
+      "duration_seconds": 0.16,
+      "loop": false,
+      "bytes": 7100,
+      "sha256": "c4fd737ea0dbb0e12b92c697b914b1452af028399413cc0810e84fd0cf70afbd",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/world/spark6.wav",
+      "role": "Electrical spark variant two",
+      "synthesis": "spark",
+      "duration_seconds": 0.209977,
+      "loop": false,
+      "bytes": 9304,
+      "sha256": "22faefec2ab27de89bd474f4f8e73e5be80ffd45b0786b9058389931299beec9",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "path": "sound/world/spark7.wav",
+      "role": "Electrical spark variant three",
+      "synthesis": "spark",
+      "duration_seconds": 0.129977,
+      "loop": false,
+      "bytes": 5776,
+      "sha256": "5d9b0c38b4274a2ef2efced348887c8243a3fed27dee811a0cb3893ee9af6f94",
+      "license": "GPL-2.0-or-later"
+    }
+  ]
+}

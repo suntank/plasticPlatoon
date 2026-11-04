@@ -1,0 +1,23 @@
+{
+  "map_name": "pp_rocket_test",
+  "map_sha256": "f8beb7b69afa1dc5247eb5dd3c7816e47eb7615964fedda6c14b73aec1dc97bc",
+  "binary_sha256": "c4d53ae067e4685678bf7d8e06d9e03fd3382c90a075494f99eb8f3b4d1a2415",
+  "game_sha256": "9112d6e3efd9bcd6cfdac22f890cfba4d9c0e52bbb32325d492c23122c59d4ff",
+  "renderer": "gl3",
+  "renderer_sha256": "1483c87b7fc1a1be86b3df838aa39d17667f1b1e2b35f93e92a5cc9ee720c9b9",
+  "software_renderer": true,
+  "complete": true,
+  "model_sha256": "6bdf833ee3cb7d8de945fb445d27c130dee600b0d74684414690893b04c26676",
+  "preview_sha256": "13eb0e0a7a49383721ec7fc9543a60e1a02906a374222e97be06380e038ac0e3",
+  "checks": [
+    "Standing launcher visible on original enemy body",
+    "Crouched launcher pose before firing",
+    "Live enemy rocket launch and flight visible",
+    "Projectile, stance, cooldown, interruption and save/load regression suite passed",
+    "M60 gunner regression suite passed",
+    "Client rocket muzzle offset and launch report regression passed",
+    "All 72 production MD2 models loaded and cached",
+    "BSP placement and supported route verification passed"
+  ],
+  "note": "Local GL3 software renderer capture with god mode. Audio disabled in capture; launch sound verified by client regression. Not a full human combat balance playtest."
+}

@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/../.."
+test_build=$(mktemp -d)
+trap 'rm -rf "$test_build"' EXIT HUP INT TERM
+# Link the real game, including its savegame registration tables and rocket
+# implementation. Only the engine imports are replaced by the test harness.
+make -s -j4 DEBUG=1 QUIET=1 game
+${CC:-cc} -std=c11 -D_DEFAULT_SOURCE -O2 -g -UNDEBUG ${TEST_CFLAGS:-} \
+    tests/rocket_soldier/game_test.c $(find build/debug/baseq2 -name '*.o' -print) \
+    -lm -o "$test_build/game_test"
+"$test_build/game_test" "$test_build/rocket.sav"

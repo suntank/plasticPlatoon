@@ -1,0 +1,1833 @@
+/*
+ * Copyright (C) 1997-2001 Id Software, Inc.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+ * 02111-1307, USA.
+ *
+ * =======================================================================
+ *
+ * This file implements all static entities at client site.
+ *
+ * =======================================================================
+ */
+
+#include <math.h>
+#include "header/client.h"
+#include "header/performance.h"
+#include "cl_splitscreen.h"
+
+/* Weapon types for per-weapon recoil tuning */
+typedef enum {
+	PP_WEAPON_UNKNOWN = 0,
+	PP_WEAPON_M9_PISTOL,      /* Blaster */
+	PP_WEAPON_SHOTGUN,        /* Shotgun */
+	PP_WEAPON_SUPER_SHOTGUN,  /* Super Shotgun */
+	PP_WEAPON_M16,            /* Machinegun */
+	PP_WEAPON_M60,            /* Chaingun */
+	PP_WEAPON_HAND_GRENADE,   /* Hand Grenades */
+	PP_WEAPON_GRENADE_LAUNCHER,
+	PP_WEAPON_ROCKET_LAUNCHER,
+	PP_WEAPON_FLAMETHROWER,   /* HyperBlaster */
+	PP_WEAPON_SNIPER,         /* Railgun */
+	PP_WEAPON_MORTAR          /* BFG */
+} pp_weapon_type_t;
+
+/* Per-weapon recoil configuration */
+typedef struct {
+	float strength;     /* recoil kick strength (0-1 scale, multiplied) */
+	float recovery;     /* how fast recoil recovers (higher = faster) */
+	float interval;
+	float pitch_kick;   /* pitch angle kick */
+	float push_back;    /* how far gun pushes back */
+} pp_recoil_config_t;
+
+static const pp_recoil_config_t pp_recoil_configs[] = {
+	/* PP_WEAPON_UNKNOWN */        { 0.3f, 7.5f, 0.25f, 2.0f, 4.0f },
+	/* PP_WEAPON_M9_PISTOL */      { 0.85f, 10.0f, 0.18f, 5.0f, 5.0f },
+	/* PP_WEAPON_SHOTGUN */        { 1.0f, 6.0f, 0.45f, 6.0f, 7.0f },
+	/* PP_WEAPON_SUPER_SHOTGUN */  { 1.0f, 5.0f, 0.55f, 8.0f, 9.0f },
+	/* PP_WEAPON_M16 */            { 0.75f, 28.0f, 0.06f, 2.8f, 3.2f },
+	/* PP_WEAPON_M60 */            { 0.65f, 26.0f, 0.06f, 2.4f, 3.0f },
+	/* PP_WEAPON_HAND_GRENADE */   { 0.2f, 6.0f, 0.50f, 1.0f, 2.0f },
+	/* PP_WEAPON_GRENADE_LAUNCHER */ { 1.0f, 5.0f, 0.55f, 7.0f, 8.0f },
+	/* PP_WEAPON_ROCKET_LAUNCHER */ { 0.9f, 6.0f, 0.60f, 5.0f, 6.0f },
+	/* PP_WEAPON_FLAMETHROWER */   { 0.2f, 35.0f, 0.05f, 0.8f, 1.2f },
+	/* PP_WEAPON_SNIPER */         { 1.0f, 4.0f, 0.85f, 9.0f, 7.0f },
+	/* PP_WEAPON_MORTAR */         { 1.0f, 3.5f, 1.00f, 12.0f, 12.0f }
+};
+
+/* Procedural viewmodel animation state */
+static float pp_viewmodel_recoil = 0.0f;
+static int pp_viewmodel_last_gunindex = 0;
+static float pp_viewmodel_last_fire_time = 0.0f;
+static float pp_viewmodel_raise_progress = 0.0f; /* 0 = hidden, 1 = fully raised */
+static int pp_viewmodel_last_muzzle_seq = 0;
+static pp_weapon_type_t pp_current_weapon = PP_WEAPON_UNKNOWN;
+static vec3_t pp_viewmodel_smoothed_origin;
+static vec3_t pp_viewmodel_smoothed_angles;
+static qboolean pp_viewmodel_smoothed_valid = false;
+
+static float
+PP_ViewmodelAngleOffset(float angle, float base)
+{
+	float delta = angle - base;
+
+	while (delta > 180.0f)
+	{
+		delta -= 360.0f;
+	}
+
+	while (delta < -180.0f)
+	{
+		delta += 360.0f;
+	}
+
+	return delta;
+}
+
+static qboolean
+PP_IsBoss2Helicopter(const entity_state_t *state)
+{
+	const char *model_path;
+
+	if (!state || (state->modelindex <= 0) || (state->modelindex >= MAX_MODELS))
+	{
+		return false;
+	}
+
+	model_path = cl.configstrings[CS_MODELS + state->modelindex];
+
+	return model_path && !Q_stricmp(model_path, "models/monsters/boss2/tris.md2");
+}
+
+static void
+PP_ApplyBoss2PropellerSpin(entity_t *ent)
+{
+	const float spin_rate = 1.8f;
+
+	if (!ent)
+	{
+		return;
+	}
+
+	/* Keep the propeller on a static mesh frame and sell the motion with rotation. */
+	ent->frame = 0;
+	ent->oldframe = 0;
+	ent->backlerp = 0.0f;
+	ent->angles[YAW] = anglemod(ent->angles[YAW] + (cl.time * spin_rate));
+}
+
+static qboolean
+PP_IsBoss2PropellerModel(int modelindex)
+{
+	const char *model_path;
+
+	if ((modelindex <= 0) || (modelindex >= MAX_MODELS))
+	{
+		return false;
+	}
+
+	model_path = cl.configstrings[CS_MODELS + modelindex];
+
+	return model_path && !Q_stricmp(model_path, "models/monsters/boss2/propeller.md2");
+}
+
+static void
+PP_ApplyBoss2HelicopterTransform(const entity_state_t *state,
+		const centity_t *cent, entity_t *ent)
+{
+	vec3_t move_delta;
+	float speed_scale;
+	float bob;
+
+	if (!state || !cent || !ent)
+	{
+		return;
+	}
+
+	VectorSubtract(cent->current.origin, cent->prev.origin, move_delta);
+	speed_scale = Q_clamp(VectorLength(move_delta) * 0.08f, 0.0f, 1.0f);
+
+	bob = sinf((cl.time * 0.0125f) + (state->number * 0.37f)) *
+		(1.0f - speed_scale) * 2.0f;
+	ent->origin[2] += bob;
+	ent->oldorigin[2] += bob;
+}
+
+static pp_weapon_type_t
+PP_DetectWeaponType(player_state_t *ps)
+{
+	const char *model;
+
+	if (!ps || ps->gunindex <= 0)
+	{
+		return PP_WEAPON_UNKNOWN;
+	}
+
+	model = cl.configstrings[CS_MODELS + ps->gunindex];
+	if (!model || !model[0])
+	{
+		return PP_WEAPON_UNKNOWN;
+	}
+
+	if (strstr(model, "v_blast")) return PP_WEAPON_M9_PISTOL;
+	if (strstr(model, "v_shotg2")) return PP_WEAPON_SUPER_SHOTGUN;
+	if (strstr(model, "v_shotg")) return PP_WEAPON_SHOTGUN;
+	if (strstr(model, "v_machn")) return PP_WEAPON_M16;
+	if (strstr(model, "v_chain")) return PP_WEAPON_M60;
+	if (strstr(model, "v_handgr")) return PP_WEAPON_HAND_GRENADE;
+	if (strstr(model, "v_launch")) return PP_WEAPON_GRENADE_LAUNCHER;
+	if (strstr(model, "v_rocket")) return PP_WEAPON_ROCKET_LAUNCHER;
+	if (strstr(model, "v_hyperb")) return PP_WEAPON_FLAMETHROWER;
+	if (strstr(model, "v_rail")) return PP_WEAPON_SNIPER;
+	if (strstr(model, "v_bfg")) return PP_WEAPON_MORTAR;
+
+	return PP_WEAPON_UNKNOWN;
+}
+
+static const char *
+PP_ADSOverlayPicForWeapon(pp_weapon_type_t weapon)
+{
+	switch (weapon)
+	{
+		case PP_WEAPON_M9_PISTOL: return "ads_blaster.png";
+		case PP_WEAPON_SHOTGUN: return "ads_shotgun.png";
+		case PP_WEAPON_SUPER_SHOTGUN: return "ads_supershotgun.png";
+		case PP_WEAPON_M16: return "ads_machinegun.png";
+		case PP_WEAPON_M60: return "ads_chaingun.png";
+		case PP_WEAPON_HAND_GRENADE: return "ads_handgrenade.png";
+		case PP_WEAPON_GRENADE_LAUNCHER: return "ads_grenadelauncher.png";
+		case PP_WEAPON_ROCKET_LAUNCHER: return "ads_rocketlauncher.png";
+		case PP_WEAPON_FLAMETHROWER: return "ads_hyperblaster.png";
+		case PP_WEAPON_SNIPER: return "ads_railgun.png";
+		case PP_WEAPON_MORTAR: return "ads_mortar.png";
+		default: return NULL;
+	}
+}
+
+const char *
+CL_GetADSOverlayPicName(void)
+{
+	pp_weapon_type_t weapon;
+
+	weapon = PP_DetectWeaponType(&cl.frame.playerstate);
+	return PP_ADSOverlayPicForWeapon(weapon);
+}
+
+qboolean
+CL_IsADSActive(void)
+{
+	if (cls.state != ca_active)
+	{
+		return false;
+	}
+
+	if (cls.key_dest != key_game)
+	{
+		return false;
+	}
+
+	if (!(cl.cmd.buttons & BUTTON_ADS))
+	{
+		return false;
+	}
+
+	return CL_GetADSOverlayPicName() != NULL;
+}
+
+void
+CL_TouchADSOverlayPics(void)
+{
+	static const char *ads_overlays[] = {
+		"ads_blaster.png",
+		"ads_shotgun.png",
+		"ads_supershotgun.png",
+		"ads_machinegun.png",
+		"ads_chaingun.png",
+		"ads_handgrenade.png",
+		"ads_grenadelauncher.png",
+		"ads_rocketlauncher.png",
+		"ads_hyperblaster.png",
+		"ads_railgun.png",
+		"ads_mortar.png"
+	};
+	int i;
+
+	for (i = 0; i < (int)ARRLEN(ads_overlays); i++)
+	{
+		Draw_FindPic(ads_overlays[i]);
+	}
+}
+
+static qboolean
+CL_MFlashTuneCameraActive(void)
+{
+	return cl_mflash_tune_mode && (cl_mflash_tune_mode->value > 0.0f);
+}
+
+static const char *
+CL_MFlashTuneWeaponFileForGun(void)
+{
+	const player_state_t *ps = &cl.frame.playerstate;
+	const char *gun_model;
+
+	if (!ps || ps->gunindex <= 0)
+	{
+		return "weapon.md2";
+	}
+
+	gun_model = cl.configstrings[CS_MODELS + ps->gunindex];
+	if (!gun_model || !gun_model[0])
+	{
+		return "weapon.md2";
+	}
+
+	if (strstr(gun_model, "v_blast")) return "w_blaster.md2";
+	if (strstr(gun_model, "v_shotg2")) return "w_sshotgun.md2";
+	if (strstr(gun_model, "v_shotg")) return "w_shotgun.md2";
+	if (strstr(gun_model, "v_machn")) return "w_machinegun.md2";
+	if (strstr(gun_model, "v_chain")) return "w_chaingun.md2";
+	if (strstr(gun_model, "v_handgr")) return "w_glauncher.md2";
+	if (strstr(gun_model, "v_launch")) return "w_glauncher.md2";
+	if (strstr(gun_model, "v_rocket")) return "w_rlauncher.md2";
+	if (strstr(gun_model, "v_hyperb")) return "w_hyperblaster.md2";
+	if (strstr(gun_model, "v_rail")) return "w_railgun.md2";
+	if (strstr(gun_model, "v_bfg")) return "w_bfg.md2";
+	if (strstr(gun_model, "v_etf")) return "w_machinegun.md2";
+
+	return "weapon.md2";
+}
+
+static void
+CL_MFlashTuneGetClientModelName(const clientinfo_t *ci, char *model_name, size_t model_name_size)
+{
+	const char *model_start;
+	const char *sep;
+	size_t copy_len;
+
+	if (!model_name || model_name_size == 0)
+	{
+		return;
+	}
+
+	Q_strlcpy(model_name, "soldier", model_name_size);
+
+	if (!ci || !ci->cinfo[0])
+	{
+		return;
+	}
+
+	model_start = strchr(ci->cinfo, '\\');
+	if (!model_start || !model_start[1])
+	{
+		return;
+	}
+	model_start++;
+
+	sep = strpbrk(model_start, "/\\");
+	if (!sep || sep <= model_start)
+	{
+		Q_strlcpy(model_name, model_start, model_name_size);
+		return;
+	}
+
+	copy_len = (size_t)(sep - model_start);
+	if (copy_len >= model_name_size)
+	{
+		copy_len = model_name_size - 1;
+	}
+
+	memcpy(model_name, model_start, copy_len);
+	model_name[copy_len] = '\0';
+
+	if (!model_name[0])
+	{
+		Q_strlcpy(model_name, "soldier", model_name_size);
+	}
+}
+
+static struct model_s *
+CL_MFlashTuneResolveWeaponModel(const clientinfo_t *ci)
+{
+	char model_name[MAX_QPATH];
+	char weapon_filename[MAX_QPATH];
+	const char *weapon_file;
+	struct model_s *model;
+
+	weapon_file = CL_MFlashTuneWeaponFileForGun();
+	CL_MFlashTuneGetClientModelName(ci, model_name, sizeof(model_name));
+
+	Com_sprintf(weapon_filename, sizeof(weapon_filename),
+		"players/%s/%s", model_name, weapon_file);
+	model = R_RegisterModel(weapon_filename);
+
+	if (!model && Q_stricmp(model_name, "soldier"))
+	{
+		Com_sprintf(weapon_filename, sizeof(weapon_filename),
+			"players/soldier/%s", weapon_file);
+		model = R_RegisterModel(weapon_filename);
+	}
+
+	if (!model && ci)
+	{
+		model = ci->weaponmodel[0];
+	}
+
+	if (!model)
+	{
+		model = cl.baseclientinfo.weaponmodel[0];
+	}
+
+	return model;
+}
+
+static qboolean
+CL_BuildPlayerGibSkinPath(const char *model_path, char *skin_path, size_t skin_path_size)
+{
+	const char *slash;
+	size_t dir_len;
+
+	if (!model_path || !model_path[0] || !skin_path || (skin_path_size == 0))
+	{
+		return false;
+	}
+
+	slash = strrchr(model_path, '/');
+	if (!slash)
+	{
+		return false;
+	}
+
+	dir_len = (size_t)(slash - model_path);
+	if (dir_len + sizeof("/player.png") > skin_path_size)
+	{
+		return false;
+	}
+
+	memcpy(skin_path, model_path, dir_len);
+	skin_path[dir_len] = '\0';
+	Q_strlcat(skin_path, "/player.png", skin_path_size);
+	return true;
+}
+
+static void
+CL_EntityEffectLight(qboolean draw, vec3_t origin, float intensity,
+	float red, float green, float blue)
+{
+	if (draw)
+	{
+		V_AddLight(origin, intensity, red, green, blue);
+	}
+}
+
+static void
+CL_EntityEffects(entity_t *entity, centity_t *cent, const entity_state_t *s1,
+	unsigned int effects, qboolean emit_particles, qboolean draw_lights)
+{
+	entity_t ent = *entity;
+	int i;
+	if ((effects & ~EF_ROTATE))
+	{
+		if (effects & EF_ROCKET)
+		{
+			if (emit_particles)
+			{
+				CL_RocketTrail(cent->lerp_origin, ent.origin, cent);
+			}
+
+			if (cl_r1q2_lightstyle->value)
+			{
+				CL_EntityEffectLight(draw_lights, ent.origin, 200, 1, 0.23f, 0);
+			}
+			else
+			{
+				CL_EntityEffectLight(draw_lights, ent.origin, 200, 1, 1, 0);
+			}
+		}
+
+		/* Do not reorder EF_BLASTER and EF_HYPERBLASTER.
+		   EF_BLASTER | EF_TRACKER is a special case for
+		   EF_BLASTER2 */
+		else if (effects & EF_BLASTER)
+		{
+			if (effects & EF_TRACKER)
+			{
+				if (emit_particles)
+				{
+					CL_BlasterTrail2(cent->lerp_origin, ent.origin);
+				}
+				CL_EntityEffectLight(draw_lights, ent.origin, 200, 0, 1, 0);
+			}
+			else
+			{
+				if (emit_particles)
+				{
+					CL_BlasterTrail(cent->lerp_origin, ent.origin);
+				}
+				CL_EntityEffectLight(draw_lights, ent.origin, 200, 1, 1, 0);
+			}
+		}
+		else if (effects & EF_HYPERBLASTER)
+		{
+			if (effects & EF_TRACKER)
+			{
+				CL_EntityEffectLight(draw_lights, ent.origin, 200, 0, 1, 0);
+			}
+			else
+			{
+				/* Flame projectile: orange trail and light */
+				if (emit_particles)
+				{
+					CL_FlameTrail(cent->lerp_origin, ent.origin);
+				}
+				CL_EntityEffectLight(draw_lights, ent.origin, 150, 1.0f, 0.5f, 0.1f);
+			}
+		}
+		else if (effects & (EF_GIB | EF_GREENGIB))
+		{
+			if (emit_particles)
+			{
+				CL_DiminishingTrail(cent->lerp_origin, ent.origin,
+						cent, effects);
+			}
+		}
+		else if (effects & EF_GRENADE)
+		{
+			if (emit_particles)
+			{
+				CL_DiminishingTrail(cent->lerp_origin, ent.origin,
+						cent, effects);
+			}
+		}
+		else if (effects & EF_FLIES)
+		{
+			if (emit_particles)
+			{
+				CL_FlyEffect(cent, ent.origin);
+			}
+		}
+		else if (effects & EF_BFG)
+		{
+			static int bfg_lightramp[6] = {300, 400, 600, 300, 150, 75};
+
+			if (effects & EF_ANIM_ALLFAST)
+			{
+				if (emit_particles)
+				{
+					CL_BfgParticles(&ent);
+				}
+				i = 200;
+			}
+			else
+			{
+				i = bfg_lightramp[Q_clamp(s1->frame, 0, 5)];
+			}
+
+			CL_EntityEffectLight(draw_lights, ent.origin, i, 0, 1, 0);
+		}
+		else if (effects & EF_TRAP)
+		{
+			ent.origin[2] += 32;
+			if (emit_particles)
+			{
+				CL_TrapParticles(&ent);
+			}
+			i = (CL_EffectNoise(s1->number, 1) % 100) + 100;
+			CL_EntityEffectLight(draw_lights, ent.origin, i, 1, 0.8f, 0.1f);
+		}
+		else if (effects & EF_FLAG1)
+		{
+			if (emit_particles)
+			{
+				CL_FlagTrail(cent->lerp_origin, ent.origin, 242);
+			}
+			CL_EntityEffectLight(draw_lights, ent.origin, 225, 1, 0.1f, 0.1f);
+		}
+		else if (effects & EF_FLAG2)
+		{
+			if (emit_particles)
+			{
+				CL_FlagTrail(cent->lerp_origin, ent.origin, 115);
+			}
+			CL_EntityEffectLight(draw_lights, ent.origin, 225, 0.1f, 0.1f, 1);
+		}
+		else if (effects & EF_TAGTRAIL)
+		{
+			if (emit_particles)
+			{
+				CL_TagTrail(cent->lerp_origin, ent.origin, 220);
+			}
+			CL_EntityEffectLight(draw_lights, ent.origin, 225, 1.0, 1.0, 0.0);
+		}
+		else if (effects & EF_TRACKERTRAIL)
+		{
+			if (effects & EF_TRACKER)
+			{
+				float intensity;
+
+				intensity = 50 + (500 * ((float)sin(cl.time / 500.0f) + 1.0f));
+				CL_EntityEffectLight(draw_lights, ent.origin, intensity, -1.0, -1.0, -1.0);
+			}
+			else
+			{
+				if (emit_particles)
+				{
+					CL_Tracker_Shell(cent->lerp_origin);
+				}
+				CL_EntityEffectLight(draw_lights, ent.origin, 155, -1.0, -1.0, -1.0);
+			}
+		}
+		else if (effects & EF_TRACKER)
+		{
+			if (emit_particles)
+			{
+				CL_TrackerTrail(cent->lerp_origin, ent.origin, 0);
+			}
+			CL_EntityEffectLight(draw_lights, ent.origin, 200, -1, -1, -1);
+		}
+		else if (effects & EF_IONRIPPER)
+		{
+			if (emit_particles)
+			{
+				CL_IonripperTrail(cent->lerp_origin, ent.origin);
+			}
+			CL_EntityEffectLight(draw_lights, ent.origin, 100, 1, 0.5, 0.5);
+		}
+		else if (effects & EF_BLUEHYPERBLASTER)
+		{
+			CL_EntityEffectLight(draw_lights, ent.origin, 200, 0, 0, 1);
+		}
+		else if (effects & EF_PLASMA)
+		{
+			if (effects & EF_ANIM_ALLFAST)
+			{
+				if (emit_particles)
+				{
+					CL_BlasterTrail(cent->lerp_origin, ent.origin);
+				}
+			}
+
+			CL_EntityEffectLight(draw_lights, ent.origin, 130, 1, 0.5, 0.5);
+		}
+	}
+
+	*entity = ent;
+}
+
+/* Only effect preparation is shared. Model poses, local-player exclusions,
+ * visibility, and all other camera-dependent entity work retain their own
+ * snapshot and interpolation inputs. */
+typedef struct
+{
+	centity_t *sources[SS_MAX_LOCAL_PLAYERS];
+	const entity_state_t *state;
+	entity_t entity;
+	float lerp;
+	unsigned int view_mask;
+	int source_count;
+	int number;
+	int next;
+} entity_effect_task_t;
+
+static entity_effect_task_t entity_effect_tasks[MAX_PACKET_ENTITIES * SS_MAX_LOCAL_PLAYERS];
+static int entity_effect_heads[MAX_CL_ENTNUM + 1];
+static byte entity_effect_variants[MAX_CL_ENTNUM + 1];
+static int entity_effect_count;
+
+void
+CL_ResetEntityEffectQueue(void)
+{
+	int i;
+	for (i = 0; i < entity_effect_count; ++i)
+	{
+		int number = entity_effect_tasks[i].number;
+		entity_effect_heads[number] = 0;
+		entity_effect_variants[number] = 0;
+	}
+	entity_effect_count = 0;
+}
+
+static qboolean
+CL_EquivalentEntityEffect(const entity_effect_task_t *task,
+	const centity_t *cent, const entity_state_t *state)
+{
+	const centity_t *first = task->sources[0];
+	return task->lerp == cl.lerpfrac &&
+		first->serverframe == cent->serverframe &&
+		first->trailcount == cent->trailcount &&
+		first->fly_stoptime == cent->fly_stoptime &&
+		VectorCompare(first->lerp_origin, cent->lerp_origin) &&
+		!memcmp(&first->current, &cent->current, sizeof(cent->current)) &&
+		!memcmp(&first->prev, &cent->prev, sizeof(cent->prev)) &&
+		!memcmp(task->state, state, sizeof(*state));
+}
+
+void
+CL_QueueEntityEffects(frame_t *frame, int view_slot)
+{
+	int pnum;
+	if (!frame->valid || view_slot < 0 || view_slot >= SS_MAX_LOCAL_PLAYERS)
+	{
+		return;
+	}
+	for (pnum = 0; pnum < frame->num_entities; ++pnum)
+	{
+		const entity_state_t *state = &cl_entity_parse_stream[(frame->parse_entities + pnum) & (MAX_PARSE_ENTITIES - 1)];
+		centity_t *cent;
+		entity_effect_task_t *task;
+		vec3_t origin;
+		int j, index;
+
+		if (state->number < 0 || state->number >= cl_numentities ||
+			state->number > MAX_CL_ENTNUM || !state->modelindex ||
+			(state->number == cl.playernum + 1 && !CL_MFlashTuneCameraActive()))
+		{
+			continue;
+		}
+		cent = &cl_entities[state->number];
+		if (state->renderfx & (RF_FRAMELERP | RF_BEAM))
+		{
+			VectorCopy(cent->current.origin, origin);
+		}
+		else
+		{
+			for (j = 0; j < 3; ++j)
+			{
+				origin[j] = cent->prev.origin[j] + cl.lerpfrac *
+					(cent->current.origin[j] - cent->prev.origin[j]);
+			}
+		}
+		if (!(state->effects & ~EF_ROTATE))
+		{
+			VectorCopy(origin, cent->lerp_origin);
+			continue;
+		}
+		for (index = entity_effect_heads[state->number]; index; index = task->next)
+		{
+			task = &entity_effect_tasks[index - 1];
+			if (CL_EquivalentEntityEffect(task, cent, state))
+			{
+				task->view_mask |= 1u << view_slot;
+				if (task->source_count < SS_MAX_LOCAL_PLAYERS)
+				{
+					task->sources[task->source_count++] = cent;
+				}
+				++cl_effect_stats.entity_effect_reuses;
+				break;
+			}
+		}
+		if (index)
+		{
+			continue;
+		}
+		if (entity_effect_count == (int)ARRLEN(entity_effect_tasks))
+		{
+			/* More than the protocol's maximum entity count is malformed. */
+			Com_Error(ERR_DROP, "Too many local entity effect inputs");
+			return;
+		}
+		task = &entity_effect_tasks[entity_effect_count++];
+		memset(task, 0, sizeof(*task));
+		task->sources[0] = cent;
+		task->source_count = 1;
+		task->state = state;
+		task->number = state->number;
+		task->lerp = cl.lerpfrac;
+		task->view_mask = 1u << view_slot;
+		task->next = entity_effect_heads[state->number];
+		entity_effect_heads[state->number] = entity_effect_count;
+		++entity_effect_variants[state->number];
+		VectorCopy(origin, task->entity.origin);
+		task->entity.frame = state->frame;
+	}
+}
+
+static int
+CL_CompareEntityEffects(const void *left, const void *right)
+{
+	const entity_effect_task_t *a = left, *b = right;
+	if (a->state->number != b->state->number)
+	{
+		return a->state->number < b->state->number ? -1 : 1;
+	}
+	return a->view_mask < b->view_mask ? -1 : a->view_mask != b->view_mask;
+}
+
+void
+CL_EmitQueuedEntityEffects(void)
+{
+	int i, j;
+	unsigned int saved_mask = cl_particle_view_mask;
+
+	/* Stable entity/view ordering is independent of viewport draw order. */
+	qsort(entity_effect_tasks, entity_effect_count, sizeof(entity_effect_tasks[0]), CL_CompareEntityEffects);
+	for (i = 0; i < entity_effect_count; ++i)
+	{
+		entity_effect_task_t *task = &entity_effect_tasks[i];
+		centity_t *cent = task->sources[0];
+		/* A single representation belongs to the union of local views. If
+		 * histories differ, each representation belongs only to its views. */
+		cl_particle_view_mask = entity_effect_variants[task->state->number] > 1 ?
+			task->view_mask : ~0u;
+		CL_EntityEffects(&task->entity, cent, task->state, task->state->effects, true, false);
+		++cl_effect_stats.entity_effect_evaluations;
+		for (j = 0; j < task->source_count; ++j)
+		{
+			task->sources[j]->trailcount = cent->trailcount;
+			task->sources[j]->fly_stoptime = cent->fly_stoptime;
+			VectorCopy(task->entity.origin, task->sources[j]->lerp_origin);
+		}
+	}
+	cl_particle_view_mask = saved_mask;
+}
+
+void
+CL_AddPacketEntities(frame_t *frame)
+{
+	entity_t ent = {0};
+	entity_state_t *s1;
+	float autorotate;
+	int i;
+	int pnum;
+	centity_t *cent;
+	int autoanim;
+	clientinfo_t *ci;
+	unsigned int effects, renderfx;
+
+	/* To distinguish baseq2, xatrix and rogue. */
+	cvar_t *game = Cvar_Get("game",  "", CVAR_LATCH | CVAR_SERVERINFO);
+
+	/* bonus items rotate at a fixed rate */
+	autorotate = anglemod(cl.time * 0.1f);
+
+	/* brush models can auto animate their frames */
+	autoanim = 2 * cl.time / 1000;
+
+	for (pnum = 0; pnum < frame->num_entities; pnum++)
+	{
+		s1 = &cl_entity_parse_stream[(frame->parse_entities +
+				pnum) & (MAX_PARSE_ENTITIES - 1)];
+
+		if ((s1->number < 0) || (s1->number >= cl_numentities))
+		{
+			continue;
+		}
+
+		cent = &cl_entities[s1->number];
+
+		effects = s1->effects;
+		renderfx = s1->renderfx;
+
+		/* set frame */
+		if (effects & EF_ANIM01)
+		{
+			ent.frame = autoanim & 1;
+		}
+
+		else if (effects & EF_ANIM23)
+		{
+			ent.frame = 2 + (autoanim & 1);
+		}
+
+		else if (effects & EF_ANIM_ALL)
+		{
+			ent.frame = autoanim;
+		}
+
+		else if (effects & EF_ANIM_ALLFAST)
+		{
+			ent.frame = cl.time / 100;
+		}
+
+		else
+		{
+			ent.frame = s1->frame;
+		}
+
+		/* quad and pent can do different things on client */
+		if (effects & EF_PENT)
+		{
+			effects &= ~EF_PENT;
+			effects |= EF_COLOR_SHELL;
+			renderfx |= RF_SHELL_RED;
+		}
+
+		if (effects & EF_QUAD)
+		{
+			effects &= ~EF_QUAD;
+			effects |= EF_COLOR_SHELL;
+			renderfx |= RF_SHELL_BLUE;
+		}
+
+		if (effects & EF_DOUBLE)
+		{
+			effects &= ~EF_DOUBLE;
+			effects |= EF_COLOR_SHELL;
+			renderfx |= RF_SHELL_DOUBLE;
+		}
+
+		if (effects & EF_HALF_DAMAGE)
+		{
+			effects &= ~EF_HALF_DAMAGE;
+			effects |= EF_COLOR_SHELL;
+			renderfx |= RF_SHELL_HALF_DAM;
+		}
+
+		ent.oldframe = cent->prev.frame;
+		ent.backlerp = 1.0f - cl.lerpfrac;
+
+		if (renderfx & (RF_FRAMELERP | RF_BEAM))
+		{
+			/* step origin discretely, because the
+			   frames do the animation properly */
+			VectorCopy(cent->current.origin, ent.origin);
+			VectorCopy(cent->current.old_origin, ent.oldorigin);
+		}
+		else
+		{
+			/* interpolate origin */
+			for (i = 0; i < 3; i++)
+			{
+				ent.origin[i] = ent.oldorigin[i] = cent->prev.origin[i] + cl.lerpfrac *
+				   	(cent->current.origin[i] - cent->prev.origin[i]);
+			}
+		}
+
+		/* tweak the color of beams */
+		if (renderfx & RF_BEAM)
+		{
+			ent.alpha = cl_laseralpha->value;
+			if (ent.alpha < 0.0f)
+			{
+				ent.alpha = 0.0f;
+			}
+			else if (ent.alpha > 1.0f)
+			{
+				ent.alpha = 1.0f;
+			}
+
+			/* the four beam colors are encoded in 32 bits of skinnum (hack) */
+			ent.skinnum = (s1->skinnum >> ((CL_EffectNoise(s1->number, 0) % 4) * 8)) & 0xff;
+			ent.model = NULL;
+		}
+		else
+		{
+			/* set skin */
+			if (s1->modelindex == 255)
+			{
+				/* use custom player skin */
+				ent.skinnum = 0;
+				ci = &cl.clientinfo[s1->skinnum & PP_PLAYER_SKINNUM_PLAYER_MASK];
+				ent.skin = ci->skin;
+				if (s1->skinnum & PP_PLAYER_SKINNUM_PISTOL_FLAG)
+				{
+					ent.model = ci->model_pistol;
+				}
+				else
+				{
+					ent.model = ci->model;
+				}
+
+				if (!ent.skin || !ent.model)
+				{
+					ent.skin = cl.baseclientinfo.skin;
+					ent.model = cl.baseclientinfo.model;
+				}
+
+				if (renderfx & RF_USE_DISGUISE)
+				{
+					if (ent.skin != NULL)
+					{
+						if (!strncmp((char *)ent.skin, "players/male", 12))
+						{
+							ent.skin = R_RegisterSkin("players/male/disguise.pcx");
+							ent.model = R_RegisterModel("players/male/tris.md2");
+						}
+						else if (!strncmp((char *)ent.skin, "players/female", 14))
+						{
+							ent.skin = R_RegisterSkin("players/female/disguise.pcx");
+							ent.model = R_RegisterModel("players/female/tris.md2");
+						}
+						else if (!strncmp((char *)ent.skin, "players/cyborg", 14))
+						{
+							ent.skin = R_RegisterSkin("players/cyborg/disguise.pcx");
+							ent.model = R_RegisterModel("players/cyborg/tris.md2");
+						}
+					}
+				}
+			}
+			else
+			{
+				const char *model_path;
+				char player_gib_skin[MAX_QPATH];
+
+				ent.skinnum = s1->skinnum;
+				ent.skin = NULL;
+				ent.model = cl.model_draw[s1->modelindex];
+
+				if ((s1->skinnum & PP_GIB_PLAYER_SKIN_OVERRIDE) &&
+					(s1->modelindex > 0) && (s1->modelindex < MAX_MODELS))
+				{
+					model_path = cl.configstrings[CS_MODELS + s1->modelindex];
+					if (CL_BuildPlayerGibSkinPath(model_path, player_gib_skin,
+						sizeof(player_gib_skin)))
+					{
+						ent.skin = R_RegisterSkin(player_gib_skin);
+						if (ent.skin)
+						{
+							ent.skinnum = 0;
+						}
+					}
+				}
+			}
+		}
+
+		/* only used for black hole model right now */
+		if (renderfx & RF_TRANSLUCENT && !(renderfx & RF_BEAM))
+		{
+			ent.alpha = 0.70f;
+		}
+
+		/* render effects (fullbright, translucent, etc) */
+		if ((effects & EF_COLOR_SHELL))
+		{
+			ent.flags = 0; /* renderfx go on color shell entity */
+		}
+		else
+		{
+			ent.flags = renderfx;
+		}
+
+		/* calculate angles */
+		if (effects & EF_ROTATE)
+		{
+			/* some bonus items auto-rotate */
+			ent.angles[0] = 0;
+			ent.angles[1] = autorotate;
+			ent.angles[2] = 0;
+		}
+		else if (effects & EF_SPINNINGLIGHTS)
+		{
+			ent.angles[0] = 0;
+			ent.angles[1] = anglemod(cl.time / 2) + s1->angles[1];
+			ent.angles[2] = 180;
+			{
+				vec3_t forward;
+				vec3_t start;
+
+				AngleVectors(ent.angles, forward, NULL, NULL);
+				VectorMA(ent.origin, 64, forward, start);
+				V_AddLight(start, 100, 1, 0, 0);
+			}
+		}
+		else
+		{
+			/* interpolate angles */
+			float a1, a2;
+
+			for (i = 0; i < 3; i++)
+			{
+				a1 = cent->current.angles[i];
+				a2 = cent->prev.angles[i];
+				ent.angles[i] = LerpAngle(a2, a1, cl.lerpfrac);
+			}
+		}
+
+		if (PP_IsBoss2Helicopter(s1))
+		{
+			PP_ApplyBoss2HelicopterTransform(s1, cent, &ent);
+		}
+
+		if (s1->number == cl.playernum + 1)
+		{
+			if (!CL_MFlashTuneCameraActive())
+			{
+				ent.flags |= RF_VIEWERMODEL;
+
+				if (effects & EF_FLAG1)
+				{
+					V_AddLight(ent.origin, 225, 1.0f, 0.1f, 0.1f);
+				}
+
+				else if (effects & EF_FLAG2)
+				{
+					V_AddLight(ent.origin, 225, 0.1f, 0.1f, 1.0f);
+				}
+
+				else if (effects & EF_TAGTRAIL)
+				{
+					V_AddLight(ent.origin, 225, 1.0f, 1.0f, 0.0f);
+				}
+
+				else if (effects & EF_TRACKERTRAIL)
+				{
+					V_AddLight(ent.origin, 225, -1.0f, -1.0f, -1.0f);
+				}
+
+				continue;
+			}
+		}
+
+		/* if set to invisible, skip */
+		if (!s1->modelindex)
+		{
+			continue;
+		}
+
+		if (effects & EF_BFG)
+		{
+			ent.flags |= RF_TRANSLUCENT;
+			ent.alpha = 0.30f;
+		}
+
+		if (effects & EF_PLASMA)
+		{
+			ent.flags |= RF_TRANSLUCENT;
+			ent.alpha = 0.6f;
+		}
+
+		if (effects & EF_SPHERETRANS)
+		{
+			ent.flags |= RF_TRANSLUCENT;
+
+			if (effects & EF_TRACKERTRAIL)
+			{
+				ent.alpha = 0.6f;
+			}
+
+			else
+			{
+				ent.alpha = 0.3f;
+			}
+		}
+
+		/* add to refresh list */
+		V_AddEntity(&ent);
+
+		/* color shells generate a seperate entity for the main model */
+		if (effects & EF_COLOR_SHELL)
+		{
+			/* all of the solo colors are fine.  we need to catch any of
+			   the combinations that look bad (double & half) and turn
+			   them into the appropriate color, and make double/quad
+			   something special */
+			if (renderfx & RF_SHELL_HALF_DAM)
+			{
+				if (strcmp(game->string, "rogue") == 0)
+				{
+					/* ditch the half damage shell if any of red, blue, or double are on */
+					if (renderfx & (RF_SHELL_RED | RF_SHELL_BLUE | RF_SHELL_DOUBLE))
+					{
+						renderfx &= ~RF_SHELL_HALF_DAM;
+					}
+				}
+			}
+
+			if (renderfx & RF_SHELL_DOUBLE)
+			{
+				if (strcmp(game->string, "rogue") == 0)
+				{
+					/* lose the yellow shell if we have a red, blue, or green shell */
+					if (renderfx & (RF_SHELL_RED | RF_SHELL_BLUE | RF_SHELL_GREEN))
+					{
+						renderfx &= ~RF_SHELL_DOUBLE;
+					}
+
+					/* if we have a red shell, turn it to purple by adding blue */
+					if (renderfx & RF_SHELL_RED)
+					{
+						renderfx |= RF_SHELL_BLUE;
+					}
+
+					/* if we have a blue shell (and not a red shell),
+					   turn it to cyan by adding green */
+					else if (renderfx & RF_SHELL_BLUE)
+					{
+						/* go to green if it's on already,
+						   otherwise do cyan (flash green) */
+						if (renderfx & RF_SHELL_GREEN)
+						{
+							renderfx &= ~RF_SHELL_BLUE;
+						}
+
+						else
+						{
+							renderfx |= RF_SHELL_GREEN;
+						}
+					}
+				}
+			}
+
+			ent.flags = renderfx | RF_TRANSLUCENT;
+			ent.alpha = 0.30f;
+			V_AddEntity(&ent);
+		}
+
+		ent.skin = NULL; /* never use a custom skin on others */
+		ent.skinnum = 0;
+		ent.flags = 0;
+		ent.alpha = 0;
+
+		/* duplicate for linked models */
+		if (s1->modelindex2)
+		{
+			if (s1->modelindex2 == 255)
+			{
+				if (CL_MFlashTuneCameraActive() && (s1->number == cl.playernum + 1))
+				{
+					ci = &cl.clientinfo[cl.playernum];
+					ent.model = CL_MFlashTuneResolveWeaponModel(ci);
+				}
+				else
+				{
+					/* custom weapon */
+					ci = &cl.clientinfo[s1->skinnum & PP_PLAYER_SKINNUM_PLAYER_MASK];
+					i = (s1->skinnum >> PP_PLAYER_SKINNUM_WEAPON_SHIFT) & PP_PLAYER_SKINNUM_WEAPON_MASK;
+
+					if (!cl_vwep->value || (i > MAX_CLIENTWEAPONMODELS - 1))
+					{
+						i = 0;
+					}
+
+					ent.model = ci->weaponmodel[i];
+
+					if (!ent.model)
+					{
+						if (i != 0)
+						{
+							ent.model = ci->weaponmodel[0];
+						}
+
+						if (!ent.model)
+						{
+							ent.model = cl.baseclientinfo.weaponmodel[0];
+						}
+					}
+				}
+			}
+			else
+			{
+				ent.model = cl.model_draw[s1->modelindex2];
+			}
+
+			if (PP_IsBoss2Helicopter(s1) && PP_IsBoss2PropellerModel(s1->modelindex2))
+			{
+				PP_ApplyBoss2PropellerSpin(&ent);
+			}
+
+			/* check for the defender sphere shell and make it translucent */
+			if (!Q_strcasecmp(cl.configstrings[CS_MODELS + (s1->modelindex2)],
+						"models/items/shell/tris.md2"))
+			{
+				ent.alpha = 0.32f;
+				ent.flags = RF_TRANSLUCENT;
+			}
+
+			V_AddEntity(&ent);
+
+			ent.flags = 0;
+			ent.alpha = 0;
+		}
+
+		if (s1->modelindex3)
+		{
+			ent.model = cl.model_draw[s1->modelindex3];
+			V_AddEntity(&ent);
+		}
+
+		if (s1->modelindex4)
+		{
+			ent.model = cl.model_draw[s1->modelindex4];
+			V_AddEntity(&ent);
+		}
+
+		if (effects & EF_POWERSCREEN)
+		{
+			ent.model = CL_PowerScreenModel();
+			ent.oldframe = 0;
+			ent.frame = 0;
+			ent.flags |= (RF_TRANSLUCENT | RF_SHELL_GREEN);
+			ent.alpha = 0.30f;
+			V_AddEntity(&ent);
+		}
+
+		/* Particle/trail state was prepared over the union of local snapshots.
+		 * This per-view call only submits lighting with this view's pose. */
+		CL_EntityEffects(&ent, cent, s1, effects, false, true);
+	}
+}
+
+void
+CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
+{
+	entity_t gun = {0}; /* view model */
+	vec3_t base_origin;
+	vec3_t base_angles;
+	int i;
+
+	if (cl_skip_view_weapon)
+	{
+		return;
+	}
+
+	if (CL_MFlashTuneCameraActive() && (!cl_mflash_tune_show_viewmodel ||
+		(cl_mflash_tune_show_viewmodel->value <= 0.0f)))
+	{
+		return;
+	}
+
+	/* allow the gun to be completely removed */
+	if (!cl_gun->value)
+	{
+		return;
+	}
+
+	if (CL_IsADSActive())
+	{
+		return;
+	}
+
+	/* don't draw gun if in wide angle view and drawing not forced */
+	if (ps->fov > 90)
+	{
+		if (cl_gun->value < 2)
+		{
+			return;
+		}
+	}
+
+	if (gun_model)
+	{
+		gun.model = gun_model;
+	}
+
+	else
+	{
+		gun.model = cl.model_draw[ps->gunindex];
+	}
+
+	if (!gun.model)
+	{
+		return;
+	}
+
+	/* set up gun position */
+	for (i = 0; i < 3; i++)
+	{
+		gun.origin[i] = cl.refdef.vieworg[i] + ops->gunoffset[i]
+			+ cl.lerpfrac * (ps->gunoffset[i] - ops->gunoffset[i]);
+		gun.angles[i] = cl.refdef.viewangles[i] + LerpAngle(ops->gunangles[i],
+			ps->gunangles[i], cl.lerpfrac);
+	}
+
+	VectorCopy(gun.origin, base_origin);
+	VectorCopy(gun.angles, base_angles);
+
+	/* Force static frame 0 for all weapons - we do procedural animation */
+	gun.frame = 0;
+	gun.oldframe = 0;
+
+	/* Procedural viewmodel animation for all weapons */
+	{
+		float dt = cls.rframetime;
+		float raise = 1.0f; /* target raise value */
+		float recoil;
+		float t;
+		float bob_up;
+		float bob_right;
+		float bob_scale;
+		float hide;
+		float current_time = (float)cls.realtime * 0.001f;
+		float time_since_fire;
+		int muzzle_seq;
+		const pp_recoil_config_t *recoil_cfg;
+		static float pp_viewmodel_last_time = 0.0f;
+
+		if (dt < 0.0f)
+		{
+			dt = 0.0f;
+		}
+
+		/* Map change/reconnect can reset the render clock we use here; our static state persists.
+		 * If time went backwards, reset recoil timing so it can trigger again. */
+		if (current_time < pp_viewmodel_last_time)
+		{
+			pp_viewmodel_recoil = 0.0f;
+			pp_viewmodel_last_fire_time = current_time;
+			pp_viewmodel_last_muzzle_seq = pp_viewmodel_muzzle_seq;
+			pp_viewmodel_raise_progress = 0.0f;
+			pp_viewmodel_last_gunindex = 0;
+			pp_current_weapon = PP_WEAPON_UNKNOWN;
+			pp_viewmodel_smoothed_valid = false;
+		}
+
+		/* Detect weapon switch - reset raise progress and update weapon type */
+		if (pp_viewmodel_last_gunindex != ps->gunindex)
+		{
+			pp_viewmodel_raise_progress = 0.0f;
+			pp_current_weapon = PP_DetectWeaponType(ps);
+			pp_viewmodel_smoothed_valid = false;
+		}
+
+		recoil_cfg = &pp_recoil_configs[pp_current_weapon];
+
+		/* Detect firing via local-player muzzleflash events */
+		muzzle_seq = pp_viewmodel_muzzle_seq;
+		if ((muzzle_seq != pp_viewmodel_last_muzzle_seq) &&
+			((current_time - pp_viewmodel_last_fire_time) >= recoil_cfg->interval))
+		{
+			pp_viewmodel_recoil = recoil_cfg->strength;
+			pp_viewmodel_last_fire_time = current_time;
+		}
+		pp_viewmodel_last_muzzle_seq = muzzle_seq;
+
+		pp_viewmodel_recoil -= dt * recoil_cfg->recovery;
+		if (pp_viewmodel_recoil < 0.0f)
+		{
+			pp_viewmodel_recoil = 0.0f;
+		}
+
+		/* Smoothly animate client-side raise progress towards target */
+		if (pp_viewmodel_raise_progress < raise)
+		{
+			pp_viewmodel_raise_progress += dt * 4.0f; /* raise speed */
+			if (pp_viewmodel_raise_progress > raise)
+			{
+				pp_viewmodel_raise_progress = raise;
+			}
+		}
+		else if (pp_viewmodel_raise_progress > raise)
+		{
+			pp_viewmodel_raise_progress -= dt * 6.0f; /* drop speed (faster) */
+			if (pp_viewmodel_raise_progress < raise)
+			{
+				pp_viewmodel_raise_progress = raise;
+			}
+		}
+
+		raise = pp_viewmodel_raise_progress;
+
+		recoil = pp_viewmodel_recoil;
+		recoil *= raise;
+
+		t = current_time;
+		time_since_fire = current_time - pp_viewmodel_last_fire_time;
+
+		/* Suppress idle bob while firing or shortly after (2 second cooldown) */
+		if (time_since_fire < 2.0f)
+		{
+			bob_scale = time_since_fire / 2.0f;
+			if (bob_scale < 0.0f)
+			{
+				bob_scale = 0.0f;
+			}
+		}
+		else
+		{
+			bob_scale = 1.0f;
+		}
+
+		bob_up = sinf(t * 2.0f) * 0.45f * raise * bob_scale;
+		bob_right = sinf(t * 1.5f) * 0.35f * raise * bob_scale;
+
+		VectorMA(gun.origin, bob_up, cl.v_up, gun.origin);
+		VectorMA(gun.origin, bob_right, cl.v_right, gun.origin);
+		gun.angles[ROLL] += sinf(t * 1.5f) * 0.75f * raise * bob_scale;
+		gun.angles[YAW] += sinf(t * 1.0f) * 0.5f * raise * bob_scale;
+
+		hide = 1.0f - raise;
+		VectorMA(gun.origin, -hide * 18.0f, cl.v_up, gun.origin);
+		VectorMA(gun.origin, -hide * 10.0f, cl.v_forward, gun.origin);
+		gun.angles[PITCH] += hide * 22.0f;
+		gun.angles[ROLL] += hide * 8.0f;
+
+		VectorMA(gun.origin, -recoil * recoil_cfg->push_back, cl.v_forward, gun.origin);
+		VectorMA(gun.origin, recoil * 1.0f, cl.v_up, gun.origin);
+		gun.angles[PITCH] -= recoil * recoil_cfg->pitch_kick;
+
+		pp_viewmodel_last_gunindex = ps->gunindex;
+		pp_viewmodel_last_time = current_time;
+	}
+
+	{
+		vec3_t proc_origin;
+		vec3_t proc_angles;
+		float smooth = Q_clamp(cls.rframetime * 24.0f, 0.0f, 1.0f);
+
+		if (!pp_viewmodel_smoothed_valid)
+		{
+			for (i = 0; i < 3; ++i)
+			{
+				pp_viewmodel_smoothed_origin[i] = gun.origin[i] - base_origin[i];
+				pp_viewmodel_smoothed_angles[i] =
+					PP_ViewmodelAngleOffset(gun.angles[i], base_angles[i]);
+			}
+			pp_viewmodel_smoothed_valid = true;
+		}
+		else
+		{
+			float max_origin_error = 0.0f;
+
+			for (i = 0; i < 3; ++i)
+			{
+				proc_origin[i] = gun.origin[i] - base_origin[i];
+				proc_angles[i] = PP_ViewmodelAngleOffset(gun.angles[i], base_angles[i]);
+			}
+
+			for (i = 0; i < 3; ++i)
+			{
+				float origin_error = fabsf(proc_origin[i] - pp_viewmodel_smoothed_origin[i]);
+
+				if (origin_error > max_origin_error)
+				{
+					max_origin_error = origin_error;
+				}
+			}
+
+			if (max_origin_error > 4.0f)
+			{
+				smooth = 1.0f;
+			}
+			else if (max_origin_error > 1.5f)
+			{
+				smooth = Q_max(smooth, 0.6f);
+			}
+
+			for (i = 0; i < 3; ++i)
+			{
+				pp_viewmodel_smoothed_origin[i] +=
+					(proc_origin[i] - pp_viewmodel_smoothed_origin[i]) * smooth;
+				pp_viewmodel_smoothed_angles[i] =
+					LerpAngle(pp_viewmodel_smoothed_angles[i], proc_angles[i], smooth);
+			}
+		}
+
+		for (i = 0; i < 3; ++i)
+		{
+			gun.origin[i] = base_origin[i] + pp_viewmodel_smoothed_origin[i];
+			gun.angles[i] = base_angles[i] + pp_viewmodel_smoothed_angles[i];
+		}
+	}
+
+	gun.flags = RF_MINLIGHT | RF_DEPTHHACK | RF_WEAPONMODEL;
+	gun.backlerp = 1.0f - cl.lerpfrac;
+	VectorCopy(gun.origin, gun.oldorigin); /* don't lerp at all */
+	V_AddEntity(&gun);
+}
+
+/*
+ * Adapts a 4:3 aspect FOV to the current aspect (Hor+)
+ */
+static inline float
+AdaptFov(float fov, float w, float h)
+{
+	static const float pi = M_PI; /* float instead of double */
+
+	if (w <= 0 || h <= 0)
+		return fov;
+
+	/*
+	 * Formula:
+	 *
+	 * fov = 2.0 * atan(width / height * 3.0 / 4.0 * tan(fov43 / 2.0))
+	 *
+	 * The code below is equivalent but precalculates a few values and
+	 * converts between degrees and radians when needed.
+	 */
+	return (atanf(tanf(fov / 360.0f * pi) * (w / h * 0.75f)) / pi * 360.0f);
+}
+
+/*
+ * Sets cl.refdef view values
+ */
+void
+CL_CalcViewValues(void)
+{
+	int i;
+	float lerp, backlerp, ifov;
+	frame_t *oldframe;
+	player_state_t *ps, *ops;
+	vec3_t player_origin;
+	vec3_t base_viewangles;
+
+	/* find the previous frame to interpolate from */
+	ps = &cl.frame.playerstate;
+	i = (cl.frame.serverframe - 1) & UPDATE_MASK;
+	oldframe = &cl.frames[i];
+
+	if ((oldframe->serverframe != cl.frame.serverframe - 1) || !oldframe->valid)
+	{
+		oldframe = &cl.frame; /* previous frame was dropped or invalid */
+	}
+
+	ops = &oldframe->playerstate;
+
+	/* see if the player entity was teleported this frame */
+	if ((abs(ops->pmove.origin[0] - ps->pmove.origin[0]) > 256 * 8) ||
+		(abs(ops->pmove.origin[1] - ps->pmove.origin[1]) > 256 * 8) ||
+		(abs(ops->pmove.origin[2] - ps->pmove.origin[2]) > 256 * 8))
+	{
+		ops = ps; /* don't interpolate */
+	}
+
+	if(cl_paused->value){
+		lerp = 1.0f;
+	}
+	else
+	{
+		lerp = cl.lerpfrac;
+	}
+
+	/* calculate the origin */
+	if ((cl_predict->value) && !(cl.frame.playerstate.pmove.pm_flags & PMF_NO_PREDICTION))
+	{
+		/* use predicted values */
+		unsigned delta;
+
+		backlerp = 1.0f - lerp;
+
+		for (i = 0; i < 3; i++)
+		{
+			cl.refdef.vieworg[i] = cl.predicted_origin[i] + ops->viewoffset[i]
+				+ cl.lerpfrac * (ps->viewoffset[i] - ops->viewoffset[i])
+				- backlerp * cl.prediction_error[i];
+			player_origin[i] = cl.predicted_origin[i];
+		}
+
+		/* smooth out stair climbing */
+		delta = cls.realtime - cl.predicted_step_time;
+
+		if (delta < 100)
+		{
+			cl.refdef.vieworg[2] -= cl.predicted_step * (100 - delta) * 0.01;
+		}
+	}
+	else
+	{
+		/* just use interpolated values */
+		for (i = 0; i < 3; i++)
+		{
+			cl.refdef.vieworg[i] = ops->pmove.origin[i] * 0.125 +
+				ops->viewoffset[i] + lerp * (ps->pmove.origin[i] * 0.125 +
+						ps->viewoffset[i] - (ops->pmove.origin[i] * 0.125 +
+							ops->viewoffset[i]));
+			player_origin[i] = ops->pmove.origin[i] * 0.125f +
+				lerp * (ps->pmove.origin[i] * 0.125f - ops->pmove.origin[i] * 0.125f);
+		}
+	}
+
+	/* if not running a demo or on a locked frame, add the local angle movement */
+	if (cl.frame.playerstate.pmove.pm_type < PM_DEAD)
+	{
+		/* use predicted values */
+		for (i = 0; i < 3; i++)
+		{
+			cl.refdef.viewangles[i] = cl.predicted_angles[i];
+			base_viewangles[i] = cl.predicted_angles[i];
+		}
+	}
+	else
+	{
+		/* just use interpolated values */
+		for (i = 0; i < 3; i++)
+		{
+			cl.refdef.viewangles[i] = LerpAngle(ops->viewangles[i],
+					ps->viewangles[i], lerp);
+			base_viewangles[i] = cl.refdef.viewangles[i];
+		}
+	}
+
+	if (cl_kickangles->value)
+	{
+		for (i = 0; i < 3; i++)
+		{
+			cl.refdef.viewangles[i] += LerpAngle(ops->kick_angles[i],
+					ps->kick_angles[i], lerp);
+		}
+	}
+
+	if (CL_MFlashTuneCameraActive())
+	{
+		vec3_t cam_angles, cam_forward, cam_right, cam_up;
+		vec3_t target, desired, to_target;
+		trace_t tr;
+		float cam_back = cl_mflash_tune_cam_back ? cl_mflash_tune_cam_back->value : 105.0f;
+		float cam_right_off = cl_mflash_tune_cam_right ? cl_mflash_tune_cam_right->value : 95.0f;
+		float cam_up_off = cl_mflash_tune_cam_up ? cl_mflash_tune_cam_up->value : 16.0f;
+		float target_up = cl_mflash_tune_target_up ? cl_mflash_tune_target_up->value : 24.0f;
+		int tune_mode = (int)cl_mflash_tune_mode->value;
+
+		if (tune_mode == 2)
+		{
+			cam_right_off = -fabsf(cam_right_off);
+		}
+		else if (tune_mode == 3)
+		{
+			cam_right_off = 0.0f;
+			cam_back *= 1.35f;
+		}
+		else
+		{
+			cam_right_off = fabsf(cam_right_off);
+		}
+
+		VectorCopy(base_viewangles, cam_angles);
+		AngleVectors(cam_angles, cam_forward, cam_right, cam_up);
+
+		VectorCopy(player_origin, target);
+		target[2] += target_up;
+
+		VectorCopy(target, desired);
+		VectorMA(desired, -cam_back, cam_forward, desired);
+		VectorMA(desired, cam_right_off, cam_right, desired);
+		VectorMA(desired, cam_up_off, cam_up, desired);
+
+		tr = CL_PMTrace(target, vec3_origin, vec3_origin, desired);
+		VectorCopy(tr.endpos, cl.refdef.vieworg);
+
+		if (tr.fraction < 1.0f)
+		{
+			VectorMA(cl.refdef.vieworg, 4.0f, tr.plane.normal, cl.refdef.vieworg);
+		}
+
+		if (!cl_mflash_tune_lookat || (cl_mflash_tune_lookat->value > 0.0f))
+		{
+			VectorSubtract(target, cl.refdef.vieworg, to_target);
+			AngleVectors2(to_target, cl.refdef.viewangles);
+		}
+	}
+
+	AngleVectors(cl.refdef.viewangles, cl.v_forward, cl.v_right, cl.v_up);
+
+	/* interpolate field of view */
+	ifov = ops->fov + lerp * (ps->fov - ops->fov);
+	if (horplus->value)
+	{
+		cl.refdef.fov_x = AdaptFov(ifov, cl.refdef.width, cl.refdef.height);
+	}
+	else
+	{
+		cl.refdef.fov_x = ifov;
+	}
+
+	/* don't interpolate blend color */
+	for (i = 0; i < 4; i++)
+	{
+		cl.refdef.blend[i] = ps->blend[i];
+	}
+
+	/* add the weapon */
+	CL_AddViewWeapon(ps, ops);
+}
+
+/*
+ * Emits all entities, particles, and lights to the refresh
+ */
+void
+CL_CalcRenderLerp(void)
+{
+	if (cls.state != ca_active)
+	{
+		return;
+	}
+
+	if (cl.time > cl.frame.servertime)
+	{
+		if (cl_showclamp->value)
+		{
+			Com_Printf("high clamp %i\n", cl.time - cl.frame.servertime);
+		}
+
+		cl.time = cl.frame.servertime;
+		cl.lerpfrac = 1.0;
+	}
+	else if (cl.time < cl.frame.servertime - 100)
+	{
+		if (cl_showclamp->value)
+		{
+			Com_Printf("low clamp %i\n", cl.frame.servertime - 100 - cl.time);
+		}
+
+		cl.time = cl.frame.servertime - 100;
+		cl.lerpfrac = 0;
+	}
+	else
+	{
+		cl.lerpfrac = 1.0 - (cl.frame.servertime - cl.time) * 0.01f;
+	}
+
+	if (cl_timedemo->value)
+	{
+		cl.lerpfrac = 1.0;
+	}
+
+}
+
+void
+CL_AddEntities(void)
+{
+	if (cls.state != ca_active)
+	{
+		return;
+	}
+	CL_PerfBeginPrepare();
+	CL_CalcRenderLerp();
+	CL_CalcViewValues();
+	if (CL_BeginSharedEffects())
+	{
+		CL_QueueEntityEffects(&cl.frame, 0);
+		CL_EmitQueuedEntityEffects();
+		CL_PrepareTEnts();
+		CL_PrepareViewBeamParticles();
+		CL_PrepareParticles();
+	}
+	CL_AddPacketEntities(&cl.frame);
+	CL_AddTEnts();
+	CL_AddParticles();
+	CL_AddDLights();
+	CL_AddLightStyles();
+	CL_PerfEndPrepare();
+}
+
+/*
+ * Called to get the sound spatialization
+ */
+void
+CL_GetEntitySoundVelocity(int ent, vec3_t vel)
+{
+	centity_t *old;
+
+	if ((ent < 0) || (ent >= cl_numentities))
+	{
+		VectorClear(vel);
+		return;
+	}
+
+	old = &cl_entities[ent];
+
+	VectorSubtract(old->current.origin, old->prev.origin, vel);
+}
+
+void
+CL_GetViewVelocity(vec3_t vel)
+{
+	// restore value from 12.3 fixed point
+	const float scale_factor = 1.0f / 8.0f;
+
+	vel[0] = (float)cl.frame.playerstate.pmove.velocity[0] * scale_factor;
+	vel[1] = (float)cl.frame.playerstate.pmove.velocity[1] * scale_factor;
+	vel[2] = (float)cl.frame.playerstate.pmove.velocity[2] * scale_factor;
+}

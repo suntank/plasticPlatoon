@@ -1,0 +1,77 @@
+{
+  "purpose": "Preserve the active laptop weapon/muzzle-flash profile in the release, with no value changes.",
+  "capture_date": "2026-11-04",
+  "original_active_file": "release/baseq2/tuning/default.json",
+  "canonical_file": "baseq2/tuning/default.json",
+  "profile_sha256": "219e0f1ec97fa6b944336f263726564a3eb0a176351f5fd19f805913d24a22ea",
+  "profile_bytes": 13732,
+  "m60": {
+    "rate_rps": 35.0,
+    "damage": 12,
+    "spread_standing_hip": 3.0,
+    "spread_crouched_hip": 1.0,
+    "spread_ads": 0.5,
+    "bloom_per_shot": 0.1,
+    "bloom_recover_rate": 0.9
+  },
+  "obsolete_source_copy_removed": "plastic_platoon/tuning/default.json",
+  "release_json_matches_laptop_original": true,
+  "packed_and_loose_profiles_identical": true,
+  "pack_sha256": "8d04f31a31c78b46be9dba846e896755c15aa776415e1fa8733855ee9016e7d4",
+  "pack_bytes": 17016779,
+  "previous_pack_entries_unchanged": true,
+  "pack_additions": [
+    "tuning/default.json"
+  ],
+  "release_engine_sha256": "e9b3de2dce54f53dd3b0210a2fe09845c688ca94e3891d8dec6740ab8d57cd9a",
+  "release_game_sha256": "f73f6219daf6a2eee95285b2e01371f77bfff03be2e25a694d60455cdca4ace6",
+  "checks": {
+    "overlay_regressions": 13,
+    "packaging_benchmark_regressions": 16,
+    "server_loading_regressions": 5,
+    "server_cases": [
+      "release folder",
+      "unrelated launch folder with -datadir",
+      "executable directory without -datadir",
+      "explicit custom profile directory",
+      "selected data directory priority"
+    ]
+  },
+  "renderers": {
+    "gl1": {
+      "passed": true,
+      "renderer": "gl1",
+      "returncode": 0,
+      "rendered_frames": 120,
+      "pickup_models": 16,
+      "pickup_textures": 16,
+      "missing_pack_reads": [],
+      "image_errors": [],
+      "home_override_present": false,
+      "pack_sha256": "8d04f31a31c78b46be9dba846e896755c15aa776415e1fa8733855ee9016e7d4",
+      "screenshots": [
+        "q2_0000.tga"
+      ],
+      "tuning_loaded_from_pack": true,
+      "server_loaded_release_profile": true
+    },
+    "gl3": {
+      "passed": true,
+      "renderer": "gl3",
+      "returncode": 0,
+      "rendered_frames": 120,
+      "pickup_models": 16,
+      "pickup_textures": 16,
+      "missing_pack_reads": [],
+      "image_errors": [],
+      "home_override_present": false,
+      "pack_sha256": "8d04f31a31c78b46be9dba846e896755c15aa776415e1fa8733855ee9016e7d4",
+      "screenshots": [
+        "q2_0000.tga"
+      ],
+      "tuning_loaded_from_pack": true,
+      "server_loaded_release_profile": true
+    }
+  },
+  "desktop_profile_inspected": false
+}

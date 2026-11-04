@@ -1,0 +1,76 @@
+name: Testbuild for Linux (x86_64)
+run-name: testbuild_linux_x86_64
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    types:
+      - edited
+      - opened
+      - synchronize
+      - ready_for_review
+concurrency:
+  # Cancel concurrent workflows for the same PR or commit hash.
+  group: ${{github.workflow}}-${{github.event_name == 'pull_request' && github.head_ref || github.sha}}
+  cancel-in-progress: true
+jobs:
+  build_ubuntu_x86_64:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - env: ubuntu
+    steps:
+    - name: Install build dependencies
+      run: |
+        sudo apt update
+        sudo apt install libgl1-mesa-dev libopenal-dev libcurl4-openssl-dev \
+            build-essential python3
+    - name: Build SDL3
+      uses: libsdl-org/setup-sdl@main
+      with:
+        install-linux-dependencies: true
+        version: 3-latest
+    - name: Check out repository code
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+    - name: Check public source and history
+      run: |
+        python3 tests/assets/test_public_source_audit.py
+        python3 tests/assets/test_source_archives.py
+        python3 tools/assets/audit_public_source.py --history --strict
+    - name: Build
+      run: |
+        # Public runners come with 4 CPUs.
+        make WITH_SDL3=yes -j4
+        make WITH_SDL3=yes -j4 ref_gles1
+    - name: Run production regressions
+      run: |
+        python3 -m unittest discover -s tests/performance -p 'test_*.py' -v
+        python3 tests/run_renderer_tests.py --sanitize
+        TEST_CFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" sh tests/performance/run_effects_tests.sh
+        TEST_CFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" sh tests/screen_image/run_tests.sh
+    - name: Create testbuild package
+      run: |
+        # Create release directory tree
+        mkdir -p publish/quake2-linux_x86_64-${{github.sha}}/misc/docs
+        # Copy release assets
+        cp -r release/* publish/quake2-linux_x86_64-${{github.sha}}/
+        # Copy misc assets
+        cp -r stuff/yq2.cfg publish/quake2-linux_x86_64-${{github.sha}}/misc/yq2.cfg
+        if [ -d stuff/mapfixes ]; then cp -r stuff/mapfixes publish/quake2-linux_x86_64-${{github.sha}}/misc; fi
+        cp LICENSE publish/quake2-linux_x86_64-${{github.sha}}/misc/docs/LICENSE.txt
+        cp README.md publish/quake2-linux_x86_64-${{github.sha}}/misc/docs/README.txt
+        if [ -d doc ]; then cp -r doc/. publish/quake2-linux_x86_64-${{github.sha}}/misc/docs/; fi
+    - name: Upload testbuild package
+      uses: actions/upload-artifact@v7
+      with:
+        name: quake2-linux_x86_64-${{github.sha}}
+        path: publish/
+        if-no-files-found: error

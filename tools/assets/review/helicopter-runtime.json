@@ -1,0 +1,227 @@
+{
+  "description": "Tan molded gunship enemy with independently rotating main/tail rotors, twin machineguns, paired rocket salvos and a falling crash with staged explosions.",
+  "gameplay_suite": "tests/helicopter/run_tests.sh",
+  "gameplay_result": "passed: target acquisition, altitude/retreat/patrol, rotor transforms and continuous tail interpolation, actual bullets/rockets, firing guards/cooldowns, trigger activation, pain, owner cleanup, gravity/contact/timeout crash, and save/load in pain, attacks and both crash stages",
+  "asset_suite": "tests/assets/test_helicopter.py",
+  "asset_result": "five tests passed: engine limits, winding, independent rotor models/body frames, real muzzle geometry, tank palette matching",
+  "client_effect_suite": "tests/performance/run_effects_tests.sh",
+  "client_effect_result": "passed: paired gun/pod effects match actual yaw, pitch and roll of the banked model; reports, invalid-index guard and existing shared effects passed",
+  "existing_monster_regressions": "heavy_tank, heavy_gunner and rocket_soldier suites passed",
+  "models": {
+    "body.md2": "1c9914d9c4b2f7e2ed3cbd7ef602aad9fa00a3ec1f408b4ecf5b5021c2c1d4f2",
+    "main_rotor.md2": "f3070402206557216257e30d159eb2e72984daecd04d4b5c58a6803f7795ab9d",
+    "tail_rotor.md2": "67efb240dd23332bdc09dfe726d1d1eecf6ab3b39ca6e26c649897a480c9e750"
+  },
+  "preview": "tools/assets/review/helicopter-in-game.png",
+  "runs": [
+    {
+      "complete": true,
+      "renderer": "gl1",
+      "software_renderer": true,
+      "returncode": 0,
+      "views": [
+        {
+          "name": "front_rotors",
+          "requested_pose": [
+            150,
+            -510,
+            275,
+            0,
+            118
+          ],
+          "actual_eye_pose": {
+            "x": 150.062,
+            "y": -509.938,
+            "z": 307.062,
+            "pitch": 0.0,
+            "yaw": 117.999,
+            "roll": 0.0
+          },
+          "frames": 21,
+          "screenshot": "front_rotors.png"
+        },
+        {
+          "name": "side_rotors",
+          "requested_pose": [
+            280,
+            -224,
+            275,
+            0,
+            180
+          ],
+          "actual_eye_pose": {
+            "x": 280.062,
+            "y": -223.938,
+            "z": 307.062,
+            "pitch": 0.0,
+            "yaw": 180.0,
+            "roll": 0.0
+          },
+          "frames": 20,
+          "screenshot": "side_rotors.png"
+        },
+        {
+          "name": "rear_rotors",
+          "requested_pose": [
+            -180,
+            100,
+            305,
+            6,
+            299
+          ],
+          "actual_eye_pose": {
+            "x": -179.938,
+            "y": 100.062,
+            "z": 337.062,
+            "pitch": 0.0,
+            "yaw": -61.002,
+            "roll": 0.0
+          },
+          "frames": 21,
+          "screenshot": "rear_rotors.png"
+        },
+        {
+          "name": "gunship_combat",
+          "requested_pose": [
+            200,
+            -640,
+            72,
+            -18,
+            118
+          ],
+          "actual_eye_pose": {
+            "x": 200.062,
+            "y": -639.938,
+            "z": 89.938,
+            "pitch": -17.996,
+            "yaw": 117.999,
+            "roll": 0.0
+          },
+          "frames": 20,
+          "screenshot": "gunship_combat.png"
+        }
+      ],
+      "game_sha256": "7daff5ad87d81391322fce327989e7e5b8e3a04cdf7f576f3af11ea90ce8cdd8",
+      "binary_sha256": "731a682c84ec202dba591f124f0bc410af2dbffc12f3936e3ac5383819de704f",
+      "renderer_sha256": "98f7e19b0824a41e62d07c4176a87df9cf71e816267d9623e84fad67dd056c94",
+      "map_sha256": "c41e13aadd98f898a264cbc72ec0ea3cccc2d3a5eef1a4baa40e23b275099209",
+      "asset_pack_sha256": "da57be85314f25773d98b03d1bddfeec571d9cdccc56419b36ab43e81e3f2659",
+      "note": "Real game capture controlled with normal console commands, including invulnerable live combat; not a human playthrough or performance benchmark.",
+      "combat_projectiles_observed_max": 0,
+      "report": "build/helicopter-qa/console-balanced-gl1/run.json",
+      "validation_errors": []
+    },
+    {
+      "complete": true,
+      "renderer": "gl3",
+      "software_renderer": true,
+      "returncode": 0,
+      "views": [
+        {
+          "name": "front_rotors",
+          "requested_pose": [
+            150,
+            -510,
+            275,
+            0,
+            118
+          ],
+          "actual_eye_pose": {
+            "x": 150.062,
+            "y": -509.938,
+            "z": 307.062,
+            "pitch": 0.0,
+            "yaw": 117.999,
+            "roll": 0.0
+          },
+          "frames": 19,
+          "screenshot": "front_rotors.png"
+        },
+        {
+          "name": "side_rotors",
+          "requested_pose": [
+            280,
+            -224,
+            275,
+            0,
+            180
+          ],
+          "actual_eye_pose": {
+            "x": 280.062,
+            "y": -223.938,
+            "z": 307.062,
+            "pitch": 0.0,
+            "yaw": 180.0,
+            "roll": 0.0
+          },
+          "frames": 19,
+          "screenshot": "side_rotors.png"
+        },
+        {
+          "name": "rear_rotors",
+          "requested_pose": [
+            -180,
+            100,
+            305,
+            6,
+            299
+          ],
+          "actual_eye_pose": {
+            "x": -179.938,
+            "y": 100.062,
+            "z": 337.062,
+            "pitch": 0.0,
+            "yaw": -61.002,
+            "roll": 0.0
+          },
+          "frames": 19,
+          "screenshot": "rear_rotors.png"
+        },
+        {
+          "name": "gunship_combat",
+          "requested_pose": [
+            200,
+            -640,
+            72,
+            -18,
+            118
+          ],
+          "actual_eye_pose": {
+            "x": 200.062,
+            "y": -639.938,
+            "z": 46.188,
+            "pitch": -17.996,
+            "yaw": 117.999,
+            "roll": 0.0
+          },
+          "frames": 19,
+          "screenshot": "gunship_combat.png"
+        }
+      ],
+      "game_sha256": "7daff5ad87d81391322fce327989e7e5b8e3a04cdf7f576f3af11ea90ce8cdd8",
+      "binary_sha256": "731a682c84ec202dba591f124f0bc410af2dbffc12f3936e3ac5383819de704f",
+      "renderer_sha256": "1483c87b7fc1a1be86b3df838aa39d17667f1b1e2b35f93e92a5cc9ee720c9b9",
+      "map_sha256": "c41e13aadd98f898a264cbc72ec0ea3cccc2d3a5eef1a4baa40e23b275099209",
+      "asset_pack_sha256": "da57be85314f25773d98b03d1bddfeec571d9cdccc56419b36ab43e81e3f2659",
+      "note": "Real game capture controlled with normal console commands, including invulnerable live combat; not a human playthrough or performance benchmark.",
+      "combat_projectiles_observed_max": 0,
+      "report": "build/helicopter-qa/console-balanced-gl3/run.json",
+      "validation_errors": []
+    }
+  ],
+  "map_lighting": {
+    "sun_direct": 70,
+    "sun_ambient": 24,
+    "sun_color": [
+      1,
+      0.98,
+      0.94
+    ],
+    "radiosity_patch_size": 256,
+    "bounces": 4,
+    "lightmap_sample_spacing": 16,
+    "interior_and_shelter_lamps": 5
+  },
+  "test_range_archive_sha256": "5952dd7d3591a5059b3a884380c869e51ac396afa823a3687980293e14169b6a",
+  "note": "GL1 and GL3 real-engine offscreen software rendering, with invulnerable live targets. Crash behavior is checked through production physics/gameplay tests, not a full human playthrough. CMake configuration could not be run because installed CMake3.28.3 is below the project requirement3.31; Make release builds passed."
+}

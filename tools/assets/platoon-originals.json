@@ -1,0 +1,746 @@
+{
+  "schema": 1,
+  "source_archive": {
+    "path": "tools/assets/sources/platoon-originals.pk3",
+    "sha256": "308e7b7e07f08ecbd0f7487e8a37440ab07c28bb83896b0f4c959a29fdcbf7e4",
+    "bytes": 47317833,
+    "origin": "Original owner-authored Plastic Platoon model, texture and sprite inputs recovered before public history cleanup",
+    "license": "GPL-2.0-or-later",
+    "excluded": [
+      "Legacy players/male assets",
+      "Inherited soldier portrait PCXs"
+    ]
+  },
+  "files": [
+    {
+      "path": "baseq2/models/items/ammo/bullets/medium/skin.png",
+      "bytes": 1718580,
+      "sha256": "948fc0b15b3cb5c3a0fa6b25f226afa3f2f87981ed5741c903b71550c5aa652e"
+    },
+    {
+      "path": "baseq2/models/items/ammo/bullets/medium/tris.md2",
+      "bytes": 150625,
+      "sha256": "acec81547616988f017a3494777702b2846c36e74167f103da58d8cee3ada6d2"
+    },
+    {
+      "path": "baseq2/models/items/ammo/cells/medium/skin.png",
+      "bytes": 24671,
+      "sha256": "4b31a1b5c61db2c86533549fa0499b050f2608b5f2292b63e2a278765db25280"
+    },
+    {
+      "path": "baseq2/models/items/ammo/cells/medium/tris.md2",
+      "bytes": 90217,
+      "sha256": "40159f235432d34da9e6beea05f6af9e6c0da9106b0da8caadcc982fa6daf3dc"
+    },
+    {
+      "path": "baseq2/models/items/ammo/gl_ammo/medium/skin.png",
+      "bytes": 726477,
+      "sha256": "8c135599a15bbcc49d245b4a284be454572f05bbf0850e68f90067ca3b33270d"
+    },
+    {
+      "path": "baseq2/models/items/ammo/gl_ammo/medium/tris.md2",
+      "bytes": 168951,
+      "sha256": "ac739c7d3bd20e4f98c4c701cdb6e4b4a35d001b4b9a7990cc9abe48656befc1"
+    },
+    {
+      "path": "baseq2/models/items/ammo/grenades/medium/skin.png",
+      "bytes": 109460,
+      "sha256": "f0f8670c02701242ccf360e7f3fcef11bc304cfb97e03ed04aba90aa1a77e480"
+    },
+    {
+      "path": "baseq2/models/items/ammo/grenades/medium/tris.md2",
+      "bytes": 37256,
+      "sha256": "95e9b7a37f8c5ee6fb47009caf1cf3d08416acb2b927a66466fa028a34339871"
+    },
+    {
+      "path": "baseq2/models/items/ammo/rockets/medium/skin.png",
+      "bytes": 95426,
+      "sha256": "b60bb2c57c573fe241a64333077429f20d997aa82b66840930847bb2d08ca070"
+    },
+    {
+      "path": "baseq2/models/items/ammo/rockets/medium/tris.md2",
+      "bytes": 22188,
+      "sha256": "8c05d04ffd7fa05496312f44b6588d496601d63ee6407a9785d0fd4c337625c4"
+    },
+    {
+      "path": "baseq2/models/items/ammo/shells/medium/skin.png",
+      "bytes": 1756568,
+      "sha256": "30ca6bc9149c8721195ac72f1f1640aabb4683fd28437a40b10c39cf0f857a95"
+    },
+    {
+      "path": "baseq2/models/items/ammo/shells/medium/tris.md2",
+      "bytes": 152315,
+      "sha256": "93367d01fe4ddde3e6ef0fd48f023656b4b2652d153cd5a9853d8a8924295045"
+    },
+    {
+      "path": "baseq2/models/items/ammo/slugs/medium/skin.png",
+      "bytes": 1008545,
+      "sha256": "2f4697a064457f2aca2c0f178e81faa0a7f503b2fdd2e96aa07dbaa58e220da7"
+    },
+    {
+      "path": "baseq2/models/items/ammo/slugs/medium/tris.md2",
+      "bytes": 91412,
+      "sha256": "d3a8935200e89bab0d3325153c101b1e71bcb83018c4e36d2d8b341872b90946"
+    },
+    {
+      "path": "baseq2/models/items/armor/body/skin.png",
+      "bytes": 111565,
+      "sha256": "b221ad26c8624516cccf462121166859bcd21bc7eb830810d47d7901d6f3712a"
+    },
+    {
+      "path": "baseq2/models/items/armor/body/tris.md2",
+      "bytes": 43608,
+      "sha256": "2b40a85c9c8bb88aacac154fa4937149ff31e3c8675de5e65faf2fc4f5b77eb4"
+    },
+    {
+      "path": "baseq2/models/items/armor/combat/skin.png",
+      "bytes": 78673,
+      "sha256": "c8e94fbbf18a2c8a2a411c53348d5ccf0b798815bb25f18dcaaa188a6ed2d6e9"
+    },
+    {
+      "path": "baseq2/models/items/armor/combat/tris.md2",
+      "bytes": 42984,
+      "sha256": "87845cbb9897221feccf2e3699e45ebaf391c6c159ec9dae687cf429a82b7602"
+    },
+    {
+      "path": "baseq2/models/items/armor/jacket/skin.png",
+      "bytes": 136626,
+      "sha256": "76f77f613d1a35104f421920812e05f688ff7228a4931d98f233ead8aabc5eb3"
+    },
+    {
+      "path": "baseq2/models/items/armor/jacket/tris.md2",
+      "bytes": 36180,
+      "sha256": "578b22e9350fe9f5beea0a97892defdd3d4540b8395b80cd1ac9861c9fc3c7d6"
+    },
+    {
+      "path": "baseq2/models/items/armor/shard/skin.png",
+      "bytes": 130971,
+      "sha256": "a180436fb89a5367ebeb49d9f8ff89643f9f51e77f24fc72996a315aa4558d29"
+    },
+    {
+      "path": "baseq2/models/items/armor/shard/tris.md2",
+      "bytes": 35696,
+      "sha256": "e11f9b6037c8e979c81b76cd8cbccef9ba09a56b952baad8c3b1046412ce819e"
+    },
+    {
+      "path": "baseq2/models/items/healing/large/skin.png",
+      "bytes": 102629,
+      "sha256": "3ff254d276e176e809aa974186657eae9ecdd2a666e21ea2eb54b61b72485ee8"
+    },
+    {
+      "path": "baseq2/models/items/healing/large/tris.md2",
+      "bytes": 43104,
+      "sha256": "36f1f3dd667698b067216bbfc25237145ff68b16847a67731ffadc09b44047ed"
+    },
+    {
+      "path": "baseq2/models/items/healing/medium/skin.png",
+      "bytes": 114841,
+      "sha256": "39c4c86d1e984b2934ecbee6ead2244680c21105d0ff4db3eaea86b28ec6eed5"
+    },
+    {
+      "path": "baseq2/models/items/healing/medium/tris.md2",
+      "bytes": 34492,
+      "sha256": "3e8e0e403034a3569492a5520be27e782744f990eec5b732572b7ae3b700378f"
+    },
+    {
+      "path": "baseq2/models/items/healing/stimpack/skin.png",
+      "bytes": 106017,
+      "sha256": "f2de38228dc17b60223130256159a9adbc72f200edcd81d5a224eb249080c384"
+    },
+    {
+      "path": "baseq2/models/items/healing/stimpack/tris.md2",
+      "bytes": 34480,
+      "sha256": "b732f8175f78e1e34e7ddf096ce6d3ef490a9218c13c07c76d79d6676f039abf"
+    },
+    {
+      "path": "baseq2/models/items/mega_h/skin.png",
+      "bytes": 107469,
+      "sha256": "38ad4258cb8230747ea745c0d0fcf10fe831397d7bd8ef01b9ec817e0e618070"
+    },
+    {
+      "path": "baseq2/models/items/mega_h/tris.md2",
+      "bytes": 35704,
+      "sha256": "b9af48f7cca177af27e380a284ec88b48a932a274e23f96f22a22b290d343683"
+    },
+    {
+      "path": "baseq2/models/monsters/soldier/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/monsters/soldier/tris.md2",
+      "bytes": 3436094,
+      "sha256": "5dcb773edace70038f3f57e80b8c744ce728669588a223d5688783185e9d922e"
+    },
+    {
+      "path": "baseq2/models/monsters/soldier/weapon_blaster.md2",
+      "bytes": 3411228,
+      "sha256": "d175d6912db2afca0d755bcb26835a5026945011e6fc001684e79baffa8a7a6d"
+    },
+    {
+      "path": "baseq2/models/monsters/soldier/weapon_machinegun.md2",
+      "bytes": 3399003,
+      "sha256": "a80c9f9d49ff31e733b7ff49e9678fbeec2980a60c2253562a30eff369a77b08"
+    },
+    {
+      "path": "baseq2/models/monsters/soldier/weapon_shotgun.md2",
+      "bytes": 3424708,
+      "sha256": "1c03a89b5ba7dc904e76cfc995b310b811e41dbf8b66a071e3d43081c89ee01f"
+    },
+    {
+      "path": "baseq2/models/objects/barrels/skin.png",
+      "bytes": 773156,
+      "sha256": "5c54dceca5d53a5fb9ab0fb9cd755b9b0803472cdccd76b5f338e8976f4808b6"
+    },
+    {
+      "path": "baseq2/models/objects/barrels/tris.md2",
+      "bytes": 89138,
+      "sha256": "2bdcc295ba958a1714ff222f493e688e623ecc6c472b70721454981719385733"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/arm/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/arm/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/arm/tris.md2",
+      "bytes": 8510,
+      "sha256": "b372895d8c19e8090ed23927a5f38bba2cfcb65f15f5fe9e9b25703ac4e4eb6f"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/bone/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/bone/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/bone/tris.md2",
+      "bytes": 11115,
+      "sha256": "aedbb1319d70095c4e38afa4e56b6052c1832624dbb5f4f36ed60772ce331880"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/bone2/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/bone2/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/bone2/tris.md2",
+      "bytes": 4554,
+      "sha256": "cd3d878a2bebc394ec0f6379642665c76966ead31438771d2ba6790e3031acdf"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/chest/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/chest/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/chest/tris.md2",
+      "bytes": 29916,
+      "sha256": "86a2ba3ed7b36c53cd62d969313c5f127359dc8e9bfbada11ab8922b3d26e65f"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/gear/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/gear/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/gear/tris.md2",
+      "bytes": 4554,
+      "sha256": "cd3d878a2bebc394ec0f6379642665c76966ead31438771d2ba6790e3031acdf"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/head/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/head/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/head/tris.md2",
+      "bytes": 8268,
+      "sha256": "99f7f83acbdc19af2f910e79290b789669390236ca15f7836b0a5b1e1902de8c"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/head2/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/head2/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/head2/tris.md2",
+      "bytes": 8268,
+      "sha256": "99f7f83acbdc19af2f910e79290b789669390236ca15f7836b0a5b1e1902de8c"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/leg/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/leg/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/leg/tris.md2",
+      "bytes": 17414,
+      "sha256": "bacdf51e355b4dbc5f7b57fd5ed362bcafa033c9677aaa464e68f36966892e16"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/skull/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/skull/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/skull/tris.md2",
+      "bytes": 8268,
+      "sha256": "99f7f83acbdc19af2f910e79290b789669390236ca15f7836b0a5b1e1902de8c"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/sm_meat/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/sm_meat/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/sm_meat/tris.md2",
+      "bytes": 4614,
+      "sha256": "0fa47c4cb1a8f90eda920064f21e76a8f5490e5574187af65ff519f6d191263d"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/sm_metal/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/sm_metal/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/sm_metal/tris.md2",
+      "bytes": 11115,
+      "sha256": "aedbb1319d70095c4e38afa4e56b6052c1832624dbb5f4f36ed60772ce331880"
+    },
+    {
+      "path": "baseq2/models/objects/grenade/skin.png",
+      "bytes": 726477,
+      "sha256": "8c135599a15bbcc49d245b4a284be454572f05bbf0850e68f90067ca3b33270d"
+    },
+    {
+      "path": "baseq2/models/objects/grenade/tris.md2",
+      "bytes": 168951,
+      "sha256": "d124979291fbb095a54bb7eaa27832bd1fe5958e9d999dcd9e072ef29eda5429"
+    },
+    {
+      "path": "baseq2/models/objects/grenade2/skin.png",
+      "bytes": 993352,
+      "sha256": "41be4d86deb4029dd99cdefd86ec0d23adc6fe61633e6f5bd24fbfb2948886b3"
+    },
+    {
+      "path": "baseq2/models/objects/grenade2/tris.md2",
+      "bytes": 89952,
+      "sha256": "8d1ec6ce262a5cb1c573d811ea35d84be2880d1c625b0b8d01fe2897e3f91b2e"
+    },
+    {
+      "path": "baseq2/models/objects/rocket/tris.md2",
+      "bytes": 90410,
+      "sha256": "13b8de981f1a60b1743b1d390f2a2243998f2fccbb05efd9bf4767cffccc8ec9"
+    },
+    {
+      "path": "baseq2/models/weapons/g_bfg/skin.png",
+      "bytes": 912596,
+      "sha256": "aecbb534c26bbd0694a50b9f35745c2fa9987aea55b2fb5623535cd3e0914d8d"
+    },
+    {
+      "path": "baseq2/models/weapons/g_bfg/tris.md2",
+      "bytes": 91906,
+      "sha256": "cf6fac8cbf9aad523c30668bf65c3cae41eaac42598bc553e49737b9c5e0ce66"
+    },
+    {
+      "path": "baseq2/models/weapons/g_chain/skin.png",
+      "bytes": 104357,
+      "sha256": "13e14cc22496488f0f7271f5e06f67e4bb72d5412f24161abbe0cae31f308d15"
+    },
+    {
+      "path": "baseq2/models/weapons/g_chain/tris.md2",
+      "bytes": 35768,
+      "sha256": "a9ee78745082aa8ec1a2ea8ff85f29bd35fc80278a2478eef82118df302793ea"
+    },
+    {
+      "path": "baseq2/models/weapons/g_hyperb/skin.png",
+      "bytes": 1640440,
+      "sha256": "41cf33910d38cb000e2baa807e3391e9406fd3e7c25a8e7acfdc358a176f4911"
+    },
+    {
+      "path": "baseq2/models/weapons/g_hyperb/tris.md2",
+      "bytes": 145608,
+      "sha256": "b4189aee68e466eec7c53f2abe1c535531f386a11305706e4c6a54349be6c476"
+    },
+    {
+      "path": "baseq2/models/weapons/g_launch/skin.png",
+      "bytes": 110486,
+      "sha256": "b3e6ea476ea3e630c4a16714f584e0b0b6a8eba254c33bcdd4b6d88c2681a089"
+    },
+    {
+      "path": "baseq2/models/weapons/g_launch/tris.md2",
+      "bytes": 36652,
+      "sha256": "3c2c8867aed2e9290e79292bd8dc997036cf841f3e91cf7f015a7c187dbb598e"
+    },
+    {
+      "path": "baseq2/models/weapons/g_machn/skin.png",
+      "bytes": 798991,
+      "sha256": "98a2c927f49449188ff5035167886ec23fa3f7addff6d229cdad85706e444b93"
+    },
+    {
+      "path": "baseq2/models/weapons/g_machn/skin_pickup.png",
+      "bytes": 71820,
+      "sha256": "de04561f9bf7147b24acaf67111a3874cf091c3eeddd3a517d0fb1a9aa9a2a8a"
+    },
+    {
+      "path": "baseq2/models/weapons/g_machn/tris.md2",
+      "bytes": 34752,
+      "sha256": "869fdd0e8756cd95808467718374f12e4a124f2673d4ee5e80477963047660be"
+    },
+    {
+      "path": "baseq2/models/weapons/g_rail/skin.png",
+      "bytes": 702365,
+      "sha256": "fe53a12d628306fe04ef6ccbda802388a553d3c8f4a83631cabba4711eb0b9eb"
+    },
+    {
+      "path": "baseq2/models/weapons/g_rail/tris.md2",
+      "bytes": 174091,
+      "sha256": "4c709615202483e1e2e0a5a105ba20173fd05613e322c52656980514115066f9"
+    },
+    {
+      "path": "baseq2/models/weapons/g_rocket/skin.png",
+      "bytes": 47610,
+      "sha256": "dd469e49e5976c1a77dcb55a4be29c64d29621ef6dc699b1b048db9c6c0fe656"
+    },
+    {
+      "path": "baseq2/models/weapons/g_rocket/tris.md2",
+      "bytes": 34664,
+      "sha256": "b017286485161299b2dda300bcd809fdfb0079874c5048fbe2975a2b8a1fc9bb"
+    },
+    {
+      "path": "baseq2/models/weapons/g_shotg/skin.png",
+      "bytes": 45253,
+      "sha256": "7a617f7d9b2dc50c18ca985455ec0433d05261cf4ecc479687fe68fc5e95fee7"
+    },
+    {
+      "path": "baseq2/models/weapons/g_shotg/tris.md2",
+      "bytes": 33004,
+      "sha256": "3c6d11b6e1374a1116079019a807b3f100b652eee8a89622ae7135d4f1db37a0"
+    },
+    {
+      "path": "baseq2/models/weapons/g_shotg2/skin.png",
+      "bytes": 64753,
+      "sha256": "21c93df9455938d55398e9ec93a1ab59a6b08322d27787fd0a4a3fcec753afad"
+    },
+    {
+      "path": "baseq2/models/weapons/g_shotg2/tris.md2",
+      "bytes": 33968,
+      "sha256": "e4cd9e9ccdf05cf7197d8e9d5f982b1f647ed448cb390d7ba05f50a34d883e2d"
+    },
+    {
+      "path": "baseq2/models/weapons/v_bfg/skin.png",
+      "bytes": 912596,
+      "sha256": "aecbb534c26bbd0694a50b9f35745c2fa9987aea55b2fb5623535cd3e0914d8d"
+    },
+    {
+      "path": "baseq2/models/weapons/v_bfg/tris.md2",
+      "bytes": 89750,
+      "sha256": "d31f0e3a675e8062ffe0431b82528abba5316ca0db7513abba884211ee890cff"
+    },
+    {
+      "path": "baseq2/models/weapons/v_blast/skin.png",
+      "bytes": 999766,
+      "sha256": "0882c989819519e79409cb99ee6d74a65bc95a23bb4ea4b8f8c20657526b35d8"
+    },
+    {
+      "path": "baseq2/models/weapons/v_blast/tris.md2",
+      "bytes": 89724,
+      "sha256": "7287d40a90d689a9b40595e55ad644dee8e1a5320b9831c2212c3c5eadad71a7"
+    },
+    {
+      "path": "baseq2/models/weapons/v_chain/skin.png",
+      "bytes": 1091728,
+      "sha256": "5b65010c02fe15350f5cebb87b0bd135b6ec45c53de6dadb0f91118cfa85c5c2"
+    },
+    {
+      "path": "baseq2/models/weapons/v_chain/tris.md2",
+      "bytes": 91704,
+      "sha256": "5a16b7e29e59fd9096fdc161fc35b5c2aa0b59152e6ee6ddc548f87df743adcc"
+    },
+    {
+      "path": "baseq2/models/weapons/v_hyperb/skin.png",
+      "bytes": 1191257,
+      "sha256": "0f424e315b8e3e0334a1cb9b7a08a03fddde852c0bb4ee979195306d025b9ff8"
+    },
+    {
+      "path": "baseq2/models/weapons/v_hyperb/tris.md2",
+      "bytes": 146752,
+      "sha256": "6285f6513bb104eedf6aff3c385a41ccfbd6935b4783e0a53866548facd2d64d"
+    },
+    {
+      "path": "baseq2/models/weapons/v_launch/skin.png",
+      "bytes": 1289851,
+      "sha256": "5e128b08329c22172521ba8ef560ef57c15c1ff3655530c744747ab55526b5ce"
+    },
+    {
+      "path": "baseq2/models/weapons/v_launch/tris.md2",
+      "bytes": 94691,
+      "sha256": "5b8f374de07dc147b26d76bf4184c1a7c74fe33b4396944a6de52f5c02ba70fe"
+    },
+    {
+      "path": "baseq2/models/weapons/v_machn/skin.png",
+      "bytes": 798991,
+      "sha256": "98a2c927f49449188ff5035167886ec23fa3f7addff6d229cdad85706e444b93"
+    },
+    {
+      "path": "baseq2/models/weapons/v_machn/tris.md2",
+      "bytes": 91905,
+      "sha256": "d73d8f0c4113899b5afe7786b9f67c050f0f20ffe920e10633c2132c5b2569bc"
+    },
+    {
+      "path": "baseq2/models/weapons/v_rail/skin.png",
+      "bytes": 702365,
+      "sha256": "fe53a12d628306fe04ef6ccbda802388a553d3c8f4a83631cabba4711eb0b9eb"
+    },
+    {
+      "path": "baseq2/models/weapons/v_rail/tris.md2",
+      "bytes": 174091,
+      "sha256": "4140aa8c68786da3b0cdfd050b4cb67e8338f084252a6acd52df3db761124e8c"
+    },
+    {
+      "path": "baseq2/models/weapons/v_rocket/skin.png",
+      "bytes": 520431,
+      "sha256": "0853494ab3d11846e8fb0f915610615a0955cd5107d9d82cceb63bdad2f6cace"
+    },
+    {
+      "path": "baseq2/models/weapons/v_rocket/tris.md2",
+      "bytes": 89945,
+      "sha256": "9bd6a4c39f5a3220a6195efe5ad470ed8bbcc4862f41f7406afa386e5140be8f"
+    },
+    {
+      "path": "baseq2/models/weapons/v_shotg/skin.png",
+      "bytes": 372256,
+      "sha256": "292ab2fb7c0c326963223bc77d86f8c112a8a2cfc85fd7dd42e17b5e7c7028fd"
+    },
+    {
+      "path": "baseq2/models/weapons/v_shotg/tris.md2",
+      "bytes": 87748,
+      "sha256": "650df9feef22956f9a38d7829f8711ec6750c38318869236ec26cccf9344c089"
+    },
+    {
+      "path": "baseq2/models/weapons/v_shotg2/skin.png",
+      "bytes": 837738,
+      "sha256": "681f18af52b9a1fe0c8011cc23d48ab83f00199422098e5a8ecdc0d1abe74449"
+    },
+    {
+      "path": "baseq2/models/weapons/v_shotg2/tris.md2",
+      "bytes": 88223,
+      "sha256": "3be57f8f989c32e52463b86aa013ddfbb73e351069150f42664ce5e1f6ab1f1f"
+    },
+    {
+      "path": "baseq2/players/soldier/blue.png",
+      "bytes": 27263,
+      "sha256": "a149df3dd1215c5d24584406d8a862164f75f1ebf4654c0c93af744df311669f"
+    },
+    {
+      "path": "baseq2/players/soldier/gray.png",
+      "bytes": 28132,
+      "sha256": "f97c9e4690cd7b83da6944d7f88f538a0436538f1023b4e920ad1bf269e6d97a"
+    },
+    {
+      "path": "baseq2/players/soldier/green.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/players/soldier/orange.png",
+      "bytes": 36288,
+      "sha256": "6a681c75bb3f1a65d64abeaae7ba54230ca3a841e9dfc4742ab6e4fc8b26901f"
+    },
+    {
+      "path": "baseq2/players/soldier/pink.png",
+      "bytes": 52629,
+      "sha256": "0ee27f6d3875a431d9e918df2a13fb28fd93c5fece21a00c60d74a21a6b33e34"
+    },
+    {
+      "path": "baseq2/players/soldier/purple.png",
+      "bytes": 33325,
+      "sha256": "e1eaefd367d3099515be0ac466747c19af09342a7a69a2d97a2981ed57812717"
+    },
+    {
+      "path": "baseq2/players/soldier/red.png",
+      "bytes": 28119,
+      "sha256": "31678be3b59c5260c38d7f411d5d47e8ef642d122a651175576d32e5195d57f2"
+    },
+    {
+      "path": "baseq2/players/soldier/skin.png",
+      "bytes": 2217036,
+      "sha256": "4745e3416dc8b426e2aa2e544ced57f10cf3c34b173d73aebe2ee2b3c6599aed"
+    },
+    {
+      "path": "baseq2/players/soldier/tan.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/players/soldier/tris.md2",
+      "bytes": 1482136,
+      "sha256": "dd754de5c6ab1baf6b15cfb2e7e3fabe5d581e27aa7dabc726f791be293022a7"
+    },
+    {
+      "path": "baseq2/players/soldier/tris_pistol.md2",
+      "bytes": 1482136,
+      "sha256": "7dcbd2ae64d02bff7703f1f49206233424757f03bc87efce5a182bf9b954c1ca"
+    },
+    {
+      "path": "baseq2/players/soldier/w_bfg.md2",
+      "bytes": 1479388,
+      "sha256": "7f58b6accf40a864d5c5d49813461c5225bed5f1643e671b35e0424484998a23"
+    },
+    {
+      "path": "baseq2/players/soldier/w_blaster.md2",
+      "bytes": 1467896,
+      "sha256": "a32d11e1b648ab8fc4bcee704f7d8dba4b7d204c5f9508201cf441859fb8d509"
+    },
+    {
+      "path": "baseq2/players/soldier/w_chaingun.md2",
+      "bytes": 1467188,
+      "sha256": "c50026e103b135d445a3aa3dfea9275697650c36df653ade6c61054a0f65d5c6"
+    },
+    {
+      "path": "baseq2/players/soldier/w_glauncher.md2",
+      "bytes": 1466374,
+      "sha256": "90f1ed58ea009cbe4cf9b5ca37ed7172c151312d6ec3573cb5f1859933be261b"
+    },
+    {
+      "path": "baseq2/players/soldier/w_hyperblaster.md2",
+      "bytes": 2020308,
+      "sha256": "7742a95495ed3db8699798671bf42b635f97cbb0a74df6472fd4964479bf3e9a"
+    },
+    {
+      "path": "baseq2/players/soldier/w_machinegun.md2",
+      "bytes": 1466374,
+      "sha256": "7adf512370df5a728b279f655e1f3a0c62803b26d269a8012824190d770020b2"
+    },
+    {
+      "path": "baseq2/players/soldier/w_railgun.md2",
+      "bytes": 2717998,
+      "sha256": "d0dd20709c355052ab30c17796175869e51d1a425914ad262f71fa4766334a16"
+    },
+    {
+      "path": "baseq2/players/soldier/w_rlauncher.md2",
+      "bytes": 1464414,
+      "sha256": "1c76f16f3d72d05834d371e6b5a6674cb7ac00fe6c19384aefb377bcb70a02dd"
+    },
+    {
+      "path": "baseq2/players/soldier/w_shotgun.md2",
+      "bytes": 1473816,
+      "sha256": "e95506f31633babdcc2261ec88feacbcb060652f2e1d1873df4e4a208acac591"
+    },
+    {
+      "path": "baseq2/players/soldier/w_sshotgun.md2",
+      "bytes": 1470238,
+      "sha256": "df2d4138bb28fb3f0e30414822ef232a33acc34bc5240f68e0a56c4496f9d6ff"
+    },
+    {
+      "path": "baseq2/players/soldier/weapon.md2",
+      "bytes": 1466374,
+      "sha256": "7adf512370df5a728b279f655e1f3a0c62803b26d269a8012824190d770020b2"
+    },
+    {
+      "path": "baseq2/players/soldier/white.png",
+      "bytes": 40835,
+      "sha256": "8138c5d785d5e492e37afa04a9315a753b3c5db76175e77665c8502f45931fab"
+    },
+    {
+      "path": "baseq2/sprites/explosion.png",
+      "bytes": 135588,
+      "sha256": "25149727dfc32837547a00be606ecc7f6027b736e4be86787a2c37efdf1d082a"
+    },
+    {
+      "path": "baseq2/sprites/explosion.sp2",
+      "bytes": 92,
+      "sha256": "984c0e3576e7921c988fdd499931fba168e158b86df5cd8873ea5a5016172799"
+    },
+    {
+      "path": "baseq2/sprites/flame.png",
+      "bytes": 135588,
+      "sha256": "25149727dfc32837547a00be606ecc7f6027b736e4be86787a2c37efdf1d082a"
+    },
+    {
+      "path": "baseq2/sprites/flame.sp2",
+      "bytes": 92,
+      "sha256": "6a567b1c02b0a2b23b9715736ce388cd856584d21106c9f43d4f6453196c5658"
+    },
+    {
+      "path": "baseq2/sprites/muzzleFlashCore.png",
+      "bytes": 30576,
+      "sha256": "83740dfa37707c88a7f3be4767e5a2fd3f406e019d28a7291301df1ea7b76b82"
+    },
+    {
+      "path": "baseq2/sprites/muzzleFlashFlare.png",
+      "bytes": 30576,
+      "sha256": "83740dfa37707c88a7f3be4767e5a2fd3f406e019d28a7291301df1ea7b76b82"
+    },
+    {
+      "path": "baseq2/sprites/muzzleFlashSmall.png",
+      "bytes": 30576,
+      "sha256": "83740dfa37707c88a7f3be4767e5a2fd3f406e019d28a7291301df1ea7b76b82"
+    },
+    {
+      "path": "baseq2/sprites/smoke.png",
+      "bytes": 41019,
+      "sha256": "8f6e152c57e2f562e089e16c861bd243315e0acbac5ee928c7ce4c9d6fcabffe"
+    },
+    {
+      "path": "baseq2/sprites/smoke.sp2",
+      "bytes": 92,
+      "sha256": "fe32c697f33b6e541fd818e80b0a2b5194906cc39c604f13e0aed1be788f1580"
+    }
+  ]
+}

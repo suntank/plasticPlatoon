@@ -1,0 +1,160 @@
+{
+  "purpose": "Ship approved custom runtime assets with the game and retire user-home overrides.",
+  "date": "2026-11-04",
+  "pack_sha256": "11794f5400fa524fb4f37e418ab3a14e74a3093352bca7a2e25d00cfb03f9715",
+  "pack_bytes": 35810031,
+  "pack_entries": 339,
+  "asset_counts": {
+    "models": 126,
+    "players": 37,
+    "sprites": 9,
+    "pics": 33,
+    "sound": 110,
+    "maps": 3,
+    "env": 6,
+    "textures": 12
+  },
+  "previous_pack_entries_unchanged": true,
+  "release_copies_identical": true,
+  "home_runtime_assets_removed": true,
+  "removed_home_paths": [
+    "models",
+    "baseq2/baseq2/players",
+    "baseq2/baseq2/sprites",
+    "baseq2/baseq2/pics",
+    "baseq2/baseq2/sound",
+    "baseq2/baseq2/sound.zip",
+    "baseq2/baseq2/operation-sandbreak.pk3"
+  ],
+  "backup": {
+    "path": "asset-backups/yq2-2026-11-04",
+    "manifest": "migration.json",
+    "files": 307,
+    "bytes": 198677566,
+    "all_hashes_verified": true
+  },
+  "settings_saves_screenshots_preserved": true,
+  "portable_launcher": "release/play-portable.sh",
+  "launcher_uses_home": false,
+  "tuning_loose_copy_required_by_game_api": true,
+  "original_quake_paks_remain_external": true,
+  "checks": {
+    "portable_asset_tests": 3,
+    "overlay_tests": 13,
+    "packaging_benchmark_tests": 16,
+    "tuning_runtime_tests": 5,
+    "production_md2_loads_and_caches": 77,
+    "address_and_undefined_behavior_sanitizers": true,
+    "leak_sanitizer": false,
+    "leak_sanitizer_note": "Unsupported under the execution environment ptrace; leak detection disabled for this run.",
+    "home_free_sound_source_verification": true
+  },
+  "runtime_runs": {
+    "sandbox-gl3-pp_sandbox2": {
+      "passed": true,
+      "renderer": "gl3",
+      "map": "pp_sandbox2",
+      "returncode": 0,
+      "rendered_frames": 120,
+      "registered_assets_checked": 10,
+      "missing_pack_reads": [],
+      "image_errors": [],
+      "home_override_present": false,
+      "audio_initialized": true,
+      "pack_sha256": "11794f5400fa524fb4f37e418ab3a14e74a3093352bca7a2e25d00cfb03f9715",
+      "screenshots": [
+        "q2_0000.tga"
+      ],
+      "tuning_loaded_from_pack": true,
+      "server_loaded_release_profile": true
+    },
+    "gl1": {
+      "passed": true,
+      "renderer": "gl1",
+      "returncode": 0,
+      "rendered_frames": 120,
+      "registered_assets_checked": 154,
+      "missing_pack_reads": [],
+      "image_errors": [],
+      "home_override_present": false,
+      "audio_initialized": true,
+      "pack_sha256": "11794f5400fa524fb4f37e418ab3a14e74a3093352bca7a2e25d00cfb03f9715",
+      "screenshots": [
+        "q2_0000.tga"
+      ],
+      "tuning_loaded_from_pack": true,
+      "server_loaded_release_profile": true
+    },
+    "sandbox-gl3-pp_sandbox_coop1": {
+      "passed": true,
+      "renderer": "gl3",
+      "map": "pp_sandbox_coop1",
+      "returncode": 0,
+      "rendered_frames": 120,
+      "registered_assets_checked": 10,
+      "missing_pack_reads": [],
+      "image_errors": [],
+      "home_override_present": false,
+      "audio_initialized": true,
+      "pack_sha256": "11794f5400fa524fb4f37e418ab3a14e74a3093352bca7a2e25d00cfb03f9715",
+      "screenshots": [
+        "q2_0000.tga"
+      ],
+      "tuning_loaded_from_pack": true,
+      "server_loaded_release_profile": true
+    },
+    "sandbox-gl1-pp_sandbox_coop1": {
+      "passed": true,
+      "renderer": "gl1",
+      "map": "pp_sandbox_coop1",
+      "returncode": 0,
+      "rendered_frames": 120,
+      "registered_assets_checked": 10,
+      "missing_pack_reads": [],
+      "image_errors": [],
+      "home_override_present": false,
+      "audio_initialized": true,
+      "pack_sha256": "11794f5400fa524fb4f37e418ab3a14e74a3093352bca7a2e25d00cfb03f9715",
+      "screenshots": [
+        "q2_0000.tga"
+      ],
+      "tuning_loaded_from_pack": true,
+      "server_loaded_release_profile": true
+    },
+    "gl3": {
+      "passed": true,
+      "renderer": "gl3",
+      "returncode": 0,
+      "rendered_frames": 120,
+      "registered_assets_checked": 154,
+      "missing_pack_reads": [],
+      "image_errors": [],
+      "home_override_present": false,
+      "audio_initialized": true,
+      "pack_sha256": "11794f5400fa524fb4f37e418ab3a14e74a3093352bca7a2e25d00cfb03f9715",
+      "screenshots": [
+        "q2_0000.tga"
+      ],
+      "tuning_loaded_from_pack": true,
+      "server_loaded_release_profile": true
+    },
+    "sandbox-gl3-pp_sandbox1": {
+      "passed": true,
+      "renderer": "gl3",
+      "map": "pp_sandbox1",
+      "returncode": 0,
+      "rendered_frames": 120,
+      "registered_assets_checked": 10,
+      "missing_pack_reads": [],
+      "image_errors": [],
+      "home_override_present": false,
+      "audio_initialized": true,
+      "pack_sha256": "11794f5400fa524fb4f37e418ab3a14e74a3093352bca7a2e25d00cfb03f9715",
+      "screenshots": [
+        "q2_0000.tga"
+      ],
+      "tuning_loaded_from_pack": true,
+      "server_loaded_release_profile": true
+    }
+  }
+}

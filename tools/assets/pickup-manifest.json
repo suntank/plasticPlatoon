@@ -1,0 +1,1913 @@
+{
+  "schema": 1,
+  "source_map_sha256": "09dd444a8523b669d31c26940dd630f2ce42e7799ee6745a0622ccf5284bd550",
+  "tools": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "Pillow": "12.3.0",
+    "pymeshlab": "2025.7.post1"
+  },
+  "algorithm": "meshing_decimation_quadric_edge_collapse_with_texture",
+  "parameters": {
+    "qualitythr": 0.3,
+    "extratcoordw": 2.0,
+    "preserveboundary": true,
+    "boundaryweight": 5.0,
+    "optimalplacement": true,
+    "preservenormal": true,
+    "planarquadric": true
+  },
+  "normal_policy": "closest source surface, barycentric normal transfer, nearest of 162 MD2 normals",
+  "converter_sha256": "894c26ea6d87858bfea877267657a97addad6b238cbb89f1f112a591d0062c2b",
+  "assets": [
+    {
+      "model": "models/items/armor/shard/tris.md2",
+      "classname": "item_armor_shard",
+      "sandbox_instances": 18,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 2000,
+        "position_vertices": 982,
+        "render_vertices": 2107,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/armor/shard/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 991,
+        "gl_command_triangles": 2000,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 2946,
+        "file_bytes": 91226,
+        "sha256": "b3a8eceadaef73e7725ab0131b30b2d2f54fae491a5c0ca71b09947c22889a65",
+        "bounds": [
+          [
+            -4.711928367614746,
+            -3.2774510383605957,
+            -5.261002540588379
+          ],
+          [
+            4.69611220061779,
+            3.288239449262619,
+            5.261002402752638
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 800,
+        "position_vertices": 382,
+        "render_vertices": 1075,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/armor/shard/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 377,
+        "gl_command_triangles": 800,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 35696,
+        "sha256": "e11f9b6037c8e979c81b76cd8cbccef9ba09a56b952baad8c3b1046412ce819e",
+        "bounds": [
+          [
+            -4.711928367614746,
+            -3.2774510383605957,
+            -5.261002540588379
+          ],
+          [
+            4.69611220061779,
+            3.288239449262619,
+            5.137214109301567
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/items/armor/shard/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 1199808,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "65755fb1cd4f67bd068d5233f4796eaf8afd376190b4f91dc8b829fce2892221"
+      },
+      "texture_after": {
+        "path": "models/items/armor/shard/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 65758,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "738605133c9109b110357fc84cc37373b5e93aa6f4deb98d93405e05d786b6fc"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_items_armor_shard.png",
+        "comparison_sha256": "41831b97f51364676d1f69f1388fb96477307922fe0cdc63bbb352be70bf3b3f",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9664429530201343,
+          0.9777530589543938,
+          0.9769647696476965,
+          0.9822616407982262
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/items/healing/stimpack/tris.md2",
+      "classname": "item_health_small",
+      "sandbox_instances": 15,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 3000,
+        "position_vertices": 1502,
+        "render_vertices": 2669,
+        "frames": 1,
+        "frame_names": [
+          "frame_0"
+        ],
+        "skin_references": [
+          "models/items/healing/stimpack/skin.png",
+          "."
+        ],
+        "skin_coordinate_dimensions": [
+          480,
+          480
+        ],
+        "gl_command_primitives": 1596,
+        "gl_command_triangles": 3000,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 4506,
+        "file_bytes": 138118,
+        "sha256": "bbfd4015f6d4e5e011f2f0614b805f3ea8ff3f3d71c29e1d4623b03241c5dbff",
+        "bounds": [
+          [
+            -3.1914665699005127,
+            -1.931037425994873,
+            0.0
+          ],
+          [
+            3.184980772435665,
+            1.94500776194036,
+            14.981246162205935
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 800,
+        "position_vertices": 402,
+        "render_vertices": 932,
+        "frames": 1,
+        "frame_names": [
+          "frame_0"
+        ],
+        "skin_references": [
+          "models/items/healing/stimpack/skin.png",
+          "models/items/healing/stimpack/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          480,
+          480
+        ],
+        "gl_command_primitives": 347,
+        "gl_command_triangles": 800,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 34480,
+        "sha256": "b732f8175f78e1e34e7ddf096ce6d3ef490a9218c13c07c76d79d6676f039abf",
+        "bounds": [
+          [
+            -3.166460894048214,
+            -1.931037425994873,
+            0.0
+          ],
+          [
+            3.1599750965833664,
+            1.929807584732771,
+            14.981246162205935
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/items/healing/stimpack/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 44940,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "e6d94324ad0028f0e8e427b8a5523223d7d64da66939eaf2263f744b200ea4d5"
+      },
+      "texture_after": {
+        "path": "models/items/healing/stimpack/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 44940,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "e6d94324ad0028f0e8e427b8a5523223d7d64da66939eaf2263f744b200ea4d5"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_items_healing_stimpack.png",
+        "comparison_sha256": "73209f8ab10ee53860bb5c724b3abf992ae690690e3467c413b972c84adec0a6",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9801324503311258,
+          0.9630681818181818,
+          0.9899665551839465,
+          0.9686609686609686
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/items/healing/medium/tris.md2",
+      "classname": "item_health",
+      "sandbox_instances": 11,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 2994,
+        "position_vertices": 1491,
+        "render_vertices": 2954,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/healing/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 1444,
+        "gl_command_triangles": 2994,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 4473,
+        "file_bytes": 134717,
+        "sha256": "969583bfaf611bca1060f77eda241d58f80e91b7fa56fc2edeadd9f6955c8166",
+        "bounds": [
+          [
+            -7.747470855712891,
+            -5.197824001312256,
+            -14.358160018920898
+          ],
+          [
+            7.73925743252039,
+            5.211502738296986,
+            -7.367515534162521
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 800,
+        "position_vertices": 394,
+        "render_vertices": 970,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/healing/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 348,
+        "gl_command_triangles": 800,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 34492,
+        "sha256": "3e8e0e403034a3569492a5520be27e782744f990eec5b732572b7ae3b700378f",
+        "bounds": [
+          [
+            -7.686738587915897,
+            -5.197824001312256,
+            -14.358160018920898
+          ],
+          [
+            7.617792896926403,
+            5.211502738296986,
+            -7.367515534162521
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/items/healing/medium/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 51722,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "db99c7b8e055a7d9d7bf9a2c6a18c03d34921519f7c6bca265922ff45ccb643d"
+      },
+      "texture_after": {
+        "path": "models/items/healing/medium/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 51722,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "db99c7b8e055a7d9d7bf9a2c6a18c03d34921519f7c6bca265922ff45ccb643d"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_items_healing_medium.png",
+        "comparison_sha256": "adc9560fa4c210f956f74e5a63c442ad5b23a53dd0ae12f9cfaed0e5f7f3156f",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9719934102141681,
+          0.9751461988304093,
+          0.9667774086378738,
+          0.9882179675994109
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/items/healing/large/tris.md2",
+      "classname": "item_health_large",
+      "sandbox_instances": 12,
+      "target_triangles": 1000,
+      "before": {
+        "triangles": 1998,
+        "position_vertices": 999,
+        "render_vertices": 2307,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/healing/large/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 1066,
+        "gl_command_triangles": 1999,
+        "duplicate_gl_triangles": 1,
+        "unused_bytes_per_frame": 2997,
+        "file_bytes": 94209,
+        "sha256": "702158ccb119aa8ef818c8d505af81fe25905312c8485700823b0eacaf023d7f",
+        "bounds": [
+          [
+            -10.293880462646484,
+            -4.78317403793335,
+            -15.285584449768066
+          ],
+          [
+            10.273526698350906,
+            4.7950726971030235,
+            0.24265661090612411
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 998,
+        "position_vertices": 500,
+        "render_vertices": 1235,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/healing/large/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 435,
+        "gl_command_triangles": 998,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 43104,
+        "sha256": "36f1f3dd667698b067216bbfc25237145ff68b16847a67731ffadc09b44047ed",
+        "bounds": [
+          [
+            -10.293880462646484,
+            -4.78317403793335,
+            -15.285584449768066
+          ],
+          [
+            10.273526698350906,
+            4.7950726971030235,
+            0.18176154792308807
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/items/healing/large/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 1082962,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "6dcb45c3e6f59b0e4f0197fdcc36d68dcd664371dcc3a09b0804bcbbc5fefb51"
+      },
+      "texture_after": {
+        "path": "models/items/healing/large/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 42575,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "1d3f5e3dc59ddad422f4b930adb1ff3cd8b3c7148b193f9092860142de389944"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_items_healing_large.png",
+        "comparison_sha256": "b731893e6a2e5764ea2f8b1658ae71413ac3ace603ab39dc84d93cfab083be45",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9951534733441034,
+          0.9734299516908212,
+          0.9919743178170144,
+          0.9685230024213075
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/items/armor/combat/tris.md2",
+      "classname": "item_armor_combat",
+      "sandbox_instances": 1,
+      "target_triangles": 1000,
+      "before": {
+        "triangles": 4096,
+        "position_vertices": 2048,
+        "render_vertices": 3584,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/armor/combat/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          480,
+          480
+        ],
+        "gl_command_primitives": 1801,
+        "gl_command_triangles": 4096,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 6144,
+        "file_bytes": 177580,
+        "sha256": "06f26c23e71e9426c709293a0f3c652d4f5475c5ca3f5e404b0cfecd0a3ef1b2",
+        "bounds": [
+          [
+            -8.591038703918457,
+            -9.617664337158203,
+            -8.688767433166504
+          ],
+          [
+            8.56393876671791,
+            9.6401506960392,
+            8.673156432807446
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 1000,
+        "position_vertices": 500,
+        "render_vertices": 1204,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/armor/combat/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          480,
+          480
+        ],
+        "gl_command_primitives": 430,
+        "gl_command_triangles": 1000,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 42984,
+        "sha256": "87845cbb9897221feccf2e3699e45ebaf391c6c159ec9dae687cf429a82b7602",
+        "bounds": [
+          [
+            -8.523764282464981,
+            -9.617664337158203,
+            -8.688767433166504
+          ],
+          [
+            8.496664345264435,
+            9.6401506960392,
+            8.673156432807446
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/items/armor/combat/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 31752,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "ab3a5d6595d79d9f62ff4f50e9d55c0ccf2d27c5d00f0d0d3813a48de5d5fef3"
+      },
+      "texture_after": {
+        "path": "models/items/armor/combat/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 31752,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "ab3a5d6595d79d9f62ff4f50e9d55c0ccf2d27c5d00f0d0d3813a48de5d5fef3"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_items_armor_combat.png",
+        "comparison_sha256": "bba940d70a4735da6551601b238161b4b6c9042bc7a0e50b9b6270902712ac8c",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9873551106427819,
+          0.9945115257958288,
+          0.9836779107725789,
+          0.98661800486618
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/items/armor/body/tris.md2",
+      "classname": "item_armor_body",
+      "sandbox_instances": 2,
+      "target_triangles": 1000,
+      "before": {
+        "triangles": 2000,
+        "position_vertices": 1002,
+        "render_vertices": 2147,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/armor/body/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          480,
+          480
+        ],
+        "gl_command_primitives": 958,
+        "gl_command_triangles": 2000,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 3006,
+        "file_bytes": 90602,
+        "sha256": "6a8169292d9451b66925fb6a21d4b52c71eb4fcdf4a5ac2e5f46e00b0a785fd0",
+        "bounds": [
+          [
+            -11.060054779052734,
+            -8.980663299560547,
+            -11.966904640197754
+          ],
+          [
+            10.951098211109638,
+            9.072886154055595,
+            11.966905280947685
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 1000,
+        "position_vertices": 502,
+        "render_vertices": 1267,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/armor/body/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          480,
+          480
+        ],
+        "gl_command_primitives": 443,
+        "gl_command_triangles": 1000,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 43608,
+        "sha256": "2b40a85c9c8bb88aacac154fa4937149ff31e3c8675de5e65faf2fc4f5b77eb4",
+        "bounds": [
+          [
+            -11.060054779052734,
+            -8.980663299560547,
+            -11.966904640197754
+          ],
+          [
+            10.951098211109638,
+            9.072886154055595,
+            11.966905280947685
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/items/armor/body/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 1303915,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "57cadc3f95eb30a1a53d3c6146427cf8121d857ddbaaaad35619d2e0d2acf873"
+      },
+      "texture_after": {
+        "path": "models/items/armor/body/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 44687,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "7f24b9450a7b49a55e13b495948ad180e5e9974bfbc31ac625cfae94cc6eb397"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_items_armor_body.png",
+        "comparison_sha256": "517a6493d45c2061f8cf802dd2f44867918791b15a4e808c022fcbd4b597a62c",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9897172236503856,
+          0.9859649122807017,
+          0.9878493317132442,
+          0.9867256637168141
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/items/armor/jacket/tris.md2",
+      "classname": "item_armor_jacket",
+      "sandbox_instances": 2,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 1999,
+        "position_vertices": 1004,
+        "render_vertices": 2383,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/armor/jacket/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 1126,
+        "gl_command_triangles": 1999,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 3012,
+        "file_bytes": 96240,
+        "sha256": "358670497bca2ce1830c7f2af3ff540225a7e4ca2a019a1b7b212bed4c34feec",
+        "bounds": [
+          [
+            -12.350793838500977,
+            -9.039933204650879,
+            -11.908408164978027
+          ],
+          [
+            12.334606252610683,
+            9.057122014462948,
+            10.894008666276932
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 799,
+        "position_vertices": 404,
+        "render_vertices": 1121,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/armor/jacket/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 386,
+        "gl_command_triangles": 799,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 36180,
+        "sha256": "578b22e9350fe9f5beea0a97892defdd3d4540b8395b80cd1ac9861c9fc3c7d6",
+        "bounds": [
+          [
+            -12.253988347947598,
+            -9.039933204650879,
+            -11.908408164978027
+          ],
+          [
+            12.334606252610683,
+            9.057122014462948,
+            10.804587423801422
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/items/armor/jacket/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 1498682,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "3e316fd2f6ad36b946384109c549fa9987a64468431e4a12dc7aa6f4babdb670"
+      },
+      "texture_after": {
+        "path": "models/items/armor/jacket/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 54695,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "67d90d24e01e38ef7fb10addf1e3bc1768ff03a85d97a57a3e9a52015ec8f0d3"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_items_armor_jacket.png",
+        "comparison_sha256": "a7cb4368100433980e3c725728469dc1d1937ff2f71dc65ddc844ae67a63f486",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.984822934232715,
+          0.9540412044374009,
+          0.9712351945854484,
+          0.9712351945854484
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/items/ammo/grenades/medium/tris.md2",
+      "classname": "ammo_grenades",
+      "sandbox_instances": 16,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 2000,
+        "position_vertices": 998,
+        "render_vertices": 2275,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/ammo/grenades/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          480,
+          480
+        ],
+        "gl_command_primitives": 929,
+        "gl_command_triangles": 2000,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 2994,
+        "file_bytes": 90274,
+        "sha256": "c6b775f241d37166a535bf522cd1691bfa9a24590b1f3bd2de0dbdf058e2ffde",
+        "bounds": [
+          [
+            -3.6939916610717773,
+            -3.3438024520874023,
+            -12.000975608825684
+          ],
+          [
+            3.6587287448346615,
+            3.357227748259902,
+            0.4758230410516262
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 800,
+        "position_vertices": 398,
+        "render_vertices": 1190,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/ammo/grenades/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          480,
+          480
+        ],
+        "gl_command_primitives": 413,
+        "gl_command_triangles": 800,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 37256,
+        "sha256": "95e9b7a37f8c5ee6fb47009caf1cf3d08416acb2b927a66466fa028a34339871",
+        "bounds": [
+          [
+            -3.6939916610717773,
+            -3.2649668026715517,
+            -12.000975608825684
+          ],
+          [
+            3.6587287448346615,
+            3.357227748259902,
+            0.4758230410516262
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/items/ammo/grenades/medium/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 1183588,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "7b22e631c9ecffc5a2b8785f4e6bedb44d06a3c99a2bf6c84d74408dc6ff980a"
+      },
+      "texture_after": {
+        "path": "models/items/ammo/grenades/medium/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 40229,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "30c163ca8659dd7957b37022b95c066364f56f4093b66b90321bdd2e2a7601bb"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_items_ammo_grenades_medium.png",
+        "comparison_sha256": "5031e0dd64c965fa506209dea5499ce247686c302c34d4b72759af840a1b165c",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9725363489499192,
+          0.9866863905325444,
+          0.9825119236883942,
+          0.978386167146974
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/items/ammo/rockets/medium/tris.md2",
+      "classname": "ammo_rockets",
+      "sandbox_instances": 6,
+      "target_triangles": 500,
+      "before": {
+        "triangles": 2000,
+        "position_vertices": 1002,
+        "render_vertices": 1854,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/ammo/rockets/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 993,
+        "gl_command_triangles": 2000,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 3006,
+        "file_bytes": 90410,
+        "sha256": "e9a774ab3c1c39227713ea826ebea3621b7ee52d49ea65375336e4a0a6279e0b",
+        "bounds": [
+          [
+            -2.65165638923645,
+            -2.265514612197876,
+            -11.896893501281738
+          ],
+          [
+            2.651657762005925,
+            2.312007609754801,
+            12.610624834895134
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 500,
+        "position_vertices": 252,
+        "render_vertices": 640,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/ammo/rockets/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 231,
+        "gl_command_triangles": 500,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 22188,
+        "sha256": "8c05d04ffd7fa05496312f44b6588d496601d63ee6407a9785d0fd4c337625c4",
+        "bounds": [
+          [
+            -2.65165638923645,
+            -2.2475635446608067,
+            -11.896893501281738
+          ],
+          [
+            2.651657762005925,
+            2.2940565422177315,
+            12.610624834895134
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/items/ammo/rockets/medium/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 888925,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "a3f4d15a94dbe15e4f0423a97bee8e398d369d23fccb44a87ffcfecf07c78fed"
+      },
+      "texture_after": {
+        "path": "models/items/ammo/rockets/medium/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 35793,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "9cc6122b646e70b0bfde420163bfaa8fed18b6671143da6721189593b9448b72"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_items_ammo_rockets_medium.png",
+        "comparison_sha256": "de2b38a8400aefc0d783e67edf664d9938f867ac69fa655b29ec9456bfd9f766",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9572649572649573,
+          0.9708333333333333,
+          0.9535864978902954,
+          0.9707112970711297
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/items/mega_h/tris.md2",
+      "classname": "item_health_mega",
+      "sandbox_instances": 0,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 1994,
+        "position_vertices": 999,
+        "render_vertices": 2165,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/mega_h/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          480,
+          480
+        ],
+        "gl_command_primitives": 888,
+        "gl_command_triangles": 1994,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 2997,
+        "file_bytes": 88549,
+        "sha256": "f9b16cf306b8b39cb1bb7ed4b72f4021e97ee2d2937d9d8e78d6fafdc3b6ac69",
+        "bounds": [
+          [
+            -7.136602878570557,
+            -7.29399299621582,
+            -11.839356422424316
+          ],
+          [
+            7.114478264003992,
+            7.315473515540361,
+            8.16064428538084
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 800,
+        "position_vertices": 402,
+        "render_vertices": 1095,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/items/mega_h/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          480,
+          480
+        ],
+        "gl_command_primitives": 371,
+        "gl_command_triangles": 800,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 35704,
+        "sha256": "b9af48f7cca177af27e380a284ec88b48a932a274e23f96f22a22b290d343683",
+        "bounds": [
+          [
+            -7.136602878570557,
+            -7.29399299621582,
+            -11.839356422424316
+          ],
+          [
+            7.0585916712880135,
+            7.258181490004063,
+            8.16064428538084
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/items/mega_h/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 1078207,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "0f31f298704f695c420a932d806206c120680469ae8f3c3cb0584faef62c4907"
+      },
+      "texture_after": {
+        "path": "models/items/mega_h/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 41372,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "2d4935a2501a3f8932cf78579a3045703a969dc98dbad131838500b76fdd3a3f"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_items_mega_h.png",
+        "comparison_sha256": "334416131f6fce78ec971f223e03f6243c1931f80617442b4e297c8fac137e1e",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9767955801104973,
+          0.9873708381171068,
+          0.9722530521642619,
+          0.9907834101382489
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/weapons/g_chain/tris.md2",
+      "classname": "weapon_chaingun",
+      "sandbox_instances": 1,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 1999,
+        "position_vertices": 992,
+        "render_vertices": 2068,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_chain/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 1094,
+        "gl_command_triangles": 2000,
+        "duplicate_gl_triangles": 1,
+        "unused_bytes_per_frame": 2976,
+        "file_bytes": 94012,
+        "sha256": "106d2b57be0757447abfc7b58e2091cdbc9417476fe294d39d9b28591c579e2e",
+        "bounds": [
+          [
+            -39.366973876953125,
+            -8.675304412841797,
+            6.095477104187012
+          ],
+          [
+            39.29541712999344,
+            8.695936553180218,
+            26.257846899330616
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 799,
+        "position_vertices": 392,
+        "render_vertices": 1064,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_chain/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 381,
+        "gl_command_triangles": 799,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 35768,
+        "sha256": "a9ee78745082aa8ec1a2ea8ff85f29bd35fc80278a2478eef82118df302793ea",
+        "bounds": [
+          [
+            -39.366973876953125,
+            -8.470936872065067,
+            6.174545221030712
+          ],
+          [
+            39.29541712999344,
+            8.627814039587975,
+            26.257846899330616
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/weapons/g_chain/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 1091728,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "5b65010c02fe15350f5cebb87b0bd135b6ec45c53de6dadb0f91118cfa85c5c2"
+      },
+      "texture_after": {
+        "path": "models/weapons/g_chain/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 38236,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "eb794e9f761b3e521063248068cbb604b16abe77ea11c3678c6742ce7073406c"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_weapons_g_chain.png",
+        "comparison_sha256": "35b46b5d9ff126d2fe429ba82871ae91ed466220f827c07dbcfe7bf8849ea07a",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9603960396039604,
+          0.9333333333333333,
+          0.9705882352941176,
+          0.9602649006622517
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/weapons/g_launch/tris.md2",
+      "classname": "weapon_grenadelauncher",
+      "sandbox_instances": 1,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 1996,
+        "position_vertices": 989,
+        "render_vertices": 2311,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_launch/skin.png",
+          "/home/austin-morgan/Downloads/Meshy_AI_Toy_Grenade_Launcher_01"
+        ],
+        "skin_coordinate_dimensions": [
+          480,
+          480
+        ],
+        "gl_command_primitives": 1159,
+        "gl_command_triangles": 1996,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 2967,
+        "file_bytes": 96763,
+        "sha256": "cfd42238a364f242b42a995a18fb6ab57e5a81348037037b349a8854f57ace93",
+        "bounds": [
+          [
+            -24.964847564697266,
+            -6.013576030731201,
+            8.367156982421875
+          ],
+          [
+            24.88021656870842,
+            6.067990627139807,
+            24.76472109556198
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 800,
+        "position_vertices": 391,
+        "render_vertices": 1156,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_launch/skin.png",
+          "models/weapons/g_launch/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          480,
+          480
+        ],
+        "gl_command_primitives": 395,
+        "gl_command_triangles": 800,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 36652,
+        "sha256": "3c2c8867aed2e9290e79292bd8dc997036cf841f3e91cf7f015a7c187dbb598e",
+        "bounds": [
+          [
+            -24.964847564697266,
+            -6.013576030731201,
+            8.6243736743927
+          ],
+          [
+            24.684745728969574,
+            6.067990627139807,
+            24.76472109556198
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/weapons/g_launch/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 1289851,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "5e128b08329c22172521ba8ef560ef57c15c1ff3655530c744747ab55526b5ce"
+      },
+      "texture_after": {
+        "path": "models/weapons/g_launch/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 43312,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "a777a5a411ced792863e47982fbf2a2f149246d417ba118b06370380917933c1"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_weapons_g_launch.png",
+        "comparison_sha256": "900fd6fd78595c08b62ce99a96fe21f21bde093c5bd9b664b87e9277376630b1",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9558011049723757,
+          0.9756944444444444,
+          0.9772727272727273,
+          0.9620689655172414
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/weapons/g_machn/tris.md2",
+      "classname": "weapon_machinegun",
+      "sandbox_instances": 2,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 1990,
+        "position_vertices": 991,
+        "render_vertices": 1880,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_machn/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 1113,
+        "gl_command_triangles": 1991,
+        "duplicate_gl_triangles": 1,
+        "unused_bytes_per_frame": 2973,
+        "file_bytes": 93569,
+        "sha256": "100181847139211d3c5daedb00b30e6c0c313e72422c621b66dab8568c30a7a8",
+        "bounds": [
+          [
+            -36.38828659057617,
+            -2.5957117080688477,
+            7.422466278076172
+          ],
+          [
+            36.37745162844658,
+            2.5268960148096085,
+            26.337841786444187
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 800,
+        "position_vertices": 396,
+        "render_vertices": 974,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_machn/skin_pickup.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 357,
+        "gl_command_triangles": 800,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 34752,
+        "sha256": "869fdd0e8756cd95808467718374f12e4a124f2673d4ee5e80477963047660be",
+        "bounds": [
+          [
+            -36.38828659057617,
+            -2.5957117080688477,
+            7.4966442212462425
+          ],
+          [
+            36.09209579229355,
+            2.5268960148096085,
+            26.263663843274117
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/weapons/g_machn/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 798991,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "98a2c927f49449188ff5035167886ec23fa3f7addff6d229cdad85706e444b93"
+      },
+      "texture_after": {
+        "path": "models/weapons/g_machn/skin_pickup.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 28478,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_weapons_g_machn.png",
+        "comparison_sha256": "b0e0cd2cff0b2de47cd119b38616a3f7b84a7f766cb273dfd97b4da91425d82d",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          1.0,
+          0.9776119402985075,
+          0.9156626506024096,
+          0.9787234042553191
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/weapons/g_rocket/tris.md2",
+      "classname": "weapon_rocketlauncher",
+      "sandbox_instances": 1,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 1999,
+        "position_vertices": 991,
+        "render_vertices": 1882,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_rocket/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 1082,
+        "gl_command_triangles": 2001,
+        "duplicate_gl_triangles": 2,
+        "unused_bytes_per_frame": 2973,
+        "file_bytes": 92937,
+        "sha256": "f2e30e42cb3ef91c353ebb8d175c38dbfef1c7d1df3a30ec784467c9535c05eb",
+        "bounds": [
+          [
+            -39.4134521484375,
+            -3.5495829582214355,
+            7.90424919128418
+          ],
+          [
+            39.37095031142235,
+            3.5881155356764793,
+            24.633252419531345
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 799,
+        "position_vertices": 391,
+        "render_vertices": 979,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_rocket/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 355,
+        "gl_command_triangles": 799,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 34664,
+        "sha256": "b017286485161299b2dda300bcd809fdfb0079874c5048fbe2975a2b8a1fc9bb",
+        "bounds": [
+          [
+            -39.4134521484375,
+            -3.3816371113061905,
+            8.03545705974102
+          ],
+          [
+            39.37095031142235,
+            3.5881155356764793,
+            24.502044551074505
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/weapons/g_rocket/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 520431,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "0853494ab3d11846e8fb0f915610615a0955cd5107d9d82cceb63bdad2f6cace"
+      },
+      "texture_after": {
+        "path": "models/weapons/g_rocket/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 18411,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "4d17e7d569fde30ff2b882cf21f1f2ee2b20be85fc291870e20c2df5caa551ae"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_weapons_g_rocket.png",
+        "comparison_sha256": "3ea359b8ed9dd7d1837b70b7dc10e5cca8662a44c0730f331af3f744cf76ed62",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9534883720930233,
+          0.9682539682539683,
+          0.9629629629629629,
+          0.9318181818181818
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/weapons/g_shotg/tris.md2",
+      "classname": "weapon_shotgun",
+      "sandbox_instances": 3,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 1999,
+        "position_vertices": 1000,
+        "render_vertices": 1632,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_shotg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 1017,
+        "gl_command_triangles": 1999,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 3000,
+        "file_bytes": 90156,
+        "sha256": "7c7751c94cfe9baa27cf6fb735f56dd88d7d1c47e6d0cdb553e68ffeaf6aa730",
+        "bounds": [
+          [
+            -29.13062858581543,
+            -1.6819970607757568,
+            10.787975311279297
+          ],
+          [
+            29.048558741807938,
+            1.7639435064047575,
+            21.554249197244644
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 799,
+        "position_vertices": 400,
+        "render_vertices": 832,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_shotg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 314,
+        "gl_command_triangles": 799,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 33004,
+        "sha256": "3c6d11b6e1374a1116079019a807b3f100b652eee8a89622ae7135d4f1db37a0",
+        "bounds": [
+          [
+            -29.13062858581543,
+            -1.6549700759351254,
+            10.787975311279297
+          ],
+          [
+            29.048558741807938,
+            1.6693490594625473,
+            21.554249197244644
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/weapons/g_shotg/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 372256,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "292ab2fb7c0c326963223bc77d86f8c112a8a2cfc85fd7dd42e17b5e7c7028fd"
+      },
+      "texture_after": {
+        "path": "models/weapons/g_shotg/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 24541,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "9acf93e0f9348dd7ce9810f8b5b8bd187cc978b8f73532ea00d6c948b889b062"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_weapons_g_shotg.png",
+        "comparison_sha256": "1c2cdabc9a5037077b9d6228dcfcdf05f1641d4bcca081d831c0f58d43e3c438",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.967741935483871,
+          1.0,
+          0.9821428571428571,
+          1.0
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    },
+    {
+      "model": "models/weapons/g_shotg2/tris.md2",
+      "classname": "weapon_supershotgun",
+      "sandbox_instances": 1,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 2000,
+        "position_vertices": 997,
+        "render_vertices": 1855,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_shotg2/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 1005,
+        "gl_command_triangles": 2001,
+        "duplicate_gl_triangles": 1,
+        "unused_bytes_per_frame": 2991,
+        "file_bytes": 90727,
+        "sha256": "010ec7ffd4e20b385e4512db1d2255d46890478f1d53c01c2bacd29b55581bdb",
+        "bounds": [
+          [
+            -22.073017120361328,
+            -2.1118459701538086,
+            11.169374465942383
+          ],
+          [
+            21.985626310110092,
+            2.1400607991963625,
+            21.6593528278172
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 800,
+        "position_vertices": 397,
+        "render_vertices": 931,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_shotg2/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 333,
+        "gl_command_triangles": 800,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 33968,
+        "sha256": "e4cd9e9ccdf05cf7197d8e9d5f982b1f647ed448cb390d7ba05f50a34d883e2d",
+        "bounds": [
+          [
+            -22.073017120361328,
+            -2.1118459701538086,
+            11.251648806035519
+          ],
+          [
+            21.985626310110092,
+            2.1233866550028324,
+            21.6593528278172
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/weapons/g_shotg2/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 837738,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "681f18af52b9a1fe0c8011cc23d48ab83f00199422098e5a8ecdc0d1abe74449"
+      },
+      "texture_after": {
+        "path": "models/weapons/g_shotg2/skin.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 25727,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "ac41a6b70574245fd2b3e2187d646c8c8510b6332e8666662b2d7af6cea3f312"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_weapons_g_shotg2.png",
+        "comparison_sha256": "8853fca0bc6ca0453ea578426d4d1b58ca5a758df8e72bb67636b007d01467ae",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          0.9791666666666666,
+          0.9788732394366197,
+          0.9534883720930233,
+          0.9802631578947368
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    }
+  ],
+  "source_archive": {
+    "path": "tools/assets/sources/pickups-local.pk3",
+    "sha256": "6c6dcc1d9a9a44aa666285a9add3ff439fc5561791e46529ef91b7ee5866bf37",
+    "origin": "Original owner-authored Plastic Platoon pickup models and textures"
+  },
+  "totals": {
+    "sandbox_instances": 92,
+    "triangles_before": 36064,
+    "triangles_after": 13094,
+    "instance_weighted_triangles_before": 211975,
+    "instance_weighted_triangles_after": 74769
+  },
+  "source_migration": "Original input hashes and runtime output hashes preserved; source lookup now uses the committed archive without private Git history."
+}

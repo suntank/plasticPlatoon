@@ -1,0 +1,6 @@
+[
+ {"name":"lights_left", "pose":[55,-390,24,3,108], "after_pose":[{"command":"noclip","wait":0.3},{"command":"noclip","wait":0.3}]},
+ {"name":"lights_right", "pose":[-55,-390,24,3,72], "after_pose":[{"command":"noclip","wait":0.3},{"command":"noclip","wait":0.3}]},
+ {"name":"muzzle_close", "pose":[12,-350,24,0,96]},
+ {"name":"deck_trim", "pose":[115,-105,56,12,226], "after_pose":[{"command":"noclip","wait":0.3},{"command":"noclip","wait":0.3}]}
+]

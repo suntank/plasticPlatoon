@@ -1,0 +1,995 @@
+{
+  "schema": 1,
+  "source": "Audited local runtime art and sound.zip",
+  "original_sound_archive": {
+    "path": "tools/assets/sources/player-sounds.zip",
+    "sha256": "2bea06c212681a0b59b22b16e34e50298bbc4035c669cc5726b0cbbca2f4e2b1"
+  },
+  "files": [
+    {
+      "path": "pics/a_bullets.png",
+      "source_sha256": "e4e32433003d36078521f471f1d3158297d6d65c0c2815e9ef788d0696f76a94",
+      "sha256": "e4e32433003d36078521f471f1d3158297d6d65c0c2815e9ef788d0696f76a94",
+      "bytes": 1881,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/a_cells.png",
+      "source_sha256": "fb9c7f22d845a6e1b27980cc2ad416890786d7eff330e0a56de64516223773a6",
+      "sha256": "fb9c7f22d845a6e1b27980cc2ad416890786d7eff330e0a56de64516223773a6",
+      "bytes": 2288,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/a_gl_rounds.png",
+      "source_sha256": "8f1475a4a016c037ca5aaa20933a32dd4787eb6c8f342dd354e81c4e215cda1a",
+      "sha256": "8f1475a4a016c037ca5aaa20933a32dd4787eb6c8f342dd354e81c4e215cda1a",
+      "bytes": 2031,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/a_grenades.png",
+      "source_sha256": "f599fa2f3859c8c21b1d2d86972d4845a5161e18af4b69b1ade61a06cb4198cf",
+      "sha256": "f599fa2f3859c8c21b1d2d86972d4845a5161e18af4b69b1ade61a06cb4198cf",
+      "bytes": 2226,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/a_mortar.png",
+      "source_sha256": "7ed256b10230cf69adf8861a594dfb8d57669c31b16982231037de002ee38740",
+      "sha256": "7ed256b10230cf69adf8861a594dfb8d57669c31b16982231037de002ee38740",
+      "bytes": 1950,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/a_rockets.png",
+      "source_sha256": "c41e2c92c29dd6b5e237250b18e25998dfcff951e20b69f16e574856c2d8299e",
+      "sha256": "c41e2c92c29dd6b5e237250b18e25998dfcff951e20b69f16e574856c2d8299e",
+      "bytes": 1786,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/a_shells.png",
+      "source_sha256": "f9c61dd01532de38465392c5756dfac2001cd3fa90459dd5ff37776b2c026d0f",
+      "sha256": "f9c61dd01532de38465392c5756dfac2001cd3fa90459dd5ff37776b2c026d0f",
+      "bytes": 1907,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/a_slugs.png",
+      "source_sha256": "4e3db0ef73e30464be40dea25edcdfaa0a14d883641bf153f0c0ab1b4f6aa3a2",
+      "sha256": "4e3db0ef73e30464be40dea25edcdfaa0a14d883641bf153f0c0ab1b4f6aa3a2",
+      "bytes": 1992,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/ads_blaster.png",
+      "source_sha256": "8e95959ecb6367a0b3348dfc9708529f78b21597c88672936b5b6d479a99d29e",
+      "sha256": "8e95959ecb6367a0b3348dfc9708529f78b21597c88672936b5b6d479a99d29e",
+      "bytes": 374229,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/ads_chaingun.png",
+      "source_sha256": "0b2040606f2c62b083c2c97fc087484411ecefeaed29b3f8dfa689edbf584e51",
+      "sha256": "0b2040606f2c62b083c2c97fc087484411ecefeaed29b3f8dfa689edbf584e51",
+      "bytes": 450772,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/ads_grenadelauncher.png",
+      "source_sha256": "979aabc9b7589107b808ed6e4defee3fa955058ab1f1b8371c1dae5d945c92b1",
+      "sha256": "979aabc9b7589107b808ed6e4defee3fa955058ab1f1b8371c1dae5d945c92b1",
+      "bytes": 159353,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/ads_handgrenade.png",
+      "source_sha256": "48cdf7f518d54242e2085e58854919bc79c28ad59186297b202cc2fc05bc365d",
+      "sha256": "48cdf7f518d54242e2085e58854919bc79c28ad59186297b202cc2fc05bc365d",
+      "bytes": 110533,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/ads_hyperblaster.png",
+      "source_sha256": "480ec9c71beac8351d382c2f0623da3c5be25b18641df83507ac439c97ea40e8",
+      "sha256": "480ec9c71beac8351d382c2f0623da3c5be25b18641df83507ac439c97ea40e8",
+      "bytes": 312347,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/ads_machinegun.png",
+      "source_sha256": "e36c24911a233d38adefd60c752d9d1e3b21ca0439687189121090fb826e06f0",
+      "sha256": "e36c24911a233d38adefd60c752d9d1e3b21ca0439687189121090fb826e06f0",
+      "bytes": 444898,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/ads_mortar.png",
+      "source_sha256": "e73807eb3a8903df407475b624a91f50ff0174f13961b9f270256829b93432f1",
+      "sha256": "e73807eb3a8903df407475b624a91f50ff0174f13961b9f270256829b93432f1",
+      "bytes": 167544,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/ads_railgun.png",
+      "source_sha256": "da1234ec05be97f580e2a1618a25a7c9fd1a4221d39f48979227b3cfc84dec5d",
+      "sha256": "da1234ec05be97f580e2a1618a25a7c9fd1a4221d39f48979227b3cfc84dec5d",
+      "bytes": 53930,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/ads_rocketlauncher.png",
+      "source_sha256": "20770accf58c44a43c298745c075ac8b1acc5842ec2fad8935d478a3383cc0be",
+      "sha256": "20770accf58c44a43c298745c075ac8b1acc5842ec2fad8935d478a3383cc0be",
+      "bytes": 162597,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/ads_shotgun.png",
+      "source_sha256": "ca86d135b994249b98baede713948b24d1cb4d3eb93a9db38c2c717ae02b2766",
+      "sha256": "ca86d135b994249b98baede713948b24d1cb4d3eb93a9db38c2c717ae02b2766",
+      "bytes": 264269,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/ads_supershotgun.png",
+      "source_sha256": "10a2ab42b86f5f8a9dd7d55fede3a0b9b9863b1a3ab9663c5575760e4c54d884",
+      "sha256": "10a2ab42b86f5f8a9dd7d55fede3a0b9b9863b1a3ab9663c5575760e4c54d884",
+      "bytes": 164277,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/i_bodyarmor.png",
+      "source_sha256": "5ea9335ab2fa43eb157b451909d5f5d61846b15d9f6ddb93975d4bf09c115fdb",
+      "sha256": "5ea9335ab2fa43eb157b451909d5f5d61846b15d9f6ddb93975d4bf09c115fdb",
+      "bytes": 1457,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/i_combatarmor.png",
+      "source_sha256": "5ea9335ab2fa43eb157b451909d5f5d61846b15d9f6ddb93975d4bf09c115fdb",
+      "sha256": "5ea9335ab2fa43eb157b451909d5f5d61846b15d9f6ddb93975d4bf09c115fdb",
+      "bytes": 1457,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/i_health.png",
+      "source_sha256": "9734531b42592ce04fe7c9ddf8e1bd372f91ac06dde3efeb21073e0dfd7d25b6",
+      "sha256": "9734531b42592ce04fe7c9ddf8e1bd372f91ac06dde3efeb21073e0dfd7d25b6",
+      "bytes": 1386,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/i_jacketarmor.png",
+      "source_sha256": "5ea9335ab2fa43eb157b451909d5f5d61846b15d9f6ddb93975d4bf09c115fdb",
+      "sha256": "5ea9335ab2fa43eb157b451909d5f5d61846b15d9f6ddb93975d4bf09c115fdb",
+      "bytes": 1457,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/w_bfg.png",
+      "source_sha256": "2f92df317ac3960196fb299364b79115b196be0fba7b0dd085663b7aff4514a7",
+      "sha256": "2f92df317ac3960196fb299364b79115b196be0fba7b0dd085663b7aff4514a7",
+      "bytes": 2267,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/w_blaster.png",
+      "source_sha256": "c315751d4b2c7ee141e734617b6ff299aa4a2de5ba61640e84185439818092b8",
+      "sha256": "c315751d4b2c7ee141e734617b6ff299aa4a2de5ba61640e84185439818092b8",
+      "bytes": 2240,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/w_chaingun.png",
+      "source_sha256": "edfb8a22be23f62de150994bb810ebe785f41d2fcc8585a981585d8fed2d02fc",
+      "sha256": "edfb8a22be23f62de150994bb810ebe785f41d2fcc8585a981585d8fed2d02fc",
+      "bytes": 2303,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/w_glauncher.png",
+      "source_sha256": "d5a1544b580d23f36da7d9f3d97413d3802e1d307716ce159029f50cdb0b87b2",
+      "sha256": "d5a1544b580d23f36da7d9f3d97413d3802e1d307716ce159029f50cdb0b87b2",
+      "bytes": 2307,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/w_hyperblaster.png",
+      "source_sha256": "5467922668b4d2eb5f22d8a4567f7e9d80f504417ab54ec674b3174894d9a816",
+      "sha256": "5467922668b4d2eb5f22d8a4567f7e9d80f504417ab54ec674b3174894d9a816",
+      "bytes": 2345,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/w_machinegun.png",
+      "source_sha256": "ed8a9d30d7e544e19ce01ae3ae3e00b31fa2f3d784b2d28492905dce35d78c26",
+      "sha256": "ed8a9d30d7e544e19ce01ae3ae3e00b31fa2f3d784b2d28492905dce35d78c26",
+      "bytes": 2415,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/w_railgun.png",
+      "source_sha256": "e0cd43559db89a7a52cedafb61ac5ee47a8bebd5b711d4f6c855fda165208c4f",
+      "sha256": "e0cd43559db89a7a52cedafb61ac5ee47a8bebd5b711d4f6c855fda165208c4f",
+      "bytes": 2195,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/w_rlauncher.png",
+      "source_sha256": "c12178740d7caa5baa86406e9433b9e30ab80f4498b1d2d1284863a05444bfbd",
+      "sha256": "c12178740d7caa5baa86406e9433b9e30ab80f4498b1d2d1284863a05444bfbd",
+      "bytes": 2031,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/w_shotgun.png",
+      "source_sha256": "5274321309f5e7c1a385bbc66e37bbbf39198a9cbf72fa41c96ebeeca0568aba",
+      "sha256": "5274321309f5e7c1a385bbc66e37bbbf39198a9cbf72fa41c96ebeeca0568aba",
+      "bytes": 2127,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "pics/w_sshotgun.png",
+      "source_sha256": "33e7e850d8297506dd8d4e37bb576ed843aa3ad921cbf58e30ab3fcaa1af7199",
+      "sha256": "33e7e850d8297506dd8d4e37bb576ed843aa3ad921cbf58e30ab3fcaa1af7199",
+      "bytes": 2116,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "models/monsters/boss2/tris.md2",
+      "source_sha256": "8e455516c901e17753623d0b62fbbb50c56fbabbb0499f2befaea3b7dbfb14bd",
+      "sha256": "3c2435e7252fecaf6e3035905319608e1193f5172ebec659fc082cc4a71615d9",
+      "bytes": 125648,
+      "conversion": "Exporter skin slots repaired; all other model bytes unchanged"
+    },
+    {
+      "path": "models/monsters/boss2/propeller.md2",
+      "source_sha256": "eb2ed6801fd78d73d67e0218de8bc2b7614b9c86b9e5f6044653e23c53e2bcf4",
+      "sha256": "dd41fa090a6ec3d9cf1dbb83fb4d928bd25a08de5d432243e92cee4569b06cf1",
+      "bytes": 18468,
+      "conversion": "Exporter skin slots repaired; all other model bytes unchanged"
+    },
+    {
+      "path": "models/monsters/boss2/skin.png",
+      "source_sha256": "1bc8872e8eef65211a532869ade4936246536e6c781a59aea8d2f654097743e3",
+      "sha256": "1df8efd29169c05adf68817ddebbbbce6ea312b0d008f81797624a4baacb4552",
+      "bytes": 138375,
+      "conversion": "Lanczos resize to the 256-pixel world texture budget"
+    },
+    {
+      "path": "sound/bosshovr/BHVDETH1.wav",
+      "source_sha256": "919c5b62eb2dc2d467f74ce74caa0597e7e9eed242185dbe2aedde3ec8d622d8",
+      "sha256": "2095a82ec625181bdc4c5242ece5ecc9b0b6864f022f9821ed97381b693063b3",
+      "bytes": 328624,
+      "conversion": "Spatial mono PCM16; original sample rate and duration retained"
+    },
+    {
+      "path": "sound/bosshovr/BHVENGN1.wav",
+      "source_sha256": "3125a85a46c712750931e7ca8684f1e74c28eff8dc10a0f5ad76c4bfcd885868",
+      "sha256": "a726631eb11ee524ced929c491e4594ef9c48f4067281e90b5dca4036e39f696",
+      "bytes": 158444,
+      "conversion": "Spatial mono PCM16; original sample rate and duration retained"
+    },
+    {
+      "path": "sound/bosshovr/BHVPAIN1.wav",
+      "source_sha256": "9b4cbc6197d2498777ac96303fdf39662b7422b76d988ae61336df31ec5f9741",
+      "sha256": "ef58d508f3bf08a37819f9d96f5a6096306c9e354ee0c16bb1519a186a56681d",
+      "bytes": 210774,
+      "conversion": "Spatial mono PCM16; original sample rate and duration retained"
+    },
+    {
+      "path": "sound/bosshovr/BHVPAIN2.wav",
+      "source_sha256": "9b4cbc6197d2498777ac96303fdf39662b7422b76d988ae61336df31ec5f9741",
+      "sha256": "ef58d508f3bf08a37819f9d96f5a6096306c9e354ee0c16bb1519a186a56681d",
+      "bytes": 210774,
+      "conversion": "Spatial mono PCM16; original sample rate and duration retained"
+    },
+    {
+      "path": "sound/bosshovr/BHVPAIN3.wav",
+      "source_sha256": "9b4cbc6197d2498777ac96303fdf39662b7422b76d988ae61336df31ec5f9741",
+      "sha256": "ef58d508f3bf08a37819f9d96f5a6096306c9e354ee0c16bb1519a186a56681d",
+      "bytes": 210774,
+      "conversion": "Spatial mono PCM16; original sample rate and duration retained"
+    },
+    {
+      "path": "sound/bosshovr/BHVUNQV1.wav",
+      "source_sha256": "9cde735ef3672307a3d84f682ae2c30f81ac6668455d2af190f2de48f4fcd835",
+      "sha256": "aac67ef660786357591fefd2d2a8fb78e4d75ffa7cc3ceec972bc87b08adac7a",
+      "bytes": 430124,
+      "conversion": "Spatial mono PCM16; original sample rate and duration retained"
+    },
+    {
+      "path": "sound/misc/am_pkup.wav",
+      "source_sha256": "8191e6e1cf9eb867c1732e21e689d211fdb6ce570f52f14c2e8c932981ea8700",
+      "sha256": "8191e6e1cf9eb867c1732e21e689d211fdb6ce570f52f14c2e8c932981ea8700",
+      "bytes": 65678,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/misc/w_pkup.wav",
+      "source_sha256": "0116e27231a6fd5216e6f44b05bba3cac1e60f9efd90993e4c6afa25bbd5c69a",
+      "sha256": "0116e27231a6fd5216e6f44b05bba3cac1e60f9efd90993e4c6afa25bbd5c69a",
+      "bytes": 129858,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/burn1.wav",
+      "source_sha256": "96f43b1088b76d1e9265c422352862c6a378d557ae6c9f85999f827092863844",
+      "sha256": "96f43b1088b76d1e9265c422352862c6a378d557ae6c9f85999f827092863844",
+      "bytes": 192078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/burn2.wav",
+      "source_sha256": "96f43b1088b76d1e9265c422352862c6a378d557ae6c9f85999f827092863844",
+      "sha256": "96f43b1088b76d1e9265c422352862c6a378d557ae6c9f85999f827092863844",
+      "bytes": 192078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/drown1.wav",
+      "source_sha256": "2472cbed442fa4274c8c2ed7cd8c85d0ee5c8eaa8ba978955465bb8fa5b2b1dd",
+      "sha256": "2472cbed442fa4274c8c2ed7cd8c85d0ee5c8eaa8ba978955465bb8fa5b2b1dd",
+      "bytes": 384162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/fry.wav",
+      "source_sha256": "7cf4f69e3b2c9e0529e752de3da8c11177bc97272a03ac0bf2f23d1b5a7fa3c9",
+      "sha256": "7cf4f69e3b2c9e0529e752de3da8c11177bc97272a03ac0bf2f23d1b5a7fa3c9",
+      "bytes": 188282,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/gasp1.wav",
+      "source_sha256": "ec1de1ba5212c86054bef4eaa9af456281ede22f229028781928bed2218ebb78",
+      "sha256": "ec1de1ba5212c86054bef4eaa9af456281ede22f229028781928bed2218ebb78",
+      "bytes": 192162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/gasp2.wav",
+      "source_sha256": "16a3fd8d099c4b3a307999b84b88ed5e683dd91da1a9c0ba12bc58d467253ca6",
+      "sha256": "16a3fd8d099c4b3a307999b84b88ed5e683dd91da1a9c0ba12bc58d467253ca6",
+      "bytes": 192162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/land1.wav",
+      "source_sha256": "1f4160979ce6e17fff309a446c1dab5d67f94221d7d7de8aab320e82ea698874",
+      "sha256": "1f4160979ce6e17fff309a446c1dab5d67f94221d7d7de8aab320e82ea698874",
+      "bytes": 43034,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/lava1.wav",
+      "source_sha256": "96f43b1088b76d1e9265c422352862c6a378d557ae6c9f85999f827092863844",
+      "sha256": "96f43b1088b76d1e9265c422352862c6a378d557ae6c9f85999f827092863844",
+      "bytes": 192078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/lava2.wav",
+      "source_sha256": "a55272a5908fb408c96a36d39bda610a0b096bb9be16e9bbedb4f6ca71e04e5f",
+      "sha256": "a55272a5908fb408c96a36d39bda610a0b096bb9be16e9bbedb4f6ca71e04e5f",
+      "bytes": 121294,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/lava_in.wav",
+      "source_sha256": "541da4369c9ece912e7cf12b3c7602671d784fc480bbc5f6f1425d741bc531c2",
+      "sha256": "541da4369c9ece912e7cf12b3c7602671d784fc480bbc5f6f1425d741bc531c2",
+      "bytes": 192078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/bump1.wav",
+      "source_sha256": "09ba9954e4b733f70702de8c7a558709eb9bf616d42abd454177c4aad0a5f929",
+      "sha256": "09ba9954e4b733f70702de8c7a558709eb9bf616d42abd454177c4aad0a5f929",
+      "bytes": 115278,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/death1.wav",
+      "source_sha256": "f23cf3ea7d890ea8d09a81e4b6e995778e599714bbcc15c6f3e27e8aba029fa1",
+      "sha256": "f23cf3ea7d890ea8d09a81e4b6e995778e599714bbcc15c6f3e27e8aba029fa1",
+      "bytes": 360630,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/death2.wav",
+      "source_sha256": "049d6a99b49cf81d7ac19959a51dc1f44bac0306ba7230fbdea517b7968a0156",
+      "sha256": "049d6a99b49cf81d7ac19959a51dc1f44bac0306ba7230fbdea517b7968a0156",
+      "bytes": 324358,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/death3.wav",
+      "source_sha256": "65393361342d2e36df6dfad7a023cdde30185fd680218d8c28558ae06d442aa2",
+      "sha256": "65393361342d2e36df6dfad7a023cdde30185fd680218d8c28558ae06d442aa2",
+      "bytes": 224786,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/death4.wav",
+      "source_sha256": "11305f7efd7b6ad7892ff3f20f04316fa986d061e1e9a36c3ee96d681cacba66",
+      "sha256": "11305f7efd7b6ad7892ff3f20f04316fa986d061e1e9a36c3ee96d681cacba66",
+      "bytes": 108194,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/drown1.wav",
+      "source_sha256": "2472cbed442fa4274c8c2ed7cd8c85d0ee5c8eaa8ba978955465bb8fa5b2b1dd",
+      "sha256": "2472cbed442fa4274c8c2ed7cd8c85d0ee5c8eaa8ba978955465bb8fa5b2b1dd",
+      "bytes": 384162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/fall1.wav",
+      "source_sha256": "654fc50d75b9fcb8af12cc996ec41bc6371eec5bf537d8f3dd4e9f9e0fb1f364",
+      "sha256": "654fc50d75b9fcb8af12cc996ec41bc6371eec5bf537d8f3dd4e9f9e0fb1f364",
+      "bytes": 115278,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/fall2.wav",
+      "source_sha256": "3982c3cadc5e5a1060929591b41ee91d2fef5a49ff9358987885801f9b7076c1",
+      "sha256": "3982c3cadc5e5a1060929591b41ee91d2fef5a49ff9358987885801f9b7076c1",
+      "bytes": 115278,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/gurp1.wav",
+      "source_sha256": "d40262b55f01da139a224a7c6a73445264dfcbf0077feb868beb4d78ecf277e9",
+      "sha256": "d40262b55f01da139a224a7c6a73445264dfcbf0077feb868beb4d78ecf277e9",
+      "bytes": 115278,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/gurp2.wav",
+      "source_sha256": "c82a2ea1ffc95e4f91c779da55c7869580381a13e29988060802fd54dc3fd6d9",
+      "sha256": "c82a2ea1ffc95e4f91c779da55c7869580381a13e29988060802fd54dc3fd6d9",
+      "bytes": 115278,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/jump1.wav",
+      "source_sha256": "c6bdf45376d570f5f2da2201fd5450fb46a304307b77674c5a59a77ad74a1705",
+      "sha256": "c6bdf45376d570f5f2da2201fd5450fb46a304307b77674c5a59a77ad74a1705",
+      "bytes": 43034,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/pain100_1.wav",
+      "source_sha256": "e14c34494f699c76dd81a23adf824cac0f96b573ea020f54fa7c7d0e88f5dbf0",
+      "sha256": "e14c34494f699c76dd81a23adf824cac0f96b573ea020f54fa7c7d0e88f5dbf0",
+      "bytes": 111462,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/pain100_2.wav",
+      "source_sha256": "be3c62fd0eb374a44089f3807113501c0659da645c87b47a1cd9851d5a3623a5",
+      "sha256": "be3c62fd0eb374a44089f3807113501c0659da645c87b47a1cd9851d5a3623a5",
+      "bytes": 98002,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/pain25_1.wav",
+      "source_sha256": "168300f7e29d49d7979f220da5e3ba391467c4f66514989c70f9d508055f1db9",
+      "sha256": "168300f7e29d49d7979f220da5e3ba391467c4f66514989c70f9d508055f1db9",
+      "bytes": 128518,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/pain25_2.wav",
+      "source_sha256": "3a3136c0c84e62fe76900377cac2f839bcab2f13512f8af46d1bda7ac4967725",
+      "sha256": "3a3136c0c84e62fe76900377cac2f839bcab2f13512f8af46d1bda7ac4967725",
+      "bytes": 128518,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/pain50_1.wav",
+      "source_sha256": "ddd772343a549ca7e00c1212e005d02e2d4ef00c3205343767de5455c742aec1",
+      "sha256": "ddd772343a549ca7e00c1212e005d02e2d4ef00c3205343767de5455c742aec1",
+      "bytes": 108330,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/pain50_2.wav",
+      "source_sha256": "5ddd642c734aeffc9e2d6e498dcd4e8122c530a5b49b4f9fb50a1c065a7cc0c1",
+      "sha256": "5ddd642c734aeffc9e2d6e498dcd4e8122c530a5b49b4f9fb50a1c065a7cc0c1",
+      "bytes": 109266,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/pain75_1.wav",
+      "source_sha256": "6a400e238c25d52e45224ca2f1da6956dcd5f0b482664c21e0f55f0b115d2666",
+      "sha256": "6a400e238c25d52e45224ca2f1da6956dcd5f0b482664c21e0f55f0b115d2666",
+      "bytes": 118566,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/male/pain75_2.wav",
+      "source_sha256": "b660e0820922edca29d5b4dec69a84bc0d38b005a14d6a3c3f637dfb72ef84c0",
+      "sha256": "b660e0820922edca29d5b4dec69a84bc0d38b005a14d6a3c3f637dfb72ef84c0",
+      "bytes": 82526,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/step1.wav",
+      "source_sha256": "ced59c7075dcaae00b1e309ced691320f8e9b5f84c3d10308c51f7b9aa709041",
+      "sha256": "ced59c7075dcaae00b1e309ced691320f8e9b5f84c3d10308c51f7b9aa709041",
+      "bytes": 97814,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/step2.wav",
+      "source_sha256": "22045898df2c2e0798b34ea2989acb9b3598d870732b45e575578cdf0dab397d",
+      "sha256": "22045898df2c2e0798b34ea2989acb9b3598d870732b45e575578cdf0dab397d",
+      "bytes": 97814,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/step3.wav",
+      "source_sha256": "ee7ec6635fd95971f703b5c18adceb96cf0ad831faaf796c0dc19801b442df4d",
+      "sha256": "ee7ec6635fd95971f703b5c18adceb96cf0ad831faaf796c0dc19801b442df4d",
+      "bytes": 35726,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/step4.wav",
+      "source_sha256": "279fec0f2ec2ac4da16c258750cbeef9108e51d8ca3bdd116d5a96b7e9e1e383",
+      "sha256": "279fec0f2ec2ac4da16c258750cbeef9108e51d8ca3bdd116d5a96b7e9e1e383",
+      "bytes": 35726,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/watr_in.wav",
+      "source_sha256": "3ddee2343179f3926b221fce8e777d3f029399453023494c792704c5d4bdaffb",
+      "sha256": "3ddee2343179f3926b221fce8e777d3f029399453023494c792704c5d4bdaffb",
+      "bytes": 192078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/watr_out.wav",
+      "source_sha256": "38947ec782f32a4d8d1368465045825dbe46bbf0feff9fb0990f7abb59e3a0c9",
+      "sha256": "38947ec782f32a4d8d1368465045825dbe46bbf0feff9fb0990f7abb59e3a0c9",
+      "bytes": 192078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/player/watr_un.wav",
+      "source_sha256": "ebe1430a808b4eac6cad53d3a0c09b40d9c593cf002b718c83005e499fce8327",
+      "sha256": "ebe1430a808b4eac6cad53d3a0c09b40d9c593cf002b718c83005e499fce8327",
+      "bytes": 192078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/bfg__f1y.wav",
+      "source_sha256": "d086ac93d5b83c4eafa727573b8ae38f821eb28be8ac9bb26f2ae34b57973927",
+      "sha256": "d086ac93d5b83c4eafa727573b8ae38f821eb28be8ac9bb26f2ae34b57973927",
+      "bytes": 384078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/bfg_hum.wav",
+      "source_sha256": "83fc00e7ea4f593ea093ca69926e189b95ed224a1a27e5d442cf683b61b5b535",
+      "sha256": "83fc00e7ea4f593ea093ca69926e189b95ed224a1a27e5d442cf683b61b5b535",
+      "bytes": 10662,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/grenlb1b.wav",
+      "source_sha256": "16e7d64d0c621ab13f55cf6b07a455ebab141179f4f080a9bde8310f0bebb45a",
+      "sha256": "16e7d64d0c621ab13f55cf6b07a455ebab141179f4f080a9bde8310f0bebb45a",
+      "bytes": 192162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/grenlf1a.wav",
+      "source_sha256": "ce06a862f9f863a160b471d04c624801d81680afb221e4b69a8a6944a1456131",
+      "sha256": "ce06a862f9f863a160b471d04c624801d81680afb221e4b69a8a6944a1456131",
+      "bytes": 192162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/grenlr1b.wav",
+      "source_sha256": "83fc00e7ea4f593ea093ca69926e189b95ed224a1a27e5d442cf683b61b5b535",
+      "sha256": "83fc00e7ea4f593ea093ca69926e189b95ed224a1a27e5d442cf683b61b5b535",
+      "bytes": 10662,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/grenlx1a.wav",
+      "source_sha256": "8b9d4d0cb1ec912f8349a754d2135f394e9c27df1a5dd422851ac2c81e1f397a",
+      "sha256": "8b9d4d0cb1ec912f8349a754d2135f394e9c27df1a5dd422851ac2c81e1f397a",
+      "bytes": 384162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/hgrena1b.wav",
+      "source_sha256": "fd961ec0bedd51cd79c9123f9744f7484faf25c1173db0e81a95630522069f63",
+      "sha256": "fd961ec0bedd51cd79c9123f9744f7484faf25c1173db0e81a95630522069f63",
+      "bytes": 147726,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/hgrenb1a.wav",
+      "source_sha256": "47a0197911877f4d5d9623adc38e017db3b4b048af82ace67677b7e143ace029",
+      "sha256": "47a0197911877f4d5d9623adc38e017db3b4b048af82ace67677b7e143ace029",
+      "bytes": 68618,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/hgrenb2a.wav",
+      "source_sha256": "f9122503354a96c94f06a1d58b874a7d5f060b8274a66f8d3f0236263f0ffcc6",
+      "sha256": "f9122503354a96c94f06a1d58b874a7d5f060b8274a66f8d3f0236263f0ffcc6",
+      "bytes": 56050,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/hgrenc1b.wav",
+      "source_sha256": "83fc00e7ea4f593ea093ca69926e189b95ed224a1a27e5d442cf683b61b5b535",
+      "sha256": "83fc00e7ea4f593ea093ca69926e189b95ed224a1a27e5d442cf683b61b5b535",
+      "bytes": 10662,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/hgrent1a.wav",
+      "source_sha256": "fd1d2767deb12a5e2f93911ed1146058cd348340a97c30ba1e144284dd95a94d",
+      "sha256": "fd1d2767deb12a5e2f93911ed1146058cd348340a97c30ba1e144284dd95a94d",
+      "bytes": 192078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/hyprbf1a.wav",
+      "source_sha256": "422f0a2149c24dff9db21eb8a68bf169a6e81712248c6022af7c006c865fdadb",
+      "sha256": "422f0a2149c24dff9db21eb8a68bf169a6e81712248c6022af7c006c865fdadb",
+      "bytes": 192078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/m601.wav",
+      "source_sha256": "7b3595af19967991f0a3d72d12c93dd35b273b188ac0d7e866f955eac170edd3",
+      "sha256": "7b3595af19967991f0a3d72d12c93dd35b273b188ac0d7e866f955eac170edd3",
+      "bytes": 20818,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/m602.wav",
+      "source_sha256": "e19eb3bc45c20f119b94e3e1c8831069b787a8e9f2149e3f3c9b0267e0e391b8",
+      "sha256": "e19eb3bc45c20f119b94e3e1c8831069b787a8e9f2149e3f3c9b0267e0e391b8",
+      "bytes": 20818,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/m603.wav",
+      "source_sha256": "eda0ade819a2215cf1b3e88102eb9bf74b4af7a63e9931ce9c1cd177ff31e69c",
+      "sha256": "eda0ade819a2215cf1b3e88102eb9bf74b4af7a63e9931ce9c1cd177ff31e69c",
+      "bytes": 20818,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/m604.wav",
+      "source_sha256": "8890c5da5336c9d76238b9b030c6f0a378822adc1eb4280ab08bd601ba521569",
+      "sha256": "8890c5da5336c9d76238b9b030c6f0a378822adc1eb4280ab08bd601ba521569",
+      "bytes": 20818,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/m605.wav",
+      "source_sha256": "92c2faa238df9fe1fe595eb437c21f9c0dd2057b14a06d70b16e4616474db276",
+      "sha256": "92c2faa238df9fe1fe595eb437c21f9c0dd2057b14a06d70b16e4616474db276",
+      "bytes": 20818,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/m60end.wav",
+      "source_sha256": "329a147c837b01753432ee25126f9483c1d6df4d9e1a3204744b7da08af1fdec",
+      "sha256": "329a147c837b01753432ee25126f9483c1d6df4d9e1a3204744b7da08af1fdec",
+      "bytes": 283842,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/machgf1b.wav",
+      "source_sha256": "df28e662058972ea26ef67ffbd6207584473c933656cf7dec57e47d3af3be345",
+      "sha256": "df28e662058972ea26ef67ffbd6207584473c933656cf7dec57e47d3af3be345",
+      "bytes": 192078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/machgf2b.wav",
+      "source_sha256": "27fafeb4ddce1cab2eb6bf32da9e4b030f7dbd204e45e7cbb527d48d480ff9bf",
+      "sha256": "27fafeb4ddce1cab2eb6bf32da9e4b030f7dbd204e45e7cbb527d48d480ff9bf",
+      "bytes": 192162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/machgf3b.wav",
+      "source_sha256": "887c18e477b644a9f1c122365c1a2761aea5f0dadcfe9441bd8a5a60f05f15e2",
+      "sha256": "887c18e477b644a9f1c122365c1a2761aea5f0dadcfe9441bd8a5a60f05f15e2",
+      "bytes": 192162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/machgf4b.wav",
+      "source_sha256": "b736ff38c6140d50f6c77b5c0dae383777a4d8c011284a6d700fdd35ba2ebe62",
+      "sha256": "b736ff38c6140d50f6c77b5c0dae383777a4d8c011284a6d700fdd35ba2ebe62",
+      "bytes": 192162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/machgf5b.wav",
+      "source_sha256": "7838b45873b76e824b30c8058052c3280a98e7347c16f9ac930281f740e24e99",
+      "sha256": "7838b45873b76e824b30c8058052c3280a98e7347c16f9ac930281f740e24e99",
+      "bytes": 192162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/mortar_explode.wav",
+      "source_sha256": "3c422fea6911e48ece0bd57b5be185e1b4c90cdd028d738c33e122ee4da60759",
+      "sha256": "3c422fea6911e48ece0bd57b5be185e1b4c90cdd028d738c33e122ee4da60759",
+      "bytes": 384078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/noammo.wav",
+      "source_sha256": "b72d5602e6912b822431477586890b0282d1bf9eb24c498fe930fab9cef0e151",
+      "sha256": "b72d5602e6912b822431477586890b0282d1bf9eb24c498fe930fab9cef0e151",
+      "bytes": 38222,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/pistol1.wav",
+      "source_sha256": "b74863a15283e9832fbc31914828c19412f40a8ff38c3e6bcc4488dc299491d0",
+      "sha256": "b74863a15283e9832fbc31914828c19412f40a8ff38c3e6bcc4488dc299491d0",
+      "bytes": 192162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/pistol2.wav",
+      "source_sha256": "347599d1d4642646bad5eec611dd42ea26033b4a479e9c732b9d485b72e9270e",
+      "sha256": "347599d1d4642646bad5eec611dd42ea26033b4a479e9c732b9d485b72e9270e",
+      "bytes": 192162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/pistol3.wav",
+      "source_sha256": "cbec4cd117396cbf241595e48ab4179506e959dee133f0886ea35ecdedbe7137",
+      "sha256": "cbec4cd117396cbf241595e48ab4179506e959dee133f0886ea35ecdedbe7137",
+      "bytes": 192162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/pistol4.wav",
+      "source_sha256": "ef4bcb0583d568cdd009c414d845b9c7cb685c7d8420d0735a03e78fb369b8fc",
+      "sha256": "ef4bcb0583d568cdd009c414d845b9c7cb685c7d8420d0735a03e78fb369b8fc",
+      "bytes": 192162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/railgf1a.wav",
+      "source_sha256": "380488bc2a8623dfbdb7f7a8a64b8b4a137736daabe52b6a5194a099d172e2e0",
+      "sha256": "380488bc2a8623dfbdb7f7a8a64b8b4a137736daabe52b6a5194a099d172e2e0",
+      "bytes": 192078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/rg_hum.wav",
+      "source_sha256": "83fc00e7ea4f593ea093ca69926e189b95ed224a1a27e5d442cf683b61b5b535",
+      "sha256": "83fc00e7ea4f593ea093ca69926e189b95ed224a1a27e5d442cf683b61b5b535",
+      "bytes": 10662,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/rocklf1a.wav",
+      "source_sha256": "b859e2dd503084be251bc16a58ecd1c664926441779a003961a4ba6750d3d6eb",
+      "sha256": "b859e2dd503084be251bc16a58ecd1c664926441779a003961a4ba6750d3d6eb",
+      "bytes": 384078,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/rocklr1b.wav",
+      "source_sha256": "83fc00e7ea4f593ea093ca69926e189b95ed224a1a27e5d442cf683b61b5b535",
+      "sha256": "83fc00e7ea4f593ea093ca69926e189b95ed224a1a27e5d442cf683b61b5b535",
+      "bytes": 10662,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/rocklx1a.wav",
+      "source_sha256": "c0d560c1fb73e03d09332af15af330d95a7caa10b52d000ed540423795a154ef",
+      "sha256": "1146e38ad2629b3fb69691f82a9471a033704395c0d5e928fcefbd1efeab5e51",
+      "bytes": 192044,
+      "conversion": "Previously approved spatial mono conversion retained"
+    },
+    {
+      "path": "sound/weapons/shotgf1b.wav",
+      "source_sha256": "0c892357ec479911c57c3ebb4c6822d52c78aaa3ef66e82f5a96b9d201378276",
+      "sha256": "0c892357ec479911c57c3ebb4c6822d52c78aaa3ef66e82f5a96b9d201378276",
+      "bytes": 172142,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/shotgr1b.wav",
+      "source_sha256": "83fc00e7ea4f593ea093ca69926e189b95ed224a1a27e5d442cf683b61b5b535",
+      "sha256": "83fc00e7ea4f593ea093ca69926e189b95ed224a1a27e5d442cf683b61b5b535",
+      "bytes": 10662,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/sshotf1b.wav",
+      "source_sha256": "fb1eca30dd653b0fa6c1d8c318c89fead24fa601996526b76f1f7cf99d26329e",
+      "sha256": "fb1eca30dd653b0fa6c1d8c318c89fead24fa601996526b76f1f7cf99d26329e",
+      "bytes": 172142,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/sshotr1b.wav",
+      "source_sha256": "20fceb7d2188c7c61aa6b4e8fdbfcaf110157587d287d210c5d9c3f6dffb4723",
+      "sha256": "20fceb7d2188c7c61aa6b4e8fdbfcaf110157587d287d210c5d9c3f6dffb4723",
+      "bytes": 82778,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "sound/weapons/xpld_wat.wav",
+      "source_sha256": "c68257197b022c5465cd81b6bd263b7418d8de5d5a11a8329f861d7cd636d49c",
+      "sha256": "c68257197b022c5465cd81b6bd263b7418d8de5d5a11a8329f861d7cd636d49c",
+      "bytes": 384162,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "maps/pp_sandbox1.bsp",
+      "source_sha256": "16e38d368ec1f15e084157642d96044db353ee16a92bfe3a5ea6d07c654b64a1",
+      "sha256": "16e38d368ec1f15e084157642d96044db353ee16a92bfe3a5ea6d07c654b64a1",
+      "bytes": 1203516,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "maps/pp_sandbox2.bsp",
+      "source_sha256": "7872f29de213c31b51f34103e569eeedeed79ab80aac167683a72594741775e8",
+      "sha256": "7872f29de213c31b51f34103e569eeedeed79ab80aac167683a72594741775e8",
+      "bytes": 2993136,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "maps/pp_sandbox_coop1.bsp",
+      "source_sha256": "c8a4da356e722d55cb06502bfc72d80a4d4309038241b5265b6ac239130fae8a",
+      "sha256": "c8a4da356e722d55cb06502bfc72d80a4d4309038241b5265b6ac239130fae8a",
+      "bytes": 2107552,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "textures/sandbox/abc_block_a.png",
+      "source_sha256": "4ed8a8752e566318f62cb7437ed86783ec792115fe3b30430cf32616b277c453",
+      "sha256": "4ed8a8752e566318f62cb7437ed86783ec792115fe3b30430cf32616b277c453",
+      "bytes": 126207,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "textures/sandbox/abc_block_b.png",
+      "source_sha256": "f84292c7436d55756ca32af77c1880f2910c54f997725272e9cb233f4ec7c25b",
+      "sha256": "f84292c7436d55756ca32af77c1880f2910c54f997725272e9cb233f4ec7c25b",
+      "bytes": 126273,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "textures/sandbox/abc_block_c.png",
+      "source_sha256": "28c401a6fe0cfd5d68afbe6ca03a9c230acbba58eb803462b756d566ca533808",
+      "sha256": "28c401a6fe0cfd5d68afbe6ca03a9c230acbba58eb803462b756d566ca533808",
+      "bytes": 123311,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "textures/sandbox/abc_block_d.png",
+      "source_sha256": "b0d8d676fa2c2805de43733224233f8184b70d9d3ec97ca45c5a1569fc71b524",
+      "sha256": "b0d8d676fa2c2805de43733224233f8184b70d9d3ec97ca45c5a1569fc71b524",
+      "bytes": 116890,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "textures/sandbox/abc_block_e.png",
+      "source_sha256": "56822d3aea727c719e6010c6cb6465f22df6ba88b40105ce17e070b38e54e00a",
+      "sha256": "56822d3aea727c719e6010c6cb6465f22df6ba88b40105ce17e070b38e54e00a",
+      "bytes": 116400,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "textures/sandbox/abc_block_f.png",
+      "source_sha256": "6f49ca33abd1b6b91dd6665de57fc420243a9b0e7d598154f4974fc48fad7176",
+      "sha256": "6f49ca33abd1b6b91dd6665de57fc420243a9b0e7d598154f4974fc48fad7176",
+      "bytes": 114222,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "textures/sandbox/bluesky1.png",
+      "source_sha256": "029d10538294b4be0234773ff80e75b396e5a6711ecab66814a676c1786f9ece",
+      "sha256": "029d10538294b4be0234773ff80e75b396e5a6711ecab66814a676c1786f9ece",
+      "bytes": 157,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "textures/sandbox/plastic1.png",
+      "source_sha256": "ade35ec472a821cba6d41c47c7189c94164b862cbfef97d812338fb1192ec256",
+      "sha256": "ade35ec472a821cba6d41c47c7189c94164b862cbfef97d812338fb1192ec256",
+      "bytes": 573818,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "textures/sandbox/sand1.tga",
+      "source_sha256": "7a7024ce43f63e371849c0cff563e6e0cf9b16d01ea4c27e9072d09d54b65ff1",
+      "sha256": "7a7024ce43f63e371849c0cff563e6e0cf9b16d01ea4c27e9072d09d54b65ff1",
+      "bytes": 197405,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "textures/sandbox/water1.png",
+      "source_sha256": "f08710e30ec3ab2f3c141e6e4c270830a24ac76b3cf857bf3dab6956087b1c8a",
+      "sha256": "f08710e30ec3ab2f3c141e6e4c270830a24ac76b3cf857bf3dab6956087b1c8a",
+      "bytes": 538517,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "textures/sandbox/wood1.tga",
+      "source_sha256": "d675b6f1fb26b208c167dbd19f8719791721765613a974ae6b343ef8afdea03f",
+      "sha256": "d675b6f1fb26b208c167dbd19f8719791721765613a974ae6b343ef8afdea03f",
+      "bytes": 778494,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "textures/sandbox/wood2.png",
+      "source_sha256": "f0499c06ea0a9c7401f62b16d5ca6cde7717b7a82545c4e7c8b44c9d7d57b3eb",
+      "sha256": "f0499c06ea0a9c7401f62b16d5ca6cde7717b7a82545c4e7c8b44c9d7d57b3eb",
+      "bytes": 401133,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "env/bluesky1bk.png",
+      "source_sha256": "259ca0929da9125cf7f31536805f4d1ea62830ba669b1623bb4700473eed8dce",
+      "sha256": "259ca0929da9125cf7f31536805f4d1ea62830ba669b1623bb4700473eed8dce",
+      "bytes": 166864,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "env/bluesky1dn.png",
+      "source_sha256": "adb04c81c42db4e7ec209e1ff3cf57777da136accbadd4aad4c47d2cf8a77f99",
+      "sha256": "adb04c81c42db4e7ec209e1ff3cf57777da136accbadd4aad4c47d2cf8a77f99",
+      "bytes": 155447,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "env/bluesky1ft.png",
+      "source_sha256": "d8307664a0fae16a93ff1283d553fd80c16cf923ce835215696e1b49947b620f",
+      "sha256": "d8307664a0fae16a93ff1283d553fd80c16cf923ce835215696e1b49947b620f",
+      "bytes": 179584,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "env/bluesky1lf.png",
+      "source_sha256": "6b71ae834c69448f8520c7dbe851627adaec6d1dd3d12efcc445ac3fa58e214b",
+      "sha256": "6b71ae834c69448f8520c7dbe851627adaec6d1dd3d12efcc445ac3fa58e214b",
+      "bytes": 150718,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "env/bluesky1rt.png",
+      "source_sha256": "ddfda2f353d1db0cecb8b2ae7f4bbe692c03e07033733bc2044797bbfc2e1339",
+      "sha256": "ddfda2f353d1db0cecb8b2ae7f4bbe692c03e07033733bc2044797bbfc2e1339",
+      "bytes": 181413,
+      "conversion": "unchanged bytes"
+    },
+    {
+      "path": "env/bluesky1up.png",
+      "source_sha256": "64ef8f14a8ed4ce68801a427ab2883b0b63c83cac150d316bc8d5a0f14a7a981",
+      "sha256": "64ef8f14a8ed4ce68801a427ab2883b0b63c83cac150d316bc8d5a0f14a7a981",
+      "bytes": 208875,
+      "conversion": "unchanged bytes"
+    }
+  ],
+  "excluded": [
+    "Editor/source PNG with ChatGPT filename",
+    "Unreferenced powerful_gun_firing source recording",
+    "Python conversion scripts and .bak files"
+  ]
+}

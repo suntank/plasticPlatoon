@@ -1,0 +1,711 @@
+{
+  "schema": 1,
+  "origin": "Owner-authored Plastic Platoon model and texture inputs retained in checked source archives",
+  "files": [
+    {
+      "path": "models/items/ammo/bullets/medium/skin.png",
+      "source_sha256": "948fc0b15b3cb5c3a0fa6b25f226afa3f2f87981ed5741c903b71550c5aa652e",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/items/ammo/bullets/medium/tris.md2",
+      "source_sha256": "acec81547616988f017a3494777702b2846c36e74167f103da58d8cee3ada6d2",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/items/ammo/cells/medium/skin.png",
+      "source_sha256": "4b31a1b5c61db2c86533549fa0499b050f2608b5f2292b63e2a278765db25280",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/items/ammo/cells/medium/tris.md2",
+      "source_sha256": "40159f235432d34da9e6beea05f6af9e6c0da9106b0da8caadcc982fa6daf3dc",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/items/ammo/gl_ammo/medium/skin.png",
+      "source_sha256": "8c135599a15bbcc49d245b4a284be454572f05bbf0850e68f90067ca3b33270d",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/items/ammo/gl_ammo/medium/tris.md2",
+      "source_sha256": "ac739c7d3bd20e4f98c4c701cdb6e4b4a35d001b4b9a7990cc9abe48656befc1",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/items/ammo/grenades/medium/skin.png",
+      "source_sha256": "7b22e631c9ecffc5a2b8785f4e6bedb44d06a3c99a2bf6c84d74408dc6ff980a",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/ammo/grenades/medium/tris.md2",
+      "source_sha256": "c6b775f241d37166a535bf522cd1691bfa9a24590b1f3bd2de0dbdf058e2ffde",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/ammo/rockets/medium/skin.png",
+      "source_sha256": "a3f4d15a94dbe15e4f0423a97bee8e398d369d23fccb44a87ffcfecf07c78fed",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/ammo/rockets/medium/tris.md2",
+      "source_sha256": "e9a774ab3c1c39227713ea826ebea3621b7ee52d49ea65375336e4a0a6279e0b",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/ammo/shells/medium/skin.png",
+      "source_sha256": "30ca6bc9149c8721195ac72f1f1640aabb4683fd28437a40b10c39cf0f857a95",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/items/ammo/shells/medium/tris.md2",
+      "source_sha256": "93367d01fe4ddde3e6ef0fd48f023656b4b2652d153cd5a9853d8a8924295045",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/items/ammo/slugs/medium/skin.png",
+      "source_sha256": "2f4697a064457f2aca2c0f178e81faa0a7f503b2fdd2e96aa07dbaa58e220da7",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/items/ammo/slugs/medium/tris.md2",
+      "source_sha256": "d3a8935200e89bab0d3325153c101b1e71bcb83018c4e36d2d8b341872b90946",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/items/armor/body/skin.png",
+      "source_sha256": "57cadc3f95eb30a1a53d3c6146427cf8121d857ddbaaaad35619d2e0d2acf873",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/armor/body/tris.md2",
+      "source_sha256": "6a8169292d9451b66925fb6a21d4b52c71eb4fcdf4a5ac2e5f46e00b0a785fd0",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/armor/combat/skin.png",
+      "source_sha256": "ab3a5d6595d79d9f62ff4f50e9d55c0ccf2d27c5d00f0d0d3813a48de5d5fef3",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/armor/combat/tris.md2",
+      "source_sha256": "06f26c23e71e9426c709293a0f3c652d4f5475c5ca3f5e404b0cfecd0a3ef1b2",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/armor/jacket/skin.png",
+      "source_sha256": "3e316fd2f6ad36b946384109c549fa9987a64468431e4a12dc7aa6f4babdb670",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/armor/jacket/tris.md2",
+      "source_sha256": "358670497bca2ce1830c7f2af3ff540225a7e4ca2a019a1b7b212bed4c34feec",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/armor/shard/skin.png",
+      "source_sha256": "65755fb1cd4f67bd068d5233f4796eaf8afd376190b4f91dc8b829fce2892221",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/armor/shard/tris.md2",
+      "source_sha256": "b3a8eceadaef73e7725ab0131b30b2d2f54fae491a5c0ca71b09947c22889a65",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/healing/large/skin.png",
+      "source_sha256": "6dcb45c3e6f59b0e4f0197fdcc36d68dcd664371dcc3a09b0804bcbbc5fefb51",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/healing/large/tris.md2",
+      "source_sha256": "702158ccb119aa8ef818c8d505af81fe25905312c8485700823b0eacaf023d7f",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/healing/medium/skin.png",
+      "source_sha256": "db99c7b8e055a7d9d7bf9a2c6a18c03d34921519f7c6bca265922ff45ccb643d",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/healing/medium/tris.md2",
+      "source_sha256": "969583bfaf611bca1060f77eda241d58f80e91b7fa56fc2edeadd9f6955c8166",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/healing/stimpack/skin.png",
+      "source_sha256": "e6d94324ad0028f0e8e427b8a5523223d7d64da66939eaf2263f744b200ea4d5",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/healing/stimpack/tris.md2",
+      "source_sha256": "bbfd4015f6d4e5e011f2f0614b805f3ea8ff3f3d71c29e1d4623b03241c5dbff",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/mega_h/skin.png",
+      "source_sha256": "0f31f298704f695c420a932d806206c120680469ae8f3c3cb0584faef62c4907",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/items/mega_h/tris.md2",
+      "source_sha256": "f9b16cf306b8b39cb1bb7ed4b72f4021e97ee2d2937d9d8e78d6fafdc3b6ac69",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/monsters/soldier/skin.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/monsters/soldier/tris.md2",
+      "source_sha256": "5dcb773edace70038f3f57e80b8c744ce728669588a223d5688783185e9d922e",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/monsters/soldier/weapon_blaster.md2",
+      "source_sha256": "d175d6912db2afca0d755bcb26835a5026945011e6fc001684e79baffa8a7a6d",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/monsters/soldier/weapon_machinegun.md2",
+      "source_sha256": "a80c9f9d49ff31e733b7ff49e9678fbeec2980a60c2253562a30eff369a77b08",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/monsters/soldier/weapon_shotgun.md2",
+      "source_sha256": "1c03a89b5ba7dc904e76cfc995b310b811e41dbf8b66a071e3d43081c89ee01f",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/barrels/skin.png",
+      "source_sha256": "5c54dceca5d53a5fb9ab0fb9cd755b9b0803472cdccd76b5f338e8976f4808b6",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/barrels/tris.md2",
+      "source_sha256": "2bdcc295ba958a1714ff222f493e688e623ecc6c472b70721454981719385733",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/arm/player.png",
+      "source_sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/arm/skin.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/arm/tris.md2",
+      "source_sha256": "b372895d8c19e8090ed23927a5f38bba2cfcb65f15f5fe9e9b25703ac4e4eb6f",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/bone/player.png",
+      "source_sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/bone/skin.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/bone/tris.md2",
+      "source_sha256": "aedbb1319d70095c4e38afa4e56b6052c1832624dbb5f4f36ed60772ce331880",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/bone2/player.png",
+      "source_sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/bone2/skin.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/bone2/tris.md2",
+      "source_sha256": "cd3d878a2bebc394ec0f6379642665c76966ead31438771d2ba6790e3031acdf",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/chest/player.png",
+      "source_sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/chest/skin.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/chest/tris.md2",
+      "source_sha256": "86a2ba3ed7b36c53cd62d969313c5f127359dc8e9bfbada11ab8922b3d26e65f",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/gear/player.png",
+      "source_sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/gear/skin.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/gear/tris.md2",
+      "source_sha256": "cd3d878a2bebc394ec0f6379642665c76966ead31438771d2ba6790e3031acdf",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/head/player.png",
+      "source_sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/head/skin.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/head/tris.md2",
+      "source_sha256": "99f7f83acbdc19af2f910e79290b789669390236ca15f7836b0a5b1e1902de8c",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/head2/player.png",
+      "source_sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/head2/skin.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/head2/tris.md2",
+      "source_sha256": "99f7f83acbdc19af2f910e79290b789669390236ca15f7836b0a5b1e1902de8c",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/leg/player.png",
+      "source_sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/leg/skin.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/leg/tris.md2",
+      "source_sha256": "bacdf51e355b4dbc5f7b57fd5ed362bcafa033c9677aaa464e68f36966892e16",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/skull/player.png",
+      "source_sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/skull/skin.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/skull/tris.md2",
+      "source_sha256": "99f7f83acbdc19af2f910e79290b789669390236ca15f7836b0a5b1e1902de8c",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/sm_meat/player.png",
+      "source_sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/sm_meat/skin.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/sm_meat/tris.md2",
+      "source_sha256": "0fa47c4cb1a8f90eda920064f21e76a8f5490e5574187af65ff519f6d191263d",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/sm_metal/player.png",
+      "source_sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/sm_metal/skin.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/gibs/sm_metal/tris.md2",
+      "source_sha256": "aedbb1319d70095c4e38afa4e56b6052c1832624dbb5f4f36ed60772ce331880",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/grenade/skin.png",
+      "source_sha256": "8c135599a15bbcc49d245b4a284be454572f05bbf0850e68f90067ca3b33270d",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/grenade/tris.md2",
+      "source_sha256": "d124979291fbb095a54bb7eaa27832bd1fe5958e9d999dcd9e072ef29eda5429",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/grenade2/skin.png",
+      "source_sha256": "41be4d86deb4029dd99cdefd86ec0d23adc6fe61633e6f5bd24fbfb2948886b3",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/grenade2/tris.md2",
+      "source_sha256": "8d1ec6ce262a5cb1c573d811ea35d84be2880d1c625b0b8d01fe2897e3f91b2e",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/objects/rocket/tris.md2",
+      "source_sha256": "13b8de981f1a60b1743b1d390f2a2243998f2fccbb05efd9bf4767cffccc8ec9",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/g_bfg/skin.png",
+      "source_sha256": "aecbb534c26bbd0694a50b9f35745c2fa9987aea55b2fb5623535cd3e0914d8d",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/g_bfg/tris.md2",
+      "source_sha256": "cf6fac8cbf9aad523c30668bf65c3cae41eaac42598bc553e49737b9c5e0ce66",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/g_chain/skin.png",
+      "source_sha256": "5b65010c02fe15350f5cebb87b0bd135b6ec45c53de6dadb0f91118cfa85c5c2",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/weapons/g_chain/tris.md2",
+      "source_sha256": "106d2b57be0757447abfc7b58e2091cdbc9417476fe294d39d9b28591c579e2e",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/weapons/g_hyperb/skin.png",
+      "source_sha256": "41cf33910d38cb000e2baa807e3391e9406fd3e7c25a8e7acfdc358a176f4911",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/g_hyperb/tris.md2",
+      "source_sha256": "b4189aee68e466eec7c53f2abe1c535531f386a11305706e4c6a54349be6c476",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/g_launch/skin.png",
+      "source_sha256": "5e128b08329c22172521ba8ef560ef57c15c1ff3655530c744747ab55526b5ce",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/weapons/g_launch/tris.md2",
+      "source_sha256": "cfd42238a364f242b42a995a18fb6ab57e5a81348037037b349a8854f57ace93",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/weapons/g_machn/skin.png",
+      "source_sha256": "98a2c927f49449188ff5035167886ec23fa3f7addff6d229cdad85706e444b93",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/g_machn/tris.md2",
+      "source_sha256": "100181847139211d3c5daedb00b30e6c0c313e72422c621b66dab8568c30a7a8",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/weapons/g_rail/skin.png",
+      "source_sha256": "fe53a12d628306fe04ef6ccbda802388a553d3c8f4a83631cabba4711eb0b9eb",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/g_rail/tris.md2",
+      "source_sha256": "4c709615202483e1e2e0a5a105ba20173fd05613e322c52656980514115066f9",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/g_rocket/skin.png",
+      "source_sha256": "0853494ab3d11846e8fb0f915610615a0955cd5107d9d82cceb63bdad2f6cace",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/weapons/g_rocket/tris.md2",
+      "source_sha256": "f2e30e42cb3ef91c353ebb8d175c38dbfef1c7d1df3a30ec784467c9535c05eb",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/weapons/g_shotg/skin.png",
+      "source_sha256": "292ab2fb7c0c326963223bc77d86f8c112a8a2cfc85fd7dd42e17b5e7c7028fd",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/weapons/g_shotg/tris.md2",
+      "source_sha256": "7c7751c94cfe9baa27cf6fb735f56dd88d7d1c47e6d0cdb553e68ffeaf6aa730",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/weapons/g_shotg2/skin.png",
+      "source_sha256": "681f18af52b9a1fe0c8011cc23d48ab83f00199422098e5a8ecdc0d1abe74449",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/weapons/g_shotg2/tris.md2",
+      "source_sha256": "010ec7ffd4e20b385e4512db1d2255d46890478f1d53c01c2bacd29b55581bdb",
+      "kept_prior_optimized_asset": true
+    },
+    {
+      "path": "models/weapons/v_bfg/skin.png",
+      "source_sha256": "aecbb534c26bbd0694a50b9f35745c2fa9987aea55b2fb5623535cd3e0914d8d",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_bfg/tris.md2",
+      "source_sha256": "d31f0e3a675e8062ffe0431b82528abba5316ca0db7513abba884211ee890cff",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_blast/skin.png",
+      "source_sha256": "0882c989819519e79409cb99ee6d74a65bc95a23bb4ea4b8f8c20657526b35d8",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_blast/tris.md2",
+      "source_sha256": "7287d40a90d689a9b40595e55ad644dee8e1a5320b9831c2212c3c5eadad71a7",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_chain/skin.png",
+      "source_sha256": "5b65010c02fe15350f5cebb87b0bd135b6ec45c53de6dadb0f91118cfa85c5c2",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_chain/tris.md2",
+      "source_sha256": "5a16b7e29e59fd9096fdc161fc35b5c2aa0b59152e6ee6ddc548f87df743adcc",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_hyperb/skin.png",
+      "source_sha256": "0f424e315b8e3e0334a1cb9b7a08a03fddde852c0bb4ee979195306d025b9ff8",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_hyperb/tris.md2",
+      "source_sha256": "6285f6513bb104eedf6aff3c385a41ccfbd6935b4783e0a53866548facd2d64d",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_launch/skin.png",
+      "source_sha256": "5e128b08329c22172521ba8ef560ef57c15c1ff3655530c744747ab55526b5ce",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_launch/tris.md2",
+      "source_sha256": "5b8f374de07dc147b26d76bf4184c1a7c74fe33b4396944a6de52f5c02ba70fe",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_machn/skin.png",
+      "source_sha256": "98a2c927f49449188ff5035167886ec23fa3f7addff6d229cdad85706e444b93",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_machn/tris.md2",
+      "source_sha256": "d73d8f0c4113899b5afe7786b9f67c050f0f20ffe920e10633c2132c5b2569bc",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_rail/skin.png",
+      "source_sha256": "fe53a12d628306fe04ef6ccbda802388a553d3c8f4a83631cabba4711eb0b9eb",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_rail/tris.md2",
+      "source_sha256": "4140aa8c68786da3b0cdfd050b4cb67e8338f084252a6acd52df3db761124e8c",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_rocket/skin.png",
+      "source_sha256": "0853494ab3d11846e8fb0f915610615a0955cd5107d9d82cceb63bdad2f6cace",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_rocket/tris.md2",
+      "source_sha256": "9bd6a4c39f5a3220a6195efe5ad470ed8bbcc4862f41f7406afa386e5140be8f",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_shotg/skin.png",
+      "source_sha256": "292ab2fb7c0c326963223bc77d86f8c112a8a2cfc85fd7dd42e17b5e7c7028fd",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_shotg/tris.md2",
+      "source_sha256": "650df9feef22956f9a38d7829f8711ec6750c38318869236ec26cccf9344c089",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_shotg2/skin.png",
+      "source_sha256": "681f18af52b9a1fe0c8011cc23d48ab83f00199422098e5a8ecdc0d1abe74449",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "models/weapons/v_shotg2/tris.md2",
+      "source_sha256": "3be57f8f989c32e52463b86aa013ddfbb73e351069150f42664ce5e1f6ab1f1f",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/blue.png",
+      "source_sha256": "a149df3dd1215c5d24584406d8a862164f75f1ebf4654c0c93af744df311669f",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/gray.png",
+      "source_sha256": "f97c9e4690cd7b83da6944d7f88f538a0436538f1023b4e920ad1bf269e6d97a",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/green.png",
+      "source_sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/orange.png",
+      "source_sha256": "6a681c75bb3f1a65d64abeaae7ba54230ca3a841e9dfc4742ab6e4fc8b26901f",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/pink.png",
+      "source_sha256": "0ee27f6d3875a431d9e918df2a13fb28fd93c5fece21a00c60d74a21a6b33e34",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/purple.png",
+      "source_sha256": "e1eaefd367d3099515be0ac466747c19af09342a7a69a2d97a2981ed57812717",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/red.png",
+      "source_sha256": "31678be3b59c5260c38d7f411d5d47e8ef642d122a651175576d32e5195d57f2",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/tan.png",
+      "source_sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/tris.md2",
+      "source_sha256": "dd754de5c6ab1baf6b15cfb2e7e3fabe5d581e27aa7dabc726f791be293022a7",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/tris_pistol.md2",
+      "source_sha256": "7dcbd2ae64d02bff7703f1f49206233424757f03bc87efce5a182bf9b954c1ca",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/w_bfg.md2",
+      "source_sha256": "7f58b6accf40a864d5c5d49813461c5225bed5f1643e671b35e0424484998a23",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/w_blaster.md2",
+      "source_sha256": "a32d11e1b648ab8fc4bcee704f7d8dba4b7d204c5f9508201cf441859fb8d509",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/w_chaingun.md2",
+      "source_sha256": "c50026e103b135d445a3aa3dfea9275697650c36df653ade6c61054a0f65d5c6",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/w_glauncher.md2",
+      "source_sha256": "90f1ed58ea009cbe4cf9b5ca37ed7172c151312d6ec3573cb5f1859933be261b",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/w_hyperblaster.md2",
+      "source_sha256": "7742a95495ed3db8699798671bf42b635f97cbb0a74df6472fd4964479bf3e9a",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/w_machinegun.md2",
+      "source_sha256": "7adf512370df5a728b279f655e1f3a0c62803b26d269a8012824190d770020b2",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/w_railgun.md2",
+      "source_sha256": "d0dd20709c355052ab30c17796175869e51d1a425914ad262f71fa4766334a16",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/w_rlauncher.md2",
+      "source_sha256": "1c76f16f3d72d05834d371e6b5a6674cb7ac00fe6c19384aefb377bcb70a02dd",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/w_shotgun.md2",
+      "source_sha256": "e95506f31633babdcc2261ec88feacbcb060652f2e1d1873df4e4a208acac591",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/w_sshotgun.md2",
+      "source_sha256": "df2d4138bb28fb3f0e30414822ef232a33acc34bc5240f68e0a56c4496f9d6ff",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/weapon.md2",
+      "source_sha256": "7adf512370df5a728b279f655e1f3a0c62803b26d269a8012824190d770020b2",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "players/soldier/white.png",
+      "source_sha256": "8138c5d785d5e492e37afa04a9315a753b3c5db76175e77665c8502f45931fab",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "sprites/explosion.png",
+      "source_sha256": "25149727dfc32837547a00be606ecc7f6027b736e4be86787a2c37efdf1d082a",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "sprites/flame.png",
+      "source_sha256": "25149727dfc32837547a00be606ecc7f6027b736e4be86787a2c37efdf1d082a",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "sprites/muzzleFlashCore.png",
+      "source_sha256": "83740dfa37707c88a7f3be4767e5a2fd3f406e019d28a7291301df1ea7b76b82",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "sprites/muzzleFlashFlare.png",
+      "source_sha256": "83740dfa37707c88a7f3be4767e5a2fd3f406e019d28a7291301df1ea7b76b82",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "sprites/muzzleFlashSmall.png",
+      "source_sha256": "83740dfa37707c88a7f3be4767e5a2fd3f406e019d28a7291301df1ea7b76b82",
+      "kept_prior_optimized_asset": false
+    },
+    {
+      "path": "sprites/smoke.png",
+      "source_sha256": "8f6e152c57e2f562e089e16c861bd243315e0acbac5ee928c7ce4c9d6fcabffe",
+      "kept_prior_optimized_asset": false
+    }
+  ]
+}

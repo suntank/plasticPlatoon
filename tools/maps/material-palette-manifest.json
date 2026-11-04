@@ -1,0 +1,1418 @@
+{
+  "schema": 1,
+  "generator": "tools/maps/reindex_materials.py",
+  "palette_source": "tools/assets/build_bootstrap.py",
+  "palette_sha256": "dc77cbae79b92a36d259d0d9db499b0bda2c0af8669e375c15d6ab3a74c1a535",
+  "preserved": "All truecolor artwork, BSP bytes and non-material archive members; WAL header metadata unchanged",
+  "loose_files": [
+    {
+      "path": "textures/bedroom/battery.wal",
+      "sha256": "f24e99a8da11f92f87c9f29db9791dfb9924402b017b3bfb02d1674820679eea",
+      "source": "textures/bedroom/battery.png",
+      "source_sha256": "b8f178c6c6ae91c8e9400c5db802ab95fdbd874aefe783df24ead45faa6fa8ad",
+      "header_sha256": "ab5f919122ce47ef522ca31941599ea871402fb32707aa8657afdc84fa05dfe2"
+    },
+    {
+      "path": "textures/bedroom/blue.wal",
+      "sha256": "90eb16a156a9324f1d40a4a69944947950cc773761e7bf245e54385c06b72465",
+      "source": "textures/bedroom/blue.png",
+      "source_sha256": "cef44a5e7d907571356b9fa6e076fb1bb89d232476a301169eb6baf24efe1e66",
+      "header_sha256": "c59d2d38147a47b2672164d3ac97038534d8c5e84d60e4ed64b60983935e6c17"
+    },
+    {
+      "path": "textures/bedroom/book.wal",
+      "sha256": "f18fba83206513bfc83df3f49c5bf33db205db84992244456e14d0ba459b9de0",
+      "source": "textures/bedroom/book.png",
+      "source_sha256": "35bf9330bd529f14a0f91b2bdafec7294330c3f7a3adc8013c4e8b79bcd09246",
+      "header_sha256": "79be3261da1a5916285ffac4e1c0433ac8011e218ceb061e497505490e5e3f7d"
+    },
+    {
+      "path": "textures/bedroom/briefing.wal",
+      "sha256": "8364085eac7c04dc8fd989c166518f59ab40b7f9f1368098300b8c8395d0a840",
+      "source": "textures/bedroom/briefing.png",
+      "source_sha256": "c26c641a93c5468efde5036b41e310152cba806bcc73fa0f984740a4cb8f9105",
+      "header_sha256": "be52a185405e03a31c37815d7424f9c94bf5045fa4c21c0ad639b9109119ac0a"
+    },
+    {
+      "path": "textures/bedroom/cardboard.wal",
+      "sha256": "c88cfc3af5e85e3fcfe24e3487e24fa253e3b379b0282bbdf6081cfb6093dcba",
+      "source": "textures/bedroom/cardboard.png",
+      "source_sha256": "f35404b717c17e9cac2b58acad6064ff819d81de046a597e98aad04abd253e6a",
+      "header_sha256": "e9543d19aa58668470896e0c3c970e10eabfa6f65f146967a9169f6343585ac7"
+    },
+    {
+      "path": "textures/bedroom/carpet.wal",
+      "sha256": "e1017dd58e1a60d13f2972736c932b1e3fd69eaf8063a45a3d7f0d1b06a6674c",
+      "source": "textures/bedroom/carpet.png",
+      "source_sha256": "7c9b51363b7dbf8db09d75a4f79ec9947e7de682afb37440be26e25f80ed4048",
+      "header_sha256": "4297f58d55e6ab2c077243fe77ecc50f073209ab4b0f6877ea5a110d9af34f80"
+    },
+    {
+      "path": "textures/bedroom/exit.wal",
+      "sha256": "d7fc496d5c2b9651ed2bb982c926c2c7bca3a5c928c5d75b76586606be1fa3c6",
+      "source": "textures/bedroom/exit.png",
+      "source_sha256": "688528ee8d8f1021655613a099586eaf62722c3766c8015a2245453b112b7b05",
+      "header_sha256": "1b0725eb1fbb25b1e988a6645158fb379eb45d7170471be9603f52e677ea0a15"
+    },
+    {
+      "path": "textures/bedroom/glow.wal",
+      "sha256": "abf22a06d653fa6e62bd23d02c6d5b5bc76f262ab344c906a9e26d9bf1a72948",
+      "source": "textures/bedroom/glow.png",
+      "source_sha256": "e25b496ba97138494855df848ff79a358422414496d1b12b0f4c542df4ce5e89",
+      "header_sha256": "3e683b99939836954bd849a69b766cc228abe2061c333df67e51b93651f9c033"
+    },
+    {
+      "path": "textures/bedroom/green.wal",
+      "sha256": "6eb9ffba83704172072bb8d3f1672b77309d78384df71b4a3b71e5a5b9f7b8ab",
+      "source": "textures/bedroom/green.png",
+      "source_sha256": "2a4740861b50010d00526c80d6afac8fa71008c5aeef5ea6777cca2d75c89acc",
+      "header_sha256": "13c136aa7b5300ed276f650cd8ce6557612fdfa8370e0ad4f31d98cbace8bad0"
+    },
+    {
+      "path": "textures/bedroom/helipad.wal",
+      "sha256": "184803caeac09fafc4b00df5f0742b89c09e9464a903417ee40db7b9b3c42b34",
+      "source": "textures/bedroom/helipad.png",
+      "source_sha256": "943e60fc1fdcdf9e6d2ee44420c0d9997b4b71fc49b502d70ae120ffb96a027c",
+      "header_sha256": "4e729d576e34e025c94dbe67ba59f2895580750d578d26eb0d0bb4c03e5132dd"
+    },
+    {
+      "path": "textures/bedroom/letter_a.wal",
+      "sha256": "274c6db1f30cccc7f5a2e8cae520f0b91fcf10b4810137056b44573bc2d80493",
+      "source": "textures/bedroom/letter_a.png",
+      "source_sha256": "13e40c50c7c13c5036b3522c7fa7fcf4d0813f7d5ab8333cc7b4c913f0d0c527",
+      "header_sha256": "be1ea0014b88777bc5df8f57484fe075813db58917b4a148eb3407920271a424"
+    },
+    {
+      "path": "textures/bedroom/letter_b.wal",
+      "sha256": "f903db2ee27d16d54476406ae0111870a9adeff183213e3ec6df6ea31f4185f4",
+      "source": "textures/bedroom/letter_b.png",
+      "source_sha256": "901f9c0ac7f1ba3a2e88b0b5b0e9e3634d1ce106188144e7ab85f8181f45279e",
+      "header_sha256": "46b9b6d20e19aaff0f58596ae6fb9779dbd11115a834aca45ce9bb8c63b6aa9e"
+    },
+    {
+      "path": "textures/bedroom/letter_c.wal",
+      "sha256": "07aa78517a3d79e7ec45e3ec1c9fc5e96b3bb982ed46d0413c979004b3ee9363",
+      "source": "textures/bedroom/letter_c.png",
+      "source_sha256": "936c3db49f03f4fb1b8bd222a39bb4724bf4d3ad22c819cb0c12d1019b792356",
+      "header_sha256": "e9b4696c7cc668417654f9c3985662fd295e8a0f092024bce17d63a4d1f062d3"
+    },
+    {
+      "path": "textures/bedroom/metal.wal",
+      "sha256": "e9955ce15ce45ab77df60b9de75cba20e96ecc94cc8c276dcafd2f842e7b20d4",
+      "source": "textures/bedroom/metal.png",
+      "source_sha256": "0553091dafb60edebc95a79069a30d076e3b208aa33c3c59fa573620dd60489b",
+      "header_sha256": "cb736135cccc9ed5ad0cb8cb054048c98eaa9b491a0052dd269dc1c054be5bad"
+    },
+    {
+      "path": "textures/bedroom/pages.wal",
+      "sha256": "b66bbf2a15f36eddd5bc0630c3cec593631a79b286b26f0e34dff1a6f97aabbd",
+      "source": "textures/bedroom/pages.png",
+      "source_sha256": "e9c2878d5fb7bbcfaa48ec97bcd15baf84755f1efd3b0ea38a745de1c8ccbbea",
+      "header_sha256": "40874c8f2c9efef5eaf709d0642f1b346fefad3ca425ed9e892d809722ece57d"
+    },
+    {
+      "path": "textures/bedroom/pillow.wal",
+      "sha256": "5472c9120a1b5726deea31bb1e678562ce974f86be1b74aeb0d72f455c6f8cdc",
+      "source": "textures/bedroom/pillow.png",
+      "source_sha256": "46bfa87045e2f4f372210f6021ad18bcb25b61770afcf572f3283c0e849c9b16",
+      "header_sha256": "702fbb046abcfd533388034cf2c309af567d9bd53a41f87ae72f1b5f7f9d5027"
+    },
+    {
+      "path": "textures/bedroom/quilt.wal",
+      "sha256": "dbffd70bfeec28daebe24c0adf0cf874757ef3d3a146d69fcc0041b7d95a2cb9",
+      "source": "textures/bedroom/quilt.png",
+      "source_sha256": "c0fe77a281344f32c3983596f74cdd4b14e52abaa2a6f0766df0f775c7203e7e",
+      "header_sha256": "d311421a72585fdc92d31de872eb7d31a0c19ed7429111307bc33306334c990d"
+    },
+    {
+      "path": "textures/bedroom/radio.wal",
+      "sha256": "d90edaa655d93f7cfc28b999266536d0b636531b6e5f8ba84b51baf2fe1d8a57",
+      "source": "textures/bedroom/radio.png",
+      "source_sha256": "d1816a8b41faa3bd108977d620e94a1df8d69e823517cce962dc6c7b97fb5357",
+      "header_sha256": "bbf5a2a468bb04de5886ea2acc3adc06bac8e30cec7461943bc3bc8270138066"
+    },
+    {
+      "path": "textures/bedroom/red.wal",
+      "sha256": "bcfb7ccddf8aea7cc62f5b79162e3508e62368691bc48e2e5ddef64bb0a0520b",
+      "source": "textures/bedroom/red.png",
+      "source_sha256": "2d370eb778cb1a69ac657b5ed762bfb5bdb3fad68a2c5be6942098a500251069",
+      "header_sha256": "b21eeb64fd8f8e9fea8e23fd0d5f82139aadba5700ae46948ae7752ec2e07162"
+    },
+    {
+      "path": "textures/bedroom/trim.wal",
+      "sha256": "6974e5f6ef49cfb6da294a49f61f0e39d76176cef3e904adede55346f9e592c4",
+      "source": "textures/bedroom/trim.png",
+      "source_sha256": "eb534594311e7251eea6dccf2a9dd34100ff96d222906d9b19171a1e7a5c0ef0",
+      "header_sha256": "e5d1ba64bae58b2dbbd77ff50c8574e0698be5235ae850cebf0127c370f6007a"
+    },
+    {
+      "path": "textures/bedroom/wall.wal",
+      "sha256": "fa7aa5b8efee560b37d26fb3e58ff2a67cf06b15eeec436b795228501495c478",
+      "source": "textures/bedroom/wall.png",
+      "source_sha256": "20fc4c0f290b2bba293b596031adacf8df415b31c4bfcffb1f3b3139470f8836",
+      "header_sha256": "35b48576a8310853e0bf32008ac3a97133107444ef0350b5777c597c039fc013"
+    },
+    {
+      "path": "textures/bedroom/window.wal",
+      "sha256": "2c8a706d3004b6e155c5db474104f2e057bed4c7365b7129106a0f3ada558965",
+      "source": "textures/bedroom/window.png",
+      "source_sha256": "39986f32fc3b47ce95744fdf15b74bec3893f66d06f3ce4069856aa78d8d25ae",
+      "header_sha256": "a8ddff78c5a9b7f8d766b19e067f343e29accf55438464556921b84883ddbdb6"
+    },
+    {
+      "path": "textures/bedroom/wood.wal",
+      "sha256": "9c46a64cf6d649b17d6debc0b671e9f035ff229c84e03c2b4a539bcb72c89539",
+      "source": "textures/bedroom/wood.png",
+      "source_sha256": "82da157bf7eb961c45066a930786daebf214137eefe974982b5416d5916ea80b",
+      "header_sha256": "8c027075457019f8d61eb70f9bde39a81f8a973cdb098d47a92c84e44a4a74c2"
+    },
+    {
+      "path": "textures/sandkeep/abc_a.wal",
+      "sha256": "28a57f82df0b96df18fad3d91363742713d7d9951eca4deab49d3c8f52b82707",
+      "source": "textures/sandkeep/abc_a.png",
+      "source_sha256": "4ed8a8752e566318f62cb7437ed86783ec792115fe3b30430cf32616b277c453",
+      "header_sha256": "5e72a29a8d6a2bbba21f67a6eff4dc7bbb15aced174802fc834ea6ec3e25abec"
+    },
+    {
+      "path": "textures/sandkeep/abc_b.wal",
+      "sha256": "938d2e0c3349998a1e3d9ca4d32c498131fcd3a33eb986470039e1bff7ceefb2",
+      "source": "textures/sandkeep/abc_b.png",
+      "source_sha256": "f84292c7436d55756ca32af77c1880f2910c54f997725272e9cb233f4ec7c25b",
+      "header_sha256": "93fdcf4d2e95bcd1acce20ea3b9c425932f1500cd5d91b234416d977b013d9d2"
+    },
+    {
+      "path": "textures/sandkeep/abc_c.wal",
+      "sha256": "bef09abe021ab118eb17be9cd54aa5a848206505264118969a0321ba82b05a3a",
+      "source": "textures/sandkeep/abc_c.png",
+      "source_sha256": "28c401a6fe0cfd5d68afbe6ca03a9c230acbba58eb803462b756d566ca533808",
+      "header_sha256": "2a1e6f6e0c174779bfec1ef201df1663771dec9f68f065992f515b35675b1965"
+    },
+    {
+      "path": "textures/sandkeep/abc_d.wal",
+      "sha256": "a8d0f7411e87abcd7a01e4980881caa97301809b9ea6704f428d2ad032c497ea",
+      "source": "textures/sandkeep/abc_d.png",
+      "source_sha256": "b0d8d676fa2c2805de43733224233f8184b70d9d3ec97ca45c5a1569fc71b524",
+      "header_sha256": "07f99af8fc43eef6b3ca0c8ab485d8ea1baacf7d940cbea4478c0542f470c290"
+    },
+    {
+      "path": "textures/sandkeep/abc_e.wal",
+      "sha256": "42afe6e113681d588663472186c1bfacb3bdf75aa377552d51b41af2c18e2924",
+      "source": "textures/sandkeep/abc_e.png",
+      "source_sha256": "56822d3aea727c719e6010c6cb6465f22df6ba88b40105ce17e070b38e54e00a",
+      "header_sha256": "8c6b33a002a0af7b1bf15a82376e4052f924bc955f9fe4428ff2a1d9d44c5ef1"
+    },
+    {
+      "path": "textures/sandkeep/abc_f.wal",
+      "sha256": "0c0af225a5580f8acb503131ce4ba4644e60c98a9c8e7a8206654c33bde3a822",
+      "source": "textures/sandkeep/abc_f.png",
+      "source_sha256": "6f49ca33abd1b6b91dd6665de57fc420243a9b0e7d598154f4974fc48fad7176",
+      "header_sha256": "9a4f437a5d69ae761d364ad606979216c1d67a2a0fe5c17a3d319aa760d1293a"
+    },
+    {
+      "path": "textures/sandkeep/gate_wood.wal",
+      "sha256": "e36960e2ecb2b5c4de98ecb81abf230168456861f06116c746d5196e677b84ff",
+      "source": "textures/sandkeep/gate_wood.png",
+      "source_sha256": "d7f79b026fa7279cb1327a629800d3b4e5afa961fc7ddf86269757ba78800570",
+      "header_sha256": "28a5dd1f006aef9395985d2a939953bd767ce0dc908da7dd988f1c69db62a14b"
+    },
+    {
+      "path": "textures/sandkeep/grass.wal",
+      "sha256": "421f35ed2dc28a5c3f3d2950a82fdfabe63b820af0d74f4dae47343291303b11",
+      "source": "textures/sandkeep/grass.png",
+      "source_sha256": "e38b0ccabb847c50dce417fad1b6920409d1a70e8f05f520af9fd17221d42af4",
+      "header_sha256": "775579f580866baac0d4268633bfafdbfd244f63f2948e10a62a023b8b2ffa92"
+    },
+    {
+      "path": "textures/sandkeep/helipad.wal",
+      "sha256": "e7bb646af11a4ac771ef1cca9564282790cdce7064e842e51f02668d34fc6dca",
+      "source": "textures/sandkeep/helipad.png",
+      "source_sha256": "15bbc40efbbd058f9883edb4a4aeba06fd9f6992040c3e397ed4ab3610f0a989",
+      "header_sha256": "8aeefdbf3bffd79662dfbc22c4d8b842a51845376e43651f5d043209d7fe656c"
+    },
+    {
+      "path": "textures/sandkeep/iron.wal",
+      "sha256": "fa19d02d1e884b74e8fb28893cc29aa44ec948c36ca5015545306056c89fe283",
+      "source": "textures/sandkeep/iron.png",
+      "source_sha256": "31a5c99ad170a5dbb5ca1a2949a50a25411fa8c09cbf42269e1623c979e0cea6",
+      "header_sha256": "a296fa5da03b26b652c613c87132f0eb812b57dc60636b848e51a4dbb3a14318"
+    },
+    {
+      "path": "textures/sandkeep/lamp.wal",
+      "sha256": "2afc46299be2d2b197c196770aa26fbd4e08e625f737ef4f753c2085f57cd6dd",
+      "source": "textures/sandkeep/lamp.png",
+      "source_sha256": "51d558c52e1e17fa85940a07544c4e79c978b3c87ffbb453b5a340500f30a913",
+      "header_sha256": "5468640f89c38ea00e1f3affceab13269e04c868924aaa8c83792607bc5c0de1"
+    },
+    {
+      "path": "textures/sandkeep/marker.wal",
+      "sha256": "1a5afde8d40c98d684f62823035dad3e847fb6b32110716fb26cb06ce406e305",
+      "source": "textures/sandkeep/marker.png",
+      "source_sha256": "bcf08b4d81566df5afad51eaff7dced0e586bc5aa0ffcba8caf2fba29d4cf998",
+      "header_sha256": "4f15aae5084f95f0eb465cbd5a91d3702b27705e9bd76abafe41ccda7007fa4f"
+    },
+    {
+      "path": "textures/sandkeep/metal.wal",
+      "sha256": "e6a2b798d0c199bf96c5c672d0d9724cb15eacf5947126c5adf8af3c7db0330f",
+      "source": "textures/sandkeep/metal.png",
+      "source_sha256": "2dff1c1c8d4f23714692a568639cc70d48518f98f4952dbc362e626924e36db3",
+      "header_sha256": "4547bcf0fa57d81b1b5de558966303fdb51f9c4a51658740f1c5bb4b277c6781"
+    },
+    {
+      "path": "textures/sandkeep/plastic_blue.wal",
+      "sha256": "6125f57cb1d616ad30de0bbb168df87a0125e388ed0b383ace5d797558cbe3fb",
+      "source": "textures/sandkeep/plastic_blue.png",
+      "source_sha256": "36b2a87fd06e285951bfc373fdd8e514b9e2307bd3f3ae7240c1bc936a59bad9",
+      "header_sha256": "2cccf128a44260e2d0eb45af6857e4113182257547c0cd676c5023e09cbf1533"
+    },
+    {
+      "path": "textures/sandkeep/plastic_blue_smooth.wal",
+      "sha256": "26ade16e5267f7da0a57ffce333a0e5f03c2127b5b85aacaa13fb16f7ba5eee0",
+      "source": "textures/sandkeep/plastic_blue_smooth.png",
+      "source_sha256": "750921e9388e8f30c543c58f6574c28897829ad3564daa093042203373d68541",
+      "header_sha256": "1c867e1121838d33eeb5c4737d28c90a2a98d4dab78817813944c4adb8a72f1a"
+    },
+    {
+      "path": "textures/sandkeep/plastic_green.wal",
+      "sha256": "2d01a834c894a20e34d3b58cb9ef202cd5aa8c1a70523f83099ea0c95651978b",
+      "source": "textures/sandkeep/plastic_green.png",
+      "source_sha256": "2e3ac9dc86d997252bf73acc5dfd2e9e0c9a21a76f285da40697372ed5560327",
+      "header_sha256": "1a23a23167556953f3613074b9dbd1977f32d249c91629c3cf802f60f11a39a1"
+    },
+    {
+      "path": "textures/sandkeep/plastic_green_smooth.wal",
+      "sha256": "7c3766d1fdb4243bd9d8f841386a6e9a4fd7718c93ec817b52a28538834fb9a4",
+      "source": "textures/sandkeep/plastic_green_smooth.png",
+      "source_sha256": "ff12acc84021fa6d2d91d2c921d452e436574330f1562727370035de49d3aa51",
+      "header_sha256": "b8b9761630f4e46edf83d465973b225c8b2ed98a282da15eb6baf15aaf0507c2"
+    },
+    {
+      "path": "textures/sandkeep/plastic_red.wal",
+      "sha256": "ce5674acd7125778555355409d9d0da6aabc562c61ccee4f79cb0a6145be2cfa",
+      "source": "textures/sandkeep/plastic_red.png",
+      "source_sha256": "7685aabe6794a817bbed3cc9ab8091da0f5940df8cc74307920a4605639e5e54",
+      "header_sha256": "e207981dc9bf398b5593a6344e685ebe31986a859d915abd032fb91c7fcd02cb"
+    },
+    {
+      "path": "textures/sandkeep/sand.wal",
+      "sha256": "b68cc5642077ba491f434db9b91859df359829e0860ee18fbc0a5f2d34caec6c",
+      "source": "textures/sandkeep/sand.png",
+      "source_sha256": "56d0beb2473806b331d131c1b8ce2494f084d43588b1803240bde28cffe0cd16",
+      "header_sha256": "6eb702302faab7c7a3c5b858673c114791cce8680cbb00d7b7d025987693341f"
+    },
+    {
+      "path": "textures/sandkeep/sand_cracked.wal",
+      "sha256": "7967d9c8426a67cd68644c2d6126b5db77db8ad5209aafa7f336c7085a657d59",
+      "source": "textures/sandkeep/sand_cracked.png",
+      "source_sha256": "50fcea298fda6fa2895ad1f23f2903f5347bebfb592124a6759d20b9c6ae7747",
+      "header_sha256": "e657fff57f72c24be5577d21e937b3d9ba702850e6e268967c60c1202484f6ac"
+    },
+    {
+      "path": "textures/sandkeep/sand_cracked_offset.wal",
+      "sha256": "ce728f8376400337568218b05ee2ae41796565db3658f153e706efb69f5c6c3b",
+      "source": "textures/sandkeep/sand_cracked_offset.png",
+      "source_sha256": "9f70f9b0b4cc190be9faf4ebc1f9c856efa1b3019d15e437799be37306f9d503",
+      "header_sha256": "d1759413bd535a4d0f44130be52f05856aefce5c5ab7371ab39efcfffac44ab3"
+    },
+    {
+      "path": "textures/sandkeep/sand_wall.wal",
+      "sha256": "57c9d44126920c989a57d5461b2885e1e7744d5201622bd4eca3b83f755ecfcd",
+      "source": "textures/sandkeep/sand_wall.png",
+      "source_sha256": "815bd37282d1e98185eb15237caaec0caf75c88986a66a17b6df13492ec8e07d",
+      "header_sha256": "165dd186f94dba40b2695bd2e04d2f4b2b2156845c48a63838ad285a208fdd9f"
+    },
+    {
+      "path": "textures/sandkeep/sign_armory.wal",
+      "sha256": "801ba45980f23a4247d81a40bf57f5afc08070ffafcea61162a53a1cf5f988a1",
+      "source": "textures/sandkeep/sign_armory.png",
+      "source_sha256": "1d2bca00f26925ab0fc4136e50e4d6b75abd70d2f044ba0805e6fb88341a6d3f",
+      "header_sha256": "25e01f92ba4cfd180f89a6cf8349b9003d492b7628cff31ddf23e4ff44cff506"
+    },
+    {
+      "path": "textures/sandkeep/sign_boss.wal",
+      "sha256": "ce6041fd58d65868a02238bfa7a7e4cc88ec348be0c7ed6d19620f9dd0e83699",
+      "source": "textures/sandkeep/sign_boss.png",
+      "source_sha256": "dd4c3d95220078c0e51cd6d0b280748335a93162aac29298b6b101072ece51b0",
+      "header_sha256": "c78f70a6da222c25c2e460fa4436f177222c5e9d3818ab11dc4609041fc65a52"
+    },
+    {
+      "path": "textures/sandkeep/sign_exit.wal",
+      "sha256": "c16ce8d65c203cb22da8ccf3676c2e7adcae8480f708f957bf8ccf8926a10ac5",
+      "source": "textures/sandkeep/sign_exit.png",
+      "source_sha256": "cc37b1af2f86ae265cedab5a1f1a3efcac1eeb195fd8190b9b64356e95a68f7a",
+      "header_sha256": "b117eedf6cfab2d42b180a227de1bd1774300fa0dfdc5e8a402301e19b7e45a1"
+    },
+    {
+      "path": "textures/sandkeep/sign_radio.wal",
+      "sha256": "24f3b6deeacabdd34abd73d579b5c9a2f23fcf16adbf311da0062ea267a2f19f",
+      "source": "textures/sandkeep/sign_radio.png",
+      "source_sha256": "4438161e436bc8fa3a3676d11f634282257d8de33dd48c20c64f057db79f98c7",
+      "header_sha256": "ace11acce762238e7c0852d3616d366b5ddf7d34d62a963d17d785b6960a39e1"
+    },
+    {
+      "path": "textures/sandkeep/sign_start.wal",
+      "sha256": "824c82e0d9dcffd6a42c448cfbb6cac0924b58b976a2526744d51095750e57ae",
+      "source": "textures/sandkeep/sign_start.png",
+      "source_sha256": "a568186e431040cb271af0fd594d6e7584ab90d03302b03191ab428b969b9fde",
+      "header_sha256": "c51b9a7babf739353c9a4c36330639cecd622a98247bf179391b54b9cd67f85d"
+    },
+    {
+      "path": "textures/sandkeep/sky.wal",
+      "sha256": "887e877ad9c4ebc86ec267b9b14d38a23e2b20778af45a2d34c23acbfef83983",
+      "source": "textures/sandkeep/sky.png",
+      "source_sha256": "e4b50122ba83d074905f864a465ce4c826fdad20c205ebc2ed9e562cecf6ceea",
+      "header_sha256": "31fa6f1f807b34d0912276d4b9e6bf88829c6f40fadc89c647d347ad2449ba78"
+    },
+    {
+      "path": "textures/sandkeep/soil.wal",
+      "sha256": "ebd6332e45cf8f2c8ffeccbb04f48b1a9354aca31fea2a059c36862c9e64f5f9",
+      "source": "textures/sandkeep/soil.png",
+      "source_sha256": "4c069e40a2ab2d907cd57c573763b79c751a8617b14244656f9e4a65b8a43abd",
+      "header_sha256": "df4f04f05b87f4647b05b5025d92b07041515f0bca6eb9bab2324db583fa1380"
+    },
+    {
+      "path": "textures/sandkeep/sw_ammo.wal",
+      "sha256": "5b57cd9e4f01c6a226fd9149b0ec101c61b1dc59ed1d3b0821b9da947b9d3027",
+      "source": "textures/sandkeep/sw_ammo.png",
+      "source_sha256": "5795dc3d978d4a5c6e2464ad387cd90fed325a706bd88358015bd30a32d0f0b8",
+      "header_sha256": "724822c06e0f8caf7bd02f97b96d479bc16f8108c559925798ba059c103d26b2"
+    },
+    {
+      "path": "textures/sandkeep/sw_auto.wal",
+      "sha256": "1ed1509c253110a13d4ca63b4a90ad08d98a62a5040de63868978a1e1fb566bc",
+      "source": "textures/sandkeep/sw_auto.png",
+      "source_sha256": "3f3351c60a14a7bdfd2013de3ec7dc773813df20844857bd811585e29d48a919",
+      "header_sha256": "dfd8a98aa943f86405954cc6060a4a8488a2d19e09acd1838ae116102b84e9b3"
+    },
+    {
+      "path": "textures/sandkeep/sw_boom.wal",
+      "sha256": "97d0a0044a532e3592584f718e02a8da5dbac3313e4b31b8b3e21c4d1402fcbb",
+      "source": "textures/sandkeep/sw_boom.png",
+      "source_sha256": "decaa7fa3b5d8e7b02ca40afff5278df69eb396ff088cb3974cdedb81784c4eb",
+      "header_sha256": "295c0b7c15c656b4b2b686ca67e8605278517c7c299b4235703ce750cb3f22a4"
+    },
+    {
+      "path": "textures/sandkeep/sw_close.wal",
+      "sha256": "57eea7047158b5227c44e15cb0af2040892a5894e9a038991ca28f9d2ca82fc6",
+      "source": "textures/sandkeep/sw_close.png",
+      "source_sha256": "3d596438331d0e96672d1925f22cc43d362ad864166169997e7cf744dd3bbdeb",
+      "header_sha256": "50ca1bc5cde6bf2a0e415187d321299d570fd145e5c36a14a0359d5fae1102a7"
+    },
+    {
+      "path": "textures/sandkeep/sw_exit.wal",
+      "sha256": "92fe503144760a37ba12185ab16e306cd5ddb5449c6fc82d1d4ff5fcca238c1f",
+      "source": "textures/sandkeep/sw_exit.png",
+      "source_sha256": "f5199ef60576125e17b2f1389ab682467c33a99602f57d63941af1388971bcd5",
+      "header_sha256": "b6a9ceb06ed2643abdb7089fce2719cf53440ed19d1174f5a1586b7f00d1c7f0"
+    },
+    {
+      "path": "textures/sandkeep/sw_heavy.wal",
+      "sha256": "94230b8c737e5165c9e6ff59ff4fa070f92c871995b3c5f268b8b4fd67fe162c",
+      "source": "textures/sandkeep/sw_heavy.png",
+      "source_sha256": "f2755bc7e47ee24c835b4c8774f168fb6391f7f097bd6c58c7274a83181f3211",
+      "header_sha256": "432ebec201b0e3389d47143e56887a99788ba2851ea253368a32691537ed055a"
+    },
+    {
+      "path": "textures/sandkeep/sw_mission.wal",
+      "sha256": "fbe9e77066894ca48d9428662792cdab6cc132eb712037a8ee6e753952af0b6d",
+      "source": "textures/sandkeep/sw_mission.png",
+      "source_sha256": "9f0fcde8ca4d6ecaeb1022c64850221100d66a165b122935fe5d0feafe5a5462",
+      "header_sha256": "562c7f63252d1786e47d73d4a1d481c243b5b335c90730c196dc2d53de80ad7d"
+    },
+    {
+      "path": "textures/sandkeep/sw_radio.wal",
+      "sha256": "0fb554381ba27c23f9d83aee2518e4fc649866286c811b0a794ab1630d32e2b5",
+      "source": "textures/sandkeep/sw_radio.png",
+      "source_sha256": "9e43cd8c34c1ec3e6fa0e61f75af9c98c58b9ccb26811aa5138aabea5a3a45e3",
+      "header_sha256": "8bb8283ce9e4d553bf538495e78d8b93d323a6fddf954b5a584c2ef672d05fa6"
+    },
+    {
+      "path": "textures/sandkeep/sw_rocket.wal",
+      "sha256": "efe433fbd5621b975fd0d2f9c3940cb7e991f04e7bfe5ad3a21cc508de1eb642",
+      "source": "textures/sandkeep/sw_rocket.png",
+      "source_sha256": "cb700f22ffcdb2987a9ad0553e06e987c33879cb8e47cdd714e984b8785acd99",
+      "header_sha256": "f097b2312c1152786421ae17af3d9747fe5b13565db077d63a983c38e0e24896"
+    },
+    {
+      "path": "textures/sandkeep/sw_wave.wal",
+      "sha256": "c4ec881b36e2b31bde671108362b383d27d4b0c0690be2268545422bf727fcc6",
+      "source": "textures/sandkeep/sw_wave.png",
+      "source_sha256": "8e70c5e43396058460d77cf5b90a525781237a387dff91fe4738ceefe81d9ab2",
+      "header_sha256": "26dacd6c35996048c1a41944f27d149341fa41a0f3a7e62a6a90a613cd009bf9"
+    },
+    {
+      "path": "textures/sandkeep/switch_armory.wal",
+      "sha256": "30ea069142f78e5ca40de65561c43b2780fc8bc72743eb333899f74f575c9d0c",
+      "source": "textures/sandkeep/switch_armory.png",
+      "source_sha256": "98aff8a67880cbe0ddea24cf1c5d53cbb97ee43d4af67adf61e6b129fc6b3932",
+      "header_sha256": "20095375b6dbbb999ef8307b25fbe8d14af76ac49406d512a53f6c7300873fc1"
+    },
+    {
+      "path": "textures/sandkeep/switch_armory_idle.wal",
+      "sha256": "a5f76381e7a8016918b8191a13e688cc0f44085e975b710f07285aae474a01e4",
+      "source": "textures/sandkeep/switch_armory_idle.png",
+      "source_sha256": "8d4781d915242e03176269d8b11843bfd727c83c1ac666e2cf7d06b33774a026",
+      "header_sha256": "4a6cc17dc9a04261186123f376e25642d325669d01423991c349c6ec2b72191c"
+    },
+    {
+      "path": "textures/sandkeep/switch_armory_on.wal",
+      "sha256": "4aaf6458a91df32de99e16ed6aa64fbbdddcccbfbb28a5eecac95208a5fd129e",
+      "source": "textures/sandkeep/switch_armory_on.png",
+      "source_sha256": "fa155e0c8ac3195959d2759a2b33657def55df2ddb7c120f31b13acea1443ebc",
+      "header_sha256": "6557508e4db022519de4c6df67d03ab385665fe44c3d5bac1500141a79c8c380"
+    },
+    {
+      "path": "textures/sandkeep/switch_armory_on_alt.wal",
+      "sha256": "46616af980d0d27c7d49f42e0072bac428181b9e1fe0f87b421c82072a7f57b8",
+      "source": "textures/sandkeep/switch_armory_on_alt.png",
+      "source_sha256": "22d4e48c48a7661c0bacdcbb8a558016308cfeda9e5b07078794a02587766a30",
+      "header_sha256": "83a45b1f2bb8d35b36d8d6fee37d7c9d0b157589f64a80cbb8a9c7fe7c690fb8"
+    },
+    {
+      "path": "textures/sandkeep/switch_radio.wal",
+      "sha256": "dfe4a3cdd498fef4a4d9ed71105b72d9b2385017875b8c882da16acb5dda2296",
+      "source": "textures/sandkeep/switch_radio.png",
+      "source_sha256": "f277e57289521a88154d5490d6d69d6f06fddddd4d9100c744fd4466b16f74cf",
+      "header_sha256": "2068f00ac3628217f2ed8daa03514d0495f8fc142e02edb2376550704b909316"
+    },
+    {
+      "path": "textures/sandkeep/switch_radio_idle.wal",
+      "sha256": "ee69945a242caecadee385638e197328e78d78b5bc04c8735a8660a698fe124c",
+      "source": "textures/sandkeep/switch_radio_idle.png",
+      "source_sha256": "09f0ce226012890f0c9bf25ec11bae2450f9d32497f8be2e96e0000058c2978f",
+      "header_sha256": "156ffccc8b876d9cd8fdb230231a92dbaf69d5e7ce6a0a69f9481fcabf522afb"
+    },
+    {
+      "path": "textures/sandkeep/switch_radio_on.wal",
+      "sha256": "176a8750eebd8ceab7695026a8d6a776e0eeb9c33f863b94f9c95c4938fe6274",
+      "source": "textures/sandkeep/switch_radio_on.png",
+      "source_sha256": "1d411f7ffc8f4d075b4bf28a0511ba8eccd9600603282881a2980c3298a831da",
+      "header_sha256": "06191b7346b46d3683ecb58f4d3aa467f08fba1a69cdaa26385adb11c3d1dc17"
+    },
+    {
+      "path": "textures/sandkeep/switch_radio_on_alt.wal",
+      "sha256": "c132e96108c5dbe8c64f982f0efed56cebb718f16cde83c412bab4c01418e536",
+      "source": "textures/sandkeep/switch_radio_on_alt.png",
+      "source_sha256": "9a1fdb9441ec4f6e922bb020e43be5a53acf673b15515bf8817efdf26d380756",
+      "header_sha256": "0b1c421be2f9c043f58070c0d469e280d87639a6691aa7192e1a3de63c9940ce"
+    },
+    {
+      "path": "textures/sandkeep/trim.wal",
+      "sha256": "9f757d0d2159412f299a3912be5235168cf5c9ba41b0d52c64b5074de63bdd57",
+      "source": "textures/sandkeep/trim.png",
+      "source_sha256": "4c520a068f16c1c525d8c8b99a5c0f80d0310c71b32ef85110d51199bdd9768a",
+      "header_sha256": "bec81e1e2fa249d803c9611e7843a2faf984775c27ce6e55128cebe10f01dbf0"
+    },
+    {
+      "path": "textures/sandkeep/wood.wal",
+      "sha256": "ff2db1281cf83f0601da5f08b906a0749b1e07ae75e0c437db16f0969b37ede2",
+      "source": "textures/sandkeep/wood.png",
+      "source_sha256": "26dd93a38236d59486bc2d1143dcd3fc94e562b943d9e378ad42ed32847abd10",
+      "header_sha256": "ca16936e65f2e328d945c49a0b58d17a8135308de3d26f3483e3bf573902820f"
+    },
+    {
+      "path": "textures/sandkeep/wood_end.wal",
+      "sha256": "693394c4d9049325eaa248a299e4a58c6c9b62ac8551b55507a6b6d91976e5bd",
+      "source": "textures/sandkeep/wood_end.png",
+      "source_sha256": "562bb682fa5f47def74b9b9a79779325b8a420b3d30a215227b176fe1252e5b0",
+      "header_sha256": "adfce24748b15e7124365810b2829db7594b7211407d0aa4fbde1fddda7a363f"
+    }
+  ],
+  "archives": [
+    {
+      "archive": "operation-heavy-test.pk3",
+      "sha256": "1b301f6bba38f5c1036e8c6f15dcf46bffee9f67828c00be60c5b60023de7239",
+      "files": [
+        {
+          "path": "textures/sandkeep/iron.wal",
+          "sha256": "fa19d02d1e884b74e8fb28893cc29aa44ec948c36ca5015545306056c89fe283",
+          "source": "textures/sandkeep/iron.png",
+          "source_sha256": "31a5c99ad170a5dbb5ca1a2949a50a25411fa8c09cbf42269e1623c979e0cea6",
+          "header_sha256": "a296fa5da03b26b652c613c87132f0eb812b57dc60636b848e51a4dbb3a14318"
+        },
+        {
+          "path": "textures/sandkeep/lamp.wal",
+          "sha256": "2afc46299be2d2b197c196770aa26fbd4e08e625f737ef4f753c2085f57cd6dd",
+          "source": "textures/sandkeep/lamp.png",
+          "source_sha256": "51d558c52e1e17fa85940a07544c4e79c978b3c87ffbb453b5a340500f30a913",
+          "header_sha256": "5468640f89c38ea00e1f3affceab13269e04c868924aaa8c83792607bc5c0de1"
+        },
+        {
+          "path": "textures/sandkeep/plastic_blue_smooth.wal",
+          "sha256": "26ade16e5267f7da0a57ffce333a0e5f03c2127b5b85aacaa13fb16f7ba5eee0",
+          "source": "textures/sandkeep/plastic_blue_smooth.png",
+          "source_sha256": "750921e9388e8f30c543c58f6574c28897829ad3564daa093042203373d68541",
+          "header_sha256": "1c867e1121838d33eeb5c4737d28c90a2a98d4dab78817813944c4adb8a72f1a"
+        },
+        {
+          "path": "textures/sandkeep/plastic_green_smooth.wal",
+          "sha256": "7c3766d1fdb4243bd9d8f841386a6e9a4fd7718c93ec817b52a28538834fb9a4",
+          "source": "textures/sandkeep/plastic_green_smooth.png",
+          "source_sha256": "ff12acc84021fa6d2d91d2c921d452e436574330f1562727370035de49d3aa51",
+          "header_sha256": "b8b9761630f4e46edf83d465973b225c8b2ed98a282da15eb6baf15aaf0507c2"
+        },
+        {
+          "path": "textures/sandkeep/plastic_red.wal",
+          "sha256": "ce5674acd7125778555355409d9d0da6aabc562c61ccee4f79cb0a6145be2cfa",
+          "source": "textures/sandkeep/plastic_red.png",
+          "source_sha256": "7685aabe6794a817bbed3cc9ab8091da0f5940df8cc74307920a4605639e5e54",
+          "header_sha256": "e207981dc9bf398b5593a6344e685ebe31986a859d915abd032fb91c7fcd02cb"
+        },
+        {
+          "path": "textures/sandkeep/sand.wal",
+          "sha256": "b68cc5642077ba491f434db9b91859df359829e0860ee18fbc0a5f2d34caec6c",
+          "source": "textures/sandkeep/sand.png",
+          "source_sha256": "56d0beb2473806b331d131c1b8ce2494f084d43588b1803240bde28cffe0cd16",
+          "header_sha256": "6eb702302faab7c7a3c5b858673c114791cce8680cbb00d7b7d025987693341f"
+        },
+        {
+          "path": "textures/sandkeep/trim.wal",
+          "sha256": "9f757d0d2159412f299a3912be5235168cf5c9ba41b0d52c64b5074de63bdd57",
+          "source": "textures/sandkeep/trim.png",
+          "source_sha256": "4c520a068f16c1c525d8c8b99a5c0f80d0310c71b32ef85110d51199bdd9768a",
+          "header_sha256": "bec81e1e2fa249d803c9611e7843a2faf984775c27ce6e55128cebe10f01dbf0"
+        },
+        {
+          "path": "textures/sandkeep/wood.wal",
+          "sha256": "ff2db1281cf83f0601da5f08b906a0749b1e07ae75e0c437db16f0969b37ede2",
+          "source": "textures/sandkeep/wood.png",
+          "source_sha256": "26dd93a38236d59486bc2d1143dcd3fc94e562b943d9e378ad42ed32847abd10",
+          "header_sha256": "ca16936e65f2e328d945c49a0b58d17a8135308de3d26f3483e3bf573902820f"
+        },
+        {
+          "path": "textures/sandkeep/wood_end.wal",
+          "sha256": "693394c4d9049325eaa248a299e4a58c6c9b62ac8551b55507a6b6d91976e5bd",
+          "source": "textures/sandkeep/wood_end.png",
+          "source_sha256": "562bb682fa5f47def74b9b9a79779325b8a420b3d30a215227b176fe1252e5b0",
+          "header_sha256": "adfce24748b15e7124365810b2829db7594b7211407d0aa4fbde1fddda7a363f"
+        }
+      ]
+    },
+    {
+      "archive": "operation-helicopter-test.pk3",
+      "sha256": "e04b21aac3cce98198a0e232ad8b2cac35be17539d30613bee841d0541809994",
+      "files": [
+        {
+          "path": "textures/sandkeep/plastic_blue_smooth.wal",
+          "sha256": "26ade16e5267f7da0a57ffce333a0e5f03c2127b5b85aacaa13fb16f7ba5eee0",
+          "source": "textures/sandkeep/plastic_blue_smooth.png",
+          "source_sha256": "750921e9388e8f30c543c58f6574c28897829ad3564daa093042203373d68541",
+          "header_sha256": "1c867e1121838d33eeb5c4737d28c90a2a98d4dab78817813944c4adb8a72f1a"
+        },
+        {
+          "path": "textures/sandkeep/plastic_green_smooth.wal",
+          "sha256": "7c3766d1fdb4243bd9d8f841386a6e9a4fd7718c93ec817b52a28538834fb9a4",
+          "source": "textures/sandkeep/plastic_green_smooth.png",
+          "source_sha256": "ff12acc84021fa6d2d91d2c921d452e436574330f1562727370035de49d3aa51",
+          "header_sha256": "b8b9761630f4e46edf83d465973b225c8b2ed98a282da15eb6baf15aaf0507c2"
+        },
+        {
+          "path": "textures/sandkeep/plastic_red.wal",
+          "sha256": "ce5674acd7125778555355409d9d0da6aabc562c61ccee4f79cb0a6145be2cfa",
+          "source": "textures/sandkeep/plastic_red.png",
+          "source_sha256": "7685aabe6794a817bbed3cc9ab8091da0f5940df8cc74307920a4605639e5e54",
+          "header_sha256": "e207981dc9bf398b5593a6344e685ebe31986a859d915abd032fb91c7fcd02cb"
+        },
+        {
+          "path": "textures/sandkeep/sand.wal",
+          "sha256": "b68cc5642077ba491f434db9b91859df359829e0860ee18fbc0a5f2d34caec6c",
+          "source": "textures/sandkeep/sand.png",
+          "source_sha256": "56d0beb2473806b331d131c1b8ce2494f084d43588b1803240bde28cffe0cd16",
+          "header_sha256": "6eb702302faab7c7a3c5b858673c114791cce8680cbb00d7b7d025987693341f"
+        },
+        {
+          "path": "textures/sandkeep/trim.wal",
+          "sha256": "9f757d0d2159412f299a3912be5235168cf5c9ba41b0d52c64b5074de63bdd57",
+          "source": "textures/sandkeep/trim.png",
+          "source_sha256": "4c520a068f16c1c525d8c8b99a5c0f80d0310c71b32ef85110d51199bdd9768a",
+          "header_sha256": "bec81e1e2fa249d803c9611e7843a2faf984775c27ce6e55128cebe10f01dbf0"
+        },
+        {
+          "path": "textures/sandkeep/wood.wal",
+          "sha256": "ff2db1281cf83f0601da5f08b906a0749b1e07ae75e0c437db16f0969b37ede2",
+          "source": "textures/sandkeep/wood.png",
+          "source_sha256": "26dd93a38236d59486bc2d1143dcd3fc94e562b943d9e378ad42ed32847abd10",
+          "header_sha256": "ca16936e65f2e328d945c49a0b58d17a8135308de3d26f3483e3bf573902820f"
+        },
+        {
+          "path": "textures/sandkeep/wood_end.wal",
+          "sha256": "693394c4d9049325eaa248a299e4a58c6c9b62ac8551b55507a6b6d91976e5bd",
+          "source": "textures/sandkeep/wood_end.png",
+          "source_sha256": "562bb682fa5f47def74b9b9a79779325b8a420b3d30a215227b176fe1252e5b0",
+          "header_sha256": "adfce24748b15e7124365810b2829db7594b7211407d0aa4fbde1fddda7a363f"
+        }
+      ]
+    },
+    {
+      "archive": "operation-nightlight.pk3",
+      "sha256": "dd0fe5e2ff7c9befc1e36690912701e0b223cde9a24c51452c0ca6f7dce2466b",
+      "files": [
+        {
+          "path": "textures/bedroom/battery.wal",
+          "sha256": "f24e99a8da11f92f87c9f29db9791dfb9924402b017b3bfb02d1674820679eea",
+          "source": "textures/bedroom/battery.png",
+          "source_sha256": "b8f178c6c6ae91c8e9400c5db802ab95fdbd874aefe783df24ead45faa6fa8ad",
+          "header_sha256": "ab5f919122ce47ef522ca31941599ea871402fb32707aa8657afdc84fa05dfe2"
+        },
+        {
+          "path": "textures/bedroom/blue.wal",
+          "sha256": "90eb16a156a9324f1d40a4a69944947950cc773761e7bf245e54385c06b72465",
+          "source": "textures/bedroom/blue.png",
+          "source_sha256": "cef44a5e7d907571356b9fa6e076fb1bb89d232476a301169eb6baf24efe1e66",
+          "header_sha256": "c59d2d38147a47b2672164d3ac97038534d8c5e84d60e4ed64b60983935e6c17"
+        },
+        {
+          "path": "textures/bedroom/book.wal",
+          "sha256": "f18fba83206513bfc83df3f49c5bf33db205db84992244456e14d0ba459b9de0",
+          "source": "textures/bedroom/book.png",
+          "source_sha256": "35bf9330bd529f14a0f91b2bdafec7294330c3f7a3adc8013c4e8b79bcd09246",
+          "header_sha256": "79be3261da1a5916285ffac4e1c0433ac8011e218ceb061e497505490e5e3f7d"
+        },
+        {
+          "path": "textures/bedroom/briefing.wal",
+          "sha256": "8364085eac7c04dc8fd989c166518f59ab40b7f9f1368098300b8c8395d0a840",
+          "source": "textures/bedroom/briefing.png",
+          "source_sha256": "c26c641a93c5468efde5036b41e310152cba806bcc73fa0f984740a4cb8f9105",
+          "header_sha256": "be52a185405e03a31c37815d7424f9c94bf5045fa4c21c0ad639b9109119ac0a"
+        },
+        {
+          "path": "textures/bedroom/cardboard.wal",
+          "sha256": "c88cfc3af5e85e3fcfe24e3487e24fa253e3b379b0282bbdf6081cfb6093dcba",
+          "source": "textures/bedroom/cardboard.png",
+          "source_sha256": "f35404b717c17e9cac2b58acad6064ff819d81de046a597e98aad04abd253e6a",
+          "header_sha256": "e9543d19aa58668470896e0c3c970e10eabfa6f65f146967a9169f6343585ac7"
+        },
+        {
+          "path": "textures/bedroom/carpet.wal",
+          "sha256": "e1017dd58e1a60d13f2972736c932b1e3fd69eaf8063a45a3d7f0d1b06a6674c",
+          "source": "textures/bedroom/carpet.png",
+          "source_sha256": "7c9b51363b7dbf8db09d75a4f79ec9947e7de682afb37440be26e25f80ed4048",
+          "header_sha256": "4297f58d55e6ab2c077243fe77ecc50f073209ab4b0f6877ea5a110d9af34f80"
+        },
+        {
+          "path": "textures/bedroom/exit.wal",
+          "sha256": "d7fc496d5c2b9651ed2bb982c926c2c7bca3a5c928c5d75b76586606be1fa3c6",
+          "source": "textures/bedroom/exit.png",
+          "source_sha256": "688528ee8d8f1021655613a099586eaf62722c3766c8015a2245453b112b7b05",
+          "header_sha256": "1b0725eb1fbb25b1e988a6645158fb379eb45d7170471be9603f52e677ea0a15"
+        },
+        {
+          "path": "textures/bedroom/glow.wal",
+          "sha256": "abf22a06d653fa6e62bd23d02c6d5b5bc76f262ab344c906a9e26d9bf1a72948",
+          "source": "textures/bedroom/glow.png",
+          "source_sha256": "e25b496ba97138494855df848ff79a358422414496d1b12b0f4c542df4ce5e89",
+          "header_sha256": "3e683b99939836954bd849a69b766cc228abe2061c333df67e51b93651f9c033"
+        },
+        {
+          "path": "textures/bedroom/green.wal",
+          "sha256": "6eb9ffba83704172072bb8d3f1672b77309d78384df71b4a3b71e5a5b9f7b8ab",
+          "source": "textures/bedroom/green.png",
+          "source_sha256": "2a4740861b50010d00526c80d6afac8fa71008c5aeef5ea6777cca2d75c89acc",
+          "header_sha256": "13c136aa7b5300ed276f650cd8ce6557612fdfa8370e0ad4f31d98cbace8bad0"
+        },
+        {
+          "path": "textures/bedroom/helipad.wal",
+          "sha256": "184803caeac09fafc4b00df5f0742b89c09e9464a903417ee40db7b9b3c42b34",
+          "source": "textures/bedroom/helipad.png",
+          "source_sha256": "943e60fc1fdcdf9e6d2ee44420c0d9997b4b71fc49b502d70ae120ffb96a027c",
+          "header_sha256": "4e729d576e34e025c94dbe67ba59f2895580750d578d26eb0d0bb4c03e5132dd"
+        },
+        {
+          "path": "textures/bedroom/letter_a.wal",
+          "sha256": "274c6db1f30cccc7f5a2e8cae520f0b91fcf10b4810137056b44573bc2d80493",
+          "source": "textures/bedroom/letter_a.png",
+          "source_sha256": "13e40c50c7c13c5036b3522c7fa7fcf4d0813f7d5ab8333cc7b4c913f0d0c527",
+          "header_sha256": "be1ea0014b88777bc5df8f57484fe075813db58917b4a148eb3407920271a424"
+        },
+        {
+          "path": "textures/bedroom/letter_b.wal",
+          "sha256": "f903db2ee27d16d54476406ae0111870a9adeff183213e3ec6df6ea31f4185f4",
+          "source": "textures/bedroom/letter_b.png",
+          "source_sha256": "901f9c0ac7f1ba3a2e88b0b5b0e9e3634d1ce106188144e7ab85f8181f45279e",
+          "header_sha256": "46b9b6d20e19aaff0f58596ae6fb9779dbd11115a834aca45ce9bb8c63b6aa9e"
+        },
+        {
+          "path": "textures/bedroom/letter_c.wal",
+          "sha256": "07aa78517a3d79e7ec45e3ec1c9fc5e96b3bb982ed46d0413c979004b3ee9363",
+          "source": "textures/bedroom/letter_c.png",
+          "source_sha256": "936c3db49f03f4fb1b8bd222a39bb4724bf4d3ad22c819cb0c12d1019b792356",
+          "header_sha256": "e9b4696c7cc668417654f9c3985662fd295e8a0f092024bce17d63a4d1f062d3"
+        },
+        {
+          "path": "textures/bedroom/metal.wal",
+          "sha256": "e9955ce15ce45ab77df60b9de75cba20e96ecc94cc8c276dcafd2f842e7b20d4",
+          "source": "textures/bedroom/metal.png",
+          "source_sha256": "0553091dafb60edebc95a79069a30d076e3b208aa33c3c59fa573620dd60489b",
+          "header_sha256": "cb736135cccc9ed5ad0cb8cb054048c98eaa9b491a0052dd269dc1c054be5bad"
+        },
+        {
+          "path": "textures/bedroom/pages.wal",
+          "sha256": "b66bbf2a15f36eddd5bc0630c3cec593631a79b286b26f0e34dff1a6f97aabbd",
+          "source": "textures/bedroom/pages.png",
+          "source_sha256": "e9c2878d5fb7bbcfaa48ec97bcd15baf84755f1efd3b0ea38a745de1c8ccbbea",
+          "header_sha256": "40874c8f2c9efef5eaf709d0642f1b346fefad3ca425ed9e892d809722ece57d"
+        },
+        {
+          "path": "textures/bedroom/pillow.wal",
+          "sha256": "5472c9120a1b5726deea31bb1e678562ce974f86be1b74aeb0d72f455c6f8cdc",
+          "source": "textures/bedroom/pillow.png",
+          "source_sha256": "46bfa87045e2f4f372210f6021ad18bcb25b61770afcf572f3283c0e849c9b16",
+          "header_sha256": "702fbb046abcfd533388034cf2c309af567d9bd53a41f87ae72f1b5f7f9d5027"
+        },
+        {
+          "path": "textures/bedroom/quilt.wal",
+          "sha256": "dbffd70bfeec28daebe24c0adf0cf874757ef3d3a146d69fcc0041b7d95a2cb9",
+          "source": "textures/bedroom/quilt.png",
+          "source_sha256": "c0fe77a281344f32c3983596f74cdd4b14e52abaa2a6f0766df0f775c7203e7e",
+          "header_sha256": "d311421a72585fdc92d31de872eb7d31a0c19ed7429111307bc33306334c990d"
+        },
+        {
+          "path": "textures/bedroom/radio.wal",
+          "sha256": "d90edaa655d93f7cfc28b999266536d0b636531b6e5f8ba84b51baf2fe1d8a57",
+          "source": "textures/bedroom/radio.png",
+          "source_sha256": "d1816a8b41faa3bd108977d620e94a1df8d69e823517cce962dc6c7b97fb5357",
+          "header_sha256": "bbf5a2a468bb04de5886ea2acc3adc06bac8e30cec7461943bc3bc8270138066"
+        },
+        {
+          "path": "textures/bedroom/red.wal",
+          "sha256": "bcfb7ccddf8aea7cc62f5b79162e3508e62368691bc48e2e5ddef64bb0a0520b",
+          "source": "textures/bedroom/red.png",
+          "source_sha256": "2d370eb778cb1a69ac657b5ed762bfb5bdb3fad68a2c5be6942098a500251069",
+          "header_sha256": "b21eeb64fd8f8e9fea8e23fd0d5f82139aadba5700ae46948ae7752ec2e07162"
+        },
+        {
+          "path": "textures/bedroom/trim.wal",
+          "sha256": "6974e5f6ef49cfb6da294a49f61f0e39d76176cef3e904adede55346f9e592c4",
+          "source": "textures/bedroom/trim.png",
+          "source_sha256": "eb534594311e7251eea6dccf2a9dd34100ff96d222906d9b19171a1e7a5c0ef0",
+          "header_sha256": "e5d1ba64bae58b2dbbd77ff50c8574e0698be5235ae850cebf0127c370f6007a"
+        },
+        {
+          "path": "textures/bedroom/wall.wal",
+          "sha256": "fa7aa5b8efee560b37d26fb3e58ff2a67cf06b15eeec436b795228501495c478",
+          "source": "textures/bedroom/wall.png",
+          "source_sha256": "20fc4c0f290b2bba293b596031adacf8df415b31c4bfcffb1f3b3139470f8836",
+          "header_sha256": "35b48576a8310853e0bf32008ac3a97133107444ef0350b5777c597c039fc013"
+        },
+        {
+          "path": "textures/bedroom/window.wal",
+          "sha256": "2c8a706d3004b6e155c5db474104f2e057bed4c7365b7129106a0f3ada558965",
+          "source": "textures/bedroom/window.png",
+          "source_sha256": "39986f32fc3b47ce95744fdf15b74bec3893f66d06f3ce4069856aa78d8d25ae",
+          "header_sha256": "a8ddff78c5a9b7f8d766b19e067f343e29accf55438464556921b84883ddbdb6"
+        },
+        {
+          "path": "textures/bedroom/wood.wal",
+          "sha256": "9c46a64cf6d649b17d6debc0b671e9f035ff229c84e03c2b4a539bcb72c89539",
+          "source": "textures/bedroom/wood.png",
+          "source_sha256": "82da157bf7eb961c45066a930786daebf214137eefe974982b5416d5916ea80b",
+          "header_sha256": "8c027075457019f8d61eb70f9bde39a81f8a973cdb098d47a92c84e44a4a74c2"
+        }
+      ]
+    },
+    {
+      "archive": "operation-rocket-test.pk3",
+      "sha256": "143249a14f3f03490a589de0629e22cd721adb4996e4e767072bc0994979e64f",
+      "files": [
+        {
+          "path": "textures/sandkeep/iron.wal",
+          "sha256": "fa19d02d1e884b74e8fb28893cc29aa44ec948c36ca5015545306056c89fe283",
+          "source": "textures/sandkeep/iron.png",
+          "source_sha256": "31a5c99ad170a5dbb5ca1a2949a50a25411fa8c09cbf42269e1623c979e0cea6",
+          "header_sha256": "a296fa5da03b26b652c613c87132f0eb812b57dc60636b848e51a4dbb3a14318"
+        },
+        {
+          "path": "textures/sandkeep/lamp.wal",
+          "sha256": "2afc46299be2d2b197c196770aa26fbd4e08e625f737ef4f753c2085f57cd6dd",
+          "source": "textures/sandkeep/lamp.png",
+          "source_sha256": "51d558c52e1e17fa85940a07544c4e79c978b3c87ffbb453b5a340500f30a913",
+          "header_sha256": "5468640f89c38ea00e1f3affceab13269e04c868924aaa8c83792607bc5c0de1"
+        },
+        {
+          "path": "textures/sandkeep/plastic_blue_smooth.wal",
+          "sha256": "26ade16e5267f7da0a57ffce333a0e5f03c2127b5b85aacaa13fb16f7ba5eee0",
+          "source": "textures/sandkeep/plastic_blue_smooth.png",
+          "source_sha256": "750921e9388e8f30c543c58f6574c28897829ad3564daa093042203373d68541",
+          "header_sha256": "1c867e1121838d33eeb5c4737d28c90a2a98d4dab78817813944c4adb8a72f1a"
+        },
+        {
+          "path": "textures/sandkeep/plastic_green_smooth.wal",
+          "sha256": "7c3766d1fdb4243bd9d8f841386a6e9a4fd7718c93ec817b52a28538834fb9a4",
+          "source": "textures/sandkeep/plastic_green_smooth.png",
+          "source_sha256": "ff12acc84021fa6d2d91d2c921d452e436574330f1562727370035de49d3aa51",
+          "header_sha256": "b8b9761630f4e46edf83d465973b225c8b2ed98a282da15eb6baf15aaf0507c2"
+        },
+        {
+          "path": "textures/sandkeep/plastic_red.wal",
+          "sha256": "ce5674acd7125778555355409d9d0da6aabc562c61ccee4f79cb0a6145be2cfa",
+          "source": "textures/sandkeep/plastic_red.png",
+          "source_sha256": "7685aabe6794a817bbed3cc9ab8091da0f5940df8cc74307920a4605639e5e54",
+          "header_sha256": "e207981dc9bf398b5593a6344e685ebe31986a859d915abd032fb91c7fcd02cb"
+        },
+        {
+          "path": "textures/sandkeep/sand.wal",
+          "sha256": "b68cc5642077ba491f434db9b91859df359829e0860ee18fbc0a5f2d34caec6c",
+          "source": "textures/sandkeep/sand.png",
+          "source_sha256": "56d0beb2473806b331d131c1b8ce2494f084d43588b1803240bde28cffe0cd16",
+          "header_sha256": "6eb702302faab7c7a3c5b858673c114791cce8680cbb00d7b7d025987693341f"
+        },
+        {
+          "path": "textures/sandkeep/trim.wal",
+          "sha256": "9f757d0d2159412f299a3912be5235168cf5c9ba41b0d52c64b5074de63bdd57",
+          "source": "textures/sandkeep/trim.png",
+          "source_sha256": "4c520a068f16c1c525d8c8b99a5c0f80d0310c71b32ef85110d51199bdd9768a",
+          "header_sha256": "bec81e1e2fa249d803c9611e7843a2faf984775c27ce6e55128cebe10f01dbf0"
+        },
+        {
+          "path": "textures/sandkeep/wood.wal",
+          "sha256": "ff2db1281cf83f0601da5f08b906a0749b1e07ae75e0c437db16f0969b37ede2",
+          "source": "textures/sandkeep/wood.png",
+          "source_sha256": "26dd93a38236d59486bc2d1143dcd3fc94e562b943d9e378ad42ed32847abd10",
+          "header_sha256": "ca16936e65f2e328d945c49a0b58d17a8135308de3d26f3483e3bf573902820f"
+        },
+        {
+          "path": "textures/sandkeep/wood_end.wal",
+          "sha256": "693394c4d9049325eaa248a299e4a58c6c9b62ac8551b55507a6b6d91976e5bd",
+          "source": "textures/sandkeep/wood_end.png",
+          "source_sha256": "562bb682fa5f47def74b9b9a79779325b8a420b3d30a215227b176fe1252e5b0",
+          "header_sha256": "adfce24748b15e7124365810b2829db7594b7211407d0aa4fbde1fddda7a363f"
+        }
+      ]
+    },
+    {
+      "archive": "operation-sandkeep.pk3",
+      "sha256": "71bd03e02846747424b9afc4359851e5d561a1cecaaa2ca1a0e5fd080915705d",
+      "files": [
+        {
+          "path": "textures/sandkeep/abc_a.wal",
+          "sha256": "28a57f82df0b96df18fad3d91363742713d7d9951eca4deab49d3c8f52b82707",
+          "source": "textures/sandkeep/abc_a.png",
+          "source_sha256": "4ed8a8752e566318f62cb7437ed86783ec792115fe3b30430cf32616b277c453",
+          "header_sha256": "5e72a29a8d6a2bbba21f67a6eff4dc7bbb15aced174802fc834ea6ec3e25abec"
+        },
+        {
+          "path": "textures/sandkeep/abc_b.wal",
+          "sha256": "938d2e0c3349998a1e3d9ca4d32c498131fcd3a33eb986470039e1bff7ceefb2",
+          "source": "textures/sandkeep/abc_b.png",
+          "source_sha256": "f84292c7436d55756ca32af77c1880f2910c54f997725272e9cb233f4ec7c25b",
+          "header_sha256": "93fdcf4d2e95bcd1acce20ea3b9c425932f1500cd5d91b234416d977b013d9d2"
+        },
+        {
+          "path": "textures/sandkeep/abc_c.wal",
+          "sha256": "bef09abe021ab118eb17be9cd54aa5a848206505264118969a0321ba82b05a3a",
+          "source": "textures/sandkeep/abc_c.png",
+          "source_sha256": "28c401a6fe0cfd5d68afbe6ca03a9c230acbba58eb803462b756d566ca533808",
+          "header_sha256": "2a1e6f6e0c174779bfec1ef201df1663771dec9f68f065992f515b35675b1965"
+        },
+        {
+          "path": "textures/sandkeep/abc_d.wal",
+          "sha256": "a8d0f7411e87abcd7a01e4980881caa97301809b9ea6704f428d2ad032c497ea",
+          "source": "textures/sandkeep/abc_d.png",
+          "source_sha256": "b0d8d676fa2c2805de43733224233f8184b70d9d3ec97ca45c5a1569fc71b524",
+          "header_sha256": "07f99af8fc43eef6b3ca0c8ab485d8ea1baacf7d940cbea4478c0542f470c290"
+        },
+        {
+          "path": "textures/sandkeep/abc_e.wal",
+          "sha256": "42afe6e113681d588663472186c1bfacb3bdf75aa377552d51b41af2c18e2924",
+          "source": "textures/sandkeep/abc_e.png",
+          "source_sha256": "56822d3aea727c719e6010c6cb6465f22df6ba88b40105ce17e070b38e54e00a",
+          "header_sha256": "8c6b33a002a0af7b1bf15a82376e4052f924bc955f9fe4428ff2a1d9d44c5ef1"
+        },
+        {
+          "path": "textures/sandkeep/abc_f.wal",
+          "sha256": "0c0af225a5580f8acb503131ce4ba4644e60c98a9c8e7a8206654c33bde3a822",
+          "source": "textures/sandkeep/abc_f.png",
+          "source_sha256": "6f49ca33abd1b6b91dd6665de57fc420243a9b0e7d598154f4974fc48fad7176",
+          "header_sha256": "9a4f437a5d69ae761d364ad606979216c1d67a2a0fe5c17a3d319aa760d1293a"
+        },
+        {
+          "path": "textures/sandkeep/gate_wood.wal",
+          "sha256": "e36960e2ecb2b5c4de98ecb81abf230168456861f06116c746d5196e677b84ff",
+          "source": "textures/sandkeep/gate_wood.png",
+          "source_sha256": "d7f79b026fa7279cb1327a629800d3b4e5afa961fc7ddf86269757ba78800570",
+          "header_sha256": "28a5dd1f006aef9395985d2a939953bd767ce0dc908da7dd988f1c69db62a14b"
+        },
+        {
+          "path": "textures/sandkeep/grass.wal",
+          "sha256": "421f35ed2dc28a5c3f3d2950a82fdfabe63b820af0d74f4dae47343291303b11",
+          "source": "textures/sandkeep/grass.png",
+          "source_sha256": "e38b0ccabb847c50dce417fad1b6920409d1a70e8f05f520af9fd17221d42af4",
+          "header_sha256": "775579f580866baac0d4268633bfafdbfd244f63f2948e10a62a023b8b2ffa92"
+        },
+        {
+          "path": "textures/sandkeep/helipad.wal",
+          "sha256": "e7bb646af11a4ac771ef1cca9564282790cdce7064e842e51f02668d34fc6dca",
+          "source": "textures/sandkeep/helipad.png",
+          "source_sha256": "15bbc40efbbd058f9883edb4a4aeba06fd9f6992040c3e397ed4ab3610f0a989",
+          "header_sha256": "8aeefdbf3bffd79662dfbc22c4d8b842a51845376e43651f5d043209d7fe656c"
+        },
+        {
+          "path": "textures/sandkeep/iron.wal",
+          "sha256": "fa19d02d1e884b74e8fb28893cc29aa44ec948c36ca5015545306056c89fe283",
+          "source": "textures/sandkeep/iron.png",
+          "source_sha256": "31a5c99ad170a5dbb5ca1a2949a50a25411fa8c09cbf42269e1623c979e0cea6",
+          "header_sha256": "a296fa5da03b26b652c613c87132f0eb812b57dc60636b848e51a4dbb3a14318"
+        },
+        {
+          "path": "textures/sandkeep/lamp.wal",
+          "sha256": "2afc46299be2d2b197c196770aa26fbd4e08e625f737ef4f753c2085f57cd6dd",
+          "source": "textures/sandkeep/lamp.png",
+          "source_sha256": "51d558c52e1e17fa85940a07544c4e79c978b3c87ffbb453b5a340500f30a913",
+          "header_sha256": "5468640f89c38ea00e1f3affceab13269e04c868924aaa8c83792607bc5c0de1"
+        },
+        {
+          "path": "textures/sandkeep/marker.wal",
+          "sha256": "1a5afde8d40c98d684f62823035dad3e847fb6b32110716fb26cb06ce406e305",
+          "source": "textures/sandkeep/marker.png",
+          "source_sha256": "bcf08b4d81566df5afad51eaff7dced0e586bc5aa0ffcba8caf2fba29d4cf998",
+          "header_sha256": "4f15aae5084f95f0eb465cbd5a91d3702b27705e9bd76abafe41ccda7007fa4f"
+        },
+        {
+          "path": "textures/sandkeep/metal.wal",
+          "sha256": "e6a2b798d0c199bf96c5c672d0d9724cb15eacf5947126c5adf8af3c7db0330f",
+          "source": "textures/sandkeep/metal.png",
+          "source_sha256": "2dff1c1c8d4f23714692a568639cc70d48518f98f4952dbc362e626924e36db3",
+          "header_sha256": "4547bcf0fa57d81b1b5de558966303fdb51f9c4a51658740f1c5bb4b277c6781"
+        },
+        {
+          "path": "textures/sandkeep/plastic_blue.wal",
+          "sha256": "6125f57cb1d616ad30de0bbb168df87a0125e388ed0b383ace5d797558cbe3fb",
+          "source": "textures/sandkeep/plastic_blue.png",
+          "source_sha256": "36b2a87fd06e285951bfc373fdd8e514b9e2307bd3f3ae7240c1bc936a59bad9",
+          "header_sha256": "2cccf128a44260e2d0eb45af6857e4113182257547c0cd676c5023e09cbf1533"
+        },
+        {
+          "path": "textures/sandkeep/plastic_blue_smooth.wal",
+          "sha256": "26ade16e5267f7da0a57ffce333a0e5f03c2127b5b85aacaa13fb16f7ba5eee0",
+          "source": "textures/sandkeep/plastic_blue_smooth.png",
+          "source_sha256": "750921e9388e8f30c543c58f6574c28897829ad3564daa093042203373d68541",
+          "header_sha256": "1c867e1121838d33eeb5c4737d28c90a2a98d4dab78817813944c4adb8a72f1a"
+        },
+        {
+          "path": "textures/sandkeep/plastic_green.wal",
+          "sha256": "2d01a834c894a20e34d3b58cb9ef202cd5aa8c1a70523f83099ea0c95651978b",
+          "source": "textures/sandkeep/plastic_green.png",
+          "source_sha256": "2e3ac9dc86d997252bf73acc5dfd2e9e0c9a21a76f285da40697372ed5560327",
+          "header_sha256": "1a23a23167556953f3613074b9dbd1977f32d249c91629c3cf802f60f11a39a1"
+        },
+        {
+          "path": "textures/sandkeep/plastic_green_smooth.wal",
+          "sha256": "7c3766d1fdb4243bd9d8f841386a6e9a4fd7718c93ec817b52a28538834fb9a4",
+          "source": "textures/sandkeep/plastic_green_smooth.png",
+          "source_sha256": "ff12acc84021fa6d2d91d2c921d452e436574330f1562727370035de49d3aa51",
+          "header_sha256": "b8b9761630f4e46edf83d465973b225c8b2ed98a282da15eb6baf15aaf0507c2"
+        },
+        {
+          "path": "textures/sandkeep/plastic_red.wal",
+          "sha256": "ce5674acd7125778555355409d9d0da6aabc562c61ccee4f79cb0a6145be2cfa",
+          "source": "textures/sandkeep/plastic_red.png",
+          "source_sha256": "7685aabe6794a817bbed3cc9ab8091da0f5940df8cc74307920a4605639e5e54",
+          "header_sha256": "e207981dc9bf398b5593a6344e685ebe31986a859d915abd032fb91c7fcd02cb"
+        },
+        {
+          "path": "textures/sandkeep/sand.wal",
+          "sha256": "b68cc5642077ba491f434db9b91859df359829e0860ee18fbc0a5f2d34caec6c",
+          "source": "textures/sandkeep/sand.png",
+          "source_sha256": "56d0beb2473806b331d131c1b8ce2494f084d43588b1803240bde28cffe0cd16",
+          "header_sha256": "6eb702302faab7c7a3c5b858673c114791cce8680cbb00d7b7d025987693341f"
+        },
+        {
+          "path": "textures/sandkeep/sand_cracked.wal",
+          "sha256": "7967d9c8426a67cd68644c2d6126b5db77db8ad5209aafa7f336c7085a657d59",
+          "source": "textures/sandkeep/sand_cracked.png",
+          "source_sha256": "50fcea298fda6fa2895ad1f23f2903f5347bebfb592124a6759d20b9c6ae7747",
+          "header_sha256": "e657fff57f72c24be5577d21e937b3d9ba702850e6e268967c60c1202484f6ac"
+        },
+        {
+          "path": "textures/sandkeep/sand_cracked_offset.wal",
+          "sha256": "ce728f8376400337568218b05ee2ae41796565db3658f153e706efb69f5c6c3b",
+          "source": "textures/sandkeep/sand_cracked_offset.png",
+          "source_sha256": "9f70f9b0b4cc190be9faf4ebc1f9c856efa1b3019d15e437799be37306f9d503",
+          "header_sha256": "d1759413bd535a4d0f44130be52f05856aefce5c5ab7371ab39efcfffac44ab3"
+        },
+        {
+          "path": "textures/sandkeep/sand_wall.wal",
+          "sha256": "57c9d44126920c989a57d5461b2885e1e7744d5201622bd4eca3b83f755ecfcd",
+          "source": "textures/sandkeep/sand_wall.png",
+          "source_sha256": "815bd37282d1e98185eb15237caaec0caf75c88986a66a17b6df13492ec8e07d",
+          "header_sha256": "165dd186f94dba40b2695bd2e04d2f4b2b2156845c48a63838ad285a208fdd9f"
+        },
+        {
+          "path": "textures/sandkeep/sign_armory.wal",
+          "sha256": "801ba45980f23a4247d81a40bf57f5afc08070ffafcea61162a53a1cf5f988a1",
+          "source": "textures/sandkeep/sign_armory.png",
+          "source_sha256": "1d2bca00f26925ab0fc4136e50e4d6b75abd70d2f044ba0805e6fb88341a6d3f",
+          "header_sha256": "25e01f92ba4cfd180f89a6cf8349b9003d492b7628cff31ddf23e4ff44cff506"
+        },
+        {
+          "path": "textures/sandkeep/sign_boss.wal",
+          "sha256": "ce6041fd58d65868a02238bfa7a7e4cc88ec348be0c7ed6d19620f9dd0e83699",
+          "source": "textures/sandkeep/sign_boss.png",
+          "source_sha256": "dd4c3d95220078c0e51cd6d0b280748335a93162aac29298b6b101072ece51b0",
+          "header_sha256": "c78f70a6da222c25c2e460fa4436f177222c5e9d3818ab11dc4609041fc65a52"
+        },
+        {
+          "path": "textures/sandkeep/sign_exit.wal",
+          "sha256": "c16ce8d65c203cb22da8ccf3676c2e7adcae8480f708f957bf8ccf8926a10ac5",
+          "source": "textures/sandkeep/sign_exit.png",
+          "source_sha256": "cc37b1af2f86ae265cedab5a1f1a3efcac1eeb195fd8190b9b64356e95a68f7a",
+          "header_sha256": "b117eedf6cfab2d42b180a227de1bd1774300fa0dfdc5e8a402301e19b7e45a1"
+        },
+        {
+          "path": "textures/sandkeep/sign_radio.wal",
+          "sha256": "24f3b6deeacabdd34abd73d579b5c9a2f23fcf16adbf311da0062ea267a2f19f",
+          "source": "textures/sandkeep/sign_radio.png",
+          "source_sha256": "4438161e436bc8fa3a3676d11f634282257d8de33dd48c20c64f057db79f98c7",
+          "header_sha256": "ace11acce762238e7c0852d3616d366b5ddf7d34d62a963d17d785b6960a39e1"
+        },
+        {
+          "path": "textures/sandkeep/sign_start.wal",
+          "sha256": "824c82e0d9dcffd6a42c448cfbb6cac0924b58b976a2526744d51095750e57ae",
+          "source": "textures/sandkeep/sign_start.png",
+          "source_sha256": "a568186e431040cb271af0fd594d6e7584ab90d03302b03191ab428b969b9fde",
+          "header_sha256": "c51b9a7babf739353c9a4c36330639cecd622a98247bf179391b54b9cd67f85d"
+        },
+        {
+          "path": "textures/sandkeep/sky.wal",
+          "sha256": "887e877ad9c4ebc86ec267b9b14d38a23e2b20778af45a2d34c23acbfef83983",
+          "source": "textures/sandkeep/sky.png",
+          "source_sha256": "e4b50122ba83d074905f864a465ce4c826fdad20c205ebc2ed9e562cecf6ceea",
+          "header_sha256": "31fa6f1f807b34d0912276d4b9e6bf88829c6f40fadc89c647d347ad2449ba78"
+        },
+        {
+          "path": "textures/sandkeep/soil.wal",
+          "sha256": "ebd6332e45cf8f2c8ffeccbb04f48b1a9354aca31fea2a059c36862c9e64f5f9",
+          "source": "textures/sandkeep/soil.png",
+          "source_sha256": "4c069e40a2ab2d907cd57c573763b79c751a8617b14244656f9e4a65b8a43abd",
+          "header_sha256": "df4f04f05b87f4647b05b5025d92b07041515f0bca6eb9bab2324db583fa1380"
+        },
+        {
+          "path": "textures/sandkeep/switch_armory.wal",
+          "sha256": "30ea069142f78e5ca40de65561c43b2780fc8bc72743eb333899f74f575c9d0c",
+          "source": "textures/sandkeep/switch_armory.png",
+          "source_sha256": "98aff8a67880cbe0ddea24cf1c5d53cbb97ee43d4af67adf61e6b129fc6b3932",
+          "header_sha256": "20095375b6dbbb999ef8307b25fbe8d14af76ac49406d512a53f6c7300873fc1"
+        },
+        {
+          "path": "textures/sandkeep/switch_armory_idle.wal",
+          "sha256": "a5f76381e7a8016918b8191a13e688cc0f44085e975b710f07285aae474a01e4",
+          "source": "textures/sandkeep/switch_armory_idle.png",
+          "source_sha256": "8d4781d915242e03176269d8b11843bfd727c83c1ac666e2cf7d06b33774a026",
+          "header_sha256": "4a6cc17dc9a04261186123f376e25642d325669d01423991c349c6ec2b72191c"
+        },
+        {
+          "path": "textures/sandkeep/switch_armory_on.wal",
+          "sha256": "4aaf6458a91df32de99e16ed6aa64fbbdddcccbfbb28a5eecac95208a5fd129e",
+          "source": "textures/sandkeep/switch_armory_on.png",
+          "source_sha256": "fa155e0c8ac3195959d2759a2b33657def55df2ddb7c120f31b13acea1443ebc",
+          "header_sha256": "6557508e4db022519de4c6df67d03ab385665fe44c3d5bac1500141a79c8c380"
+        },
+        {
+          "path": "textures/sandkeep/switch_armory_on_alt.wal",
+          "sha256": "46616af980d0d27c7d49f42e0072bac428181b9e1fe0f87b421c82072a7f57b8",
+          "source": "textures/sandkeep/switch_armory_on_alt.png",
+          "source_sha256": "22d4e48c48a7661c0bacdcbb8a558016308cfeda9e5b07078794a02587766a30",
+          "header_sha256": "83a45b1f2bb8d35b36d8d6fee37d7c9d0b157589f64a80cbb8a9c7fe7c690fb8"
+        },
+        {
+          "path": "textures/sandkeep/switch_radio.wal",
+          "sha256": "dfe4a3cdd498fef4a4d9ed71105b72d9b2385017875b8c882da16acb5dda2296",
+          "source": "textures/sandkeep/switch_radio.png",
+          "source_sha256": "f277e57289521a88154d5490d6d69d6f06fddddd4d9100c744fd4466b16f74cf",
+          "header_sha256": "2068f00ac3628217f2ed8daa03514d0495f8fc142e02edb2376550704b909316"
+        },
+        {
+          "path": "textures/sandkeep/switch_radio_idle.wal",
+          "sha256": "ee69945a242caecadee385638e197328e78d78b5bc04c8735a8660a698fe124c",
+          "source": "textures/sandkeep/switch_radio_idle.png",
+          "source_sha256": "09f0ce226012890f0c9bf25ec11bae2450f9d32497f8be2e96e0000058c2978f",
+          "header_sha256": "156ffccc8b876d9cd8fdb230231a92dbaf69d5e7ce6a0a69f9481fcabf522afb"
+        },
+        {
+          "path": "textures/sandkeep/switch_radio_on.wal",
+          "sha256": "176a8750eebd8ceab7695026a8d6a776e0eeb9c33f863b94f9c95c4938fe6274",
+          "source": "textures/sandkeep/switch_radio_on.png",
+          "source_sha256": "1d411f7ffc8f4d075b4bf28a0511ba8eccd9600603282881a2980c3298a831da",
+          "header_sha256": "06191b7346b46d3683ecb58f4d3aa467f08fba1a69cdaa26385adb11c3d1dc17"
+        },
+        {
+          "path": "textures/sandkeep/switch_radio_on_alt.wal",
+          "sha256": "c132e96108c5dbe8c64f982f0efed56cebb718f16cde83c412bab4c01418e536",
+          "source": "textures/sandkeep/switch_radio_on_alt.png",
+          "source_sha256": "9a1fdb9441ec4f6e922bb020e43be5a53acf673b15515bf8817efdf26d380756",
+          "header_sha256": "0b1c421be2f9c043f58070c0d469e280d87639a6691aa7192e1a3de63c9940ce"
+        },
+        {
+          "path": "textures/sandkeep/trim.wal",
+          "sha256": "9f757d0d2159412f299a3912be5235168cf5c9ba41b0d52c64b5074de63bdd57",
+          "source": "textures/sandkeep/trim.png",
+          "source_sha256": "4c520a068f16c1c525d8c8b99a5c0f80d0310c71b32ef85110d51199bdd9768a",
+          "header_sha256": "bec81e1e2fa249d803c9611e7843a2faf984775c27ce6e55128cebe10f01dbf0"
+        },
+        {
+          "path": "textures/sandkeep/wood.wal",
+          "sha256": "ff2db1281cf83f0601da5f08b906a0749b1e07ae75e0c437db16f0969b37ede2",
+          "source": "textures/sandkeep/wood.png",
+          "source_sha256": "26dd93a38236d59486bc2d1143dcd3fc94e562b943d9e378ad42ed32847abd10",
+          "header_sha256": "ca16936e65f2e328d945c49a0b58d17a8135308de3d26f3483e3bf573902820f"
+        },
+        {
+          "path": "textures/sandkeep/wood_end.wal",
+          "sha256": "693394c4d9049325eaa248a299e4a58c6c9b62ac8551b55507a6b6d91976e5bd",
+          "source": "textures/sandkeep/wood_end.png",
+          "source_sha256": "562bb682fa5f47def74b9b9a79779325b8a420b3d30a215227b176fe1252e5b0",
+          "header_sha256": "adfce24748b15e7124365810b2829db7594b7211407d0aa4fbde1fddda7a363f"
+        }
+      ]
+    },
+    {
+      "archive": "operation-sandwatch.pk3",
+      "sha256": "e483fff765e638ab78063b7f31590e9959658f9ec987303dcf3a017cdc12749c",
+      "files": [
+        {
+          "path": "textures/sandkeep/abc_a.wal",
+          "sha256": "28a57f82df0b96df18fad3d91363742713d7d9951eca4deab49d3c8f52b82707",
+          "source": "textures/sandkeep/abc_a.png",
+          "source_sha256": "4ed8a8752e566318f62cb7437ed86783ec792115fe3b30430cf32616b277c453",
+          "header_sha256": "5e72a29a8d6a2bbba21f67a6eff4dc7bbb15aced174802fc834ea6ec3e25abec"
+        },
+        {
+          "path": "textures/sandkeep/abc_b.wal",
+          "sha256": "938d2e0c3349998a1e3d9ca4d32c498131fcd3a33eb986470039e1bff7ceefb2",
+          "source": "textures/sandkeep/abc_b.png",
+          "source_sha256": "f84292c7436d55756ca32af77c1880f2910c54f997725272e9cb233f4ec7c25b",
+          "header_sha256": "93fdcf4d2e95bcd1acce20ea3b9c425932f1500cd5d91b234416d977b013d9d2"
+        },
+        {
+          "path": "textures/sandkeep/abc_c.wal",
+          "sha256": "bef09abe021ab118eb17be9cd54aa5a848206505264118969a0321ba82b05a3a",
+          "source": "textures/sandkeep/abc_c.png",
+          "source_sha256": "28c401a6fe0cfd5d68afbe6ca03a9c230acbba58eb803462b756d566ca533808",
+          "header_sha256": "2a1e6f6e0c174779bfec1ef201df1663771dec9f68f065992f515b35675b1965"
+        },
+        {
+          "path": "textures/sandkeep/abc_d.wal",
+          "sha256": "a8d0f7411e87abcd7a01e4980881caa97301809b9ea6704f428d2ad032c497ea",
+          "source": "textures/sandkeep/abc_d.png",
+          "source_sha256": "b0d8d676fa2c2805de43733224233f8184b70d9d3ec97ca45c5a1569fc71b524",
+          "header_sha256": "07f99af8fc43eef6b3ca0c8ab485d8ea1baacf7d940cbea4478c0542f470c290"
+        },
+        {
+          "path": "textures/sandkeep/gate_wood.wal",
+          "sha256": "e36960e2ecb2b5c4de98ecb81abf230168456861f06116c746d5196e677b84ff",
+          "source": "textures/sandkeep/gate_wood.png",
+          "source_sha256": "d7f79b026fa7279cb1327a629800d3b4e5afa961fc7ddf86269757ba78800570",
+          "header_sha256": "28a5dd1f006aef9395985d2a939953bd767ce0dc908da7dd988f1c69db62a14b"
+        },
+        {
+          "path": "textures/sandkeep/iron.wal",
+          "sha256": "fa19d02d1e884b74e8fb28893cc29aa44ec948c36ca5015545306056c89fe283",
+          "source": "textures/sandkeep/iron.png",
+          "source_sha256": "31a5c99ad170a5dbb5ca1a2949a50a25411fa8c09cbf42269e1623c979e0cea6",
+          "header_sha256": "a296fa5da03b26b652c613c87132f0eb812b57dc60636b848e51a4dbb3a14318"
+        },
+        {
+          "path": "textures/sandkeep/lamp.wal",
+          "sha256": "2afc46299be2d2b197c196770aa26fbd4e08e625f737ef4f753c2085f57cd6dd",
+          "source": "textures/sandkeep/lamp.png",
+          "source_sha256": "51d558c52e1e17fa85940a07544c4e79c978b3c87ffbb453b5a340500f30a913",
+          "header_sha256": "5468640f89c38ea00e1f3affceab13269e04c868924aaa8c83792607bc5c0de1"
+        },
+        {
+          "path": "textures/sandkeep/plastic_blue_smooth.wal",
+          "sha256": "26ade16e5267f7da0a57ffce333a0e5f03c2127b5b85aacaa13fb16f7ba5eee0",
+          "source": "textures/sandkeep/plastic_blue_smooth.png",
+          "source_sha256": "750921e9388e8f30c543c58f6574c28897829ad3564daa093042203373d68541",
+          "header_sha256": "1c867e1121838d33eeb5c4737d28c90a2a98d4dab78817813944c4adb8a72f1a"
+        },
+        {
+          "path": "textures/sandkeep/plastic_green_smooth.wal",
+          "sha256": "7c3766d1fdb4243bd9d8f841386a6e9a4fd7718c93ec817b52a28538834fb9a4",
+          "source": "textures/sandkeep/plastic_green_smooth.png",
+          "source_sha256": "ff12acc84021fa6d2d91d2c921d452e436574330f1562727370035de49d3aa51",
+          "header_sha256": "b8b9761630f4e46edf83d465973b225c8b2ed98a282da15eb6baf15aaf0507c2"
+        },
+        {
+          "path": "textures/sandkeep/sand.wal",
+          "sha256": "b68cc5642077ba491f434db9b91859df359829e0860ee18fbc0a5f2d34caec6c",
+          "source": "textures/sandkeep/sand.png",
+          "source_sha256": "56d0beb2473806b331d131c1b8ce2494f084d43588b1803240bde28cffe0cd16",
+          "header_sha256": "6eb702302faab7c7a3c5b858673c114791cce8680cbb00d7b7d025987693341f"
+        },
+        {
+          "path": "textures/sandkeep/sand_wall.wal",
+          "sha256": "57c9d44126920c989a57d5461b2885e1e7744d5201622bd4eca3b83f755ecfcd",
+          "source": "textures/sandkeep/sand_wall.png",
+          "source_sha256": "815bd37282d1e98185eb15237caaec0caf75c88986a66a17b6df13492ec8e07d",
+          "header_sha256": "165dd186f94dba40b2695bd2e04d2f4b2b2156845c48a63838ad285a208fdd9f"
+        },
+        {
+          "path": "textures/sandkeep/sky.wal",
+          "sha256": "887e877ad9c4ebc86ec267b9b14d38a23e2b20778af45a2d34c23acbfef83983",
+          "source": "textures/sandkeep/sky.png",
+          "source_sha256": "e4b50122ba83d074905f864a465ce4c826fdad20c205ebc2ed9e562cecf6ceea",
+          "header_sha256": "31fa6f1f807b34d0912276d4b9e6bf88829c6f40fadc89c647d347ad2449ba78"
+        },
+        {
+          "path": "textures/sandkeep/sw_ammo.wal",
+          "sha256": "5b57cd9e4f01c6a226fd9149b0ec101c61b1dc59ed1d3b0821b9da947b9d3027",
+          "source": "textures/sandkeep/sw_ammo.png",
+          "source_sha256": "5795dc3d978d4a5c6e2464ad387cd90fed325a706bd88358015bd30a32d0f0b8",
+          "header_sha256": "724822c06e0f8caf7bd02f97b96d479bc16f8108c559925798ba059c103d26b2"
+        },
+        {
+          "path": "textures/sandkeep/sw_auto.wal",
+          "sha256": "1ed1509c253110a13d4ca63b4a90ad08d98a62a5040de63868978a1e1fb566bc",
+          "source": "textures/sandkeep/sw_auto.png",
+          "source_sha256": "3f3351c60a14a7bdfd2013de3ec7dc773813df20844857bd811585e29d48a919",
+          "header_sha256": "dfd8a98aa943f86405954cc6060a4a8488a2d19e09acd1838ae116102b84e9b3"
+        },
+        {
+          "path": "textures/sandkeep/sw_boom.wal",
+          "sha256": "97d0a0044a532e3592584f718e02a8da5dbac3313e4b31b8b3e21c4d1402fcbb",
+          "source": "textures/sandkeep/sw_boom.png",
+          "source_sha256": "decaa7fa3b5d8e7b02ca40afff5278df69eb396ff088cb3974cdedb81784c4eb",
+          "header_sha256": "295c0b7c15c656b4b2b686ca67e8605278517c7c299b4235703ce750cb3f22a4"
+        },
+        {
+          "path": "textures/sandkeep/sw_close.wal",
+          "sha256": "57eea7047158b5227c44e15cb0af2040892a5894e9a038991ca28f9d2ca82fc6",
+          "source": "textures/sandkeep/sw_close.png",
+          "source_sha256": "3d596438331d0e96672d1925f22cc43d362ad864166169997e7cf744dd3bbdeb",
+          "header_sha256": "50ca1bc5cde6bf2a0e415187d321299d570fd145e5c36a14a0359d5fae1102a7"
+        },
+        {
+          "path": "textures/sandkeep/sw_exit.wal",
+          "sha256": "92fe503144760a37ba12185ab16e306cd5ddb5449c6fc82d1d4ff5fcca238c1f",
+          "source": "textures/sandkeep/sw_exit.png",
+          "source_sha256": "f5199ef60576125e17b2f1389ab682467c33a99602f57d63941af1388971bcd5",
+          "header_sha256": "b6a9ceb06ed2643abdb7089fce2719cf53440ed19d1174f5a1586b7f00d1c7f0"
+        },
+        {
+          "path": "textures/sandkeep/sw_heavy.wal",
+          "sha256": "94230b8c737e5165c9e6ff59ff4fa070f92c871995b3c5f268b8b4fd67fe162c",
+          "source": "textures/sandkeep/sw_heavy.png",
+          "source_sha256": "f2755bc7e47ee24c835b4c8774f168fb6391f7f097bd6c58c7274a83181f3211",
+          "header_sha256": "432ebec201b0e3389d47143e56887a99788ba2851ea253368a32691537ed055a"
+        },
+        {
+          "path": "textures/sandkeep/sw_mission.wal",
+          "sha256": "fbe9e77066894ca48d9428662792cdab6cc132eb712037a8ee6e753952af0b6d",
+          "source": "textures/sandkeep/sw_mission.png",
+          "source_sha256": "9f0fcde8ca4d6ecaeb1022c64850221100d66a165b122935fe5d0feafe5a5462",
+          "header_sha256": "562c7f63252d1786e47d73d4a1d481c243b5b335c90730c196dc2d53de80ad7d"
+        },
+        {
+          "path": "textures/sandkeep/sw_radio.wal",
+          "sha256": "0fb554381ba27c23f9d83aee2518e4fc649866286c811b0a794ab1630d32e2b5",
+          "source": "textures/sandkeep/sw_radio.png",
+          "source_sha256": "9e43cd8c34c1ec3e6fa0e61f75af9c98c58b9ccb26811aa5138aabea5a3a45e3",
+          "header_sha256": "8bb8283ce9e4d553bf538495e78d8b93d323a6fddf954b5a584c2ef672d05fa6"
+        },
+        {
+          "path": "textures/sandkeep/sw_rocket.wal",
+          "sha256": "efe433fbd5621b975fd0d2f9c3940cb7e991f04e7bfe5ad3a21cc508de1eb642",
+          "source": "textures/sandkeep/sw_rocket.png",
+          "source_sha256": "cb700f22ffcdb2987a9ad0553e06e987c33879cb8e47cdd714e984b8785acd99",
+          "header_sha256": "f097b2312c1152786421ae17af3d9747fe5b13565db077d63a983c38e0e24896"
+        },
+        {
+          "path": "textures/sandkeep/switch_radio.wal",
+          "sha256": "dfe4a3cdd498fef4a4d9ed71105b72d9b2385017875b8c882da16acb5dda2296",
+          "source": "textures/sandkeep/switch_radio.png",
+          "source_sha256": "f277e57289521a88154d5490d6d69d6f06fddddd4d9100c744fd4466b16f74cf",
+          "header_sha256": "2068f00ac3628217f2ed8daa03514d0495f8fc142e02edb2376550704b909316"
+        },
+        {
+          "path": "textures/sandkeep/trim.wal",
+          "sha256": "9f757d0d2159412f299a3912be5235168cf5c9ba41b0d52c64b5074de63bdd57",
+          "source": "textures/sandkeep/trim.png",
+          "source_sha256": "4c520a068f16c1c525d8c8b99a5c0f80d0310c71b32ef85110d51199bdd9768a",
+          "header_sha256": "bec81e1e2fa249d803c9611e7843a2faf984775c27ce6e55128cebe10f01dbf0"
+        },
+        {
+          "path": "textures/sandkeep/wood.wal",
+          "sha256": "ff2db1281cf83f0601da5f08b906a0749b1e07ae75e0c437db16f0969b37ede2",
+          "source": "textures/sandkeep/wood.png",
+          "source_sha256": "26dd93a38236d59486bc2d1143dcd3fc94e562b943d9e378ad42ed32847abd10",
+          "header_sha256": "ca16936e65f2e328d945c49a0b58d17a8135308de3d26f3483e3bf573902820f"
+        },
+        {
+          "path": "textures/sandkeep/wood_end.wal",
+          "sha256": "693394c4d9049325eaa248a299e4a58c6c9b62ac8551b55507a6b6d91976e5bd",
+          "source": "textures/sandkeep/wood_end.png",
+          "source_sha256": "562bb682fa5f47def74b9b9a79779325b8a420b3d30a215227b176fe1252e5b0",
+          "header_sha256": "adfce24748b15e7124365810b2829db7594b7211407d0aa4fbde1fddda7a363f"
+        }
+      ]
+    },
+    {
+      "archive": "operation-tank-test.pk3",
+      "sha256": "7c0b4eb973228a11bf4ac5fcda3e90889c7fd12e421764f8ba1b977b003e630c",
+      "files": [
+        {
+          "path": "textures/sandkeep/iron.wal",
+          "sha256": "fa19d02d1e884b74e8fb28893cc29aa44ec948c36ca5015545306056c89fe283",
+          "source": "textures/sandkeep/iron.png",
+          "source_sha256": "31a5c99ad170a5dbb5ca1a2949a50a25411fa8c09cbf42269e1623c979e0cea6",
+          "header_sha256": "a296fa5da03b26b652c613c87132f0eb812b57dc60636b848e51a4dbb3a14318"
+        },
+        {
+          "path": "textures/sandkeep/lamp.wal",
+          "sha256": "2afc46299be2d2b197c196770aa26fbd4e08e625f737ef4f753c2085f57cd6dd",
+          "source": "textures/sandkeep/lamp.png",
+          "source_sha256": "51d558c52e1e17fa85940a07544c4e79c978b3c87ffbb453b5a340500f30a913",
+          "header_sha256": "5468640f89c38ea00e1f3affceab13269e04c868924aaa8c83792607bc5c0de1"
+        },
+        {
+          "path": "textures/sandkeep/plastic_blue_smooth.wal",
+          "sha256": "26ade16e5267f7da0a57ffce333a0e5f03c2127b5b85aacaa13fb16f7ba5eee0",
+          "source": "textures/sandkeep/plastic_blue_smooth.png",
+          "source_sha256": "750921e9388e8f30c543c58f6574c28897829ad3564daa093042203373d68541",
+          "header_sha256": "1c867e1121838d33eeb5c4737d28c90a2a98d4dab78817813944c4adb8a72f1a"
+        },
+        {
+          "path": "textures/sandkeep/plastic_green_smooth.wal",
+          "sha256": "7c3766d1fdb4243bd9d8f841386a6e9a4fd7718c93ec817b52a28538834fb9a4",
+          "source": "textures/sandkeep/plastic_green_smooth.png",
+          "source_sha256": "ff12acc84021fa6d2d91d2c921d452e436574330f1562727370035de49d3aa51",
+          "header_sha256": "b8b9761630f4e46edf83d465973b225c8b2ed98a282da15eb6baf15aaf0507c2"
+        },
+        {
+          "path": "textures/sandkeep/plastic_red.wal",
+          "sha256": "ce5674acd7125778555355409d9d0da6aabc562c61ccee4f79cb0a6145be2cfa",
+          "source": "textures/sandkeep/plastic_red.png",
+          "source_sha256": "7685aabe6794a817bbed3cc9ab8091da0f5940df8cc74307920a4605639e5e54",
+          "header_sha256": "e207981dc9bf398b5593a6344e685ebe31986a859d915abd032fb91c7fcd02cb"
+        },
+        {
+          "path": "textures/sandkeep/sand.wal",
+          "sha256": "b68cc5642077ba491f434db9b91859df359829e0860ee18fbc0a5f2d34caec6c",
+          "source": "textures/sandkeep/sand.png",
+          "source_sha256": "56d0beb2473806b331d131c1b8ce2494f084d43588b1803240bde28cffe0cd16",
+          "header_sha256": "6eb702302faab7c7a3c5b858673c114791cce8680cbb00d7b7d025987693341f"
+        },
+        {
+          "path": "textures/sandkeep/trim.wal",
+          "sha256": "9f757d0d2159412f299a3912be5235168cf5c9ba41b0d52c64b5074de63bdd57",
+          "source": "textures/sandkeep/trim.png",
+          "source_sha256": "4c520a068f16c1c525d8c8b99a5c0f80d0310c71b32ef85110d51199bdd9768a",
+          "header_sha256": "bec81e1e2fa249d803c9611e7843a2faf984775c27ce6e55128cebe10f01dbf0"
+        },
+        {
+          "path": "textures/sandkeep/wood.wal",
+          "sha256": "ff2db1281cf83f0601da5f08b906a0749b1e07ae75e0c437db16f0969b37ede2",
+          "source": "textures/sandkeep/wood.png",
+          "source_sha256": "26dd93a38236d59486bc2d1143dcd3fc94e562b943d9e378ad42ed32847abd10",
+          "header_sha256": "ca16936e65f2e328d945c49a0b58d17a8135308de3d26f3483e3bf573902820f"
+        },
+        {
+          "path": "textures/sandkeep/wood_end.wal",
+          "sha256": "693394c4d9049325eaa248a299e4a58c6c9b62ac8551b55507a6b6d91976e5bd",
+          "source": "textures/sandkeep/wood_end.png",
+          "source_sha256": "562bb682fa5f47def74b9b9a79779325b8a420b3d30a215227b176fe1252e5b0",
+          "header_sha256": "adfce24748b15e7124365810b2829db7594b7211407d0aa4fbde1fddda7a363f"
+        }
+      ]
+    }
+  ]
+}

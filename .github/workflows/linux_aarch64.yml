@@ -1,0 +1,58 @@
+name: Testbuild for Linux (aarch64)
+run-name: testbuild_linux_aarch64
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    types:
+      - edited
+      - opened
+      - synchronize
+      - ready_for_review
+concurrency:
+  # Cancel concurrent workflows for the same PR or commit hash.
+  group: ${{github.workflow}}-${{github.event_name == 'pull_request' && github.head_ref || github.sha}}
+  cancel-in-progress: true
+jobs:
+  build_ubuntu_aarch64:
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - env: ubuntu
+    steps:
+    - name: Install build dependencies
+      run: |
+        sudo apt update
+        sudo apt install libgl1-mesa-dev libsdl2-dev libopenal-dev libcurl4-openssl-dev \
+            build-essential python3
+    - name: Check out repository code
+      uses: actions/checkout@v6
+    - name: Build
+      run: |
+        # Public runners come with 4 CPUs.
+        make WITH_SDL3=no -j4
+        make WITH_SDL3=no -j4 ref_gles1
+    - name: Create testbuild package
+      run: |
+        # Create release directory tree
+        mkdir -p publish/quake2-linux_aarch64-${{github.sha}}/misc/docs
+        # Copy release assets
+        cp -r release/* publish/quake2-linux_aarch64-${{github.sha}}/
+        # Copy misc assets
+        cp -r stuff/yq2.cfg publish/quake2-linux_aarch64-${{github.sha}}/misc/yq2.cfg
+        if [ -d stuff/mapfixes ]; then cp -r stuff/mapfixes publish/quake2-linux_aarch64-${{github.sha}}/misc; fi
+        cp LICENSE publish/quake2-linux_aarch64-${{github.sha}}/misc/docs/LICENSE.txt
+        cp README.md publish/quake2-linux_aarch64-${{github.sha}}/misc/docs/README.txt
+        if [ -d doc ]; then cp -r doc/. publish/quake2-linux_aarch64-${{github.sha}}/misc/docs/; fi
+    - name: Upload testbuild package
+      uses: actions/upload-artifact@v7
+      with:
+        name: quake2-linux_aarch64-${{github.sha}}
+        path: publish/
+        if-no-files-found: error

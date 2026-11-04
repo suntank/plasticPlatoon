@@ -1,0 +1,105 @@
+[
+  {
+    "name": "entry_crack_outside",
+    "pose": [0, -2288, 28, 0, 90]
+  },
+  {
+    "name": "entry_crack_walkthrough",
+    "pose": [0, -2240, 28, 0, 90],
+    "expect_eye_bounds": {"x": [-96, 96], "y": [-2040, -1400], "z": [32, 192]},
+    "after_pose": [
+      {"command": "noclip", "wait": 0.2},
+      {"command": "+forward", "wait": 1.8},
+      {"command": "-forward", "wait": 0.3},
+      {"command": "noclip", "wait": 0.1}
+    ]
+  },
+  {
+    "name": "secret_one_intact",
+    "pose": [-896, -1328, 28, 0, 90]
+  },
+  {
+    "name": "secret_one_breached",
+    "pose": [-896, -1328, 28, 0, 90],
+    "commands": ["give all", "use Shotgun"],
+    "after_pose": [
+      {"command": "+attack", "wait": 1.5},
+      {"command": "-attack", "wait": 0.7}
+    ]
+  },
+  {
+    "name": "secret_one_inside",
+    "pose": [-896, -1128, 28, 0, 90],
+    "expect_log": ["Secret found: buried supply cache."],
+    "after_pose": [
+      {"command": "noclip", "wait": 0.5},
+      {"command": "noclip", "wait": 0.2}
+    ]
+  },
+  {
+    "name": "secret_two_intact",
+    "pose": [-72, 480, 28, 0, 90]
+  },
+  {
+    "name": "secret_two_breached",
+    "pose": [-72, 520, 28, 0, 90],
+    "after_pose": [
+      {"command": "+attack", "wait": 1.5},
+      {"command": "-attack", "wait": 0.7}
+    ]
+  },
+  {
+    "name": "secret_two_inside",
+    "pose": [-72, 744, 28, 0, 90],
+    "expect_log": ["Secret found: marksman's reserve."],
+    "after_pose": [
+      {"command": "noclip", "wait": 0.5},
+      {"command": "noclip", "wait": 0.2}
+    ]
+  },
+  {
+    "name": "keep_before_controls",
+    "pose": [-112, 1390, 28, -3, 90]
+  },
+  {
+    "name": "armory_before_press",
+    "pose": [-736, 635, 28, 0, 90]
+  },
+  {
+    "name": "armory_pressed",
+    "pose": [-736, 740, 28, 0, 90],
+    "expect_log": ["ARMORY SECURED"],
+    "after_pose": [
+      {"command": "noclip", "wait": 0.1},
+      {"command": "+forward", "wait": 0.9},
+      {"command": "-forward", "wait": 0.3},
+      {"command": "noclip", "wait": 0.1},
+      {"command": "cl_bench_pose 0 -736 635 28 0 90", "wait": 0.4}
+    ]
+  },
+  {
+    "name": "radio_before_press",
+    "pose": [800, 650, 156, 0, 90]
+  },
+  {
+    "name": "radio_pressed",
+    "pose": [800, 740, 156, 0, 90],
+    "expect_log": ["RADIO DISABLED", "KEEP ACCESS OPEN"],
+    "after_pose": [
+      {"command": "noclip", "wait": 0.1},
+      {"command": "+forward", "wait": 0.9},
+      {"command": "-forward", "wait": 0.3},
+      {"command": "noclip", "wait": 0.1},
+      {"command": "cl_bench_pose 0 800 650 156 0 90", "wait": 0.4}
+    ]
+  },
+  {
+    "name": "keep_after_controls",
+    "pose": [-112, 1390, 28, -3, 90],
+    "after_pose": [{"wait": 2.5}]
+  },
+  {
+    "name": "outdoor_extraction_arrival",
+    "pose": [0, 3264, 28, 0, 90]
+  }
+]

@@ -1,0 +1,62 @@
+{
+  "purpose": "Correct pickup textures from the audited local originals, preserving optimized model bytes.",
+  "pack_sha256": "159eb98a34e4dd04dac1c10b77dd340d4081f8df03f80ef32fbbf680dc71cb9e",
+  "pack_bytes": 17015360,
+  "both_pack_copies_identical": true,
+  "all_audited_home_assets_unchanged": true,
+  "shared_png_count": 75,
+  "all_shared_pngs_match_original_pixels_or_exact_lanczos_resize": true,
+  "changed_pack_entries": [
+    "models/items/ammo/grenades/medium/skin.png",
+    "models/items/ammo/rockets/medium/skin.png",
+    "models/items/armor/body/skin.png",
+    "models/items/armor/combat/skin.png",
+    "models/items/armor/jacket/skin.png",
+    "models/items/armor/shard/skin.png",
+    "models/items/healing/large/skin.png",
+    "models/items/healing/medium/skin.png",
+    "models/items/healing/stimpack/skin.png",
+    "models/items/mega_h/skin.png",
+    "models/weapons/g_chain/skin.png",
+    "models/weapons/g_launch/skin.png",
+    "models/weapons/g_machn/skin_pickup.png",
+    "models/weapons/g_rocket/skin.png",
+    "models/weapons/g_shotg/skin.png",
+    "models/weapons/g_shotg2/skin.png"
+  ],
+  "model_bytes_unchanged": true,
+  "test_pack_asset_overlaps_match": true,
+  "deterministic_pickup_rebuild": true,
+  "renderers": {
+    "gl1": {
+      "passed": true,
+      "renderer": "gl1",
+      "returncode": 0,
+      "rendered_frames": 120,
+      "pickup_models": 16,
+      "pickup_textures": 16,
+      "missing_pack_reads": [],
+      "image_errors": [],
+      "home_override_present": false,
+      "pack_sha256": "159eb98a34e4dd04dac1c10b77dd340d4081f8df03f80ef32fbbf680dc71cb9e",
+      "screenshots": [
+        "q2_0000.tga"
+      ]
+    },
+    "gl3": {
+      "passed": true,
+      "renderer": "gl3",
+      "returncode": 0,
+      "rendered_frames": 120,
+      "pickup_models": 16,
+      "pickup_textures": 16,
+      "missing_pack_reads": [],
+      "image_errors": [],
+      "home_override_present": false,
+      "pack_sha256": "159eb98a34e4dd04dac1c10b77dd340d4081f8df03f80ef32fbbf680dc71cb9e",
+      "screenshots": [
+        "q2_0000.tga"
+      ]
+    }
+  }
+}

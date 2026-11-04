@@ -1,0 +1,737 @@
+// Original Plastic Platoon helicopter test range; directly editable.
+{
+"classname" "worldspawn"
+"message" "Plastic Helicopter Test Range"
+"sounds" "0"
+"sky" "unit1_"
+"_sun" "range_sun_target"
+"_sun_light" "70"
+"_sun_ambient" "24"
+"_sun_color" "1 .98 .94"
+{
+( -1440 -1632 -64 ) ( -1440 1632 0 ) ( -1440 -1632 0 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( 1440 -1632 -64 ) ( 1440 1632 0 ) ( 1440 1632 -64 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -1440 -1632 -64 ) ( 1440 -1632 0 ) ( 1440 -1632 -64 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -1440 1632 -64 ) ( 1440 1632 0 ) ( -1440 1632 0 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -1440 -1632 -64 ) ( 1440 1632 -64 ) ( -1440 1632 -64 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -1440 -1632 0 ) ( 1440 1632 0 ) ( 1440 -1632 0 ) sandkeep/sand 0 0 0 1 1 0 0 0
+}
+{
+( -1440 -1632 832 ) ( -1440 1632 864 ) ( -1440 -1632 864 ) sandkeep/wood_end 0 0 0 1 1 0 4 0
+( 1440 -1632 832 ) ( 1440 1632 864 ) ( 1440 1632 832 ) sandkeep/wood_end 0 0 0 1 1 0 4 0
+( -1440 -1632 832 ) ( 1440 -1632 864 ) ( 1440 -1632 832 ) sandkeep/wood_end 0 0 0 1 1 0 4 0
+( -1440 1632 832 ) ( 1440 1632 864 ) ( -1440 1632 864 ) sandkeep/wood_end 0 0 0 1 1 0 4 0
+( -1440 -1632 832 ) ( 1440 1632 832 ) ( -1440 1632 832 ) sandkeep/wood_end 0 0 0 1 1 0 4 0
+( -1440 -1632 864 ) ( 1440 1632 864 ) ( 1440 -1632 864 ) sandkeep/wood_end 0 0 0 1 1 0 4 0
+}
+{
+( -1440 -1632 0 ) ( -1440 1632 832 ) ( -1440 -1632 832 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1408 -1632 0 ) ( -1408 1632 832 ) ( -1408 1632 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1440 -1632 0 ) ( -1408 -1632 832 ) ( -1408 -1632 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1440 1632 0 ) ( -1408 1632 832 ) ( -1440 1632 832 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1440 -1632 0 ) ( -1408 1632 0 ) ( -1440 1632 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1440 -1632 832 ) ( -1408 1632 832 ) ( -1408 -1632 832 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( 1408 -1632 0 ) ( 1408 1632 832 ) ( 1408 -1632 832 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 1440 -1632 0 ) ( 1440 1632 832 ) ( 1440 1632 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 1408 -1632 0 ) ( 1440 -1632 832 ) ( 1440 -1632 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 1408 1632 0 ) ( 1440 1632 832 ) ( 1408 1632 832 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 1408 -1632 0 ) ( 1440 1632 0 ) ( 1408 1632 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 1408 -1632 832 ) ( 1440 1632 832 ) ( 1440 -1632 832 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( -1408 -1632 0 ) ( -1408 -1600 832 ) ( -1408 -1632 832 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 1408 -1632 0 ) ( 1408 -1600 832 ) ( 1408 -1600 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1408 -1632 0 ) ( 1408 -1632 832 ) ( 1408 -1632 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1408 -1600 0 ) ( 1408 -1600 832 ) ( -1408 -1600 832 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1408 -1632 0 ) ( 1408 -1600 0 ) ( -1408 -1600 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1408 -1632 832 ) ( 1408 -1600 832 ) ( 1408 -1632 832 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( -1408 1600 0 ) ( -1408 1632 832 ) ( -1408 1600 832 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 1408 1600 0 ) ( 1408 1632 832 ) ( 1408 1632 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1408 1600 0 ) ( 1408 1600 832 ) ( 1408 1600 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1408 1632 0 ) ( 1408 1632 832 ) ( -1408 1632 832 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1408 1600 0 ) ( 1408 1632 0 ) ( -1408 1632 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -1408 1600 832 ) ( 1408 1632 832 ) ( 1408 1600 832 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( -1408 -1600 176 ) ( -1408 1600 200 ) ( -1408 -1600 200 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -1384 -1600 176 ) ( -1384 1600 200 ) ( -1384 1600 176 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -1408 -1600 176 ) ( -1384 -1600 200 ) ( -1384 -1600 176 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -1408 1600 176 ) ( -1384 1600 200 ) ( -1408 1600 200 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -1408 -1600 176 ) ( -1384 1600 176 ) ( -1408 1600 176 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -1408 -1600 200 ) ( -1384 1600 200 ) ( -1384 -1600 200 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+}
+{
+( -1408 -1504 0 ) ( -1408 -1472 288 ) ( -1408 -1504 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1384 -1504 0 ) ( -1384 -1472 288 ) ( -1384 -1472 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 -1504 0 ) ( -1384 -1504 288 ) ( -1384 -1504 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 -1472 0 ) ( -1384 -1472 288 ) ( -1408 -1472 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 -1504 0 ) ( -1384 -1472 0 ) ( -1408 -1472 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 -1504 288 ) ( -1384 -1472 288 ) ( -1384 -1504 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+}
+{
+( -1408 -864 0 ) ( -1408 -832 288 ) ( -1408 -864 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1384 -864 0 ) ( -1384 -832 288 ) ( -1384 -832 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 -864 0 ) ( -1384 -864 288 ) ( -1384 -864 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 -832 0 ) ( -1384 -832 288 ) ( -1408 -832 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 -864 0 ) ( -1384 -832 0 ) ( -1408 -832 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 -864 288 ) ( -1384 -832 288 ) ( -1384 -864 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+}
+{
+( -1408 -224 0 ) ( -1408 -192 288 ) ( -1408 -224 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1384 -224 0 ) ( -1384 -192 288 ) ( -1384 -192 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 -224 0 ) ( -1384 -224 288 ) ( -1384 -224 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 -192 0 ) ( -1384 -192 288 ) ( -1408 -192 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 -224 0 ) ( -1384 -192 0 ) ( -1408 -192 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 -224 288 ) ( -1384 -192 288 ) ( -1384 -224 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+}
+{
+( -1408 416 0 ) ( -1408 448 288 ) ( -1408 416 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1384 416 0 ) ( -1384 448 288 ) ( -1384 448 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 416 0 ) ( -1384 416 288 ) ( -1384 416 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 448 0 ) ( -1384 448 288 ) ( -1408 448 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 416 0 ) ( -1384 448 0 ) ( -1408 448 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 416 288 ) ( -1384 448 288 ) ( -1384 416 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+}
+{
+( -1408 1056 0 ) ( -1408 1088 288 ) ( -1408 1056 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1384 1056 0 ) ( -1384 1088 288 ) ( -1384 1088 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 1056 0 ) ( -1384 1056 288 ) ( -1384 1056 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 1088 0 ) ( -1384 1088 288 ) ( -1408 1088 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 1056 0 ) ( -1384 1088 0 ) ( -1408 1088 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 1056 288 ) ( -1384 1088 288 ) ( -1384 1056 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+}
+{
+( -1408 1536 0 ) ( -1408 1568 288 ) ( -1408 1536 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1384 1536 0 ) ( -1384 1568 288 ) ( -1384 1568 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 1536 0 ) ( -1384 1536 288 ) ( -1384 1536 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 1568 0 ) ( -1384 1568 288 ) ( -1408 1568 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 1536 0 ) ( -1384 1568 0 ) ( -1408 1568 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( -1408 1536 288 ) ( -1384 1568 288 ) ( -1384 1536 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+}
+{
+( 1384 -1600 176 ) ( 1384 1600 200 ) ( 1384 -1600 200 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 1408 -1600 176 ) ( 1408 1600 200 ) ( 1408 1600 176 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 1384 -1600 176 ) ( 1408 -1600 200 ) ( 1408 -1600 176 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 1384 1600 176 ) ( 1408 1600 200 ) ( 1384 1600 200 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 1384 -1600 176 ) ( 1408 1600 176 ) ( 1384 1600 176 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 1384 -1600 200 ) ( 1408 1600 200 ) ( 1408 -1600 200 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+}
+{
+( 1384 -1504 0 ) ( 1384 -1472 288 ) ( 1384 -1504 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1408 -1504 0 ) ( 1408 -1472 288 ) ( 1408 -1472 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 -1504 0 ) ( 1408 -1504 288 ) ( 1408 -1504 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 -1472 0 ) ( 1408 -1472 288 ) ( 1384 -1472 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 -1504 0 ) ( 1408 -1472 0 ) ( 1384 -1472 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 -1504 288 ) ( 1408 -1472 288 ) ( 1408 -1504 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+}
+{
+( 1384 -864 0 ) ( 1384 -832 288 ) ( 1384 -864 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1408 -864 0 ) ( 1408 -832 288 ) ( 1408 -832 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 -864 0 ) ( 1408 -864 288 ) ( 1408 -864 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 -832 0 ) ( 1408 -832 288 ) ( 1384 -832 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 -864 0 ) ( 1408 -832 0 ) ( 1384 -832 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 -864 288 ) ( 1408 -832 288 ) ( 1408 -864 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+}
+{
+( 1384 -224 0 ) ( 1384 -192 288 ) ( 1384 -224 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1408 -224 0 ) ( 1408 -192 288 ) ( 1408 -192 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 -224 0 ) ( 1408 -224 288 ) ( 1408 -224 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 -192 0 ) ( 1408 -192 288 ) ( 1384 -192 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 -224 0 ) ( 1408 -192 0 ) ( 1384 -192 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 -224 288 ) ( 1408 -192 288 ) ( 1408 -224 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+}
+{
+( 1384 416 0 ) ( 1384 448 288 ) ( 1384 416 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1408 416 0 ) ( 1408 448 288 ) ( 1408 448 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 416 0 ) ( 1408 416 288 ) ( 1408 416 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 448 0 ) ( 1408 448 288 ) ( 1384 448 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 416 0 ) ( 1408 448 0 ) ( 1384 448 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 416 288 ) ( 1408 448 288 ) ( 1408 416 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+}
+{
+( 1384 1056 0 ) ( 1384 1088 288 ) ( 1384 1056 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1408 1056 0 ) ( 1408 1088 288 ) ( 1408 1088 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 1056 0 ) ( 1408 1056 288 ) ( 1408 1056 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 1088 0 ) ( 1408 1088 288 ) ( 1384 1088 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 1056 0 ) ( 1408 1088 0 ) ( 1384 1088 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 1056 288 ) ( 1408 1088 288 ) ( 1408 1056 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+}
+{
+( 1384 1536 0 ) ( 1384 1568 288 ) ( 1384 1536 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1408 1536 0 ) ( 1408 1568 288 ) ( 1408 1568 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 1536 0 ) ( 1408 1536 288 ) ( 1408 1536 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 1568 0 ) ( 1408 1568 288 ) ( 1384 1568 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 1536 0 ) ( 1408 1568 0 ) ( 1384 1568 0 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+( 1384 1536 288 ) ( 1408 1568 288 ) ( 1408 1536 288 ) sandkeep/trim 0 0 0 1 1 134217728 0 0
+}
+{
+( -560 -1112 0 ) ( -560 -1064 208 ) ( -560 -1112 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 560 -1112 0 ) ( 560 -1064 208 ) ( 560 -1064 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -560 -1112 0 ) ( 560 -1112 208 ) ( 560 -1112 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -560 -1064 0 ) ( 560 -1064 208 ) ( -560 -1064 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -560 -1112 0 ) ( 560 -1064 0 ) ( -560 -1064 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -560 -1112 208 ) ( 560 -1064 208 ) ( 560 -1112 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( -560 -1600 208 ) ( -560 -1064 232 ) ( -560 -1600 232 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( 560 -1600 208 ) ( 560 -1064 232 ) ( 560 -1064 208 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -560 -1600 208 ) ( 560 -1600 232 ) ( 560 -1600 208 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -560 -1064 208 ) ( 560 -1064 232 ) ( -560 -1064 232 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -560 -1600 208 ) ( 560 -1064 208 ) ( -560 -1064 208 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -560 -1600 232 ) ( 560 -1064 232 ) ( 560 -1600 232 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+}
+{
+( -560 -1600 0 ) ( -560 -1360 208 ) ( -560 -1600 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -528 -1600 0 ) ( -528 -1360 208 ) ( -528 -1360 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -560 -1600 0 ) ( -528 -1600 208 ) ( -528 -1600 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -560 -1360 0 ) ( -528 -1360 208 ) ( -560 -1360 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -560 -1600 0 ) ( -528 -1360 0 ) ( -560 -1360 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -560 -1600 208 ) ( -528 -1360 208 ) ( -528 -1600 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( -560 -1200 0 ) ( -560 -1112 208 ) ( -560 -1200 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -528 -1200 0 ) ( -528 -1112 208 ) ( -528 -1112 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -560 -1200 0 ) ( -528 -1200 208 ) ( -528 -1200 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -560 -1112 0 ) ( -528 -1112 208 ) ( -560 -1112 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -560 -1200 0 ) ( -528 -1112 0 ) ( -560 -1112 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -560 -1200 208 ) ( -528 -1112 208 ) ( -528 -1200 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( 528 -1600 0 ) ( 528 -1360 208 ) ( 528 -1600 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 560 -1600 0 ) ( 560 -1360 208 ) ( 560 -1360 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 528 -1600 0 ) ( 560 -1600 208 ) ( 560 -1600 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 528 -1360 0 ) ( 560 -1360 208 ) ( 528 -1360 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 528 -1600 0 ) ( 560 -1360 0 ) ( 528 -1360 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 528 -1600 208 ) ( 560 -1360 208 ) ( 560 -1600 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( 528 -1200 0 ) ( 528 -1112 208 ) ( 528 -1200 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 560 -1200 0 ) ( 560 -1112 208 ) ( 560 -1112 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 528 -1200 0 ) ( 560 -1200 208 ) ( 560 -1200 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 528 -1112 0 ) ( 560 -1112 208 ) ( 528 -1112 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 528 -1200 0 ) ( 560 -1112 0 ) ( 528 -1112 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 528 -1200 208 ) ( 560 -1112 208 ) ( 560 -1200 208 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( -240 -848 0 ) ( -240 -752 192 ) ( -240 -848 192 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 240 -848 0 ) ( 240 -752 192 ) ( 240 -752 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -240 -848 0 ) ( 240 -848 192 ) ( 240 -848 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -240 -752 0 ) ( 240 -752 192 ) ( -240 -752 192 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -240 -848 0 ) ( 240 -752 0 ) ( -240 -752 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -240 -848 192 ) ( 240 -752 192 ) ( 240 -848 192 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+}
+{
+( -244 -852 176 ) ( -244 -748 192 ) ( -244 -852 192 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 244 -852 176 ) ( 244 -748 192 ) ( 244 -748 176 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -244 -852 176 ) ( 244 -852 192 ) ( 244 -852 176 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -244 -748 176 ) ( 244 -748 192 ) ( -244 -748 192 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -244 -852 176 ) ( 244 -748 176 ) ( -244 -748 176 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -244 -852 192 ) ( 244 -748 192 ) ( 244 -852 192 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+}
+{
+( -960 -480 0 ) ( -960 -384 224 ) ( -960 -480 224 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -736 -480 0 ) ( -736 -384 224 ) ( -736 -384 0 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -960 -480 0 ) ( -736 -480 224 ) ( -736 -480 0 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -960 -384 0 ) ( -736 -384 224 ) ( -960 -384 224 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -960 -480 0 ) ( -736 -384 0 ) ( -960 -384 0 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -960 -480 224 ) ( -736 -384 224 ) ( -736 -480 224 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+}
+{
+( -964 -484 208 ) ( -964 -380 224 ) ( -964 -484 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -732 -484 208 ) ( -732 -380 224 ) ( -732 -380 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -964 -484 208 ) ( -732 -484 224 ) ( -732 -484 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -964 -380 208 ) ( -732 -380 224 ) ( -964 -380 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -964 -484 208 ) ( -732 -380 208 ) ( -964 -380 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -964 -484 224 ) ( -732 -380 224 ) ( -732 -484 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+}
+{
+( 704 -416 0 ) ( 704 -320 224 ) ( 704 -416 224 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 960 -416 0 ) ( 960 -320 224 ) ( 960 -320 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 704 -416 0 ) ( 960 -416 224 ) ( 960 -416 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 704 -320 0 ) ( 960 -320 224 ) ( 704 -320 224 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 704 -416 0 ) ( 960 -320 0 ) ( 704 -320 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 704 -416 224 ) ( 960 -320 224 ) ( 960 -416 224 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+}
+{
+( 700 -420 208 ) ( 700 -316 224 ) ( 700 -420 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 964 -420 208 ) ( 964 -316 224 ) ( 964 -316 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 700 -420 208 ) ( 964 -420 224 ) ( 964 -420 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 700 -316 208 ) ( 964 -316 224 ) ( 700 -316 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 700 -420 208 ) ( 964 -316 208 ) ( 700 -316 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 700 -420 224 ) ( 964 -316 224 ) ( 964 -420 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+}
+{
+( -960 224 0 ) ( -960 288 224 ) ( -960 224 224 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -384 224 0 ) ( -384 288 224 ) ( -384 288 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -960 224 0 ) ( -384 224 224 ) ( -384 224 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -960 288 0 ) ( -384 288 224 ) ( -960 288 224 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -960 224 0 ) ( -384 288 0 ) ( -960 288 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -960 224 224 ) ( -384 288 224 ) ( -384 224 224 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( -964 220 208 ) ( -964 292 224 ) ( -964 220 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -380 220 208 ) ( -380 292 224 ) ( -380 292 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -964 220 208 ) ( -380 220 224 ) ( -380 220 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -964 292 208 ) ( -380 292 224 ) ( -964 292 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -964 220 208 ) ( -380 292 208 ) ( -964 292 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -964 220 224 ) ( -380 292 224 ) ( -380 220 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+}
+{
+( 384 320 0 ) ( 384 384 224 ) ( 384 320 224 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 960 320 0 ) ( 960 384 224 ) ( 960 384 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 384 320 0 ) ( 960 320 224 ) ( 960 320 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 384 384 0 ) ( 960 384 224 ) ( 384 384 224 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 384 320 0 ) ( 960 384 0 ) ( 384 384 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 384 320 224 ) ( 960 384 224 ) ( 960 320 224 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( 380 316 208 ) ( 380 388 224 ) ( 380 316 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 964 316 208 ) ( 964 388 224 ) ( 964 388 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 380 316 208 ) ( 964 316 224 ) ( 964 316 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 380 388 208 ) ( 964 388 224 ) ( 380 388 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 380 316 208 ) ( 964 388 208 ) ( 380 388 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 380 316 224 ) ( 964 388 224 ) ( 964 316 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+}
+{
+( -208 704 0 ) ( -208 800 192 ) ( -208 704 192 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 208 704 0 ) ( 208 800 192 ) ( 208 800 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -208 704 0 ) ( 208 704 192 ) ( 208 704 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -208 800 0 ) ( 208 800 192 ) ( -208 800 192 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -208 704 0 ) ( 208 800 0 ) ( -208 800 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -208 704 192 ) ( 208 800 192 ) ( 208 704 192 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( -212 700 176 ) ( -212 804 192 ) ( -212 700 192 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 212 700 176 ) ( 212 804 192 ) ( 212 804 176 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -212 700 176 ) ( 212 700 192 ) ( 212 700 176 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -212 804 176 ) ( 212 804 192 ) ( -212 804 192 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -212 700 176 ) ( 212 804 176 ) ( -212 804 176 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -212 700 192 ) ( 212 804 192 ) ( 212 700 192 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+}
+{
+( -960 1184 0 ) ( -960 1280 224 ) ( -960 1184 224 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -736 1184 0 ) ( -736 1280 224 ) ( -736 1280 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -960 1184 0 ) ( -736 1184 224 ) ( -736 1184 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -960 1280 0 ) ( -736 1280 224 ) ( -960 1280 224 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -960 1184 0 ) ( -736 1280 0 ) ( -960 1280 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -960 1184 224 ) ( -736 1280 224 ) ( -736 1184 224 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+}
+{
+( -964 1180 208 ) ( -964 1284 224 ) ( -964 1180 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -732 1180 208 ) ( -732 1284 224 ) ( -732 1284 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -964 1180 208 ) ( -732 1180 224 ) ( -732 1180 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -964 1284 208 ) ( -732 1284 224 ) ( -964 1284 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -964 1180 208 ) ( -732 1284 208 ) ( -964 1284 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( -964 1180 224 ) ( -732 1284 224 ) ( -732 1180 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+}
+{
+( 736 1200 0 ) ( 736 1296 224 ) ( 736 1200 224 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( 960 1200 0 ) ( 960 1296 224 ) ( 960 1296 0 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( 736 1200 0 ) ( 960 1200 224 ) ( 960 1200 0 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( 736 1296 0 ) ( 960 1296 224 ) ( 736 1296 224 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( 736 1200 0 ) ( 960 1296 0 ) ( 736 1296 0 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( 736 1200 224 ) ( 960 1296 224 ) ( 960 1200 224 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+}
+{
+( 732 1196 208 ) ( 732 1300 224 ) ( 732 1196 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 964 1196 208 ) ( 964 1300 224 ) ( 964 1300 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 732 1196 208 ) ( 964 1196 224 ) ( 964 1196 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 732 1300 208 ) ( 964 1300 224 ) ( 732 1300 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 732 1196 208 ) ( 964 1300 208 ) ( 732 1300 208 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+( 732 1196 224 ) ( 964 1300 224 ) ( 964 1196 224 ) sandkeep/wood_end 0 0 0 1 1 134217728 0 0
+}
+{
+( -1248 -192 176 ) ( -1248 32 200 ) ( -1248 -192 200 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -992 -192 176 ) ( -992 32 200 ) ( -992 32 176 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -1248 -192 176 ) ( -992 -192 200 ) ( -992 -192 176 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -1248 32 176 ) ( -992 32 200 ) ( -1248 32 200 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -1248 -192 176 ) ( -992 32 176 ) ( -1248 32 176 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -1248 -192 200 ) ( -992 32 200 ) ( -992 -192 200 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+}
+{
+( -1248 0 0 ) ( -1248 32 176 ) ( -1248 0 176 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -992 0 0 ) ( -992 32 176 ) ( -992 32 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -1248 0 0 ) ( -992 0 176 ) ( -992 0 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -1248 32 0 ) ( -992 32 176 ) ( -1248 32 176 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -1248 0 0 ) ( -992 32 0 ) ( -1248 32 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -1248 0 176 ) ( -992 32 176 ) ( -992 0 176 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( -1248 -192 0 ) ( -1248 0 176 ) ( -1248 -192 176 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -1224 -192 0 ) ( -1224 0 176 ) ( -1224 0 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -1248 -192 0 ) ( -1224 -192 176 ) ( -1224 -192 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -1248 0 0 ) ( -1224 0 176 ) ( -1248 0 176 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -1248 -192 0 ) ( -1224 0 0 ) ( -1248 0 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( -1248 -192 176 ) ( -1224 0 176 ) ( -1224 -192 176 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( 992 704 176 ) ( 992 928 200 ) ( 992 704 200 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( 1248 704 176 ) ( 1248 928 200 ) ( 1248 928 176 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( 992 704 176 ) ( 1248 704 200 ) ( 1248 704 176 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( 992 928 176 ) ( 1248 928 200 ) ( 992 928 200 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( 992 704 176 ) ( 1248 928 176 ) ( 992 928 176 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( 992 704 200 ) ( 1248 928 200 ) ( 1248 704 200 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+}
+{
+( 992 896 0 ) ( 992 928 176 ) ( 992 896 176 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 1248 896 0 ) ( 1248 928 176 ) ( 1248 928 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 992 896 0 ) ( 1248 896 176 ) ( 1248 896 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 992 928 0 ) ( 1248 928 176 ) ( 992 928 176 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 992 896 0 ) ( 1248 928 0 ) ( 992 928 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 992 896 176 ) ( 1248 928 176 ) ( 1248 896 176 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( 992 704 0 ) ( 992 896 176 ) ( 992 704 176 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 1016 704 0 ) ( 1016 896 176 ) ( 1016 896 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 992 704 0 ) ( 1016 704 176 ) ( 1016 704 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 992 896 0 ) ( 1016 896 176 ) ( 992 896 176 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 992 704 0 ) ( 1016 896 0 ) ( 992 896 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 992 704 176 ) ( 1016 896 176 ) ( 1016 704 176 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+}
+{
+"classname" "light"
+"origin" "256 -384 768"
+"target" "range_sun_target"
+}
+{
+"classname" "info_null"
+"origin" "0 0 32"
+"targetname" "range_sun_target"
+}
+{
+"classname" "light"
+"origin" "-352 -1392 144"
+"light" "400"
+"_color" "1 .98 .94"
+}
+{
+"classname" "light"
+"origin" "352 -1392 144"
+"light" "400"
+"_color" "1 .98 .94"
+}
+{
+"classname" "light"
+"origin" "0 -1248 144"
+"light" "400"
+"_color" "1 .98 .94"
+}
+{
+"classname" "light"
+"origin" "-1120 -96 128"
+"light" "260"
+"_color" "1 .98 .94"
+}
+{
+"classname" "light"
+"origin" "1120 800 128"
+"light" "260"
+"_color" "1 .98 .94"
+}
+{
+"classname" "light"
+"origin" "-1024 -1376 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "-352 -1376 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "352 -1376 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "1024 -1376 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "-1024 -736 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "-352 -736 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "352 -736 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "1024 -736 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "-1024 -96 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "-352 -96 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "352 -96 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "1024 -96 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "-1024 544 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "-352 544 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "352 544 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "1024 544 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "-1024 1184 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "-352 1184 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "352 1184 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "light"
+"origin" "1024 1184 600"
+"light" "640"
+"_color" "1 .94 .83"
+}
+{
+"classname" "monster_plastic_helicopter"
+"origin" "0 -224 288"
+"angle" "270"
+"deathtarget" "helicopter_down"
+}
+{
+"classname" "light"
+"origin" "0 -336 224"
+"light" "340"
+"_color" ".82 .90 1"
+}
+{
+"classname" "monster_plastic_helicopter"
+"origin" "-672 608 336"
+"angle" "270"
+"deathtarget" "helicopter_down"
+}
+{
+"classname" "light"
+"origin" "-672 496 224"
+"light" "340"
+"_color" ".82 .90 1"
+}
+{
+"classname" "monster_plastic_helicopter"
+"origin" "672 1024 384"
+"angle" "270"
+"deathtarget" "helicopter_down"
+}
+{
+"classname" "light"
+"origin" "672 912 224"
+"light" "340"
+"_color" ".82 .90 1"
+}
+{
+"classname" "info_player_start"
+"origin" "0 -1488 24"
+"angle" "90"
+}
+{
+"classname" "info_player_coop"
+"origin" "96 -1488 24"
+"angle" "90"
+}
+{
+"classname" "info_player_coop"
+"origin" "-96 -1488 24"
+"angle" "90"
+}
+{
+"classname" "info_player_coop"
+"origin" "192 -1488 24"
+"angle" "90"
+}
+{
+"classname" "weapon_rocketlauncher"
+"origin" "-192 -1408 32"
+}
+{
+"classname" "weapon_chaingun"
+"origin" "192 -1408 32"
+}
+{
+"classname" "item_armor_body"
+"origin" "0 -1408 32"
+}
+{
+"classname" "item_health_large"
+"origin" "-400 -1408 32"
+}
+{
+"classname" "item_health_large"
+"origin" "400 -1408 32"
+}
+{
+"classname" "item_health_large"
+"origin" "-1120 -48 32"
+}
+{
+"classname" "ammo_rockets"
+"origin" "-1120 48 32"
+}
+{
+"classname" "ammo_bullets"
+"origin" "-1024 -48 32"
+}
+{
+"classname" "item_health_large"
+"origin" "1120 848 32"
+}
+{
+"classname" "ammo_rockets"
+"origin" "1120 752 32"
+}
+{
+"classname" "ammo_bullets"
+"origin" "1064 848 32"
+}
+{
+"classname" "ammo_rockets"
+"origin" "-384 -1280 32"
+}
+{
+"classname" "ammo_rockets"
+"origin" "-384 -1184 32"
+}
+{
+"classname" "ammo_rockets"
+"origin" "-256 -1280 32"
+}
+{
+"classname" "ammo_rockets"
+"origin" "-256 -1184 32"
+}
+{
+"classname" "ammo_rockets"
+"origin" "-128 -1280 32"
+}
+{
+"classname" "ammo_rockets"
+"origin" "-128 -1184 32"
+}
+{
+"classname" "ammo_bullets"
+"origin" "128 -1280 32"
+}
+{
+"classname" "ammo_bullets"
+"origin" "128 -1184 32"
+}
+{
+"classname" "ammo_bullets"
+"origin" "256 -1280 32"
+}
+{
+"classname" "ammo_bullets"
+"origin" "256 -1184 32"
+}
+{
+"classname" "ammo_bullets"
+"origin" "384 -1280 32"
+}
+{
+"classname" "ammo_bullets"
+"origin" "384 -1184 32"
+}
+{
+"classname" "trigger_counter"
+"targetname" "helicopter_down"
+"count" "3"
+"spawnflags" "1"
+"target" "range_complete"
+}
+{
+"classname" "trigger_relay"
+"targetname" "range_complete"
+"target" "range_goal"
+"message" "AIR RANGE CLEAR\nAll three helicopters defeated.\nConsole: map pp_helicopter_test to reset."
+}
+{
+"classname" "target_goal"
+"origin" "0 1504 48"
+"targetname" "range_goal"
+}
+{
+"classname" "target_help"
+"targetname" "range_help"
+"spawnflags" "1"
+"message" "HELICOPTER TEST\nThree tan gunships patrol above the toy range.\nWatch the main and tail rotors turn.\nCollect the M60, rockets and armor in this bunker.\nUse roofed shelters against their guns and rockets."
+}
+{
+"classname" "trigger_always"
+"target" "range_help"
+"delay" "1"
+}
+{
+"classname" "info_player_intermission"
+"origin" "1200 -816 448"
+"angles" "14 130 0"
+}

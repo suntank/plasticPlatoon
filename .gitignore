@@ -1,0 +1,43 @@
+/build/
+/debug/
+/release/
+/asset-backups/
+*.mk
+*.user
+*.d
+
+/stuff/mapfixes/
+/doc/performance/results/
+/doc/performance/visuals/
+
+# Local caches, captures and authoring backups are not source inputs.
+__pycache__/
+*.pyc
+*.blend1
+/autosave/
+/test-crash.*
+*.prt
+/baseq2/config.cfg
+/baseq2/yq2.cfg
+/baseq2/autoexec.cfg
+/baseq2/qconsole.log
+/baseq2/save/
+/baseq2/scrnshot/
+# Commercial game data must never be added to this TC repository.
+/baseq2/pak*.pak
+
+/baseq2/perf/
+
+# Removed legacy game media, bundles and private backups must stay out.
+/baseq2/players/male/
+/stuff/models/crosshair/
+/stuff/osx/
+/kingpin.zip
+/private-backups/
+/public-release-check/
+*.pak
+/tools/assets/review/*-in-game.png
+/tools/assets/review/runtime-gl*.png
+/tools/assets/review/public-source-audit.json
+
+.venv/

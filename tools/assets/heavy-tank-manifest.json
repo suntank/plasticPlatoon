@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "description": "Original molded tan toy tracked heavy tank, procedurally authored for Plastic Platoon",
+  "builder": "tools/assets/build_heavy_tank.py",
+  "builder_sha256": "5da0d7bb354272457b8c677125d2fb513dc439986567ed8ebbf89b35aef9980b",
+  "sources": "Original geometry and texture; no external asset inputs",
+  "face_winding": "Clockwise exterior triangles for Quake II GL_FRONT culling; outward lighting normals",
+  "coordinate_contract": {
+    "forward_axis": "+X",
+    "hull_ground_z": -24,
+    "turret_pivot_in_hull": [
+      0.0,
+      0.0,
+      24.0
+    ],
+    "rocket_muzzle_in_turret": [
+      80.0,
+      0.0,
+      8.0
+    ],
+    "turret_yaw_degrees": "unrestricted",
+    "barrel_pitch_degrees": [
+      -10,
+      10
+    ]
+  },
+  "models": [
+    {
+      "path": "models/monsters/plastic_tank/hull.md2",
+      "triangles": 1290,
+      "position_vertices": 1972,
+      "render_vertices": 2356,
+      "frames": 1,
+      "frame_names": [
+        "idle01"
+      ],
+      "skin_references": [
+        "models/monsters/plastic_tank/tan.png"
+      ],
+      "skin_coordinate_dimensions": [
+        256,
+        256
+      ],
+      "gl_command_primitives": 645,
+      "gl_command_triangles": 1290,
+      "duplicate_gl_triangles": 0,
+      "unused_bytes_per_frame": 0,
+      "file_bytes": 57500,
+      "sha256": "38e103fbfda5add9e20b2d2c915fbd3c971cbf55c1f76c20584800a38ffa28cc",
+      "bounds": [
+        [
+          -55.0,
+          -42.25,
+          -24.0
+        ],
+        [
+          55.000001043081284,
+          42.250002562999725,
+          25.00000087916851
+        ]
+      ]
+    },
+    {
+      "path": "models/monsters/plastic_tank/turret.md2",
+      "triangles": 516,
+      "position_vertices": 728,
+      "render_vertices": 904,
+      "frames": 1,
+      "frame_names": [
+        "idle01"
+      ],
+      "skin_references": [
+        "models/monsters/plastic_tank/tan.png"
+      ],
+      "skin_coordinate_dimensions": [
+        256,
+        256
+      ],
+      "gl_command_primitives": 258,
+      "gl_command_triangles": 516,
+      "duplicate_gl_triangles": 0,
+      "unused_bytes_per_frame": 0,
+      "file_bytes": 23064,
+      "sha256": "9c29b98b64bf3a89b2cf508079ccad5e968349e378c4d3b7a3275d4e5c3986e2",
+      "bounds": [
+        [
+          -29.0,
+          -23.1200008392334,
+          0.0
+        ],
+        [
+          80.00000110268593,
+          23.119999140501022,
+          24.80000004172325
+        ]
+      ]
+    }
+  ],
+  "texture": {
+    "path": "models/monsters/plastic_tank/tan.png",
+    "dimensions": [
+      256,
+      256
+    ],
+    "sha256": "a30818ce2408796a2c5a296753c5ba0c264fc3607813aabe48402184e21624a6",
+    "file_bytes": 4168
+  },
+  "review": "tools/assets/review/heavy-tank.png"
+}

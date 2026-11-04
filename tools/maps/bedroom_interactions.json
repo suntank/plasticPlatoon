@@ -1,0 +1,8 @@
+[
+  {"name":"extraction_locked","pose":[1648,1568,546,0,90],"expect_eye_bounds":{"x":[1638,1658],"y":[1558,1578]},"after_pose":[{"command":"noclip","wait":0.4},{"command":"noclip","wait":0.2}]},
+  {"name":"radio_without_cell","pose":[1856,240,728,0,90],"expect_log":["You need the Power Cube"],"after_pose":[{"command":"noclip","wait":0.5},{"command":"noclip","wait":0.2}]},
+  {"name":"power_cell_collected","pose":[320,1488,424,0,90],"expect_log":["POWER CELL RECOVERED"],"after_pose":[{"command":"noclip","wait":0.5},{"command":"noclip","wait":0.2}]},
+  {"name":"radio_powered","pose":[1856,240,728,0,90],"expect_log":["RADIO ONLINE - EXTRACTION READY"],"after_pose":[{"command":"noclip","wait":0.5},{"command":"noclip","wait":1.5}]},
+  {"name":"bridge_open","pose":[2032,688,728,0,90]},
+  {"name":"mission_intermission","pose":[1648,1568,546,0,90],"expect_log":["OPERATION NIGHTLIGHT COMPLETE"],"expect_eye_bounds":{"x":[1060,1084],"y":[820,844],"z":[1080,1120]},"after_pose":[{"command":"noclip","wait":1.2}]}
+]

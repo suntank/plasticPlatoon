@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "purpose": "Actual-game model/sprite registration and bounded two-player rendering smoke; software host only, not Raspberry Pi performance evidence.",
+  "package": {
+    "sha256": "62d5938594a6851243b8f2d8bf299b084abcbcc73921288aa33c9015242b9216",
+    "bytes": 14354059,
+    "assets": 162
+  },
+  "fixture": {
+    "map": "pp_model_gallery",
+    "map_source_sha256": "6840efb227e934ca88403358f920a16e9e55d53c4f1887b75d5171d1787cf77c",
+    "bsp_sha256": "8e8da7d8e7f7bd50e41c581374c1d87f5c50a460312175efb481a540f265dada",
+    "compile_tool_sha256": "93308eed55a36ada015457e3d1bccecdfea8c705a667f213317b352cafddce43",
+    "full_bsp_vis_rad_succeeded": true,
+    "md2_props": 68,
+    "sp2_props": 3,
+    "direct_png_sprite_props": 3,
+    "native_monster_classes": [
+      "monster_soldier_light",
+      "monster_soldier",
+      "monster_soldier_ss"
+    ],
+    "map_source": "pp_model_gallery.map"
+  },
+  "runtime": {
+    "engine_sha256": "4dee3af32db994dba00143931911b5b20cdd9c01ec9c83fc659bffb512144b23",
+    "game_sha256": "82b1893ff45a47b6f35b1e538a9e85febcf2d2fa292c5f47ce446ff28d669c0f",
+    "renderers": {
+      "gl1": "98f7e19b0824a41e62d07c4176a87df9cf71e816267d9623e84fad67dd056c94",
+      "gl3": "1483c87b7fc1a1be86b3df838aa39d17667f1b1e2b35f93e92a5cc9ee720c9b9"
+    },
+    "display": "Managed Xvfb; LIBGL_ALWAYS_SOFTWARE=1; LP_NUM_THREADS=2; llvmpipe LLVM20.1.2"
+  },
+  "runs": [
+    {
+      "renderer": "gl1",
+      "engine_exit_code": 0,
+      "complete_displays": 300,
+      "views": 600,
+      "views_per_display": [
+        2
+      ],
+      "resolution": [
+        240,
+        240
+      ],
+      "pk3_registered_md2_count": 68,
+      "missing_md2_registrations": [],
+      "pk3_registered_sprite_models": [
+        "sprites/explosion.sp2",
+        "sprites/flame.sp2",
+        "sprites/smoke.sp2",
+        "sprites/muzzleFlashCore.png",
+        "sprites/muzzleFlashFlare.png",
+        "sprites/muzzleFlashSmall.png"
+      ],
+      "custom_player_skin_seen": true,
+      "live_monsters_range": [
+        2,
+        3
+      ],
+      "unique_model_warnings": [
+        "R_DrawAliasModel models/weapons/v_blast/tris.md2: no such frame 1",
+        "R_DrawAliasModel models/weapons/v_blast/tris.md2: no such frame 2",
+        "R_DrawAliasModel models/weapons/v_blast/tris.md2: no such frame 3",
+        "R_DrawAliasModel models/weapons/v_blast/tris.md2: no such frame 4",
+        "R_DrawAliasModel models/weapons/v_blast/tris.md2: no such frame 5"
+      ],
+      "screenshot": "runtime-gl1.png",
+      "screenshot_sha256": "45849e31924bccbfe93ec2bff836000100dc61120377ff80295031a8eadb07f0",
+      "console_sha256": "82eb10e64172241ce80252e2c0529f086e3a02e58edd1eeac9576bb7b0124949",
+      "frames_csv_sha256": "ca0e248e5b0de9ecf49ed778805fe01a9f3b97380db066830f3f2f8caaa4eb25",
+      "console": "runtime-gl1-console.log.gz",
+      "frames_csv": "runtime-gl1-frames.csv.gz"
+    },
+    {
+      "renderer": "gl3",
+      "engine_exit_code": 0,
+      "complete_displays": 300,
+      "views": 600,
+      "views_per_display": [
+        2
+      ],
+      "resolution": [
+        240,
+        240
+      ],
+      "pk3_registered_md2_count": 68,
+      "missing_md2_registrations": [],
+      "pk3_registered_sprite_models": [
+        "sprites/explosion.sp2",
+        "sprites/flame.sp2",
+        "sprites/smoke.sp2",
+        "sprites/muzzleFlashCore.png",
+        "sprites/muzzleFlashFlare.png",
+        "sprites/muzzleFlashSmall.png"
+      ],
+      "custom_player_skin_seen": true,
+      "live_monsters_range": [
+        2,
+        3
+      ],
+      "unique_model_warnings": [
+        "R_DrawAliasModel models/weapons/v_blast/tris.md2: no such frame 1",
+        "R_DrawAliasModel models/weapons/v_blast/tris.md2: no such frame 2",
+        "R_DrawAliasModel models/weapons/v_blast/tris.md2: no such frame 3",
+        "R_DrawAliasModel models/weapons/v_blast/tris.md2: no such frame 4",
+        "R_DrawAliasModel models/weapons/v_blast/tris.md2: no such frame 5"
+      ],
+      "screenshot": "runtime-gl3.png",
+      "screenshot_sha256": "1480271cb1cc46fe3daf7e96c1047b609a5ccaccb439e0bac6f6e1e9e5941298",
+      "console_sha256": "3ce311737d4394aa61451c0a9a899dd03ab2041bf4c9b683e5af27bf7679881b",
+      "frames_csv_sha256": "301037ae3fd37c5fe25f5f2ddb8d672b67ad6420011ad5e6c4bfdca1b151d88a",
+      "console": "runtime-gl3-console.log.gz",
+      "frames_csv": "runtime-gl3-frames.csv.gz"
+    }
+  ],
+  "known_source_behavior": {
+    "model": "models/weapons/v_blast/tris.md2",
+    "original_and_output_frames": 1,
+    "requested_missing_frames": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "behavior": "Existing renderer falls back to frame zero; warning enabled by developer1. Source animation count preserved."
+  },
+  "scope_note": "Every model was registered from the exact PK3; a diagnostic gallery and live combat rendered for 300 displays per renderer. This is not proof that every model pose or every model was visible in every captured frame. Combat killed a player and the final screenshots include a death-camera view and developer text.",
+  "initial_wrapper_attempt": "xvfb-run returned1 after300completedframes and clean shutdown text; retained separately in raw provenance. Direct managed-display engine launches both returned0."
+}

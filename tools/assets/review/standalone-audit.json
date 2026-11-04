@@ -1,0 +1,2115 @@
+{
+  "schema": 1,
+  "data_directory": "/media/austin-morgan/reclaimed/plasticPlatoon/release/baseq2",
+  "repository": "/media/austin-morgan/reclaimed/plasticPlatoon",
+  "runtime_dependency_checks_pass": true,
+  "public_release_readiness": "not_certified",
+  "provenance": {
+    "status": "owner_declared_original",
+    "declaration_file": "tools/assets/asset-provenance.json",
+    "owner_statement": "i created them all myself.",
+    "license": "GPL-2.0-or-later",
+    "license_document": "ASSET-LICENSE.md",
+    "scope": [
+      "Original Plastic Platoon models, textures, animations, maps, and sound recordings",
+      "Original editable model, map, texture and audio source inputs",
+      "Original generated bootstrap and support assets"
+    ],
+    "excluded": [
+      "Quake II PAKs and other third-party game data",
+      "Removed legacy male/grunt fallback assets and obsolete stock artwork, retained only in the separate private pre-cleanup backup",
+      "Third-party engine/library/developer-tool code, which retains its own notices"
+    ],
+    "limitations": [
+      "Owner declaration is not an independent file-by-file rights determination",
+      "Runtime dependency and public-source checks do not independently establish ownership"
+    ],
+    "source_history_review": "cleanup_recorded",
+    "reason": "Owner declaration and public-source cleanup recorded; run audit_public_source.py --history to check the current object store. This audit does not independently certify ownership or redistribution rights."
+  },
+  "limitations": [
+    "Audits only this data directory; never reads home or system game data.",
+    "Checks all archive providers because non-numbered archive precedence is filesystem dependent.",
+    "Parses MD2/SP2 image references and all BSP38 texinfo materials, sky faces and explicit model/noise entity keys; missing map images may trigger warning/fallback rather than prevent play.",
+    "Potential source literal calls include inherited or unreachable entities; dynamic names, player sounds, client effects and scripted resource loads still need runtime testing.",
+    "Presence checks do not decode images/audio or prove rendering, gameplay, platform-library availability or asset rights.",
+    "Numbered PAK and players/male names are review markers, not hash-based identification of proprietary bytes."
+  ],
+  "inventory": {
+    "unique_asset_paths": 704,
+    "providers": 846,
+    "archives": [
+      {
+        "path": "operation-heavy-test.pk3",
+        "bytes": 543915,
+        "sha256": "1b301f6bba38f5c1036e8c6f15dcf46bffee9f67828c00be60c5b60023de7239",
+        "numbered_stock_namespace": false,
+        "files": 28
+      },
+      {
+        "path": "operation-helicopter-test.pk3",
+        "bytes": 645593,
+        "sha256": "e04b21aac3cce98198a0e232ad8b2cac35be17539d30613bee841d0541809994",
+        "numbered_stock_namespace": false,
+        "files": 30
+      },
+      {
+        "path": "operation-nightlight.pk3",
+        "bytes": 652458,
+        "sha256": "dd0fe5e2ff7c9befc1e36690912701e0b223cde9a24c51452c0ca6f7dce2466b",
+        "numbered_stock_namespace": false,
+        "files": 51
+      },
+      {
+        "path": "operation-rocket-test.pk3",
+        "bytes": 221395,
+        "sha256": "143249a14f3f03490a589de0629e22cd721adb4996e4e767072bc0994979e64f",
+        "numbered_stock_namespace": false,
+        "files": 22
+      },
+      {
+        "path": "operation-sandkeep.pk3",
+        "bytes": 2068316,
+        "sha256": "71bd03e02846747424b9afc4359851e5d561a1cecaaa2ca1a0e5fd080915705d",
+        "numbered_stock_namespace": false,
+        "files": 91
+      },
+      {
+        "path": "operation-sandwatch.pk3",
+        "bytes": 1231514,
+        "sha256": "e483fff765e638ab78063b7f31590e9959658f9ec987303dcf3a017cdc12749c",
+        "numbered_stock_namespace": false,
+        "files": 61
+      },
+      {
+        "path": "operation-tank-test.pk3",
+        "bytes": 765781,
+        "sha256": "7c0b4eb973228a11bf4ac5fcda3e90889c7fd12e421764f8ba1b977b003e630c",
+        "numbered_stock_namespace": false,
+        "files": 33
+      },
+      {
+        "path": "plastic-platoon.pk3",
+        "bytes": 36648779,
+        "sha256": "fe4f9ff0e0ecd9be33fad2bba0c0f6d5634d8a34d29a6a4e6402b657d12c2cf5",
+        "numbered_stock_namespace": false,
+        "files": 527
+      }
+    ],
+    "archive_errors": [],
+    "conflicting_providers": []
+  },
+  "boot_requirements": [
+    {
+      "kind": "renderer_palette",
+      "reference": "pics/colormap.pcx",
+      "candidates": [
+        "pics/colormap.pcx"
+      ],
+      "present": true,
+      "reason": "GetPCXPalette loads an indexed PCX directly; a PNG replacement cannot satisfy this."
+    },
+    {
+      "kind": "console_font",
+      "reference": "pics/conchars.pcx",
+      "candidates": [
+        "pics/conchars.png",
+        "pics/conchars.tga",
+        "pics/conchars.jpg",
+        "pics/conchars.pcx"
+      ],
+      "present": true,
+      "reason": "GL1/GL3 accept high-color replacements; the software renderer requires PCX."
+    },
+    {
+      "kind": "default_bindings",
+      "reference": "default.cfg",
+      "candidates": [
+        "default.cfg"
+      ],
+      "present": true,
+      "reason": "Provides fresh-install bindings and defaults; absence can leave the controls unbound."
+    },
+    {
+      "kind": "launch_map",
+      "reference": "maps/pp_sandbox_coop1.bsp",
+      "candidates": [
+        "maps/pp_sandbox_coop1.bsp"
+      ],
+      "present": true,
+      "reason": "Selected initial map."
+    },
+    {
+      "kind": "loose_weapon_tuning",
+      "reference": "tuning/default.json",
+      "candidates": [
+        "loose:tuning/default.json"
+      ],
+      "present": true,
+      "reason": "The game module uses fopen rather than archive lookup for the approved weapon profile."
+    }
+  ],
+  "conditional_renderer_requirements": [
+    {
+      "reference": "pics/conchars.pcx",
+      "present": true,
+      "condition": "Software renderer: indexed PCX is required even when a GL-compatible PNG exists."
+    },
+    {
+      "reference": "pics/16to8.dat",
+      "present": true,
+      "condition": "GL1 only when the optional paletted-texture path is enabled."
+    }
+  ],
+  "dependencies": {
+    "references_checked": 298,
+    "missing": [],
+    "invalid": []
+  },
+  "potential_missing_game_source_literals": [
+    {
+      "kind": "imageindex",
+      "reference": "pics/i_powershield.pcx",
+      "calls": [
+        "src/game/player/hud.c:473"
+      ]
+    },
+    {
+      "kind": "imageindex",
+      "reference": "pics/p_envirosuit.pcx",
+      "calls": [
+        "src/game/player/hud.c:511"
+      ]
+    },
+    {
+      "kind": "imageindex",
+      "reference": "pics/p_invulnerability.pcx",
+      "calls": [
+        "src/game/player/hud.c:504"
+      ]
+    },
+    {
+      "kind": "imageindex",
+      "reference": "pics/p_quad.pcx",
+      "calls": [
+        "src/game/player/hud.c:498"
+      ]
+    },
+    {
+      "kind": "imageindex",
+      "reference": "pics/p_rebreather.pcx",
+      "calls": [
+        "src/game/player/hud.c:517"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/deadbods/dude/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:1804"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/berserk/tris.md2",
+      "calls": [
+        "src/game/monster/berserker/berserker.c:593"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/bitch/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:1542",
+        "src/game/g_misc.c:1583",
+        "src/game/monster/chick/chick.c:977"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/boss1/tris.md2",
+      "calls": [
+        "src/game/monster/supertank/supertank.c:896"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/boss3/jorg/tris.md2",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:918"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/boss3/rider/tris.md2",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:919",
+        "src/game/monster/boss3/boss32.c:1127",
+        "src/game/monster/boss3/boss32.c:1151",
+        "src/game/monster/boss3/boss32.c:923"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/brain/tris.md2",
+      "calls": [
+        "src/game/monster/brain/brain.c:849"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/flipper/tris.md2",
+      "calls": [
+        "src/game/monster/flipper/flipper.c:540"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/float/tris.md2",
+      "calls": [
+        "src/game/monster/float/float.c:808"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/flyer/tris.md2",
+      "calls": [
+        "src/game/monster/flyer/flyer.c:847"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/gladiatr/tris.md2",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:568"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/gunner/tris.md2",
+      "calls": [
+        "src/game/monster/gunner/gunner.c:913"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/hover/tris.md2",
+      "calls": [
+        "src/game/monster/hover/hover.c:817"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/infantry/tris.md2",
+      "calls": [
+        "src/game/g_turret.c:569",
+        "src/game/monster/infantry/infantry.c:834"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/insane/tris.md2",
+      "calls": [
+        "src/game/monster/insane/insane.c:980"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/medic/tris.md2",
+      "calls": [
+        "src/game/monster/medic/medic.c:1045"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/mutant/tris.md2",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:866"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/parasite/tris.md2",
+      "calls": [
+        "src/game/monster/parasite/parasite.c:767"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/monsters/tank/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:1499",
+        "src/game/monster/tank/tank.c:1086"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/objects/banner/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:1744",
+        "src/game/g_misc.c:714"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/objects/black/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:1454"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/objects/bomb/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:2012"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/objects/debris3/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:1362"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/objects/minelite/light1/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:2242"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/objects/minelite/light2/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:2259"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/objects/satellite/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:2135"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/ships/bigviper/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:1919"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/ships/strogg1/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:2075"
+      ]
+    },
+    {
+      "kind": "modelindex",
+      "reference": "models/ships/viper/tris.md2",
+      "calls": [
+        "src/game/g_misc.c:1892"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/berserk/attack.wav",
+      "calls": [
+        "src/game/monster/berserker/berserker.c:589"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/berserk/berdeth2.wav",
+      "calls": [
+        "src/game/monster/berserker/berserker.c:587"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/berserk/beridle1.wav",
+      "calls": [
+        "src/game/monster/berserker/berserker.c:588"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/berserk/berpain2.wav",
+      "calls": [
+        "src/game/monster/berserker/berserker.c:586"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/berserk/bersrch1.wav",
+      "calls": [
+        "src/game/monster/berserker/berserker.c:590"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/berserk/sight.wav",
+      "calls": [
+        "src/game/monster/berserker/berserker.c:591"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/berserk/step1.wav",
+      "calls": [
+        "src/game/monster/berserker/berserker.c:49"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/berserk/step2.wav",
+      "calls": [
+        "src/game/monster/berserker/berserker.c:50"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bitch/step1.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:67"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bitch/step2.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:68"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/bs3atck1.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:903"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/bs3atck2.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:904"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/bs3deth1.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:902"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/bs3idle1.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:908"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/bs3pain1.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:899"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/bs3pain2.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:900"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/bs3pain3.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:901"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/bs3srch1.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:905"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/bs3srch2.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:906"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/bs3srch3.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:907"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/d_hit.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:912"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/step1.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:909"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/step2.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:910"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/w_loop.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:737"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/boss3/xfire.wav",
+      "calls": [
+        "src/game/monster/boss3/boss31.c:911"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosshovr/bhvdeth1.wav",
+      "calls": [
+        "src/game/monster/boss2/boss2.c:1067",
+        "src/game/monster/helicopter/helicopter.c:602",
+        "src/game/monster/helicopter/helicopter.c:644"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosshovr/bhvengn1.wav",
+      "calls": [
+        "src/game/monster/boss2/boss2.c:1070",
+        "src/game/monster/helicopter/helicopter.c:642"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosshovr/bhvpain1.wav",
+      "calls": [
+        "src/game/monster/boss2/boss2.c:1064",
+        "src/game/monster/helicopter/helicopter.c:478",
+        "src/game/monster/helicopter/helicopter.c:643"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosshovr/bhvpain2.wav",
+      "calls": [
+        "src/game/monster/boss2/boss2.c:1065"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosshovr/bhvpain3.wav",
+      "calls": [
+        "src/game/monster/boss2/boss2.c:1066"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosshovr/bhvunqv1.wav",
+      "calls": [
+        "src/game/monster/boss2/boss2.c:1068"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosstank/btkdeth1.wav",
+      "calls": [
+        "src/game/monster/supertank/supertank.c:888"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosstank/btkengn1.wav",
+      "calls": [
+        "src/game/monster/supertank/supertank.c:892"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosstank/btkpain1.wav",
+      "calls": [
+        "src/game/monster/supertank/supertank.c:885"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosstank/btkpain2.wav",
+      "calls": [
+        "src/game/monster/supertank/supertank.c:886"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosstank/btkpain3.wav",
+      "calls": [
+        "src/game/monster/supertank/supertank.c:887"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosstank/btkunqv1.wav",
+      "calls": [
+        "src/game/monster/supertank/supertank.c:889"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/bosstank/btkunqv2.wav",
+      "calls": [
+        "src/game/monster/supertank/supertank.c:890"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/brnatck1.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:832"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/brnatck2.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:833"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/brnatck3.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:834"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/brndeth1.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:835"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/brnidle1.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:836"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/brnidle2.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:837"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/brnlens1.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:838"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/brnpain1.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:839"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/brnpain2.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:840"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/brnsght1.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:841"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/brnsrch1.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:842"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/melee1.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:843"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/melee2.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:844"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/melee3.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:845"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/step1.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:57"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/brain/step2.wav",
+      "calls": [
+        "src/game/monster/brain/brain.c:58"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkatck1.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:959"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkatck2.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:960"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkatck3.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:961"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkatck4.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:962"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkatck5.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:963"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkdeth1.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:964"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkdeth2.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:965"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkfall1.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:966"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkidle1.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:967"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkidle2.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:968"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkpain1.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:969"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkpain2.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:970"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chkpain3.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:971"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chksght1.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:972"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/chick/chksrch1.wav",
+      "calls": [
+        "src/game/monster/chick/chick.c:973"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/doors/dr1_end.wav",
+      "calls": [
+        "src/game/g_func.c:1740",
+        "src/game/g_func.c:1968",
+        "src/game/g_func.c:2919"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/doors/dr1_mid.wav",
+      "calls": [
+        "src/game/g_func.c:1739",
+        "src/game/g_func.c:1967",
+        "src/game/g_func.c:2918"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/doors/dr1_strt.wav",
+      "calls": [
+        "src/game/g_func.c:1738",
+        "src/game/g_func.c:1966",
+        "src/game/g_func.c:2917"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flipper/flpatck1.wav",
+      "calls": [
+        "src/game/monster/flipper/flipper.c:532"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flipper/flpatck2.wav",
+      "calls": [
+        "src/game/monster/flipper/flipper.c:533"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flipper/flpdeth1.wav",
+      "calls": [
+        "src/game/monster/flipper/flipper.c:531"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flipper/flpidle1.wav",
+      "calls": [
+        "src/game/monster/flipper/flipper.c:534"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flipper/flppain1.wav",
+      "calls": [
+        "src/game/monster/flipper/flipper.c:529"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flipper/flppain2.wav",
+      "calls": [
+        "src/game/monster/flipper/flipper.c:530"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flipper/flpsght1.wav",
+      "calls": [
+        "src/game/monster/flipper/flipper.c:536"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flipper/flpsrch1.wav",
+      "calls": [
+        "src/game/monster/flipper/flipper.c:535"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/floater/fltatck1.wav",
+      "calls": [
+        "src/game/monster/float/float.c:802"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/floater/fltatck2.wav",
+      "calls": [
+        "src/game/monster/float/float.c:794"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/floater/fltatck3.wav",
+      "calls": [
+        "src/game/monster/float/float.c:795"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/floater/fltdeth1.wav",
+      "calls": [
+        "src/game/monster/float/float.c:796"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/floater/fltidle1.wav",
+      "calls": [
+        "src/game/monster/float/float.c:797"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/floater/fltpain1.wav",
+      "calls": [
+        "src/game/monster/float/float.c:798"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/floater/fltpain2.wav",
+      "calls": [
+        "src/game/monster/float/float.c:799"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/floater/fltsght1.wav",
+      "calls": [
+        "src/game/monster/float/float.c:800"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/floater/fltsrch1.wav",
+      "calls": [
+        "src/game/monster/float/float.c:804"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flyer/flyatck1.wav",
+      "calls": [
+        "src/game/monster/flyer/flyer.c:842"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flyer/flyatck2.wav",
+      "calls": [
+        "src/game/monster/flyer/flyer.c:841"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flyer/flyatck3.wav",
+      "calls": [
+        "src/game/monster/flyer/flyer.c:845"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flyer/flydeth1.wav",
+      "calls": [
+        "src/game/monster/flyer/flyer.c:843"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flyer/flyidle1.wav",
+      "calls": [
+        "src/game/monster/flyer/flyer.c:853"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flyer/flypain1.wav",
+      "calls": [
+        "src/game/monster/flyer/flyer.c:839"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flyer/flypain2.wav",
+      "calls": [
+        "src/game/monster/flyer/flyer.c:840"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flyer/flysght1.wav",
+      "calls": [
+        "src/game/monster/flyer/flyer.c:837"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/flyer/flysrch1.wav",
+      "calls": [
+        "src/game/monster/flyer/flyer.c:838"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gladiator/glddeth2.wav",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:557"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gladiator/gldidle1.wav",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:562"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gladiator/gldpain2.wav",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:556"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gladiator/gldsrch1.wav",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:563"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gladiator/melee1.wav",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:559"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gladiator/melee2.wav",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:560"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gladiator/melee3.wav",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:561"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gladiator/pain.wav",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:555"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gladiator/railgun.wav",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:558"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gladiator/sight.wav",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:564"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gladiator/step1.wav",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:53"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gladiator/step2.wav",
+      "calls": [
+        "src/game/monster/gladiator/gladiator.c:54"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gunner/step1.wav",
+      "calls": [
+        "src/game/monster/gunner/gunner.c:50"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/gunner/step2.wav",
+      "calls": [
+        "src/game/monster/gunner/gunner.c:51"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/hover/hovatck1.wav",
+      "calls": [
+        "src/game/monster/hover/hover.c:811"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/hover/hovdeth1.wav",
+      "calls": [
+        "src/game/monster/hover/hover.c:805"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/hover/hovdeth2.wav",
+      "calls": [
+        "src/game/monster/hover/hover.c:806"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/hover/hovidle1.wav",
+      "calls": [
+        "src/game/monster/hover/hover.c:813"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/hover/hovpain1.wav",
+      "calls": [
+        "src/game/monster/hover/hover.c:803"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/hover/hovpain2.wav",
+      "calls": [
+        "src/game/monster/hover/hover.c:804"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/hover/hovsght1.wav",
+      "calls": [
+        "src/game/monster/hover/hover.c:807"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/hover/hovsrch1.wav",
+      "calls": [
+        "src/game/monster/hover/hover.c:808"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/hover/hovsrch2.wav",
+      "calls": [
+        "src/game/monster/hover/hover.c:809"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/infantry/infatck1.wav",
+      "calls": [
+        "src/game/monster/infantry/infantry.c:823"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/infantry/infatck2.wav",
+      "calls": [
+        "src/game/monster/infantry/infantry.c:825"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/infantry/infdeth1.wav",
+      "calls": [
+        "src/game/monster/infantry/infantry.c:820"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/infantry/infdeth2.wav",
+      "calls": [
+        "src/game/monster/infantry/infantry.c:821"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/infantry/infidle1.wav",
+      "calls": [
+        "src/game/monster/infantry/infantry.c:830"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/infantry/infpain1.wav",
+      "calls": [
+        "src/game/monster/infantry/infantry.c:818"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/infantry/infpain2.wav",
+      "calls": [
+        "src/game/monster/infantry/infantry.c:819"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/infantry/infsght1.wav",
+      "calls": [
+        "src/game/monster/infantry/infantry.c:828"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/infantry/infsrch1.wav",
+      "calls": [
+        "src/game/monster/infantry/infantry.c:829"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/infantry/melee2.wav",
+      "calls": [
+        "src/game/monster/infantry/infantry.c:826"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/infantry/step1.wav",
+      "calls": [
+        "src/game/monster/infantry/infantry.c:57"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/infantry/step2.wav",
+      "calls": [
+        "src/game/monster/infantry/infantry.c:58"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/insane/insane1.wav",
+      "calls": [
+        "src/game/monster/insane/insane.c:969"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/insane/insane10.wav",
+      "calls": [
+        "src/game/monster/insane/insane.c:976"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/insane/insane11.wav",
+      "calls": [
+        "src/game/monster/insane/insane.c:966"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/insane/insane2.wav",
+      "calls": [
+        "src/game/monster/insane/insane.c:970"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/insane/insane3.wav",
+      "calls": [
+        "src/game/monster/insane/insane.c:971"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/insane/insane4.wav",
+      "calls": [
+        "src/game/monster/insane/insane.c:972"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/insane/insane5.wav",
+      "calls": [
+        "src/game/monster/insane/insane.c:967"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/insane/insane6.wav",
+      "calls": [
+        "src/game/monster/insane/insane.c:973"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/insane/insane7.wav",
+      "calls": [
+        "src/game/monster/insane/insane.c:968"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/insane/insane8.wav",
+      "calls": [
+        "src/game/monster/insane/insane.c:974"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/insane/insane9.wav",
+      "calls": [
+        "src/game/monster/insane/insane.c:975"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/items/airout.wav",
+      "calls": [
+        "src/game/player/view.c:584",
+        "src/game/player/view.c:599"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/items/damage2.wav",
+      "calls": [
+        "src/game/player/view.c:554"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/items/damage3.wav",
+      "calls": [
+        "src/game/g_cmds.c:1903",
+        "src/game/player/weapon.c:767",
+        "src/game/player/weapon.c:814"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/items/protect2.wav",
+      "calls": [
+        "src/game/player/view.c:569"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/bfg_fire.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1118"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/bhit.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1125"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/brain1.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1119"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/death.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1115"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/pain1.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1114"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/pain2.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1113"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/pain3.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1112"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/popup.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1121"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/rail_up.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1120"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/spine.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:926"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/step1.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1116"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/step2.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1117"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/voice.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1124"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/voice3.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1123"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/makron/voice4.wav",
+      "calls": [
+        "src/game/monster/boss3/boss32.c:1122"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/idle.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:1030"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/medatck1.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:1041"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/medatck2.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:1036"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/medatck3.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:1037"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/medatck4.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:1038"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/medatck5.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:1039"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/meddeth1.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:1033"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/medpain1.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:1031"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/medpain2.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:1032"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/medsght1.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:1034"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/medsrch1.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:1035"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/step1.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:55"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/medic/step2.wav",
+      "calls": [
+        "src/game/monster/medic/medic.c:56"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/misc/bigtele.wav",
+      "calls": [
+        "src/game/monster/boss3/boss3.c:90"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/misc/fhit3.wav",
+      "calls": [
+        "src/game/g_misc.c:157"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/misc/power1.wav",
+      "calls": [
+        "src/game/g_items.c:1114"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/misc/power2.wav",
+      "calls": [
+        "src/game/g_items.c:1100",
+        "src/game/player/hud.c:462"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/misc/talk.wav",
+      "calls": [
+        "src/game/g_func.c:1814",
+        "src/game/g_func.c:1989",
+        "src/game/g_func.c:2983",
+        "src/game/g_trigger.c:207"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/misc/trigger1.wav",
+      "calls": [
+        "src/game/g_trigger.c:211"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/misc/windfly.wav",
+      "calls": [
+        "src/game/g_trigger.c:603"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/mutatck1.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:850"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/mutatck2.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:851"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/mutatck3.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:852"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/mutdeth1.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:853"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/mutidle1.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:854"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/mutpain1.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:855"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/mutpain2.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:856"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/mutsght1.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:857"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/mutsrch1.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:858"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/step1.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:859"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/step2.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:860"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/step3.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:861"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/mutant/thud1.wav",
+      "calls": [
+        "src/game/monster/mutant/mutant.c:862"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/parasite/paratck1.wav",
+      "calls": [
+        "src/game/monster/parasite/parasite.c:758"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/parasite/paratck2.wav",
+      "calls": [
+        "src/game/monster/parasite/parasite.c:759"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/parasite/paratck3.wav",
+      "calls": [
+        "src/game/monster/parasite/parasite.c:760"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/parasite/paratck4.wav",
+      "calls": [
+        "src/game/monster/parasite/parasite.c:761"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/parasite/pardeth1.wav",
+      "calls": [
+        "src/game/monster/parasite/parasite.c:757"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/parasite/paridle1.wav",
+      "calls": [
+        "src/game/monster/parasite/parasite.c:763"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/parasite/paridle2.wav",
+      "calls": [
+        "src/game/monster/parasite/parasite.c:764"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/parasite/parpain1.wav",
+      "calls": [
+        "src/game/monster/parasite/parasite.c:755"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/parasite/parpain2.wav",
+      "calls": [
+        "src/game/monster/parasite/parasite.c:756"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/parasite/parsght1.wav",
+      "calls": [
+        "src/game/monster/parasite/parasite.c:762"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/parasite/parsrch1.wav",
+      "calls": [
+        "src/game/monster/parasite/parasite.c:765"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/plats/pt1_end.wav",
+      "calls": [
+        "src/game/g_func.c:851"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/plats/pt1_mid.wav",
+      "calls": [
+        "src/game/g_func.c:850"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/plats/pt1_strt.wav",
+      "calls": [
+        "src/game/g_func.c:849"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/tank/pain.wav",
+      "calls": [
+        "src/game/g_misc.c:1631",
+        "src/game/g_misc.c:1660",
+        "src/game/g_misc.c:1709"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/tank/thud.wav",
+      "calls": [
+        "src/game/g_misc.c:1616",
+        "src/game/g_misc.c:1708"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/weapons/laser2.wav",
+      "calls": [
+        "src/game/g_target.c:809"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/world/amb10.wav",
+      "calls": [
+        "src/game/g_misc.c:2789"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/world/electro.wav",
+      "calls": [
+        "src/game/g_trigger.c:727"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/world/mov_watr.wav",
+      "calls": [
+        "src/game/g_func.c:2070"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/world/quake.wav",
+      "calls": [
+        "src/game/g_target.c:1387"
+      ]
+    },
+    {
+      "kind": "soundindex",
+      "reference": "sound/world/stp_watr.wav",
+      "calls": [
+        "src/game/g_func.c:2071"
+      ]
+    }
+  ],
+  "stock_review_markers": {
+    "numbered_paks": [],
+    "legacy_player_files": []
+  },
+  "development_strip_candidates": [
+    {
+      "path": "homogenizeTextures.psd",
+      "bytes": 20572911,
+      "reason": "Texture authoring source; not loaded by the game."
+    },
+    {
+      "path": "blender/PlayerRig_final.blend",
+      "bytes": 14023853,
+      "reason": "Model authoring source; optional for runtime, useful for source releases."
+    },
+    {
+      "path": "blender/SoldierRig_final.blend",
+      "bytes": 29149527,
+      "reason": "Model authoring source; optional for runtime, useful for source releases."
+    },
+    {
+      "path": "tests/assets/__pycache__/test_md2_animation.cpython-312.pyc",
+      "bytes": 21615,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tests/assets/__pycache__/test_md2_assets.cpython-312.pyc",
+      "bytes": 17887,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tests/assets/__pycache__/test_standalone_audit.cpython-312.pyc",
+      "bytes": 8876,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/asset_sources.cpython-312.pyc",
+      "bytes": 3534,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/audit_public_source.cpython-312.pyc",
+      "bytes": 23092,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/audit_standalone.cpython-312.pyc",
+      "bytes": 26034,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/build_bootstrap.cpython-312.pyc",
+      "bytes": 25766,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/build_branding.cpython-312.pyc",
+      "bytes": 8185,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/build_overlay.cpython-312.pyc",
+      "bytes": 17281,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/build_platoon.cpython-312.pyc",
+      "bytes": 18808,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/build_support_models.cpython-312.pyc",
+      "bytes": 19136,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/build_support_sounds.cpython-312.pyc",
+      "bytes": 18428,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/import_portable_assets.cpython-312.pyc",
+      "bytes": 10547,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/import_soldier_sounds.cpython-312.pyc",
+      "bytes": 10206,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/md2_animation.cpython-312.pyc",
+      "bytes": 27364,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/md2_assets.cpython-312.pyc",
+      "bytes": 53464,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/assets/__pycache__/smoke_standalone.cpython-312.pyc",
+      "bytes": 23204,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/maps/__pycache__/generate_bedroom.cpython-312.pyc",
+      "bytes": 26159,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/maps/__pycache__/generate_sandkeep.cpython-312.pyc",
+      "bytes": 60349,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/maps/__pycache__/generate_sandkeep_materials.cpython-312.pyc",
+      "bytes": 44282,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/maps/__pycache__/generate_sandwatch.cpython-312.pyc",
+      "bytes": 22899,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/maps/__pycache__/package_bedroom.cpython-312.pyc",
+      "bytes": 4660,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/maps/__pycache__/platoon_palette.cpython-312.pyc",
+      "bytes": 4039,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "tools/maps/__pycache__/reindex_materials.cpython-312.pyc",
+      "bytes": 11816,
+      "reason": "Generated Python cache; not needed in the repository or runtime."
+    },
+    {
+      "path": "build/",
+      "bytes": 9157208,
+      "reason": "Generated build output; rebuild or distribute separately as release artifacts."
+    },
+    {
+      "path": "release/",
+      "bytes": 49387467,
+      "reason": "Generated build output; rebuild or distribute separately as release artifacts."
+    }
+  ]
+}

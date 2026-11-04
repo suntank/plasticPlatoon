@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "recorded_date": "2026-11-04",
+  "declaration_source": "Project owner reply during reclaimed-install audit",
+  "question": "Did you create all the imported models, textures, animations, and sound recordings, or are any from other creators or asset packs?",
+  "owner_statement": "i created them all myself.",
+  "status": "owner_declared_original",
+  "license": "GPL-2.0-or-later",
+  "license_document": "ASSET-LICENSE.md",
+  "scope": [
+    "Original Plastic Platoon models, textures, animations, maps, and sound recordings",
+    "Original editable model, map, texture and audio source inputs",
+    "Original generated bootstrap and support assets"
+  ],
+  "excluded": [
+    "Quake II PAKs and other third-party game data",
+    "Removed legacy male/grunt fallback assets and obsolete stock artwork, retained only in the separate private pre-cleanup backup",
+    "Third-party engine/library/developer-tool code, which retains its own notices"
+  ],
+  "limitations": [
+    "Owner declaration is not an independent file-by-file rights determination",
+    "Runtime dependency and public-source checks do not independently establish ownership"
+  ],
+  "public_source_cleanup": {
+    "date": "2026-11-04",
+    "report": "tools/assets/review/public-cleanup.json",
+    "method": "Clean source snapshot with a new Git root; legacy history backed up outside the repository",
+    "asset_input_migration": "Authorized original conversion inputs archived separately from Git history"
+  }
+}

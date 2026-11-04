@@ -1,0 +1,117 @@
+# Plastic Platoon asset sources and releases
+
+The source tree contains the project's runtime assets, editable artwork and
+checked original conversion inputs. The project needs no Quake II PAKs, stock
+palette, historical Git objects or home-directory assets. Original asset terms
+and the owner's declaration are in [ASSET-LICENSE.md](../../ASSET-LICENSE.md).
+
+## Build a playable release
+
+```sh
+make -j4 all
+./release/play-portable.sh
+```
+
+The asset target uses standard-library Python generators for original branding,
+palette/font/UI, provisional support sounds and props, then creates
+`release/baseq2/plastic-platoon.pk3`. It stages every `operation-*.pk3` mission,
+the launcher, notices and an identical loose `tuning/default.json` needed by the
+game module. Personal configs and saves are never packaging inputs.
+
+To update the canonical source pack after editing runtime files:
+
+```sh
+python3 tools/assets/build_overlay.py --output baseq2/plastic-platoon.pk3
+python3 tools/assets/build_overlay.py --verify --output baseq2/plastic-platoon.pk3
+python3 tools/assets/build_overlay.py --verify
+```
+
+Archive manifests record every entry's size/hash. MD2 skin and SP2 image
+references must resolve within the pack. Legacy male/grunt media has no exception
+and is excluded from both the source tree and its conversion inputs.
+
+## Reproduce models and textures
+
+Install the tested conversion dependencies separately from the game build:
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r tools/assets/requirements.txt
+```
+
+`platoon.json` pins `sources/platoon-originals.pk3`, which contains 146 authorized
+original model, texture and sprite inputs. `platoon-originals.json` records its
+contents. Corrected pickup originals are retained in `sources/pickups-local.pk3`.
+`pickup-manifest.json`, `pickups.json` and `platoon-manifest.json` identify input
+and output hashes, geometry/animation checks and conversion settings. No source
+reader falls back to Git history or an installed game.
+
+```sh
+.venv/bin/python tools/assets/md2_assets.py verify
+.venv/bin/python tools/assets/build_platoon.py verify
+.venv/bin/python tests/assets/test_md2_assets.py
+.venv/bin/python tests/assets/test_md2_animation.py
+python3 tests/assets/test_source_archives.py
+```
+
+To rebuild the 16 pickup pairs, then the complete optimized model/texture set:
+
+```sh
+.venv/bin/python tools/assets/md2_assets.py build --write --review
+.venv/bin/python tools/assets/build_platoon.py build --write --review
+```
+
+The full model manifest covers 66 custom MD2s and 77 PNGs. Independent procedural
+vehicle builders reproduce the tan tank and attack helicopter; the attachment
+builder retargets existing project weapon models to the soldier animation:
+
+```sh
+.venv/bin/python tools/assets/build_heavy_tank.py --verify
+.venv/bin/python tools/assets/build_helicopter.py --verify
+.venv/bin/python tools/assets/build_heavy_gunner.py --verify
+.venv/bin/python tools/assets/build_heavy_gunner.py --weapon rocket --verify
+```
+
+Original recordings are retained in `sources/player-sounds.zip`. Soldier sound
+conversion has an independent hash manifest and verifier. The support-sound
+manifest identifies synthesized placeholders separately from those recordings.
+
+## Maps, palette and branding
+
+Editable `.map`, `.blend`, PSD and material source images remain in this source
+release. The separate private pre-cleanup backup also preserves editor backups
+and removed diagnostic files. Runtime downloads do not need editable sources.
+
+All map material generators use `tools/maps/platoon_palette.py`, which imports
+the original palette defined in `build_bootstrap.py`. Indexed WALs were migrated
+from their truecolor companions while retaining headers, flags, animation links,
+BSP geometry and truecolor image bytes. Verify or update indexed outputs with:
+
+```sh
+.venv/bin/python tools/maps/reindex_materials.py
+# After changing the authored truecolor textures:
+.venv/bin/python tools/maps/reindex_materials.py --write
+```
+
+`tools/maps/material-palette-manifest.json` records 195 loose/archive WAL
+representations across the source textures and seven mission packages.
+`build_branding.py --verify` checks the original SDL, PNG and Windows icons.
+The macOS workflow packages source-built binaries rather than an old app bundle.
+
+## Public-source and runtime verification
+
+```sh
+python3 tools/assets/audit_public_source.py --history --strict
+python3 tools/assets/audit_standalone.py --strict --output /tmp/platoon-runtime-audit.json
+python3 tools/assets/smoke_standalone.py --renderer gl3 --renderer gl1 --renderer soft
+```
+
+The public-source guard checks tracked files, archive members and all Git blobs,
+including unreachable objects, for known removed media, prohibited paths and
+private backups. It does not independently establish ownership. Retain the GPL
+and component notices; the source release relies on the recorded owner declaration.
+
+See [the cleanup record](STANDALONE.md) for backups, test results and remaining
+presentation/platform limitations. Historical offline model comparisons are
+retained because they show project artwork; stock-map/runtime screenshots were
+removed from the public source.

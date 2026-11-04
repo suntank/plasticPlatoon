@@ -1,0 +1,1057 @@
+{
+  "schema": 1,
+  "date": "2026-11-04",
+  "note": "Recovered missing project mission inputs and verified existing mission packages; no numbered PAKs or home assets copied. Provenance still requires author review.",
+  "files": [
+    {
+      "path": "baseq2/bedroom_coop.cfg",
+      "source": "working-project/baseq2/bedroom_coop.cfg",
+      "bytes": 365,
+      "sha256": "7320d067c794b90e8fbdf7e897562b4c6987b85d7e517d87bc47031458e21dd2"
+    },
+    {
+      "path": "baseq2/bedroom_solo.cfg",
+      "source": "working-project/baseq2/bedroom_solo.cfg",
+      "bytes": 255,
+      "sha256": "6e409805d8d7c5c5c4f0e605af2ac58b4ec7e7c82d137042ede295ebfaadca61"
+    },
+    {
+      "path": "baseq2/env/sandkeepbk.tga",
+      "source": "working-project/baseq2/env/sandkeepbk.tga",
+      "bytes": 38749,
+      "sha256": "c04a529bb9c2102b30cf8ec03102b20f9ede64b5d8acd538e7c985cfc85ba650"
+    },
+    {
+      "path": "baseq2/env/sandkeepdn.tga",
+      "source": "working-project/baseq2/env/sandkeepdn.tga",
+      "bytes": 2092,
+      "sha256": "586177bcb20efe73142fb0f708200728caae30533a17429dba4c9abf71a8383b"
+    },
+    {
+      "path": "baseq2/env/sandkeepft.tga",
+      "source": "working-project/baseq2/env/sandkeepft.tga",
+      "bytes": 37567,
+      "sha256": "2f5ed5d45334b06bdc55582cb8943c8d472305079045e2ea3601096517f0f9bb"
+    },
+    {
+      "path": "baseq2/env/sandkeeplf.tga",
+      "source": "working-project/baseq2/env/sandkeeplf.tga",
+      "bytes": 34513,
+      "sha256": "6f7aec63a1d3b6806c8f8b26821a533334fdcdaf08bf4af264efa6341a43ce2b"
+    },
+    {
+      "path": "baseq2/env/sandkeeprt.tga",
+      "source": "working-project/baseq2/env/sandkeeprt.tga",
+      "bytes": 47343,
+      "sha256": "c6ea4b8dcf875492c264beb4faf27d2f00726151253c9a3c44c11ed3956dfe13"
+    },
+    {
+      "path": "baseq2/env/sandkeepup.tga",
+      "source": "working-project/baseq2/env/sandkeepup.tga",
+      "bytes": 87484,
+      "sha256": "a886807e8e63299c8f03eab3f76f2b9ddfc3768cde83f669e0275ded61e39311"
+    },
+    {
+      "path": "baseq2/maps/pp_bedroom.bsp",
+      "source": "working-project/baseq2/maps/pp_bedroom.bsp",
+      "bytes": 1949308,
+      "sha256": "cf2d9a162cbfde2f1ecfc14162f84eb12ff076d19993bf7455532ae5a9993da6"
+    },
+    {
+      "path": "baseq2/operation-nightlight.pk3",
+      "source": "working-project/baseq2/operation-nightlight.pk3",
+      "bytes": 658456,
+      "sha256": "80b6c7ad5db8186e5c17a3d2ed396b91f28107e6ebb4aae5c4da059bb92c8cf7"
+    },
+    {
+      "path": "baseq2/sandkeep_coop.cfg",
+      "source": "working-project/baseq2/sandkeep_coop.cfg",
+      "bytes": 307,
+      "sha256": "c10ea1e1760afd473506780ecfe6c951723f8815badb84a75d87d9a0c85b238c"
+    },
+    {
+      "path": "baseq2/sandkeep_solo.cfg",
+      "source": "working-project/baseq2/sandkeep_solo.cfg",
+      "bytes": 160,
+      "sha256": "f1b7cb9cf7f87a91aab687d51acaa35f36c93d517db07017788b400cc2b33078"
+    },
+    {
+      "path": "baseq2/sandwatch_coop.cfg",
+      "source": "working-project/baseq2/sandwatch_coop.cfg",
+      "bytes": 260,
+      "sha256": "81704940fceb01b76a5679d134ce1516bfe034f2b6f46bc2cbc61f814765183c"
+    },
+    {
+      "path": "baseq2/sandwatch_solo.cfg",
+      "source": "working-project/baseq2/sandwatch_solo.cfg",
+      "bytes": 173,
+      "sha256": "83346a963e9f9fbce0d74128ff549f983fa2703e384df198ae66385c562570e2"
+    },
+    {
+      "path": "baseq2/textures/bedroom/battery.png",
+      "source": "working-project/baseq2/textures/bedroom/battery.png",
+      "bytes": 3851,
+      "sha256": "b8f178c6c6ae91c8e9400c5db802ab95fdbd874aefe783df24ead45faa6fa8ad"
+    },
+    {
+      "path": "baseq2/textures/bedroom/battery.wal",
+      "source": "working-project/baseq2/textures/bedroom/battery.wal",
+      "bytes": 43620,
+      "sha256": "c64f44fcc7ef199b9481ea4eba95ac8d5c54035eb662ecea2f8853bdb6d4c181"
+    },
+    {
+      "path": "baseq2/textures/bedroom/blue.png",
+      "source": "working-project/baseq2/textures/bedroom/blue.png",
+      "bytes": 361,
+      "sha256": "cef44a5e7d907571356b9fa6e076fb1bb89d232476a301169eb6baf24efe1e66"
+    },
+    {
+      "path": "baseq2/textures/bedroom/blue.wal",
+      "source": "working-project/baseq2/textures/bedroom/blue.wal",
+      "bytes": 21860,
+      "sha256": "064df19a08ce99a11078c2fddbc2a3005b1926230c797a665bd0327d2e41174e"
+    },
+    {
+      "path": "baseq2/textures/bedroom/book.png",
+      "source": "working-project/baseq2/textures/bedroom/book.png",
+      "bytes": 3159,
+      "sha256": "35bf9330bd529f14a0f91b2bdafec7294330c3f7a3adc8013c4e8b79bcd09246"
+    },
+    {
+      "path": "baseq2/textures/bedroom/book.wal",
+      "source": "working-project/baseq2/textures/bedroom/book.wal",
+      "bytes": 43620,
+      "sha256": "3a9822804199bb7a454ece3b6ad847b29caa1fbbc92a01c73ed91108bbb48e9e"
+    },
+    {
+      "path": "baseq2/textures/bedroom/briefing.png",
+      "source": "working-project/baseq2/textures/bedroom/briefing.png",
+      "bytes": 3825,
+      "sha256": "c26c641a93c5468efde5036b41e310152cba806bcc73fa0f984740a4cb8f9105"
+    },
+    {
+      "path": "baseq2/textures/bedroom/briefing.wal",
+      "source": "working-project/baseq2/textures/bedroom/briefing.wal",
+      "bytes": 43620,
+      "sha256": "b1652af3b07ceb315e4eb386c1701fefe7e7532f004a28d841ba79ccc251db33"
+    },
+    {
+      "path": "baseq2/textures/bedroom/cardboard.png",
+      "source": "working-project/baseq2/textures/bedroom/cardboard.png",
+      "bytes": 800,
+      "sha256": "f35404b717c17e9cac2b58acad6064ff819d81de046a597e98aad04abd253e6a"
+    },
+    {
+      "path": "baseq2/textures/bedroom/cardboard.wal",
+      "source": "working-project/baseq2/textures/bedroom/cardboard.wal",
+      "bytes": 21860,
+      "sha256": "8b7ef74099a127d18e674b19bc4c3d03109c01937647a6e0f7613f3536535643"
+    },
+    {
+      "path": "baseq2/textures/bedroom/carpet.png",
+      "source": "working-project/baseq2/textures/bedroom/carpet.png",
+      "bytes": 663,
+      "sha256": "7c9b51363b7dbf8db09d75a4f79ec9947e7de682afb37440be26e25f80ed4048"
+    },
+    {
+      "path": "baseq2/textures/bedroom/carpet.wal",
+      "source": "working-project/baseq2/textures/bedroom/carpet.wal",
+      "bytes": 21860,
+      "sha256": "abf54233d5f615b58e9eab6c7488953a548e26f3723001a9d15c41a807c66f6e"
+    },
+    {
+      "path": "baseq2/textures/bedroom/exit.png",
+      "source": "working-project/baseq2/textures/bedroom/exit.png",
+      "bytes": 4004,
+      "sha256": "688528ee8d8f1021655613a099586eaf62722c3766c8015a2245453b112b7b05"
+    },
+    {
+      "path": "baseq2/textures/bedroom/exit.wal",
+      "source": "working-project/baseq2/textures/bedroom/exit.wal",
+      "bytes": 43620,
+      "sha256": "f156fa68ec1885e2345b18206d00eb310a14900d28cb813381d7d1886c904f30"
+    },
+    {
+      "path": "baseq2/textures/bedroom/glow.png",
+      "source": "working-project/baseq2/textures/bedroom/glow.png",
+      "bytes": 361,
+      "sha256": "e25b496ba97138494855df848ff79a358422414496d1b12b0f4c542df4ce5e89"
+    },
+    {
+      "path": "baseq2/textures/bedroom/glow.wal",
+      "source": "working-project/baseq2/textures/bedroom/glow.wal",
+      "bytes": 21860,
+      "sha256": "494624c33b91f1b19b7d182bb3aa0e31387508ae920e08861d14ef43a245ab29"
+    },
+    {
+      "path": "baseq2/textures/bedroom/green.png",
+      "source": "working-project/baseq2/textures/bedroom/green.png",
+      "bytes": 361,
+      "sha256": "2a4740861b50010d00526c80d6afac8fa71008c5aeef5ea6777cca2d75c89acc"
+    },
+    {
+      "path": "baseq2/textures/bedroom/green.wal",
+      "source": "working-project/baseq2/textures/bedroom/green.wal",
+      "bytes": 21860,
+      "sha256": "959152c19d012dbdf5c8b29ed77a9b1576159a577601683beee519f664075ec1"
+    },
+    {
+      "path": "baseq2/textures/bedroom/helipad.png",
+      "source": "working-project/baseq2/textures/bedroom/helipad.png",
+      "bytes": 2048,
+      "sha256": "943e60fc1fdcdf9e6d2ee44420c0d9997b4b71fc49b502d70ae120ffb96a027c"
+    },
+    {
+      "path": "baseq2/textures/bedroom/helipad.wal",
+      "source": "working-project/baseq2/textures/bedroom/helipad.wal",
+      "bytes": 87140,
+      "sha256": "4cd8a9f8e5278ad11f40a20402bd31a12f3633e3d25e0df2f29ca9d7155b7751"
+    },
+    {
+      "path": "baseq2/textures/bedroom/letter_a.png",
+      "source": "working-project/baseq2/textures/bedroom/letter_a.png",
+      "bytes": 1724,
+      "sha256": "13e40c50c7c13c5036b3522c7fa7fcf4d0813f7d5ab8333cc7b4c913f0d0c527"
+    },
+    {
+      "path": "baseq2/textures/bedroom/letter_a.wal",
+      "source": "working-project/baseq2/textures/bedroom/letter_a.wal",
+      "bytes": 21860,
+      "sha256": "fe4702d1527ea6666be52b3b170fa0c6b1c2482c620daf19f0fa769d14a4c5ef"
+    },
+    {
+      "path": "baseq2/textures/bedroom/letter_b.png",
+      "source": "working-project/baseq2/textures/bedroom/letter_b.png",
+      "bytes": 1691,
+      "sha256": "901f9c0ac7f1ba3a2e88b0b5b0e9e3634d1ce106188144e7ab85f8181f45279e"
+    },
+    {
+      "path": "baseq2/textures/bedroom/letter_b.wal",
+      "source": "working-project/baseq2/textures/bedroom/letter_b.wal",
+      "bytes": 21860,
+      "sha256": "266f55b4ad433af78fdc4d5732833bad45d355604ee96fce29f4befb357f9c75"
+    },
+    {
+      "path": "baseq2/textures/bedroom/letter_c.png",
+      "source": "working-project/baseq2/textures/bedroom/letter_c.png",
+      "bytes": 2180,
+      "sha256": "936c3db49f03f4fb1b8bd222a39bb4724bf4d3ad22c819cb0c12d1019b792356"
+    },
+    {
+      "path": "baseq2/textures/bedroom/letter_c.wal",
+      "source": "working-project/baseq2/textures/bedroom/letter_c.wal",
+      "bytes": 21860,
+      "sha256": "0f07999abe4beaea2a44f18d634ea25924edc6c9685d22cca4a430b7992bf1ca"
+    },
+    {
+      "path": "baseq2/textures/bedroom/metal.png",
+      "source": "working-project/baseq2/textures/bedroom/metal.png",
+      "bytes": 361,
+      "sha256": "0553091dafb60edebc95a79069a30d076e3b208aa33c3c59fa573620dd60489b"
+    },
+    {
+      "path": "baseq2/textures/bedroom/metal.wal",
+      "source": "working-project/baseq2/textures/bedroom/metal.wal",
+      "bytes": 21860,
+      "sha256": "830d2d8e7de502de2ce484089056298c36974b27ba002a16ed1e827255c7d595"
+    },
+    {
+      "path": "baseq2/textures/bedroom/pages.png",
+      "source": "working-project/baseq2/textures/bedroom/pages.png",
+      "bytes": 414,
+      "sha256": "e9c2878d5fb7bbcfaa48ec97bcd15baf84755f1efd3b0ea38a745de1c8ccbbea"
+    },
+    {
+      "path": "baseq2/textures/bedroom/pages.wal",
+      "source": "working-project/baseq2/textures/bedroom/pages.wal",
+      "bytes": 21860,
+      "sha256": "470dc478b50ff602b67268c52bcf653cf89270f55d234b92e70d7871b17e7497"
+    },
+    {
+      "path": "baseq2/textures/bedroom/pillow.png",
+      "source": "working-project/baseq2/textures/bedroom/pillow.png",
+      "bytes": 600,
+      "sha256": "46bfa87045e2f4f372210f6021ad18bcb25b61770afcf572f3283c0e849c9b16"
+    },
+    {
+      "path": "baseq2/textures/bedroom/pillow.wal",
+      "source": "working-project/baseq2/textures/bedroom/pillow.wal",
+      "bytes": 21860,
+      "sha256": "339749ab3be207160e857c1e4d9a24a3a8f12fe22f4a90fbef06a8d2179b2c65"
+    },
+    {
+      "path": "baseq2/textures/bedroom/quilt.png",
+      "source": "working-project/baseq2/textures/bedroom/quilt.png",
+      "bytes": 859,
+      "sha256": "c0fe77a281344f32c3983596f74cdd4b14e52abaa2a6f0766df0f775c7203e7e"
+    },
+    {
+      "path": "baseq2/textures/bedroom/quilt.wal",
+      "source": "working-project/baseq2/textures/bedroom/quilt.wal",
+      "bytes": 21860,
+      "sha256": "8929498d5252c1ffc7518f77e5d4c2a153806376e626ee5b5f8cd7fc2c2fdd86"
+    },
+    {
+      "path": "baseq2/textures/bedroom/radio.png",
+      "source": "working-project/baseq2/textures/bedroom/radio.png",
+      "bytes": 3965,
+      "sha256": "d1816a8b41faa3bd108977d620e94a1df8d69e823517cce962dc6c7b97fb5357"
+    },
+    {
+      "path": "baseq2/textures/bedroom/radio.wal",
+      "source": "working-project/baseq2/textures/bedroom/radio.wal",
+      "bytes": 43620,
+      "sha256": "afb87599919237dae1a2373fdecdcc3f81673832ef018cd21d3dce96b6d82507"
+    },
+    {
+      "path": "baseq2/textures/bedroom/red.png",
+      "source": "working-project/baseq2/textures/bedroom/red.png",
+      "bytes": 360,
+      "sha256": "2d370eb778cb1a69ac657b5ed762bfb5bdb3fad68a2c5be6942098a500251069"
+    },
+    {
+      "path": "baseq2/textures/bedroom/red.wal",
+      "source": "working-project/baseq2/textures/bedroom/red.wal",
+      "bytes": 21860,
+      "sha256": "5f4dc2bf3d402e4c9bc6dba045b990f9195150a151eae4528fd54b331863d7e1"
+    },
+    {
+      "path": "baseq2/textures/bedroom/trim.png",
+      "source": "working-project/baseq2/textures/bedroom/trim.png",
+      "bytes": 362,
+      "sha256": "eb534594311e7251eea6dccf2a9dd34100ff96d222906d9b19171a1e7a5c0ef0"
+    },
+    {
+      "path": "baseq2/textures/bedroom/trim.wal",
+      "source": "working-project/baseq2/textures/bedroom/trim.wal",
+      "bytes": 21860,
+      "sha256": "097e221b8835aa63ef4a9ea01a2fe15f455df265c499345677fe0f486c919214"
+    },
+    {
+      "path": "baseq2/textures/bedroom/wall.png",
+      "source": "working-project/baseq2/textures/bedroom/wall.png",
+      "bytes": 670,
+      "sha256": "20fc4c0f290b2bba293b596031adacf8df415b31c4bfcffb1f3b3139470f8836"
+    },
+    {
+      "path": "baseq2/textures/bedroom/wall.wal",
+      "source": "working-project/baseq2/textures/bedroom/wall.wal",
+      "bytes": 21860,
+      "sha256": "decef23e0a9ff550dda941639b3d4e5fd975d12efa07ba645ebe1a0daf631cae"
+    },
+    {
+      "path": "baseq2/textures/bedroom/window.png",
+      "source": "working-project/baseq2/textures/bedroom/window.png",
+      "bytes": 361,
+      "sha256": "39986f32fc3b47ce95744fdf15b74bec3893f66d06f3ce4069856aa78d8d25ae"
+    },
+    {
+      "path": "baseq2/textures/bedroom/window.wal",
+      "source": "working-project/baseq2/textures/bedroom/window.wal",
+      "bytes": 21860,
+      "sha256": "f1c273675e9120cdba2779379f85a3de950b260d8bf4553a4a2812fa3f7d74bc"
+    },
+    {
+      "path": "baseq2/textures/bedroom/wood.png",
+      "source": "working-project/baseq2/textures/bedroom/wood.png",
+      "bytes": 800,
+      "sha256": "82da157bf7eb961c45066a930786daebf214137eefe974982b5416d5916ea80b"
+    },
+    {
+      "path": "baseq2/textures/bedroom/wood.wal",
+      "source": "working-project/baseq2/textures/bedroom/wood.wal",
+      "bytes": 21860,
+      "sha256": "e0b8a4e5253a982372dfd70aac809eab140715556008d16611a148d2646a4fa1"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/abc_a.png",
+      "source": "working-project/baseq2/textures/sandkeep/abc_a.png",
+      "bytes": 126207,
+      "sha256": "4ed8a8752e566318f62cb7437ed86783ec792115fe3b30430cf32616b277c453"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/abc_a.wal",
+      "source": "working-project/baseq2/textures/sandkeep/abc_a.wal",
+      "bytes": 87140,
+      "sha256": "28e48bd137e40c4f05a84e605af83a74269ce79256f9f14e8657d987a722397c"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/abc_b.png",
+      "source": "working-project/baseq2/textures/sandkeep/abc_b.png",
+      "bytes": 126273,
+      "sha256": "f84292c7436d55756ca32af77c1880f2910c54f997725272e9cb233f4ec7c25b"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/abc_b.wal",
+      "source": "working-project/baseq2/textures/sandkeep/abc_b.wal",
+      "bytes": 87140,
+      "sha256": "da336d587ec4d0040421ddc19ba37e67ae0b4e162a4212101ae5bfe34e79841c"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/abc_c.png",
+      "source": "working-project/baseq2/textures/sandkeep/abc_c.png",
+      "bytes": 123311,
+      "sha256": "28c401a6fe0cfd5d68afbe6ca03a9c230acbba58eb803462b756d566ca533808"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/abc_c.wal",
+      "source": "working-project/baseq2/textures/sandkeep/abc_c.wal",
+      "bytes": 87140,
+      "sha256": "31dfa2045d5650841f0e48609cefdb683a9bbbda338c5ab3ac7e357a32e3cc8e"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/abc_d.png",
+      "source": "working-project/baseq2/textures/sandkeep/abc_d.png",
+      "bytes": 116890,
+      "sha256": "b0d8d676fa2c2805de43733224233f8184b70d9d3ec97ca45c5a1569fc71b524"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/abc_d.wal",
+      "source": "working-project/baseq2/textures/sandkeep/abc_d.wal",
+      "bytes": 87140,
+      "sha256": "4d12c065feffd33ae69845d4fb15b3ca1b27beaae1926baa1f6c5eb587b093b4"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/abc_e.png",
+      "source": "working-project/baseq2/textures/sandkeep/abc_e.png",
+      "bytes": 116400,
+      "sha256": "56822d3aea727c719e6010c6cb6465f22df6ba88b40105ce17e070b38e54e00a"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/abc_e.wal",
+      "source": "working-project/baseq2/textures/sandkeep/abc_e.wal",
+      "bytes": 87140,
+      "sha256": "d711997f42a830ab12252313603c24477889a6f07fcbc71472611d4e8063a60b"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/abc_f.png",
+      "source": "working-project/baseq2/textures/sandkeep/abc_f.png",
+      "bytes": 114222,
+      "sha256": "6f49ca33abd1b6b91dd6665de57fc420243a9b0e7d598154f4974fc48fad7176"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/abc_f.wal",
+      "source": "working-project/baseq2/textures/sandkeep/abc_f.wal",
+      "bytes": 87140,
+      "sha256": "1f498c70f2a21b7b0c8b7b9cdf514a88931d63eb00b1d1be03bcb3213a9b74b9"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/gate_wood.png",
+      "source": "working-project/baseq2/textures/sandkeep/gate_wood.png",
+      "bytes": 37791,
+      "sha256": "d7f79b026fa7279cb1327a629800d3b4e5afa961fc7ddf86269757ba78800570"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/gate_wood.wal",
+      "source": "working-project/baseq2/textures/sandkeep/gate_wood.wal",
+      "bytes": 87140,
+      "sha256": "eccfd35c4a0fc7d9cca57cb18d7391aab664ee693636f37ab78443075c9cc0d3"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/grass.png",
+      "source": "working-project/baseq2/textures/sandkeep/grass.png",
+      "bytes": 55445,
+      "sha256": "e38b0ccabb847c50dce417fad1b6920409d1a70e8f05f520af9fd17221d42af4"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/grass.wal",
+      "source": "working-project/baseq2/textures/sandkeep/grass.wal",
+      "bytes": 87140,
+      "sha256": "82c1cdf508b37eb32a5cee612be8af2644697cd2b5cdbde593ff84fc87c73040"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/helipad.png",
+      "source": "working-project/baseq2/textures/sandkeep/helipad.png",
+      "bytes": 11333,
+      "sha256": "15bbc40efbbd058f9883edb4a4aeba06fd9f6992040c3e397ed4ab3610f0a989"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/helipad.wal",
+      "source": "working-project/baseq2/textures/sandkeep/helipad.wal",
+      "bytes": 87140,
+      "sha256": "323459d4db373b5e944dcd2286ad7368fc90d2b634512a873805d7413b2d3c0e"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/marker.png",
+      "source": "working-project/baseq2/textures/sandkeep/marker.png",
+      "bytes": 7386,
+      "sha256": "bcf08b4d81566df5afad51eaff7dced0e586bc5aa0ffcba8caf2fba29d4cf998"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/marker.wal",
+      "source": "working-project/baseq2/textures/sandkeep/marker.wal",
+      "bytes": 21860,
+      "sha256": "d47b5fb156510aa3846fd5fb3d789cf5b7ae6306bd2f611426dd4930cd6576fd"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/materials.json",
+      "source": "working-project/baseq2/textures/sandkeep/materials.json",
+      "bytes": 14671,
+      "sha256": "90e054a965c4c3701f281e9e93abfc2426ee506e20ca08ed69bb756dee6d1acb"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/metal.png",
+      "source": "working-project/baseq2/textures/sandkeep/metal.png",
+      "bytes": 7195,
+      "sha256": "2dff1c1c8d4f23714692a568639cc70d48518f98f4952dbc362e626924e36db3"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/metal.wal",
+      "source": "working-project/baseq2/textures/sandkeep/metal.wal",
+      "bytes": 21860,
+      "sha256": "030cdbee499c42796ef9ce1d9462cbf8cf7e8bb6ff2e882dc3cfd82c7fd5e625"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/plastic_blue.png",
+      "source": "working-project/baseq2/textures/sandkeep/plastic_blue.png",
+      "bytes": 7876,
+      "sha256": "36b2a87fd06e285951bfc373fdd8e514b9e2307bd3f3ae7240c1bc936a59bad9"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/plastic_blue.wal",
+      "source": "working-project/baseq2/textures/sandkeep/plastic_blue.wal",
+      "bytes": 21860,
+      "sha256": "01ee53c0aae929efb5510bea93cac98e1f0c2fa132232f95c5b442b13e2ab2fc"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/plastic_green.png",
+      "source": "working-project/baseq2/textures/sandkeep/plastic_green.png",
+      "bytes": 7899,
+      "sha256": "2e3ac9dc86d997252bf73acc5dfd2e9e0c9a21a76f285da40697372ed5560327"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/plastic_green.wal",
+      "source": "working-project/baseq2/textures/sandkeep/plastic_green.wal",
+      "bytes": 21860,
+      "sha256": "1ee8824a1242575baeceb3fdf8bf2617c3f0ab218804f78176b8ed1002b28e65"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sand_cracked.png",
+      "source": "working-project/baseq2/textures/sandkeep/sand_cracked.png",
+      "bytes": 1236,
+      "sha256": "50fcea298fda6fa2895ad1f23f2903f5347bebfb592124a6759d20b9c6ae7747"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sand_cracked.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sand_cracked.wal",
+      "bytes": 21860,
+      "sha256": "577d071733c79ce5561f6c578b96a88359e06d5de71035971f0da3b46aaa9352"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sand_cracked_offset.png",
+      "source": "working-project/baseq2/textures/sandkeep/sand_cracked_offset.png",
+      "bytes": 1281,
+      "sha256": "9f70f9b0b4cc190be9faf4ebc1f9c856efa1b3019d15e437799be37306f9d503"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sand_cracked_offset.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sand_cracked_offset.wal",
+      "bytes": 21860,
+      "sha256": "874fa743c5231a8d204133e49a4e74b63cfd73639bb8c8199d9dd0a72c8768c7"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sand_wall.png",
+      "source": "working-project/baseq2/textures/sandkeep/sand_wall.png",
+      "bytes": 906,
+      "sha256": "815bd37282d1e98185eb15237caaec0caf75c88986a66a17b6df13492ec8e07d"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sand_wall.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sand_wall.wal",
+      "bytes": 21860,
+      "sha256": "c8aa0bd26c167752af919f8c1d10f25ff254514283df9a0739ba4bb415eb5873"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sign_armory.png",
+      "source": "working-project/baseq2/textures/sandkeep/sign_armory.png",
+      "bytes": 988,
+      "sha256": "1d2bca00f26925ab0fc4136e50e4d6b75abd70d2f044ba0805e6fb88341a6d3f"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sign_armory.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sign_armory.wal",
+      "bytes": 43620,
+      "sha256": "a0cbf308dae82e428f23e581261c474f37b71c1507901137da8271ef03e5b24f"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sign_boss.png",
+      "source": "working-project/baseq2/textures/sandkeep/sign_boss.png",
+      "bytes": 1074,
+      "sha256": "dd4c3d95220078c0e51cd6d0b280748335a93162aac29298b6b101072ece51b0"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sign_boss.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sign_boss.wal",
+      "bytes": 43620,
+      "sha256": "8928664c9df120268621d0cd54b68000f694e361ee379f5a249c61823c8a7c61"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sign_exit.png",
+      "source": "working-project/baseq2/textures/sandkeep/sign_exit.png",
+      "bytes": 908,
+      "sha256": "cc37b1af2f86ae265cedab5a1f1a3efcac1eeb195fd8190b9b64356e95a68f7a"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sign_exit.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sign_exit.wal",
+      "bytes": 43620,
+      "sha256": "dd519494d2561f056a8c613ee23404a5f4d54a3bc1e959940e64af6cf1bb2dbd"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sign_radio.png",
+      "source": "working-project/baseq2/textures/sandkeep/sign_radio.png",
+      "bytes": 1033,
+      "sha256": "4438161e436bc8fa3a3676d11f634282257d8de33dd48c20c64f057db79f98c7"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sign_radio.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sign_radio.wal",
+      "bytes": 43620,
+      "sha256": "83f7a8395d43fb893be1b22495e0ad15474fbf10c3dce6fa196ae0602861bbd1"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sign_start.png",
+      "source": "working-project/baseq2/textures/sandkeep/sign_start.png",
+      "bytes": 986,
+      "sha256": "a568186e431040cb271af0fd594d6e7584ab90d03302b03191ab428b969b9fde"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sign_start.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sign_start.wal",
+      "bytes": 43620,
+      "sha256": "c37a9c799434e6874ba8e3f655c94ef7d67dcc13b1a03df0fe0e26b06143b0f9"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sky.png",
+      "source": "working-project/baseq2/textures/sandkeep/sky.png",
+      "bytes": 136,
+      "sha256": "e4b50122ba83d074905f864a465ce4c826fdad20c205ebc2ed9e562cecf6ceea"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sky.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sky.wal",
+      "bytes": 5540,
+      "sha256": "662bfcc792b12ef6a0373879d8af5ca15ba66526e8168d7b9bf49b74d04ecc23"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/soil.png",
+      "source": "working-project/baseq2/textures/sandkeep/soil.png",
+      "bytes": 34441,
+      "sha256": "4c069e40a2ab2d907cd57c573763b79c751a8617b14244656f9e4a65b8a43abd"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/soil.wal",
+      "source": "working-project/baseq2/textures/sandkeep/soil.wal",
+      "bytes": 87140,
+      "sha256": "11888c85e7055e9f74045d6c5aee343c5d6b14640cad514f1b1758c39c18040d"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_ammo.png",
+      "source": "working-project/baseq2/textures/sandkeep/sw_ammo.png",
+      "bytes": 1107,
+      "sha256": "5795dc3d978d4a5c6e2464ad387cd90fed325a706bd88358015bd30a32d0f0b8"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_ammo.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sw_ammo.wal",
+      "bytes": 43620,
+      "sha256": "317ebf8d74287e6b0daad0f05391a5797c2465894340e127d6b184a0f10c66c7"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_auto.png",
+      "source": "working-project/baseq2/textures/sandkeep/sw_auto.png",
+      "bytes": 1109,
+      "sha256": "3f3351c60a14a7bdfd2013de3ec7dc773813df20844857bd811585e29d48a919"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_auto.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sw_auto.wal",
+      "bytes": 43620,
+      "sha256": "de088baa797c251a9b44faf6c92dfba1b385e0a8aa275230a9e8e4170c08d58f"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_boom.png",
+      "source": "working-project/baseq2/textures/sandkeep/sw_boom.png",
+      "bytes": 1113,
+      "sha256": "decaa7fa3b5d8e7b02ca40afff5278df69eb396ff088cb3974cdedb81784c4eb"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_boom.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sw_boom.wal",
+      "bytes": 43620,
+      "sha256": "f5c9e985dcc73e7223652c588d5e3384ea4e2c0c0da695e12c9eb83cafdf5ffe"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_close.png",
+      "source": "working-project/baseq2/textures/sandkeep/sw_close.png",
+      "bytes": 1134,
+      "sha256": "3d596438331d0e96672d1925f22cc43d362ad864166169997e7cf744dd3bbdeb"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_close.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sw_close.wal",
+      "bytes": 43620,
+      "sha256": "ae72a059027706e2d94185374b7be8b53cbdfb2db2bbd45f20fff3e5a61ee199"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_exit.png",
+      "source": "working-project/baseq2/textures/sandkeep/sw_exit.png",
+      "bytes": 1136,
+      "sha256": "f5199ef60576125e17b2f1389ab682467c33a99602f57d63941af1388971bcd5"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_exit.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sw_exit.wal",
+      "bytes": 43620,
+      "sha256": "0e68dd3c984fd13bbaebc3d43b1098ece05d472c4f3633107870a7c8ad7b6340"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_heavy.png",
+      "source": "working-project/baseq2/textures/sandkeep/sw_heavy.png",
+      "bytes": 1105,
+      "sha256": "f2755bc7e47ee24c835b4c8774f168fb6391f7f097bd6c58c7274a83181f3211"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_heavy.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sw_heavy.wal",
+      "bytes": 43620,
+      "sha256": "6a6dd4a51fca518a09f35041f9dacd2900202bc9ce57188209a5b4ad1ab09dd1"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_mission.png",
+      "source": "working-project/baseq2/textures/sandkeep/sw_mission.png",
+      "bytes": 1139,
+      "sha256": "9f0fcde8ca4d6ecaeb1022c64850221100d66a165b122935fe5d0feafe5a5462"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_mission.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sw_mission.wal",
+      "bytes": 43620,
+      "sha256": "05ad26a93fa0112efae601115d4f5a67a29d2f855cba9900a02aa4687bbe6db2"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_radio.png",
+      "source": "working-project/baseq2/textures/sandkeep/sw_radio.png",
+      "bytes": 1141,
+      "sha256": "9e43cd8c34c1ec3e6fa0e61f75af9c98c58b9ccb26811aa5138aabea5a3a45e3"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_radio.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sw_radio.wal",
+      "bytes": 43620,
+      "sha256": "bbbd6b5859b69258f6285df58b142cab9ea662132183109aead1045e491cb938"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_rocket.png",
+      "source": "working-project/baseq2/textures/sandkeep/sw_rocket.png",
+      "bytes": 1113,
+      "sha256": "cb700f22ffcdb2987a9ad0553e06e987c33879cb8e47cdd714e984b8785acd99"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_rocket.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sw_rocket.wal",
+      "bytes": 43620,
+      "sha256": "815407a3d8e2f78ba27e465d8f9f8fab856ba3d969f62b29fb326adcb24236be"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_wave.png",
+      "source": "working-project/baseq2/textures/sandkeep/sw_wave.png",
+      "bytes": 1148,
+      "sha256": "8e70c5e43396058460d77cf5b90a525781237a387dff91fe4738ceefe81d9ab2"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/sw_wave.wal",
+      "source": "working-project/baseq2/textures/sandkeep/sw_wave.wal",
+      "bytes": 43620,
+      "sha256": "10082c86be729349fafcc50b202f929f27cf844363263871b1fd468ce5fe6263"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_armory.png",
+      "source": "working-project/baseq2/textures/sandkeep/switch_armory.png",
+      "bytes": 798,
+      "sha256": "98aff8a67880cbe0ddea24cf1c5d53cbb97ee43d4af67adf61e6b129fc6b3932"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_armory.wal",
+      "source": "working-project/baseq2/textures/sandkeep/switch_armory.wal",
+      "bytes": 10980,
+      "sha256": "f9c237e8b1f0636526513a4b62eff3599c074c0cb9490ace506b6c13b7f916d8"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_armory_idle.png",
+      "source": "working-project/baseq2/textures/sandkeep/switch_armory_idle.png",
+      "bytes": 797,
+      "sha256": "8d4781d915242e03176269d8b11843bfd727c83c1ac666e2cf7d06b33774a026"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_armory_idle.wal",
+      "source": "working-project/baseq2/textures/sandkeep/switch_armory_idle.wal",
+      "bytes": 10980,
+      "sha256": "e609bff6a378fef5aa676ccc060dc51cf1e45a91dd68ecf6bbbec466217676a4"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_armory_on.png",
+      "source": "working-project/baseq2/textures/sandkeep/switch_armory_on.png",
+      "bytes": 825,
+      "sha256": "fa155e0c8ac3195959d2759a2b33657def55df2ddb7c120f31b13acea1443ebc"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_armory_on.wal",
+      "source": "working-project/baseq2/textures/sandkeep/switch_armory_on.wal",
+      "bytes": 10980,
+      "sha256": "a4b3dbafd2265bdcb40abcdaf91cc0591de93bbed3c20d57f7b476fd914351aa"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_armory_on_alt.png",
+      "source": "working-project/baseq2/textures/sandkeep/switch_armory_on_alt.png",
+      "bytes": 829,
+      "sha256": "22d4e48c48a7661c0bacdcbb8a558016308cfeda9e5b07078794a02587766a30"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_armory_on_alt.wal",
+      "source": "working-project/baseq2/textures/sandkeep/switch_armory_on_alt.wal",
+      "bytes": 10980,
+      "sha256": "93c9c87375a8105410a66fa43b3a8fa039acfa82e04beaa1e6e41ade8e5a6773"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_radio.png",
+      "source": "working-project/baseq2/textures/sandkeep/switch_radio.png",
+      "bytes": 811,
+      "sha256": "f277e57289521a88154d5490d6d69d6f06fddddd4d9100c744fd4466b16f74cf"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_radio.wal",
+      "source": "working-project/baseq2/textures/sandkeep/switch_radio.wal",
+      "bytes": 10980,
+      "sha256": "3da73032c8891aa5793cba4971a16056a46e64c9b53506a1fbb70d4d4da26571"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_radio_idle.png",
+      "source": "working-project/baseq2/textures/sandkeep/switch_radio_idle.png",
+      "bytes": 813,
+      "sha256": "09f0ce226012890f0c9bf25ec11bae2450f9d32497f8be2e96e0000058c2978f"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_radio_idle.wal",
+      "source": "working-project/baseq2/textures/sandkeep/switch_radio_idle.wal",
+      "bytes": 10980,
+      "sha256": "5d71d8010c48d1948834c851b6ed9713bdd6de7371c69d532cb72e6cf84a5d84"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_radio_on.png",
+      "source": "working-project/baseq2/textures/sandkeep/switch_radio_on.png",
+      "bytes": 840,
+      "sha256": "1d411f7ffc8f4d075b4bf28a0511ba8eccd9600603282881a2980c3298a831da"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_radio_on.wal",
+      "source": "working-project/baseq2/textures/sandkeep/switch_radio_on.wal",
+      "bytes": 10980,
+      "sha256": "cd8014d0d3c6f1bb2fe42b967e9a365d81e2e67f6c53671ce1d721d88dfeec77"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_radio_on_alt.png",
+      "source": "working-project/baseq2/textures/sandkeep/switch_radio_on_alt.png",
+      "bytes": 845,
+      "sha256": "9a1fdb9441ec4f6e922bb020e43be5a53acf673b15515bf8817efdf26d380756"
+    },
+    {
+      "path": "baseq2/textures/sandkeep/switch_radio_on_alt.wal",
+      "source": "working-project/baseq2/textures/sandkeep/switch_radio_on_alt.wal",
+      "bytes": 10980,
+      "sha256": "a86d010f63811390f34a421f852422b50edbfa4f832947dff6083e370f2a7659"
+    },
+    {
+      "path": "maps/README-bedroom.md",
+      "source": "working-project/maps/README-bedroom.md",
+      "bytes": 4264,
+      "sha256": "8041004de9214a67a7ac3dcc9768307590e8dcd75e2c7f40d0f613dc2aadadf8"
+    },
+    {
+      "path": "maps/README-sandkeep.md",
+      "source": "working-project/maps/README-sandkeep.md",
+      "bytes": 5805,
+      "sha256": "db435d8ee5379f9b0852c7ec32a2f171ebe2335dc2997b4090a5c4878b7b6af6"
+    },
+    {
+      "path": "maps/README-sandwatch.md",
+      "source": "working-project/maps/README-sandwatch.md",
+      "bytes": 7049,
+      "sha256": "138c0dd509e7f6aa96d7b572598b47c362646311d03247fc96a3d4f68182c604"
+    },
+    {
+      "path": "maps/source/pp_bedroom.map",
+      "source": "working-project/maps/source/pp_bedroom.map",
+      "bytes": 113344,
+      "sha256": "59d7849867be8a04d54e53a0e0e7d6e0c2fd406f810f43475dac4978c0df2585"
+    },
+    {
+      "path": "maps/source/pp_sandkeep.map",
+      "source": "working-project/maps/source/pp_sandkeep.map",
+      "bytes": 416348,
+      "sha256": "0aa3b1c1266bad67244def74156a0b153a67914ebe6adfa8bf3d5cb45e1200f5"
+    },
+    {
+      "path": "maps/source/pp_sandwatch.map",
+      "source": "working-project/maps/source/pp_sandwatch.map",
+      "bytes": 201747,
+      "sha256": "35b54ef3ac767fc74666df51f1e39e49293d019919079ac6a18a7dca155b5124"
+    },
+    {
+      "path": "tools/maps/SANDKEEP_VISUAL_QA.md",
+      "source": "working-project/tools/maps/SANDKEEP_VISUAL_QA.md",
+      "bytes": 5733,
+      "sha256": "d4216ac8a3f345aa804827aea0d8a63eb3ef9b8a8810fc026869d0a16bbfa5c9"
+    },
+    {
+      "path": "tools/maps/bedroom_interactions.json",
+      "source": "working-project/tools/maps/bedroom_interactions.json",
+      "bytes": 1016,
+      "sha256": "54c55383ee894f65d756a97b6130cb734f1f0dc86fabccd69870b509cd7b998d"
+    },
+    {
+      "path": "tools/maps/bedroom_routes.json",
+      "source": "working-project/tools/maps/bedroom_routes.json",
+      "bytes": 7567,
+      "sha256": "99e3a706f73e02b26b97908d42a7e8edcac4d5403025c115869466221d467c3d"
+    },
+    {
+      "path": "tools/maps/bedroom_views.json",
+      "source": "working-project/tools/maps/bedroom_views.json",
+      "bytes": 504,
+      "sha256": "61ea6418c8df7e39d46cbd1cd8c863ba9f0ed31cef21bf4c2d6d5a5cd3f6aacc"
+    },
+    {
+      "path": "tools/maps/generate_bedroom.py",
+      "source": "working-project/tools/maps/generate_bedroom.py",
+      "bytes": 18565,
+      "sha256": "c255dd29f498fababb1f3ec70603eaebf2c8c8fbf8312943cb872db585791117"
+    },
+    {
+      "path": "tools/maps/generate_sandkeep.py",
+      "source": "working-project/tools/maps/generate_sandkeep.py",
+      "bytes": 37916,
+      "sha256": "f444f9aa2fce7c7ac28b9048fee1867ebfc9f5e8b5e35133fa70239eb77f3ce8"
+    },
+    {
+      "path": "tools/maps/generate_sandkeep_materials.py",
+      "source": "working-project/tools/maps/generate_sandkeep_materials.py",
+      "bytes": 33993,
+      "sha256": "9a44d79e2f9094065e51a2b3fa8089c78c582b27f97c3c0aab288cfbcfc7f303"
+    },
+    {
+      "path": "tools/maps/generate_sandwatch.py",
+      "source": "working-project/tools/maps/generate_sandwatch.py",
+      "bytes": 14825,
+      "sha256": "1bdf7f2d907a942d95c5fd6539d233f8ad25083f83bc82dff5cae50ced70a4ae"
+    },
+    {
+      "path": "tools/maps/material_sources/abc_block_a.png",
+      "source": "working-project/tools/maps/material_sources/abc_block_a.png",
+      "bytes": 126207,
+      "sha256": "4ed8a8752e566318f62cb7437ed86783ec792115fe3b30430cf32616b277c453"
+    },
+    {
+      "path": "tools/maps/material_sources/abc_block_b.png",
+      "source": "working-project/tools/maps/material_sources/abc_block_b.png",
+      "bytes": 126273,
+      "sha256": "f84292c7436d55756ca32af77c1880f2910c54f997725272e9cb233f4ec7c25b"
+    },
+    {
+      "path": "tools/maps/material_sources/abc_block_c.png",
+      "source": "working-project/tools/maps/material_sources/abc_block_c.png",
+      "bytes": 123311,
+      "sha256": "28c401a6fe0cfd5d68afbe6ca03a9c230acbba58eb803462b756d566ca533808"
+    },
+    {
+      "path": "tools/maps/material_sources/abc_block_d.png",
+      "source": "working-project/tools/maps/material_sources/abc_block_d.png",
+      "bytes": 116890,
+      "sha256": "b0d8d676fa2c2805de43733224233f8184b70d9d3ec97ca45c5a1569fc71b524"
+    },
+    {
+      "path": "tools/maps/material_sources/abc_block_e.png",
+      "source": "working-project/tools/maps/material_sources/abc_block_e.png",
+      "bytes": 116400,
+      "sha256": "56822d3aea727c719e6010c6cb6465f22df6ba88b40105ce17e070b38e54e00a"
+    },
+    {
+      "path": "tools/maps/material_sources/abc_block_f.png",
+      "source": "working-project/tools/maps/material_sources/abc_block_f.png",
+      "bytes": 114222,
+      "sha256": "6f49ca33abd1b6b91dd6665de57fc420243a9b0e7d598154f4974fc48fad7176"
+    },
+    {
+      "path": "tools/maps/package_bedroom.py",
+      "source": "working-project/tools/maps/package_bedroom.py",
+      "bytes": 2130,
+      "sha256": "b72d138fb2fa212f5b1f8ab86a3d229ae2409cbaa1937f82cfe2a97c283aa865"
+    },
+    {
+      "path": "tools/maps/package_sandkeep.py",
+      "source": "working-project/tools/maps/package_sandkeep.py",
+      "bytes": 3697,
+      "sha256": "325908b51127ae61d57f7cce45e651c483f5ec2858bf11454c0ddffab38ac7d2"
+    },
+    {
+      "path": "tools/maps/package_sandwatch.py",
+      "source": "working-project/tools/maps/package_sandwatch.py",
+      "bytes": 3342,
+      "sha256": "4c9a83a8f8a48a0f8cdc237d0bd21d1da28edb014c39c1f5cf81424b80cf1598"
+    },
+    {
+      "path": "tools/maps/sandkeep_completion.json",
+      "source": "working-project/tools/maps/sandkeep_completion.json",
+      "bytes": 462,
+      "sha256": "181a9e6e0a5c558c4588415e4a2d652386bf5d51bead449e051105fcbeac850f"
+    },
+    {
+      "path": "tools/maps/sandkeep_interactions.json",
+      "source": "working-project/tools/maps/sandkeep_interactions.json",
+      "bytes": 2728,
+      "sha256": "f3f54609d295fffc2e0141bcd28fafbade6b5f8e5eca03a16ad5b95fa3becb72"
+    },
+    {
+      "path": "tools/maps/sandwatch_views.json",
+      "source": "working-project/tools/maps/sandwatch_views.json",
+      "bytes": 583,
+      "sha256": "3cc7998b955f652ca1b4b63f5688957add23d8a96c9efd6c4b7c8ace4848c0b0"
+    },
+    {
+      "path": "tools/maps/verify_bedroom.py",
+      "source": "working-project/tools/maps/verify_bedroom.py",
+      "bytes": 6466,
+      "sha256": "f8d941598182cbfe7a1dd174f223b0c727789d2464a80b0da80e796e38b03ade"
+    },
+    {
+      "path": "tools/maps/verify_sandwatch.py",
+      "source": "working-project/tools/maps/verify_sandwatch.py",
+      "bytes": 9372,
+      "sha256": "f4b100510f5400f025f44f2df835d136146c4e76c673316716dba919321c10b6"
+    },
+    {
+      "path": "baseq2/operation-sandkeep.pk3",
+      "source": "working-project/release/baseq2/operation-sandkeep.pk3",
+      "bytes": 2060090,
+      "sha256": "f11dec921090df74cbceaba93acfced2b358a0033fa39ad23147fcd30135f21c"
+    },
+    {
+      "path": "baseq2/maps/pp_sandkeep.bsp",
+      "source": "working-project/release/baseq2/operation-sandkeep.pk3:maps/pp_sandkeep.bsp",
+      "bytes": 1579992,
+      "sha256": "246c6c33ee7e0ed22f003452d07fdb9e8486a733968999859d88c4edba497c47"
+    },
+    {
+      "path": "baseq2/operation-sandwatch.pk3",
+      "source": "working-project/release/baseq2/operation-sandwatch.pk3",
+      "bytes": 1212057,
+      "sha256": "c806fb83abdfd57eb4658c26bdf0148e99d8f596536fc8acf1fb5d7c68018559"
+    },
+    {
+      "path": "baseq2/maps/pp_sandwatch.bsp",
+      "source": "working-project/release/baseq2/operation-sandwatch.pk3:maps/pp_sandwatch.bsp",
+      "bytes": 916720,
+      "sha256": "062f287b6a523819f1e0bbfea95dba90976b1fde9ddccdfdcb63bb55f35bf2bb"
+    }
+  ]
+}

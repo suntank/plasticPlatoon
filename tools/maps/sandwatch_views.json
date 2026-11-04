@@ -1,0 +1,11 @@
+[
+  {"name":"base_overview","pose":[880,-1000,480,24,132],"after_pose":[{"command":"noclip","wait":0.3},{"command":"noclip","wait":0.3}]},
+  {"name":"command_bunker","pose":[-384,256,32,-6,320]},
+  {"name":"radio_control","pose":[0,-48,28,0,90]},
+  {"name":"roof_defense","pose":[0,0,180,-3,90]},
+  {"name":"armory_shutters","pose":[0,-528,200,0,270]},
+  {"name":"northwest_approach","pose":[-736,736,32,-2,90]},
+  {"name":"east_approach","pose":[864,576,32,-3,0]},
+  {"name":"rear_resupply","pose":[640,-1200,64,0,160]},
+  {"name":"extraction_shutter","pose":[0,-1120,32,-8,270]}
+]

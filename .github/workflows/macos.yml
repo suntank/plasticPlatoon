@@ -1,0 +1,74 @@
+name: Testbuild for MacOS
+run-name: testbuild_macos
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    types:
+      - edited
+      - opened
+      - synchronize
+      - ready_for_review
+concurrency:
+  # Cancel concurrent workflows for the same PR or commit hash.
+  group: ${{github.workflow}}-${{github.event_name == 'pull_request' && github.head_ref || github.sha}}
+  cancel-in-progress: true
+jobs:
+  build_macos_aarch64:
+    runs-on: macos-latest
+    permissions:
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - env: macos
+    steps:
+    - name: Install build dependencies
+      run: |
+        brew update
+        brew install sdl3 openal-soft make
+    - name: Check out repository code
+      uses: actions/checkout@v6
+    - name: Build
+      run: |
+        # Public runners come with 3 CPUs.
+        gmake WITH_SDL3=yes -j3
+    - name: Create portable testbuild package
+      run: |
+        # Build from this checkout; no legacy app template or bundled utilities.
+        package="publish/plastic-platoon-macos-${{github.sha}}"
+        mkdir -p "$package"
+        cp -R release/. "$package/"
+        # The asset target already staged project packs, launcher and notices.
+        # Bundle the build's SDL dependency beside its executable/renderers.
+        sdl_prefix="$(brew --prefix sdl3)"
+        cp -L "$sdl_prefix/lib/libSDL3.0.dylib" "$package/"
+        install_name_tool -id "@loader_path/libSDL3.0.dylib" "$package/libSDL3.0.dylib"
+        for binary in "$package/quake2" "$package/q2ded" "$package"/ref_*.dylib; do
+          [ -f "$binary" ] || continue
+          dependency="$(otool -L "$binary" | awk '/libSDL3/{print $1; exit}')"
+          if [ -n "$dependency" ]; then
+            install_name_tool -change "$dependency" "@loader_path/libSDL3.0.dylib" "$binary"
+          fi
+        done
+        # Re-sign modified arm64 binaries locally; this is not notarization.
+        for binary in "$package"/*.dylib "$package/quake2" "$package/q2ded"; do
+          [ -f "$binary" ] || continue
+          codesign --force --sign - "$binary"
+        done
+        for license in "$sdl_prefix/LICENSE.txt" "$sdl_prefix/share/licenses/SDL3/LICENSE.txt"; do
+          if [ -f "$license" ]; then
+            cp "$license" "$package/SDL3-LICENSE.txt"
+            break
+          fi
+        done
+        test -s "$package/SDL3-LICENSE.txt"
+    - name: Upload testbuild package
+      uses: actions/upload-artifact@v7
+      with:
+        name: plastic-platoon-macos-${{github.sha}}
+        path: publish/
+        if-no-files-found: error

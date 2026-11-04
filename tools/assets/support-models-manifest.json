@@ -1,0 +1,277 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_support_models.py",
+  "provenance": "Original procedural source artwork defined entirely in the generator",
+  "license": "GPL-2.0-or-later",
+  "external_inputs": [],
+  "status": "Provisional functional replacements requiring an art review",
+  "animation_note": "The first-person grenade has 49 identical poses matching the requested frame range",
+  "models": [
+    {
+      "path": "models/items/keys/power/tris.md2",
+      "vertices": 96,
+      "triangles": 48,
+      "frames": 1,
+      "bounds": [
+        [
+          -6.8,
+          -5,
+          -8
+        ],
+        [
+          6.8,
+          5,
+          10
+        ]
+      ],
+      "skin": "models/support/plastic_atlas.tga"
+    },
+    {
+      "path": "models/objects/debris1/tris.md2",
+      "vertices": 24,
+      "triangles": 12,
+      "frames": 1,
+      "bounds": [
+        [
+          -3,
+          -2,
+          -1.5
+        ],
+        [
+          3,
+          2,
+          1.5
+        ]
+      ],
+      "skin": "models/support/plastic_atlas.tga"
+    },
+    {
+      "path": "models/objects/debris2/tris.md2",
+      "vertices": 24,
+      "triangles": 12,
+      "frames": 1,
+      "bounds": [
+        [
+          -1.5,
+          -1,
+          -1
+        ],
+        [
+          1.5,
+          1,
+          1
+        ]
+      ],
+      "skin": "models/support/plastic_atlas.tga"
+    },
+    {
+      "path": "models/objects/laser/tris.md2",
+      "vertices": 48,
+      "triangles": 24,
+      "frames": 1,
+      "bounds": [
+        [
+          -8,
+          -1,
+          -1
+        ],
+        [
+          8,
+          1,
+          1
+        ]
+      ],
+      "skin": "models/support/plastic_atlas.tga"
+    },
+    {
+      "path": "models/weapons/v_handgr/tris.md2",
+      "vertices": 168,
+      "triangles": 84,
+      "frames": 49,
+      "bounds": [
+        [
+          9,
+          -9.5,
+          -22
+        ],
+        [
+          20.5,
+          -2.5,
+          -3
+        ]
+      ],
+      "skin": "models/support/plastic_atlas.tga"
+    }
+  ],
+  "sprites": [
+    {
+      "path": "sprites/s_bfg1.sp2",
+      "frames": 4,
+      "display_size": 32,
+      "images": [
+        "sprites/pp_energy/bfg1_0.tga",
+        "sprites/pp_energy/bfg1_1.tga",
+        "sprites/pp_energy/bfg1_2.tga",
+        "sprites/pp_energy/bfg1_3.tga"
+      ]
+    },
+    {
+      "path": "sprites/s_bfg2.sp2",
+      "frames": 6,
+      "display_size": 80,
+      "images": [
+        "sprites/pp_energy/bfg2_0.tga",
+        "sprites/pp_energy/bfg2_1.tga",
+        "sprites/pp_energy/bfg2_2.tga",
+        "sprites/pp_energy/bfg2_3.tga",
+        "sprites/pp_energy/bfg2_4.tga",
+        "sprites/pp_energy/bfg2_5.tga"
+      ]
+    },
+    {
+      "path": "sprites/s_bfg3.sp2",
+      "frames": 6,
+      "display_size": 112,
+      "images": [
+        "sprites/pp_energy/bfg3_0.tga",
+        "sprites/pp_energy/bfg3_1.tga",
+        "sprites/pp_energy/bfg3_2.tga",
+        "sprites/pp_energy/bfg3_3.tga",
+        "sprites/pp_energy/bfg3_4.tga",
+        "sprites/pp_energy/bfg3_5.tga"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "models/items/keys/power/tris.md2",
+      "bytes": 3440,
+      "sha256": "642817ae575813aed3b121af735d5793d7ef4e5956f04442d6457d51347c3f02"
+    },
+    {
+      "path": "models/objects/debris1/tris.md2",
+      "bytes": 992,
+      "sha256": "56f8987809d5b7b5077a77cb19221b6baeb3fbe79b20e0f3ef4cd0152a5741a7"
+    },
+    {
+      "path": "models/objects/debris2/tris.md2",
+      "bytes": 992,
+      "sha256": "92776626c417c8eef358c713f52cb2362a472db76d38852477d02312e87798d8"
+    },
+    {
+      "path": "models/objects/laser/tris.md2",
+      "bytes": 1808,
+      "sha256": "02ec9413dc0648af7e5fa7fda3c6b716b74bc44885d6427c20b729470ed56918"
+    },
+    {
+      "path": "models/support/plastic_atlas.tga",
+      "bytes": 65554,
+      "sha256": "5e873d4eece764d3a88caf4ead56c4711b448189e5a92aebf1445aaa1cec2e90"
+    },
+    {
+      "path": "models/weapons/v_handgr/tris.md2",
+      "bytes": 40064,
+      "sha256": "9b74b53a1729ec04921ea4c9e142f3494ab15683e557c47269e1da2d6fdbb32f"
+    },
+    {
+      "path": "pics/k_powercube.tga",
+      "bytes": 4114,
+      "sha256": "8843e1c8590b133dc16111471cfbb4df0eb8912d22d416c1a7189a4783139692"
+    },
+    {
+      "path": "sprites/pp_energy/bfg1_0.tga",
+      "bytes": 16402,
+      "sha256": "2056e9091e4acd6c19f45a0907df7d1e8c2265b2241864237ff5ac333c2b0317"
+    },
+    {
+      "path": "sprites/pp_energy/bfg1_1.tga",
+      "bytes": 16402,
+      "sha256": "b51a0611b5eb386c7796fd3a69e66aef1d9e373f3d724b462729f8318287cc23"
+    },
+    {
+      "path": "sprites/pp_energy/bfg1_2.tga",
+      "bytes": 16402,
+      "sha256": "2056e9091e4acd6c19f45a0907df7d1e8c2265b2241864237ff5ac333c2b0317"
+    },
+    {
+      "path": "sprites/pp_energy/bfg1_3.tga",
+      "bytes": 16402,
+      "sha256": "d43fa8b91c8000c1424915e4bd9cb92d8226492314bde6c64c7e26fc1b62192c"
+    },
+    {
+      "path": "sprites/pp_energy/bfg2_0.tga",
+      "bytes": 16402,
+      "sha256": "547cab77cd72dd5ac60e87134a095c2b53650800f426421085635cffed549691"
+    },
+    {
+      "path": "sprites/pp_energy/bfg2_1.tga",
+      "bytes": 16402,
+      "sha256": "46d18f5392efec14a7c99505c845fcd3372040bfb9c18fe2ec869f3bd977d40c"
+    },
+    {
+      "path": "sprites/pp_energy/bfg2_2.tga",
+      "bytes": 16402,
+      "sha256": "77b831cedb192c430f24037c9f7d706c1fbbccac662e19ada6f2b397de24ce38"
+    },
+    {
+      "path": "sprites/pp_energy/bfg2_3.tga",
+      "bytes": 16402,
+      "sha256": "b517035fe76b88073d8ce6ba6710ac69e200a4f8279e5659b692bd4dbe23f73d"
+    },
+    {
+      "path": "sprites/pp_energy/bfg2_4.tga",
+      "bytes": 16402,
+      "sha256": "50593f81ba92fcb0c0796579a094af7a2939dbd314b30f4451dac64edc2b7294"
+    },
+    {
+      "path": "sprites/pp_energy/bfg2_5.tga",
+      "bytes": 16402,
+      "sha256": "20f4b802f5fbf22cb4dcf42eceb4f78612ef4e271fb042aeda34d3492c45c57a"
+    },
+    {
+      "path": "sprites/pp_energy/bfg3_0.tga",
+      "bytes": 16402,
+      "sha256": "547cab77cd72dd5ac60e87134a095c2b53650800f426421085635cffed549691"
+    },
+    {
+      "path": "sprites/pp_energy/bfg3_1.tga",
+      "bytes": 16402,
+      "sha256": "46d18f5392efec14a7c99505c845fcd3372040bfb9c18fe2ec869f3bd977d40c"
+    },
+    {
+      "path": "sprites/pp_energy/bfg3_2.tga",
+      "bytes": 16402,
+      "sha256": "77b831cedb192c430f24037c9f7d706c1fbbccac662e19ada6f2b397de24ce38"
+    },
+    {
+      "path": "sprites/pp_energy/bfg3_3.tga",
+      "bytes": 16402,
+      "sha256": "b517035fe76b88073d8ce6ba6710ac69e200a4f8279e5659b692bd4dbe23f73d"
+    },
+    {
+      "path": "sprites/pp_energy/bfg3_4.tga",
+      "bytes": 16402,
+      "sha256": "50593f81ba92fcb0c0796579a094af7a2939dbd314b30f4451dac64edc2b7294"
+    },
+    {
+      "path": "sprites/pp_energy/bfg3_5.tga",
+      "bytes": 16402,
+      "sha256": "20f4b802f5fbf22cb4dcf42eceb4f78612ef4e271fb042aeda34d3492c45c57a"
+    },
+    {
+      "path": "sprites/s_bfg1.sp2",
+      "bytes": 332,
+      "sha256": "23847b7a1f80f962573464518e55db199f2a7b30395640ec6b5b11585a75b3d8"
+    },
+    {
+      "path": "sprites/s_bfg2.sp2",
+      "bytes": 492,
+      "sha256": "89d9e383fe63093dfafe447048501baf251112fdc97b41e23ea7c1a162e76af3"
+    },
+    {
+      "path": "sprites/s_bfg3.sp2",
+      "bytes": 492,
+      "sha256": "14c39cf8f79133719808d7f0f1c3384a129e2fa2265e95b65b02d18793cb032f"
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+{
+  "schema": 1,
+  "description": "Original tan molded plastic attack helicopter with twin machineguns and seven-tube rocket pods",
+  "builder": "tools/assets/build_helicopter.py",
+  "builder_sha256": "51b1cf259e170b3d2eebbfd78b860c9e7740a248b05697c03f0e9761abdfea3f",
+  "shared_geometry_library": "tools/assets/build_heavy_tank.py",
+  "shared_geometry_library_sha256": "5da0d7bb354272457b8c677125d2fb513dc439986567ed8ebbf89b35aef9980b",
+  "sources": "Original procedural geometry; tank palette extended with cockpit glazing; no external inputs",
+  "face_winding": "Clockwise exterior triangles for Quake II GL_FRONT culling; outward lighting normals",
+  "coordinate_contract": {
+    "forward_axis": "+X",
+    "main_rotor_pivot": [
+      0.0,
+      0.0,
+      48.0
+    ],
+    "main_rotor_axis": "local Z / yaw",
+    "tail_rotor_pivot": [
+      -88.0,
+      8.0,
+      16.0
+    ],
+    "tail_rotor_axis": "local Y / pitch",
+    "machinegun_muzzles": [
+      [
+        64.0,
+        -24.0,
+        -10.0
+      ],
+      [
+        64.0,
+        24.0,
+        -10.0
+      ]
+    ],
+    "rocket_muzzles": [
+      [
+        30.0,
+        -46.0,
+        -2.0
+      ],
+      [
+        30.0,
+        46.0,
+        -2.0
+      ]
+    ],
+    "body_frames": 32
+  },
+  "models": [
+    {
+      "path": "models/monsters/plastic_helicopter/body.md2",
+      "triangles": 1160,
+      "position_vertices": 1552,
+      "render_vertices": 2064,
+      "frames": 32,
+      "frame_names": [
+        "flight00",
+        "flight01",
+        "flight02",
+        "flight03",
+        "flight04",
+        "flight05",
+        "flight06",
+        "flight07",
+        "flight08",
+        "flight09",
+        "flight10",
+        "flight11",
+        "flight12",
+        "flight13",
+        "flight14",
+        "flight15",
+        "flight16",
+        "flight17",
+        "flight18",
+        "flight19",
+        "flight20",
+        "flight21",
+        "flight22",
+        "flight23",
+        "flight24",
+        "flight25",
+        "flight26",
+        "flight27",
+        "flight28",
+        "flight29",
+        "flight30",
+        "flight31"
+      ],
+      "skin_references": [
+        "models/monsters/plastic_helicopter/tan.png"
+      ],
+      "skin_coordinate_dimensions": [
+        256,
+        256
+      ],
+      "gl_command_primitives": 580,
+      "gl_command_triangles": 1160,
+      "duplicate_gl_triangles": 0,
+      "unused_bytes_per_frame": 0,
+      "file_bytes": 244584,
+      "sha256": "1c9914d9c4b2f7e2ed3cbd7ef602aad9fa00a3ec1f408b4ecf5b5021c2c1d4f2",
+      "bounds": [
+        [
+          -91.0,
+          -55.0,
+          -32.0
+        ],
+        [
+          64.00000596046448,
+          55.000001043081284,
+          48.00000283122063
+        ]
+      ]
+    },
+    {
+      "path": "models/monsters/plastic_helicopter/main_rotor.md2",
+      "triangles": 140,
+      "position_vertices": 240,
+      "render_vertices": 264,
+      "frames": 1,
+      "frame_names": [
+        "flight00"
+      ],
+      "skin_references": [
+        "models/monsters/plastic_helicopter/tan.png"
+      ],
+      "skin_coordinate_dimensions": [
+        256,
+        256
+      ],
+      "gl_command_primitives": 70,
+      "gl_command_triangles": 140,
+      "duplicate_gl_triangles": 0,
+      "unused_bytes_per_frame": 0,
+      "file_bytes": 6568,
+      "sha256": "f3070402206557216257e30d159eb2e72984daecd04d4b5c58a6803f7795ab9d",
+      "bounds": [
+        [
+          -92.0,
+          -92.0,
+          -2.0
+        ],
+        [
+          92.00000423192978,
+          92.00000423192978,
+          3.500000147148967
+        ]
+      ]
+    },
+    {
+      "path": "models/monsters/plastic_helicopter/tail_rotor.md2",
+      "triangles": 76,
+      "position_vertices": 128,
+      "render_vertices": 144,
+      "frames": 1,
+      "frame_names": [
+        "flight00"
+      ],
+      "skin_references": [
+        "models/monsters/plastic_helicopter/tan.png"
+      ],
+      "skin_coordinate_dimensions": [
+        256,
+        256
+      ],
+      "gl_command_primitives": 38,
+      "gl_command_triangles": 76,
+      "duplicate_gl_triangles": 0,
+      "unused_bytes_per_frame": 0,
+      "file_bytes": 3656,
+      "sha256": "67efb240dd23332bdc09dfe726d1d1eecf6ab3b39ca6e26c649897a480c9e750",
+      "bounds": [
+        [
+          -17.0,
+          -1.5,
+          -17.0
+        ],
+        [
+          17.000001773238182,
+          2.500000236555934,
+          17.000001773238182
+        ]
+      ]
+    }
+  ],
+  "texture": {
+    "path": "models/monsters/plastic_helicopter/tan.png",
+    "dimensions": [
+      256,
+      256
+    ],
+    "sha256": "64b72f67a056d42c4289ecc4bfbb02d4a2522de2a76cd860da48b2e322a99978",
+    "file_bytes": 4329
+  },
+  "review": "tools/assets/review/helicopter.png"
+}

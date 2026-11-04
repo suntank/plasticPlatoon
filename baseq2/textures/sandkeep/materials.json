@@ -1,0 +1,324 @@
+{
+  "generator": "tools/maps/generate_sandkeep_materials.py",
+  "palette_sha256": "dc77cbae79b92a36d259d0d9db499b0bda2c0af8669e375c15d6ab3a74c1a535",
+  "artwork": "Procedural Sandkeep artwork and reused repository Sandbox alphabet blocks",
+  "materials": {
+    "sandkeep/sand": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "b68cc5642077ba491f434db9b91859df359829e0860ee18fbc0a5f2d34caec6c",
+      "png_sha256": "56d0beb2473806b331d131c1b8ce2494f084d43588b1803240bde28cffe0cd16"
+    },
+    "sandkeep/sand_wall": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "57c9d44126920c989a57d5461b2885e1e7744d5201622bd4eca3b83f755ecfcd",
+      "png_sha256": "815bd37282d1e98185eb15237caaec0caf75c88986a66a17b6df13492ec8e07d"
+    },
+    "sandkeep/sand_cracked": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "7967d9c8426a67cd68644c2d6126b5db77db8ad5209aafa7f336c7085a657d59",
+      "png_sha256": "50fcea298fda6fa2895ad1f23f2903f5347bebfb592124a6759d20b9c6ae7747"
+    },
+    "sandkeep/sand_cracked_offset": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "ce728f8376400337568218b05ee2ae41796565db3658f153e706efb69f5c6c3b",
+      "png_sha256": "9f70f9b0b4cc190be9faf4ebc1f9c856efa1b3019d15e437799be37306f9d503"
+    },
+    "sandkeep/soil": {
+      "width": 256,
+      "height": 256,
+      "surface_flags": 0,
+      "wal_sha256": "ebd6332e45cf8f2c8ffeccbb04f48b1a9354aca31fea2a059c36862c9e64f5f9",
+      "png_sha256": "4c069e40a2ab2d907cd57c573763b79c751a8617b14244656f9e4a65b8a43abd",
+      "tileable": true
+    },
+    "sandkeep/grass": {
+      "width": 256,
+      "height": 256,
+      "surface_flags": 0,
+      "wal_sha256": "421f35ed2dc28a5c3f3d2950a82fdfabe63b820af0d74f4dae47343291303b11",
+      "png_sha256": "e38b0ccabb847c50dce417fad1b6920409d1a70e8f05f520af9fd17221d42af4",
+      "tileable": true
+    },
+    "sandkeep/abc_a": {
+      "width": 256,
+      "height": 256,
+      "surface_flags": 0,
+      "wal_sha256": "28a57f82df0b96df18fad3d91363742713d7d9951eca4deab49d3c8f52b82707",
+      "png_sha256": "4ed8a8752e566318f62cb7437ed86783ec792115fe3b30430cf32616b277c453",
+      "source": "tools/maps/material_sources/abc_block_a.png",
+      "source_sha256": "4ed8a8752e566318f62cb7437ed86783ec792115fe3b30430cf32616b277c453",
+      "indexed_fallback": "Nearest opaque project-palette color; truecolor source preserved"
+    },
+    "sandkeep/abc_b": {
+      "width": 256,
+      "height": 256,
+      "surface_flags": 0,
+      "wal_sha256": "938d2e0c3349998a1e3d9ca4d32c498131fcd3a33eb986470039e1bff7ceefb2",
+      "png_sha256": "f84292c7436d55756ca32af77c1880f2910c54f997725272e9cb233f4ec7c25b",
+      "source": "tools/maps/material_sources/abc_block_b.png",
+      "source_sha256": "f84292c7436d55756ca32af77c1880f2910c54f997725272e9cb233f4ec7c25b",
+      "indexed_fallback": "Nearest opaque project-palette color; truecolor source preserved"
+    },
+    "sandkeep/abc_c": {
+      "width": 256,
+      "height": 256,
+      "surface_flags": 0,
+      "wal_sha256": "bef09abe021ab118eb17be9cd54aa5a848206505264118969a0321ba82b05a3a",
+      "png_sha256": "28c401a6fe0cfd5d68afbe6ca03a9c230acbba58eb803462b756d566ca533808",
+      "source": "tools/maps/material_sources/abc_block_c.png",
+      "source_sha256": "28c401a6fe0cfd5d68afbe6ca03a9c230acbba58eb803462b756d566ca533808",
+      "indexed_fallback": "Nearest opaque project-palette color; truecolor source preserved"
+    },
+    "sandkeep/abc_d": {
+      "width": 256,
+      "height": 256,
+      "surface_flags": 0,
+      "wal_sha256": "a8d0f7411e87abcd7a01e4980881caa97301809b9ea6704f428d2ad032c497ea",
+      "png_sha256": "b0d8d676fa2c2805de43733224233f8184b70d9d3ec97ca45c5a1569fc71b524",
+      "source": "tools/maps/material_sources/abc_block_d.png",
+      "source_sha256": "b0d8d676fa2c2805de43733224233f8184b70d9d3ec97ca45c5a1569fc71b524",
+      "indexed_fallback": "Nearest opaque project-palette color; truecolor source preserved"
+    },
+    "sandkeep/abc_e": {
+      "width": 256,
+      "height": 256,
+      "surface_flags": 0,
+      "wal_sha256": "42afe6e113681d588663472186c1bfacb3bdf75aa377552d51b41af2c18e2924",
+      "png_sha256": "56822d3aea727c719e6010c6cb6465f22df6ba88b40105ce17e070b38e54e00a",
+      "source": "tools/maps/material_sources/abc_block_e.png",
+      "source_sha256": "56822d3aea727c719e6010c6cb6465f22df6ba88b40105ce17e070b38e54e00a",
+      "indexed_fallback": "Nearest opaque project-palette color; truecolor source preserved"
+    },
+    "sandkeep/abc_f": {
+      "width": 256,
+      "height": 256,
+      "surface_flags": 0,
+      "wal_sha256": "0c0af225a5580f8acb503131ce4ba4644e60c98a9c8e7a8206654c33bde3a822",
+      "png_sha256": "6f49ca33abd1b6b91dd6665de57fc420243a9b0e7d598154f4974fc48fad7176",
+      "source": "tools/maps/material_sources/abc_block_f.png",
+      "source_sha256": "6f49ca33abd1b6b91dd6665de57fc420243a9b0e7d598154f4974fc48fad7176",
+      "indexed_fallback": "Nearest opaque project-palette color; truecolor source preserved"
+    },
+    "sandkeep/wood": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "ff2db1281cf83f0601da5f08b906a0749b1e07ae75e0c437db16f0969b37ede2",
+      "png_sha256": "26dd93a38236d59486bc2d1143dcd3fc94e562b943d9e378ad42ed32847abd10"
+    },
+    "sandkeep/wood_end": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "693394c4d9049325eaa248a299e4a58c6c9b62ac8551b55507a6b6d91976e5bd",
+      "png_sha256": "562bb682fa5f47def74b9b9a79779325b8a420b3d30a215227b176fe1252e5b0"
+    },
+    "sandkeep/gate_wood": {
+      "width": 256,
+      "height": 256,
+      "surface_flags": 0,
+      "wal_sha256": "e36960e2ecb2b5c4de98ecb81abf230168456861f06116c746d5196e677b84ff",
+      "png_sha256": "d7f79b026fa7279cb1327a629800d3b4e5afa961fc7ddf86269757ba78800570"
+    },
+    "sandkeep/switch_armory": {
+      "width": 128,
+      "height": 64,
+      "surface_flags": 0,
+      "wal_sha256": "30ea069142f78e5ca40de65561c43b2780fc8bc72743eb333899f74f575c9d0c",
+      "png_sha256": "98aff8a67880cbe0ddea24cf1c5d53cbb97ee43d4af67adf61e6b129fc6b3932",
+      "animation_next": "sandkeep/switch_armory_idle"
+    },
+    "sandkeep/switch_armory_idle": {
+      "width": 128,
+      "height": 64,
+      "surface_flags": 0,
+      "wal_sha256": "a5f76381e7a8016918b8191a13e688cc0f44085e975b710f07285aae474a01e4",
+      "png_sha256": "8d4781d915242e03176269d8b11843bfd727c83c1ac666e2cf7d06b33774a026",
+      "animation_next": "sandkeep/switch_armory_on"
+    },
+    "sandkeep/switch_armory_on": {
+      "width": 128,
+      "height": 64,
+      "surface_flags": 0,
+      "wal_sha256": "4aaf6458a91df32de99e16ed6aa64fbbdddcccbfbb28a5eecac95208a5fd129e",
+      "png_sha256": "fa155e0c8ac3195959d2759a2b33657def55df2ddb7c120f31b13acea1443ebc",
+      "animation_next": "sandkeep/switch_armory_on_alt"
+    },
+    "sandkeep/switch_armory_on_alt": {
+      "width": 128,
+      "height": 64,
+      "surface_flags": 0,
+      "wal_sha256": "46616af980d0d27c7d49f42e0072bac428181b9e1fe0f87b421c82072a7f57b8",
+      "png_sha256": "22d4e48c48a7661c0bacdcbb8a558016308cfeda9e5b07078794a02587766a30",
+      "animation_next": "sandkeep/switch_armory"
+    },
+    "sandkeep/switch_radio": {
+      "width": 128,
+      "height": 64,
+      "surface_flags": 0,
+      "wal_sha256": "dfe4a3cdd498fef4a4d9ed71105b72d9b2385017875b8c882da16acb5dda2296",
+      "png_sha256": "f277e57289521a88154d5490d6d69d6f06fddddd4d9100c744fd4466b16f74cf",
+      "animation_next": "sandkeep/switch_radio_idle"
+    },
+    "sandkeep/switch_radio_idle": {
+      "width": 128,
+      "height": 64,
+      "surface_flags": 0,
+      "wal_sha256": "ee69945a242caecadee385638e197328e78d78b5bc04c8735a8660a698fe124c",
+      "png_sha256": "09f0ce226012890f0c9bf25ec11bae2450f9d32497f8be2e96e0000058c2978f",
+      "animation_next": "sandkeep/switch_radio_on"
+    },
+    "sandkeep/switch_radio_on": {
+      "width": 128,
+      "height": 64,
+      "surface_flags": 0,
+      "wal_sha256": "176a8750eebd8ceab7695026a8d6a776e0eeb9c33f863b94f9c95c4938fe6274",
+      "png_sha256": "1d411f7ffc8f4d075b4bf28a0511ba8eccd9600603282881a2980c3298a831da",
+      "animation_next": "sandkeep/switch_radio_on_alt"
+    },
+    "sandkeep/switch_radio_on_alt": {
+      "width": 128,
+      "height": 64,
+      "surface_flags": 0,
+      "wal_sha256": "c132e96108c5dbe8c64f982f0efed56cebb718f16cde83c412bab4c01418e536",
+      "png_sha256": "9a1fdb9441ec4f6e922bb020e43be5a53acf673b15515bf8817efdf26d380756",
+      "animation_next": "sandkeep/switch_radio"
+    },
+    "sandkeep/lamp": {
+      "width": 32,
+      "height": 32,
+      "surface_flags": 0,
+      "wal_sha256": "2afc46299be2d2b197c196770aa26fbd4e08e625f737ef4f753c2085f57cd6dd",
+      "png_sha256": "51d558c52e1e17fa85940a07544c4e79c978b3c87ffbb453b5a340500f30a913"
+    },
+    "sandkeep/plastic_green": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "2d01a834c894a20e34d3b58cb9ef202cd5aa8c1a70523f83099ea0c95651978b",
+      "png_sha256": "2e3ac9dc86d997252bf73acc5dfd2e9e0c9a21a76f285da40697372ed5560327"
+    },
+    "sandkeep/plastic_green_smooth": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "7c3766d1fdb4243bd9d8f841386a6e9a4fd7718c93ec817b52a28538834fb9a4",
+      "png_sha256": "ff12acc84021fa6d2d91d2c921d452e436574330f1562727370035de49d3aa51"
+    },
+    "sandkeep/plastic_red": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "ce5674acd7125778555355409d9d0da6aabc562c61ccee4f79cb0a6145be2cfa",
+      "png_sha256": "7685aabe6794a817bbed3cc9ab8091da0f5940df8cc74307920a4605639e5e54"
+    },
+    "sandkeep/plastic_blue": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "6125f57cb1d616ad30de0bbb168df87a0125e388ed0b383ace5d797558cbe3fb",
+      "png_sha256": "36b2a87fd06e285951bfc373fdd8e514b9e2307bd3f3ae7240c1bc936a59bad9"
+    },
+    "sandkeep/plastic_blue_smooth": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "26ade16e5267f7da0a57ffce333a0e5f03c2127b5b85aacaa13fb16f7ba5eee0",
+      "png_sha256": "750921e9388e8f30c543c58f6574c28897829ad3564daa093042203373d68541"
+    },
+    "sandkeep/trim": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "9f757d0d2159412f299a3912be5235168cf5c9ba41b0d52c64b5074de63bdd57",
+      "png_sha256": "4c520a068f16c1c525d8c8b99a5c0f80d0310c71b32ef85110d51199bdd9768a"
+    },
+    "sandkeep/iron": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "fa19d02d1e884b74e8fb28893cc29aa44ec948c36ca5015545306056c89fe283",
+      "png_sha256": "31a5c99ad170a5dbb5ca1a2949a50a25411fa8c09cbf42269e1623c979e0cea6"
+    },
+    "sandkeep/metal": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "e6a2b798d0c199bf96c5c672d0d9724cb15eacf5947126c5adf8af3c7db0330f",
+      "png_sha256": "2dff1c1c8d4f23714692a568639cc70d48518f98f4952dbc362e626924e36db3"
+    },
+    "sandkeep/sign_start": {
+      "width": 256,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "824c82e0d9dcffd6a42c448cfbb6cac0924b58b976a2526744d51095750e57ae",
+      "png_sha256": "a568186e431040cb271af0fd594d6e7584ab90d03302b03191ab428b969b9fde"
+    },
+    "sandkeep/sign_armory": {
+      "width": 256,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "801ba45980f23a4247d81a40bf57f5afc08070ffafcea61162a53a1cf5f988a1",
+      "png_sha256": "1d2bca00f26925ab0fc4136e50e4d6b75abd70d2f044ba0805e6fb88341a6d3f"
+    },
+    "sandkeep/sign_radio": {
+      "width": 256,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "24f3b6deeacabdd34abd73d579b5c9a2f23fcf16adbf311da0062ea267a2f19f",
+      "png_sha256": "4438161e436bc8fa3a3676d11f634282257d8de33dd48c20c64f057db79f98c7"
+    },
+    "sandkeep/sign_boss": {
+      "width": 256,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "ce6041fd58d65868a02238bfa7a7e4cc88ec348be0c7ed6d19620f9dd0e83699",
+      "png_sha256": "dd4c3d95220078c0e51cd6d0b280748335a93162aac29298b6b101072ece51b0"
+    },
+    "sandkeep/sign_exit": {
+      "width": 256,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "c16ce8d65c203cb22da8ccf3676c2e7adcae8480f708f957bf8ccf8926a10ac5",
+      "png_sha256": "cc37b1af2f86ae265cedab5a1f1a3efcac1eeb195fd8190b9b64356e95a68f7a"
+    },
+    "sandkeep/marker": {
+      "width": 128,
+      "height": 128,
+      "surface_flags": 0,
+      "wal_sha256": "1a5afde8d40c98d684f62823035dad3e847fb6b32110716fb26cb06ce406e305",
+      "png_sha256": "bcf08b4d81566df5afad51eaff7dced0e586bc5aa0ffcba8caf2fba29d4cf998"
+    },
+    "sandkeep/helipad": {
+      "width": 256,
+      "height": 256,
+      "surface_flags": 0,
+      "wal_sha256": "e7bb646af11a4ac771ef1cca9564282790cdce7064e842e51f02668d34fc6dca",
+      "png_sha256": "15bbc40efbbd058f9883edb4a4aeba06fd9f6992040c3e397ed4ab3610f0a989"
+    },
+    "sandkeep/sky": {
+      "width": 64,
+      "height": 64,
+      "surface_flags": 4,
+      "wal_sha256": "887e877ad9c4ebc86ec267b9b14d38a23e2b20778af45a2d34c23acbfef83983",
+      "png_sha256": "e4b50122ba83d074905f864a465ce4c826fdad20c205ebc2ed9e562cecf6ceea"
+    }
+  },
+  "skybox": {
+    "sandkeeprt.tga": "c6ea4b8dcf875492c264beb4faf27d2f00726151253c9a3c44c11ed3956dfe13",
+    "sandkeeplf.tga": "6f7aec63a1d3b6806c8f8b26821a533334fdcdaf08bf4af264efa6341a43ce2b",
+    "sandkeepbk.tga": "c04a529bb9c2102b30cf8ec03102b20f9ede64b5d8acd538e7c985cfc85ba650",
+    "sandkeepft.tga": "2f5ed5d45334b06bdc55582cb8943c8d472305079045e2ea3601096517f0f9bb",
+    "sandkeepup.tga": "a886807e8e63299c8f03eab3f76f2b9ddfc3768cde83f669e0275ded61e39311",
+    "sandkeepdn.tga": "586177bcb20efe73142fb0f708200728caae30533a17429dba4c9abf71a8383b"
+  },
+  "palette_source": "Original palette in tools/assets/build_bootstrap.py"
+}

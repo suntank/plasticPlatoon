@@ -1,0 +1,19 @@
+[
+  {
+    "name": "extraction_before_completion",
+    "pose": [0, 3584, 28, 0, 90]
+  },
+  {
+    "name": "extraction_intermission",
+    "pose": [0, 3584, 28, 0, 90],
+    "expect_eye_bounds": {
+      "x": [380, 388], "y": [3404, 3412], "z": [276, 282],
+      "pitch": [18, 22], "yaw": [142, 146]
+    },
+    "after_pose": [
+      {"command": "noclip", "wait": 0.2},
+      {"command": "+forward", "wait": 1.1},
+      {"command": "-forward", "wait": 0.5}
+    ]
+  }
+]

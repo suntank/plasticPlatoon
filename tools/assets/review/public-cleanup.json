@@ -1,0 +1,1356 @@
+{
+  "schema": 1,
+  "date": "2026-11-04",
+  "private_backup_directory": "../plasticPlatoon-private-backup-20261104T204722Z",
+  "backup_archive_sha256": "3258559a6851a17846d4bcd80143b62fb613e9bcc06f070b0cdbb84f8d064cc9",
+  "removed_files": [
+    {
+      "path": "baseq2/players/male/grunt.pcx",
+      "bytes": 58004,
+      "sha256": "4cc63f1c2a4c04ece2ec3f11c2b941ba90a099528ad3d1ef5c6948778535db36"
+    },
+    {
+      "path": "baseq2/players/male/grunt_i.pcx",
+      "bytes": 1967,
+      "sha256": "7448a9a3f61fcff7b2819b56957ea5ac54c65f316e14df33002a2024aff529d2"
+    },
+    {
+      "path": "baseq2/players/male/tris.md2",
+      "bytes": 278760,
+      "sha256": "36f56c0f9cc11add6d3fbad1cf257bfc595cfca1459d53c9d65d5ab392709a61"
+    },
+    {
+      "path": "baseq2/players/male/weapon.md2",
+      "bytes": 38800,
+      "sha256": "8259152d5e9e2cfa7aa98cdc708a64ebafd810cd8a6e069aab7a6a3c8337ecc6"
+    },
+    {
+      "path": "stuff/models/crosshair/skin.pcx",
+      "bytes": 4279,
+      "sha256": "909d30f02111ad0a124010cf71420434cd901e44c326bf8fe195e86d831c6e2d"
+    },
+    {
+      "path": "stuff/models/crosshair/tris.md2",
+      "bytes": 1152,
+      "sha256": "fbae581b9c5b5121ff2f23ecfd58d61da7d545a2e999381183cebedf95965248"
+    },
+    {
+      "path": "stuff/osx/quake2-appbundle.zip",
+      "bytes": 1266168,
+      "sha256": "da1d500f816ef80c84823a90a8320736e3767d2588c886e84490dec3ac931e38"
+    },
+    {
+      "path": "kingpin.zip",
+      "bytes": 59108,
+      "sha256": "9f6179570803696afc514c1254ba008763d055e2aa66e11163c31514acca9e8b"
+    },
+    {
+      "path": "autosave/test.1.map",
+      "bytes": 1359,
+      "sha256": "afd54848b2a48dffcad1d3a70fd6efbf318fd0147e574a3136ae34dc18eee58b"
+    },
+    {
+      "path": "autosave/test.2.map",
+      "bytes": 4498,
+      "sha256": "f508b6e930ed3b6b7c9095ca6e10299c4fc53ab8715aa085462ceeb00d3c222d"
+    },
+    {
+      "path": "autosave/test.3.map",
+      "bytes": 4737,
+      "sha256": "7f005c84aafc76910240cec6a35f726d17958e55555be7ad6f1b95812aa359d9"
+    },
+    {
+      "path": "autosave/test.4.map",
+      "bytes": 4335,
+      "sha256": "7041061f4f1f1cecc431307866b78bfafda7b6ad09c86e5e45b83761c5b016d6"
+    },
+    {
+      "path": "autosave/test.5.map",
+      "bytes": 4384,
+      "sha256": "2859fa3612451dcb7f619701df287fe48232ada2c55674a62df7feacbda8f2ec"
+    },
+    {
+      "path": "autosave/test.6.map",
+      "bytes": 2180,
+      "sha256": "3c4332652d699f1f3d658a9d79b089b979c78e48eebf407ef01abb1a0e284c80"
+    },
+    {
+      "path": "autosave/test.7.map",
+      "bytes": 2588,
+      "sha256": "d372818143d9e2be736516197ee5b7465c965d74d8e738c3ce796c21497f11fe"
+    },
+    {
+      "path": "blender/PlayerRig_final.blend1",
+      "bytes": 14024577,
+      "sha256": "d3b2761a1f98d9719f00673c23b068d86854e1584894bc89cbf4923c9145b385"
+    },
+    {
+      "path": "blender/SoldierRig_final.blend1",
+      "bytes": 19680793,
+      "sha256": "03db2294fb7a0ba93d53c2c91ec448f05deea7359de68d96737f4b83928657b1"
+    },
+    {
+      "path": "test-crash.log",
+      "bytes": 2123,
+      "sha256": "490f9c7b500e2ff063e1deda17219f098b4d54fb5f7718f4dfca3b100d1ac578"
+    },
+    {
+      "path": "test-crash.map",
+      "bytes": 4341,
+      "sha256": "5b075a1aa73f46615459dea002916d802ddb52370b1dd60c5ecb86264b0fb4e3"
+    },
+    {
+      "path": "test-crash.txt",
+      "bytes": 8791,
+      "sha256": "d3befabf8c381d0c876fe0c690174923efa9e8cfc1d06a0bbdc161991fb0f426"
+    },
+    {
+      "path": "test.map",
+      "bytes": 4366,
+      "sha256": "ea3e372e2648fb564bfb83cc063df0cf3037bf2bc76dc05edfc3319569b92bff"
+    },
+    {
+      "path": "test.prt",
+      "bytes": 9,
+      "sha256": "b1ac538e53efc28ace2088324b1c0504d0f09b013d30b39ce231d76124bc6c22"
+    },
+    {
+      "path": "doc/performance/results/build/map-transition-client-build.log",
+      "bytes": 95,
+      "sha256": "1467f5d6de8b3fcab155e58cb9ba5bebb824d121844cd6c66cb535efdd0fe80f"
+    },
+    {
+      "path": "doc/performance/results/build/preserved-binary-hashes.json",
+      "bytes": 1437,
+      "sha256": "c69e8a40e557a77d3b77e2b1ffc07c8f3226f41f1ddb7ed5a6e26e30f3c4771b"
+    },
+    {
+      "path": "doc/performance/results/build/release-build.log",
+      "bytes": 2256,
+      "sha256": "51a512e75ba0c3bde47aa1ce4e4707cefb96297be43c6cef8e5df648353677d6"
+    },
+    {
+      "path": "doc/performance/results/build/verified-compiler-commands.txt",
+      "bytes": 1565,
+      "sha256": "f37a3e73e2c23d9a35b2f4300f2abb06527c0af18b78a37afa8cd40ec2b7865d"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/environment.json",
+      "bytes": 1014,
+      "sha256": "562162f15df72e49fece3c049f2f57d53599a084831dbd65b380d3eeb22b3e5f"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/manifest.json",
+      "bytes": 128419,
+      "sha256": "2c6512f6ab2333ce7e9ed94aa25c89c09d7243efd556b31a01eea329a4806936"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-different-console.log",
+      "bytes": 7814,
+      "sha256": "68af5a2da2ed37e83d6f068fa9229fc9a9791d42e71d3ed9ebd5b7e66c1606de"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-different-frames.csv.gz",
+      "bytes": 17911,
+      "sha256": "2fb99ea8dd640c417312ee463a4cf77f1aba5997fe679a8496bf73035e9a85f9"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-different-run.json",
+      "bytes": 11236,
+      "sha256": "7cdc7c018a8512002fea0b7d38fb5e6406b159a2406291ac2e2e4f7d64508c8c"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-different-settings.txt",
+      "bytes": 1738,
+      "sha256": "062bfe840fa3b8a5288f39152b1089f0d85afdb63094a5b04a73ae77af6edc00"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-different-views.csv.gz",
+      "bytes": 22901,
+      "sha256": "6537a82168862ac1201f5996e39d1393fde3e4e96b92a211c1b5e90be0f2e30e"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-different.cfg",
+      "bytes": 792,
+      "sha256": "4b2c9e4f2045690dad75c317a9ae4384ba5f3bcc2a9810d311703a253e8a1423"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-same-console.log",
+      "bytes": 7804,
+      "sha256": "5fc2854e8b0a90754288a1676335be7f70e481eb6d11a127914252c417616a14"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-same-frames.csv.gz",
+      "bytes": 17544,
+      "sha256": "0b2bbb791bb68ebf7f32afafac07b6ef2fd8c9df37f076c1f8a610972586d3f7"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-same-run.json",
+      "bytes": 11137,
+      "sha256": "8e1c0dd8e6e11a47d7889a87cf29485ac6b9e578566112492054ca08e5263fde"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-same-settings.txt",
+      "bytes": 1738,
+      "sha256": "062bfe840fa3b8a5288f39152b1089f0d85afdb63094a5b04a73ae77af6edc00"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-same-views.csv.gz",
+      "bytes": 22958,
+      "sha256": "b273c92c028011a6db2359841e2c6e682136e914a425edc167ccd6d1c0b04b91"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-same.cfg",
+      "bytes": 741,
+      "sha256": "c4a96e4f660e84bb704599f19a6a234cc3ffea600c5c64d4ef753f740bcf956e"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-single-console.log",
+      "bytes": 7720,
+      "sha256": "1225edb4a2a48bc508e2b73f064e52f663b56daf436cdd9cc74db6ae12dea08a"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-single-frames.csv.gz",
+      "bytes": 16302,
+      "sha256": "e2d81289e95ef3d4108fc903571d0ffb7f8acb6c2beaa82605469457220e3f9f"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-single-run.json",
+      "bytes": 11122,
+      "sha256": "2c5e067b15e53090bfb2a4137adadf7fa551fdf491d3470d2fc82bd552887e82"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-single-settings.txt",
+      "bytes": 1736,
+      "sha256": "319fdfc1eb0adbda69a872ceb62308e3ee985d4bf08672ed678fc4d112539afc"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-single-views.csv.gz",
+      "bytes": 11701,
+      "sha256": "65d4e131a7f257f78a41d27c2fe8172ff7cc4193c80d517ee023efc9084812c7"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl1-single.cfg",
+      "bytes": 743,
+      "sha256": "edce90445e7f7c01bb8dc7083982c6e8cd5d12a2a006d4ed53c8d3f8a4c754fa"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl3-same-console.log",
+      "bytes": 9877,
+      "sha256": "2b11848c324c4a81bf1ee6fd8922a622edacc5c3e4d026dcf38cef32c45df7f7"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl3-same-frames.csv.gz",
+      "bytes": 17420,
+      "sha256": "6e2b3c2524d30957e18bcf9651c57349e46d24ee19d154cf40ca32431fd27bc9"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl3-same-run.json",
+      "bytes": 11137,
+      "sha256": "4dcd5c78b9cdf59be241fc4fda537e6cfbbd478198ac719c2b078b1e27976fba"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl3-same-settings.txt",
+      "bytes": 1744,
+      "sha256": "2924edab18c29384a1e1ebaa96143d73991ca5d61f1d67fb21ab461007b5823d"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl3-same-views.csv.gz",
+      "bytes": 23631,
+      "sha256": "054c6a791945b67c8d98ab63034bb8db7bf074f3f14193518d4228b3654c7120"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-assets-gl3-same.cfg",
+      "bytes": 741,
+      "sha256": "318319990e43277b7e82e4c79d4ccd774e932bb40ea021aca4fabb2d0bcc6bd7"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-different-console.log",
+      "bytes": 8006,
+      "sha256": "b800b147b59e68cec745cbdca355dca2c8a24039c2a0be38f98d2026b31b3b5a"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-different-frames.csv.gz",
+      "bytes": 12823,
+      "sha256": "46828b067ba7dcdba2c3aff3d6e5585cf476e68dafa0e352de65924a644218a5"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-different-run.json",
+      "bytes": 6145,
+      "sha256": "6d5377df53652ef0096cc74481d5d36bc42aba085b58783794134f156011f4ef"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-different-settings.txt",
+      "bytes": 1723,
+      "sha256": "68ede2910c2bd6a94e8762692fec121e36d42e249cce8cfbd99c9490096e8c0f"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-different-views.csv.gz",
+      "bytes": 8168,
+      "sha256": "37991751519cb782dd79db2f3c16cee903436b7f2ddef952f6e99713569f837f"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-different.cfg",
+      "bytes": 794,
+      "sha256": "e9a4bb85549336c5fe509f19eea5414417edee623fd247f0b5acbe03a3da0b69"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-same-console.log",
+      "bytes": 7996,
+      "sha256": "35e17853b9ac0d918332a15a1ad998f48a46c2c04c21945511e6ef2815b0013a"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-same-frames.csv.gz",
+      "bytes": 13198,
+      "sha256": "be3fe04586a2db122a8d6fddb6294a7c546dd82146eb5e443339f6dc2fd4df8b"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-same-run.json",
+      "bytes": 6080,
+      "sha256": "063af13e61ec50d84916e5c02c08acff4d1836e09f8cbf0ac78c1e79cd877480"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-same-settings.txt",
+      "bytes": 1723,
+      "sha256": "68ede2910c2bd6a94e8762692fec121e36d42e249cce8cfbd99c9490096e8c0f"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-same-views.csv.gz",
+      "bytes": 8291,
+      "sha256": "6be3961c319c3a6ab8a885e01301bfe187f1cd8f86b43d140e2f10c13cd3a272"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-same.cfg",
+      "bytes": 743,
+      "sha256": "d94d4b63f34c83d1db59d9b6930e5704c969b12086aaae46531ddd979a5a26f0"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-single-console.log",
+      "bytes": 7912,
+      "sha256": "6ff64c2f6d9aab60081001fe797e8cf1c5a55cd82f42536d17a1c9a2d4a67096"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-single-frames.csv.gz",
+      "bytes": 12418,
+      "sha256": "c5436cf853c75c3bb3f2c86d468ed0d0f17af623866541ee29980fb5800c3c75"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-single-run.json",
+      "bytes": 6108,
+      "sha256": "111b71c949dc2a71fe43fa63ff3af234bcfef3b86bc3eef1ecc8bc9dbf144654"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-single-settings.txt",
+      "bytes": 1721,
+      "sha256": "a83764072bf03c8178ac2d1ada9ce2d838581ae5aeec65aa07696003b75aa003"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-single-views.csv.gz",
+      "bytes": 4084,
+      "sha256": "67a8c98a9ec09a39a299d52790b2391cf996a3fa66da076b218c6e092ba5f5e6"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl1-single.cfg",
+      "bytes": 745,
+      "sha256": "07b1eea18eb3472d105a5b2b898a229bed6ed7b9b080b1a8caf8cc1875a079e5"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl3-same-console.log",
+      "bytes": 10102,
+      "sha256": "5c4f39184b54e4f29e604e777a3d341547967c7dd5a427a5a7904e5f0fbcbb41"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl3-same-frames.csv.gz",
+      "bytes": 12822,
+      "sha256": "66c4224ddfb66c5ff5cf501ca781ad480e380327aee5a5025715100de3b9944b"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl3-same-run.json",
+      "bytes": 6122,
+      "sha256": "db8fb3b2b291098794916a670665da6dc5cb78e51a80967e9115113d064201b2"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl3-same-settings.txt",
+      "bytes": 1729,
+      "sha256": "2bc6300fdb5f86c0b32a84a49e4207826a5b1b16a499e00fdee572d2100e5efb"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl3-same-views.csv.gz",
+      "bytes": 8409,
+      "sha256": "36f6ee4452d9b96cf1f89ca6ae28754c5ab3c9608a6d3b949eaeca42775cf6e1"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-baseline-gl3-same.cfg",
+      "bytes": 743,
+      "sha256": "414f777768a17948287e0d2dc55252729e653c3df2cac9b64e530e5d028b347f"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-different-console.log",
+      "bytes": 8047,
+      "sha256": "a34ef38596a040718a4499de841d5b33053f14ea8560f0b76f8acce91409738a"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-different-frames.csv.gz",
+      "bytes": 17606,
+      "sha256": "1c29a9edaa6748b6bb570e4eb5dd93fb91bdd7c7b10119489f1570925f44bab7"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-different-run.json",
+      "bytes": 11245,
+      "sha256": "d8fa5a3bac459f0f6388e9f756c6b9de61c0e6d838eba9235285d7f17e94dffc"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-different-settings.txt",
+      "bytes": 1738,
+      "sha256": "f30de96819567363f7ad03bedb1861af7808a1b88d424b8f82971c0f01870d7a"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-different-views.csv.gz",
+      "bytes": 23437,
+      "sha256": "dcfd0d610c3dd34f5fdc5da66650a02f43c7f7b5b0ce2f889f4010aa286f70b1"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-different.cfg",
+      "bytes": 792,
+      "sha256": "8d5a5836d7d299f9ede37f972e13470591de88eeeb51a19586903cfd230f4e60"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-same-console.log",
+      "bytes": 8037,
+      "sha256": "59ad700e93e54038774df38a95321af8b8417795302667e01958a7a3234f2cc7"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-same-frames.csv.gz",
+      "bytes": 17386,
+      "sha256": "95b218ccf946184544ce31762051613018494e8f9f9be5f7c23d91793a4790ae"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-same-run.json",
+      "bytes": 11145,
+      "sha256": "bfcf09789f1bc1cdb581f2d7fdb3a856ee8a0bb3471d59c943392f298ae01d0b"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-same-settings.txt",
+      "bytes": 1738,
+      "sha256": "f30de96819567363f7ad03bedb1861af7808a1b88d424b8f82971c0f01870d7a"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-same-views.csv.gz",
+      "bytes": 23134,
+      "sha256": "005f41b4b15515b006ff0f09657d31b89c9b2d70eca47c4fcd068b888d47f06e"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-same.cfg",
+      "bytes": 741,
+      "sha256": "9c394b80de52297f00e88dea9ac0cb6b251391d190dfbbd90cf8acf200c28241"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-single-console.log",
+      "bytes": 7953,
+      "sha256": "599c0b7c254533188f69bf550561fddb33e4805813eef0dc1d41d3acedbc8d97"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-single-frames.csv.gz",
+      "bytes": 16259,
+      "sha256": "9570bdf3b38ce87e4574b716f0f62314b2a60ea4f0c14ac7c0ddee4b89dd45d1"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-single-run.json",
+      "bytes": 11172,
+      "sha256": "9b1f3eaf8e600b3bdcb5f5646c46e968721610ea5456165a2ef4c90ad426477c"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-single-settings.txt",
+      "bytes": 1736,
+      "sha256": "c1e81aa7583ca0653094a1f31632c0f2c3f06d0d3d55266899498cb842bf11b3"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-single-views.csv.gz",
+      "bytes": 11834,
+      "sha256": "446c8a0632dcde1eaca387ca4b4956eb28c0e8fdfd6d09fd658f0c088329dd18"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl1-single.cfg",
+      "bytes": 743,
+      "sha256": "bfd2fc6599d36b6e6c62653c028dc526868c851916b9c6619641587a0ec7f20f"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl3-same-console.log",
+      "bytes": 10110,
+      "sha256": "01cf0198839f0885db64f870055ee94c28baba5d3b326c4af9f1183705c5df7f"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl3-same-frames.csv.gz",
+      "bytes": 17365,
+      "sha256": "3011eb57ec8d22f3e5068ca1e59e50f93e410118c2dc09c34b51b0f8c695e32b"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl3-same-run.json",
+      "bytes": 11169,
+      "sha256": "4086480cc7e40aa0f204c73efd2a5e10d6059fe2f13fbce5150a338b0e70f891"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl3-same-settings.txt",
+      "bytes": 1744,
+      "sha256": "ff3f1b42b4c0b1bc112b8847a33118a82c6ce8760af349ebeec311cc32a029e1"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl3-same-views.csv.gz",
+      "bytes": 23912,
+      "sha256": "ef0e8c8339f38ac95aa45a125ccd5c101c20242f8c116f25c541a36536df06c2"
+    },
+    {
+      "path": "doc/performance/results/host-2026-10-31/quiet/pp-engine-gl3-same.cfg",
+      "bytes": 741,
+      "sha256": "259c44a94907d75bcdf15a504ae54e6b78f663f15595bc9a257152ab0435e3f8"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/archive-manifest.json",
+      "bytes": 7032,
+      "sha256": "0a07b099e0c8f2969562846fc04cdee26c35fae2a79f22ac761cd679535bd8bb"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/console.log",
+      "bytes": 11200,
+      "sha256": "144216d8a62182d7c0ec62f9fd0b80a4d6a7b8fb6a8697e2d23ccd31185372f6"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/direct-map-reply.txt",
+      "bytes": 557,
+      "sha256": "49b0b5b0dc20dc95be190849e3ada4e57188871d0496045e4048f631b5732463"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/frames-before.csv.gz",
+      "bytes": 2870,
+      "sha256": "323d273f1d9466135d200d3fa62c3b905653632aae47d0e634f6352aedfd08f9"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/lifecycle-start.cfg",
+      "bytes": 789,
+      "sha256": "514b8df81cffbe3e7a16366a42e3d54f3b6494cad212bc35ea0ddb767c4e21c7"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/perf/transition-probe-frames.csv.gz",
+      "bytes": 23544,
+      "sha256": "fd2179f557c7fa9d38b62c007a46f8f88bc0e8e81445f16ef898eca6c74842bf"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/perf/transition-probe-settings.txt",
+      "bytes": 1741,
+      "sha256": "827ddeb02531b010c8df35f091c1d306d2014743a51bc649e7fee792ba29e3f6"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/perf/transition-probe-views.csv.gz",
+      "bytes": 27817,
+      "sha256": "0759e7532a0f066899ac90f960d41ae00b13ad7485582cbb8ea6c127157c6f36"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/qconsole.log",
+      "bytes": 10556,
+      "sha256": "c3e1b8e79a1ce21ab5335bc7ff684dd832936fde078608788162e4fc188bb748"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/run.json",
+      "bytes": 1419,
+      "sha256": "e82625010a8e9e4e9b0ee08feef2cc2db053bca938507d406ede47a37a6680ee"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/scrnshot/q2_0000.png",
+      "bytes": 55779,
+      "sha256": "65166e18238f6c2362cffa32912af6c533cadb78a9e05b956a30e70a06aa7ea2"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/scrnshot/q2_0001.png",
+      "bytes": 57608,
+      "sha256": "5869861efd6a86ab13e259abb8b6e49afbfc562c61dd53c911173e85598f2367"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/status-after.txt",
+      "bytes": 312,
+      "sha256": "659db5ead0a15e61f44a3db060cb2e257c0aacc8d3d77a25844ca971ed5c2d9c"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/direct-map-gl3-fixed/status-before.txt",
+      "bytes": 322,
+      "sha256": "c62664ddb640af67516f3fc442612ad5ee4b54c4daee712e1dbf984b512cc392"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/archive-manifest.json",
+      "bytes": 14388,
+      "sha256": "26d08bc2fb243d3c8b2eef8f8a063bc9af5eb146c02f548c4989cd727775af1a"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/console.log",
+      "bytes": 21476,
+      "sha256": "e7d770c3cb32d46ede42c642d45c6ba67e2abd826c9ca69ecfec791ae2abf1f9"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/control-reply.txt",
+      "bytes": 50,
+      "sha256": "6d7fa42cb5d17eb191c9693c1c828e876847be9bc090d68c4efee5de19d717e0"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/initial-status.txt",
+      "bytes": 322,
+      "sha256": "0b5eed317ee9efaa4bce25f12df2c105149398854e99a1d9a7855616af58144f"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/lifecycle-sequence.cfg",
+      "bytes": 1051,
+      "sha256": "7f6a7c0cf143e1bcd5c44b9ce589e543b5545e09e650f5a82d3bd362bfec5063"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/lifecycle-start.cfg",
+      "bytes": 789,
+      "sha256": "29de791d578ed81bbc2864febaa8b7c64727703ab247d35678581dc05d3a9e59"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-fallback-frames.csv.gz",
+      "bytes": 4094,
+      "sha256": "038c2b3d416098f54c3d9973b251d550310750b71f6e9a23610d81181f923d98"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-fallback-settings.txt",
+      "bytes": 1742,
+      "sha256": "4b245b28c783294a7aa737b6d0d26b1fba234f977cfec3c9a43e12bcbbbcc7cc"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-fallback-views.csv.gz",
+      "bytes": 5069,
+      "sha256": "5f9c6102faf820bd3037209e3259697f5cf431da47bdbc0a767ba9958e21c149"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-initial-frames.csv.gz",
+      "bytes": 3750,
+      "sha256": "1e4e93f0c6a0990b339459df4f528c20240ec0afca8c4d5eafdd2b91ddbc5d04"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-initial-settings.txt",
+      "bytes": 1738,
+      "sha256": "e936d4bba1e3a12054b9c8fb88444e4861f6587ce86e5214e9e9e6dc84b4d640"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-initial-views.csv.gz",
+      "bytes": 4801,
+      "sha256": "f27e488b9deab9f68ff1426a7277f19986a82c063475360a619af144ca3245ea"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-map-reload-frames.csv.gz",
+      "bytes": 3950,
+      "sha256": "6ae783068cbb1f218d53fffb7e655e0fd165a7328cbdc8d91201eba161ff5ef8"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-map-reload-settings.txt",
+      "bytes": 1742,
+      "sha256": "5de55f773f90ae453390ed2bc1eda5f68c2912388658f55f94c9ef71acc462b4"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-map-reload-views.csv.gz",
+      "bytes": 4953,
+      "sha256": "49da6a546cc4d2423c0ee4a9f68b8b6eb272c92c32c972cde09f0032c7f4ebe2"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-restart-frames.csv.gz",
+      "bytes": 3934,
+      "sha256": "c376d6889cb57b42098aba0c55ebb82ae546c7f2172d3e7a1af7c95dffcdce27"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-restart-settings.txt",
+      "bytes": 1742,
+      "sha256": "b9c7084115cda2550e3b9eebea4d4609bb7319bfe3757eb3ebd1a4c4b9480a60"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-restart-views.csv.gz",
+      "bytes": 4892,
+      "sha256": "a21cf97bb813c6f0171b6f9463dd3a8f7852d51cf77412465feb942c09515a46"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-restored-frames.csv.gz",
+      "bytes": 3972,
+      "sha256": "94470bdeb6ca3549790acb41de09892a974eb93a007d666b563d81d6aa3a771c"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-restored-settings.txt",
+      "bytes": 1742,
+      "sha256": "b9c7084115cda2550e3b9eebea4d4609bb7319bfe3757eb3ebd1a4c4b9480a60"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/perf/gl1-restored-views.csv.gz",
+      "bytes": 5050,
+      "sha256": "6bb9a93929d77328756f3d6347ac12a669ba028c9ea932977dc4b0deaaadda06"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/qconsole.log",
+      "bytes": 20832,
+      "sha256": "fb2c37dcb522d93c6d953163225ba3a0ad105e522c562be7a2749a4a537347b0"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/run.json",
+      "bytes": 4207,
+      "sha256": "59c27e875f210daeb50d3fa6cffaafe4e4a2b4ad8100cc8068e6db9870aa9e6f"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/screenshots/q2_0000.png",
+      "bytes": 57770,
+      "sha256": "9460354266beb287ad60458e87b83c6825ff31dde89f0ef85961b57149c33a93"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/screenshots/q2_0001.png",
+      "bytes": 57758,
+      "sha256": "b241536254871d0cab298d3975a78b44a708fe70226f66aee64710f748cde8f3"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/screenshots/q2_0002.png",
+      "bytes": 57692,
+      "sha256": "e0edf5f99c4a3e80fe8c36498fba9b0fcded7706d8c6f2e23ae8566c48bf9049"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/screenshots/q2_0003.png",
+      "bytes": 56912,
+      "sha256": "4537fdc629c1fb6b0a6e670f6a2aaf9a48afa99ed5b8784317c151da62dbea37"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl1-mapfix/screenshots/q2_0004.png",
+      "bytes": 56642,
+      "sha256": "eaf79f5a403d5f98010d8471eb295ea0d5fd53fc3d21be94c3df01dfec69c7bf"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/archive-manifest.json",
+      "bytes": 14388,
+      "sha256": "baa843bfed1d7f41f4e97b44ed1f312591aacefad584072ef10b767cad54852b"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/console.log",
+      "bytes": 27695,
+      "sha256": "7e4eeccea05578de3cc1f32c405ea8e7c6e6af8f87265607347c985ff44cb1cc"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/control-reply.txt",
+      "bytes": 50,
+      "sha256": "6d7fa42cb5d17eb191c9693c1c828e876847be9bc090d68c4efee5de19d717e0"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/initial-status.txt",
+      "bytes": 322,
+      "sha256": "09037b7d4634243eb376afb3babae516b30333b44bc18abaf0a16739f8d3a76c"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/lifecycle-sequence.cfg",
+      "bytes": 1051,
+      "sha256": "53c693ef66007a61884de1940d84b74f64f2b32dae300b72e3e4e7e77bf28a98"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/lifecycle-start.cfg",
+      "bytes": 789,
+      "sha256": "514b8df81cffbe3e7a16366a42e3d54f3b6494cad212bc35ea0ddb767c4e21c7"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-fallback-frames.csv.gz",
+      "bytes": 4125,
+      "sha256": "e3a8cebc8093bf341ce211016b5a37062122cabf2ca432f3a40ba70feae6e0fe"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-fallback-settings.txt",
+      "bytes": 1745,
+      "sha256": "a8b19a345e300e6887d5a2ff8d005e78fe3a2f0ee663535a78d315b478a75062"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-fallback-views.csv.gz",
+      "bytes": 5230,
+      "sha256": "1b9772984a550a6532c991365bf8c37cd8313f635e083432bcce9c6995ca734e"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-initial-frames.csv.gz",
+      "bytes": 4210,
+      "sha256": "252d046e63f92a56513c1ee474778d852a9550f255887dcd46a0167a228638df"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-initial-settings.txt",
+      "bytes": 1741,
+      "sha256": "827ddeb02531b010c8df35f091c1d306d2014743a51bc649e7fee792ba29e3f6"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-initial-views.csv.gz",
+      "bytes": 5262,
+      "sha256": "1355c6c5a9323355aa465c3cfb85b8e0f2530d25d67f8fd6b3dab104cdbf4074"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-map-reload-frames.csv.gz",
+      "bytes": 4080,
+      "sha256": "b721df6bfffa2f10f5ba922c8ba7e7bb3b12abafbf68aa54e67dccf93ec6fd22"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-map-reload-settings.txt",
+      "bytes": 1745,
+      "sha256": "5e34658b6a09a1bbbb25e6ebc68d0e3e97a867b98c1454c6371ab46e759b4d86"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-map-reload-views.csv.gz",
+      "bytes": 5257,
+      "sha256": "9b61af4989952d29eeb6295cf6ee43440e25e1451b6c6f330d71daa478a40f42"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-restart-frames.csv.gz",
+      "bytes": 4143,
+      "sha256": "33637f97267469c62486b5f84a984b09c87c74a7686d6f45db89470348310ff2"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-restart-settings.txt",
+      "bytes": 1745,
+      "sha256": "f05e29f3737f8233732cd267c48b3b232335467a9f9d07f0ca9b535d39231463"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-restart-views.csv.gz",
+      "bytes": 5238,
+      "sha256": "b1454033f09ceffb60d1357df696910862c31f2fea3c23d5bc771ed8bb42e009"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-restored-frames.csv.gz",
+      "bytes": 3918,
+      "sha256": "9c69167dd1d362c2f133625ce2a420a22cdcc82e445741ad89df141b7f141238"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-restored-settings.txt",
+      "bytes": 1745,
+      "sha256": "f05e29f3737f8233732cd267c48b3b232335467a9f9d07f0ca9b535d39231463"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/perf/gl3-restored-views.csv.gz",
+      "bytes": 5076,
+      "sha256": "6f9daba1bc8f693bf318ffbcdbe5113c0b8af873a0398ab09356d8fc2941cab1"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/qconsole.log",
+      "bytes": 27051,
+      "sha256": "8db0559a32cbdb6a63a257408966089f8c11be3829f03d30aa7903497254652a"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/run.json",
+      "bytes": 4216,
+      "sha256": "7e8dabc96411fab5b35c375cc6dae25274b782b97acd21c0c623d4cc09784a1c"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/screenshots/q2_0000.png",
+      "bytes": 56745,
+      "sha256": "2a5607ad34f940fd55847d79f8e7f427682aa0a6f23f7f20eec81f1512fe1dda"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/screenshots/q2_0001.png",
+      "bytes": 56107,
+      "sha256": "ca8ed78eb031467e4f587d666b978133f55bb28d2a2f110772a76bfab19de683"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/screenshots/q2_0002.png",
+      "bytes": 56162,
+      "sha256": "b6bcca1484643d4315f3fb2a24e337626af10fb4f227f0d1c43729cb86385254"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/screenshots/q2_0003.png",
+      "bytes": 56338,
+      "sha256": "b1cfd5ad466c6f245b8c5b59dd562d61df8dd1ab7cb0e7afecaa2e6652be1849"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gl3-mapfix/screenshots/q2_0004.png",
+      "bytes": 55394,
+      "sha256": "724366ab3f06ab4f62a2f567d06a363db7398ca9698a4d73165e214ac2958ea3"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/README.md",
+      "bytes": 6735,
+      "sha256": "2d6c805d86c6f0045c2aa5c8ebba8ddc3a369512367aa7c49bd9821862782092"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/archive-manifest.json",
+      "bytes": 13802,
+      "sha256": "f116580e5c7fc016305bb6043cf65ef358365a2e93a41846a5621c82dc5b134c"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/mesa-configure.log",
+      "bytes": 12208,
+      "sha256": "78660887730149f9a896d5f494c67512150349f59c466230156513b17d2332a3"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-functional-240-console.log",
+      "bytes": 5072,
+      "sha256": "235d5d5cb6a48234851132db930ba87ef0cee6524f60e8aaa54c1ef6afda837f"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-functional-240-frames.csv.gz",
+      "bytes": 6040,
+      "sha256": "22fa9f600ffd4fca08b115d4be23630bc3f958b7f4e13ae0f2a8f3a067713cad"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-functional-240-run.json",
+      "bytes": 10915,
+      "sha256": "70082d6feede53a8411282b3e650f6a628092e8880663ba60240fe4bece96b25"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-functional-240-settings.txt",
+      "bytes": 1396,
+      "sha256": "9dca9d2373657bfe35346b9b6ae207d7985bcb5020e6b1846ecd10792f6bdcfa"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-functional-240-views.csv.gz",
+      "bytes": 6609,
+      "sha256": "23139639bdf0fa39f574ba4ba8668e803130158793af71618847607f3d49dd7d"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-functional-240.cfg",
+      "bytes": 745,
+      "sha256": "dada28fde8379030faa47ef658427f56d96788a50d5a9ea802431ab2525b656b"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-lifecycle-clone-240-console.log",
+      "bytes": 9710,
+      "sha256": "c91c627cb5bc6ca04d78220d72fa50b13e07d4f3f394152bbd4f356c257b90ae"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-lifecycle-clone-240-events.json",
+      "bytes": 1333,
+      "sha256": "bad484107f7e72b08132016689927929657b201cc026b0a3658d853861a58c3f"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-lifecycle-clone-240-frames.csv.gz",
+      "bytes": 10757,
+      "sha256": "9d71fb4066d46a5ce290575a5b6e2230f7a442e0662c8c090d0582c1f9fea9bc"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-lifecycle-clone-240-settings.txt",
+      "bytes": 1396,
+      "sha256": "e7a932049edfd03f640f0d2761b9962608e08c84127866f0bb636dc31562be34"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-lifecycle-clone-240-views.csv.gz",
+      "bytes": 12023,
+      "sha256": "e5cebd87888169ce29ea0fe3aaded9020a38d6594b5782e14c530ec20e411084"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-lifecycle-clone-240.cfg",
+      "bytes": 208,
+      "sha256": "3315192aa83e06e14afa95c868176bc07a8f028b8a6a24ba4161fc7cd952bbb6"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-lifecycle-fixed-240-console.log",
+      "bytes": 9531,
+      "sha256": "143a82979cd33cc1cc47a278c045e74c6c017076c476416f9c87cbe824d0ebd1"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-lifecycle-fixed-240-events.json",
+      "bytes": 1331,
+      "sha256": "0e098e6139d42e1efbe1b6e49002e5a44f477b78f7a12d24c914cbfb84cd937c"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-lifecycle-fixed-240-frames.csv.gz",
+      "bytes": 11821,
+      "sha256": "072b0e58025f0823997a9434ef0f9de62a18852d0ef9a549b99e3bda3e636190"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-lifecycle-fixed-240-settings.txt",
+      "bytes": 1740,
+      "sha256": "a80cb8d605f28fdf7e9c02800e31cde3e04220af925ea7ba0151e9a4f9543629"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-lifecycle-fixed-240-views.csv.gz",
+      "bytes": 13075,
+      "sha256": "1e299edcfa209ae26a5d9dea677049160aa45a669b53a02a4884ceb41c151b87"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-lifecycle-fixed-240.cfg",
+      "bytes": 208,
+      "sha256": "3a700dc61ef0c676e46b401e923e3eb07a779342b1fbeb0e780da19f9c72166e"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-to-clone.cfg",
+      "bytes": 23,
+      "sha256": "0d12131505ca5d08eabd1da2d3d8967f06c1ffc477bfe85a21f4b1a28c1a693a"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-to-demo.cfg",
+      "bytes": 14,
+      "sha256": "6b5d43608c85cd9346b168051fa9637590610b9531449d20eaee5edf4a9e508c"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/perf/gles1-to-fixture.cfg",
+      "bytes": 24,
+      "sha256": "ee0780e6cbcec303001bac8af55b27fee15aadf55f5e32e4f799f54c352db2cf"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/probes/pp-egl-gles-context.c",
+      "bytes": 1759,
+      "sha256": "e792dfcc8b2c60b709b2908dea529e4007e5e12aacb02f7fca9e4221b6d0804f"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/probes/pp-sdl-gles-context.c",
+      "bytes": 1835,
+      "sha256": "82174f55e54e39c6674467985bca449f7b2548426a6c4b77d450cbef7b46eb89"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/run.json",
+      "bytes": 2324,
+      "sha256": "11c44b623330ed41fc0e6479a7bf68d97e76bd9d13eef4e854946c74c4c480bf"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/screenshots/different-map-return.png",
+      "bytes": 54389,
+      "sha256": "a75b006d847f950c30a293c42329f4ba588d0b41460478171bdc656cd76c9cf2"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/screenshots/fallback.png",
+      "bytes": 54145,
+      "sha256": "bd5f6d39b67f497db5905a7a7cbb6629a7fef0fa7158b16951bc92bb3b0aa44e"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/screenshots/initial.png",
+      "bytes": 54726,
+      "sha256": "0f70b355c202ba5574617befb1e0166e56e8380ca9b6368f347621ddbf95ac97"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/screenshots/persistent.png",
+      "bytes": 54846,
+      "sha256": "e8111abbb18433fd79817d7ee0cd329ffcb8bd570810071d2c027e76f40118d1"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/screenshots/reloaded.png",
+      "bytes": 54873,
+      "sha256": "f32443c5192bf017f215ba7f5e11a302d0ea5c5c9b8d27069d78c1b62630cb9d"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/gles1/screenshots/restarted.png",
+      "bytes": 54774,
+      "sha256": "b29d837edc68eec07ee183487ee3e808489150a99272909549779451628f8bde"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/archive-manifest.json",
+      "bytes": 6445,
+      "sha256": "caa515e104b533bf361e5755dc9fe4b3ee96689827d01501f0fde8641411866e"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/console.log",
+      "bytes": 14738,
+      "sha256": "46fc8ba48d56497532bc1177048e14cc3ae41786a6492db3ccc2bc9b0d8b1134"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/direct-map-reply.txt",
+      "bytes": 42,
+      "sha256": "a697b4ccc660d4e302bc201c86832a1cdc6485fec155e0e026881df1ed0a9ba0"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/frames-before.csv.gz",
+      "bytes": 1190,
+      "sha256": "376f76aa4142adbd73f403700b70493341b652a2a880f14d06b6a69e452969ff"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/lifecycle-start.cfg",
+      "bytes": 789,
+      "sha256": "29de791d578ed81bbc2864febaa8b7c64727703ab247d35678581dc05d3a9e59"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/perf/transition-probe-frames.csv.gz",
+      "bytes": 1190,
+      "sha256": "376f76aa4142adbd73f403700b70493341b652a2a880f14d06b6a69e452969ff"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/perf/transition-probe-settings.txt",
+      "bytes": 1725,
+      "sha256": "660c59866923b4ff0d73922ec815bc7d82919057ba4f974e5a8d1ad86c77f44a"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/perf/transition-probe-views.csv.gz",
+      "bytes": 955,
+      "sha256": "ae5a16093143d9b77dd1b48e6db3ced9db3ee7e6afca2b5fb17baa292ef1d385"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/qconsole.log",
+      "bytes": 8684,
+      "sha256": "a482f05ac7d9f1553a751a059d06b6a378cc7a3a4ab958d68ed7beb726255b1c"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/run.json",
+      "bytes": 1476,
+      "sha256": "ca4f993965b528d14ec1ee3aef9b2760241e2755e24bc40527620944ab4be1bd"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/scrnshot/q2_0000.png",
+      "bytes": 54576,
+      "sha256": "b598327639a70743af8d32e72bc6bc11eaf4674111c5763e60b39c04aa456b81"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/status-after.txt",
+      "bytes": 8,
+      "sha256": "1d44ad7979d972dfc94da20b9f633c6b08f23c70ea01ec5d5b1f46222d275a6c"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-baseline-original-confirm/status-before.txt",
+      "bytes": 322,
+      "sha256": "129f5aa8ecd8991111c16b1a95f7f7fb7091a078e1ba6d16394bdd501b889182"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/archive-manifest.json",
+      "bytes": 7032,
+      "sha256": "9640d96bd2d2a307c46c2715449a4e987469e4dd434953a7bdf38886036e0c4a"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/console.log",
+      "bytes": 9570,
+      "sha256": "de217ea59a8eb6f7d60687384a8c2f56506c531a051fec46e54ae6974f676534"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/direct-map-reply.txt",
+      "bytes": 42,
+      "sha256": "a697b4ccc660d4e302bc201c86832a1cdc6485fec155e0e026881df1ed0a9ba0"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/frames-before.csv.gz",
+      "bytes": 2204,
+      "sha256": "ce1bbad854ebd4dc8f163f6af7d2bef5a52b9a565f4a290d3ba2232cfd7dc2ac"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/lifecycle-start.cfg",
+      "bytes": 789,
+      "sha256": "29de791d578ed81bbc2864febaa8b7c64727703ab247d35678581dc05d3a9e59"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/perf/transition-probe-frames.csv.gz",
+      "bytes": 21004,
+      "sha256": "ca3d4f3687c037f4ee57f3a534b8afe179078f75e41e80a6828cc4c3f91dac6c"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/perf/transition-probe-settings.txt",
+      "bytes": 1738,
+      "sha256": "61d4ee0e5e0b1f5881f3d8217ce3dc1c31187eee6d90a9da8138e21cfd9dccdb"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/perf/transition-probe-views.csv.gz",
+      "bytes": 24968,
+      "sha256": "56b465ff3a7f0f6c739bf89b8554e71dda32fe0c3c30c6311ab330e54ea5fa15"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/qconsole.log",
+      "bytes": 8926,
+      "sha256": "6f4b754763901058d657d52873ed8a067aa921a71b2e57e7baa684c14b1e9115"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/run.json",
+      "bytes": 1418,
+      "sha256": "a93c42ecc221b78292309de2d0f53999ecb38ece5514dea8a8bc5d66063387aa"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/scrnshot/q2_0000.png",
+      "bytes": 55538,
+      "sha256": "078326ac0bfff0ba1e2108458f31abd7f7ccdfa7215697aeedbd90b00c1256c2"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/scrnshot/q2_0001.png",
+      "bytes": 56898,
+      "sha256": "fe72f8eb306c21befbbffbee7f293ea78193ab48617fb3017be8d0d72d89e997"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/status-after.txt",
+      "bytes": 312,
+      "sha256": "4e2a29bdcb3ee484fbf84ae9dad6129ef42a6c98f22485c42b534121f859919b"
+    },
+    {
+      "path": "doc/performance/results/lifecycle/queued-map-gl1-fixed-original/status-before.txt",
+      "bytes": 322,
+      "sha256": "ba08b5d3804da79d30176e55cad55ea1608bc0680785c9a7b478f3ff7f612308"
+    },
+    {
+      "path": "doc/performance/results/sustained/pp-effects-soak-summary.json",
+      "bytes": 8241,
+      "sha256": "09ba0ca4960c65b8cb8937bb39e6a9b724b36668b139c7cb0ef6b651e8d7877b"
+    },
+    {
+      "path": "doc/performance/results/sustained/provenance.json",
+      "bytes": 3850,
+      "sha256": "07b66d11f85c0fd7c979e1667f1d7a8dc02c5a250f51927e14cb6149e25c9cc6"
+    },
+    {
+      "path": "doc/performance/results/sustained/sandbox-wave-diagnostic-summary.json",
+      "bytes": 8257,
+      "sha256": "c0ef28d01333c05019259006f7c4383f266ff4af408549c37bd7d7c01b242dda"
+    },
+    {
+      "path": "doc/performance/results/terrain/contained_and_ladders_detail-bsp.log",
+      "bytes": 2386,
+      "sha256": "dad6d0ac1755922897c9710797a490f2952c46b8c4a1b99b4556dd8d75d7db96"
+    },
+    {
+      "path": "doc/performance/results/terrain/contained_and_ladders_detail-vis.log",
+      "bytes": 1799,
+      "sha256": "1f0249a11c2172b439a60fa2b25695b3277e7c6b0998d985c4eb2e5a9f53745f"
+    },
+    {
+      "path": "doc/performance/results/terrain/contained_sand_detail-bsp.log",
+      "bytes": 2351,
+      "sha256": "f8d751b8eeab1b9d5d0898373a801e93747d32d0834c3076ee83110686bde06d"
+    },
+    {
+      "path": "doc/performance/results/terrain/contained_sand_detail-vis.log",
+      "bytes": 1764,
+      "sha256": "eef336aa0010dd5886c372344a33cf792a7f04cf0aa2583eb1736e4bfa7c2d24"
+    },
+    {
+      "path": "doc/performance/results/terrain/interior_ladders_detail-bsp.log",
+      "bytes": 2361,
+      "sha256": "243c4f6c1cc3b6e694d5fb08e08860fd6957b5eba2bad0c832811b1d1ebd17d5"
+    },
+    {
+      "path": "doc/performance/results/terrain/interior_ladders_detail-vis.log",
+      "bytes": 1774,
+      "sha256": "29cd2b348821ec2f289069f3cb110862e09f212d9121d29518cc5cea25bed23c"
+    },
+    {
+      "path": "doc/performance/results/terrain/original-bsp-fullvis-rad-attempt.log",
+      "bytes": 3869,
+      "sha256": "321fee4d59357c4b7321c57aa6c638fdc4ac383959c086b4be7ae12f85b92320"
+    },
+    {
+      "path": "doc/performance/results/terrain/original-fullvis-diagnostic-rad.log",
+      "bytes": 2282,
+      "sha256": "3fcae4e4b99844a44a1f9a07a2b9cf341486b07f491a66c606a90474843b98d7"
+    },
+    {
+      "path": "doc/performance/results/terrain/original_diagnostic-bsp.log",
+      "bytes": 2335,
+      "sha256": "7011eb0d530c56cd20b0d672476084c943cb15af1739402771def3e869bf25ee"
+    },
+    {
+      "path": "doc/performance/results/terrain/original_diagnostic-vis.log",
+      "bytes": 1748,
+      "sha256": "c9f7ba137d833a7e5c90ac779d1b569a319075416a8f8bbd6d84d88c3a483906"
+    },
+    {
+      "path": "doc/performance/runtime-comparison.png",
+      "bytes": 638360,
+      "sha256": "46a6e185dec33b4adb6558b584af5b9bf233c9e8fecf0a37f601e207d05e73f5"
+    },
+    {
+      "path": "doc/performance/terrain-review.png",
+      "bytes": 295765,
+      "sha256": "37d9c998853d5c3f0884a123bdbd5223ccc985fa5c7e62399b5549db1c7693c8"
+    },
+    {
+      "path": "doc/performance/visuals/gles1-softpipe-240.png",
+      "bytes": 54726,
+      "sha256": "0f70b355c202ba5574617befb1e0166e56e8380ca9b6368f347621ddbf95ac97"
+    },
+    {
+      "path": "tools/assets/review/runtime-gl3.png",
+      "bytes": 68863,
+      "sha256": "1480271cb1cc46fe3daf7e96c1047b609a5ccaccb439e0bac6f6e1e9e5941298"
+    },
+    {
+      "path": "tools/assets/review/rocket-soldier-in-game.png",
+      "bytes": 460397,
+      "sha256": "13eb0e0a7a49383721ec7fc9543a60e1a02906a374222e97be06380e038ac0e3"
+    },
+    {
+      "path": "tools/assets/review/helicopter-in-game.png",
+      "bytes": 365284,
+      "sha256": "c74f28ee40d83a42e020a69400d6a1d7d345b63b7ac410f400291fb4c761857b"
+    },
+    {
+      "path": "tools/assets/review/runtime-gl1.png",
+      "bytes": 59137,
+      "sha256": "45849e31924bccbfe93ec2bff836000100dc61120377ff80295031a8eadb07f0"
+    },
+    {
+      "path": "tools/assets/review/heavy-tank-in-game.png",
+      "bytes": 461620,
+      "sha256": "92b94ff68203c7c912daa480548e6ab1fd4ac598480eb8307c1796e042d0075d"
+    },
+    {
+      "path": "src/client/vid/icon/q2icon64.h",
+      "bytes": 99519,
+      "sha256": "241b171cb69bbf0b24108d8f252931f7451f3e2536ff932e3531b9e5de941b97"
+    }
+  ],
+  "editable_sources": "Primary PSD, Blender rigs, original map sources, texture sources and audio archives retained; all originals and backups also preserved in the complete private archive.",
+  "editable_backup": {
+    "archive": "../plasticPlatoon-private-backup-20261104T204722Z/editable-sources.tar",
+    "bytes": 100454400,
+    "sha256": "0b08e8a79db06d13ce2556f35a51c0682b91fb254f13d88483086cc9981240f1",
+    "verified_files": 31,
+    "verification": "Every archive member hash matches the pre-cleanup editable-source inventory"
+  },
+  "history_cleanup": {
+    "strategy": "Clean initial main commit; old .git moved outside repository",
+    "old_objects_directory": "../plasticPlatoon-private-backup-20261104T204722Z/original-git",
+    "source_builds_use_history": false,
+    "publication": "Local source preparation only; no remote push",
+    "old_objects_removed": true
+  },
+  "source_migration": {
+    "original_archive": "tools/assets/sources/platoon-originals.pk3",
+    "archive_sha256": "308e7b7e07f08ecbd0f7487e8a37440ab07c28bb83896b0f4c959a29fdcbf7e4",
+    "members": 146,
+    "validated_models": 66,
+    "validated_pngs": 77,
+    "validated_pickup_pairs": 16
+  },
+  "palette_migration": {
+    "manifest": "tools/maps/material-palette-manifest.json",
+    "wal_representations": 195,
+    "truecolor_art_and_bsp_unchanged": true,
+    "palette_generator": "tools/assets/build_bootstrap.py"
+  },
+  "branding": {
+    "generator": "tools/assets/build_branding.py",
+    "original_icon": true,
+    "obsolete_macos_bundle_removed": true
+  },
+  "editable_sources_retained_in_public_tree": {
+    "files": [
+      "homogenizeTextures.psd",
+      "blender/PlayerRig_final.blend",
+      "blender/SoldierRig_final.blend",
+      "maps/source/pp_helicopter_test.map",
+      "maps/source/pp_sandwatch.map",
+      "maps/source/pp_rocket_test.map",
+      "maps/source/pp_tank_test.map",
+      "maps/source/pp_sandkeep.map",
+      "maps/source/pp_heavy_test.map",
+      "maps/source/pp_sandbox_coop1.map",
+      "maps/source/pp_bedroom.map",
+      "tools/maps/material_sources/abc_block_c.png",
+      "tools/maps/material_sources/abc_block_b.png",
+      "tools/maps/material_sources/abc_block_e.png",
+      "tools/maps/material_sources/abc_block_f.png",
+      "tools/maps/material_sources/abc_block_d.png",
+      "tools/maps/material_sources/abc_block_a.png"
+    ],
+    "all_match_pre_cleanup_hashes": true
+  },
+  "verification": {
+    "clean_clone": {
+      "method": "git clone --no-local --no-hardlinks into a separate /tmp checkout",
+      "make_all": "passed",
+      "asset_tests": 77,
+      "asset_test_failures": 0,
+      "asset_test_skips": 0,
+      "source_models_verified": 66,
+      "source_pngs_verified": 77,
+      "pickup_pairs_verified": 16,
+      "git_status_after_build_and_tests": "clean"
+    },
+    "updated_runtime": {
+      "maps": 10,
+      "renderers": [
+        "gl3",
+        "gl1",
+        "soft"
+      ],
+      "cases_passed": 30,
+      "frames": 900,
+      "missing_resources": 0,
+      "report": "tools/assets/review/standalone-smoke.json"
+    },
+    "public_source_guard": {
+      "known_removed_content_violations": 0,
+      "checks_unreachable_git_blobs": true,
+      "archives_checked": 11,
+      "archive_members_checked": 1098,
+      "largest_file_bytes": 47317833
+    }
+  }
+}

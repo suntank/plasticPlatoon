@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "model": "models/monsters/soldier/weapon_heavy.md2",
+  "sources": {
+    "models/monsters/soldier/weapon_machinegun.md2": "c44c70b25c3edc1f65cfcdf9195a2163f7751efd63ebe07fcad05c655a6ba022",
+    "players/soldier/w_chaingun.md2": "4e061cc055f001f86e4be9b348f7566778913ee50a7d5f7d66e90470316eeed8",
+    "models/monsters/soldier/tris.md2": "9363f8d2fcb22c0d738ddf12f33a7e873ecb30f7badc8d704ecc565c812a2f05"
+  },
+  "method": "Rigid least-squares transfer of enemy attachment motion onto held M60 frame zero",
+  "frames": 475,
+  "position_vertices": 765,
+  "triangles": 1545,
+  "skin_references": [
+    "models/weapons/g_chain/skin.png"
+  ],
+  "max_source_rigid_fit_error_units": 0.12934203,
+  "max_output_quantization_error_units": 0.06802097,
+  "sha256": "cc59137e12c7a94a16ad19d6b29a3f7bc96aee0a17967160f0d0b6e72e6e4ef6",
+  "bytes": 1535032
+}

@@ -1,0 +1,8 @@
+[
+  {"name":"shoebox_start","pose":[-1760,-1456,40,-5,20],"commands":["set scr_centertime 0"]},
+  {"name":"bedroom_overview","pose":[-256,-1728,512,0,65],"commands":["set scr_centertime 0"]},
+  {"name":"under_the_bed","pose":[-944,-768,32,0,105]},
+  {"name":"dresser_power_cell","pose":[160,1344,432,0,55]},
+  {"name":"desk_radio","pose":[1744,0,736,-10,78]},
+  {"name":"toy_chest_extraction","pose":[1072,832,1088,20,48],"after_pose":[{"command":"noclip","wait":0.3},{"command":"noclip","wait":0.3}]}
+]

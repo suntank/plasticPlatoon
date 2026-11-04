@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "model": "models/monsters/soldier/weapon_rocket.md2",
+  "sources": {
+    "models/monsters/soldier/weapon_machinegun.md2": "c44c70b25c3edc1f65cfcdf9195a2163f7751efd63ebe07fcad05c655a6ba022",
+    "models/monsters/soldier/tris.md2": "9363f8d2fcb22c0d738ddf12f33a7e873ecb30f7badc8d704ecc565c812a2f05",
+    "players/soldier/w_rlauncher.md2": "ed73d6194eee3af276000032290ca2854262e800a90330ffbb5e871227f99f04"
+  },
+  "method": "Rigid least-squares transfer of enemy attachment motion onto held rocket launcher frame zero",
+  "frames": 475,
+  "position_vertices": 705,
+  "triangles": 1427,
+  "skin_references": [
+    "models/weapons/g_rocket/skin.png"
+  ],
+  "max_source_rigid_fit_error_units": 0.12934203,
+  "max_output_quantization_error_units": 0.05954545,
+  "sha256": "6bdf833ee3cb7d8de945fb445d27c130dee600b0d74684414690893b04c26676",
+  "bytes": 1415072
+}

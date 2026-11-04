@@ -1,0 +1,44 @@
+{
+  "description": "Nozzle and headlight surface repair verified with actual GL1/GL3 close-up captures from multiple angles.",
+  "runs": [
+    {
+      "report": "build/tank-qa/tank-surfaces-fixed-gl3/run.json",
+      "complete": true,
+      "renderer": "gl3",
+      "game_sha256": "9c96bb06d6fe715419a8c9ab4bace1d63bd54134784a71f1cc66a948ccf93fc7",
+      "map_sha256": "2470fa06ab8dea6531078e2018971660938707df2548c2e22bc620cf442723da",
+      "views": [
+        "lights_left",
+        "lights_right",
+        "muzzle_close",
+        "deck_trim"
+      ],
+      "validation_errors": []
+    },
+    {
+      "report": "build/tank-qa/tank-surfaces-fixed-gl1/run.json",
+      "complete": true,
+      "renderer": "gl1",
+      "game_sha256": "9c96bb06d6fe715419a8c9ab4bace1d63bd54134784a71f1cc66a948ccf93fc7",
+      "map_sha256": "2470fa06ab8dea6531078e2018971660938707df2548c2e22bc620cf442723da",
+      "views": [
+        "lights_left",
+        "lights_right",
+        "muzzle_close",
+        "deck_trim"
+      ],
+      "validation_errors": []
+    }
+  ],
+  "preview": "tools/assets/review/heavy-tank-in-game.png",
+  "gameplay_suite": "tests/heavy_tank/run_tests.sh",
+  "gameplay_result": "passed: independent aiming/firing, two-rocket timing, target acquisition, shot guards, triggered visibility, death/owner cleanup, save/load",
+  "previous_gameplay_note": "Prior gameplay suites verified unchanged behavior; the runs below replace earlier visual evidence for the exported models.",
+  "asset_regression_suite": "tests/assets/test_heavy_tank.py",
+  "asset_regression_result": "passed: no shared detail depth after quantization, clockwise winding, matching vertex/UV corners, one-sided culling",
+  "models": {
+    "hull.md2": "38e103fbfda5add9e20b2d2c915fbd3c971cbf55c1f76c20584800a38ffa28cc",
+    "turret.md2": "9c29b98b64bf3a89b2cf508079ccad5e968349e378c4d3b7a3275d4e5c3986e2"
+  },
+  "surface_fix": "Headlights and muzzle opening use actual exterior faces instead of coplanar overlays; grille plates and applique retain clearance after MD2 quantization."
+}
