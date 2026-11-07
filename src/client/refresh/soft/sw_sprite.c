@@ -34,10 +34,12 @@ void
 R_DrawSprite(entity_t *currententity, const model_t *currentmodel)
 {
 	vec5_t		*pverts;
-	vec3_t		left, up, right, down;
+	vec3_t		left, up, right, down, sprite_up, sprite_right;
 	dsprite_t	*s_psprite;
 	dsprframe_t	*s_psprframe;
 	image_t		*skin;
+	float		scale = 1.0f;
+	qboolean	reverse = false;
 
 	s_psprite = (dsprite_t *)currentmodel->extradata;
 	currententity->frame %= s_psprite->numframes;
@@ -55,23 +57,45 @@ R_DrawSprite(entity_t *currententity, const model_t *currentmodel)
 	r_polydesc.pixel_height = Q_min(s_psprframe->height, skin->height);
 	r_polydesc.dist         = 0;
 
-	// generate the sprite's axes, completely parallel to the viewplane.
-	VectorCopy (vup, r_polydesc.vup);
-	VectorCopy (vright, r_polydesc.vright);
-	VectorCopy (vpn, r_polydesc.vpn);
+	if (currententity->flags & RF_ORIENTED_SPRITE)
+	{
+		vec3_t forward, axis_right, axis_up;
+		AngleVectors(currententity->angles, forward, axis_right, axis_up);
+		VectorCopy(forward, sprite_up);
+		if (fabs(currententity->angles[2]) > 45.0f)
+			VectorScale(axis_up, -1, sprite_right);
+		else
+			VectorScale(axis_right, -1, sprite_right);
+		CrossProduct(sprite_up, sprite_right, r_polydesc.vpn);
+		/* Draw either side, just as the OpenGL renderers do. */
+		reverse = DotProduct(modelorg, r_polydesc.vpn) > 0;
+	}
+	else
+	{
+		float roll = currententity->angles[2] * (M_PI / 180.0f);
+		float c = cosf(roll), s = sinf(roll);
+		VectorScale(vup, c, sprite_up);
+		VectorMA(sprite_up, s, vright, sprite_up);
+		VectorScale(vright, c, sprite_right);
+		VectorMA(sprite_right, -s, vup, sprite_right);
+		VectorCopy(vpn, r_polydesc.vpn);
+	}
+
+	/* The same skinnum encoding is used by the OpenGL renderers. */
+	if (currententity->skinnum < 0)
+		scale = Q_clamp(-currententity->skinnum, 1, 255) / 255.0f;
+	else if (currententity->skinnum > 0 && currententity->skinnum < 256)
+		scale = 0.1f + (currententity->skinnum / 255.0f) * 0.9f;
+
+	/* Texture gradients run in pixels per world unit, inverse to size. */
+	VectorScale(sprite_up, -1.0f / scale, r_polydesc.vup);
+	VectorScale(sprite_right, 1.0f / scale, r_polydesc.vright);
 
 	// build the sprite poster in worldspace
-	VectorScale (r_polydesc.vright,
-		s_psprframe->width - s_psprframe->origin_x, right);
-	VectorScale (r_polydesc.vup,
-		s_psprframe->height - s_psprframe->origin_y, up);
-	VectorScale (r_polydesc.vright,
-		-s_psprframe->origin_x, left);
-	VectorScale (r_polydesc.vup,
-		-s_psprframe->origin_y, down);
-
-	// invert UP vector for sprites
-	VectorInverse( r_polydesc.vup );
+	VectorScale(sprite_right, scale * (s_psprframe->width - s_psprframe->origin_x), right);
+	VectorScale(sprite_up, scale * (s_psprframe->height - s_psprframe->origin_y), up);
+	VectorScale(sprite_right, scale * -s_psprframe->origin_x, left);
+	VectorScale(sprite_up, scale * -s_psprframe->origin_y, down);
 
 	pverts = r_clip_verts[0];
 
@@ -98,6 +122,14 @@ R_DrawSprite(entity_t *currententity, const model_t *currentmodel)
 	pverts[3][2] = r_entorigin[2] + down[2] + left[2];
 	pverts[3][3] = 0;
 	pverts[3][4] = s_psprframe->height;
+
+	if (reverse)
+	{
+		vec5_t tmp;
+		memcpy(tmp, pverts[1], sizeof(tmp));
+		memcpy(pverts[1], pverts[3], sizeof(tmp));
+		memcpy(pverts[3], tmp, sizeof(tmp));
+	}
 
 	r_polydesc.nump = 4;
 	r_polydesc.s_offset = ( r_polydesc.pixel_width  >> 1);

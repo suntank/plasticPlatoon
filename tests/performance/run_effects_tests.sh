@@ -8,6 +8,6 @@ ${CC:-cc} -std=c11 -D_DEFAULT_SOURCE -DYQ2ARCH='"test"' -DYQ2OSTYPE='"test"' \
     ${TEST_CFLAGS:-} tests/performance/effects_regression.c \
     src/client/cl_particles.c src/client/cl_effects.c src/client/cl_entities.c src/client/cl_lights.c \
     src/server/sv_send.c src/common/shared/shared.c src/common/shared/flash.c \
-    src/common/movemsg.c src/common/szone.c \
+    src/common/movemsg.c src/common/szone.c src/common/pp_json.c \
     -Wl,--gc-sections -lm -o "$test_build/effects_regression"
 "$test_build/effects_regression"

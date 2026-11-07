@@ -33,6 +33,7 @@ cvar_t *maxclients = &three, *hand = &zero, *cl_vwep = &one;
 static unsigned int random_state = 1, random_calls;
 static unsigned int sound_calls, submitted_particles, submitted_entities, submitted_lights;
 static char last_sound_name[MAX_QPATH];
+static char last_model_name[MAX_QPATH];
 static particle_t submissions[MAX_PARTICLES];
 static entity_t entity_submissions[MAX_ENTITIES];
 static byte test_pvs = 0xff;
@@ -41,6 +42,7 @@ static int test_loopback_slot, transmitted_slot;
 static unsigned int transmit_calls;
 static byte transmitted_command[MAX_MSGLEN];
 static int transmitted_length;
+static qboolean load_muzzle_profile;
 
 int randk(void) { ++random_calls; random_state = random_state * 1664525u + 1013904223u; return (int)(random_state & 0x7fffffffu); }
 float frandk(void) { return (randk() & 32767) * (1.0f / 32767.0f); }
@@ -51,8 +53,9 @@ void Com_DPrintf(const char *fmt, ...) { (void)fmt; }
 void V_AddParticle(vec3_t origin, unsigned int color, float alpha) { particle_t *p = &submissions[submitted_particles++]; assert(submitted_particles <= MAX_PARTICLES); VectorCopy(origin,p->origin); p->color=color; p->alpha=alpha; }
 void V_AddEntity(entity_t *ent) { assert(submitted_entities < MAX_ENTITIES); entity_submissions[submitted_entities++]=*ent; }
 void V_AddLight(vec3_t org, float intensity, float r, float g, float b) { (void)org;(void)intensity;(void)r;(void)g;(void)b; ++submitted_lights; }
-struct model_s *R_RegisterModel(const char *name) { (void)name; return (struct model_s *)(uintptr_t)1; }
+struct model_s *R_RegisterModel(const char *name) { snprintf(last_model_name,sizeof(last_model_name),"%s",name); return (struct model_s *)(uintptr_t)1; }
 struct image_s *R_RegisterSkin(const char *name) { (void)name; return (struct image_s *)(uintptr_t)1; }
+struct image_s *Draw_FindPic(const char *name) { (void)name; return (struct image_s *)(uintptr_t)1; }
 struct sfx_s *S_RegisterSound(const char *name) { snprintf(last_sound_name,sizeof(last_sound_name),"%s",name); return (struct sfx_s *)(uintptr_t)1; }
 void S_StartSound(vec3_t org, int entnum, int channel, struct sfx_s *sfx, float volume, float attenuation, float offset) { (void)org;(void)entnum;(void)channel;(void)sfx;(void)volume;(void)attenuation;(void)offset; ++sound_calls; }
 int CM_PointLeafnum(vec3_t p) { return (int)p[0]; }
@@ -63,6 +66,21 @@ byte *CM_ClusterPVS(int cluster) { (void)cluster; return &test_pvs; }
 byte *CM_ClusterPHS(int cluster) { (void)cluster; return &test_pvs; }
 qboolean CM_AreasConnected(int a, int b) { (void)a; return connected_areas[b]; }
 cvar_t *Cvar_Get(const char *name, const char *value, int flags) { (void)name;(void)value;(void)flags; return &zero; }
+int FS_FOpenFile(const char *name, fileHandle_t *f, qboolean game_only) { (void)name; (void)f; (void)game_only; return -1; }
+void FS_FCloseFile(fileHandle_t f) { (void)f; }
+const char *FS_GetFilenameForHandle(fileHandle_t f) { (void)f; return NULL; }
+int FS_LoadFile(const char *path, void **buffer)
+{
+    FILE *f; long size;
+    *buffer=NULL;
+    if (!load_muzzle_profile || strcmp(path,"tuning/default.json")) return -1;
+    f=fopen("baseq2/tuning/default.json","rb"); assert(f);
+    assert(!fseek(f,0,SEEK_END)); size=ftell(f); assert(size>0);
+    rewind(f); *buffer=malloc((size_t)size+1); assert(*buffer);
+    assert(fread(*buffer,1,(size_t)size,f)==(size_t)size); fclose(f);
+    ((char *)*buffer)[size]='\0'; return (int)size;
+}
+void FS_FreeFile(void *buffer) { free(buffer); }
 void *Z_Realloc(void *ptr,int size) { (void)ptr; (void)size; assert(!"fixture entity buffers are preallocated"); return NULL; }
 centity_t *CL_AllocEntity(int entnum) { assert(entnum>=0 && entnum<cl_numentities); return &cl_entities[entnum]; }
 qboolean NET_CompareAdr(netadr_t a, netadr_t b) { return a.type==b.type && a.port==b.port && !memcmp(a.ip,b.ip,sizeof(a.ip)); }
@@ -238,6 +256,52 @@ static void TestParticleFrame(void)
 }
 
 static centity_t test_entities[2][16];
+
+static void TestPlayerMuzzleFlashes(void)
+{
+    const int weapons[] = {MZ_BLASTER, MZ_HYPERBLASTER, MZ_MACHINEGUN,
+        MZ_CHAINGUN1, MZ_CHAINGUN2, MZ_CHAINGUN3, MZ_SHOTGUN, MZ_SHOTGUN2,
+        MZ_SSHOTGUN, MZ_RAILGUN, MZ_ETF_RIFLE, MZ_ROCKET, MZ_GRENADE, MZ_BFG};
+    byte data[8];
+    size_t i;
+    int thirdperson;
+    extern cvar_t *cl_mflash_thirdperson_up, *cl_mflash_thirdperson_crouch_down;
+
+    load_muzzle_profile=false; CL_InitMuzzleFlashCvars();
+    assert(!strcmp(CL_GetMuzzleFlashConfig(MZ_BLASTER,false)->image,"sprites/muzzleFlashSmall.png"));
+    assert(!strcmp(CL_GetMuzzleFlashConfig(MZ_SHOTGUN2,false)->image,"sprites/muzzleFlashSmall.png"));
+    CL_RegisterTEntModels();
+    assert(!strcmp(last_model_name,"sprites/muzzleFlashSmall.png"));
+    load_muzzle_profile=true; CL_InitMuzzleFlashCvars();
+    assert(CL_GetMuzzleFlashConfig(MZ_HYPERBLASTER,false)->forward==20);
+    assert(CL_GetMuzzleFlashConfig(MZ_HYPERBLASTER,true)->forward==27);
+    assert(CL_GetMuzzleFlashConfig(MZ_SHOTGUN2,true)->forward==CL_GetMuzzleFlashConfig(MZ_SHOTGUN,true)->forward);
+
+    cl_mflash_thirdperson_up = &zero;
+    cl_mflash_thirdperson_crouch_down = &zero;
+    for (i = 0; i < sizeof(weapons)/sizeof(weapons[0]); ++i) {
+        for (thirdperson = 0; thirdperson < 2; ++thirdperson) {
+            muzzle_flash_config_t *cfg;
+            ResetEffects();
+            cl_entities = test_entities[0]; cl_numentities = 16;
+            memset(test_entities[0], 0, sizeof(test_entities[0]));
+            cfg = CL_GetMuzzleFlashConfig(weapons[i], thirdperson);
+            memset(cfg, 0, sizeof(*cfg));
+            cfg->enabled = true; cfg->forward = thirdperson ? 20 : 10;
+            cfg->scale = 2; cfg->duration_ms = 50;
+            strcpy(cfg->image, "sprites/muzzleFlashSmall.png");
+            cl.playernum = thirdperson ? 0 : 1;
+            SZ_Init(&net_message, data, sizeof(data));
+            MSG_WriteShort(&net_message, 2); MSG_WriteByte(&net_message, weapons[i]);
+            MSG_BeginReading(&net_message); CL_AddMuzzleFlash();
+            assert(net_message.readcount == 3);
+            assert(cl_explosions[0].type == (thirdperson ? ex_mflash_billboard : ex_mflash_cone_h));
+            assert(fabsf(cl_explosions[0].ent.origin[0] - (thirdperson ? 20 : 10)) < 0.001f);
+            if (!thirdperson) assert(cl_explosions[1].type == ex_mflash_cone_v);
+        }
+    }
+    puts("PASS player muzzle flashes: every weapon event spawns first- and third-person sprites");
+}
 static entity_state_t test_streams[2][MAX_PARSE_ENTITIES];
 
 static void TestSoldierPlayerReports(void)
@@ -257,6 +321,7 @@ static void TestSoldierPlayerReports(void)
     for(kind=0;kind<3;++kind) for(i=0;i<8;++i) for(seed=1;seed<=32;++seed) {
         const float *offset=monster_flash_offset[flashes[kind][i]];
         ResetEffects(); random_state=(unsigned int)seed*0x9e3779b9u;
+        CL_RegisterTEntModels();
         cl_entities=test_entities[0]; cl_numentities=16;
         memset(test_entities[0],0,sizeof(test_entities[0]));
         VectorSet(cl_entities[2].current.origin,120,40,36);
@@ -280,6 +345,7 @@ static void TestSoldierPlayerReports(void)
         assert(fabsf(cl_dlights[0].origin[1]-(40+offset[0]))<0.001f);
         assert(fabsf(cl_dlights[0].origin[2]-(36+offset[2]))<0.001f);
         assert(cl_effect_stats.particles_created==(kind==2?40u:0u));
+        assert(cl_explosions[0].type!=ex_free && cl_explosions[1].type!=ex_free);
     }
     assert(variants[0]==15 && variants[1]==1 && variants[2]==31);
     ResetEffects();
@@ -422,6 +488,45 @@ static void TestSpritePreparation(void)
     puts("PASS sprites: scoped submission, shared update once, immutable spawn origin prevents accumulated velocity drift");
 }
 
+static void TestBulletImpacts(void)
+{
+    const int types[] = {TE_GUNSHOT, TE_SHOTGUN, TE_BULLET_SPARKS, TE_BLOOD};
+    const unsigned int particle_counts[] = {40, 20, 6, 60};
+    vec3_t pos = {5, 6, 7}, normal = {0, 0, 1};
+    byte buffer[64]; size_t i;
+    struct model_s *smoke=(struct model_s *)(uintptr_t)2;
+    struct model_s *flash=(struct model_s *)(uintptr_t)3;
+
+    for (i=0; i<sizeof(types)/sizeof(types[0]); ++i) {
+        ResetEffects();
+        cl_mod_smoke_sprite=smoke; cl_mod_explosion_sprite=flash;
+        SZ_Init(&net_message,buffer,sizeof(buffer));
+        MSG_WriteByte(&net_message,types[i]); MSG_WritePos(&net_message,pos); MSG_WriteDir(&net_message,normal);
+        MSG_BeginReading(&net_message); CL_ParseTEnt();
+        assert(cl_effect_stats.particles_created==particle_counts[i]);
+        if (types[i]==TE_BLOOD) {
+            assert(cl_explosions[0].type==ex_free);
+            continue;
+        }
+        assert(cl_explosions[0].type==ex_impact_sprite && cl_explosions[0].ent.model==smoke);
+        assert(cl_explosions[1].type==ex_impact_sprite && cl_explosions[1].ent.model==flash);
+        assert(cl_explosions[0].ent.skinnum==-24 && cl_explosions[1].ent.skinnum==-16);
+        CL_PrepareTEnts(); CL_AddTEnts(); assert(submitted_entities==2);
+        cl.time+=100; ResetOutput(); CL_PrepareTEnts(); CL_AddTEnts();
+        assert(submitted_entities==1 && entity_submissions[0].model==smoke);
+        cl.time+=201; ResetOutput(); CL_PrepareTEnts(); CL_AddTEnts(); assert(submitted_entities==0);
+    }
+    /* Existing stock impact models still take precedence when installed. */
+    ResetEffects(); cl_mod_smoke=smoke; cl_mod_flash=flash;
+    cl_mod_smoke_sprite=flash; cl_mod_explosion_sprite=smoke;
+    CL_SmokeAndFlash(pos);
+    assert(cl_explosions[0].type==ex_misc && cl_explosions[0].ent.model==smoke);
+    assert(cl_explosions[1].type==ex_flash && cl_explosions[1].ent.model==flash);
+    ResetEffects(); CL_SmokeAndFlash(pos);
+    assert(cl_explosions[0].type==ex_free); /* no missing-model submissions */
+    puts("PASS bullet impacts: wall, shotgun, sparks and blood particles; standalone sprite fallback and stock model preference");
+}
+
 static void TestBeamViews(void)
 {
     vec3_t offset={0,0,0}, origin;
@@ -529,7 +634,7 @@ static void TestMapTransition(void)
 int main(void)
 {
     Swap_Init();
-    TestOccurrences(); TestParticleFrame(); TestSoldierPlayerReports(); TestHeavyMuzzleFlash(); TestHelicopterMuzzleFlash(); TestTrailInputs(); TestSpritePreparation(); TestBeamViews(); TestMapTransition();
+    TestOccurrences(); TestParticleFrame(); TestPlayerMuzzleFlashes(); TestSoldierPlayerReports(); TestHeavyMuzzleFlash(); TestHelicopterMuzzleFlash(); TestTrailInputs(); TestSpritePreparation(); TestBulletImpacts(); TestBeamViews(); TestMapTransition();
     puts("All shared-effect production regressions passed.");
     return 0;
 }

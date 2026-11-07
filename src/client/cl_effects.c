@@ -115,8 +115,9 @@ extern struct model_s *cl_mod_flash;
 
 extern cparticle_t *active_particles, *free_particles;
 
-static muzzle_flash_config_t weapon_mflash_configs_firstperson[32];
-static muzzle_flash_config_t weapon_mflash_configs_thirdperson[32];
+#define MFLASH_CONFIG_COUNT (MZ_NUKE8 + 1)
+static muzzle_flash_config_t weapon_mflash_configs_firstperson[MFLASH_CONFIG_COUNT];
+static muzzle_flash_config_t weapon_mflash_configs_thirdperson[MFLASH_CONFIG_COUNT];
 static char mflash_config_source[MAX_OSPATH];
 
 #define MFLASH_THIRDPERSON_MODEL_LAG_COMP_DEFAULT "1.0"
@@ -206,9 +207,9 @@ CL_MFlashTune_GetCurrentThirdPersonConfig(int *out_weapon)
 	}
 
 	weapon = CL_MFlashTune_GetCurrentWeapon();
-	if (weapon < 0 || weapon >= 32)
+	if (weapon < 0 || weapon >= MFLASH_CONFIG_COUNT)
 	{
-		Com_Printf("mflash_tune: invalid current weapon id (%d), expected 0-31\n", weapon);
+		Com_Printf("mflash_tune: invalid current weapon id (%d), expected 0-%d\n", weapon, MFLASH_CONFIG_COUNT - 1);
 		return NULL;
 	}
 
@@ -446,6 +447,7 @@ CL_GetWeaponNameFromID(int weapon)
 		case MZ_ROCKET: return "BAZOOKA";
 		case MZ_GRENADE: return "GRENADE_LAUNCHER";
 		case MZ_BLASTER: return "PISTOL";
+		case MZ_HYPERBLASTER: return "M1_FLAMETHROWER";
 		case MZ_RAILGUN: return "SNIPER_RIFLE";
 		case MZ_BFG: return "MORTAR_CANNON";
 		case MZ_ETF_RIFLE: return "SMG";
@@ -470,7 +472,7 @@ CL_SetFirstPersonMuzzleFlashDefaults(muzzle_flash_config_t *cfg)
 	cfg->scale = 40;
 	cfg->duration_ms = 150;
 	cfg->velocity_scale = 0.15f;
-	Q_strlcpy(cfg->image, "sprites/muzzleFlash.sp2", sizeof(cfg->image));
+	Q_strlcpy(cfg->image, "sprites/muzzleFlashSmall.png", sizeof(cfg->image));
 
 	cfg->flash2_enabled = false;
 	cfg->flash2_forward = 18.0f;
@@ -480,7 +482,7 @@ CL_SetFirstPersonMuzzleFlashDefaults(muzzle_flash_config_t *cfg)
 	cfg->flash2_scale = 40;
 	cfg->flash2_duration_ms = 150;
 	cfg->flash2_velocity_scale = 0.15f;
-	Q_strlcpy(cfg->flash2_image, "sprites/muzzleFlash.sp2", sizeof(cfg->flash2_image));
+	Q_strlcpy(cfg->flash2_image, "sprites/muzzleFlashSmall.png", sizeof(cfg->flash2_image));
 }
 
 static void
@@ -664,7 +666,7 @@ CL_LoadMuzzleFlashConfig(void)
 	const char *weapon_name;
 
 	/* Initialize all weapon configs so muzzle flashes still work without tuning/default.json */
-	for (weapon_id = 0; weapon_id < 32; weapon_id++)
+	for (weapon_id = 0; weapon_id < MFLASH_CONFIG_COUNT; weapon_id++)
 	{
 		CL_SetFirstPersonMuzzleFlashDefaults(&weapon_mflash_configs_firstperson[weapon_id]);
 		CL_SetThirdPersonMuzzleFlashDefaults(&weapon_mflash_configs_thirdperson[weapon_id]);
@@ -710,7 +712,7 @@ CL_LoadMuzzleFlashConfig(void)
 	}
 
 	/* Load config for each weapon */
-	for (weapon_id = 0; weapon_id < 32; weapon_id++)
+	for (weapon_id = 0; weapon_id < MFLASH_CONFIG_COUNT; weapon_id++)
 	{
 		weapon_name = CL_GetWeaponNameFromID(weapon_id);
 		if (!weapon_name)
@@ -741,7 +743,7 @@ CL_LoadMuzzleFlashConfig(void)
 muzzle_flash_config_t *
 CL_GetMuzzleFlashConfig(int weapon, qboolean thirdperson)
 {
-	if (weapon < 0 || weapon >= 32)
+	if (weapon < 0 || weapon >= MFLASH_CONFIG_COUNT)
 		return NULL;
 
 	if (thirdperson)
@@ -1126,7 +1128,7 @@ CL_AddMuzzleFlash(void)
 	if (weapon == MZ_MACHINEGUN || weapon == MZ_CHAINGUN1 ||
 		weapon == MZ_CHAINGUN2 || weapon == MZ_CHAINGUN3 ||
 		weapon == MZ_SHOTGUN || weapon == MZ_SSHOTGUN ||
-		weapon == MZ_BLASTER || weapon == MZ_RAILGUN ||
+		weapon == MZ_BLASTER || weapon == MZ_HYPERBLASTER || weapon == MZ_RAILGUN ||
 		weapon == MZ_ETF_RIFLE || weapon == MZ_SHOTGUN2 ||
 		weapon == MZ_ROCKET || weapon == MZ_GRENADE || weapon == MZ_BFG)
 	{
@@ -1451,6 +1453,8 @@ CL_AddMuzzleFlash2(void)
 			dl->color[0] = 1;
 			dl->color[1] = 1;
 			dl->color[2] = 0;
+			/* These soldiers use pistols, despite the legacy blaster event ID. */
+			CL_SmokeAndFlash(origin);
 			Com_sprintf(soundname, sizeof(soundname), "soldier/player/pistol%i.wav", 1 + randk() % 4);
 			S_StartSound(NULL, entnum, CHAN_WEAPON,
 				S_RegisterSound(soundname), 1, ATTN_NORM, 0);

@@ -32,7 +32,7 @@
 
 typedef enum
 {
-	ex_free, ex_explosion, ex_misc, ex_flash, ex_mflash, ex_mflash_cone_h, ex_mflash_cone_v, ex_mflash_billboard, ex_poly, ex_poly2, ex_sprite_explosion, ex_smoke_sprite
+	ex_free, ex_explosion, ex_misc, ex_flash, ex_mflash, ex_mflash_cone_h, ex_mflash_cone_v, ex_mflash_billboard, ex_poly, ex_poly2, ex_sprite_explosion, ex_smoke_sprite, ex_impact_sprite
 } exptype_t;
 
 typedef struct
@@ -318,7 +318,7 @@ CL_RegisterTEntModels(void)
 	cl_mod_heatbeam = R_RegisterModel("models/proj/beam/tris.md2");
 	cl_mod_explosion_sprite = R_RegisterModel("sprites/explosion.sp2");
 	cl_mod_smoke_sprite = R_RegisterModel("sprites/smoke.sp2");
-	cl_mod_muzzle_flash_sprite = R_RegisterModel("sprites/muzzleFlash.sp2");
+	cl_mod_muzzle_flash_sprite = R_RegisterModel("sprites/muzzleFlashSmall.png");
 }
 
 /*
@@ -406,21 +406,52 @@ CL_SmokeAndFlash(vec3_t origin)
 {
 	explosion_t *ex;
 
-	ex = CL_AllocExplosion();
-	VectorCopy(origin, ex->ent.origin);
-	ex->type = ex_misc;
-	ex->frames = 4;
-	ex->ent.flags = RF_TRANSLUCENT;
-	ex->start = cl.frame.servertime - 100.0f;
-	ex->ent.model = cl_mod_smoke;
+	/* The original Quake II impact models are optional in the standalone
+	 * release. Use the shipped sprites at bullet-impact size if absent. */
+	if (cl_mod_smoke || cl_mod_smoke_sprite)
+	{
+		ex = CL_AllocExplosion();
+		VectorCopy(origin, ex->ent.origin);
+		ex->ent.flags = RF_TRANSLUCENT;
+		if (cl_mod_smoke)
+		{
+			ex->type = ex_misc;
+			ex->frames = 4;
+			ex->start = cl.frame.servertime - 100.0f;
+			ex->ent.model = cl_mod_smoke;
+		}
+		else
+		{
+			ex->type = ex_impact_sprite;
+			ex->start = cl.frame.servertime;
+			ex->duration = 300.0f;
+			ex->ent.skinnum = -24;
+			ex->ent.model = cl_mod_smoke_sprite;
+		}
+	}
 
-	ex = CL_AllocExplosion();
-	VectorCopy(origin, ex->ent.origin);
-	ex->type = ex_flash;
-	ex->ent.flags = RF_FULLBRIGHT;
-	ex->frames = 2;
-	ex->start = cl.frame.servertime - 100.0f;
-	ex->ent.model = cl_mod_flash;
+	if (cl_mod_flash || cl_mod_explosion_sprite)
+	{
+		ex = CL_AllocExplosion();
+		VectorCopy(origin, ex->ent.origin);
+		ex->ent.flags = RF_FULLBRIGHT;
+		if (cl_mod_flash)
+		{
+			ex->type = ex_flash;
+			ex->frames = 2;
+			ex->start = cl.frame.servertime - 100.0f;
+			ex->ent.model = cl_mod_flash;
+		}
+		else
+		{
+			ex->type = ex_impact_sprite;
+			ex->ent.flags |= RF_TRANSLUCENT;
+			ex->start = cl.frame.servertime;
+			ex->duration = 80.0f;
+			ex->ent.skinnum = -16;
+			ex->ent.model = cl_mod_explosion_sprite;
+		}
+	}
 }
 
 /* Muzzle flash cvars (defined in cl_effects.c) */
@@ -2291,6 +2322,17 @@ CL_PrepareExplosions(void)
 				ent->flags |= RF_TRANSLUCENT;
 				ent->frame = 0;
 				ent->oldframe = 0;
+				break;
+			}
+			case ex_impact_sprite:
+			{
+				float progress = (cl.time - ex->start) / ex->duration;
+				if (progress >= 1.0f)
+				{
+					ex->type = ex_free;
+					break;
+				}
+				ent->alpha = 1.0f - Q_clamp(progress, 0.0f, 1.0f);
 				break;
 			}
 			case ex_smoke_sprite:

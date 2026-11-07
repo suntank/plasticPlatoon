@@ -170,9 +170,11 @@ R_DrawSpriteModel(entity_t *currententity, const model_t *currentmodel)
 	float alpha = 1.0F;
 	vec3_t point[4];
 	dsprframe_t *frame;
-	float *up, *right;
+	vec3_t up, right;
 	dsprite_t *psprite;
 	image_t *skin;
+	float scale = 1.0f;
+	GLboolean cull_enabled = GL_FALSE;
 
 	R_EnableMultitexture(false);
 	/* don't even bother culling, because it's just
@@ -182,9 +184,44 @@ R_DrawSpriteModel(entity_t *currententity, const model_t *currentmodel)
 	currententity->frame %= psprite->numframes;
 	frame = &psprite->frames[currententity->frame];
 
-	/* normal sprite */
-	up = vup;
-	right = vright;
+	if (currententity->flags & RF_ORIENTED_SPRITE)
+	{
+		vec3_t forward, sprite_right, sprite_up;
+
+		AngleVectors(currententity->angles, forward, sprite_right, sprite_up);
+		VectorCopy(forward, up);
+		if (fabs(currententity->angles[2]) > 45.0f)
+		{
+			VectorScale(sprite_up, -1, right);
+		}
+		else
+		{
+			VectorScale(sprite_right, -1, right);
+		}
+	}
+	else
+	{
+		float roll = currententity->angles[2] * (M_PI / 180.0f);
+		float c = cosf(roll), s = sinf(roll);
+
+		VectorScale(vup, c, up);
+		VectorMA(up, s, vright, up);
+		VectorScale(vright, c, right);
+		VectorMA(right, -s, vup, right);
+	}
+
+	/* Match GL3's sprite scale encoding, including extended small scales. */
+	if (currententity->skinnum < 0)
+	{
+		int code = Q_clamp(-currententity->skinnum, 1, 255);
+		scale = code / 255.0f;
+	}
+	else if (currententity->skinnum > 0 && currententity->skinnum < 256)
+	{
+		scale = 0.1f + (currententity->skinnum / 255.0f) * 0.9f;
+	}
+	VectorScale(up, scale, up);
+	VectorScale(right, scale, right);
 
 	if (currententity->flags & RF_TRANSLUCENT)
 	{
@@ -241,7 +278,16 @@ R_DrawSpriteModel(entity_t *currententity, const model_t *currentmodel)
 
 	glVertexPointer( 3, GL_FLOAT, 0, point );
 	glTexCoordPointer( 2, GL_FLOAT, 0, tex );
+	if (currententity->flags & RF_ORIENTED_SPRITE)
+	{
+		cull_enabled = glIsEnabled(GL_CULL_FACE);
+		glDisable(GL_CULL_FACE);
+	}
 	PP_DrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	if (cull_enabled)
+	{
+		glEnable(GL_CULL_FACE);
+	}
 
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
