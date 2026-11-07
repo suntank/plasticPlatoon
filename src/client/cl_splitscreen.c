@@ -4189,7 +4189,7 @@ SS_HandleGameplayKey(int key, qboolean down)
 			{
 				return true;
 			}
-			SS_SendSlotStringCmdNow(slot, "weapnext");
+			SS_SendSlotStringCmdNow(slot, "quickgrenade");
 			return true;
 
 		case K_DPAD_LEFT:

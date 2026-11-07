@@ -635,6 +635,25 @@ CL_InitInput(void)
 	{
 		Key_SetBinding((int)'g', (char *)"quickgrenade");
 	}
+
+	/* Saved configs unbind everything before restoring their old bindings.
+	 * Upgrade the stock controller layout once, after those configs load.
+	 * Archive the version so later user remaps (including unbinds) survive. */
+	if (Cvar_Get("pp_controller_bindings", "0", CVAR_ARCHIVE)->value < 1)
+	{
+		if (!keybindings[K_TRIG_LEFT] || !keybindings[K_TRIG_LEFT][0])
+		{
+			Key_SetBinding(K_TRIG_LEFT, (char *)"+ads");
+		}
+
+		if (!keybindings[K_SHOULDER_RIGHT] || !keybindings[K_SHOULDER_RIGHT][0] ||
+			!strcmp(keybindings[K_SHOULDER_RIGHT], "weapnext"))
+		{
+			Key_SetBinding(K_SHOULDER_RIGHT, (char *)"quickgrenade");
+		}
+
+		Cvar_Set("pp_controller_bindings", "1");
+	}
 }
 
 void

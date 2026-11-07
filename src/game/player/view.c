@@ -1085,15 +1085,6 @@ G_SetClientSound(edict_t *ent)
 		ent->client->pers.helpchanged = 1;
 	}
 
-	/* help beep (no more than three times) */
-	if (ent->client->pers.helpchanged &&
-		(ent->client->pers.helpchanged <= 3) && !(level.framenum & 63))
-	{
-		ent->client->pers.helpchanged++;
-		gi.sound(ent, CHAN_VOICE, gi.soundindex(
-						"misc/pc_up.wav"), 1, ATTN_STATIC, 0);
-	}
-
 	if (ent->client->pers.weapon)
 	{
 		weap = ent->client->pers.weapon->classname;

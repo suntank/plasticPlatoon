@@ -299,6 +299,8 @@ bind CTRL +movedown
 bind SHIFT +speed
 bind MOUSE1 +attack
 bind MOUSE2 +ads
+bind TRIG_LEFT +ads
+bind SHOULDR_RIGHT quickgrenade
 bind MWHEELUP weapprev
 bind MWHEELDOWN weapnext
 bind TAB inven
