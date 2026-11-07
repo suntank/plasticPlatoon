@@ -1,0 +1,17 @@
+[
+  {
+    "name": "west_tower_ladder_climb",
+    "pose": [-595.2, -620, 24, -35, 90],
+    "expect_eye_bounds": {
+      "x": [-603.2, -587.2],
+      "y": [-560, -480],
+      "z": [170, 210]
+    },
+    "after_pose": [
+      {"command": "noclip", "wait": 0.3},
+      {"command": "+forward", "wait": 3.0},
+      {"command": "-forward", "wait": 0.3},
+      {"command": "noclip", "wait": 0.1}
+    ]
+  }
+]

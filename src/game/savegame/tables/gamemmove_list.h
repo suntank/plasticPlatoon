@@ -25,6 +25,18 @@
  * =======================================================================
  */
 
+{"ant_move_stand", &ant_move_stand},
+{"ant_move_walk", &ant_move_walk},
+{"ant_move_run", &ant_move_run},
+{"ant_move_attack", &ant_move_attack},
+{"ant_move_pain", &ant_move_pain},
+{"ant_move_death", &ant_move_death},
+{"spider_move_stand", &spider_move_stand},
+{"spider_move_walk", &spider_move_walk},
+{"spider_move_run", &spider_move_run},
+{"spider_move_attack", &spider_move_attack},
+{"spider_move_pain", &spider_move_pain},
+{"spider_move_death", &spider_move_death},
 {"tank_move_death", &tank_move_death},
 {"plastic_helicopter_move_stand", &plastic_helicopter_move_stand},
 {"plastic_helicopter_move_run", &plastic_helicopter_move_run},

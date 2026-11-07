@@ -968,6 +968,8 @@ GAME_OBJS_ = \
 	src/game/g_turret.o \
 	src/game/g_utils.o \
 	src/game/g_weapon.o \
+	src/game/monster/ant/ant.o \
+	src/game/monster/spider/spider.o \
 	src/game/monster/berserker/berserker.o \
 	src/game/monster/boss2/boss2.o \
 	src/game/monster/boss3/boss3.o \

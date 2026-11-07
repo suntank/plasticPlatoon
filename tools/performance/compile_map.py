@@ -32,10 +32,13 @@ def main():
     p.add_argument('--output-dir', type=Path, help='publish validated BSP here; defaults to basedir/maps')
     p.add_argument('--vis', action='store_true', help='also run full VIS in preview mode')
     p.add_argument('--rad', action='store_true', help='also run VIS and RAD in preview mode')
+    p.add_argument('--rad-subdiv', type=int, help='RAD patch subdivision size (8..1024); omit for compiler default')
     p.add_argument('--allow-missing-textures', action='store_true', help='diagnostic builds only, never published')
     a = p.parse_args()
     if a.threads < 1:
         p.error('--threads must be positive')
+    if a.rad_subdiv is not None and not 8 <= a.rad_subdiv <= 1024:
+        p.error('--rad-subdiv must be an integer between 8 and 1024')
     if a.map and (Path(a.map).name != a.map or a.map in ('.', '..')):
         p.error('--map must be a basename; use --source for a path')
     src = (a.source or a.maps_dir / (a.map.removesuffix('.map') + '.map')).expanduser().resolve()
@@ -58,6 +61,8 @@ def main():
                 'tool': tool, 'tool_sha256': sha(tool), 'basedir': str(basedir),
                 'threads': a.threads, 'diagnostic': a.allow_missing_textures,
                 'stages': [], 'published': False}
+    if a.rad_subdiv is not None:
+        manifest['rad_subdiv'] = a.rad_subdiv
     manifest_path = stage / 'manifest.json'
     try:
         manifest['source_inventory'] = map_inventory(src)
@@ -71,7 +76,10 @@ def main():
             stages.append('rad')
         for name in stages:
             target = staged_src if name == 'bsp' else staged_src.with_suffix('.bsp')
-            cmd = [tool, '-' + name, '-threads', str(a.threads), '-basedir', str(basedir), str(target)]
+            cmd = [tool, '-' + name, '-threads', str(a.threads), '-basedir', str(basedir)]
+            if name == 'rad' and a.rad_subdiv is not None:
+                cmd += ['-subdiv', str(a.rad_subdiv)]
+            cmd.append(str(target))
             logfile = stage / (name + '.log')
             print(f'{name.upper()}: {logfile}', flush=True)
             started = time.monotonic()

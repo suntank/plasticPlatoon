@@ -25,6 +25,22 @@
  * =======================================================================
  */
 
+extern void SP_monster_ant ( edict_t * self ) ;
+extern void ant_stand ( edict_t * self ) ;
+extern void ant_walk ( edict_t * self ) ;
+extern void ant_run ( edict_t * self ) ;
+extern void ant_melee ( edict_t * self ) ;
+extern void ant_pain ( edict_t * self , edict_t * other , float kick , int damage ) ;
+extern void ant_die ( edict_t * self , edict_t * inflictor , edict_t * attacker , int damage , vec3_t point ) ;
+extern void ant_dead ( edict_t * self ) ;
+extern void SP_monster_spider ( edict_t * self ) ;
+extern void spider_stand ( edict_t * self ) ;
+extern void spider_walk ( edict_t * self ) ;
+extern void spider_run ( edict_t * self ) ;
+extern void spider_melee ( edict_t * self ) ;
+extern void spider_pain ( edict_t * self , edict_t * other , float kick , int damage ) ;
+extern void spider_die ( edict_t * self , edict_t * inflictor , edict_t * attacker , int damage , vec3_t point ) ;
+extern void spider_dead ( edict_t * self ) ;
 extern void ReadLevel ( const char * filename ) ;
 extern void WriteLevel ( const char * filename ) ;
 extern void ReadGame ( const char * filename ) ;
@@ -702,6 +718,14 @@ extern void trigger_key_use ( edict_t * self , edict_t * other , edict_t * activ
 extern void SP_trigger_relay ( edict_t * self ) ;
 extern void trigger_relay_use ( edict_t * self , edict_t * other , edict_t * activator ) ;
 extern void SP_trigger_once ( edict_t * ent ) ;
+extern void SP_trigger_platoon_extract ( edict_t * self ) ;
+extern void platoon_extract_think ( edict_t * self ) ;
+extern void platoon_extract_enable ( edict_t * self, edict_t * other, edict_t * activator ) ;
+extern void SP_misc_platoon_dropship ( edict_t * self ) ;
+extern void SP_target_platoon_intermission ( edict_t * self ) ;
+extern void platoon_intermission_use ( edict_t * self, edict_t * other, edict_t * activator ) ;
+extern void platoon_dropship_think ( edict_t * self ) ;
+extern void platoon_dropship_use ( edict_t * self, edict_t * other, edict_t * activator ) ;
 extern void SP_trigger_multiple ( edict_t * ent ) ;
 extern void trigger_enable ( edict_t * self , edict_t * other , edict_t * activator ) ;
 extern void Touch_Multi ( edict_t * self , edict_t * other , cplane_t * plane , csurface_t * surf ) ;

@@ -1,0 +1,38 @@
+[
+  {
+    "name": "pool_armor_before",
+    "pose": [-193, -153.6, 24, 38, 0],
+    "commands": ["listentities items"]
+  },
+  {
+    "name": "pool_dive_and_armor",
+    "pose": [-193, -153.6, 24, 38, 0],
+    "expect_eye_bounds": {
+      "x": [-30, 16],
+      "y": [-162, -145],
+      "z": [-58, -25]
+    },
+    "after_pose": [
+      {"command": "noclip", "wait": 0.3},
+      {"command": "+forward", "wait": 1.7},
+      {"command": "-forward", "wait": 0.2},
+      {"command": "noclip", "wait": 0.2},
+      {"command": "listentities items", "wait": 0.2}
+    ]
+  },
+  {
+    "name": "pool_swim_exit",
+    "pose": [-7.2, -153.4, -65.4, -55, 180],
+    "expect_eye_bounds": {
+      "x": [-500, -210],
+      "y": [-165, -145],
+      "z": [38, 60]
+    },
+    "after_pose": [
+      {"command": "noclip", "wait": 0.3},
+      {"command": "+forward", "wait": 3.0},
+      {"command": "-forward", "wait": 0.3},
+      {"command": "noclip", "wait": 0.2}
+    ]
+  }
+]

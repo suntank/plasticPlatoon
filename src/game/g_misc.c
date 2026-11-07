@@ -2195,6 +2195,146 @@ SP_misc_heli(edict_t *ent)
 }
 
 /*
+ * QUAKED misc_platoon_dropship (0 1 0) (-114 -68 36) (68 68 96) HIDDEN
+ * Friendly, non-solid green helicopter; use once to begin flying from origin
+ * to the first path_corner named by target. Corners use target to continue,
+ * pathtarget for arrival events, and a positive wait to pause. At the last
+ * corner the helicopter parks. If "deathtarget" names a second path_corner,
+ * another use after parking starts that outbound route once. Uses while moving
+ * and any further uses after the outbound route are ignored.
+ * HIDDEN hides it until activated.
+ * speed: units per second (240 default). Uses the existing animated propeller.
+ */
+void
+platoon_dropship_think(edict_t *self)
+{
+	edict_t *corner;
+	vec3_t direction;
+	float distance;
+
+	if (!self || !(corner = self->movetarget) || !corner->inuse)
+	{
+		if (self)
+		{
+			self->nextthink = 0;
+		}
+		return;
+	}
+
+	self->nextthink = level.time + FRAMETIME;
+	if (level.time < self->timestamp)
+	{
+		return;
+	}
+
+	VectorSubtract(corner->s.origin, self->s.origin, direction);
+	distance = VectorNormalize(direction);
+	if (direction[0] || direction[1])
+	{
+		self->s.angles[YAW] = vectoyaw(direction);
+	}
+	self->s.angles[PITCH] = -direction[2] * 12;
+	if (distance > self->speed * FRAMETIME)
+	{
+		VectorMA(self->s.origin, self->speed * FRAMETIME, direction,
+			self->s.origin);
+		gi.linkentity(self);
+		return;
+	}
+
+	VectorCopy(corner->s.origin, self->s.origin);
+	self->s.angles[PITCH] = 0;
+	self->timestamp = level.time + (corner->wait > 0 ? corner->wait : 0);
+	self->movetarget = corner->target ? G_PickTarget(corner->target) : NULL;
+	if (self->movetarget && strcmp(self->movetarget->classname, "path_corner"))
+	{
+		gi.dprintf("misc_platoon_dropship target is not a path_corner\n");
+		self->movetarget = NULL;
+	}
+	if (!self->movetarget)
+	{
+		self->nextthink = 0;
+		/* A parked inbound ship may be used once for its outbound path. */
+		self->count = (self->count == 1) ? 2 : 4;
+	}
+	gi.linkentity(self);
+
+	if (corner->pathtarget)
+	{
+		char *saved_target = corner->target;
+		corner->target = corner->pathtarget;
+		G_UseTargets(corner, self->activator);
+		if (corner->inuse)
+		{
+			corner->target = saved_target;
+		}
+	}
+}
+
+void
+platoon_dropship_use(edict_t *self, edict_t *other /* unused */,
+		edict_t *activator)
+{
+	char *route;
+
+	if (!self || (self->count != 0 && self->count != 2))
+	{
+		return;
+	}
+
+	route = self->count == 0 ? self->target : self->deathtarget;
+	if (!route)
+	{
+		return;
+	}
+	self->movetarget = G_PickTarget(route);
+	if (!self->movetarget || strcmp(self->movetarget->classname, "path_corner"))
+	{
+		gi.dprintf("misc_platoon_dropship needs a valid path_corner target\n");
+		return;
+	}
+
+	self->count = (self->count == 0) ? 1 : 3;
+	self->activator = activator ? activator : self;
+	self->svflags &= ~SVF_NOCLIENT;
+	self->s.sound = self->noise_index;
+	self->think = platoon_dropship_think;
+	self->nextthink = level.time + FRAMETIME;
+	self->timestamp = level.time;
+	gi.linkentity(self);
+}
+
+void
+SP_misc_platoon_dropship(edict_t *self)
+{
+	if (!self)
+	{
+		return;
+	}
+
+	self->movetype = MOVETYPE_NONE;
+	self->solid = SOLID_NOT;
+	self->s.renderfx |= RF_FRAMELERP;
+	self->s.modelindex = gi.modelindex("models/monsters/boss2/tris.md2");
+	self->s.modelindex2 = gi.modelindex("models/monsters/boss2/propeller.md2");
+	self->noise_index = gi.soundindex("bosshovr/bhvengn1.wav");
+	self->speed = self->speed > 0 ? self->speed : 240;
+	self->use = platoon_dropship_use;
+	self->count = 0;
+	VectorSet(self->mins, -114, -68, 36);
+	VectorSet(self->maxs, 68, 68, 96);
+	if (self->spawnflags & 1)
+	{
+		self->svflags |= SVF_NOCLIENT;
+	}
+	else
+	{
+		self->s.sound = self->noise_index;
+	}
+	gi.linkentity(self);
+}
+
+/*
  * QUAKED misc_plane (1 .5 0) (-128 -128 -24) (128 128 40)
  * Static plane prop.
  * Optional key:

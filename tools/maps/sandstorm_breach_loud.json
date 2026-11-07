@@ -1,0 +1,294 @@
+[
+  {
+    "name": "loud_before",
+    "pose": [
+      0,
+      -1120,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "cl_bench_pose 1 0 -881 24 0 90",
+        "wait": 0.3
+      },
+      {
+        "command": "listentities monsters",
+        "wait": 0.2
+      }
+    ]
+  },
+  {
+    "name": "loud_charge_armed",
+    "pose": [
+      0,
+      -1010,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 1.0
+      }
+    ],
+    "expect_log": [
+      "BREACH CHARGE PLANTED"
+    ]
+  },
+  {
+    "name": "loud_detonated",
+    "pose": [
+      0,
+      -1010,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "cl_bench_pose 1 -38.4 -1670.4 24 0 90",
+        "wait": 5.0
+      },
+      {
+        "command": "listentities monsters",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "loud_wall_open",
+    "pose": [
+      0,
+      -881,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.8
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        -820,
+        -520
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  },
+  {
+    "name": "loud_outer_west_open",
+    "pose": [
+      -859.2,
+      586,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.7
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        605,
+        655
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  },
+  {
+    "name": "loud_outer_east_open",
+    "pose": [
+      859.2,
+      586,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.7
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        605,
+        655
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  },
+  {
+    "name": "loud_inner_west_closed",
+    "pose": [
+      -734.4,
+      586,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.7
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        580,
+        595
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  },
+  {
+    "name": "loud_inner_east_closed",
+    "pose": [
+      734.4,
+      586,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.7
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      },
+      {
+        "command": "cl_bench_pose 1 -859.2 750 24 0 270",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        580,
+        595
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  },
+  {
+    "name": "second_wave_other_player_in_open_bay",
+    "pose": [
+      0,
+      268,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "listentities monsters",
+        "wait": 1.2
+      }
+    ],
+    "expect_log": [
+      "COMPOUND ALERT"
+    ]
+  },
+  {
+    "name": "loud_inner_west_open",
+    "pose": [
+      -734.4,
+      586,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.7
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        605,
+        655
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  },
+  {
+    "name": "loud_inner_east_open",
+    "pose": [
+      734.4,
+      586,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.7
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        605,
+        655
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  }
+]

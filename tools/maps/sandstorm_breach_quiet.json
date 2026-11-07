@@ -1,0 +1,258 @@
+[
+  {
+    "name": "quiet_before",
+    "pose": [
+      0,
+      100,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "listentities monsters",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "quiet_alert",
+    "pose": [
+      0,
+      268,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 1.5
+      },
+      {
+        "command": "listentities monsters",
+        "wait": 0.3
+      }
+    ],
+    "expect_log": [
+      "COMPOUND ALERT"
+    ]
+  },
+  {
+    "name": "quiet_outer_west_closed",
+    "pose": [
+      -859.2,
+      586,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.7
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        580,
+        595
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  },
+  {
+    "name": "quiet_outer_east_closed",
+    "pose": [
+      859.2,
+      586,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.7
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        580,
+        595
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  },
+  {
+    "name": "quiet_inner_west_open",
+    "pose": [
+      -734.4,
+      586,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.7
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        605,
+        655
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  },
+  {
+    "name": "quiet_inner_east_open",
+    "pose": [
+      734.4,
+      586,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.7
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        605,
+        655
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  },
+  {
+    "name": "quiet_then_breach_armed",
+    "pose": [
+      0,
+      -1010,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "wait": 1.0
+      }
+    ],
+    "expect_log": [
+      "BREACH CHARGE PLANTED"
+    ]
+  },
+  {
+    "name": "quiet_then_breach_detonated",
+    "pose": [
+      0,
+      -1010,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "wait": 5.0
+      },
+      {
+        "command": "listentities monsters",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "quiet_outer_west_open_after",
+    "pose": [
+      -859.2,
+      586,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.7
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        605,
+        655
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  },
+  {
+    "name": "quiet_outer_east_open_after",
+    "pose": [
+      859.2,
+      586,
+      24,
+      0,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "+forward",
+        "wait": 0.7
+      },
+      {
+        "command": "-forward",
+        "wait": 0.3
+      }
+    ],
+    "expect_eye_bounds": {
+      "y": [
+        605,
+        655
+      ],
+      "z": [
+        35,
+        100
+      ]
+    }
+  }
+]

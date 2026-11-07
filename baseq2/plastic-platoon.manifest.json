@@ -267,6 +267,16 @@
       "sha256": "b9af48f7cca177af27e380a284ec88b48a932a274e23f96f22a22b290d343683"
     },
     {
+      "path": "models/monsters/ant/skin.png",
+      "bytes": 1387,
+      "sha256": "7fbd9182aace5c19c88b8eb3009e13389d4440892311e3868b7aedc9c736fca5"
+    },
+    {
+      "path": "models/monsters/ant/tris.md2",
+      "bytes": 475616,
+      "sha256": "87ae681ca4ffb6f9e8e6be0701dcea96234381dd268cca1abad78180878229c0"
+    },
+    {
       "path": "models/monsters/boss2/propeller.md2",
       "bytes": 18468,
       "sha256": "dd41fa090a6ec3d9cf1dbb83fb4d928bd25a08de5d432243e92cee4569b06cf1"
@@ -352,6 +362,16 @@
       "sha256": "41f39b1fc5cd08c3c1649420d206bc2f1acab1e92ba24f4bd4d565389991c93d"
     },
     {
+      "path": "models/monsters/spider/skin.png",
+      "bytes": 1382,
+      "sha256": "a42279c98e65ba50bb351f27873dc389418f3bb35008038f949fb12a31ba613b"
+    },
+    {
+      "path": "models/monsters/spider/tris.md2",
+      "bytes": 393880,
+      "sha256": "b336b2f925d89f7b44e62181e0b2e8e23aa18787b4c1aa8b0adcf003e6996c0f"
+    },
+    {
       "path": "models/objects/barrels/skin.png",
       "bytes": 28301,
       "sha256": "1b106a9d61dcda486125170532c46242fb35a1192c2685377b27c0fd1da14dd5"
@@ -370,6 +390,21 @@
       "path": "models/objects/debris2/tris.md2",
       "bytes": 992,
       "sha256": "92776626c417c8eef358c713f52cb2362a472db76d38852477d02312e87798d8"
+    },
+    {
+      "path": "models/objects/gibs/ant/chunk.md2",
+      "bytes": 5432,
+      "sha256": "1d3eb34e20330a18dc9aa557bfa29c747bb5879a3d2934d8d5c1164dbdeb0e48"
+    },
+    {
+      "path": "models/objects/gibs/ant/leg.md2",
+      "bytes": 4320,
+      "sha256": "2499990d564c5f82a146b7b9d5b88e31548d2d8e0818d2d9506b7e9d8035dc0d"
+    },
+    {
+      "path": "models/objects/gibs/ant/skin.png",
+      "bytes": 665,
+      "sha256": "310e9d0b9f4efb7a768b7f7d2b8b415e0fb04859c227e9ba35a9134a6ab7ccd0"
     },
     {
       "path": "models/objects/gibs/arm/player.png",
@@ -535,6 +570,21 @@
       "path": "models/objects/gibs/sm_metal/tris.md2",
       "bytes": 10440,
       "sha256": "1c7ee39c89c0814a8525ec16837a33385dec8a70e18a42ddb489581234daa477"
+    },
+    {
+      "path": "models/objects/gibs/spider/chunk.md2",
+      "bytes": 5432,
+      "sha256": "76a2d0ddaa9664f44fbe298e6d0276f505e47c9682ba1fea5c40cb8d75fc0f4a"
+    },
+    {
+      "path": "models/objects/gibs/spider/leg.md2",
+      "bytes": 4320,
+      "sha256": "fd14d5f5c87ea68a4b7f4fc7d69ff8ee325a384ddb4211de2640c7205f46a6ac"
+    },
+    {
+      "path": "models/objects/gibs/spider/skin.png",
+      "bytes": 666,
+      "sha256": "f7bf311bbb6b640292d1a606cf3d63baa87c2901c1747e51e84a08b1d82fada8"
     },
     {
       "path": "models/objects/grenade/skin.png",
@@ -2637,6 +2687,6 @@
       "sha256": "219e0f1ec97fa6b944336f263726564a3eb0a176351f5fd19f805913d24a22ea"
     }
   ],
-  "archive_sha256": "fe4f9ff0e0ecd9be33fad2bba0c0f6d5634d8a34d29a6a4e6402b657d12c2cf5",
-  "archive_bytes": 36648779
+  "archive_sha256": "4c90accc02d4775cdc607f735f5a194f4f21a2a5149f5b9c40b86dfa3e73fd1c",
+  "archive_bytes": 37056871
 }

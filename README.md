@@ -2,7 +2,7 @@
 
 Plastic Platoon is a toy-soldier total conversion built on Yamagi Quake II.
 The source includes the client, game module, custom soldiers and weapons,
-a tank and attack helicopter, sandbox maps and mission/test ranges.
+a tank, attack helicopter, giant ant and spider, sandbox maps and mission/test ranges.
 
 The game uses original Plastic Platoon assets and needs no Quake II PAKs.
 The public source includes editable artwork, explicit source archives and build
@@ -39,6 +39,8 @@ and tilde for the console. Test missions are available there:
 | `exec rocket_test.cfg` | Rocket soldier range |
 | `exec tank_test.cfg` | Heavy tank range |
 | `exec helicopter_test.cfg` | Helicopter range |
+| `exec ant_test.cfg` | Giant ant range |
+| `exec spider_test.cfg` | Giant spider range |
 
 The Bedroom, Sandkeep and Sandwatch missions also have `_coop.cfg` launch
 configs. See each mission's guide under `maps/` for details. Weapons and muzzle

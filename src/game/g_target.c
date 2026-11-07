@@ -642,6 +642,89 @@ SP_target_changelevel(edict_t *ent)
 	ent->svflags = SVF_NOCLIENT;
 }
 
+/*
+ * QUAKED target_platoon_intermission (1 0 0) (-8 -8 -8) (8 8 8)
+ * Start a cinematic intermission at info_player_intermission. "map" must name
+ * a unit transition (for example *pp_sandstorm). "count" is the minimum time
+ * in seconds before a button can exit, clamped to 5..120. An optional "target"
+ * fires after the camera starts; use a delayed relay for an outbound dropship.
+ * The cooperative scoreboard is hidden so all local views can see the scene.
+ * An optional "message" is center-printed once to every connected player.
+ * Normal target_changelevel behavior is unchanged.
+ */
+void
+platoon_intermission_use(edict_t *self, edict_t *other, edict_t *activator)
+{
+	int i, duration;
+	char *message;
+
+	if (!self || !other || level.intermissiontime)
+	{
+		return;
+	}
+
+	/* Match target_changelevel for the required new-unit transition, while
+	 * preserving unrelated server flags. */
+	game.serverflags &= ~SFL_CROSS_TRIGGER_MASK;
+	BeginIntermission(self);
+	if (!level.intermissiontime || level.exitintermission)
+	{
+		return;
+	}
+
+	duration = self->count;
+	if (duration < 5)
+	{
+		duration = 5;
+	}
+	if (duration > 120)
+	{
+		duration = 120;
+	}
+	/* ClientThink normally permits an exit five seconds after this time. */
+	level.intermissiontime = level.time + duration - 5;
+	for (i = 1; i <= game.maxclients; ++i)
+	{
+		edict_t *player = &g_edicts[i];
+		if (!player->inuse || !player->client)
+		{
+			continue;
+		}
+		player->client->showscores = false;
+		player->client->showhelp = false;
+		player->client->showinventory = false;
+		if (player->client->pers.connected && self->message && self->message[0])
+		{
+			gi.centerprintf(player, "%s", self->message);
+		}
+	}
+	/* The shared message has already been delivered to every player. Do not
+	 * let G_UseTargets print it again to just the activator. */
+	message = self->message;
+	self->message = NULL;
+	G_UseTargets(self, activator ? activator : self);
+	if (self->inuse)
+	{
+		self->message = message;
+	}
+}
+
+void
+SP_target_platoon_intermission(edict_t *self)
+{
+	if (!self)
+	{
+		return;
+	}
+	if (!self->map || !strchr(self->map, '*'))
+	{
+		gi.dprintf("target_platoon_intermission requires a unit transition map\n");
+		G_FreeEdict(self);
+		return;
+	}
+	self->use = platoon_intermission_use;
+}
+
 /* ========================================================== */
 
 /*

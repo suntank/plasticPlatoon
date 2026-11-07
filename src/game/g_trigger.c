@@ -284,6 +284,100 @@ SP_trigger_once(edict_t *ent)
 }
 
 /*
+ * QUAKED trigger_platoon_extract (.2 .8 .2) ? x x TRIGGERED
+ * Rectangular extraction volume. Once enabled, fires its targets once when
+ * every living, connected, non-spectating player's origin is inside it.
+ * Dead players do not block extraction, but an empty squad cannot complete.
+ * TRIGGERED starts disabled; using it enables checking and never completes it
+ * directly. This lets radio objectives and encounter counters gate extraction.
+ */
+void
+platoon_extract_think(edict_t *self)
+{
+	edict_t *activator = NULL;
+	int i, axis;
+
+	if (!self || self->count || self->solid != SOLID_TRIGGER)
+	{
+		return;
+	}
+
+	self->nextthink = level.time + FRAMETIME;
+	for (i = 1; i <= game.maxclients; i++)
+	{
+		edict_t *player = &g_edicts[i];
+		if (!player->inuse || !player->client ||
+			!player->client->pers.connected || player->health <= 0 ||
+			player->deadflag != DEAD_NO || player->client->resp.spectator)
+		{
+			continue;
+		}
+
+		for (axis = 0; axis < 3; axis++)
+		{
+			if (player->s.origin[axis] < self->absmin[axis] ||
+				player->s.origin[axis] > self->absmax[axis])
+			{
+				return;
+			}
+		}
+		activator = player;
+	}
+
+	if (!activator)
+	{
+		return;
+	}
+
+	/* Mark complete before using targets: a target may use or remove us. */
+	self->count = 1;
+	self->solid = SOLID_NOT;
+	self->use = NULL;
+	self->think = NULL;
+	self->nextthink = 0;
+	gi.linkentity(self);
+	G_UseTargets(self, activator);
+}
+
+void
+platoon_extract_enable(edict_t *self, edict_t *other /* unused */,
+		edict_t *activator /* unused */)
+{
+	if (!self || self->count)
+	{
+		return;
+	}
+
+	self->solid = SOLID_TRIGGER;
+	self->think = platoon_extract_think;
+	self->nextthink = level.time + FRAMETIME;
+	gi.linkentity(self);
+}
+
+void
+SP_trigger_platoon_extract(edict_t *self)
+{
+	if (!self)
+	{
+		return;
+	}
+
+	InitTrigger(self);
+	self->count = 0;
+	self->use = platoon_extract_enable;
+	if (self->spawnflags & 4)
+	{
+		self->solid = SOLID_NOT;
+	}
+	else
+	{
+		self->think = platoon_extract_think;
+		self->nextthink = level.time + FRAMETIME;
+	}
+	gi.linkentity(self);
+}
+
+/*
  * QUAKED trigger_relay (.5 .5 .5) (-8 -8 -8) (8 8 8)
  * This fixed size trigger cannot be touched,
  * it can only be fired by other events.

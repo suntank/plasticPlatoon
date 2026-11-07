@@ -61,6 +61,7 @@ void SP_func_killbox(edict_t *ent);
 
 void SP_trigger_always(edict_t *ent);
 void SP_trigger_once(edict_t *ent);
+void SP_trigger_platoon_extract(edict_t *ent);
 void SP_trigger_multiple(edict_t *ent);
 void SP_trigger_relay(edict_t *ent);
 void SP_trigger_push(edict_t *ent);
@@ -75,6 +76,7 @@ void SP_target_temp_entity(edict_t *ent);
 void SP_target_speaker(edict_t *ent);
 void SP_target_explosion(edict_t *ent);
 void SP_target_changelevel(edict_t *ent);
+void SP_target_platoon_intermission(edict_t *ent);
 void SP_target_secret(edict_t *ent);
 void SP_target_goal(edict_t *ent);
 void SP_target_splash(edict_t *ent);
@@ -114,6 +116,7 @@ void SP_misc_viper_bomb(edict_t *self);
 void SP_misc_bigviper(edict_t *self);
 void SP_misc_strogg_ship(edict_t *self);
 void SP_misc_teleporter(edict_t *self);
+void SP_misc_platoon_dropship(edict_t *self);
 void SP_misc_teleporter_dest(edict_t *self);
 void SP_misc_blackhole(edict_t *self);
 void SP_misc_eastertank(edict_t *self);
@@ -124,6 +127,8 @@ void SP_misc_heli(edict_t *self);
 void SP_misc_plane(edict_t *self);
 void SP_misc_jeep(edict_t *self);
 
+void SP_monster_ant(edict_t *self);
+void SP_monster_spider(edict_t *self);
 void SP_monster_berserk(edict_t *self);
 void SP_monster_gladiator(edict_t *self);
 void SP_monster_gunner(edict_t *self);
@@ -205,6 +210,7 @@ static spawn_t spawns[] = {
 
 	{"trigger_always", SP_trigger_always},
 	{"trigger_once", SP_trigger_once},
+	{"trigger_platoon_extract", SP_trigger_platoon_extract},
 	{"trigger_multiple", SP_trigger_multiple},
 	{"trigger_relay", SP_trigger_relay},
 	{"trigger_push", SP_trigger_push},
@@ -219,6 +225,7 @@ static spawn_t spawns[] = {
 	{"target_speaker", SP_target_speaker},
 	{"target_explosion", SP_target_explosion},
 	{"target_changelevel", SP_target_changelevel},
+	{"target_platoon_intermission", SP_target_platoon_intermission},
 	{"target_secret", SP_target_secret},
 	{"target_goal", SP_target_goal},
 	{"target_splash", SP_target_splash},
@@ -259,6 +266,7 @@ static spawn_t spawns[] = {
 	{"misc_bigviper", SP_misc_bigviper},
 	{"misc_strogg_ship", SP_misc_strogg_ship},
 	{"misc_teleporter", SP_misc_teleporter},
+	{"misc_platoon_dropship", SP_misc_platoon_dropship},
 	{"misc_teleporter_dest", SP_misc_teleporter_dest},
 	{"misc_blackhole", SP_misc_blackhole},
 	{"misc_eastertank", SP_misc_eastertank},
@@ -269,6 +277,8 @@ static spawn_t spawns[] = {
 	{"misc_plane", SP_misc_plane},
 	{"misc_jeep", SP_misc_jeep},
 
+	{"monster_ant", SP_monster_ant},
+	{"monster_spider", SP_monster_spider},
 	{"monster_berserk", SP_monster_berserk},
 	{"monster_gladiator", SP_monster_gladiator},
 	{"monster_gunner", SP_platoon_legacy_heavy},

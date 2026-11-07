@@ -26,6 +26,18 @@
  * =======================================================================
  */
 
+extern mmove_t ant_move_stand ;
+extern mmove_t ant_move_walk ;
+extern mmove_t ant_move_run ;
+extern mmove_t ant_move_attack ;
+extern mmove_t ant_move_pain ;
+extern mmove_t ant_move_death ;
+extern mmove_t spider_move_stand ;
+extern mmove_t spider_move_walk ;
+extern mmove_t spider_move_run ;
+extern mmove_t spider_move_attack ;
+extern mmove_t spider_move_pain ;
+extern mmove_t spider_move_death ;
 extern mmove_t tank_move_death ;
 extern mmove_t plastic_helicopter_move_stand ;
 extern mmove_t plastic_helicopter_move_run ;
