@@ -26,24 +26,40 @@ can still supply its original stereo version for this shared effect. Heavy
 and rocket firing already used player recordings; their dedicated NPC copies
 are now packaged with the project. Enemy timing and sound events are unchanged.
 
-## Sounds still needed
+## Supplied ElevenLabs replacements
 
-Existing runtime sounds are retained where a suitable custom recording is
-missing. The near-silent player placeholders are not used as replacements.
+On 2026-11-07 the owner supplied six replacement clips and authorized their
+integration. Their unchanged sources are retained in
+`sources/elevenlabs-enemy-sounds/`; exact source/output hashes, roles and formats
+are in [`enemy-sounds-manifest.json`](enemy-sounds-manifest.json).
 
-| Event | Current sound / replacement slot | Missing content |
+| Supplied clip | Runtime path | Event |
 | --- | --- | --- |
-| Idle chatter | `soldier/solidle1.wav` | No matching player recording. |
-| Sight alert | `soldier/solsght1.wav` | No matching player recording. |
-| Alternate alert/search | `soldier/solsrch1.wav` | No matching player recording. |
-| Weapon cock / shotgun pump | `infantry/infatck3.wav` | Player `weapons/shotgr1b.wav` is only a near-silent 55 ms placeholder. |
-| Rocket flight loop | `weapons/rockfly.wav` | No custom player replacement. |
-| Rocket reload | `weapons/rocklr1b.wav` | Near-silent 55 ms player placeholder; the NPC does not currently play a reload event. |
+| `all_quiet.wav` | `soldier/solidle1.wav` | Idle chatter: “All quiet.” |
+| `enemy_spotted.wav` | `soldier/solsght1.wav` | Sight alert: “Enemy spotted!” |
+| `contact.wav` | `soldier/solsrch1.wav` | Alternate **sight** alert, despite the legacy search filename. |
+| `shotgun_cock.wav` | `infantry/infatck3.wav` | Existing weapon-cocking / shotgun-pump callbacks. |
+| `rocket_fly.wav` | `weapons/rockfly.wav` | Shared rocket flight loop. |
+| `rocket_reload.wav` | `soldier/rocket_reload.wav` | Rocket soldier reload after recovery. |
 
-For the first five rows, add a mono PCM WAV under `baseq2/sound/` at the current
-sound path, then rebuild the asset pack. The rocket reload would also need a
-sound event during the existing recovery animation. No new dialogue or effects
-were generated: ElevenLabs was checked but required account sign-in.
+All six runtime files are mono PCM16 at 48 kHz. Conversion preserves source
+frame counts and levels, averaging the stereo mechanical effects and retaining
+the voice samples. The five replaced procedural slots have been removed from
+`build_support_sounds.py`, so asset rebuilding will not restore placeholders.
+The existing source player recordings and their 28-file conversion are unchanged.
+
+The rocket soldier plays the reload once at the end of its recovery animation,
+after a successful launch, during the existing 2.5-second cooldown. Cancelled
+windups and dead soldiers do not play it; repeated recovery calls and save/load
+do not duplicate it. No fire rate, damage, movement, animation duration or
+cooldown changes were made. Its dedicated NPC path avoids the player reload
+placeholder. The other five effects retain their existing shared runtime paths;
+a higher-priority custom sound pack can still override those paths.
+
+These are the supplied clips, not regenerated or voice-matched takes. Technical
+checks do not replace a listening pass against the rest of the game. Integration
+is local; no publication or asset-license change was made. Provider rights and
+redistribution licensing have not been independently verified.
 
 ## Rebuild and verify
 
@@ -54,6 +70,11 @@ The source/output hashes, exact mappings and missing events are recorded in
 # Re-import only when changing the source player recordings:
 python3 tools/assets/import_soldier_sounds.py
 python3 tools/assets/import_soldier_sounds.py --verify
+# Re-import only when changing the six supplied sources:
+python3 tools/assets/import_enemy_sounds.py
+python3 tools/assets/import_enemy_sounds.py --verify
+python3 tools/assets/build_support_sounds.py --verify
+python3 tests/assets/test_enemy_sounds.py
 python3 tools/assets/build_overlay.py --output baseq2/plastic-platoon.pk3
 make -j4 client game assets
 python3 tools/assets/build_overlay.py --verify --output baseq2/plastic-platoon.pk3
@@ -68,7 +89,7 @@ Restart the game after rebuilding to load the changed client, game module and
 asset archive. `exec heavy_test.cfg` and `exec rocket_test.cfg` provide the
 existing heavy/rocket test ranges; ordinary maps provide the other soldiers.
 
-Validation passed for all five variants' sound registration, pain/death/gib
+The prior player-recording integration was validated for all five variants' sound registration, pain/death/gib
 callbacks and optional footsteps; every legacy firing animation's sound
 selection; and existing heavy/rocket gameplay and save/load checks. Ten asset
 regressions and the source conversion/archive verification passed. Release
@@ -76,3 +97,9 @@ and debug builds contain identical updated asset packs. An isolated 240-frame
 GL1 run with the original user `sound.zip` present loaded all 27 NPC aliases
 as mono and exited cleanly. That run used SDL's dummy audio output to exercise
 decoding and mixing without playing sound aloud.
+
+### 2026-11-07 integration verification
+
+See the delivery README for the checks actually run for this change and any
+environment limitations. In particular, the older GL1 validation above predates
+these six replacements and is not a listening or rendered test of this change.

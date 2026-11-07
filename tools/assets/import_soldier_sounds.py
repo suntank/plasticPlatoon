@@ -50,21 +50,9 @@ MAPPINGS = {
         'gib_death': 'soldier/player/death4.wav'},
 }
 
-MISSING = [
-    {'event': 'idle chatter', 'runtime_sound': 'soldier/solidle1.wav',
-     'reason': 'No custom player equivalent; existing runtime sound retained.'},
-    {'event': 'sight alert', 'runtime_sound': 'soldier/solsght1.wav',
-     'reason': 'No custom player equivalent; existing runtime sound retained.'},
-    {'event': 'search callout', 'runtime_sound': 'soldier/solsrch1.wav',
-     'reason': 'No custom player equivalent; existing runtime sound retained.'},
-    {'event': 'weapon cock / shotgun pump', 'runtime_sound': 'infantry/infatck3.wav',
-     'candidate': 'weapons/shotgr1b.wav',
-     'reason': 'Player candidate is a near-silent 55 ms placeholder; existing runtime sound retained.'},
-    {'event': 'rocket flight loop', 'runtime_sound': 'weapons/rockfly.wav',
-     'reason': 'No custom player equivalent; existing runtime sound retained.'},
-    {'event': 'rocket reload', 'candidate': 'weapons/rocklr1b.wav',
-     'reason': 'Player candidate is a near-silent 55 ms placeholder. The NPC currently has no reload sound event.'},
-]
+# The six former missing slots are supplied and verified separately by
+# import_enemy_sounds.py and enemy-sounds-manifest.json.
+MISSING = []
 
 
 def mono_wav(data):

@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "provider": "ElevenLabs",
+  "source": "Six files supplied by the project owner on 2026-11-07.",
+  "conversion": "Stereo PCM16 averaged to mono PCM16; original sample rate, frame count and level preserved.",
+  "rights_note": "User authorized integration. Provider rights and redistribution licensing were not independently verified; no asset license change is made.",
+  "files": [
+    {
+      "source_path": "tools/assets/sources/elevenlabs-enemy-sounds/all_quiet.wav",
+      "path": "sound/soldier/solidle1.wav",
+      "role": "Soldier idle: All quiet.",
+      "loop": false,
+      "source_sha256": "5fdf9de898733d6bda2f016ea9fbff1554bf03378ac659cd5dba093905c397dd",
+      "sha256": "9e56592288e933f68fdec99ae4e8b56f4652c15d118be118afb6c7c35655f516",
+      "bytes": 142988,
+      "source_channels": 1,
+      "channels": 1,
+      "sample_width": 2,
+      "sample_rate": 48000,
+      "frames": 71472
+    },
+    {
+      "source_path": "tools/assets/sources/elevenlabs-enemy-sounds/contact.wav",
+      "path": "sound/soldier/solsrch1.wav",
+      "role": "Alternate sight alert: Contact!",
+      "loop": false,
+      "source_sha256": "443f78159dd0e23ef419f26e668121ebe737a7928385be94fc26d47bfed28077",
+      "sha256": "5188e7d451d52e7efb2ac07ecbcf813bd1375e1e04d9abc9fd2dcc319eb43928",
+      "bytes": 158034,
+      "source_channels": 1,
+      "channels": 1,
+      "sample_width": 2,
+      "sample_rate": 48000,
+      "frames": 78995
+    },
+    {
+      "source_path": "tools/assets/sources/elevenlabs-enemy-sounds/enemy_spotted.wav",
+      "path": "sound/soldier/solsght1.wav",
+      "role": "Sight alert: Enemy spotted!",
+      "loop": false,
+      "source_sha256": "b72a5627a796b8fe3af6d5b43fe2603da4d3a46d0afda5ae72dc7a8f3841c357",
+      "sha256": "f1e69ea1ab81df7ee7a923f6c06218971d419833412aef791d7ed9cf0d54f4e2",
+      "bytes": 117910,
+      "source_channels": 1,
+      "channels": 1,
+      "sample_width": 2,
+      "sample_rate": 48000,
+      "frames": 58933
+    },
+    {
+      "source_path": "tools/assets/sources/elevenlabs-enemy-sounds/rocket_fly.wav",
+      "path": "sound/weapons/rockfly.wav",
+      "role": "Shared rocket flight loop",
+      "loop": true,
+      "source_sha256": "e405647bcd3f31844c9ffd22675c714423e29e0988c3a7009913ea58d8f99fc7",
+      "sha256": "65e8b90b03bb3ccd27ba15de8a9073702f837a131768237817b61754189079a6",
+      "bytes": 230444,
+      "source_channels": 2,
+      "channels": 1,
+      "sample_width": 2,
+      "sample_rate": 48000,
+      "frames": 115200
+    },
+    {
+      "source_path": "tools/assets/sources/elevenlabs-enemy-sounds/rocket_reload.wav",
+      "path": "sound/soldier/rocket_reload.wav",
+      "role": "Rocket soldier recovery reload",
+      "loop": false,
+      "source_sha256": "41193d41f8ea7b5dac291abfaf6ef8ff9c71e3f3aa03ed0947fa6ebbd87fb644",
+      "sha256": "e229b8d2d26d9b8916d9e38c7dbc3cd446cbfd878fbe6c72e1fabbb729324013",
+      "bytes": 153644,
+      "source_channels": 2,
+      "channels": 1,
+      "sample_width": 2,
+      "sample_rate": 48000,
+      "frames": 76800
+    },
+    {
+      "source_path": "tools/assets/sources/elevenlabs-enemy-sounds/shotgun_cock.wav",
+      "path": "sound/infantry/infatck3.wav",
+      "role": "Existing weapon-cock / shotgun-pump event",
+      "loop": false,
+      "source_sha256": "d847c2f0f2f3e92316854b428e20e3a68140486ec76dcfa73d1e1bfb530b0cb9",
+      "sha256": "c56803cd06cf47fc33332f21ee9441a412a1c517076fcbd2b87425a6e16831e6",
+      "bytes": 77468,
+      "source_channels": 2,
+      "channels": 1,
+      "sample_width": 2,
+      "sample_rate": 48000,
+      "frames": 38712
+    }
+  ]
+}

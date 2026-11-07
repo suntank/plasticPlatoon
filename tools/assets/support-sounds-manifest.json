@@ -99,16 +99,6 @@
       "license": "GPL-2.0-or-later"
     },
     {
-      "path": "sound/infantry/infatck3.wav",
-      "role": "Toy weapon cock / shotgun pump",
-      "synthesis": "impact",
-      "duration_seconds": 0.18,
-      "loop": false,
-      "bytes": 7982,
-      "sha256": "80f6b3d0422f7a1c6e08a9995bf4f301e27159cea1baf1963d74da1e77dc458b",
-      "license": "GPL-2.0-or-later"
-    },
-    {
       "path": "sound/infantry/inflies1.wav",
       "role": "Quiet synthetic insect / mechanical idle loop",
       "synthesis": "buzz",
@@ -379,36 +369,6 @@
       "license": "GPL-2.0-or-later"
     },
     {
-      "path": "sound/soldier/solidle1.wav",
-      "role": "Toy soldier idle radio chirps; no speech",
-      "synthesis": "chatter",
-      "duration_seconds": 0.36,
-      "loop": false,
-      "bytes": 15920,
-      "sha256": "3132cbd84776a3d93ecbbb8e67ae1cf3d8ed437daffbed5d362e790f868dbb14",
-      "license": "GPL-2.0-or-later"
-    },
-    {
-      "path": "sound/soldier/solsght1.wav",
-      "role": "Toy soldier sight alert double beep",
-      "synthesis": "alert",
-      "duration_seconds": 0.28,
-      "loop": false,
-      "bytes": 12392,
-      "sha256": "45da3042ff71b0ff50d5f3602d80d71630a08d176f609e099c8f9295cee1fece",
-      "license": "GPL-2.0-or-later"
-    },
-    {
-      "path": "sound/soldier/solsrch1.wav",
-      "role": "Toy soldier search radio chirps; no speech",
-      "synthesis": "chatter",
-      "duration_seconds": 0.42,
-      "loop": false,
-      "bytes": 18566,
-      "sha256": "73d605aac7d9aea20735a85f2dbe4316d9b5c9958e1fc15d9a49b64e21d37ac1",
-      "license": "GPL-2.0-or-later"
-    },
-    {
       "path": "sound/switches/butn2.wav",
       "role": "Mission switch press click",
       "synthesis": "impact_tone",
@@ -636,16 +596,6 @@
       "loop": false,
       "bytes": 7542,
       "sha256": "8ee3e036dcfc1ec972b8169f1aabcda05183ecbc3d681523588f65fa42ee5af5",
-      "license": "GPL-2.0-or-later"
-    },
-    {
-      "path": "sound/weapons/rockfly.wav",
-      "role": "Toy rocket motor flight loop",
-      "synthesis": "rocket",
-      "duration_seconds": 1.0,
-      "loop": true,
-      "bytes": 44144,
-      "sha256": "ec079fc45205fc76c4241987ec5917e076bf9c77774437322b8063ebe77a00f5",
       "license": "GPL-2.0-or-later"
     },
     {
