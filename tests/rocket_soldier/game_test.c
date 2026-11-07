@@ -18,6 +18,7 @@ static int blocked_sight, blocked_muzzle, blocked_ceiling, ceiling_checks;
 static int linked, last_shot_frame;
 static float last_shot_time;
 static float minimum_shot_interval;
+static int reloads, reload_precached;
 
 static int model_index(char *name)
 {
@@ -26,12 +27,26 @@ static int model_index(char *name)
     return 101;
 }
 
-static int sound_index(char *name) { (void)name; return 1; }
+static int sound_index(char *name)
+{
+    if (!strcmp(name, "soldier/rocket_reload.wav"))
+    {
+        reload_precached++;
+        return 2;
+    }
+    return 1;
+}
 static void sound_effect(edict_t *ent, int channel, int index,
         float volume, float attenuation, float offset)
 {
-    (void)ent; (void)channel; (void)index;
-    (void)volume; (void)attenuation; (void)offset;
+    if (index == 2)
+    {
+        assert(!strcmp(ent->classname, "monster_soldier_rocket"));
+        assert(ent->health > 0 && ent->deadflag == DEAD_NO);
+        assert(channel == CHAN_WEAPON && volume == 1);
+        assert(attenuation == ATTN_NORM && offset == 0);
+        reloads++;
+    }
 }
 
 static void link_entity(edict_t *ent)
@@ -122,6 +137,7 @@ static edict_t *new_heavy(void)
     memset(&level, 0, sizeof(level));
     memset(&st, 0, sizeof(st));
     shots = message_bytes = blocked_sight = blocked_muzzle = blocked_ceiling = 0;
+    reloads = reload_precached = 0;
     ceiling_checks = linked = 0;
     last_shot_time = 0;
     minimum_shot_interval = 1000;
@@ -137,6 +153,7 @@ static edict_t *new_heavy(void)
     heavy->classname = "monster_soldier_rocket";
     VectorSet(heavy->s.origin, 0, 0, 24);
     SP_monster_soldier_rocket(heavy);
+    assert(reload_precached == 1);
     heavy->enemy = heavy->goalentity = enemy;
     heavy->groundentity = &g_edicts[0];
     return heavy;
@@ -161,6 +178,7 @@ static void begin_firing(edict_t *heavy)
     begin_attack(heavy);
     for (i = 0; i < 12 && !shots; i++) tick(heavy);
     assert(shots == 1);
+    assert(reloads == 0);
     assert(heavy->monsterinfo.aiflags & AI_DUCKED);
     assert(heavy->maxs[2] == 0 && heavy->viewheight == 0);
     assert(last_shot_frame == FRAME_attak303);
@@ -200,6 +218,7 @@ static void test_burst_and_recovery(void)
     for (i = 0; i < 50 && heavy->monsterinfo.currentmove == attack; i++) tick(heavy);
     assert(heavy->monsterinfo.currentmove != attack);
     assert(shots == 1);
+    assert(reloads == 1);
     assert(last_shot_time >= 10.7f && last_shot_time <= 10.9f);
     assert(heavy->monsterinfo.attack_finished >= level.time + 2.49f);
     assert(g_edicts[3].inuse && !strcmp(g_edicts[3].classname, "rocket"));
@@ -217,6 +236,7 @@ static void test_burst_and_recovery(void)
     assert(!heavy->monsterinfo.checkattack(heavy));
     soldier_heavy_raise(heavy);
     soldier_heavy_recover(heavy);
+    assert(reloads == 1); /* Repeated recovery cannot replay the clip. */
     assert(heavy->maxs[2] == 32 && heavy->viewheight == 25);
     /* Reloading blocks a new deployment; a later deployment gets one rocket. */
     attack = heavy->monsterinfo.currentmove;
@@ -310,6 +330,7 @@ static void test_ceiling_and_interruptions(void)
     for (i = 0; i < 8; i++) tick(heavy);
     assert(heavy->maxs[2] == 0);
     assert(shots == before);
+    assert(reloads == 0); /* No repeat while the recovery hull is blocked. */
     blocked_ceiling = 0;
     soldier_heavy_raise(heavy);
     assert(!(heavy->monsterinfo.aiflags & AI_DUCKED));
@@ -344,6 +365,41 @@ static void test_ceiling_and_interruptions(void)
     assert(shots == before);
 }
 
+static void test_reload_guards(void)
+{
+    edict_t *heavy = new_heavy();
+    mmove_t *attack;
+    int i;
+    begin_attack(heavy);
+    tick(heavy); tick(heavy); tick(heavy);
+    attack = heavy->monsterinfo.currentmove;
+    heavy->pain(heavy, heavy->enemy, 1, 20); /* Cancel before launch. */
+    heavy->monsterinfo.aiflags |= AI_STAND_GROUND;
+    for (i = 0; i < 20 && heavy->monsterinfo.currentmove == attack; i++) tick(heavy);
+    assert(shots == 0 && reloads == 0);
+
+    heavy = new_heavy();
+    begin_firing(heavy);
+    attack = heavy->monsterinfo.currentmove;
+    heavy->pain(heavy, heavy->enemy, 1, 20); /* Fired: still reload on recovery. */
+    heavy->monsterinfo.aiflags |= AI_STAND_GROUND;
+    for (i = 0; i < 20 && heavy->monsterinfo.currentmove == attack; i++) tick(heavy);
+    assert(shots == 1 && reloads == 1);
+
+    heavy = new_heavy();
+    begin_firing(heavy);
+    heavy->health = 0;
+    heavy->deadflag = DEAD_DEAD;
+    soldier_heavy_recover(heavy);
+    assert(reloads == 0);
+
+    heavy = new_heavy();
+    begin_firing(heavy);
+    heavy->classname = "monster_soldier_heavy";
+    soldier_heavy_recover(heavy);
+    assert(reloads == 0); /* Shared M60 recovery never plays a rocket reload. */
+}
+
 static void save_and_restore(const char *filename, edict_t *heavy)
 {
     mmove_t *move = heavy->monsterinfo.currentmove;
@@ -364,6 +420,7 @@ static void save_and_restore(const char *filename, edict_t *heavy)
 static void test_savegame(const char *filename)
 {
     edict_t *heavy = new_heavy();
+    mmove_t *attack;
     int i;
     save_and_restore(filename, heavy);
     heavy->monsterinfo.walk(heavy);
@@ -380,7 +437,12 @@ static void test_savegame(const char *filename)
     soldier_heavy_fire(heavy);
     assert(shots == 1);
     heavy->monsterinfo.aiflags |= AI_STAND_GROUND;
-    for (i = 0; i < 10 && (heavy->monsterinfo.aiflags & AI_DUCKED); i++) tick(heavy);
+    attack = heavy->monsterinfo.currentmove;
+    for (i = 0; i < 15 && heavy->monsterinfo.currentmove == attack; i++) tick(heavy);
+    assert(reloads == 1); /* Saved launch still reloads exactly once. */
+    save_and_restore(filename, heavy);
+    soldier_heavy_recover(heavy);
+    assert(reloads == 1); /* A post-reload save does not replay it. */
     heavy->health = 0;
     heavy->die(heavy, heavy->enemy, heavy->enemy, 20, heavy->s.origin);
     save_and_restore(filename, heavy);
@@ -423,7 +485,8 @@ int main(int argc, char **argv)
     test_fire_guards();
     test_attack_selection();
     test_ceiling_and_interruptions();
+    test_reload_guards();
     test_savegame(argv[1]);
-    puts("rocket soldier spawn, single projectile, windup/fire guards, recovery, death and save/load passed");
+    puts("rocket soldier spawn, projectile, fire guards, reload/interruptions, death and save/load passed");
     return 0;
 }

@@ -112,6 +112,11 @@
       "sha256": "c8a4da356e722d55cb06502bfc72d80a4d4309038241b5265b6ac239130fae8a"
     },
     {
+      "path": "models/items/adrenal/tris.md2",
+      "bytes": 43104,
+      "sha256": "36f1f3dd667698b067216bbfc25237145ff68b16847a67731ffadc09b44047ed"
+    },
+    {
       "path": "models/items/ammo/bullets/medium/skin.png",
       "bytes": 51486,
       "sha256": "0ab76a6128213c6c170976829bff39849971996c4578df94b7e429c51d481c56"
@@ -1633,8 +1638,8 @@
     },
     {
       "path": "sound/infantry/infatck3.wav",
-      "bytes": 7982,
-      "sha256": "80f6b3d0422f7a1c6e08a9995bf4f301e27159cea1baf1963d74da1e77dc458b"
+      "bytes": 77468,
+      "sha256": "c56803cd06cf47fc33332f21ee9441a412a1c517076fcbd2b87425a6e16831e6"
     },
     {
       "path": "sound/infantry/inflies1.wav",
@@ -2097,19 +2102,24 @@
       "sha256": "2f80158b2661e94efaebbea04534f961bc09e205e2a8a4ef7d73a94d85940e70"
     },
     {
+      "path": "sound/soldier/rocket_reload.wav",
+      "bytes": 153644,
+      "sha256": "e229b8d2d26d9b8916d9e38c7dbc3cd446cbfd878fbe6c72e1fabbb729324013"
+    },
+    {
       "path": "sound/soldier/solidle1.wav",
-      "bytes": 15920,
-      "sha256": "3132cbd84776a3d93ecbbb8e67ae1cf3d8ed437daffbed5d362e790f868dbb14"
+      "bytes": 142988,
+      "sha256": "9e56592288e933f68fdec99ae4e8b56f4652c15d118be118afb6c7c35655f516"
     },
     {
       "path": "sound/soldier/solsght1.wav",
-      "bytes": 12392,
-      "sha256": "45da3042ff71b0ff50d5f3602d80d71630a08d176f609e099c8f9295cee1fece"
+      "bytes": 117910,
+      "sha256": "f1e69ea1ab81df7ee7a923f6c06218971d419833412aef791d7ed9cf0d54f4e2"
     },
     {
       "path": "sound/soldier/solsrch1.wav",
-      "bytes": 18566,
-      "sha256": "73d605aac7d9aea20735a85f2dbe4316d9b5c9958e1fc15d9a49b64e21d37ac1"
+      "bytes": 158034,
+      "sha256": "5188e7d451d52e7efb2ac07ecbcf813bd1375e1e04d9abc9fd2dcc319eb43928"
     },
     {
       "path": "sound/switches/butn2.wav",
@@ -2383,8 +2393,8 @@
     },
     {
       "path": "sound/weapons/rockfly.wav",
-      "bytes": 44144,
-      "sha256": "ec079fc45205fc76c4241987ec5917e076bf9c77774437322b8063ebe77a00f5"
+      "bytes": 230444,
+      "sha256": "65e8b90b03bb3ccd27ba15de8a9073702f837a131768237817b61754189079a6"
     },
     {
       "path": "sound/weapons/rocklf1a.wav",
@@ -2430,6 +2440,11 @@
       "path": "sound/weapons/xpld_wat.wav",
       "bytes": 384162,
       "sha256": "c68257197b022c5465cd81b6bd263b7418d8de5d5a11a8329f861d7cd636d49c"
+    },
+    {
+      "path": "sound/world/explod1.wav",
+      "bytes": 384162,
+      "sha256": "8b9d4d0cb1ec912f8349a754d2135f394e9c27df1a5dd422851ac2c81e1f397a"
     },
     {
       "path": "sound/world/klaxon1.wav",
@@ -2627,9 +2642,19 @@
       "sha256": "4ed8a8752e566318f62cb7437ed86783ec792115fe3b30430cf32616b277c453"
     },
     {
+      "path": "textures/sandbox/abc_block_a.wal",
+      "bytes": 87140,
+      "sha256": "525a27fa00eb13fe6df772ebd9a9be09de21ee9f26d18b7f4cc6d81a2446219e"
+    },
+    {
       "path": "textures/sandbox/abc_block_b.png",
       "bytes": 126273,
       "sha256": "f84292c7436d55756ca32af77c1880f2910c54f997725272e9cb233f4ec7c25b"
+    },
+    {
+      "path": "textures/sandbox/abc_block_b.wal",
+      "bytes": 87140,
+      "sha256": "f1cc99cf72646fa808a64c696cb5f8994bb4a004a0f5a5c86d8116b72923b4a7"
     },
     {
       "path": "textures/sandbox/abc_block_c.png",
@@ -2637,9 +2662,19 @@
       "sha256": "28c401a6fe0cfd5d68afbe6ca03a9c230acbba58eb803462b756d566ca533808"
     },
     {
+      "path": "textures/sandbox/abc_block_c.wal",
+      "bytes": 87140,
+      "sha256": "28a6657fb2bbd06ccc9b9a98478bacc032818ae75572b5d11ec40644c6085229"
+    },
+    {
       "path": "textures/sandbox/abc_block_d.png",
       "bytes": 116890,
       "sha256": "b0d8d676fa2c2805de43733224233f8184b70d9d3ec97ca45c5a1569fc71b524"
+    },
+    {
+      "path": "textures/sandbox/abc_block_d.wal",
+      "bytes": 87140,
+      "sha256": "0c3cd8a9da28588453f84e273760bcb2793843acd718f8d402db5875f85a3e4f"
     },
     {
       "path": "textures/sandbox/abc_block_e.png",
@@ -2647,9 +2682,19 @@
       "sha256": "56822d3aea727c719e6010c6cb6465f22df6ba88b40105ce17e070b38e54e00a"
     },
     {
+      "path": "textures/sandbox/abc_block_e.wal",
+      "bytes": 87140,
+      "sha256": "85cec3905c202ef76febf0dcbef14cca599e0dfbb50a367973980f0f3224adca"
+    },
+    {
       "path": "textures/sandbox/abc_block_f.png",
       "bytes": 114222,
       "sha256": "6f49ca33abd1b6b91dd6665de57fc420243a9b0e7d598154f4974fc48fad7176"
+    },
+    {
+      "path": "textures/sandbox/abc_block_f.wal",
+      "bytes": 87140,
+      "sha256": "b2daa35c13fccace937256a17763a52bad39be68e65bc67200ed13a6097fceb2"
     },
     {
       "path": "textures/sandbox/bluesky1.png",
@@ -2667,14 +2712,29 @@
       "sha256": "7a7024ce43f63e371849c0cff563e6e0cf9b16d01ea4c27e9072d09d54b65ff1"
     },
     {
+      "path": "textures/sandbox/sand1.wal",
+      "bytes": 87140,
+      "sha256": "f4af687b235f160555deb29b63033b2265bcf32c51cee4427a850bccd954327c"
+    },
+    {
       "path": "textures/sandbox/water1.png",
       "bytes": 538517,
       "sha256": "f08710e30ec3ab2f3c141e6e4c270830a24ac76b3cf857bf3dab6956087b1c8a"
     },
     {
+      "path": "textures/sandbox/water1.wal",
+      "bytes": 348260,
+      "sha256": "9e76f81866c4b786c0e30191889ff8db1117546f0e612d5e213bd2b95e0dd5df"
+    },
+    {
       "path": "textures/sandbox/wood1.tga",
       "bytes": 778494,
       "sha256": "d675b6f1fb26b208c167dbd19f8719791721765613a974ae6b343ef8afdea03f"
+    },
+    {
+      "path": "textures/sandbox/wood1.wal",
+      "bytes": 348260,
+      "sha256": "25b131bc6f1cfa890c7ee7716e6cd1ae7d3abc15a53cef64460b9cd1eda024de"
     },
     {
       "path": "textures/sandbox/wood2.png",
@@ -2687,6 +2747,6 @@
       "sha256": "219e0f1ec97fa6b944336f263726564a3eb0a176351f5fd19f805913d24a22ea"
     }
   ],
-  "archive_sha256": "4c90accc02d4775cdc607f735f5a194f4f21a2a5149f5b9c40b86dfa3e73fd1c",
-  "archive_bytes": 37056871
+  "archive_sha256": "dc580e0f96a3db986f5a2b60d17613896d4ba0000cb9cbe3b17f2044a0808d13",
+  "archive_bytes": 38210165
 }

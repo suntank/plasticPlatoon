@@ -2092,6 +2092,17 @@ soldier_heavy_run(edict_t *self)
 void
 soldier_heavy_recover(edict_t *self)
 {
+	/* Reload only after a launched rocket, once the recovery animation ends.
+	 * pausetime is zeroed by the successful launch and saved with the monster.
+	 * Consume that marker so repeated recovery calls cannot replay the effect. */
+	if (soldier_is_rocket(self) && self->health > 0 && self->deadflag == DEAD_NO &&
+		self->monsterinfo.currentmove == &soldier_heavy_move_attack &&
+		self->monsterinfo.pausetime == 0)
+	{
+		gi.sound(self, CHAN_WEAPON, gi.soundindex("soldier/rocket_reload.wav"),
+			1, ATTN_NORM, 0);
+		self->monsterinfo.pausetime = -1;
+	}
 	self->monsterinfo.aiflags &= ~AI_HOLD_FRAME;
 	self->monsterinfo.attack_finished = level.time + (soldier_is_rocket(self) ? 2.5f : 1.0f);
 	soldier_heavy_run(self);
@@ -2262,6 +2273,7 @@ SP_monster_soldier_rocket(edict_t *self)
 	}
 	gi.modelindex("models/objects/rocket/tris.md2");
 	gi.soundindex("weapons/rockfly.wav");
+	gi.soundindex("soldier/rocket_reload.wav");
 	gi.soundindex("soldier/player/rocklf1a.wav");
 	gi.soundindex("weapons/rocklx1a.wav");
 }

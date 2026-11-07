@@ -8,6 +8,8 @@ extern void SP_monster_soldier_ss(edict_t *self);
 extern void SP_monster_soldier_heavy(edict_t *self);
 extern void SP_monster_soldier_rocket(edict_t *self);
 extern void soldier_footstep(edict_t *self);
+extern void soldier_cock(edict_t *self);
+extern void soldier_idle(edict_t *self);
 
 static cvar_t zero, one;
 static char sound_names[128][MAX_QPATH];
@@ -37,7 +39,7 @@ static void sound_effect(edict_t *ent, int channel, int index,
 {
     (void)ent;
     assert(index > 0 && index <= sound_count);
-    assert(volume == 1 && attenuation == ATTN_NORM && offset == 0);
+    assert(volume == 1 && (attenuation == ATTN_NORM || attenuation == ATTN_IDLE) && offset == 0);
     last_sound = index;
     last_channel = channel;
     played++;
@@ -123,6 +125,25 @@ static void test_soldier(struct soldier_case *test)
         sound_index(path);
         assert(sound_count == before);
     }
+    {
+        const char *events[] = {"soldier/solidle1.wav", "soldier/solsght1.wav",
+                               "soldier/solsrch1.wav", "infantry/infatck3.wav"};
+        for (i = 0; i < 4; i++)
+        {
+            int before = sound_count;
+            sound_index((char *)events[i]);
+            assert(sound_count == before);
+        }
+    }
+    soldier_cock(soldier);
+    expect_sound("infantry/infatck3.wav", CHAN_WEAPON);
+    for (i = 0; i < 200 && !played; i++) soldier_idle(soldier);
+    expect_sound("soldier/solidle1.wav", CHAN_VOICE);
+    soldier->monsterinfo.sight(soldier, &g_edicts[0]);
+    assert(played == 1 && last_channel == CHAN_VOICE);
+    assert(!strcmp(sound_names[last_sound], "soldier/solsght1.wav") ||
+           !strcmp(sound_names[last_sound], "soldier/solsrch1.wav"));
+    played = 0;
     {
         int before = sound_count;
         sound_index("soldier/player/death4.wav");

@@ -83,6 +83,9 @@ accept `--review` for a decoded animation review sheet.
 Original recordings are retained in `sources/player-sounds.zip`. Soldier sound
 conversion has an independent hash manifest and verifier. The support-sound
 manifest identifies synthesized placeholders separately from those recordings.
+The six supplied ElevenLabs soldier clips and reproducible mono conversions are
+recorded in `enemy-sounds-manifest.json`; `import_enemy_sounds.py --verify` checks
+them during both Make and CMake asset builds. See `SOLDIER-SOUNDS.md`.
 
 ## Maps, palette and branding
 
