@@ -41,3 +41,7 @@ __pycache__/
 /tools/assets/review/public-source-audit.json
 
 .venv/
+
+# Editor snapshots and obsolete third-party logo artwork stay local.
+/baseq2/maps/autosave/
+/stuff/icon/

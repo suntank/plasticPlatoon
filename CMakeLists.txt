@@ -826,6 +826,12 @@ add_custom_target(project_assets ALL
 	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/assets/build_support_models.py"
 	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/assets/build_overlay.py"
 		--output "${Project-Assets-Directory}/plastic-platoon.pk3"
+	COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+		"${CMAKE_CURRENT_SOURCE_DIR}/baseq2/operation-heavy-test.pk3"
+		"${CMAKE_CURRENT_SOURCE_DIR}/baseq2/operation-rocket-test.pk3"
+		"${CMAKE_CURRENT_SOURCE_DIR}/baseq2/operation-tank-test.pk3"
+		"${CMAKE_CURRENT_SOURCE_DIR}/baseq2/operation-helicopter-test.pk3"
+		"${Project-Assets-Directory}/"
 	WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
 	COMMENT "Package Plastic Platoon runtime assets"
 	VERBATIM

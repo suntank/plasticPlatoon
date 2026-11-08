@@ -10,7 +10,10 @@ This covers original Plastic Platoon content under `baseq2/`, its editable
 project sources under `blender/` and `maps/`, original texture source artwork,
 and the project's original asset inputs under `tools/assets/sources/`.
 The original bootstrap, support-model and support-sound generators and their
-outputs use these same GPL-2.0-or-later terms. Their manifests identify generated
+outputs use these same GPL-2.0-or-later terms. Application icons in
+`packaging/branding/` (PNG, ICO and SVG) are generated from the original
+toy-soldier artwork in `tools/assets/build_branding.py`, without external
+image inputs. Their manifests identify generated
 files and disclose provisional artwork and audio.
 
 During the 2026-11-04 reclaimed-install audit, the project owner stated:

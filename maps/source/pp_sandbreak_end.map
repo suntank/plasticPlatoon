@@ -1,0 +1,123 @@
+{
+"classname" "worldspawn"
+"message" "Sandbreak Mission Complete"
+{
+( -416 -416 -32 ) ( -416 416 0 ) ( -416 -416 0 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( 416 -416 -32 ) ( 416 416 0 ) ( 416 416 -32 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -416 -416 -32 ) ( 416 -416 0 ) ( 416 -416 -32 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -416 416 -32 ) ( 416 416 0 ) ( -416 416 0 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -416 -416 -32 ) ( 416 416 -32 ) ( -416 416 -32 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -416 -416 0 ) ( 416 416 0 ) ( 416 -416 0 ) sandkeep/sand 0 0 0 1 1 0 0 0
+}
+{
+( -416 -416 256 ) ( -416 416 288 ) ( -416 -416 288 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( 416 -416 256 ) ( 416 416 288 ) ( 416 416 256 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -416 -416 256 ) ( 416 -416 288 ) ( 416 -416 256 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -416 416 256 ) ( 416 416 288 ) ( -416 416 288 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -416 -416 256 ) ( 416 416 256 ) ( -416 416 256 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -416 -416 288 ) ( 416 416 288 ) ( 416 -416 288 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+}
+{
+( -416 -416 0 ) ( -416 416 256 ) ( -416 -416 256 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -384 -416 0 ) ( -384 416 256 ) ( -384 416 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -416 -416 0 ) ( -384 -416 256 ) ( -384 -416 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -416 416 0 ) ( -384 416 256 ) ( -416 416 256 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -416 -416 0 ) ( -384 416 0 ) ( -416 416 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -416 -416 256 ) ( -384 416 256 ) ( -384 -416 256 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( 384 -416 0 ) ( 384 416 256 ) ( 384 -416 256 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 416 -416 0 ) ( 416 416 256 ) ( 416 416 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 384 -416 0 ) ( 416 -416 256 ) ( 416 -416 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 384 416 0 ) ( 416 416 256 ) ( 384 416 256 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 384 -416 0 ) ( 416 416 0 ) ( 384 416 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 384 -416 256 ) ( 416 416 256 ) ( 416 -416 256 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( -384 -416 0 ) ( -384 -384 256 ) ( -384 -416 256 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 384 -416 0 ) ( 384 -384 256 ) ( 384 -384 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -384 -416 0 ) ( 384 -416 256 ) ( 384 -416 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -384 -384 0 ) ( 384 -384 256 ) ( -384 -384 256 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -384 -416 0 ) ( 384 -384 0 ) ( -384 -384 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -384 -416 256 ) ( 384 -384 256 ) ( 384 -416 256 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( -384 384 0 ) ( -384 416 256 ) ( -384 384 256 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 384 384 0 ) ( 384 416 256 ) ( 384 416 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -384 384 0 ) ( 384 384 256 ) ( 384 384 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -384 416 0 ) ( 384 416 256 ) ( -384 416 256 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -384 384 0 ) ( 384 416 0 ) ( -384 416 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -384 384 256 ) ( 384 416 256 ) ( 384 384 256 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+}
+{
+"classname" "info_player_start"
+"origin" "-144 -240 24"
+"angle" "90"
+}
+{
+"classname" "info_player_coop"
+"origin" "-48 -240 24"
+"angle" "90"
+}
+{
+"classname" "info_player_coop"
+"origin" "48 -240 24"
+"angle" "90"
+}
+{
+"classname" "info_player_coop"
+"origin" "144 -240 24"
+"angle" "90"
+}
+{
+"classname" "light"
+"origin" "0 0 180"
+"light" "700"
+}
+{
+"classname" "trigger_always"
+"target" "victory_help"
+"delay" "1"
+}
+{
+"classname" "target_help"
+"targetname" "victory_help"
+"message" "MISSION COMPLETE\nOperation Sandbreak secured.\nThe red button starts another assault."
+}
+{
+"classname" "trigger_relay"
+"targetname" "victory_message"
+"message" "OPERATION SANDBREAK COMPLETE\nCastle breached. Armor destroyed. Airfield secured.\nRed button: replay mission."
+}
+{
+"classname" "trigger_once"
+"target" "victory_message"
+{
+( -320 -160 0 ) ( -320 160 128 ) ( -320 -160 128 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( 320 -160 0 ) ( 320 160 128 ) ( 320 160 0 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -320 -160 0 ) ( 320 -160 128 ) ( 320 -160 0 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -320 160 0 ) ( 320 160 128 ) ( -320 160 128 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -320 -160 0 ) ( 320 160 0 ) ( -320 160 0 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -320 -160 128 ) ( 320 160 128 ) ( 320 -160 128 ) sandkeep/sand 0 0 0 1 1 0 0 0
+}
+}
+{
+"classname" "func_button"
+"target" "replay"
+"angle" "90"
+"wait" "-1"
+{
+( -48 320 32 ) ( -48 344 96 ) ( -48 320 96 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( 48 320 32 ) ( 48 344 96 ) ( 48 344 32 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -48 320 32 ) ( 48 320 96 ) ( 48 320 32 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -48 344 32 ) ( 48 344 96 ) ( -48 344 96 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -48 320 32 ) ( 48 344 32 ) ( -48 344 32 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -48 320 96 ) ( 48 344 96 ) ( 48 320 96 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+}
+}
+{
+"classname" "target_changelevel"
+"targetname" "replay"
+"map" "pp_sandbreak"
+}

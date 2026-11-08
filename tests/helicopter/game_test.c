@@ -9,6 +9,8 @@ extern void M_MoveFrame(edict_t *self);
 extern void plastic_helicopter_machineguns(edict_t *self);
 extern void plastic_helicopter_rockets(edict_t *self);
 
+#include "../vehicle_objectives/targets.h"
+
 static cvar_t zero, one, max_clients, gravity, max_velocity;
 static int blocked_sight, blocked_shots, blocked_motion, no_floor;
 static int bullet_rays, explosions, message_byte, message_type, shots_traced;
@@ -436,6 +438,20 @@ static void kill_helicopter(edict_t *self)
     T_Damage(self, self->enemy, self->enemy, direction, self->s.origin,
             vec3_origin, self->health + 100, 0, DAMAGE_NO_ARMOR, MOD_ROCKET);
 }
+
+static void test_death_objective_after_attack(void)
+{
+    edict_t *self = new_helicopter(), *gate = objective_gate(self);
+    int i;
+    level.time = 120;
+    begin_attack(self);
+    kill_helicopter(self);
+    assert(!G_Find(NULL, FOFS(classname), "DelayedUse"));
+    assert_objective_opens(gate);
+    for (i = 0; i < 50 && self->inuse; i++) tick(self);
+    assert(!self->inuse && level.killed_monsters == 1);
+    assert(!G_Find(NULL, FOFS(classname), "DelayedUse"));
+}
 static void test_crash_and_cleanup(void)
 {
     edict_t *self = new_helicopter();
@@ -551,6 +567,7 @@ int main(int argc, char **argv)
     test_attack_safety();
     test_triggered_and_owner_removal();
     test_crash_and_cleanup();
+    test_death_objective_after_attack();
     test_savegame(argv[1]);
     puts("helicopter flight, rotating attachments, guns, rockets, attack safety, crash physics and save/load passed");
     return 0;

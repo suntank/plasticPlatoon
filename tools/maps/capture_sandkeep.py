@@ -82,7 +82,11 @@ def main():
     parser.add_argument("--assets", type=Path, help="Optional baseq2 art directory; models/sound/pics/sprites/players override source packages inside the private runtime")
     parser.add_argument("--label", required=True, help="Fresh output folder name")
     parser.add_argument("--output-root", type=Path, default=ROOT / "build/sandkeep-qa")
-    parser.add_argument("--renderer", choices=("gl1", "gl3"), default="gl3")
+    parser.add_argument("--renderer", choices=("gl1", "gl3", "soft"), default="gl3")
+    parser.add_argument("--display-backend", choices=("xvfb", "offscreen", "dummy", "current"), default="xvfb",
+                        help="Use Xvfb, SDL offscreen, windowless SDL dummy (soft renderer), or current display")
+    parser.add_argument("--egl-device", type=int,
+                        help="Optional SDL offscreen EGL device index (software device may differ by host)")
     parser.add_argument("--farsee", action="store_true", help="Use the 8192-unit draw distance for oversized rooms")
     parser.add_argument("--size", default="1280x720")
     parser.add_argument("--views", type=Path, help="JSON list of {name, pose:[x,y,z,pitch,yaw], commands?:[], after_pose?:[{command,wait}]} for stateful interaction captures")
@@ -107,8 +111,12 @@ def main():
         parser.error("missing runtime files: " + ", ".join(missing))
     if args.assets and not args.assets.is_dir():
         parser.error("assets must be an existing baseq2 art directory")
+    if args.display_backend == "dummy" and args.renderer != "soft":
+        parser.error("SDL dummy display requires --renderer soft")
+    if args.egl_device is not None and (args.egl_device < 0 or args.display_backend != "offscreen"):
+        parser.error("--egl-device requires a nonnegative index and --display-backend offscreen")
     collision_bsp = BSP(map_file)
-    if not shutil.which("xvfb-run"):
+    if args.display_backend == "xvfb" and not shutil.which("xvfb-run"):
         parser.error("xvfb-run is required")
     views = json.loads(args.views.read_text()) if args.views else VIEWS
     if args.only:
@@ -181,18 +189,29 @@ def main():
     (base / "sandkeep-qa.cfg").write_text(cfg)
     # Keep a reproducible config without its ephemeral localhost control token.
     (output / "settings.cfg").write_text(cfg.replace(token, "LOCAL_RCON_TOKEN"))
-    command = ["xvfb-run", "-a", "-s", f"-screen 0 {width}x{height}x24",
-        str(runtime / "quake2"), "-portable", "-datadir", str(runtime),
+    command = [str(runtime / "quake2"), "-portable", "-datadir", str(runtime),
         "+set", "ip", "127.0.0.1", "+set", "port", str(port),
         "+set", "r_farsee", str(int(args.farsee)),
         "+set", "vid_renderer", args.renderer, "+set", "vid_fullscreen", "0",
         "+set", "r_mode", "-1", "+set", "r_customwidth", str(width),
         "+set", "r_customheight", str(height), "+set", "s_initsound", "0",
         "+exec", "sandkeep-qa.cfg"]
+    if args.display_backend == "xvfb":
+        command = ["xvfb-run", "-a", "-s", f"-screen 0 {width}x{height}x24"] + command
+    environment = {**os.environ, "LIBGL_ALWAYS_SOFTWARE": "1", "LP_NUM_THREADS": "2",
+                   "XDG_CACHE_HOME": str(runtime / "cache")}
+    if args.display_backend in ("offscreen", "dummy"):
+        environment["SDL_VIDEODRIVER"] = args.display_backend
+    if args.renderer == "soft":
+        environment["SDL_RENDER_DRIVER"] = "software"
+    if args.egl_device is not None:
+        environment["SDL_HINT_EGL_DEVICE"] = str(args.egl_device)
     manifest = dict(map=str(map_file), map_name=args.map_name, map_sha256=digest(map_file),
         binary_sha256=digest(source / "quake2"), game_sha256=digest(source / "baseq2/game.so"), renderer=args.renderer,
         renderer_sha256=digest(source / f"ref_{args.renderer}.so"),
-        size=[width, height], software_renderer=True, views=[], runtime=str(runtime),
+        size=[width, height], software_renderer=True, display_backend=args.display_backend,
+        egl_device=args.egl_device,
+        views=[], runtime=str(runtime),
         note="Real engine screenshots; architecture review, not a playthrough or GPU benchmark.")
     manifest["materials"] = {str(path.relative_to(base)): digest(path)
                              for path in sorted(base.rglob("sandkeep/*")) if path.is_file()}
@@ -205,8 +224,7 @@ def main():
         with (output / "console.log").open("w") as log:
             process = subprocess.Popen(command, cwd=runtime, stdout=log,
                 stderr=subprocess.STDOUT, start_new_session=True,
-                env={**os.environ, "LIBGL_ALWAYS_SOFTWARE": "1", "LP_NUM_THREADS": "2",
-                     "XDG_CACHE_HOME": str(runtime / "cache")})
+                env=environment)
             def console():
                 path = base / "qconsole.log"
                 return path.read_text(errors="replace") if path.exists() else ""
@@ -302,7 +320,8 @@ def main():
                     eye = [actual[k] for k in ("x", "y", "z")]
                     contents = collision_bsp.point_contents(eye)
                     view["actual_eye_world_contents"] = contents
-                    collision = collision_bsp.collision(eye, (0., 0., 0.), (0., 0., 0.), SOLID)
+                    collision = collision_bsp.collision(eye, (0., 0., 0.), (0., 0., 0.), SOLID,
+                                                        opened=view.get("opened_doors", ()))
                     view["actual_eye_collision"] = collision
                     if contents & SOLID:
                         validation_errors.append(f"{view['name']}: measured camera eye is inside world solid (contents={contents})")

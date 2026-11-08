@@ -1,5 +1,15 @@
 # Plastic Heavy Tank Test Range
 
+Build the current client, game module and runtime packages first:
+
+```sh
+make -j4 DEBUG= client game ref_gl1 ref_gl3 assets
+./release/quake2 +exec tank_test.cfg
+```
+
+The `assets` target copies the committed test-range PK3s (including their launch
+configs) into `release/baseq2`, alongside the main asset pack.
+
 Open the game console and run `exec tank_test.cfg`, or use `map pp_tank_test`
 in an existing single-player session. The range requires the updated game
 module/client with `monster_plastic_tank`, the main Plastic Platoon asset pack,

@@ -7,6 +7,8 @@
 extern void SP_monster_plastic_tank(edict_t *self);
 extern void M_MoveFrame(edict_t *self);
 
+#include "../vehicle_objectives/targets.h"
+
 static cvar_t zero, one, max_clients;
 static int blocked_sight, blocked_shots, shot_traces, links;
 static char models[64][MAX_QPATH];
@@ -442,6 +444,42 @@ static void test_savegame(const char *filename)
     unlink(filename);
 }
 
+static void test_death_objective_after_attack(const char *filename)
+{
+    int delayed, saved;
+    for (delayed = 0; delayed < 2; delayed++)
+    for (saved = 0; saved < 2; saved++)
+    {
+        edict_t *tank = new_tank(), *gate = objective_gate(tank), *use;
+        ptrdiff_t gate_number = gate - g_edicts;
+        vec3_t direction = {1, 0, 0};
+        float authored_delay = delayed ? 3 : 0;
+        level.time = 120; /* Reproduce a kill well into a mission, after aiming. */
+        tank->delay = authored_delay;
+        begin_attack(tank);
+        if (saved)
+        {
+            save_and_restore(filename, tank);
+            tank = &g_edicts[2];
+            gate = &g_edicts[gate_number];
+        }
+        T_Damage(tank, tank->enemy, tank->enemy, direction, tank->s.origin,
+                vec3_origin, tank->health + 100, 0, DAMAGE_NO_ARMOR, MOD_ROCKET);
+        use = G_Find(NULL, FOFS(classname), "DelayedUse");
+        if (delayed)
+        {
+            assert(gate->moveinfo.state == OBJECTIVE_GATE_BOTTOM);
+            assert(use && fabsf(use->nextthink - (level.time + authored_delay)) < .001f);
+            level.time = use->nextthink;
+            use->think(use);
+        }
+        else
+            assert(!use);
+        assert_objective_opens(gate);
+    }
+    unlink(filename);
+}
+
 int main(int argc, char **argv)
 {
     assert(argc == 2);
@@ -478,6 +516,7 @@ int main(int argc, char **argv)
     test_attack_guards();
     test_damage_and_cleanup();
     test_savegame(argv[1]);
-    puts("heavy tank spawn, independent turret, existing rockets, attack guards, death and save/load passed");
+    test_death_objective_after_attack(argv[1]);
+    puts("heavy tank spawn, independent turret, rockets, death objectives, authored delays and save/load passed");
     return 0;
 }

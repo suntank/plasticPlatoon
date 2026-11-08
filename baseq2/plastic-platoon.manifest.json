@@ -3,8 +3,8 @@
   "files": [
     {
       "path": "default.cfg",
-      "bytes": 1056,
-      "sha256": "28729dafdf898e8c0de094535b254a37c796bed87556c74ee08045704999fccb"
+      "bytes": 1108,
+      "sha256": "1a3e9638de18f69a8a4f49773a2d6669f3a0f63a7b010351170f8d72e1f137a8"
     },
     {
       "path": "env/bluesky1bk.png",
@@ -2747,6 +2747,6 @@
       "sha256": "219e0f1ec97fa6b944336f263726564a3eb0a176351f5fd19f805913d24a22ea"
     }
   ],
-  "archive_sha256": "dc580e0f96a3db986f5a2b60d17613896d4ba0000cb9cbe3b17f2044a0808d13",
-  "archive_bytes": 38210165
+  "archive_sha256": "d978866ad9a42bd768719726d0799893866de45f9d19396a3a41ab176ee5f441",
+  "archive_bytes": 38210195
 }

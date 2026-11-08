@@ -1324,7 +1324,11 @@ plastic_tank_attack(edict_t *self)
 	VectorClear(self->velocity);
 	self->count = 2;
 	self->timestamp = level.time + .7f; /* brace and turn before the first shot */
-	self->delay = level.time + 2.5f; /* give up if cover or a flank defeats aiming */
+	/* Keep delay reserved for map-authored death targets. G_UseTargets reads it
+	 * as a relative delay; an absolute combat deadline would postpone the gate
+	 * by the elapsed mission time when this tank dies. wait is saved with the
+	 * edict and is otherwise unused by this monster. */
+	self->wait = level.time + 2.5f; /* give up if cover or a flank defeats aiming */
 }
 
 qboolean
@@ -1365,7 +1369,7 @@ plastic_tank_attack_frame(edict_t *self)
 		plastic_tank_run(self);
 		return;
 	}
-	if (level.time > self->delay)
+	if (level.time > self->wait)
 	{
 		self->monsterinfo.attack_finished = level.time + 1;
 		plastic_tank_run(self);

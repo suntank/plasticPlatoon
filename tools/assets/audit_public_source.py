@@ -27,6 +27,9 @@ FORBIDDEN_COMMITS = {'1a71577727adbe993e1fa56c7a4e09149fd17b50'}
 REQUIRED_NOTICES = ('LICENSE', 'ASSET-LICENSE.md', 'tools/assets/asset-provenance.json')
 # These bytes were recorded before the local cleanup/history replacement.
 KNOWN_HASHES = {
+    'ffb3984566d9dcd267e98e5606a093f595334833ef44028933cfdc7216a001e3': 'legacy Quake II logo (ico)',
+    '7896ad85e601eb070698d234c6fe0e142c13dfc0d188300cf757646ca901cd40': 'legacy Quake II logo (png)',
+    'b22dbec9ccfae2ace137f3f5eef24b140d5268a04f17f7e3122675835ab747f8': 'legacy Quake II logo (svg)',
     '4cc63f1c2a4c04ece2ec3f11c2b941ba90a099528ad3d1ef5c6948778535db36': 'legacy male grunt atlas',
     '7448a9a3f61fcff7b2819b56957ea5ac54c65f316e14df33002a2024aff529d2': 'legacy grunt portrait',
     '36f56c0f9cc11add6d3fbad1cf257bfc595cfca1459d53c9d65d5ab392709a61': 'legacy male player model',

@@ -18,7 +18,7 @@ class ControllerMigrationTest(unittest.TestCase):
             base.mkdir()
             for name in ('quake2', 'ref_soft.so'):
                 shutil.copy2(ROOT / 'release' / name, runtime / name)
-            (base / 'pak0.pak').symlink_to(ROOT / 'release/baseq2/pak0.pak')
+            (base / 'plastic-platoon.pk3').symlink_to(ROOT / 'baseq2/plastic-platoon.pk3')
             config = base / 'config.cfg'
             config.write_text('unbindall\nbind SHOULDR_RIGHT "weapnext"\n'
                               'bind TRIG_RIGHT "+attack"\n')

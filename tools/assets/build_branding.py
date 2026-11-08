@@ -86,11 +86,33 @@ static const struct {
 ''' + ',\n'.join('    ' + row for row in rows) + '\n}};\n').encode()
 
 
+def svg(pixels):
+    # Run-length rectangles preserve the existing original pixel artwork at any
+    # scale; no fonts, external images, or legacy logo paths are embedded.
+    rows = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"',
+            ' width="256" height="256" shape-rendering="crispEdges">',
+            '<title>Plastic Platoon toy soldier</title>',
+            '<!-- Original procedural artwork. SPDX-License-Identifier: GPL-2.0-or-later -->']
+    for y in range(SIZE):
+        x = 0
+        while x < SIZE:
+            color = pixels[(y * SIZE + x) * 4:(y * SIZE + x + 1) * 4]
+            end = x + 1
+            while end < SIZE and pixels[(y * SIZE + end) * 4:(y * SIZE + end + 1) * 4] == color:
+                end += 1
+            if color[3]:
+                rows.append(f'<rect x="{x}" y="{y}" width="{end-x}" height="1" '
+                            f'fill="#{color[:3].hex()}"/>')
+            x = end
+    return ('\n'.join(rows) + '\n</svg>\n').encode()
+
+
 def build_assets():
     pixels = icon_pixels()
     return {'src/client/vid/icon/platoon_icon64.h': header(pixels),
             'packaging/branding/plastic-platoon.png': png(pixels),
-            'packaging/branding/plastic-platoon.ico': ico(pixels)}
+            'packaging/branding/plastic-platoon.ico': ico(pixels),
+            'packaging/branding/plastic-platoon.svg': svg(pixels)}
 
 
 def main():
@@ -108,7 +130,7 @@ def main():
             path.write_bytes(data)
     if failures:
         parser.error('Missing or changed original branding: ' + ', '.join(failures))
-    print(('Verified' if args.verify else 'Built') + ' original SDL, PNG and Windows application icons')
+    print(('Verified' if args.verify else 'Built') + ' original SDL, PNG, SVG and Windows application icons')
 
 
 if __name__ == '__main__':

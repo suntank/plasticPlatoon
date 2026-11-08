@@ -1,0 +1,9 @@
+[
+  {"name": "insertion", "pose": [0, -2800, 24, 0, 90]},
+  {"name": "first_arena", "pose": [0, -2250, 80, 0, 90]},
+  {"name": "tower_bridge", "pose": [0, -1800, 240, 0, 90]},
+  {"name": "tank_courtyard", "pose": [0, -700, 100, 0, 90]},
+  {"name": "finale", "pose": [480, 1180, 220, 0, 110]},
+  {"name": "castle_overview", "pose": [1000, -2350, 500, 18, 125],
+   "after_pose": [{"command": "noclip", "wait": 0.3}, {"command": "noclip", "wait": 0.6}]}
+]

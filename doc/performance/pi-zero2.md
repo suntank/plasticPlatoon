@@ -1,7 +1,12 @@
 # Pi Zero 2 W validation procedure
 
-Pi performance is **unverified**. No Pi, VC4 GPU, or Game Bird display transport
-was connected during implementation. The 30 FPS target is **33.333 ms for the
+Initial device verification completed on 2026-11-01: a native 32-bit build ran
+on a Pi Zero 2 W using VC4 hardware rendering through SDL KMSDRM on the Game
+Bird's actual 240×240 SPI panel. Library launch, persistent saves, controller
+input, and two 240×120 split-screen views were checked. See the
+[Game Bird installation and short test results](../../packaging/gamebird/README.md).
+Sustained Pi performance and a stable 30 FPS remain **unverified**; the short
+two-player check was about 16 FPS. The 30 FPS target is **33.333 ms for the
 complete display frame**, including both players and one presentation.
 
 The official board specification is a 1 GHz quad-core Cortex-A53 with 512 MB RAM.
