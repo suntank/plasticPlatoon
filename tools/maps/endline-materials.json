@@ -1,0 +1,340 @@
+{
+  "license": "GPL-2.0-or-later",
+  "generator": "tools/maps/generate_endline_materials.py",
+  "source": "Original deterministic procedural artwork; no external images or game data.",
+  "palette_source": "tools/assets/build_bootstrap.py:PALETTE",
+  "palette_sha256": "dc77cbae79b92a36d259d0d9db499b0bda2c0af8669e375c15d6ab3a74c1a535",
+  "lettering_source": "tools/maps/generate_sandkeep_materials.py:FONT",
+  "materials": [
+    {
+      "name": "endline/concrete",
+      "dimensions": [
+        256,
+        256
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "4e7571241d2e89b33e58230af4a97a1a9452cd9725e9bcb47a3b63ec60c66c70",
+      "wal_sha256": "b2412e7adb6191f16fa7d520d60d9d2f91fb83c8bba15ddf8667f2c0945913f6"
+    },
+    {
+      "name": "endline/cardboard",
+      "dimensions": [
+        256,
+        256
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "e63c3c8ba50a6d1999f8a275677cd00a473d8a3813109953594b99b89ad74fcf",
+      "wal_sha256": "d74dbac896111048b7f70872a61b748785b8e9f2963784278804e8c347c7cd82"
+    },
+    {
+      "name": "endline/corrugation",
+      "dimensions": [
+        128,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "bb08a5ad45db441656cf235a605bf3d331ef1a602a987d2108ee25d53756ed23",
+      "wal_sha256": "0890cde91a0b24fb69b80b43eeb6b3930b7442f9543e0332001b309cf4bd0d85"
+    },
+    {
+      "name": "endline/loco_red",
+      "dimensions": [
+        128,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "dccf2e299261dd65d178b997d63b23eae0684b08baa528a2ba59956d37fc043d",
+      "wal_sha256": "f7801b29ecb00fe36987bfa82946c3cadbbc3da6a7e25c74162130b83b1553ce"
+    },
+    {
+      "name": "endline/toolbox_blue",
+      "dimensions": [
+        128,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "412674a07d7c46c5eee15a84dce0f8be36d3756fe30d4868081cb83311f1ab38",
+      "wal_sha256": "144f8a747cd1da0f036955a960578bdb69f1203c4a6bccce415c8429bc51ca5a"
+    },
+    {
+      "name": "endline/rail_metal",
+      "dimensions": [
+        128,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "0325c54e377c83f3e748df30d210db2420388fa797717df1209a0ca8cfbefd77",
+      "wal_sha256": "701d3458b3e3cd9b81134febc736249dd5258a45a3a6314c238a308662db4ed7"
+    },
+    {
+      "name": "endline/rubber",
+      "dimensions": [
+        128,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "f5ee2310a5062f3627575b2f5885332bdc16fc719a876b1968eb2a76ea8b96e7",
+      "wal_sha256": "a3eae10ab391f0d757938c766c2806fefdaa6fdfb29920652e799317cb85d6fb"
+    },
+    {
+      "name": "endline/sleeper_wood",
+      "dimensions": [
+        256,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "2b2dac2dac9c63d3f92b8d5a6252dbed12e95bfed9deb9e8729187ccb8942551",
+      "wal_sha256": "e1d090b6aec49e442c33545c33027cb4152bbceaf28e7561c3aed167344890ff"
+    },
+    {
+      "name": "endline/hazard",
+      "dimensions": [
+        128,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "a67ed6fc186a5902b77c6d783d92ec7ca6c7cbb9760fd4ba0231a9d8d667b1ec",
+      "wal_sha256": "75399a1874301fe34572fbf639b6eb51e5cc14d372819f5abef5878188a18a00"
+    },
+    {
+      "name": "endline/signal_red",
+      "dimensions": [
+        64,
+        64
+      ],
+      "animation_next": null,
+      "surface_light": 180,
+      "png_sha256": "2e08c85b7b0fd378329c2cf9d41ead98f535c8bcd241396c23ce022eb1731c74",
+      "wal_sha256": "310ec19775bd338fdc3f6abfa04234ac87a79624d62d61fd902caa88e5652946"
+    },
+    {
+      "name": "endline/signal_green",
+      "dimensions": [
+        64,
+        64
+      ],
+      "animation_next": null,
+      "surface_light": 180,
+      "png_sha256": "20fb3fa6c9c493f8d2b1bb3274ead362443776869df4431553e41f1067f67646",
+      "wal_sha256": "96ada5da82803f7c743b1bf2e2a9fe1a882a1609f3abe2a41d157aeec4a26eb1"
+    },
+    {
+      "name": "endline/signal_switch",
+      "dimensions": [
+        128,
+        64
+      ],
+      "animation_next": "endline/signal_switch_idle",
+      "surface_light": 0,
+      "png_sha256": "3d8d7c204e9c962770370e53c5da2eb1748b42cdd1ce448d4de804693789e446",
+      "wal_sha256": "054c058e09f3127c2f2cd4ed498198f6e67a9e8a6921f87ed24f233d7ac6ef18"
+    },
+    {
+      "name": "endline/signal_switch_idle",
+      "dimensions": [
+        128,
+        64
+      ],
+      "animation_next": "endline/signal_switch_on",
+      "surface_light": 0,
+      "png_sha256": "3d8d7c204e9c962770370e53c5da2eb1748b42cdd1ce448d4de804693789e446",
+      "wal_sha256": "72b78ff538d9a24c5d8f910c7bc7fefc1a5da49001c88fe8c82573d37b110d01"
+    },
+    {
+      "name": "endline/signal_switch_on",
+      "dimensions": [
+        128,
+        64
+      ],
+      "animation_next": "endline/signal_switch_on_alt",
+      "surface_light": 0,
+      "png_sha256": "87269a110fdb358183526c0e6f6ab0e097354c4f10a4fe03444b8954efa5e2dd",
+      "wal_sha256": "b1525c4c87b26aaa278061d1c99e3a726837adfc8d46f9dc0817ff23328e6467"
+    },
+    {
+      "name": "endline/signal_switch_on_alt",
+      "dimensions": [
+        128,
+        64
+      ],
+      "animation_next": "endline/signal_switch",
+      "surface_light": 0,
+      "png_sha256": "87269a110fdb358183526c0e6f6ab0e097354c4f10a4fe03444b8954efa5e2dd",
+      "wal_sha256": "c1710bd12d96b9a18787997f1455ac967718ef72e977afe9bb56f655a21a20d0"
+    },
+    {
+      "name": "endline/depart_switch",
+      "dimensions": [
+        128,
+        64
+      ],
+      "animation_next": "endline/depart_switch_idle",
+      "surface_light": 0,
+      "png_sha256": "dfe1d01f4a980a1b91227e95b213d657da11e59632de56054bf3e20e83e2692c",
+      "wal_sha256": "374360ed3355b5d6256437005cfed793377705488e44dec6551cd1eb5ee26c73"
+    },
+    {
+      "name": "endline/depart_switch_idle",
+      "dimensions": [
+        128,
+        64
+      ],
+      "animation_next": "endline/depart_switch_on",
+      "surface_light": 0,
+      "png_sha256": "dfe1d01f4a980a1b91227e95b213d657da11e59632de56054bf3e20e83e2692c",
+      "wal_sha256": "5b66d657cfefdd2d804d05e803102ef97e27de49bcf242c777f59ee5aaf08e64"
+    },
+    {
+      "name": "endline/depart_switch_on",
+      "dimensions": [
+        128,
+        64
+      ],
+      "animation_next": "endline/depart_switch_on_alt",
+      "surface_light": 0,
+      "png_sha256": "4322da4bb44e3ad150ddc4fe11ce328c67050ef328b26c67b824c7ade1ca89fb",
+      "wal_sha256": "15d48dd7d336b885ff4232dd2c838933d8ff1f691abb61e85aadd4ed9c70e691"
+    },
+    {
+      "name": "endline/depart_switch_on_alt",
+      "dimensions": [
+        128,
+        64
+      ],
+      "animation_next": "endline/depart_switch",
+      "surface_light": 0,
+      "png_sha256": "4322da4bb44e3ad150ddc4fe11ce328c67050ef328b26c67b824c7ade1ca89fb",
+      "wal_sha256": "d4eeddc6d08f996802659dd6fb970cb6df4744665f224345411b3c65c3714b37"
+    },
+    {
+      "name": "endline/sign_signal",
+      "dimensions": [
+        256,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "0b7e3cec7ff0c8433bfc369ed2a764374cb9adaae7a45510e176db99165535c5",
+      "wal_sha256": "5e5206f5960905c69c34f85a93bb8aaa6f9c2e023f741e3d9c75790bc2136433"
+    },
+    {
+      "name": "endline/sign_board",
+      "dimensions": [
+        256,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "38ec5a62851aa5ea6e97481929b7824ae487b48750ed715de3f6c386e15820a2",
+      "wal_sha256": "639c9cf66fcb6334a01d65de2c6f8c1d5ab6344cfc8bbd456dda0ad5385a598c"
+    },
+    {
+      "name": "endline/sign_double_barrel",
+      "dimensions": [
+        256,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "5104cf5bd50709ef6bf8c1ea5727cbe5cf47f3884bcccdf200efac2aed8e3540",
+      "wal_sha256": "cf3ce706fbc4deb761ad51a936a7592972a197183f660e58db12e96c32c2fad5"
+    },
+    {
+      "name": "endline/sign_upper",
+      "dimensions": [
+        256,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "4731e25696f19cf8a5adffa4a3711238cde06e386a11aa8a951c29812e8eb84a",
+      "wal_sha256": "652c2ca5f5a8a7f6019e11fd19f56f16b2f90ff636edce9295fb38eb74f47e86"
+    },
+    {
+      "name": "endline/sign_lower",
+      "dimensions": [
+        256,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "8cf2d2043bb02cf59691e28029f089a3cdc3f96a67a91505a48834b5ddb080c5",
+      "wal_sha256": "f150b6f46d09a7a1c7a9fc628c9701b6dbe47eb5d610c6586f64e2030c563661"
+    },
+    {
+      "name": "endline/sign_ammo",
+      "dimensions": [
+        256,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "cab86d6345709ee78975a7e45bb2cea97b50b657840c0553ba30e84b8d63584e",
+      "wal_sha256": "fd1a47a514e4a2b81c30f43fcc7b88f997a587825151d4a3a6b1291f0ffaac09"
+    },
+    {
+      "name": "endline/sign_medic",
+      "dimensions": [
+        256,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "ad4c7b6245d0c14fbcf7a4e1099310634e1d80f2a6e14708526a60d0103e5f73",
+      "wal_sha256": "979617d970aad51ffb7c780447dc3575016952400f54b47cab7a19de89713c8e"
+    },
+    {
+      "name": "endline/sign_freight",
+      "dimensions": [
+        256,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "e5ff0581661b8660773a922e919d468f84f455786f5033ba3fb17fd28a867613",
+      "wal_sha256": "d76d5f074f171198f19747d8a0fa2c64e604c352c5255d9cc952e80e27858940"
+    },
+    {
+      "name": "endline/sign_exit",
+      "dimensions": [
+        256,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "21451ab7f79796ad9864f44ee1122b25c9a41b65d62567bc309a58364457129f",
+      "wal_sha256": "07c699790db5fe500e8d8fb1ab3476fc85365b9169d7b8d1b03af20f1de16e15"
+    },
+    {
+      "name": "endline/sign_mission",
+      "dimensions": [
+        256,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "faf131da213f62931088dea6ec4e18cabf0fac5f075bfa5944a77d535d77d633",
+      "wal_sha256": "94220f3b691c93855c3a7c46e2a3096db8ebfd1d7cae6977a182a29f3913d341"
+    },
+    {
+      "name": "endline/shipping_label",
+      "dimensions": [
+        256,
+        128
+      ],
+      "animation_next": null,
+      "surface_light": 0,
+      "png_sha256": "722a7cc77f0f8148ca1e83d31f94e995ec4818250cd682af7c1eef298eeb2956",
+      "wal_sha256": "03a8ef03bf4e99d8385e7c7160662b4b74ee0f1085ad4700fd8dfaaacbe703de"
+    }
+  ]
+}

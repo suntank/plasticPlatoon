@@ -1,0 +1,92 @@
+[
+  {
+    "name": "insertion",
+    "pose": [
+      -2368,
+      -1184,
+      32,
+      0,
+      25
+    ]
+  },
+  {
+    "name": "bridge_and_double_barrel",
+    "pose": [
+      -1760,
+      -544,
+      24,
+      -12,
+      20
+    ]
+  },
+  {
+    "name": "upper_approach",
+    "pose": [
+      -1648,
+      -256,
+      264,
+      0,
+      0
+    ]
+  },
+  {
+    "name": "under_the_bridge",
+    "pose": [
+      -1680,
+      240,
+      24,
+      0,
+      0
+    ]
+  },
+  {
+    "name": "lower_passages",
+    "pose": [
+      -1104,
+      528,
+      24,
+      0,
+      0
+    ]
+  },
+  {
+    "name": "signal_cabin",
+    "pose": [
+      704,
+      -800,
+      328,
+      0,
+      225
+    ]
+  },
+  {
+    "name": "switching_yard",
+    "pose": [
+      1728,
+      736,
+      24,
+      0,
+      235
+    ]
+  },
+  {
+    "name": "loading_platform",
+    "pose": [
+      1680,
+      -848,
+      120,
+      -12,
+      90
+    ]
+  },
+  {
+    "name": "workbench_overview",
+    "pose": [
+      -2208,
+      928,
+      592,
+      12,
+      335
+    ]
+  }
+]

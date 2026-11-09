@@ -33,6 +33,7 @@ and tilde for the console. Test missions are available there:
 | Console command | Mission |
 | --- | --- |
 | `exec bedroom_solo.cfg` | Operation Nightlight / Bedroom |
+| `exec endline_solo.cfg` | Operation End of the Line / Toy railway |
 | `exec sandkeep_solo.cfg` | Sandkeep |
 | `exec sandwatch_solo.cfg` | Sandwatch |
 | `exec heavy_test.cfg` | Heavy machine gunner range |
@@ -45,6 +46,10 @@ and tilde for the console. Test missions are available there:
 The Bedroom, Sandkeep and Sandwatch missions also have `_coop.cfg` launch
 configs. See each mission's guide under `maps/` for details. Weapons and muzzle
 flashes use [the versioned tuning profile](baseq2/tuning/README.md).
+
+End of the Line also has `endline_easy.cfg`, `endline_hard.cfg`, and
+`endline_coop.cfg`. Its shared objectives, double-barrel introduction, alternate
+routes and original railway assets are described in [the mission guide](maps/README-endline.md).
 
 ## Local split-screen
 

@@ -1,0 +1,22 @@
+{
+  "license": "GPL-2.0-or-later",
+  "generator": "tools/maps/generate_endline_audio.py",
+  "source": "Original deterministic synthesized oscillators and seeded noise; no recordings or game samples.",
+  "format": "mono signed 16-bit PCM WAV, 22050 Hz",
+  "sounds": [
+    {
+      "name": "endline/whistle.wav",
+      "duration_seconds": 1.8499773242630386,
+      "loop_suitable": false,
+      "sample_peak": 0.620014038514359,
+      "sha256": "2cd0c569890fb83626aa2b23dc523a7d3948723afae55a8c04633cdfb716dab7"
+    },
+    {
+      "name": "endline/wheels.wav",
+      "duration_seconds": 1.6,
+      "loop_suitable": true,
+      "sample_peak": 0.4399853511154515,
+      "sha256": "01c47d1c4445900b541f7b0f4b2f9a3b9c4500057684651c6b03297cba4b2c6e"
+    }
+  ]
+}

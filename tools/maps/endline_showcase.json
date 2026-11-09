@@ -1,0 +1,90 @@
+[
+  {
+    "name": "freight_box",
+    "pose": [
+      -2368,
+      -1184,
+      32,
+      0,
+      25
+    ]
+  },
+  {
+    "name": "double_barrel_intro",
+    "pose": [
+      -1712,
+      -472,
+      24,
+      0,
+      320
+    ]
+  },
+  {
+    "name": "upper_service_walk",
+    "pose": [
+      -1648,
+      -256,
+      264,
+      0,
+      0
+    ]
+  },
+  {
+    "name": "signal_control",
+    "pose": [
+      680,
+      -920,
+      328,
+      0,
+      180
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.2
+      },
+      {
+        "command": "+forward",
+        "wait": 0.65
+      },
+      {
+        "command": "-forward",
+        "wait": 0.1
+      },
+      {
+        "command": "noclip",
+        "wait": 42
+      }
+    ]
+  },
+  {
+    "name": "captured_supply_train",
+    "pose": [
+      2288,
+      -560,
+      304,
+      0,
+      150
+    ]
+  },
+  {
+    "name": "switching_yard_overlook",
+    "pose": [
+      1856,
+      1488,
+      320,
+      0,
+      235
+    ]
+  },
+  {
+    "name": "garage_railway",
+    "pose": [
+      -2208,
+      928,
+      592,
+      0,
+      335
+    ]
+  }
+]
