@@ -289,6 +289,7 @@ void Char_Event(int key);
 void Key_Event(int key, qboolean down, qboolean special);
 void Key_SetEventGamepadIndex(int gamepad_index);
 int Key_GetEventGamepadIndex(void);
+void Key_ClearGamepadStates(int gamepad_index);
 void Key_Init(void);
 void Key_Shutdown(void);
 void Key_WriteBindings(FILE *f);

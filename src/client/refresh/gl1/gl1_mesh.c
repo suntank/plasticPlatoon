@@ -169,19 +169,45 @@ R_DrawAliasFrameLerp(entity_t *currententity, const model_t *model, dmdl_t *pali
 	if (mesh && mesh->num_vertices <= MAX_VERTICES)
 	{
 		qboolean color_only = currententity->flags & (RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE);
+		/* MD2 lighting depends on the byte normal index, not the position or
+		 * UV seam. Large animated meshes repeat these same colors thousands
+		 * of times. Keep the small-mesh path to avoid extra work for effects. */
+		byte normal_colors[256][4];
+		qboolean cached_colors = mesh->num_vertices >= 256;
+		if (cached_colors)
+		{
+			for (unsigned normal = 0; normal < 256; ++normal)
+			{
+				float brightness = color_only ? 1.0f : shadedots[normal];
+				for (int component = 0; component < 3; ++component)
+				{
+					int color = brightness * shadelight[component] * 255;
+					color = Q_clamp(color, 0, 255);
+					normal_colors[normal][component] = gl_state.minlight_set ? minlight[color] : color;
+				}
+				normal_colors[normal][3] = alpha * 255;
+			}
+		}
 		for (unsigned k = 0; k < mesh->num_vertices; ++k)
 		{
 			int source = mesh->source[k];
-			float brightness = color_only ? 1.0f : shadedots[verts[source].lightnormalindex];
 			if (!static_pose) VectorCopy(s_lerped[source], (gl_buf.vtx + k*3));
 			else if (gl_shadows->value) VectorCopy((cache->static_xyz+k*3), s_lerped[source]);
-			for (int component = 0; component < 3; ++component)
+			if (cached_colors)
 			{
-				int color = brightness * shadelight[component] * 255;
-				color = Q_clamp(color, 0, 255);
-				gl_buf.clr[k*4+component] = gl_state.minlight_set ? minlight[color] : color;
+				memcpy(gl_buf.clr + k*4, normal_colors[verts[source].lightnormalindex], 4);
 			}
-			gl_buf.clr[k*4+3] = alpha * 255;
+			else
+			{
+				float brightness = color_only ? 1.0f : shadedots[verts[source].lightnormalindex];
+				for (int component = 0; component < 3; ++component)
+				{
+					int color = brightness * shadelight[component] * 255;
+					color = Q_clamp(color, 0, 255);
+					gl_buf.clr[k*4+component] = gl_state.minlight_set ? minlight[color] : color;
+				}
+				gl_buf.clr[k*4+3] = alpha * 255;
+			}
 		}
 		PP_PERF(model_ms, PP_PerfNow() - prep_started);
 		R_DrawAliasCache(model, static_pose ? cache->static_xyz : gl_buf.vtx, static_pose);

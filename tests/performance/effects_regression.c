@@ -9,9 +9,12 @@
 #include <string.h>
 #include "../../src/client/cl_splitscreen.c"
 #include "../../src/client/cl_tempentities.c"
+#include "../../src/client/header/player_muzzle_points.h"
 
 client_state_t cl;
 client_static_t cls;
+char cl_weaponmodels[MAX_CLIENTWEAPONMODELS][MAX_QPATH];
+int num_cl_weaponmodels;
 centity_t *cl_entities;
 int cl_numentities;
 entity_state_t *cl_entity_parse_stream;
@@ -43,6 +46,8 @@ static unsigned int transmit_calls;
 static byte transmitted_command[MAX_MSGLEN];
 static int transmitted_length;
 static qboolean load_muzzle_profile;
+static const char *test_lerpmodels="1";
+const char *Cvar_VariableString(const char *name) { return !strcmp(name,"r_lerpmodels") ? test_lerpmodels : ""; }
 
 int randk(void) { ++random_calls; random_state = random_state * 1664525u + 1013904223u; return (int)(random_state & 0x7fffffffu); }
 float frandk(void) { return (randk() & 32767) * (1.0f / 32767.0f); }
@@ -302,6 +307,168 @@ static void TestPlayerMuzzleFlashes(void)
     }
     puts("PASS player muzzle flashes: every weapon event spawns first- and third-person sprites");
 }
+/* Independent reproduction of the GL alias matrix, without AngleVectors. */
+static void AliasMatrixPoint(const vec3_t angles, const vec3_t point, vec3_t result)
+{
+    const double r=angles[ROLL]*M_PI/180, p=angles[PITCH]*M_PI/180;
+    const double y=angles[YAW]*M_PI/180;
+    const double x1=point[0], y1=cos(r)*point[1]+sin(r)*point[2];
+    const double z1=-sin(r)*point[1]+cos(r)*point[2];
+    const double x2=cos(p)*x1+sin(p)*z1, z2=-sin(p)*x1+cos(p)*z1;
+    result[0]=cos(y)*x2-sin(y)*y1;result[1]=sin(y)*x2+cos(y)*y1;result[2]=z2;
+}
+
+static void TestMuzzleModelMatrix(void)
+{
+    static const struct { const char *filename; int event; } events[]={
+        {"w_blaster.md2",MZ_BLASTER},{"w_shotgun.md2",MZ_SHOTGUN},
+        {"w_sshotgun.md2",MZ_SSHOTGUN},{"w_machinegun.md2",MZ_MACHINEGUN},
+        {"w_chaingun.md2",MZ_CHAINGUN1},{"w_glauncher.md2",MZ_GRENADE},
+        {"w_rlauncher.md2",MZ_ROCKET},{"w_hyperblaster.md2",MZ_HYPERBLASTER},
+        {"w_railgun.md2",MZ_RAILGUN},{"w_bfg.md2",MZ_BFG},{"weapon.md2",MZ_MACHINEGUN}
+    };
+    unsigned checks=0;
+    ResetEffects();ss_state.session_active=false;
+    cl_entities=test_entities[0];cl_numentities=16;memset(test_entities,0,sizeof(test_entities));
+    cl.frame.serverframe=8;cl.playernum=0;cl_vwep=&one;
+    cl_entities[2].serverframe=8;cl_entities[2].current.number=2;
+    cl_entities[2].current.modelindex=cl_entities[2].current.modelindex2=255;
+    cl_entities[2].current.skinnum=1<<PP_PLAYER_SKINNUM_WEAPON_SHIFT;
+    num_cl_weaponmodels=2;strcpy(cl_weaponmodels[0],"weapon.md2");
+    cl.clientinfo[0].weaponmodel[0]=cl.clientinfo[0].weaponmodel[1]=(struct model_s *)(uintptr_t)1;
+    VectorSet(cl_entities[2].prev.origin,10,20,30);VectorSet(cl_entities[2].current.origin,50,-10,20);
+    for(int model=0;model<PP_PLAYER_MUZZLE_MODEL_COUNT;++model) {
+        const pp_player_muzzle_model_t *m=&pp_player_muzzle_models[model];
+        int event=-1;
+        for(unsigned e=0;e<sizeof(events)/sizeof(*events);++e)
+            if(!strcmp(m->filename,events[e].filename)) event=events[e].event;
+        assert(event>=0);strcpy(cl_weaponmodels[1],m->filename);
+        cl_entities[2].current.skinnum=!strcmp(m->filename,"weapon.md2")?0:1<<PP_PLAYER_SKINNUM_WEAPON_SHIFT;
+        for(int frame=0;frame<m->num_frames;++frame) for(int rotation=0;rotation<3;++rotation) {
+            vec3_t position,local,expected,angles,f,r,u;
+            int oldframe=frame?frame-1:0;
+            cl.lerpfrac=.37f;cl_entities[2].current.frame=frame;cl_entities[2].prev.frame=oldframe;
+            VectorSet(cl_entities[2].prev.angles,-30+30*rotation,350,25-25*rotation);
+            VectorSet(cl_entities[2].current.angles,-25+30*rotation,10,20-25*rotation);
+            for(int mode=0;mode<2;++mode) {
+                float frame_lerp=mode?1:cl.lerpfrac;
+                test_lerpmodels=mode?"0":"1";
+                for(int axis=0;axis<3;++axis) {
+                    local[axis]=m->points[oldframe][axis]*(1-frame_lerp)+m->points[frame][axis]*frame_lerp;
+                    angles[axis]=cl_entities[2].prev.angles[axis]+cl.lerpfrac*(cl_entities[2].current.angles[axis]-cl_entities[2].prev.angles[axis]);
+                }
+                angles[YAW]=350+20*cl.lerpfrac; /* shortest wrap, independently specified */
+                AliasMatrixPoint(angles,local,expected);
+                assert(CL_GetThirdPersonMuzzle(2,event,position,f,r,u));
+                for(int axis=0;axis<3;++axis) {
+                    expected[axis]+=cl_entities[2].prev.origin[axis]+cl.lerpfrac*(cl_entities[2].current.origin[axis]-cl_entities[2].prev.origin[axis]);
+                    assert(fabsf(position[axis]-expected[axis])<.0002f);
+                }
+                ++checks;
+            }
+        }
+    }
+    test_lerpmodels="1";
+    printf("PASS muzzle attachment matrix: %u poses across all models/frames, pitch/roll/yaw wrap and interpolation off\n",checks);
+}
+
+static void TestAttachedPlayerMuzzleFlashes(void)
+{
+    static const struct { int event; const char *model; } weapons[] = {
+        {MZ_BLASTER,"w_blaster.md2"}, {MZ_SHOTGUN,"w_shotgun.md2"},
+        {MZ_SHOTGUN2,"w_shotgun.md2"}, {MZ_SSHOTGUN,"w_sshotgun.md2"},
+        {MZ_MACHINEGUN,"w_machinegun.md2"}, {MZ_ETF_RIFLE,"w_machinegun.md2"},
+        {MZ_CHAINGUN1,"w_chaingun.md2"}, {MZ_CHAINGUN2,"w_chaingun.md2"},
+        {MZ_CHAINGUN3,"w_chaingun.md2"}, {MZ_GRENADE,"w_glauncher.md2"},
+        {MZ_ROCKET,"w_rlauncher.md2"}, {MZ_HYPERBLASTER,"w_hyperblaster.md2"},
+        {MZ_RAILGUN,"w_railgun.md2"}, {MZ_BFG,"w_bfg.md2"}
+    };
+    byte data[8];
+    vec3_t expected, forward, right, up;
+    cvar_t legacy_height = {.value=123}, legacy_crouch = {.value=77};
+    cvar_t legacy_lag = {.value=1};
+    extern cvar_t *cl_mflash_thirdperson_up, *cl_mflash_thirdperson_crouch_down;
+    extern cvar_t *cl_mflash_thirdperson_model_lag_comp;
+    cl_mflash_thirdperson_up=&legacy_height;
+    cl_mflash_thirdperson_crouch_down=&legacy_crouch;
+    cl_mflash_thirdperson_model_lag_comp=&legacy_lag;
+    for (unsigned w=0;w<sizeof(weapons)/sizeof(*weapons);++w) {
+        centity_t *shooter;
+        explosion_t saved;
+        uint64_t updates;
+        unsigned rng;
+        muzzle_flash_config_t *cfg;
+        ResetEffects(); ss_state.session_active=false;
+        cl_entities=test_entities[0]; cl_numentities=16;
+        memset(test_entities,0,sizeof(test_entities));
+        cl.frame.serverframe=5; cl.frame.servertime=1050; cl.lerpfrac=.35f;
+        cl.playernum=0; cl_vwep=&one;
+        num_cl_weaponmodels=3;
+        strcpy(cl_weaponmodels[0],"weapon.md2");
+        strcpy(cl_weaponmodels[1],weapons[w].model);
+        strcpy(cl_weaponmodels[2],"w_shotgun.md2");
+        cl.clientinfo[0].weaponmodel[0]=(struct model_s *)(uintptr_t)1;
+        cl.clientinfo[0].weaponmodel[1]=(struct model_s *)(uintptr_t)1;
+        cl.clientinfo[0].weaponmodel[2]=(struct model_s *)(uintptr_t)1;
+        shooter=&cl_entities[2]; shooter->serverframe=5;
+        shooter->current.number=2;
+        shooter->current.modelindex=shooter->current.modelindex2=255;
+        shooter->current.skinnum=1<<PP_PLAYER_SKINNUM_WEAPON_SHIFT;
+        shooter->prev.frame=169; shooter->current.frame=170; /* crouched firing */
+        VectorSet(shooter->prev.origin,20,30,40);
+        VectorSet(shooter->current.origin,70,10,60);
+        VectorSet(shooter->prev.angles,20,350,7);
+        VectorSet(shooter->current.angles,30,10,-9);
+        cfg=CL_GetMuzzleFlashConfig(weapons[w].event,true);
+        memset(cfg,0,sizeof(*cfg));cfg->enabled=true;cfg->scale=2;cfg->duration_ms=50;
+        cfg->forward=200;cfg->right=300;cfg->up=400;cfg->velocity_scale=99;
+        strcpy(cfg->image,"sprites/muzzleFlashSmall.png");
+        assert(CL_GetThirdPersonMuzzle(2,weapons[w].event,expected,forward,right,up));
+        SZ_Init(&net_message,data,sizeof(data));
+        MSG_WriteShort(&net_message,2);MSG_WriteByte(&net_message,weapons[w].event);
+        MSG_BeginReading(&net_message);CL_AddMuzzleFlash();
+        assert(cl_explosions[0].muzzle_attached && cl_explosions[0].muzzle_entity==2);
+        for(int axis=0;axis<3;++axis) {
+            assert(fabsf(cl_explosions[0].ent.origin[axis]-expected[axis])<.001f);
+            assert(fabsf(cl_dlights[0].origin[axis]-expected[axis])<.001f);
+            assert(cl_explosions[0].velocity[axis]==0);
+        }
+        cl.time+=25;CL_PrepareTEnts();
+        saved=cl_explosions[0];updates=cl_effect_stats.sprite_updates;rng=random_calls;
+        test_entities[1][2]=test_entities[0][2];
+        test_entities[1][2].current.origin[0]+=100;
+        test_entities[1][2].current.frame=171;
+        /* Observer order must not affect the other view or mutate shared state. */
+        for(int pass=0;pass<4;++pass) {
+            int observer=pass==0||pass==3?1:0;
+            cl_entities=test_entities[observer];cl.lerpfrac=observer?.8f:.35f;
+            assert(CL_GetThirdPersonMuzzle(2,weapons[w].event,expected,forward,right,up));
+            ResetOutput();CL_AddTEnts();assert(submitted_entities==1);
+            for(int axis=0;axis<3;++axis)
+                assert(fabsf(entity_submissions[0].origin[axis]-expected[axis])<.001f);
+            assert(!memcmp(&saved,&cl_explosions[0],sizeof(saved)));
+            assert(cl_effect_stats.sprite_updates==updates && random_calls==rng);
+        }
+        /* An event parsed before its snapshot can attach once the pose arrives. */
+        cl_explosions[0].muzzle_attached=false;
+        ResetOutput();CL_AddTEnts();assert(submitted_entities==1);
+        for(int axis=0;axis<3;++axis)
+            assert(fabsf(entity_submissions[0].origin[axis]-expected[axis])<.001f);
+        cl_explosions[0]=saved;
+        cl_entities[2].serverframe=4;ResetOutput();CL_AddTEnts();assert(!submitted_entities);
+        cl_entities[2].serverframe=5;
+        cl_entities[2].current.modelindex=0;ResetOutput();CL_AddTEnts();assert(!submitted_entities);
+        cl_entities[2].current.modelindex=255;
+        cl_entities[2].current.skinnum=2<<PP_PLAYER_SKINNUM_WEAPON_SHIFT;
+        ResetOutput();CL_AddTEnts();assert(!submitted_entities);
+        cl_entities[2].current.skinnum=1<<PP_PLAYER_SKINNUM_WEAPON_SHIFT;
+        cl.time+=25;CL_PrepareTEnts();ResetOutput();CL_AddTEnts();assert(!submitted_entities);
+    }
+    cl_mflash_thirdperson_up=&zero;cl_mflash_thirdperson_crouch_down=&zero;
+    cl_mflash_thirdperson_model_lag_comp=&zero;
+    puts("PASS attached player muzzle flashes: all weapon events, live model pose, observer histories, no legacy lift/lag/drift, expiration and removed/switched shooters");
+}
+
 static entity_state_t test_streams[2][MAX_PARSE_ENTITIES];
 
 static void TestSoldierPlayerReports(void)
@@ -634,7 +801,7 @@ static void TestMapTransition(void)
 int main(void)
 {
     Swap_Init();
-    TestOccurrences(); TestParticleFrame(); TestPlayerMuzzleFlashes(); TestSoldierPlayerReports(); TestHeavyMuzzleFlash(); TestHelicopterMuzzleFlash(); TestTrailInputs(); TestSpritePreparation(); TestBulletImpacts(); TestBeamViews(); TestMapTransition();
+    TestOccurrences(); TestParticleFrame(); TestPlayerMuzzleFlashes(); TestMuzzleModelMatrix(); TestAttachedPlayerMuzzleFlashes(); TestSoldierPlayerReports(); TestHeavyMuzzleFlash(); TestHelicopterMuzzleFlash(); TestTrailInputs(); TestSpritePreparation(); TestBulletImpacts(); TestBeamViews(); TestMapTransition();
     puts("All shared-effect production regressions passed.");
     return 0;
 }

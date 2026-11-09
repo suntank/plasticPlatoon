@@ -67,7 +67,10 @@ void IN_GetClipboardText(char *out, size_t n);
 /* Copy text to clipboard */
 int IN_SetClipboardText(const char *s);
 
+/* Registry span; disconnected indices within this range may be empty. */
 int IN_GetDetectedGamepadCount(void);
+qboolean IN_IsGamepadConnected(int index);
+int IN_GetDetectedGamepadId(int index);
 const char *IN_GetDetectedGamepadName(int index);
 
 #endif

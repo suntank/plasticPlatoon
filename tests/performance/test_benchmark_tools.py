@@ -76,8 +76,7 @@ class LauncherTests(unittest.TestCase):
         self.data = self.root / "runtime data"
         self.base = self.data / "baseq2"
         self.base.mkdir(parents=True)
-        self.binary = self.root / "engine tools" / "fake quake2"
-        self.binary.parent.mkdir()
+        self.binary = self.data / "fake quake2"
         self.binary.write_text(FAKE_ENGINE)
         self.binary.chmod(0o755)
         self.perf = self.base / "perf"
@@ -133,10 +132,10 @@ class LauncherTests(unittest.TestCase):
         self.assertEqual(meta["settings"]["r_modulate"], "1.25")
 
     def test_demo_mode_is_explicit_and_does_not_start_a_local_server(self):
-        result = self.launch(source=("--demo", "demos/demo1.dm2"))
+        result = self.launch(source=("--demo", "demo1.dm2"))
         self.assertEqual(result.returncode, 0, result.stderr)
         cfg = (self.perf / "capture.cfg").read_text()
-        self.assertIn("set timedemo 1\ndemomap demos/demo1.dm2\n", cfg)
+        self.assertIn("set timedemo 1\ndemomap demo1.dm2\n", cfg)
         self.assertNotIn("cl_bench_local", cfg)
         self.assertNotIn("cl_bench_pose", cfg)
         self.assertNotIn("set cheats", cfg)
@@ -170,6 +169,31 @@ class LauncherTests(unittest.TestCase):
                 result = self.launch(*arguments, source=("--demo", "demo1.dm2"))
                 self.assertEqual(result.returncode, 2, result.stderr)
                 self.assertEqual(list(self.perf.iterdir()), [])
+
+    def test_external_portable_binary_rejected_before_any_write_or_launch(self):
+        installation = self.root / "playing installation"
+        saved_config = installation / "baseq2/config.cfg"
+        saved_config.parent.mkdir(parents=True)
+        saved_config.write_text('set vid_fullscreen "1"\n')
+        external_binary = installation / "quake2"
+        external_binary.write_text(FAKE_ENGINE)
+        external_binary.chmod(0o755)
+        (installation / "ref_gl1.so").write_bytes(b"playing renderer")
+        linked_binary = self.data / "linked quake2"
+        linked_binary.symlink_to(external_binary)
+        self.perf.rmdir()
+        before = {str(p.relative_to(self.root)): p.read_bytes()
+                  for p in self.root.rglob("*") if p.is_file()}
+        for binary in (external_binary, linked_binary):
+            with self.subTest(binary=binary):
+                result = self.launch("--binary", str(binary))
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertIn("--binary must be inside --data", result.stderr)
+                self.assertIn("copy the executable and matching renderer libraries", result.stderr)
+                self.assertFalse(self.perf.exists())
+                self.assertFalse((installation / "baseq2/perf").exists())
+                self.assertEqual({str(p.relative_to(self.root)): p.read_bytes()
+                                  for p in self.root.rglob("*") if p.is_file()}, before)
 
     def test_each_existing_capture_artifact_prevents_any_overwrite(self):
         for suffix in (".cfg", "-frames.csv", "-views.csv", "-settings.txt",
@@ -314,13 +338,15 @@ class OverlayTests(unittest.TestCase):
         self.expected = {
             "models/items/armor/shard/tris.md2": b"project optimized model",
             "models/items/armor/shard/skin.png": b"project pickup skin",
-            "players/male/tris.md2": b"project player model",
-            "players/male/skin.PCX": b"project player skin",
+            "players/soldier/tris.md2": b"project player model",
+            "players/soldier/skin.PCX": b"project player skin",
             "sprites/muzzle.sp2": b"project sprite definition",
             "sprites/muzzle.tga": b"project sprite image",
             "performance/pi-zero2.cfg": b"set gl1_picmip 1\n",
         }
         excluded = {
+            "players/male/tris.md2": b"legacy stock player model",
+            "players/male/skin.PCX": b"legacy stock player skin",
             "pak0.pak": b"licensed stock archive",
             "other.pk3": b"unrelated archive",
             "game.so": b"platform-specific binary",

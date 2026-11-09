@@ -52,6 +52,10 @@ typedef struct
 	vec3_t velocity;       /* velocity for muzzle flash tracking */
 	vec3_t spawn_origin;   /* immutable muzzle origin for velocity extrapolation */
 	qboolean spawn_origin_valid;
+	int muzzle_entity;     /* third-person attachment, resolved per observer at submission */
+	int muzzle_weapon;
+	qboolean muzzle_attached;
+	int muzzle_modelindex, muzzle_modelindex2, muzzle_skinnum;
 	vec3_t dir_forward;    /* weapon forward direction for cone sprites */
 	vec3_t dir_right;      /* weapon right direction for cone sprites */
 	vec3_t dir_up;         /* weapon up direction for cone sprites */
@@ -535,7 +539,7 @@ CL_MFlashRenderScaleToSkinNum(float render_scale)
  */
 void
 CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up,
-	vec3_t velocity, int weapon, qboolean thirdperson, qboolean ads_active)
+	vec3_t velocity, int weapon, qboolean thirdperson, qboolean ads_active, int entnum)
 {
 	vec3_t spawn_origin, spawn_origin2;
 	float fwd_offset, right_offset, up_offset;
@@ -554,6 +558,7 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	struct model_s *cone_model = NULL;
 	struct model_s *billboard_model = NULL;
 	qboolean local_split_firstperson = false;
+	qboolean attached_muzzle = false;
 
 	/* Get weapon-specific config */
 	cfg = CL_GetMuzzleFlashConfig(weapon, thirdperson);
@@ -644,6 +649,13 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 
 	if (thirdperson)
 	{
+		vec3_t muzzle_origin, muzzle_forward, muzzle_right, muzzle_up;
+		attached_muzzle = CL_GetThirdPersonMuzzle(entnum, weapon, muzzle_origin,
+			muzzle_forward, muzzle_right, muzzle_up);
+		if (attached_muzzle)
+		{
+			VectorCopy(muzzle_origin, spawn_origin);
+		}
 		ex = CL_AllocExplosion();
 		ex->type = ex_mflash_billboard;
 		ex->ent.flags = RF_FULLBRIGHT | RF_TRANSLUCENT | RF_NOSHADOW;
@@ -652,9 +664,21 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 		VectorCopy(spawn_origin, ex->ent.origin);
 		VectorCopy(spawn_origin, ex->ent.oldorigin);
 
-		ex->velocity[0] = velocity[0] * vel_scale;
-		ex->velocity[1] = velocity[1] * vel_scale;
-		ex->velocity[2] = velocity[2] * vel_scale;
+		ex->muzzle_entity = entnum;
+		ex->muzzle_weapon = weapon;
+		ex->muzzle_attached = attached_muzzle;
+		if (entnum > 0 && entnum < cl_numentities)
+		{
+			ex->muzzle_modelindex = cl_entities[entnum].current.modelindex;
+			ex->muzzle_modelindex2 = cl_entities[entnum].current.modelindex2;
+			ex->muzzle_skinnum = cl_entities[entnum].current.skinnum;
+		}
+		if (!attached_muzzle)
+		{
+			ex->velocity[0] = velocity[0] * vel_scale;
+			ex->velocity[1] = velocity[1] * vel_scale;
+			ex->velocity[2] = velocity[2] * vel_scale;
+		}
 
 		ex->ent.angles[2] = (float)(randk() % 360);
 		ex->start = cl.time;
@@ -2411,6 +2435,36 @@ CL_AddExplosions(void)
 		}
 		entity = ex->ent;
 		entity.backlerp = 1.0f - cl.lerpfrac;
+		if (ex->muzzle_entity)
+		{
+			vec3_t forward, right, up;
+			const centity_t *shooter;
+			if (ex->muzzle_entity < 1 || ex->muzzle_entity >= cl_numentities)
+			{
+				continue;
+			}
+			shooter = &cl_entities[ex->muzzle_entity];
+			if (shooter->serverframe != cl.frame.serverframe ||
+				!shooter->current.modelindex ||
+				shooter->current.modelindex != ex->muzzle_modelindex ||
+				shooter->current.modelindex2 != ex->muzzle_modelindex2 ||
+				shooter->current.skinnum != ex->muzzle_skinnum)
+			{
+				continue;
+			}
+			/* The observer's snapshot/lerp can differ across split-screen
+			 * views. Attach a local copy; shared lifetime and effect state
+			 * stay independent of camera count and submission order. */
+			if (CL_GetThirdPersonMuzzle(ex->muzzle_entity, ex->muzzle_weapon,
+				entity.origin, forward, right, up))
+			{
+				VectorCopy(entity.origin, entity.oldorigin);
+			}
+			else if (ex->muzzle_attached)
+			{
+				continue;
+			}
+		}
 		if (ex->light)
 		{
 			V_AddLight(entity.origin, ex->light * entity.alpha,

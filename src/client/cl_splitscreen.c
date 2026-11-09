@@ -1,5 +1,6 @@
 #include "cl_splitscreen.h"
 #include "header/performance.h"
+#include "input/header/input.h"
 #define client_state_t server_client_state_t
 #include "../server/header/server.h"
 #undef client_state_t
@@ -44,6 +45,7 @@ static centity_t *SS_AllocSlotEntity(ss_local_player_t *slot, int entnum);
 static void SS_FreeSlotEntities(ss_local_player_t *slot);
 static void SS_TriggerSlotViewmodelKick(ss_local_player_t *slot,
 	const ss_viewmodel_recoil_t *recoil_cfg, qboolean ads_active, float current_time);
+static void SS_ClearSlotDeviceInput(ss_local_player_t *slot);
 
 static float
 SS_GetDeltaAngle(const player_state_t *ps, int axis)
@@ -70,7 +72,7 @@ SS_ClampSlotPitch(ss_local_player_t *slot, const player_state_t *ps)
 {
 	float pitch_delta;
 
-	if (!slot || !ps)
+	if (!slot)
 	{
 		return;
 	}
@@ -172,7 +174,9 @@ SS_IsDownKey(int key)
 static qboolean
 SS_IsScoreboardKey(int key)
 {
-	return key == K_TAB || key == K_BTN_BACK;
+	const char *binding = (key >= 0 && key < K_LAST) ? keybindings[key] : NULL;
+
+	return binding && (!strcmp(binding, "score") || !strcmp(binding, "cmd score"));
 }
 
 static void
@@ -296,8 +300,7 @@ SS_OpenSlotMenu(ss_local_player_t *slot)
 
 	slot->menu_open = true;
 	slot->menu_cursor = SS_SESSION_ACTION_RESUME;
-	slot->exit_hold_active = false;
-	slot->exit_hold_start = 0;
+	SS_ClearSlotDeviceInput(slot);
 	SS_UpdatePauseState();
 }
 
@@ -2767,21 +2770,17 @@ SS_PollSlotPackets(ss_local_player_t *slot)
 }
 
 static float
-SS_NormalizeAxis(int value)
+SS_NormalizeAxis(int value, float deadzone)
 {
-	const int deadzone = 8192;
+	float normalized = value / (value < 0 ? 32768.0f : 32767.0f);
 
-	if (value > -deadzone && value < deadzone)
+	deadzone = Q_clamp(deadzone, 0.0f, 0.5f);
+	if (fabsf(normalized) <= deadzone)
 	{
 		return 0.0f;
 	}
 
-	if (value < 0)
-	{
-		return (float)(value + deadzone) / (32768.0f - deadzone);
-	}
-
-	return (float)(value - deadzone) / (32767.0f - deadzone);
+	return copysignf((fabsf(normalized) - deadzone) / (1.0f - deadzone), normalized);
 }
 
 static void
@@ -2791,8 +2790,8 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	float move_y;
 	float look_x;
 	float look_y;
-	float look_yaw_scale;
-	float look_pitch_scale;
+	float left_deadzone = Cvar_VariableValue("joy_left_deadzone");
+	float right_deadzone = Cvar_VariableValue("joy_right_deadzone");
 	usercmd_t *cmd;
 	int ms;
 	int cmd_index;
@@ -2822,28 +2821,37 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	cmd = &slot->cmds[cmd_index];
 	memset(cmd, 0, sizeof(*cmd));
 
-	move_x = SS_NormalizeAxis(slot->axis_left_x);
-	move_y = SS_NormalizeAxis(slot->axis_left_y);
-	look_x = SS_NormalizeAxis(slot->axis_right_x);
-	look_y = SS_NormalizeAxis(slot->axis_right_y);
-	look_yaw_scale = 1.5f;
-	look_pitch_scale = 1.5f;
+	move_x = SS_NormalizeAxis(slot->axis_left_x, left_deadzone);
+	move_y = SS_NormalizeAxis(slot->axis_left_y, left_deadzone);
+	look_x = SS_NormalizeAxis(slot->axis_right_x, right_deadzone);
+	look_y = SS_NormalizeAxis(slot->axis_right_y, right_deadzone);
 
-	slot->viewangles[YAW] -= look_x * cl_yawspeed->value * cls.nframetime * look_yaw_scale;
-	slot->viewangles[PITCH] -= look_y * cl_pitchspeed->value * cls.nframetime * look_pitch_scale;
+	slot->viewangles[YAW] -= look_x * Cvar_VariableValue("joy_yawspeed") * cls.nframetime;
+	slot->viewangles[PITCH] += look_y * Cvar_VariableValue("joy_pitchspeed") * cls.nframetime;
+	slot->viewangles[YAW] += (slot->turnleft_down - slot->turnright_down) *
+		cl_yawspeed->value * cls.nframetime;
+	slot->viewangles[PITCH] += (slot->lookdown_down - slot->lookup_down) *
+		cl_pitchspeed->value * cls.nframetime;
+	SS_ClampSlotPitch(slot, slot->snapshot_valid ? &slot->frame.playerstate : NULL);
 
 	cmd->angles[PITCH] = ANGLE2SHORT(slot->viewangles[PITCH]);
 	cmd->angles[YAW] = ANGLE2SHORT(slot->viewangles[YAW]);
 	cmd->angles[ROLL] = ANGLE2SHORT(slot->viewangles[ROLL]);
 
-	cmd->forwardmove = (short)(-move_y * cl_forwardspeed->value);
-	cmd->sidemove = (short)(move_x * cl_sidespeed->value);
+	cmd->forwardmove = (short)((slot->forward_down - slot->back_down) * cl_forwardspeed->value);
+	cmd->sidemove = (short)((slot->moveright_down - slot->moveleft_down) * cl_sidespeed->value);
 
 	if ((slot->speed_down ? 1 : 0) ^ (int)(cl_run->value))
 	{
 		cmd->forwardmove *= 2;
 		cmd->sidemove *= 2;
 	}
+
+	/* Analog movement runs by default, just like the primary input path. */
+	cmd->forwardmove -= move_y * Cvar_VariableValue("m_forward") *
+		Cvar_VariableValue("joy_forwardsensitivity") * cl_forwardspeed->value * 2.0f;
+	cmd->sidemove += move_x * Cvar_VariableValue("m_side") *
+		Cvar_VariableValue("joy_sidesensitivity") * cl_sidespeed->value * 2.0f;
 
 	if (slot->jump_down)
 	{
@@ -3558,6 +3566,13 @@ SS_SetDetectedGamepadCount(int gamepad_count)
 		sizeof(ss_state.device_labels[1]));
 
 	ss_state.device_count = gamepad_count + 2;
+	ss_state.device_connected[0] = false;
+	ss_state.device_connected[1] = true;
+
+	for (i = 2; i < SS_MAX_INPUT_DEVICES; ++i)
+	{
+		ss_state.device_connected[i] = (i < ss_state.device_count);
+	}
 
 	for (i = 0; i < gamepad_count; ++i)
 	{
@@ -3595,11 +3610,103 @@ SS_SetDeviceLabel(int device_index, const char *label)
 		sizeof(ss_state.device_labels[device_index]));
 }
 
+static void
+SS_ClearSlotDeviceInput(ss_local_player_t *slot)
+{
+	slot->axis_left_x = 0;
+	slot->axis_left_y = 0;
+	slot->axis_right_x = 0;
+	slot->axis_right_y = 0;
+	slot->attack_down = false;
+	slot->previous_attack_down = false;
+	slot->scoreboard_down = false;
+	slot->use_down = false;
+	slot->ads_down = false;
+	slot->speed_down = false;
+	slot->jump_down = false;
+	slot->crouch_down = false;
+	slot->forward_down = false;
+	slot->back_down = false;
+	slot->moveleft_down = false;
+	slot->moveright_down = false;
+	slot->turnleft_down = false;
+	slot->turnright_down = false;
+	slot->lookup_down = false;
+	slot->lookdown_down = false;
+	slot->exit_hold_active = false;
+	slot->exit_hold_start = 0;
+}
+
+void
+SS_RefreshDevices(void)
+{
+	int i;
+
+	/* Registry indices stay stable across hotplug and may contain gaps. */
+	ss_state.device_count = SS_MAX_INPUT_DEVICES;
+	ss_state.device_connected[0] = false;
+	ss_state.device_connected[1] = true;
+	SS_SetDeviceLabel(0, "Unassigned");
+	SS_SetDeviceLabel(1, "Keyboard+Mouse");
+
+	for (i = 2; i < SS_MAX_INPUT_DEVICES; ++i)
+	{
+		qboolean connected = IN_IsGamepadConnected(i - 2);
+		int instance_id = connected ? IN_GetDetectedGamepadId(i - 2) : -1;
+		int slot_index;
+
+		if (connected != ss_state.device_connected[i] ||
+			instance_id != ss_state.device_instance_ids[i])
+		{
+			for (slot_index = 0; slot_index < SS_GetPlayerCount(); ++slot_index)
+			{
+				ss_local_player_t *slot = &ss_state.slots[slot_index];
+
+				if (!slot->active || slot->device_index != i)
+				{
+					continue;
+				}
+
+				slot->ready = false;
+				if (ss_state.lobby_active)
+				{
+					slot->state = SS_SLOT_SETUP;
+				}
+				SS_ClearSlotDeviceInput(slot);
+			}
+		}
+
+		ss_state.device_connected[i] = connected;
+		ss_state.device_instance_ids[i] = instance_id;
+		Com_sprintf(ss_state.device_labels[i], sizeof(ss_state.device_labels[i]),
+			"Pad %d: %.24s", i - 1,
+			connected ? IN_GetDetectedGamepadName(i - 2) : "disconnected");
+	}
+}
+
+qboolean
+SS_IsDeviceConnected(int device_index)
+{
+	return device_index > 0 && device_index < ss_state.device_count &&
+		ss_state.device_connected[device_index];
+}
+
 void
 SS_BeginLobby(void)
 {
 	int i;
+	int next_device = 2;
+	int gamepad_count = 0;
 	int player_count = SS_GetPlayerCount();
+
+	SS_RefreshDevices();
+	for (i = 2; i < SS_GetDeviceCount(); ++i)
+	{
+		if (SS_IsDeviceConnected(i))
+		{
+			++gamepad_count;
+		}
+	}
 
 	ss_state.enabled = true;
 	ss_state.lobby_active = true;
@@ -3608,6 +3715,7 @@ SS_BeginLobby(void)
 	{
 		ss_local_player_t *slot = &ss_state.slots[i];
 
+		SS_FreeSlotEntities(slot);
 		memset(slot, 0, sizeof(*slot));
 		slot->local_index = i;
 
@@ -3617,7 +3725,21 @@ SS_BeginLobby(void)
 			slot->state = SS_SLOT_SETUP;
 			slot->loopback_slot = i;
 			slot->connection_state = ca_disconnected;
-			slot->device_index = (i + 1 < ss_state.device_count) ? (i + 1) : 0;
+			if (i == 0 && gamepad_count < player_count)
+			{
+				slot->device_index = 1;
+				continue;
+			}
+
+			while (next_device < SS_GetDeviceCount() &&
+				!SS_IsDeviceConnected(next_device))
+			{
+				++next_device;
+			}
+			if (next_device < SS_GetDeviceCount())
+			{
+				slot->device_index = next_device++;
+			}
 		}
 	}
 }
@@ -3634,16 +3756,24 @@ SS_AreAllSlotsReady(void)
 	int i;
 	int player_count = SS_GetPlayerCount();
 
-	if (player_count <= 0)
+	if (!ss_state.lobby_active || player_count <= 0)
 	{
 		return false;
 	}
 
 	for (i = 0; i < player_count; ++i)
 	{
-		if (!ss_state.slots[i].active || !ss_state.slots[i].ready)
+		if (!ss_state.slots[i].active || !ss_state.slots[i].ready ||
+			!SS_IsDeviceConnected(ss_state.slots[i].device_index))
 		{
 			return false;
+		}
+		for (int other = 0; other < i; ++other)
+		{
+			if (ss_state.slots[other].device_index == ss_state.slots[i].device_index)
+			{
+				return false;
+			}
 		}
 	}
 
@@ -3685,8 +3815,10 @@ qboolean
 SS_IsDeviceSelectable(int slot_index, int device_index)
 {
 	int i;
+	ss_local_player_t *slot = SS_GetSlot(slot_index);
 
-	if (device_index < 0 || device_index >= ss_state.device_count)
+	if (!slot || !slot->active || device_index < 0 ||
+		device_index >= ss_state.device_count)
 	{
 		return false;
 	}
@@ -3694,6 +3826,11 @@ SS_IsDeviceSelectable(int slot_index, int device_index)
 	if (device_index == 0)
 	{
 		return true;
+	}
+
+	if (!SS_IsDeviceConnected(device_index))
+	{
+		return false;
 	}
 
 	for (i = 0; i < SS_GetPlayerCount(); ++i)
@@ -3705,10 +3842,84 @@ SS_IsDeviceSelectable(int slot_index, int device_index)
 
 		if (ss_state.slots[i].active && ss_state.slots[i].device_index == device_index)
 		{
-			return false;
+			return !ss_state.slots[i].ready;
 		}
 	}
 
+	return true;
+}
+
+int
+SS_FindLobbySlotForDevice(int device_index)
+{
+	int i;
+
+	if (!ss_state.lobby_active || !SS_IsDeviceConnected(device_index))
+	{
+		return -1;
+	}
+
+	for (i = 0; i < SS_GetPlayerCount(); ++i)
+	{
+		if (ss_state.slots[i].active && ss_state.slots[i].device_index == device_index)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+int
+SS_JoinLobbyDevice(int device_index)
+{
+	int i;
+	int assigned_slot = SS_FindLobbySlotForDevice(device_index);
+
+	if (assigned_slot >= 0)
+	{
+		return assigned_slot;
+	}
+	if (!ss_state.lobby_active || !SS_IsDeviceConnected(device_index))
+	{
+		return -1;
+	}
+
+	for (i = 0; i < SS_GetPlayerCount(); ++i)
+	{
+		ss_local_player_t *slot = &ss_state.slots[i];
+
+		if (slot->active && !slot->ready && !SS_IsDeviceConnected(slot->device_index) &&
+			SS_AssignSlotDevice(i, device_index))
+		{
+			return i;
+		}
+	}
+
+	/* A newly joined pad can replace the keyboard host without requiring
+	 * a keyboard action first. Never take over a ready player's device. */
+	if (device_index >= 2 && ss_state.slots[0].device_index == 1 &&
+		!ss_state.slots[0].ready && SS_AssignSlotDevice(0, device_index))
+	{
+		return 0;
+	}
+
+	return -1;
+}
+
+qboolean
+SS_SetSlotReady(int slot_index, qboolean ready)
+{
+	ss_local_player_t *slot = SS_GetSlot(slot_index);
+
+	if (!ss_state.lobby_active || !slot || !slot->active ||
+		(ready && !SS_IsDeviceConnected(slot->device_index)))
+	{
+		return false;
+	}
+
+	slot->ready = ready;
+	slot->state = ready ? SS_SLOT_READY : SS_SLOT_SETUP;
 	return true;
 }
 
@@ -3815,15 +4026,39 @@ qboolean
 SS_AssignSlotDevice(int slot_index, int device_index)
 {
 	ss_local_player_t *slot = SS_GetSlot(slot_index);
+	int i;
 
 	if (!slot || !SS_IsDeviceSelectable(slot_index, device_index))
 	{
 		return false;
 	}
 
+	if (slot->device_index == device_index)
+	{
+		return true;
+	}
+
+	for (i = 0; device_index > 0 && i < SS_GetPlayerCount(); ++i)
+	{
+		ss_local_player_t *other = &ss_state.slots[i];
+
+		if (other == slot || !other->active || other->device_index != device_index)
+		{
+			continue;
+		}
+
+		other->device_index = SS_IsDeviceConnected(slot->device_index) ?
+			slot->device_index : 0;
+		other->ready = false;
+		other->state = SS_SLOT_SETUP;
+		SS_ClearSlotDeviceInput(other);
+		break;
+	}
+
 	slot->device_index = device_index;
 	slot->ready = false;
 	slot->state = SS_SLOT_SETUP;
+	SS_ClearSlotDeviceInput(slot);
 	return true;
 }
 
@@ -3866,18 +4101,7 @@ SS_BeginSession(void)
 		memset(slot->frames, 0, sizeof(slot->frames));
 		memset(slot->parse_entities, 0, sizeof(slot->parse_entities));
 		VectorCopy(cl.viewangles, slot->viewangles);
-		slot->axis_left_x = 0;
-		slot->axis_left_y = 0;
-		slot->axis_right_x = 0;
-		slot->axis_right_y = 0;
-		slot->attack_down = false;
-		slot->previous_attack_down = false;
-		slot->scoreboard_down = false;
-		slot->use_down = false;
-		slot->ads_down = false;
-		slot->speed_down = false;
-		slot->jump_down = false;
-		slot->crouch_down = false;
+		SS_ClearSlotDeviceInput(slot);
 		slot->ads_active = false;
 		slot->last_gunindex = 0;
 		slot->muzzle_flash_seq = 0;
@@ -3927,18 +4151,7 @@ SS_EndSession(void)
 		memset(ss_state.slots[i].cmds, 0, sizeof(ss_state.slots[i].cmds));
 		memset(&ss_state.slots[i].cmd, 0, sizeof(ss_state.slots[i].cmd));
 		VectorClear(ss_state.slots[i].viewangles);
-		ss_state.slots[i].axis_left_x = 0;
-		ss_state.slots[i].axis_left_y = 0;
-		ss_state.slots[i].axis_right_x = 0;
-		ss_state.slots[i].axis_right_y = 0;
-		ss_state.slots[i].attack_down = false;
-		ss_state.slots[i].previous_attack_down = false;
-		ss_state.slots[i].scoreboard_down = false;
-		ss_state.slots[i].use_down = false;
-		ss_state.slots[i].ads_down = false;
-		ss_state.slots[i].speed_down = false;
-		ss_state.slots[i].jump_down = false;
-		ss_state.slots[i].crouch_down = false;
+		SS_ClearSlotDeviceInput(&ss_state.slots[i]);
 		ss_state.slots[i].ads_active = false;
 		ss_state.slots[i].last_gunindex = 0;
 		ss_state.slots[i].muzzle_flash_seq = 0;
@@ -4148,6 +4361,7 @@ qboolean
 SS_HandleGameplayKey(int key, qboolean down)
 {
 	ss_local_player_t *slot;
+	const char *binding;
 	int device_index;
 
 	if (!ss_state.session_active || cls.key_dest != key_game)
@@ -4174,92 +4388,89 @@ SS_HandleGameplayKey(int key, qboolean down)
 		return false;
 	}
 
-	switch (key)
+	/* Use the same binding table as the primary player. Running bindings in
+	 * the global command buffer would send player 2's actions to player 1. */
+	binding = (key >= 0 && key < K_LAST) ? keybindings[key] : NULL;
+
+	if (!binding || !binding[0])
 	{
-		case K_SHOULDER_LEFT:
-			if (!down)
-			{
-				return true;
-			}
-			SS_SendSlotStringCmdNow(slot, "weapprev");
-			return true;
-
-		case K_SHOULDER_RIGHT:
-			if (!down)
-			{
-				return true;
-			}
-			SS_SendSlotStringCmdNow(slot, "quickgrenade");
-			return true;
-
-		case K_DPAD_LEFT:
-			if (!down)
-			{
-				return true;
-			}
-			SS_SendSlotStringCmdNow(slot,
-				SS_IsSlotInventoryOpen(slot->local_index) ? "invprev" : "weapprev");
-			return true;
-
-		case K_DPAD_RIGHT:
-			if (!down)
-			{
-				return true;
-			}
-			SS_SendSlotStringCmdNow(slot,
-				SS_IsSlotInventoryOpen(slot->local_index) ? "invnext" : "weapnext");
-			return true;
-
-		case K_DPAD_UP:
-			if (!down)
-			{
-				return true;
-			}
-			SS_SendSlotStringCmdNow(slot, "invuse");
-			return true;
-
-		case K_DPAD_DOWN:
-			if (!down)
-			{
-				return true;
-			}
-			SS_SendSlotStringCmdNow(slot, "inven");
-			return true;
-
-		case K_TRIG_RIGHT:
-			slot->attack_down = down;
-			return true;
-
-		case K_TRIG_LEFT:
-			slot->ads_down = down;
-			return true;
-
-		case K_STICK_LEFT:
-			slot->speed_down = down;
-			return true;
-
-		case K_BTN_WEST:
-			slot->use_down = down;
-			return true;
-
-		case K_BTN_NORTH:
-			if (!down)
-			{
-				return true;
-			}
-			SS_SendSlotStringCmdNow(slot, "quickgrenade");
-			return true;
-
-		case K_BTN_SOUTH:
-			slot->jump_down = down;
-			return true;
-
-		case K_BTN_EAST:
-			slot->crouch_down = down;
-			return true;
+		return true;
 	}
 
-	return false;
+#define SS_HELD_BINDING(command, field) \
+	if (!strcmp(binding, command)) { slot->field = down; return true; }
+	SS_HELD_BINDING("+attack", attack_down)
+	SS_HELD_BINDING("+ads", ads_down)
+	SS_HELD_BINDING("+use", use_down)
+	SS_HELD_BINDING("+speed", speed_down)
+	SS_HELD_BINDING("+moveup", jump_down)
+	SS_HELD_BINDING("+movedown", crouch_down)
+	SS_HELD_BINDING("+forward", forward_down)
+	SS_HELD_BINDING("+back", back_down)
+	SS_HELD_BINDING("+moveleft", moveleft_down)
+	SS_HELD_BINDING("+moveright", moveright_down)
+	SS_HELD_BINDING("+left", turnleft_down)
+	SS_HELD_BINDING("+right", turnright_down)
+	SS_HELD_BINDING("+lookup", lookup_down)
+	SS_HELD_BINDING("+lookdown", lookdown_down)
+#undef SS_HELD_BINDING
+
+	if (!down)
+	{
+		return true;
+	}
+
+	if (!strcmp(binding, "centerview") || !strcmp(binding, "force_centerview"))
+	{
+		slot->viewangles[PITCH] = slot->snapshot_valid ?
+			-SS_GetDeltaAngle(&slot->frame.playerstate, PITCH) : 0;
+		return true;
+	}
+
+	if (!strncmp(binding, "cmd ", 4))
+	{
+		binding += 4;
+	}
+
+	if (!strcmp(binding, "weapprev") || !strcmp(binding, "weapnext") ||
+		!strcmp(binding, "weaplast") || !strcmp(binding, "quickgrenade") ||
+		!strcmp(binding, "inven") || !strcmp(binding, "invuse") ||
+		!strcmp(binding, "invdrop") || !strcmp(binding, "invprev") ||
+		!strcmp(binding, "invnext") || !strcmp(binding, "help") ||
+		!strcmp(binding, "putaway") || !strncmp(binding, "use ", 4) ||
+		!strncmp(binding, "drop ", 5))
+	{
+		SS_SendSlotStringCmdNow(slot, binding);
+	}
+
+	/* Unknown/custom aliases must never fall through into player 1's input. */
+	return true;
+}
+
+qboolean
+SS_AddDeviceMouseMotion(int device_index, float yaw, float pitch)
+{
+	ss_local_player_t *slot;
+
+	if (!ss_state.session_active)
+	{
+		return false;
+	}
+
+	slot = SS_FindSlotByDeviceIndex(device_index, false);
+	if (!slot || slot->loopback_slot <= 0)
+	{
+		return false;
+	}
+
+	if (!slot->menu_open && slot->state != SS_SLOT_DROPPED && cls.key_dest == key_game)
+	{
+		slot->viewangles[YAW] += yaw;
+		slot->viewangles[PITCH] += pitch;
+		SS_ClampSlotPitch(slot, slot->snapshot_valid ? &slot->frame.playerstate : NULL);
+	}
+
+	return true;
 }
 
 void
@@ -4456,6 +4667,7 @@ SS_RunLocalClients(void)
 		return;
 	}
 
+	SS_RefreshDevices();
 	allow_send = (ss_state.last_local_client_frame != cls.framecount);
 	ss_state.slots[0].connection_state = cls.state;
 

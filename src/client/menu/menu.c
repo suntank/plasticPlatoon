@@ -62,6 +62,8 @@ static void M_Menu_JoinServer_f(void);
 static void M_Menu_AddressBook_f(void);
 static void M_Menu_StartServer_f(void);
 static void M_Menu_SplitScreenLobby_f(void);
+static void SplitScreenLobby_Close(void);
+static void SplitScreenLobby_MenuDraw(void);
 static void M_Menu_DMOptions_f(void);
 void M_Menu_Video_f(void);
 static void M_Menu_Options_f(void);
@@ -115,6 +117,11 @@ M_Banner(const char *name)
 void
 M_ForceMenuOff(void)
 {
+	if (SS_IsLobbyActive())
+	{
+		SplitScreenLobby_Close();
+	}
+
 	cls.key_dest = key_game;
 	m_active.draw = NULL;
 	m_active.key  = NULL;
@@ -126,6 +133,11 @@ M_ForceMenuOff(void)
 void
 M_PopMenu(void)
 {
+	if (m_active.draw == SplitScreenLobby_MenuDraw && SS_IsLobbyActive())
+	{
+		SplitScreenLobby_Close();
+	}
+
 	S_StartLocalSound(menu_out_sound);
 
 	if (m_menudepth < 1)
@@ -874,10 +886,16 @@ Multiplayer_MenuDraw(void)
 	if (SS_IsSplitScreenSelected())
 	{
 		s_split_players_box.generic.flags &= ~QMF_INACTIVE;
+		s_start_network_server_action.generic.name = " set up split-screen";
+		s_player_setup_action.generic.flags |= QMF_INACTIVE;
+		s_customize_options_action.generic.name = " gamepad settings";
 	}
 	else
 	{
 		s_split_players_box.generic.flags |= QMF_INACTIVE;
+		s_start_network_server_action.generic.name = " configure session";
+		s_player_setup_action.generic.flags &= ~QMF_INACTIVE;
+		s_customize_options_action.generic.name = " customize controls";
 	}
 
 	M_Banner("m_banner_multiplayer");
@@ -895,7 +913,14 @@ PlayerSetupFunc(void *unused)
 static void
 MultplayerCustomizeControlsFunc(void *unused)
 {
-	M_Menu_Multiplayer_Keys_f();
+	if (SS_IsSplitScreenSelected())
+	{
+		M_Menu_Joy_f();
+	}
+	else
+	{
+		M_Menu_Multiplayer_Keys_f();
+	}
 }
 
 static void
@@ -4615,6 +4640,13 @@ StartServer_ExecuteConfig(const ss_match_config_t *config, qboolean activate_spl
 		return;
 	}
 
+	/* Disconnecting resets split-screen state. Finish the old connection
+	 * before enabling the newly confirmed local players. */
+	if (activate_split_session && cls.state > ca_disconnected)
+	{
+		CL_Disconnect();
+	}
+
 	if (config->has_capturelimit)
 	{
 		Cvar_SetValue("capturelimit",
@@ -4637,7 +4669,7 @@ StartServer_ExecuteConfig(const ss_match_config_t *config, qboolean activate_spl
 
 	if (config->use_spot)
 	{
-		if (Com_ServerState())
+		if (Com_ServerState() && !activate_split_session)
 		{
 			Cbuf_AddText("disconnect\n");
 		}
@@ -4750,6 +4782,12 @@ StartServerActionFunc(void *self)
 
 	if (SS_IsSplitScreenSelected())
 	{
+		if (SS_IsSessionActive())
+		{
+			SplitScreenMenuBlockedMessage("Exit the current split-screen match\nbefore setting up another.");
+			return;
+		}
+
 		SS_SetPendingMatch(&config);
 		M_Menu_SplitScreenLobby_f();
 		return;
@@ -5060,6 +5098,7 @@ StartServer_MenuInit(void)
 	/* initialize the menu stuff */
 	s_startserver_menu.x = (int)(viddef.width * 0.50f);
 	s_startserver_menu.nitems = 0;
+	Menu_SetStatusBar(&s_startserver_menu, NULL);
 
 	s_startmap_list.generic.type = MTYPE_SPINCONTROL;
 	s_startmap_list.generic.x = 0;
@@ -5180,7 +5219,8 @@ StartServer_MenuInit(void)
 	s_startserver_dmoptions_action.generic.callback = DMOptionsFunc;
 
 	s_startserver_start_action.generic.type = MTYPE_ACTION;
-	s_startserver_start_action.generic.name = " begin";
+	s_startserver_start_action.generic.name = SS_IsSplitScreenSelected() ?
+		" next: controllers" : " begin";
 	s_startserver_start_action.generic.flags = QMF_LEFT_JUSTIFY;
 	s_startserver_start_action.generic.x = 24 * scale;
 	s_startserver_start_action.generic.y = 128;
@@ -5199,8 +5239,19 @@ StartServer_MenuInit(void)
 
 	Menu_AddItem(&s_startserver_menu, &s_timelimit_field);
 	Menu_AddItem(&s_startserver_menu, &s_fraglimit_field);
-	Menu_AddItem(&s_startserver_menu, &s_maxclients_field);
-	Menu_AddItem(&s_startserver_menu, &s_hostname_field);
+	if (!SS_IsSplitScreenSelected())
+	{
+		Menu_AddItem(&s_startserver_menu, &s_maxclients_field);
+		Menu_AddItem(&s_startserver_menu, &s_hostname_field);
+	}
+	else
+	{
+		Com_sprintf(s_maxclients_field.buffer, sizeof(s_maxclients_field.buffer),
+			"%d", SS_GetPlayerCount());
+		s_startserver_dmoptions_action.generic.y = 76;
+		s_startserver_start_action.generic.y = 96;
+		Menu_SetStatusBar(&s_startserver_menu, "1. Match settings   2. Controllers   3. Play");
+	}
 	Menu_AddItem(&s_startserver_menu, &s_startserver_dmoptions_action);
 	Menu_AddItem(&s_startserver_menu, &s_startserver_start_action);
 
@@ -6984,412 +7035,8 @@ M_Menu_PlayerConfig_f(void)
 	M_PushMenu(&s_player_config_menu);
 }
 
-/*
- * SPLIT-SCREEN LOBBY MENU
- */
-
-static menuframework_s s_splitscreen_lobby_menu;
-static int s_splitscreen_lobby_cursor[SS_MAX_LOCAL_PLAYERS];
-
-static int
-SplitScreenLobby_FindSlotForInput(int key)
-{
-	ss_state_t *state = SS_GetState();
-	qboolean controller_input = (key >= K_JOY_FIRST_BTN);
-	int gamepad_index = Key_GetEventGamepadIndex();
-	int device_index;
-	int i;
-
-	if (controller_input)
-	{
-		if (gamepad_index < 0)
-		{
-			return -1;
-		}
-
-		device_index = gamepad_index + 2;
-		for (i = 0; i < SS_GetPlayerCount(); ++i)
-		{
-			ss_local_player_t *slot = &state->slots[i];
-
-			if (slot->active && slot->device_index == device_index)
-			{
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
-	for (i = 0; i < SS_GetPlayerCount(); ++i)
-	{
-		ss_local_player_t *slot = &state->slots[i];
-
-		if (!slot->active)
-		{
-			continue;
-		}
-
-		if (!controller_input && slot->device_index == 1)
-		{
-			return i;
-		}
-
-	}
-
-	return -1;
-}
-
-static void
-SplitScreenLobby_SyncSlotModelSkin(int slot_index)
-{
-	ss_local_player_t *slot = SS_GetSlot(slot_index);
-
-	if (!slot || slot->model_index < 0 || slot->model_index >= s_modelname.num)
-	{
-		return;
-	}
-
-	if (slot->skin_index < 0 || slot->skin_index >= s_skinnames[slot->model_index].num)
-	{
-		slot->skin_index = 0;
-	}
-
-	SS_AssignSlotModelSkin(slot_index, slot->model_index, slot->skin_index,
-		s_modelname.data[slot->model_index],
-		s_skinnames[slot->model_index].data[slot->skin_index]);
-}
-
-static void
-SplitScreenLobby_CycleModel(int slot_index, int dir)
-{
-	ss_local_player_t *slot = SS_GetSlot(slot_index);
-
-	if (!slot || s_modelname.num <= 0)
-	{
-		return;
-	}
-
-	slot->model_index = (slot->model_index + dir + s_modelname.num) % s_modelname.num;
-	slot->skin_index = 0;
-	SplitScreenLobby_SyncSlotModelSkin(slot_index);
-}
-
-static void
-SplitScreenLobby_CycleSkin(int slot_index, int dir)
-{
-	ss_local_player_t *slot = SS_GetSlot(slot_index);
-	int skin_count;
-
-	if (!slot || slot->model_index < 0 || slot->model_index >= s_modelname.num)
-	{
-		return;
-	}
-
-	skin_count = s_skinnames[slot->model_index].num;
-
-	if (skin_count <= 0)
-	{
-		return;
-	}
-
-	slot->skin_index = (slot->skin_index + dir + skin_count) % skin_count;
-	SplitScreenLobby_SyncSlotModelSkin(slot_index);
-}
-
-static void
-SplitScreenLobby_CycleDevice(int slot_index, int dir)
-{
-	ss_local_player_t *slot = SS_GetSlot(slot_index);
-	int attempts = 0;
-	int device_index;
-
-	if (!slot || SS_GetDeviceCount() <= 0)
-	{
-		return;
-	}
-
-	device_index = slot->device_index;
-
-	do
-	{
-		device_index = (device_index + dir + SS_GetDeviceCount()) % SS_GetDeviceCount();
-		attempts++;
-	}
-	while ((attempts < SS_GetDeviceCount()) &&
-		!SS_IsDeviceSelectable(slot_index, device_index));
-
-	SS_AssignSlotDevice(slot_index, device_index);
-}
-
-static const char *
-SplitScreenLobby_ToggleReady(int slot_index)
-{
-	ss_local_player_t *slot = SS_GetSlot(slot_index);
-
-	if (!slot)
-	{
-		return NULL;
-	}
-
-	if (slot->device_index == 0)
-	{
-		m_popup_string = "Assign a device before readying up.";
-		m_popup_endtime = cls.realtime + 1800;
-		return menu_move_sound;
-	}
-
-	slot->ready = !slot->ready;
-	slot->state = slot->ready ? SS_SLOT_READY : SS_SLOT_SETUP;
-	return slot->ready ? menu_in_sound : menu_out_sound;
-}
-
-static qboolean
-SplitScreenLobby_MenuInit(void)
-{
-	int mdlindex = 0;
-	int imgindex = 0;
-	int i;
-
-	PlayerModelFree();
-
-	if (!PlayerConfig_ScanDirectories())
-	{
-		return false;
-	}
-
-	PlayerConfig_GetDefaultSelection(&mdlindex, &imgindex);
-
-	SS_SetDetectedGamepadCount(IN_GetDetectedGamepadCount());
-
-	for (i = 0; i < IN_GetDetectedGamepadCount(); ++i)
-	{
-		SS_SetDeviceLabel(i + 2, IN_GetDetectedGamepadName(i));
-	}
-
-	SS_BeginLobby();
-
-	for (i = 0; i < SS_GetPlayerCount(); ++i)
-	{
-		ss_local_player_t *slot = SS_GetSlot(i);
-
-		s_splitscreen_lobby_cursor[i] = 0;
-		slot->model_index = mdlindex;
-		slot->skin_index = imgindex;
-		SplitScreenLobby_SyncSlotModelSkin(i);
-	}
-
-	return true;
-}
-
-static void
-SplitScreenLobby_DrawPanel(int slot_index, const ss_viewport_t *viewport, int panel_y_offset)
-{
-	ss_local_player_t *slot;
-	float scale = SCR_GetMenuScale();
-	int x = viewport->x;
-	int y = viewport->y + panel_y_offset;
-	int w = viewport->w;
-	int h = viewport->h;
-	int vx = (int)(x / scale);
-	int vy = (int)(y / scale);
-	int box_width = (int)(w / (8.0f * scale)) - 2;
-	int box_lines = (int)(h / (8.0f * scale)) - 3;
-	char line[128];
-
-	if (box_width < 12)
-	{
-		box_width = 12;
-	}
-
-	if (box_lines < 8)
-	{
-		box_lines = 8;
-	}
-
-	if (viewport->black_fill)
-	{
-		Draw_Fill(x, y, w, h, 0);
-		return;
-	}
-
-	slot = SS_GetSlot(slot_index);
-	if (!slot || !slot->active)
-	{
-		Draw_Fill(x, y, w, h, 0);
-		return;
-	}
-
-	M_DrawTextBox(vx + 1, vy + 1, box_width, box_lines);
-
-	Com_sprintf(line, sizeof(line), "Player %d", slot_index + 1);
-	Menu_DrawString(vx + 4, vy + 3, line);
-	Menu_DrawString(vx + 4, vy + 12, slot->ready ? "READY" : "NOT READY");
-
-	M_DrawCursor(vx + 4, vy + 21 + s_splitscreen_lobby_cursor[slot_index] * 10,
-		(int)(cls.realtime / 100) % NUM_CURSOR_FRAMES);
-
-	Com_sprintf(line, sizeof(line), "model  %s", slot->model[0] ? slot->model : "--");
-	Menu_DrawString(vx + 14, vy + 22, line);
-
-	Com_sprintf(line, sizeof(line), "skin   %s", slot->skin[0] ? slot->skin : "--");
-	Menu_DrawString(vx + 14, vy + 32, line);
-
-	Com_sprintf(line, sizeof(line), "device %s", SS_GetDeviceLabel(slot->device_index));
-	Menu_DrawString(vx + 14, vy + 42, line);
-
-	Com_sprintf(line, sizeof(line), "ready  %s", slot->ready ? "yes" : "no");
-	Menu_DrawString(vx + 14, vy + 52, line);
-
-	Menu_DrawString(vx + 4, vy + box_lines * 8 - 6, SS_GetDeviceLabel(slot->device_index));
-}
-
-static void
-SplitScreenLobby_MenuDraw(void)
-{
-	ss_viewport_t panels[SS_MAX_LOCAL_PLAYERS];
-	int panel_y_offset;
-	int i;
-
-	M_Banner("m_banner_multiplayer");
-
-	panel_y_offset = (int)(36 * SCR_GetMenuScale());
-	SS_CalcViewports(SS_GetPlayerCount(), viddef.width,
-		viddef.height - panel_y_offset - (int)(16 * SCR_GetMenuScale()), panels);
-
-	for (i = 0; i < SS_MAX_LOCAL_PLAYERS; ++i)
-	{
-		SplitScreenLobby_DrawPanel(i, &panels[i], panel_y_offset);
-	}
-
-	if (SS_AreAllSlotsReady())
-	{
-		Menu_DrawString(48, 26, "All players ready - press Enter/Start to continue");
-	}
-
-	Menu_DrawString(24, 226, "Keyboard: arrows/WASD + Enter. ESC backs out.");
-}
-
-static const char *
-SplitScreenLobby_MenuKey(int key)
-{
-	int slot_index;
-	int menu_key = Key_GetMenuKey(key);
-	ss_local_player_t *slot;
-
-	if (menu_key == K_ESCAPE)
-	{
-		PlayerModelFree();
-		SS_ClearPendingMatch();
-		SS_EndLobby();
-		M_PopMenu();
-		return NULL;
-	}
-
-	if (SS_AreAllSlotsReady() && menu_key == K_ENTER)
-	{
-		const ss_match_config_t *config = SS_GetPendingMatch();
-
-		if (!config || !SS_HasPendingMatch())
-		{
-			SplitScreenMenuBlockedMessage("Split-screen session config is missing.");
-			return menu_move_sound;
-		}
-
-		PlayerModelFree();
-		SS_EndLobby();
-		StartServer_ExecuteConfig(config, true);
-		M_ForceMenuOff();
-		SCR_CenterPrint("Split-screen host session started.\n"
-			"Additional local clients are still pending implementation.");
-		return menu_in_sound;
-	}
-
-	slot_index = SplitScreenLobby_FindSlotForInput(key);
-	slot = SS_GetSlot(slot_index);
-
-	if (!slot || !slot->active)
-	{
-		return NULL;
-	}
-
-	switch (menu_key)
-	{
-		case K_UPARROW:
-		case 'w':
-		case 'W':
-			s_splitscreen_lobby_cursor[slot_index] =
-				(s_splitscreen_lobby_cursor[slot_index] + 3) % 4;
-			return menu_move_sound;
-
-		case K_DOWNARROW:
-		case 's':
-		case 'S':
-			s_splitscreen_lobby_cursor[slot_index] =
-				(s_splitscreen_lobby_cursor[slot_index] + 1) % 4;
-			return menu_move_sound;
-
-		case K_LEFTARROW:
-		case 'a':
-		case 'A':
-			switch (s_splitscreen_lobby_cursor[slot_index])
-			{
-				case 0:
-					SplitScreenLobby_CycleModel(slot_index, -1);
-					return menu_move_sound;
-				case 1:
-					SplitScreenLobby_CycleSkin(slot_index, -1);
-					return menu_move_sound;
-				case 2:
-					SplitScreenLobby_CycleDevice(slot_index, -1);
-					return menu_move_sound;
-			}
-			break;
-
-		case K_RIGHTARROW:
-		case 'd':
-		case 'D':
-			switch (s_splitscreen_lobby_cursor[slot_index])
-			{
-				case 0:
-					SplitScreenLobby_CycleModel(slot_index, 1);
-					return menu_move_sound;
-				case 1:
-					SplitScreenLobby_CycleSkin(slot_index, 1);
-					return menu_move_sound;
-				case 2:
-					SplitScreenLobby_CycleDevice(slot_index, 1);
-					return menu_move_sound;
-			}
-			break;
-
-		case K_ENTER:
-		case K_SPACE:
-			if (s_splitscreen_lobby_cursor[slot_index] == 3)
-			{
-				return SplitScreenLobby_ToggleReady(slot_index);
-			}
-			break;
-	}
-
-	return NULL;
-}
-
-static void
-M_Menu_SplitScreenLobby_f(void)
-{
-	if (!SplitScreenLobby_MenuInit())
-	{
-		Menu_SetStatusBar(&s_startserver_menu, "no valid player models found");
-		return;
-	}
-
-	Menu_SetStatusBar(&s_startserver_menu, NULL);
-	s_splitscreen_lobby_menu.draw = SplitScreenLobby_MenuDraw;
-	s_splitscreen_lobby_menu.key = SplitScreenLobby_MenuKey;
-
-	M_PushMenu(&s_splitscreen_lobby_menu);
-}
+/* Shares the player-model catalogue and match-launch helpers above. */
+#include "splitscreen.inc"
 
 /*
  * QUIT MENU

@@ -96,10 +96,10 @@ cvar_t *cl_mflash_scale;     /* Scale (skinnum value, 1-255, lower=bigger) */
 cvar_t *cl_mflash_duration;  /* Duration in milliseconds */
 cvar_t *cl_mflash_vel_scale; /* Velocity inheritance factor (0.0-1.0) */
 cvar_t *cl_mflash_enabled;   /* Enable/disable muzzle flash sprites */
-cvar_t *cl_mflash_thirdperson_up; /* World-up lift for other players' muzzle sprites */
-cvar_t *cl_mflash_thirdperson_crouch_down; /* Additional downward offset while crouched */
-cvar_t *cl_mflash_thirdperson_model_lag_comp; /* Match interpolated third-person model lag (0=off,1=full) */
-cvar_t *cl_mflash_thirdperson_model_lag_max; /* Max ms of lag compensation applied to third-person flashes */
+cvar_t *cl_mflash_thirdperson_up; /* Model-local height for unsupported player models */
+cvar_t *cl_mflash_thirdperson_crouch_down; /* Legacy crouch correction for unsupported models */
+cvar_t *cl_mflash_thirdperson_model_lag_comp; /* Retired; retained for config compatibility */
+cvar_t *cl_mflash_thirdperson_model_lag_max; /* Retired; rendered poses already interpolate movement */
 cvar_t *cl_mflash_tune_mode; /* Debug tuning camera mode: 0=off,1=right side,2=left side,3=rear */
 cvar_t *cl_mflash_tune_cam_back; /* Camera pullback distance in tune mode */
 cvar_t *cl_mflash_tune_cam_right; /* Lateral camera offset in tune mode (mode 1/2) */
@@ -869,6 +869,14 @@ CL_AddMuzzleFlash(void)
 	AngleVectors(pl->current.angles, fv, rv, uv);
 	VectorMA(dl->origin, 18, fv, dl->origin);
 	VectorMA(dl->origin, 16, rv, dl->origin);
+	if (!local_player || tune_local_as_thirdperson)
+	{
+		vec3_t muzzle, forward, right, up;
+		if (CL_GetThirdPersonMuzzle(i, weapon, muzzle, forward, right, up))
+		{
+			VectorCopy(muzzle, dl->origin);
+		}
+	}
 
 	if (silenced)
 	{
@@ -1208,40 +1216,26 @@ CL_AddMuzzleFlash(void)
 			mflash_origin[0] = pl->prev.origin[0] + lerpfrac * (pl->current.origin[0] - pl->prev.origin[0]);
 			mflash_origin[1] = pl->prev.origin[1] + lerpfrac * (pl->current.origin[1] - pl->prev.origin[1]);
 			mflash_origin[2] = pl->prev.origin[2] + lerpfrac * (pl->current.origin[2] - pl->prev.origin[2]);
-			mflash_origin[2] += cl_mflash_thirdperson_up->value;
-			mflash_origin[2] -= cl_mflash_thirdperson_crouch_down->value * crouch_blend;
 
 			ent_angles[0] = LerpAngle(pl->prev.angles[0], pl->current.angles[0], lerpfrac);
 			ent_angles[1] = LerpAngle(pl->prev.angles[1], pl->current.angles[1], lerpfrac);
 			ent_angles[2] = LerpAngle(pl->prev.angles[2], pl->current.angles[2], lerpfrac);
+			/* MD2 rendering rotates local roll with the opposite sign.
+			 * Legacy tuning for unsupported player models is model-local,
+			 * including its height correction, rather than world-up. */
+			ent_angles[ROLL] = -ent_angles[ROLL];
 			AngleVectors(ent_angles, mflash_fv, mflash_rv, mflash_uv);
+			VectorMA(mflash_origin, cl_mflash_thirdperson_up->value -
+				cl_mflash_thirdperson_crouch_down->value * crouch_blend,
+				mflash_uv, mflash_origin);
 
 			/* Estimate velocity from entity position delta */
 			VectorSubtract(pl->current.origin, pl->prev.origin, mflash_velocity);
 			VectorScale(mflash_velocity, 10.0f, mflash_velocity);
-
-			/* Optional visual coherence mode: make flash lag with interpolated model. */
-			if (cl_mflash_thirdperson_model_lag_comp &&
-				(cl_mflash_thirdperson_model_lag_comp->value > 0.0f))
-			{
-				float lag_ms = (float)(cl.frame.servertime - cl.time);
-				float lag_strength = cl_mflash_thirdperson_model_lag_comp->value;
-				float lag_max = cl_mflash_thirdperson_model_lag_max ?
-					cl_mflash_thirdperson_model_lag_max->value :
-					MFLASH_THIRDPERSON_MODEL_LAG_MAX_FALLBACK;
-				float lag_seconds;
-
-				lag_max = Q_max(0.0f, lag_max);
-				lag_ms = Q_clamp(lag_ms, 0.0f, lag_max);
-				lag_ms *= lag_strength;
-				lag_seconds = lag_ms * 0.001f;
-
-				VectorMA(mflash_origin, -lag_seconds, mflash_velocity, mflash_origin);
-			}
 		}
 
 		CL_SpawnMuzzleFlashSprite(mflash_origin, mflash_fv, mflash_rv, mflash_uv,
-			mflash_velocity, weapon, (!local_player || tune_local_as_thirdperson), ads_active);
+			mflash_velocity, weapon, (!local_player || tune_local_as_thirdperson), ads_active, i);
 	}
 
 	if (split_local_firstperson_scope)

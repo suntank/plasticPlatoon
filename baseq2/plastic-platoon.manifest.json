@@ -3,8 +3,8 @@
   "files": [
     {
       "path": "default.cfg",
-      "bytes": 1108,
-      "sha256": "1a3e9638de18f69a8a4f49773a2d6669f3a0f63a7b010351170f8d72e1f137a8"
+      "bytes": 1378,
+      "sha256": "67b64ecb768327ccac143a468b3f54cbe9f67ebdacf2eece4f705f581cb210e6"
     },
     {
       "path": "env/bluesky1bk.png",
@@ -2632,6 +2632,16 @@
       "sha256": "4c7ed43c7c9dd5dae21e0887089458ed837485393e850c7e04225c286bcc336d"
     },
     {
+      "path": "textures/e1u1/clip.png",
+      "bytes": 1717,
+      "sha256": "bb379fca7f9de923236719695912b3845a46b531412410ab22de52617b870c0a"
+    },
+    {
+      "path": "textures/e1u1/clip.wal",
+      "bytes": 21860,
+      "sha256": "1369811526c5df186cda4bfacbed4ee35c7bff42ea572767a2f2e6c11c12128f"
+    },
+    {
       "path": "textures/e1u1/rpip2_2.wal",
       "bytes": 5540,
       "sha256": "fffae88c2647b01409a53639d771a9e3bad77f882ff4fc5fba41a8bfbec87d43"
@@ -2747,6 +2757,6 @@
       "sha256": "219e0f1ec97fa6b944336f263726564a3eb0a176351f5fd19f805913d24a22ea"
     }
   ],
-  "archive_sha256": "d978866ad9a42bd768719726d0799893866de45f9d19396a3a41ab176ee5f441",
-  "archive_bytes": 38210195
+  "archive_sha256": "9b7a395c93f935916a5b95e29c52c2dadb44b5602d3c5b4b87437bdb5c3370c7",
+  "archive_bytes": 38213097
 }

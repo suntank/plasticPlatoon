@@ -53,6 +53,12 @@ def main():
     if min(width, height) < 1 or a.warmup < 0 or a.frames <= a.warmup:
         p.error('positive dimensions and frames > warmup >= 0 are required')
     binary, data = a.binary.resolve(), a.data.resolve()
+    # -portable chooses the executable directory for writable files. -datadir
+    # changes asset lookup, not FS_Gamedir(), so a separate binary would write
+    # config/performance files into that other installation.
+    if binary.parent != data:
+        p.error('--binary must be inside --data: copy the executable and matching renderer libraries '
+                'into the isolated runtime directory (do not symlink the executable)')
     if not binary.is_file() or not (data / 'baseq2').is_dir():
         p.error('binary and data/baseq2 must exist')
     perf = data / 'baseq2/perf'

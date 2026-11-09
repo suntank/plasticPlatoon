@@ -404,6 +404,38 @@ ShutdownGraphics(void)
 }
 // --------
 
+/* SDL2 prefers X11 on some distributions even inside a Wayland session.
+ * That compatibility display can lack DRI3 and silently use CPU rendering.
+ * Prefer the native display when available, while honoring explicit driver
+ * selections and keeping SDL's normal discovery as a fallback. */
+static int
+InitVideoSubsystem(void)
+{
+#if defined(__linux__) && defined(SDL_HINT_VIDEODRIVER)
+	SDL_version version;
+	const char *wayland_display = SDL_getenv("WAYLAND_DISPLAY");
+
+	SDL_GetVersion(&version);
+	if (SDL_VERSIONNUM(version.major, version.minor, version.patch) >= SDL_VERSIONNUM(2, 0, 22) &&
+		wayland_display && *wayland_display &&
+		!SDL_getenv("SDL_VIDEODRIVER") && !SDL_GetHint(SDL_HINT_VIDEODRIVER) &&
+		SDL_SetHintWithPriority(SDL_HINT_VIDEODRIVER, "wayland", SDL_HINT_DEFAULT))
+	{
+		if (SDL_Init(SDL_INIT_VIDEO) == 0)
+		{
+			return 0;
+		}
+
+		Com_Printf("Native Wayland video unavailable (%s); trying SDL's default display.\n", SDL_GetError());
+		/* Empty selects normal discovery even on SDL 2.0.22, which cannot
+		 * remove a hint with NULL and predates SDL_ResetHint. */
+		SDL_SetHintWithPriority(SDL_HINT_VIDEODRIVER, "", SDL_HINT_DEFAULT);
+		SDL_ClearError();
+	}
+#endif
+	return SDL_Init(SDL_INIT_VIDEO);
+}
+
 /*
  * Initializes the SDL video subsystem. Must
  * be called before anything else.
@@ -418,7 +450,7 @@ GLimp_Init(void)
 
 	if (!SDL_WasInit(SDL_INIT_VIDEO))
 	{
-		if (SDL_Init(SDL_INIT_VIDEO) == -1)
+		if (InitVideoSubsystem() == -1)
 		{
 			Com_Printf("Couldn't init SDL video: %s.\n", SDL_GetError());
 

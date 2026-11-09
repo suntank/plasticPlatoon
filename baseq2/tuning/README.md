@@ -57,3 +57,11 @@ directory, and a separately selected data directory. Logs go to
 fields whose existing handling is outside this packaging change.
 The [validation record](../../tools/assets/review/tuning-validation.json)
 includes the profile, package and binary hashes and the GL1/GL3 checks.
+
+## Third-person barrel attachment
+
+Bundled soldier weapons now attach third-person flashes to reviewed barrel
+points in every model animation frame. Their historic position/height/velocity
+tuning fields remain custom-model fallbacks; they do not override those barrel
+attachments. First-person and ADS placement, flash styles and this approved JSON
+remain unchanged. See [attachment coverage, regeneration and validation](../../doc/third-person-muzzle-flashes.md).

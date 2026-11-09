@@ -1,0 +1,282 @@
+{
+  "date": "2026-11-08",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "capture_frames": 60,
+  "warmup_frames": 10,
+  "runs": [
+    {
+      "label": "before3-main-wayland-1",
+      "frames": 50,
+      "frame_ms_median": 7.771,
+      "frame_ms_p95": 11.447049999999994,
+      "world_triangles": 10578.0,
+      "model_triangles": 87841.0,
+      "binary_sha256": "0b8ea489fb7abcc2374144c474b2bc2b38b94b8256f2c2d78db95187622403c2",
+      "renderer_sha256": "d266322820b10a91d2c14a0a90b8d0dc84691c41b40aab6504b097c6679f66db",
+      "renderer": "Mesa Intel(R) UHD Graphics 620 (KBL GT2)",
+      "camera": {
+        "x": "-268.688",
+        "y": "-681.438",
+        "z": "162.438",
+        "pitch": "0.000",
+        "yaw": "70.005",
+        "roll": "0.000"
+      }
+    },
+    {
+      "label": "before3-main-wayland-2",
+      "frames": 50,
+      "frame_ms_median": 7.58,
+      "frame_ms_p95": 10.372999999999998,
+      "world_triangles": 10578.0,
+      "model_triangles": 87841.0,
+      "binary_sha256": "0b8ea489fb7abcc2374144c474b2bc2b38b94b8256f2c2d78db95187622403c2",
+      "renderer_sha256": "d266322820b10a91d2c14a0a90b8d0dc84691c41b40aab6504b097c6679f66db",
+      "renderer": "Mesa Intel(R) UHD Graphics 620 (KBL GT2)",
+      "camera": {
+        "x": "-268.688",
+        "y": "-681.438",
+        "z": "162.438",
+        "pitch": "0.000",
+        "yaw": "70.005",
+        "roll": "0.000"
+      }
+    },
+    {
+      "label": "before3-main-x11-1",
+      "frames": 50,
+      "frame_ms_median": 88.487,
+      "frame_ms_p95": 101.47314999999999,
+      "world_triangles": 10578.0,
+      "model_triangles": 87841.0,
+      "binary_sha256": "0b8ea489fb7abcc2374144c474b2bc2b38b94b8256f2c2d78db95187622403c2",
+      "renderer_sha256": "d266322820b10a91d2c14a0a90b8d0dc84691c41b40aab6504b097c6679f66db",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "camera": {
+        "x": "-268.688",
+        "y": "-681.438",
+        "z": "162.438",
+        "pitch": "0.000",
+        "yaw": "70.005",
+        "roll": "0.000"
+      }
+    },
+    {
+      "label": "before3-main-x11-2",
+      "frames": 50,
+      "frame_ms_median": 79.345,
+      "frame_ms_p95": 92.73174999999999,
+      "world_triangles": 10578.0,
+      "model_triangles": 87841.0,
+      "binary_sha256": "0b8ea489fb7abcc2374144c474b2bc2b38b94b8256f2c2d78db95187622403c2",
+      "renderer_sha256": "d266322820b10a91d2c14a0a90b8d0dc84691c41b40aab6504b097c6679f66db",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "camera": {
+        "x": "-268.688",
+        "y": "-681.438",
+        "z": "162.438",
+        "pitch": "0.000",
+        "yaw": "70.005",
+        "roll": "0.000"
+      }
+    },
+    {
+      "label": "before3-outdoor-wayland-1",
+      "frames": 50,
+      "frame_ms_median": 11.5095,
+      "frame_ms_p95": 17.2288,
+      "world_triangles": 16932.0,
+      "model_triangles": 173010.0,
+      "binary_sha256": "0b8ea489fb7abcc2374144c474b2bc2b38b94b8256f2c2d78db95187622403c2",
+      "renderer_sha256": "d266322820b10a91d2c14a0a90b8d0dc84691c41b40aab6504b097c6679f66db",
+      "renderer": "Mesa Intel(R) UHD Graphics 620 (KBL GT2)",
+      "camera": {
+        "x": "-38.312",
+        "y": "-1670.312",
+        "z": "56.062",
+        "pitch": "0.000",
+        "yaw": "90.000",
+        "roll": "0.000"
+      }
+    },
+    {
+      "label": "before3-outdoor-wayland-2",
+      "frames": 50,
+      "frame_ms_median": 11.279499999999999,
+      "frame_ms_p95": 16.8771,
+      "world_triangles": 16932.0,
+      "model_triangles": 173010.0,
+      "binary_sha256": "0b8ea489fb7abcc2374144c474b2bc2b38b94b8256f2c2d78db95187622403c2",
+      "renderer_sha256": "d266322820b10a91d2c14a0a90b8d0dc84691c41b40aab6504b097c6679f66db",
+      "renderer": "Mesa Intel(R) UHD Graphics 620 (KBL GT2)",
+      "camera": {
+        "x": "-38.312",
+        "y": "-1670.312",
+        "z": "56.062",
+        "pitch": "0.000",
+        "yaw": "90.000",
+        "roll": "0.000"
+      }
+    },
+    {
+      "label": "before3-outdoor-x11-1",
+      "frames": 50,
+      "frame_ms_median": 112.6765,
+      "frame_ms_p95": 127.3967,
+      "world_triangles": 16932.0,
+      "model_triangles": 173010.0,
+      "binary_sha256": "0b8ea489fb7abcc2374144c474b2bc2b38b94b8256f2c2d78db95187622403c2",
+      "renderer_sha256": "d266322820b10a91d2c14a0a90b8d0dc84691c41b40aab6504b097c6679f66db",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "camera": {
+        "x": "-38.312",
+        "y": "-1670.312",
+        "z": "56.062",
+        "pitch": "0.000",
+        "yaw": "90.000",
+        "roll": "0.000"
+      }
+    },
+    {
+      "label": "before3-outdoor-x11-2",
+      "frames": 50,
+      "frame_ms_median": 108.07499999999999,
+      "frame_ms_p95": 125.27985,
+      "world_triangles": 16932.0,
+      "model_triangles": 173010.0,
+      "binary_sha256": "0b8ea489fb7abcc2374144c474b2bc2b38b94b8256f2c2d78db95187622403c2",
+      "renderer_sha256": "d266322820b10a91d2c14a0a90b8d0dc84691c41b40aab6504b097c6679f66db",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "camera": {
+        "x": "-38.312",
+        "y": "-1670.312",
+        "z": "56.062",
+        "pitch": "0.000",
+        "yaw": "90.000",
+        "roll": "0.000"
+      }
+    },
+    {
+      "label": "fixed-main-auto-1",
+      "frames": 50,
+      "frame_ms_median": 7.8215,
+      "frame_ms_p95": 12.339299999999998,
+      "world_triangles": 6259.0,
+      "model_triangles": 87841.0,
+      "binary_sha256": "68501f572016d1b1c4744bc8f52cc13c855a32831d9923401c780f8844190639",
+      "renderer_sha256": "965ebb2b18f41a08c438a93b59bd216d83be1d91cafa702dfb903d613162d2af",
+      "renderer": "Mesa Intel(R) UHD Graphics 620 (KBL GT2)",
+      "camera": {
+        "x": "-268.688",
+        "y": "-681.438",
+        "z": "162.438",
+        "pitch": "0.000",
+        "yaw": "70.005",
+        "roll": "0.000"
+      }
+    },
+    {
+      "label": "fixed-main-auto-2",
+      "frames": 50,
+      "frame_ms_median": 7.5,
+      "frame_ms_p95": 10.30585,
+      "world_triangles": 6259.0,
+      "model_triangles": 87841.0,
+      "binary_sha256": "68501f572016d1b1c4744bc8f52cc13c855a32831d9923401c780f8844190639",
+      "renderer_sha256": "965ebb2b18f41a08c438a93b59bd216d83be1d91cafa702dfb903d613162d2af",
+      "renderer": "Mesa Intel(R) UHD Graphics 620 (KBL GT2)",
+      "camera": {
+        "x": "-268.688",
+        "y": "-681.438",
+        "z": "162.438",
+        "pitch": "0.000",
+        "yaw": "70.005",
+        "roll": "0.000"
+      }
+    },
+    {
+      "label": "fixed-outdoor-auto-1",
+      "frames": 50,
+      "frame_ms_median": 10.856,
+      "frame_ms_p95": 13.98155,
+      "world_triangles": 10960.0,
+      "model_triangles": 173010.0,
+      "binary_sha256": "68501f572016d1b1c4744bc8f52cc13c855a32831d9923401c780f8844190639",
+      "renderer_sha256": "965ebb2b18f41a08c438a93b59bd216d83be1d91cafa702dfb903d613162d2af",
+      "renderer": "Mesa Intel(R) UHD Graphics 620 (KBL GT2)",
+      "camera": {
+        "x": "-38.312",
+        "y": "-1670.312",
+        "z": "56.062",
+        "pitch": "0.000",
+        "yaw": "90.000",
+        "roll": "0.000"
+      }
+    },
+    {
+      "label": "fixed-outdoor-auto-2",
+      "frames": 50,
+      "frame_ms_median": 9.589500000000001,
+      "frame_ms_p95": 14.468499999999999,
+      "world_triangles": 10960.0,
+      "model_triangles": 173010.0,
+      "binary_sha256": "68501f572016d1b1c4744bc8f52cc13c855a32831d9923401c780f8844190639",
+      "renderer_sha256": "965ebb2b18f41a08c438a93b59bd216d83be1d91cafa702dfb903d613162d2af",
+      "renderer": "Mesa Intel(R) UHD Graphics 620 (KBL GT2)",
+      "camera": {
+        "x": "-38.312",
+        "y": "-1670.312",
+        "z": "56.062",
+        "pitch": "0.000",
+        "yaw": "90.000",
+        "roll": "0.000"
+      }
+    }
+  ],
+  "visibility": {
+    "original": "/home/austin/Storage/PlasticPlatoon/build/sandstorm-performance-map/original/pp_sandstorm.bsp",
+    "compiled": "/home/austin/Storage/PlasticPlatoon/build/sandstorm-performance-map/candidate/pp_sandstorm.bsp",
+    "output": "/home/austin/Storage/PlasticPlatoon/build/sandstorm-performance-map/optimized/pp_sandstorm.bsp",
+    "original_sha256": "6b13cedc60fdf690a7b0e0398101928372d15b231f7b2f4f3cf6e5e4dd0b9f6d",
+    "compiled_sha256": "67117b96677ea91ed97f694ee3d0c59e4943c418bc94d70ce85b5ddc39a7f348",
+    "output_sha256": "24617a1995cbcd8e7b286914e874e79365415de1b9ce6e2ac4c2b32b4be6cb9c",
+    "unchanged_lumps": [
+      "entities",
+      "planes",
+      "vertexes",
+      "nodes",
+      "texinfo",
+      "faces",
+      "lighting",
+      "leafs",
+      "leaffaces",
+      "leafbrushes",
+      "edges",
+      "surfedges",
+      "models",
+      "brushes",
+      "brushsides",
+      "pop",
+      "areas",
+      "areaportals"
+    ],
+    "clusters": 513,
+    "pvs_visible_clusters_mean_before": 428.03508771929825,
+    "pvs_visible_clusters_mean_after": 252.10136452241716,
+    "pvs_visible_fraction_mean_before": 0.8343763893163708,
+    "pvs_visible_fraction_mean_after": 0.4914256618370705
+  },
+  "recordings": {
+    "perf_main.dm2": "ae9f7c13f87ae140754c22c871446c74b14066bf37f5b1a65071d97909de1095",
+    "perf_compound.dm2": "70117a2f808b4c911e435fbbac02b595a074299022e482caee780239266081fb",
+    "perf_outdoor.dm2": "1caea380fada9dcd60f13fc66767c5755871b9e4635dde7df119e9e7b3b10b5a"
+  },
+  "limitations": [
+    "Short repeated captures with existing user game still running",
+    "Old demos retain old server entity snapshots; new map can further reduce live server visibility work",
+    "Not a sustained combat or full mission playthrough"
+  ]
+}

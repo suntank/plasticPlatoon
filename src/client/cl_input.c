@@ -654,6 +654,42 @@ CL_InitInput(void)
 
 		Cvar_Set("pp_controller_bindings", "1");
 	}
+
+	if (Cvar_Get("pp_controller_bindings", "0", CVAR_ARCHIVE)->value < 2)
+	{
+		/* The original standalone default.cfg omitted the rest of the pad.
+		 * Add missing controls once, preserving every existing customization.
+		 * Leave the v1 ADS/grenade keys alone so deliberate unbinds survive. */
+		static const struct
+		{
+			int key;
+			const char *command;
+		} defaults[] = {
+			{K_TRIG_RIGHT, "+attack"},
+			{K_BTN_SOUTH, "+moveup"},
+			{K_BTN_EAST, "+movedown"},
+			{K_BTN_WEST, "+use"},
+			{K_BTN_NORTH, "quickgrenade"},
+			{K_SHOULDER_LEFT, "weapprev"},
+			{K_STICK_LEFT, "+speed"},
+			{K_DPAD_UP, "invuse"},
+			{K_DPAD_DOWN, "inven"},
+			{K_DPAD_LEFT, "weapprev"},
+			{K_DPAD_RIGHT, "weapnext"},
+			{K_BTN_BACK, "score"}
+		};
+		int i;
+
+		for (i = 0; i < sizeof(defaults) / sizeof(defaults[0]); ++i)
+		{
+			int key = defaults[i].key;
+			if (!keybindings[key] || !keybindings[key][0])
+			{
+				Key_SetBinding(key, (char *)defaults[i].command);
+			}
+		}
+		Cvar_Set("pp_controller_bindings", "2");
+	}
 }
 
 void

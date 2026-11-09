@@ -613,7 +613,9 @@ typedef struct muzzle_flash_config_s {
 } muzzle_flash_config_t;
 
 void CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up,
-	vec3_t velocity, int weapon, qboolean thirdperson, qboolean ads_active);
+	vec3_t velocity, int weapon, qboolean thirdperson, qboolean ads_active, int entnum);
+qboolean CL_GetThirdPersonMuzzle(int entnum, int weapon, vec3_t origin,
+	vec3_t forward, vec3_t right, vec3_t up);
 void CL_InitMuzzleFlashCvars(void);
 muzzle_flash_config_t *CL_GetMuzzleFlashConfig(int weapon, qboolean thirdperson);
 void CL_MFlashTune_RegisterCommands(void);

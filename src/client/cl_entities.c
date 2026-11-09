@@ -28,6 +28,7 @@
 #include "header/client.h"
 #include "header/performance.h"
 #include "cl_splitscreen.h"
+#include "header/player_muzzle_points.h"
 
 /* Weapon types for per-weapon recoil tuning */
 typedef enum {
@@ -392,6 +393,108 @@ CL_MFlashTuneResolveWeaponModel(const clientinfo_t *ci)
 	}
 
 	return model;
+}
+
+
+/* Resolve the same linked weapon and MD2 pose used by CL_AddPacketEntities.
+ * These authored barrel points move with every frame, including crouch/fire.
+ * No eye height, view pitch or velocity extrapolation belongs in this transform. */
+qboolean
+CL_GetThirdPersonMuzzle(int entnum, int weapon, vec3_t origin,
+	vec3_t forward, vec3_t right, vec3_t up)
+{
+	const centity_t *cent;
+	const entity_state_t *state;
+	const clientinfo_t *ci;
+	const char *expected, *filename;
+	const pp_player_muzzle_model_t *points = NULL;
+	struct model_s *model;
+	char path[MAX_QPATH];
+	vec3_t angles, local;
+	float lerp, pose_lerp;
+	const char *lerp_models;
+	int index, oldframe, frame;
+
+	if (entnum <= 0 || entnum >= cl_numentities || !cl_entities)
+		return false;
+	cent = &cl_entities[entnum];
+	state = &cent->current;
+	if (cent->serverframe != cl.frame.serverframe || state->modelindex != 255 ||
+		state->modelindex2 != 255)
+		return false;
+
+	switch (weapon)
+	{
+		case MZ_BLASTER: expected = "w_blaster.md2"; break;
+		case MZ_SHOTGUN: case MZ_SHOTGUN2: expected = "w_shotgun.md2"; break;
+		case MZ_SSHOTGUN: expected = "w_sshotgun.md2"; break;
+		case MZ_MACHINEGUN: case MZ_ETF_RIFLE: expected = "w_machinegun.md2"; break;
+		case MZ_CHAINGUN1: case MZ_CHAINGUN2: case MZ_CHAINGUN3: expected = "w_chaingun.md2"; break;
+		case MZ_GRENADE: expected = "w_glauncher.md2"; break;
+		case MZ_ROCKET: expected = "w_rlauncher.md2"; break;
+		case MZ_HYPERBLASTER: expected = "w_hyperblaster.md2"; break;
+		case MZ_RAILGUN: expected = "w_railgun.md2"; break;
+		case MZ_BFG: expected = "w_bfg.md2"; break;
+		default: return false;
+	}
+
+	ci = &cl.clientinfo[state->skinnum & PP_PLAYER_SKINNUM_PLAYER_MASK];
+	index = (state->skinnum >> PP_PLAYER_SKINNUM_WEAPON_SHIFT) & PP_PLAYER_SKINNUM_WEAPON_MASK;
+	if (!cl_vwep->value || index >= MAX_CLIENTWEAPONMODELS)
+		index = 0;
+	filename = index < num_cl_weaponmodels ? cl_weaponmodels[index] : "weapon.md2";
+	/* A short-lived flash must not follow a different weapon after a switch. */
+	if (index && Q_stricmp(filename, expected))
+		return false;
+	model = ci->weaponmodel[index];
+	if (!model)
+	{
+		index = 0;
+		filename = "weapon.md2";
+		model = ci->weaponmodel[0] ? ci->weaponmodel[0] : cl.baseclientinfo.weaponmodel[0];
+	}
+	if (CL_MFlashTuneCameraActive() && entnum == cl.playernum + 1)
+	{
+		filename = CL_MFlashTuneWeaponFileForGun();
+		if (Q_stricmp(filename, expected))
+			return false;
+		model = CL_MFlashTuneResolveWeaponModel(ci);
+	}
+	if (!model)
+		return false;
+	Com_sprintf(path, sizeof(path), "players/soldier/%s", filename);
+	if (R_RegisterModel(path) != model)
+		return false; /* Optional custom player assets retain their tuning fallback. */
+
+	for (int i = 0; i < PP_PLAYER_MUZZLE_MODEL_COUNT; ++i)
+		if (!Q_stricmp(filename, pp_player_muzzle_models[i].filename))
+		{
+			points = &pp_player_muzzle_models[i];
+			break;
+		}
+	if (!points)
+		return false;
+	frame = state->frame;
+	oldframe = cent->prev.frame;
+	if (frame < 0 || frame >= points->num_frames) frame = 0;
+	if (oldframe < 0 || oldframe >= points->num_frames) oldframe = 0;
+	lerp = Q_clamp(cl.lerpfrac, 0.0f, 1.0f);
+	lerp_models = Cvar_VariableString("r_lerpmodels");
+	pose_lerp = (lerp_models[0] && atof(lerp_models) == 0.0) ? 1.0f : lerp;
+	for (int i = 0; i < 3; ++i)
+	{
+		local[i] = points->points[oldframe][i] * (1.0f - pose_lerp) + points->points[frame][i] * pose_lerp;
+		origin[i] = cent->prev.origin[i] + lerp * (state->origin[i] - cent->prev.origin[i]);
+		angles[i] = LerpAngle(cent->prev.angles[i], state->angles[i], lerp);
+	}
+	/* Alias renderers apply Rz(yaw)*Ry(pitch)*Rx(-roll). AngleVectors
+	 * supplies forward/-right/up with that matrix when roll is negated. */
+	angles[ROLL] = -angles[ROLL];
+	AngleVectors(angles, forward, right, up);
+	VectorMA(origin, local[0], forward, origin);
+	VectorMA(origin, -local[1], right, origin);
+	VectorMA(origin, local[2], up, origin);
+	return true;
 }
 
 static qboolean

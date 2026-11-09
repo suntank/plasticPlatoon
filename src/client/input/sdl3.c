@@ -45,6 +45,7 @@
 #include "../header/keyboard.h"
 #include "../header/client.h"
 #include "../cl_splitscreen.h"
+#include "header/controller_registry.h"
 
 // ----
 
@@ -155,6 +156,9 @@ static SDL_Gamepad *registered_controllers[SS_MAX_LOCAL_PLAYERS];
 static SDL_JoystickID registered_controller_ids[SS_MAX_LOCAL_PLAYERS];
 static char registered_controller_names[SS_MAX_LOCAL_PLAYERS][32];
 static int registered_controller_count = 0;
+static qboolean left_trigger[SS_MAX_LOCAL_PLAYERS];
+static qboolean right_trigger[SS_MAX_LOCAL_PLAYERS];
+static qboolean left_stick[SS_MAX_LOCAL_PLAYERS][4];
 
 #define HAPTIC_EFFECT_LIST_SIZE 16
 
@@ -289,6 +293,7 @@ IN_DispatchKeyEvent(int keynum, qboolean down, qboolean special, int gamepad_ind
 {
 	Key_SetEventGamepadIndex(gamepad_index);
 	Key_Event(keynum, down, special);
+	Key_SetEventGamepadIndex(-1);
 }
 
 static int
@@ -313,10 +318,57 @@ IN_GetDetectedGamepadCount(void)
 	return registered_controller_count;
 }
 
+qboolean
+IN_IsGamepadConnected(int index)
+{
+	return index >= 0 && index < SS_MAX_LOCAL_PLAYERS &&
+		registered_controllers[index] != NULL;
+}
+
+int
+IN_GetDetectedGamepadId(int index)
+{
+	return IN_IsGamepadConnected(index) ? (int)registered_controller_ids[index] : -1;
+}
+
+static qboolean
+IN_IsPrimaryGamepad(int index)
+{
+	ss_local_player_t *primary;
+
+	if (!IN_IsGamepadConnected(index))
+	{
+		return false;
+	}
+
+	if (!SS_IsSessionActive())
+	{
+		return IN_IsGamepadConnected(index) && registered_controllers[index] == controller;
+	}
+
+	primary = SS_GetSlot(0);
+	return primary && primary->active && primary->state != SS_SLOT_DROPPED &&
+		primary->device_index == index + 2;
+}
+
+static qboolean
+IN_HasFreeGamepadSlot(void)
+{
+	int i;
+	for (i = 0; i < SS_MAX_LOCAL_PLAYERS; ++i)
+	{
+		if (!IN_IsGamepadConnected(i))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 const char *
 IN_GetDetectedGamepadName(int index)
 {
-	if (index < 0 || index >= registered_controller_count)
+	if (!IN_IsGamepadConnected(index))
 	{
 		return "Unavailable";
 	}
@@ -618,6 +670,7 @@ IN_TranslateScancodeToQ2Key(SDL_Scancode sc)
 
 static void IN_Controller_Init(qboolean notify_user);
 static void IN_Controller_Shutdown(qboolean notify_user);
+static void IN_Controller_Refresh(qboolean notify_user);
 
 /*
  * Sets the gamepad buttons' style of labels (SDL, Xbox, PS, Switch).
@@ -864,6 +917,47 @@ qboolean IN_NumpadIsOn()
 
 /* ------------------------------------------------------------------ */
 
+/* Axis events can occur while the setup menu owns input. Sample again on
+ * every gameplay frame so starting/resuming with a held stick is reliable. */
+static void
+IN_UpdateGamepadAxes(void)
+{
+	int i;
+
+	joystick_left_x = joystick_left_y = joystick_right_x = joystick_right_y = 0;
+	if (cls.key_dest != key_game || cl_paused->value)
+	{
+		return;
+	}
+
+	for (i = 0; i < SS_MAX_LOCAL_PLAYERS; ++i)
+	{
+		int left_x, left_y, right_x, right_y;
+		if (!IN_IsGamepadConnected(i) || SS_IsMenuInputActiveForDevice(i + 2))
+		{
+			continue;
+		}
+		left_x = SDL_GetGamepadAxis(registered_controllers[i], SDL_GAMEPAD_AXIS_LEFTX);
+		left_y = SDL_GetGamepadAxis(registered_controllers[i], SDL_GAMEPAD_AXIS_LEFTY);
+		right_x = SDL_GetGamepadAxis(registered_controllers[i], SDL_GAMEPAD_AXIS_RIGHTX);
+		right_y = SDL_GetGamepadAxis(registered_controllers[i], SDL_GAMEPAD_AXIS_RIGHTY);
+		if (SS_ShouldCaptureGameplayDevice(i + 2))
+		{
+			SS_SetDeviceAxis(i + 2, SS_AXIS_LEFT_X, left_x);
+			SS_SetDeviceAxis(i + 2, SS_AXIS_LEFT_Y, left_y);
+			SS_SetDeviceAxis(i + 2, SS_AXIS_RIGHT_X, right_x);
+			SS_SetDeviceAxis(i + 2, SS_AXIS_RIGHT_Y, right_y);
+		}
+		else if (IN_IsPrimaryGamepad(i))
+		{
+			joystick_left_x = left_x;
+			joystick_left_y = left_y;
+			joystick_right_x = right_x;
+			joystick_right_y = right_y;
+		}
+	}
+}
+
 /*
  * Updates the input queue state. Called every
  * frame by the client and does nearly all the
@@ -875,10 +969,6 @@ IN_Update(void)
 	qboolean want_grab;
 	SDL_Event event;
 	unsigned int key;
-
-	static qboolean left_trigger[SS_MAX_LOCAL_PLAYERS] = {false};
-	static qboolean right_trigger[SS_MAX_LOCAL_PLAYERS] = {false};
-	static qboolean left_stick[SS_MAX_LOCAL_PLAYERS][4] = {{false}};   // left, right, up, down virtual keys
 
 	static int consoleKeyCode = 0;
 
@@ -1080,11 +1170,12 @@ IN_Update(void)
 				qboolean down = (event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN);
 				unsigned char btn = event.gbutton.button;
 				int gamepad_index = IN_FindGamepadIndexByInstanceId(event.gbutton.which);
-				int q2_key = (btn == joy_escbutton) ? K_ESCAPE : K_JOY_FIRST_BTN + btn;
+				int q2_key = (btn == joy_escbutton && !SS_IsLobbyActive()) ?
+					K_ESCAPE : K_JOY_FIRST_BTN + btn;
 
-				if (gamepad_index > 0 && !SS_IsLobbyActive() &&
-					!SS_ShouldAcceptSessionKey(gamepad_index + 2, q2_key) &&
-					!SS_ShouldCaptureGameplayDevice(gamepad_index + 2))
+				if (gamepad_index < 0 ||
+					(!IN_IsPrimaryGamepad(gamepad_index) && cls.key_dest != key_menu &&
+					!SS_IsLobbyActive() && !SS_IsSessionActive()))
 				{
 					break;
 				}
@@ -1104,9 +1195,8 @@ IN_Update(void)
 					break;
 				}
 
-				if (gamepad_index > 0 && !SS_IsLobbyActive() &&
-					!SS_IsMenuInputActiveForDevice(gamepad_index + 2) &&
-					!SS_ShouldCaptureGameplayDevice(gamepad_index + 2))
+				if (!IN_IsPrimaryGamepad(gamepad_index) && cls.key_dest != key_menu &&
+					!SS_IsLobbyActive() && !SS_IsSessionActive())
 				{
 					break;
 				}
@@ -1146,7 +1236,8 @@ IN_Update(void)
 					break;
 				}
 
-				if (!cl_paused->value && cls.key_dest == key_game &&
+				if (IN_IsPrimaryGamepad(gamepad_index) && !cl_paused->value &&
+					cls.key_dest == key_game &&
 					!SS_IsMenuInputActiveForDevice(gamepad_index + 2))
 				{
 					switch (event.gaxis.axis)
@@ -1193,6 +1284,10 @@ IN_Update(void)
 
 #ifndef NO_SDL_GYRO	// gamepad sensors' reading is supported (gyro, accelerometer)
 			case SDL_EVENT_GAMEPAD_SENSOR_UPDATE:
+				if (!IN_IsPrimaryGamepad(IN_FindGamepadIndexByInstanceId(event.gsensor.which)))
+				{
+					break;
+				}
 				switch (event.gsensor.sensor)
 				{
 					case SDL_SENSOR_ACCEL:
@@ -1255,20 +1350,21 @@ IN_Update(void)
 
 			case SDL_EVENT_GAMEPAD_REMOVED :
 				if (IN_FindGamepadIndexByInstanceId(event.gdevice.which) >= 0) {
-					if (controller && event.gdevice.which == SDL_GetJoystickID(SDL_GetGamepadJoystick(controller)))
+					if (!SS_IsLobbyActive() && !SS_IsSessionActive() && controller && event.gdevice.which == SDL_GetJoystickID(SDL_GetGamepadJoystick(controller)))
 					{
 						Cvar_SetValue("paused", 1);
 					}
-					IN_Controller_Shutdown(true);
-					IN_Controller_Init(false);
+					IN_Controller_Refresh(true);
 				}
 				break;
 
 			case SDL_EVENT_JOYSTICK_ADDED :
-				if (registered_controller_count < SS_MAX_LOCAL_PLAYERS)
+				if (IN_FindGamepadIndexByInstanceId(event.jdevice.which) < 0 &&
+					IN_HasFreeGamepadSlot())
 				{
-					// This should be lower, but some controllers just don't want to get detected by the OS
-					updates_countdown = 100;
+					// Briefly debounce composite devices, but never skip a new controller.
+					first_init = false;
+					updates_countdown = 30;
 					countdown_reason = REASON_CONTROLLERINIT;
 				}
 				break;
@@ -1293,6 +1389,8 @@ IN_Update(void)
 				break;
 		}
 	}
+
+	IN_UpdateGamepadAxes();
 
 	/* Grab and ungrab the mouse if the console or the menu is opened */
 	if (in_grab->value == 3)
@@ -1327,8 +1425,7 @@ IN_Update(void)
 				case REASON_CONTROLLERINIT:
 					if (!first_init)
 					{
-						IN_Controller_Shutdown(false);
-						IN_Controller_Init(true);
+						IN_Controller_Refresh(true);
 					}
 					else
 					{
@@ -1897,6 +1994,17 @@ IN_Move(usercmd_t *cmd)
 			}
 		}
 
+		if (SS_IsSessionActive())
+		{
+			ss_local_player_t *primary = SS_GetSlot(0);
+			if (!primary || primary->device_index != 1)
+			{
+				SS_AddDeviceMouseMotion(1, -m_yaw->value * mouse_x,
+					m_pitch->value * mouse_y);
+				mouse_x = mouse_y = 0;
+			}
+		}
+
 		// add mouse X/Y movement to cmd
 		if ((in_strafe.state & 1) || (lookstrafe->value && mlooking))
 		{
@@ -2089,6 +2197,50 @@ IN_Haptic_Effects_Init(void)
 	for (int i=0; i<HAPTIC_EFFECT_LIST_SIZE; i++)
 	{
 		last_haptic_effect[i].effect_id = -1;
+	}
+}
+
+/* Reopening SDL devices must not renumber a surviving player's controller. */
+static void
+IN_Controller_Refresh(qboolean notify_user)
+{
+	int previous_ids[SS_MAX_LOCAL_PLAYERS];
+	int incoming_ids[SS_MAX_LOCAL_PLAYERS];
+	int slots[SS_MAX_LOCAL_PLAYERS];
+	SDL_Gamepad *incoming[SS_MAX_LOCAL_PLAYERS];
+	char names[SS_MAX_LOCAL_PLAYERS][32];
+	int count, i;
+
+	for (i = 0; i < SS_MAX_LOCAL_PLAYERS; ++i)
+	{
+		previous_ids[i] = IN_GetDetectedGamepadId(i);
+	}
+	IN_Controller_Shutdown(notify_user);
+	IN_Controller_Init(notify_user);
+
+	count = registered_controller_count;
+	for (i = 0; i < count; ++i)
+	{
+		incoming_ids[i] = (int)registered_controller_ids[i];
+		incoming[i] = registered_controllers[i];
+		Q_strlcpy(names[i], registered_controller_names[i], sizeof(names[i]));
+	}
+	IN_MapControllerSlots(previous_ids, incoming_ids, count, slots);
+	memset(registered_controllers, 0, sizeof(registered_controllers));
+	memset(registered_controller_ids, 0xff, sizeof(registered_controller_ids));
+	memset(registered_controller_names, 0, sizeof(registered_controller_names));
+	registered_controller_count = 0;
+	for (i = 0; i < count; ++i)
+	{
+		int slot = slots[i];
+		registered_controllers[slot] = incoming[i];
+		registered_controller_ids[slot] = incoming_ids[i];
+		Q_strlcpy(registered_controller_names[slot], names[i],
+			sizeof(registered_controller_names[slot]));
+		if (slot >= registered_controller_count)
+		{
+			registered_controller_count = slot + 1;
+		}
 	}
 }
 
@@ -2640,13 +2792,19 @@ IN_Controller_Init(qboolean notify_user)
 	memset(registered_controller_ids, 0xff, sizeof(registered_controller_ids));
 	memset(registered_controller_names, 0, sizeof(registered_controller_names));
 
-	if (!SDL_WasInit(SDL_INIT_GAMEPAD | SDL_INIT_HAPTIC))
+	if (!SDL_WasInit(SDL_INIT_GAMEPAD))
 	{
-		if (!SDL_Init(SDL_INIT_GAMEPAD | SDL_INIT_HAPTIC))
+		if (!SDL_Init(SDL_INIT_GAMEPAD))
 		{
 			Com_Printf ("Couldn't init SDL Gamepad: %s.\n", SDL_GetError());
 			return;
 		}
+	}
+
+	/* Controller input remains usable without the optional haptics backend. */
+	if (!SDL_WasInit(SDL_INIT_HAPTIC) && !SDL_InitSubSystem(SDL_INIT_HAPTIC))
+	{
+		Com_Printf("Controller haptics unavailable: %s.\n", SDL_GetError());
 	}
 
 	int numjoysticks;
@@ -2771,7 +2929,8 @@ IN_Controller_Init(qboolean notify_user)
 			registered_controller_ids[registered_controller_count] =
 				SDL_GetJoystickID(SDL_GetGamepadJoystick(opened_controller));
 			Q_strlcpy(registered_controller_names[registered_controller_count],
-				joystick_name, sizeof(registered_controller_names[registered_controller_count]));
+				SDL_GetGamepadName(opened_controller) ? SDL_GetGamepadName(opened_controller) : "Gamepad",
+				sizeof(registered_controller_names[registered_controller_count]));
 			registered_controller_count++;
 
 			if (!controller)
@@ -3050,6 +3209,14 @@ IN_Controller_Shutdown(qboolean notify_user)
 	}
 
 	IN_Haptic_Shutdown();
+
+	for (i = 0; i < SS_MAX_LOCAL_PLAYERS; ++i)
+	{
+		Key_ClearGamepadStates(i);
+	}
+	memset(left_trigger, 0, sizeof(left_trigger));
+	memset(right_trigger, 0, sizeof(right_trigger));
+	memset(left_stick, 0, sizeof(left_stick));
 
 	for (i = 0; i < registered_controller_count; ++i)
 	{

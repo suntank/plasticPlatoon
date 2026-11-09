@@ -54,6 +54,7 @@ qboolean menubound[K_LAST]; /* if true, can't be rebound while in menu */
 int key_repeats[K_LAST]; /* if > 1, it is autorepeating */
 qboolean keydown[K_LAST];
 static int key_event_gamepad_index = -1;
+static qboolean gamepad_keydown[SS_MAX_LOCAL_PLAYERS][K_LAST];
 
 qboolean Cmd_IsComplete(const char *cmd);
 
@@ -1350,6 +1351,50 @@ Key_Event(int key, qboolean down, qboolean special)
 	cvar_t *fullscreen;
 	unsigned int time = Sys_Milliseconds();
 
+	/* A controller's held buttons belong to that controller, including virtual
+	 * arrow keys from its stick. Route local players before the legacy shared
+	 * keyboard repeat/binding state can swallow another player's press. */
+	if (key_event_gamepad_index >= 0 &&
+		key_event_gamepad_index < SS_MAX_LOCAL_PLAYERS)
+	{
+		ss_local_player_t *primary;
+
+		if (down && gamepad_keydown[key_event_gamepad_index][key])
+		{
+			return;
+		}
+		gamepad_keydown[key_event_gamepad_index][key] = down;
+
+		if (SS_IsLobbyActive() && cls.key_dest == key_menu)
+		{
+			if (down && special)
+			{
+				M_Keydown(key);
+			}
+			return;
+		}
+
+		if (SS_IsSessionActive() && cls.key_dest == key_game)
+		{
+			qboolean handled = SS_HandleSessionKey(key, down) ||
+				SS_HandleGameplayKey(key, down);
+
+			primary = SS_GetSlot(0);
+			if (!primary || !primary->active || primary->state == SS_SLOT_DROPPED ||
+				primary->device_index != key_event_gamepad_index + 2)
+			{
+				return;
+			}
+
+			/* A release still stops a primary binding begun before its menu
+			 * opened, even when the menu also uses that button to confirm. */
+			if ((handled || primary->menu_open) && (down || !keydown[key]))
+			{
+				return;
+			}
+		}
+	}
+
 	// evil hack for the joystick key altselector, which turns K_BTN_x into K_BTN_x_ALT
 	if(joy_altselector_pressed && key >= K_JOY_FIRST_BTN && key < K_JOY_FIRST_BTN_ALT)
 	{
@@ -1422,13 +1467,34 @@ Key_Event(int key, qboolean down, qboolean special)
 		return;
 	}
 
-	if (SS_HandleSessionKey(key, down))
+	if (key_event_gamepad_index < 0 && SS_HandleSessionKey(key, down))
 	{
 		return;
 	}
 
-	if (SS_HandleGameplayKey(key, down))
+	if (key_event_gamepad_index < 0 && SS_HandleGameplayKey(key, down))
 	{
+		return;
+	}
+
+	if (key_event_gamepad_index < 0 && SS_IsSessionActive() &&
+		cls.key_dest == key_game && key != K_ESCAPE)
+	{
+		ss_local_player_t *primary = SS_GetSlot(0);
+		if (!primary || primary->device_index != 1)
+		{
+			return;
+		}
+	}
+
+	/* The lobby owns its launch shortcut even if the global menu binding
+	 * for F10 is quit. Other bindings, such as screenshots, remain available. */
+	if (SS_IsLobbyActive() && cls.key_dest == key_menu && key == K_F10)
+	{
+		if (down)
+		{
+			M_Keydown(key);
+		}
 		return;
 	}
 
@@ -1624,6 +1690,29 @@ Key_GetEventGamepadIndex(void)
 	return key_event_gamepad_index;
 }
 
+/* Release before removing a device so +attack and other held actions stop. */
+void
+Key_ClearGamepadStates(int gamepad_index)
+{
+	int key;
+	int previous_index = key_event_gamepad_index;
+
+	if (gamepad_index < 0 || gamepad_index >= SS_MAX_LOCAL_PLAYERS)
+	{
+		return;
+	}
+
+	Key_SetEventGamepadIndex(gamepad_index);
+	for (key = 0; key < K_LAST; ++key)
+	{
+		if (gamepad_keydown[gamepad_index][key])
+		{
+			Key_Event(key, false, true);
+		}
+	}
+	Key_SetEventGamepadIndex(previous_index);
+}
+
 /*
  * Marks all keys as "up"
  */
@@ -1631,6 +1720,8 @@ void
 Key_MarkAllUp(void)
 {
 	int key;
+
+	memset(gamepad_keydown, 0, sizeof(gamepad_keydown));
 
 	for (key = 0; key < K_LAST; key++)
 	{

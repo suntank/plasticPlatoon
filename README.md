@@ -46,6 +46,29 @@ The Bedroom, Sandkeep and Sandwatch missions also have `_coop.cfg` launch
 configs. See each mission's guide under `maps/` for details. Weapons and muzzle
 flashes use [the versioned tuning profile](baseq2/tuning/README.md).
 
+## Local split-screen
+
+Open **Multiplayer**, choose **split-screen** and 2–4 players, then select
+**set up split-screen**. Choose the map/rules and **next: controllers**.
+With enough connected gamepads, every player gets a gamepad automatically;
+otherwise player 1 uses keyboard/mouse and the remaining pads fill later slots.
+
+Each player confirms **Ready** with their own controller (A, or B when using
+the reversed confirm setting). Player 1 presses **Start** to launch once
+everyone is ready. Cancel clears readiness; player 1 can cancel again to
+return to match settings. On keyboard, **Tab** selects a player to edit,
+arrows change selections, **F10** starts and **Esc** goes back. An unassigned
+pad can press confirm to join. Disconnecting a pad clears its readiness;
+reconnect and confirm again before starting.
+
+Standard controller button bindings apply to all local players. Missing
+default bindings are installed once when upgrading an older configuration;
+existing custom bindings and subsequent unbinds are preserved.
+The multiplayer **gamepad settings** entry opens those shared controls.
+Secondary players share look speed, inversion and deadzones; advanced stick
+curves, flick-stick, gyro and custom command aliases still use the primary
+player's input path only.
+
 ## Verify a standalone build
 
 ```sh

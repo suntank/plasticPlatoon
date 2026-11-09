@@ -85,6 +85,14 @@ typedef struct
 	qboolean speed_down;
 	qboolean jump_down;
 	qboolean crouch_down;
+	qboolean forward_down;
+	qboolean back_down;
+	qboolean moveleft_down;
+	qboolean moveright_down;
+	qboolean turnleft_down;
+	qboolean turnright_down;
+	qboolean lookup_down;
+	qboolean lookdown_down;
 	qboolean ads_active;
 	int last_gunindex;
 	int muzzle_flash_seq;
@@ -125,6 +133,8 @@ typedef struct
 	ss_transport_t transport;
 	int requested_players;
 	int device_count;
+	qboolean device_connected[SS_MAX_INPUT_DEVICES];
+	int device_instance_ids[SS_MAX_INPUT_DEVICES];
 	char device_labels[SS_MAX_INPUT_DEVICES][32];
 	ss_viewport_t viewports[SS_MAX_LOCAL_PLAYERS];
 	ss_local_player_t slots[SS_MAX_LOCAL_PLAYERS];
@@ -144,11 +154,16 @@ void SS_SetDetectedGamepadCount(int gamepad_count);
 int SS_GetDeviceCount(void);
 const char *SS_GetDeviceLabel(int device_index);
 void SS_SetDeviceLabel(int device_index, const char *label);
+void SS_RefreshDevices(void);
+qboolean SS_IsDeviceConnected(int device_index);
 
 void SS_BeginLobby(void);
 void SS_EndLobby(void);
 qboolean SS_AreAllSlotsReady(void);
 qboolean SS_IsDeviceSelectable(int slot_index, int device_index);
+int SS_FindLobbySlotForDevice(int device_index);
+int SS_JoinLobbyDevice(int device_index);
+qboolean SS_SetSlotReady(int slot_index, qboolean ready);
 void SS_CalcViewports(int player_count, int screen_w, int screen_h,
 	ss_viewport_t out_rects[SS_MAX_LOCAL_PLAYERS]);
 void SS_UpdateViewports(int screen_w, int screen_h);
@@ -173,6 +188,7 @@ qboolean SS_HandleSessionKey(int key, qboolean down);
 qboolean SS_ShouldCaptureGameplayDevice(int device_index);
 qboolean SS_HandleGameplayKey(int key, qboolean down);
 void SS_SetDeviceAxis(int device_index, ss_axis_t axis, int value);
+qboolean SS_AddDeviceMouseMotion(int device_index, float yaw, float pitch);
 qboolean SS_RenderViews(float stereo_separation);
 void SS_DrawGameplayHUD(void);
 void SS_DrawSessionOverlay(void);
