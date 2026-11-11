@@ -47,7 +47,7 @@ fi
 
 cd "$game_dir"
 if [ "$#" -eq 0 ]; then
-    set -- +map "${PLASTIC_PLATOON_MAP:-pp_sandbox_coop1}"
+    set -- +map "${PLASTIC_PLATOON_MAP:-pp_sandstorm}"
 fi
 
 # Keep renderer selection/resolution early: SDL creates its context before

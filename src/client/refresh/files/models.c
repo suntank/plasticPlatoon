@@ -265,9 +265,6 @@ Mod_GenerateSP2FromImage(const char *mod_name, struct image_s **skins,
 	*type = mod_sprite;
 	*out_size = sprite_size;
 
-	Com_Printf("Auto-generated SP2 sprite from: %s (%dx%d)\n",
-		mod_name, sprout->frames[0].width, sprout->frames[0].height);
-
 	return extradata;
 }
 

@@ -110,16 +110,9 @@ ant_die(edict_t *self, edict_t *inflictor, edict_t *attacker,
 	(void)inflictor;
 	(void)attacker;
 	(void)point;
-	if (self->health <= self->gib_health)
-	{
-		InsectGib(self, damage, false);
+	if (self->deadflag == DEAD_DEAD && (self->s.effects & EF_GIB))
 		return;
-	}
-	if (self->deadflag == DEAD_DEAD)
-		return;
-	self->deadflag = DEAD_DEAD;
-	self->takedamage = DAMAGE_YES;
-	self->monsterinfo.currentmove = &ant_move_death;
+	InsectGib(self, damage, false);
 }
 
 /* QUAKED monster_ant (1 .5 0) (-24 -24 -24) (24 24 16) Ambush Trigger_Spawn Sight */

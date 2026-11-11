@@ -1,0 +1,226 @@
+{
+  "schema": 1,
+  "scale": 1.2,
+  "foot_z": -24,
+  "standing_frame": 146,
+  "standing_head_z": 39.43737208843231,
+  "standing_hull_max_z": 40.0,
+  "generator_sha256": "37b42417150583c6a6816d06b8b02ad7671aa885f940d70e8659fba589a990c1",
+  "config_sha256": "353b30c6f7bcc6d03ff11d539a02a5c5a721ab5cb4c05928b648a996ea64525c",
+  "models": [
+    {
+      "source": "models/monsters/soldier/tris.md2",
+      "source_sha256": "9363f8d2fcb22c0d738ddf12f33a7e873ecb30f7badc8d704ecc565c812a2f05",
+      "output": "models/monsters/soldier/tall/tris.md2",
+      "sha256": "122c0f291a075757137125747574c30b13bc82c53765fbdf87454e29eedb7adf",
+      "bytes": 1784092,
+      "standing_bounds_before": [
+        [
+          -5.902708053588867,
+          10.75008076429367
+        ],
+        [
+          -10.176644325256348,
+          8.819028675556183
+        ],
+        [
+          -23.73567008972168,
+          28.86447800695896
+        ]
+      ],
+      "standing_bounds_after": [
+        [
+          -7.083249568939209,
+          12.900096632540226
+        ],
+        [
+          -12.211973190307617,
+          10.582834035158157
+        ],
+        [
+          -23.682804107666016,
+          39.43737208843231
+        ]
+      ]
+    },
+    {
+      "source": "models/monsters/soldier/weapon_blaster.md2",
+      "source_sha256": "912ee2a079fe7b015f3849fd10cfa7a1925d8bbef9dd9e2cf507781b82e20c5b",
+      "output": "models/monsters/soldier/tall/weapon_blaster.md2",
+      "sha256": "ab29c62474b12912b61e31c5fb5ef617e55a5d27439fdbcdfdfef0cb5d56e543",
+      "bytes": 1616844,
+      "standing_bounds_before": [
+        [
+          2.5717263221740723,
+          8.121832005679607
+        ],
+        [
+          -6.438620090484619,
+          -0.23127127438783646
+        ],
+        [
+          4.880040168762207,
+          9.208536103367805
+        ]
+      ],
+      "standing_bounds_after": [
+        [
+          3.086071491241455,
+          9.746198311448097
+        ],
+        [
+          -7.726344108581543,
+          -0.27752543427050114
+        ],
+        [
+          10.656047821044922,
+          15.850242752581835
+        ]
+      ]
+    },
+    {
+      "source": "models/monsters/soldier/weapon_shotgun.md2",
+      "source_sha256": "41f39b1fc5cd08c3c1649420d206bc2f1acab1e92ba24f4bd4d565389991c93d",
+      "output": "models/monsters/soldier/tall/weapon_shotgun.md2",
+      "sha256": "4aafb85c3dd370bf055ecbba460a10ddfdc1fc21d320898591c0b19091b98e34",
+      "bytes": 1401944,
+      "standing_bounds_before": [
+        [
+          0.00568389892578125,
+          11.703367605805397
+        ],
+        [
+          -9.597346305847168,
+          5.727483119815588
+        ],
+        [
+          4.697121620178223,
+          9.029453448951244
+        ]
+      ],
+      "standing_bounds_after": [
+        [
+          0.0068206787109375,
+          14.044040746986866
+        ],
+        [
+          -11.516815185546875,
+          6.872980125248432
+        ],
+        [
+          10.436546325683594,
+          15.635344710201025
+        ]
+      ]
+    },
+    {
+      "source": "models/monsters/soldier/weapon_machinegun.md2",
+      "source_sha256": "c44c70b25c3edc1f65cfcdf9195a2163f7751efd63ebe07fcad05c655a6ba022",
+      "output": "models/monsters/soldier/tall/weapon_machinegun.md2",
+      "sha256": "2b7d01f663f5e87474d825d5e6b3ba91b4fb0bcb9f2111b60d1698c1ee43428a",
+      "bytes": 1439876,
+      "standing_bounds_before": [
+        [
+          -0.9449920654296875,
+          16.562165707349777
+        ],
+        [
+          -13.474088668823242,
+          13.808361865580082
+        ],
+        [
+          2.6460118293762207,
+          11.287991486489773
+        ]
+      ],
+      "standing_bounds_after": [
+        [
+          -1.1339905261993408,
+          19.874599561095238
+        ],
+        [
+          -16.168907165527344,
+          16.570033475756645
+        ],
+        [
+          7.975214004516602,
+          18.345589593052864
+        ]
+      ]
+    },
+    {
+      "source": "models/monsters/soldier/weapon_heavy.md2",
+      "source_sha256": "cc59137e12c7a94a16ad19d6b29a3f7bc96aee0a17967160f0d0b6e72e6e4ef6",
+      "output": "models/monsters/soldier/tall/weapon_heavy.md2",
+      "sha256": "8faf9da46f264c89138535cb5a1df6d4533c2016703a23b5c480fdd652f8cdda",
+      "bytes": 1535032,
+      "standing_bounds_before": [
+        [
+          -1.8139100074768066,
+          16.550455167889595
+        ],
+        [
+          -13.257472038269043,
+          13.483074374496937
+        ],
+        [
+          -0.39391380548477173,
+          11.596333302557468
+        ]
+      ],
+      "standing_bounds_after": [
+        [
+          -2.176692008972168,
+          19.860546581447124
+        ],
+        [
+          -15.908966064453125,
+          16.17968887090683
+        ],
+        [
+          4.327303409576416,
+          18.715599939227104
+        ]
+      ]
+    },
+    {
+      "source": "models/monsters/soldier/weapon_rocket.md2",
+      "source_sha256": "6bdf833ee3cb7d8de945fb445d27c130dee600b0d74684414690893b04c26676",
+      "output": "models/monsters/soldier/tall/weapon_rocket.md2",
+      "sha256": "9bc7aeb2c5a4b47f125d7583073dfc472d6f5367e7a51dffc12182cfaf7acab1",
+      "bytes": 1415072,
+      "standing_bounds_before": [
+        [
+          -1.5560847520828247,
+          15.009158663451672
+        ],
+        [
+          -13.702177047729492,
+          10.711843505501747
+        ],
+        [
+          3.7535083293914795,
+          11.75583902746439
+        ]
+      ],
+      "standing_bounds_after": [
+        [
+          -1.8673017024993896,
+          18.010989636182785
+        ],
+        [
+          -16.442611694335938,
+          12.85421334952116
+        ],
+        [
+          9.30420970916748,
+          18.907006926834583
+        ]
+      ]
+    }
+  ],
+  "dimension_header": {
+    "path": "src/common/header/soldier_dimensions.h",
+    "sha256": "bc3e414901b73c7121ca907a0f460792b0cc6cfa029691f3e0c692556a138c19"
+  }
+}

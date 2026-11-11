@@ -22,6 +22,16 @@ for the keyboard launch shortcut, and `--from-match` to verify switching from
 an active solo game (including manual controller swaps). `--players 3` and
 `--players 4` cover the larger lobbies; `--menuscale 8` checks scale fitting.
 
+The handheld escape regression loads Game Bird bindings at 240×240 with one
+controller, covering ready cancellation, B/Select back, blocked guest Start,
+return to the main menu and cancellation from an unassigned controller:
+
+```sh
+python3 tests/splitscreen/smoke_single_pad.py --output /tmp/platoon-one-pad-check
+```
+
+Use `--client /path/to/quake2` to reproduce the same inputs on an older build.
+
 It needs SDL2 2.24 or newer, an unstripped client, the GL1 renderer and game
 module in `release`, and the bundled asset archive. It runs with an isolated
 portable configuration and an offscreen software GL driver. The test reads

@@ -217,6 +217,7 @@ ThrowGib(edict_t *self, char *gibname, int damage, int type)
 	gib->s.origin[2] = origin[2] + crandom() * size[2];
 
 	gi.setmodel(gib, gibname);
+	gib->s.renderfx |= self->s.renderfx & (RF_PP_FRIENDLY_COLOR | RF_PP_ENEMY_COLOR);
 	if (self->client || (self->s.modelindex == 255))
 	{
 		gib->s.skinnum = PP_GIB_PLAYER_SKIN_OVERRIDE;
@@ -409,6 +410,7 @@ ThrowDebris(edict_t *self, char *modelname, float speed, vec3_t origin)
 
 	VectorCopy(origin, chunk->s.origin);
 	gi.setmodel(chunk, modelname);
+	chunk->s.renderfx |= self->s.renderfx & (RF_PP_FRIENDLY_COLOR | RF_PP_ENEMY_COLOR);
 	v[0] = 100 * crandom();
 	v[1] = 100 * crandom();
 	v[2] = 100 + 100 * crandom();
@@ -2314,7 +2316,7 @@ SP_misc_platoon_dropship(edict_t *self)
 
 	self->movetype = MOVETYPE_NONE;
 	self->solid = SOLID_NOT;
-	self->s.renderfx |= RF_FRAMELERP;
+	self->s.renderfx |= RF_FRAMELERP | RF_PP_FRIENDLY_COLOR;
 	self->s.modelindex = gi.modelindex("models/monsters/boss2/tris.md2");
 	self->s.modelindex2 = gi.modelindex("models/monsters/boss2/propeller.md2");
 	self->noise_index = gi.soundindex("bosshovr/bhvengn1.wav");

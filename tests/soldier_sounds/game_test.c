@@ -10,6 +10,7 @@ extern void SP_monster_soldier_rocket(edict_t *self);
 extern void soldier_footstep(edict_t *self);
 extern void soldier_cock(edict_t *self);
 extern void soldier_idle(edict_t *self);
+extern game_export_t *GetGameAPI(game_import_t *import);
 
 static cvar_t zero, one;
 static char sound_names[128][MAX_QPATH];
@@ -85,7 +86,7 @@ static struct soldier_case cases[] = {
         "soldier/player/pain100_1.wav", "soldier/player/death3.wav", "soldier/player/rocklf1a.wav", 1},
 };
 
-static edict_t *spawn_soldier(struct soldier_case *test)
+static edict_t *spawn_soldier_flags(struct soldier_case *test, int aiflags)
 {
     edict_t *soldier = &g_edicts[2];
     memset(g_edicts, 0, game.maxentities * sizeof(*g_edicts));
@@ -97,9 +98,15 @@ static edict_t *spawn_soldier(struct soldier_case *test)
     gibsthisframe = 0;
     soldier->inuse = true;
     soldier->classname = test->classname;
+    soldier->monsterinfo.aiflags = aiflags;
     test->spawn(soldier);
     played = 0;
     return soldier;
+}
+
+static edict_t *spawn_soldier(struct soldier_case *test)
+{
+    return spawn_soldier_flags(test, 0);
 }
 
 static void expect_sound(const char *path, int channel)
@@ -115,6 +122,9 @@ static void test_soldier(struct soldier_case *test)
     edict_t *soldier = spawn_soldier(test);
     vec3_t point = {0, 0, -1000};
     int i;
+
+    assert(soldier->s.renderfx & RF_PP_ENEMY_COLOR);
+    assert(!(soldier->s.renderfx & RF_PP_FRIENDLY_COLOR));
 
     /* Every random muzzle report must be registered by the spawning game. */
     for (i = 1; i <= test->variants; i++)
@@ -174,6 +184,69 @@ static void test_soldier(struct soldier_case *test)
     soldier->health = soldier->gib_health;
     soldier->die(soldier, &g_edicts[0], &g_edicts[0], 100, point);
     expect_sound("soldier/player/death4.wav", CHAN_VOICE);
+    for (i = 2; i < globals.num_edicts; i++)
+    {
+        edict_t *gib = &g_edicts[i];
+        if (!gib->inuse || !(gib->s.effects & EF_GIB)) continue;
+        assert(gib->s.renderfx & RF_PP_ENEMY_COLOR);
+        assert(!(gib->s.renderfx & RF_PP_FRIENDLY_COLOR));
+    }
+}
+
+static void test_debris_ownership(void)
+{
+    edict_t *ally = spawn_soldier_flags(&cases[0], AI_GOOD_GUY);
+    edict_t *piece, *player;
+    int i, found_gib = 0, found_debris = 0;
+    assert(ally->s.renderfx & RF_PP_FRIENDLY_COLOR);
+    assert(!(ally->s.renderfx & RF_PP_ENEMY_COLOR));
+    ThrowGib(ally, "models/objects/gibs/arm/tris.md2", 20, GIB_ORGANIC);
+    ThrowDebris(ally, "models/objects/debris1/tris.md2", 1, ally->s.origin);
+    for (i = 3; i < globals.num_edicts; i++)
+    {
+        piece = &g_edicts[i];
+        if (!piece->inuse) continue;
+        assert(piece->s.renderfx & RF_PP_FRIENDLY_COLOR);
+        assert(!(piece->s.renderfx & RF_PP_ENEMY_COLOR));
+        if (piece->s.effects & EF_GIB) found_gib++;
+        else found_debris++;
+    }
+    assert(found_gib == 1 && found_debris == 1);
+    /* Player debris keeps its selected-skin marker and existing effects. */
+    player = &g_edicts[1];
+    player->inuse = true;
+    player->client = &game.clients[0];
+    ThrowGib(player, "models/objects/gibs/arm/tris.md2", 20, GIB_ORGANIC);
+    piece = &g_edicts[globals.num_edicts - 1];
+    assert(piece->s.skinnum & PP_GIB_PLAYER_SKIN_OVERRIDE);
+    assert(piece->s.effects & EF_GREENGIB);
+    assert(!(piece->s.renderfx & (RF_PP_ENEMY_COLOR | RF_PP_FRIENDLY_COLOR)));
+}
+
+static void test_frame_ownership_refresh(void)
+{
+    edict_t *actor, *pickup;
+    game_export_t *api = GetGameAPI(&gi);
+    memset(g_edicts, 0, game.maxentities * sizeof(*g_edicts));
+    memset(&level, 0, sizeof(level));
+    globals.num_edicts = 4;
+    password = spectator_password = &zero;
+    actor = &g_edicts[2];
+    actor->inuse = true;
+    actor->svflags = SVF_MONSTER;
+    actor->s.renderfx = RF_GLOW; /* An old save has no ownership bits. */
+    pickup = &g_edicts[3];
+    pickup->inuse = true;
+    pickup->s.renderfx = RF_FULLBRIGHT;
+    api->RunFrame();
+    assert(actor->s.renderfx == (RF_GLOW | RF_PP_ENEMY_COLOR));
+    assert(pickup->s.renderfx == RF_FULLBRIGHT);
+    actor->monsterinfo.aiflags |= AI_GOOD_GUY;
+    api->RunFrame();
+    assert(actor->s.renderfx == (RF_GLOW | RF_PP_FRIENDLY_COLOR));
+    actor->monsterinfo.aiflags &= ~AI_GOOD_GUY;
+    api->RunFrame();
+    assert(actor->s.renderfx == (RF_GLOW | RF_PP_ENEMY_COLOR));
 }
 
 int main(void)
@@ -194,6 +267,8 @@ int main(void)
     game.clients = calloc(game.maxclients, sizeof(*game.clients));
     g_edicts = calloc(game.maxentities, sizeof(*g_edicts));
     for (i = 0; i < sizeof(cases) / sizeof(cases[0]); i++) test_soldier(&cases[i]);
+    test_debris_ownership();
+    test_frame_ownership_refresh();
     free(game.clients);
     free(g_edicts);
     puts("five soldier variants: player sound precaches, pain, death, gibs and footsteps passed");

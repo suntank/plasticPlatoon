@@ -62,6 +62,7 @@ void SCR_StopCinematic(void);
 void SCR_FinishCinematic(void);
 
 void SCR_DrawCrosshair(void);
+void SCR_DrawGrenadeHUD(const player_state_t *ps, int right, int y, float scale);
 
 float SCR_GetHUDScale(void);
 float SCR_GetConsoleScale(void);

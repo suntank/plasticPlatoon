@@ -393,6 +393,7 @@ set(Game-Source
 	${GAME_SRC_DIR}/monster/supertank/supertank.c
 	${GAME_SRC_DIR}/monster/tank/tank.c
 	${GAME_SRC_DIR}/player/client.c
+	${GAME_SRC_DIR}/player/aim_assist.c
 	${GAME_SRC_DIR}/player/hud.c
 	${GAME_SRC_DIR}/player/trail.c
 	${GAME_SRC_DIR}/player/view.c
@@ -443,6 +444,7 @@ set(Client-Source
 	${CLIENT_SRC_DIR}/cl_download.c
 	${CLIENT_SRC_DIR}/cl_effects.c
 	${CLIENT_SRC_DIR}/cl_entities.c
+	${CLIENT_SRC_DIR}/cl_color_skins.c
 	${CLIENT_SRC_DIR}/cl_input.c
 	${CLIENT_SRC_DIR}/cl_image.c
 	${CLIENT_SRC_DIR}/cl_inventory.c
@@ -818,12 +820,26 @@ if(isMultiConfig)
 else()
 	set(Project-Assets-Directory "${CMAKE_BINARY_DIR}/release/baseq2")
 endif()
+add_custom_target(project_soldier_dimensions
+	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/assets/build_soldier_height.py"
+	BYPRODUCTS "${CMAKE_CURRENT_SOURCE_DIR}/src/common/header/soldier_dimensions.h"
+	WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+	COMMENT "Generate enemy soldier dimensions and model variants"
+	VERBATIM
+)
+add_dependencies(game project_soldier_dimensions)
+if(TARGET yquake2)
+	add_dependencies(yquake2 project_soldier_dimensions)
+else()
+	add_dependencies(quake2 project_soldier_dimensions)
+endif()
 add_custom_target(project_assets ALL
 	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/assets/build_branding.py"
 	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/assets/build_bootstrap.py"
 	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/assets/build_support_sounds.py"
 	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/assets/import_enemy_sounds.py" --verify
 	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/assets/build_support_models.py"
+	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/assets/build_color_variants.py"
 	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/assets/build_overlay.py"
 		--output "${Project-Assets-Directory}/plastic-platoon.pk3"
 	COMMAND "${CMAKE_COMMAND}" -E copy_if_different
@@ -836,6 +852,7 @@ add_custom_target(project_assets ALL
 	COMMENT "Package Plastic Platoon runtime assets"
 	VERBATIM
 )
+add_dependencies(project_assets project_soldier_dimensions)
 
 if(${GL1_RENDERER})
 

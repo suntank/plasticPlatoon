@@ -54,6 +54,7 @@ qboolean menubound[K_LAST]; /* if true, can't be rebound while in menu */
 int key_repeats[K_LAST]; /* if > 1, it is autorepeating */
 qboolean keydown[K_LAST];
 static int key_event_gamepad_index = -1;
+static int key_input_gamepad = -1;
 static qboolean gamepad_keydown[SS_MAX_LOCAL_PLAYERS][K_LAST];
 
 qboolean Cmd_IsComplete(const char *cmd);
@@ -1371,6 +1372,14 @@ Key_Event(int key, qboolean down, qboolean special)
 			{
 				M_Keydown(key);
 			}
+			else if (!down && key >= K_JOY_FIRST_BTN)
+			{
+				/* Confirm may have entered this lobby through the legacy menu
+				 * path. Its release must clear that path's repeat state too.
+				 * Per-controller held state remains in gamepad_keydown above. */
+				keydown[key] = false;
+				key_repeats[key] = 0;
+			}
 			return;
 		}
 
@@ -1485,6 +1494,12 @@ Key_Event(int key, qboolean down, qboolean special)
 		{
 			return;
 		}
+	}
+
+	if (down && cls.key_dest == key_game && cls.state == ca_active)
+	{
+		Key_SetInputGamepad(key_event_gamepad_index >= 0 ? key_event_gamepad_index :
+			(key >= K_JOY_FIRST_BTN && key < K_JOY_FIRST_BTN_ALT ? 0 : -1));
 	}
 
 	/* The lobby owns its launch shortcut even if the global menu binding
@@ -1690,6 +1705,18 @@ Key_GetEventGamepadIndex(void)
 	return key_event_gamepad_index;
 }
 
+void
+Key_SetInputGamepad(int gamepad_index)
+{
+	key_input_gamepad = gamepad_index;
+}
+
+qboolean
+Key_UsingGamepad(void)
+{
+	return key_input_gamepad >= 0;
+}
+
 /* Release before removing a device so +attack and other held actions stop. */
 void
 Key_ClearGamepadStates(int gamepad_index)
@@ -1711,6 +1738,10 @@ Key_ClearGamepadStates(int gamepad_index)
 		}
 	}
 	Key_SetEventGamepadIndex(previous_index);
+	if (key_input_gamepad == gamepad_index)
+	{
+		key_input_gamepad = -1;
+	}
 }
 
 /*
@@ -1721,6 +1752,7 @@ Key_MarkAllUp(void)
 {
 	int key;
 
+	CL_ReleaseGameBirdKeys();
 	memset(gamepad_keydown, 0, sizeof(gamepad_keydown));
 
 	for (key = 0; key < K_LAST; key++)

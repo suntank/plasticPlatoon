@@ -12,8 +12,9 @@ make -j4 all
 ./release/play-portable.sh
 ```
 
-The asset target uses standard-library Python generators for original branding,
-palette/font/UI, provisional support sounds and props, then creates
+The asset target uses standard-library Python and Pillow generators for original
+branding, palette/font/UI, provisional support sounds, props and color variants,
+then creates
 `release/baseq2/plastic-platoon.pk3`. It stages every `operation-*.pk3` mission,
 the launcher, notices and an identical loose `tuning/default.json` needed by the
 game module. Personal configs and saves are never packaging inputs.
@@ -86,6 +87,65 @@ manifest identifies synthesized placeholders separately from those recordings.
 The six supplied ElevenLabs soldier clips and reproducible mono conversions are
 recorded in `enemy-sounds-manifest.json`; `import_enemy_sounds.py --verify` checks
 them during both Make and CMake asset builds. See `SOLDIER-SOUNDS.md`.
+
+## Player colors and enemy variants
+
+`build_color_variants.py` generates separate PNG skins for red enemies, their
+held weapons and debris, plus player bodies, every first-person weapon, linked
+third-person weapon and ADS overlay in each selectable soldier color. It
+discovers colors from `players/soldier/<color>.png` skins with matching selection icons; missing
+or unsupported held-weapon variants fall back to green at runtime. Per-entity
+skin overrides keep each player's weapon color independent and leave unheld
+pickups and existing player debris unchanged.
+
+Player body atlases use `players/soldier/colors/body_<color>.png`, shared by the
+unchanged `tris.md2` and `tris_pistol.md2` models. They apply the weapon pigment
+hue/saturation and brightness curve to the original green body atlas, retaining
+its shading and texture detail. This also normalizes the brighter original
+pink, skin and white bodies to their held weapons; gray and white remain
+achromatic. The body mask includes deep plastic shadows and preserves neutral
+details and alpha. Canonical skin images, menu icons and player debris remain
+unchanged. Missing generated body art retains the selected canonical body;
+normal missing-skin handling still chooses green.
+
+Generated model skins use `<model-directory>/colors/<model-stem>_<color>.png`;
+additional enemy skin indices use `_<color>_<index>.png`. ADS art uses
+`pics/colors/ads_<weapon>_<color>.png`. Taller soldier models share the canonical
+soldier color paths. `color-variants-manifest.json` records source/model hashes,
+palette values, material-mask rules and hashes, output dimensions and hashes,
+and coverage of enemy models in the bundled operation archives. Enemy plastic
+uses the same saturated red pigment on bodies, parts and held weapons while
+retaining the source brightness and shading. Material masks preserve alpha and
+contrasting eyes, glass, optics, metal and dark mechanical details. Original
+model and texture inputs remain unchanged.
+
+`build_soldier_height.py` reads `soldier-height.json` (currently scale `1.2`, a
+20% increase, anchored at foot Z `-24`) and writes six enemy body/held-weapon MD2s
+under `models/monsters/soldier/tall/`. Only each frame's scale and translation
+change; packed vertices, normals, skins, UVs, triangles and frame names remain
+exact. `soldier-height-manifest.json` pins the inputs/outputs and generated
+`src/common/header/soldier_dimensions.h` keeps gameplay dimensions aligned.
+Make and CMake regenerate height models before color variants and packaging.
+
+Rebuild and verify these derived assets with Python and Pillow:
+
+```sh
+python3 tools/assets/build_soldier_height.py
+python3 tools/assets/build_color_variants.py
+python3 tools/assets/build_soldier_height.py --verify
+python3 tools/assets/build_color_variants.py --verify --review
+python3 tests/assets/test_soldier_height.py
+python3 tests/assets/test_color_variants.py
+```
+
+Color verification checks hashes, dimensions, alpha and exact preservation of
+pixels outside each plastic mask. Review sheets are written to
+`build/color-variants/red-material-review.png` and `player-body-review.png`.
+The manifest also pins both body model layouts and their shared generated
+atlases. Body recipes have a separate cache key, so body changes retain identical
+weapon/enemy/ADS bytes. Unchanged source/palette/recipe inputs reuse identical
+generated PNG bytes; run the overlay verifier above after packaging to check
+that every variant ships.
 
 ## Maps, palette and branding
 

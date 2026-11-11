@@ -6,6 +6,8 @@
 
 extern void SP_monster_ant(edict_t *self);
 extern void M_MoveFrame(edict_t *self);
+extern void Killed(edict_t *targ, edict_t *inflictor, edict_t *attacker,
+        int damage, vec3_t point);
 
 static cvar_t zero, one, max_clients;
 static int blocked_sight, blocked_shots, shot_traces, links;
@@ -167,13 +169,15 @@ int main(int argc, char **argv)
     ant = &g_edicts[2];
     assert(ant->monsterinfo.currentmove == attack && ant->monsterinfo.melee);
     assert(ant->pain && ant->die && ant->enemy == &g_edicts[1]);
-    ant->die(ant, NULL, NULL, 120, vec3_origin);
-    assert(ant->deadflag == DEAD_DEAD && ant->monsterinfo.currentmove->firstframe == 44);
-    ant->monsterinfo.currentmove->endfunc(ant);
-    assert(ant->svflags & SVF_DEADMONSTER);
-    /* Corpses can still burst into this creature's own fragments. */
-    ant->health = ant->gib_health;
-    ant->die(ant, NULL, NULL, 140, vec3_origin);
+    /* A normal, non-overkill death immediately uses the rocket gib burst.
+     * Run the real death dispatcher so mission kill accounting is covered. */
+    ant->health = -1;
+    gibsthisframe = 0;
+    Killed(ant, &g_edicts[1], &g_edicts[1], 15, vec3_origin);
+    assert(level.killed_monsters == 1);
+    assert(ant->deadflag == DEAD_DEAD && !(ant->svflags & SVF_MONSTER));
+    assert(ant->s.effects & EF_GIB);
+    assert(ant->think == G_FreeEdict && ant->nextthink > level.time);
     assert(!strcmp(models[ant->s.modelindex], "models/objects/gibs/ant/chunk.md2"));
     {
         int chunks = 0, legs = 0;
@@ -184,6 +188,14 @@ int main(int argc, char **argv)
         }
         assert(chunks == 3 && legs == 4);
     }
+    /* Already-gibbed heads cannot be counted as another monster kill. */
+    Killed(ant, &g_edicts[1], &g_edicts[1], 15, vec3_origin);
+    assert(level.killed_monsters == 1);
+    ant = spawn_ant();
+    gibsthisframe = 0;
+    ant->health = ant->gib_health;
+    Killed(ant, &g_edicts[1], &g_edicts[1], 140, vec3_origin);
+    assert(level.killed_monsters == 1 && (ant->s.effects & EF_GIB));
     unlink(argv[1]);
     puts("ant spawn, melee reach and obstruction, save/load and death passed");
     return 0;

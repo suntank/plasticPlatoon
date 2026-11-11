@@ -10,6 +10,7 @@ char *keybindings[K_LAST];
 static cvar_t move_speed = {.value = 200}, turn_speed = {.value = 140};
 static cvar_t pitch_speed = {.value = 150}, run = {.value = 1}, light = {.value = 128};
 static float pad_pitch_speed = 120, pad_yaw_speed = 160, pad_deadzone = 0.16f;
+static float ads_sensitivity = 0.5f, auto_level, auto_level_time = 0.25f;
 cvar_t *cl_forwardspeed = &move_speed, *cl_sidespeed = &move_speed;
 cvar_t *cl_upspeed = &move_speed, *cl_yawspeed = &turn_speed;
 cvar_t *cl_pitchspeed = &pitch_speed, *cl_run = &run, *cl_lightlevel = &light;
@@ -24,6 +25,9 @@ float Cvar_VariableValue(const char *name)
 {
 	if (!strcmp(name, "joy_pitchspeed")) return pad_pitch_speed;
 	if (!strcmp(name, "joy_yawspeed")) return pad_yaw_speed;
+	if (!strcmp(name, "cl_ads_sensitivity")) return ads_sensitivity;
+	if (!strcmp(name, "cl_gamebird_autolevel")) return auto_level;
+	if (!strcmp(name, "cl_gamebird_autolevel_time")) return auto_level_time;
 	if (!strcmp(name, "joy_left_deadzone") || !strcmp(name, "joy_right_deadzone"))
 		return pad_deadzone;
 	return 1.0f;
@@ -263,8 +267,8 @@ static void test_secondary_motion_and_menu(void)
 	SS_SetDeviceAxis(3, SS_AXIS_LEFT_Y, -32768);
 	p2->attack_down = p2->ads_down = p2->jump_down = p2->use_down = true;
 	SS_BuildSlotCmd(p2);
-	assert(fabsf(p2->viewangles[YAW] + 16) < 0.001f);
-	assert(fabsf(p2->viewangles[PITCH] - 12) < 0.001f);
+	assert(fabsf(p2->viewangles[YAW] + 8) < 0.001f);
+	assert(fabsf(p2->viewangles[PITCH] - 6) < 0.001f);
 	assert(p2->cmd.forwardmove == 400 && p2->cmd.upmove == 200);
 	assert((p2->cmd.buttons & (BUTTON_ATTACK | BUTTON_ADS | BUTTON_USE)) ==
 		(BUTTON_ATTACK | BUTTON_ADS | BUTTON_USE));
@@ -272,28 +276,187 @@ static void test_secondary_motion_and_menu(void)
 	pad_pitch_speed = -60;
 	pad_yaw_speed = 80;
 	SS_BuildSlotCmd(p2);
-	assert(fabsf(p2->viewangles[YAW] + 24) < 0.001f);
-	assert(fabsf(p2->viewangles[PITCH] - 6) < 0.001f);
+	assert(fabsf(p2->viewangles[YAW] + 12) < 0.001f);
+	assert(fabsf(p2->viewangles[PITCH] - 3) < 0.001f);
 	SS_SetDeviceAxis(3, SS_AXIS_LEFT_Y, 2000);
 	SS_SetDeviceAxis(3, SS_AXIS_RIGHT_X, 2000);
 	SS_SetDeviceAxis(3, SS_AXIS_RIGHT_Y, 2000);
 	SS_BuildSlotCmd(p2);
 	assert(p2->cmd.forwardmove == 0);
-	assert(fabsf(p2->viewangles[YAW] + 24) < 0.001f);
+	assert(fabsf(p2->viewangles[YAW] + 12) < 0.001f);
 	SS_OpenSlotMenu(p2);
 	assert(!p2->attack_down && !p2->ads_down && !p2->jump_down && !p2->use_down);
 	assert(!p2->axis_right_x && !p2->axis_right_y);
 	SS_CloseSlotMenu(p2);
 	assert(SS_AssignSlotDevice(1, 1));
 	assert(SS_AddDeviceMouseMotion(1, 4, -3));
-	assert(fabsf(p2->viewangles[YAW] + 20) < 0.001f);
-	assert(fabsf(p2->viewangles[PITCH] - 3) < 0.001f);
+	assert(fabsf(p2->viewangles[YAW] + 8) < 0.001f);
+	assert(fabsf(p2->viewangles[PITCH]) < 0.001f);
 	assert(!p1->viewangles[YAW] && !p1->viewangles[PITCH]);
 	assert(SS_AddDeviceMouseMotion(1, 0, 1000));
 	assert(p2->viewangles[PITCH] == 89);
 	SS_OpenSlotMenu(p2);
 	assert(SS_AddDeviceMouseMotion(1, 10, -10));
-	assert(p2->viewangles[PITCH] == 89 && fabsf(p2->viewangles[YAW] + 20) < 0.001f);
+	assert(p2->viewangles[PITCH] == 89 && fabsf(p2->viewangles[YAW] + 8) < 0.001f);
+}
+
+static void test_secondary_gamebird_controls(void)
+{
+	ss_local_player_t *p1, *p2;
+	float yaw, pitch;
+	int before;
+	begin(2, 100, 200, -1, -1);
+	p1 = SS_GetSlot(0);
+	p2 = SS_GetSlot(1);
+	SS_GetState()->session_active = true;
+	SS_EndLobby();
+	cls.key_dest = key_game;
+	cls.nframetime = 0.1f;
+	event_gamepad = 1;
+	p2->connection_state = ca_connected;
+	pad_pitch_speed = 120;
+	keybindings[K_DPAD_UP] = "+gb_up";
+	keybindings[K_DPAD_DOWN] = "+gb_down";
+	keybindings[K_DPAD_LEFT] = "+gb_left";
+	keybindings[K_DPAD_RIGHT] = "+gb_right";
+	keybindings[K_BTN_WEST] = "+gb_modifier";
+	keybindings[K_BTN_NORTH] = "+ads";
+	keybindings[K_BTN_EAST] = "+moveup";
+	assert(SS_HandleGameplayKey(K_DPAD_UP, true));
+	assert(SS_HandleGameplayKey(K_DPAD_LEFT, true));
+	SS_BuildSlotCmd(p2);
+	assert(p2->cmd.forwardmove > 0 && p2->viewangles[YAW] > 0);
+	assert(!p2->viewangles[PITCH] && !p1->gb_up_down && !p1->gb_left_down);
+	assert(SS_HandleGameplayKey(K_BTN_NORTH, true));
+	SS_BuildSlotCmd(p2);
+	assert(!p2->cmd.forwardmove && p2->viewangles[PITCH] < 0);
+	pitch = p2->viewangles[PITCH];
+	pad_pitch_speed = -120;
+	SS_BuildSlotCmd(p2);
+	assert(!p2->cmd.forwardmove && p2->viewangles[PITCH] > pitch);
+	assert(SS_HandleGameplayKey(K_BTN_NORTH, false));
+	SS_BuildSlotCmd(p2);
+	assert(p2->cmd.forwardmove > 0);
+	assert(SS_HandleGameplayKey(K_DPAD_UP, false));
+	assert(SS_HandleGameplayKey(K_DPAD_LEFT, false));
+	assert(SS_HandleGameplayKey(K_DPAD_DOWN, true));
+	SS_BuildSlotCmd(p2);
+	assert(p2->cmd.forwardmove < 0);
+	/* Holding a direction before the modifier does not trigger a toggle. */
+	assert(SS_HandleGameplayKey(K_BTN_WEST, true));
+	SS_BuildSlotCmd(p2);
+	assert(!p2->gb_crouched && !p2->cmd.forwardmove);
+	assert(SS_HandleGameplayKey(K_DPAD_DOWN, false));
+	before = transmitted;
+	assert(SS_HandleGameplayKey(K_DPAD_UP, true));
+	assert(transmitted == before + 1 && !strcmp(sent_command, "help"));
+	assert(sent_slot == 1 && loopback_slot == 0);
+	assert(SS_HandleGameplayKey(K_DPAD_UP, true));
+	assert(transmitted == before + 1);
+	assert(SS_HandleGameplayKey(K_DPAD_UP, false));
+	assert(SS_HandleGameplayKey(K_DPAD_UP, true));
+	assert(transmitted == before + 2 && !strcmp(sent_command, "help"));
+	assert(SS_HandleGameplayKey(K_DPAD_UP, false));
+	before = transmitted;
+	assert(SS_HandleGameplayKey(K_DPAD_LEFT, true));
+	assert(transmitted == before + 1 && !strcmp(sent_command, "weapprev"));
+	assert(sent_slot == 1 && loopback_slot == 0);
+	assert(SS_HandleGameplayKey(K_DPAD_LEFT, true));
+	assert(transmitted == before + 1);
+	assert(SS_HandleGameplayKey(K_DPAD_LEFT, false));
+	assert(SS_HandleGameplayKey(K_DPAD_RIGHT, true));
+	assert(transmitted == before + 2 && !strcmp(sent_command, "weapnext"));
+	assert(SS_HandleGameplayKey(K_DPAD_DOWN, true));
+	assert(p2->gb_crouched && !p1->gb_crouched);
+	assert(SS_HandleGameplayKey(K_DPAD_DOWN, true));
+	assert(p2->gb_crouched);
+	assert(SS_HandleGameplayKey(K_BTN_NORTH, true));
+	yaw = p2->viewangles[YAW];
+	pitch = p2->viewangles[PITCH];
+	SS_BuildSlotCmd(p2);
+	assert(!p2->cmd.forwardmove && p2->cmd.upmove < 0);
+	assert(p2->viewangles[YAW] == yaw && p2->viewangles[PITCH] == pitch);
+	/* Releasing the modifier restores the held directions in ADS mode. */
+	assert(SS_HandleGameplayKey(K_BTN_WEST, false));
+	pad_pitch_speed = 120;
+	SS_BuildSlotCmd(p2);
+	assert(!p2->cmd.forwardmove && p2->viewangles[YAW] < yaw);
+	assert(p2->viewangles[PITCH] > pitch);
+	pitch = p2->viewangles[PITCH];
+	pad_pitch_speed = -120;
+	SS_BuildSlotCmd(p2);
+	assert(p2->viewangles[PITCH] < pitch);
+	SS_OpenSlotMenu(p2);
+	assert(!p2->gb_down_down && !p2->gb_right_down && !p2->gb_modifier_down);
+	assert(p2->gb_crouched);
+	SS_CloseSlotMenu(p2);
+	assert(SS_HandleGameplayKey(K_DPAD_DOWN, false));
+	assert(SS_HandleGameplayKey(K_DPAD_RIGHT, false));
+	SS_BuildSlotCmd(p2);
+	assert(p2->gb_crouched && p2->cmd.upmove < 0 && !p2->cmd.forwardmove);
+	assert(SS_HandleGameplayKey(K_BTN_EAST, true));
+	SS_BuildSlotCmd(p2);
+	assert(!p2->gb_crouched && p2->cmd.upmove > 0);
+	assert(SS_HandleGameplayKey(K_BTN_EAST, false));
+	assert(SS_HandleGameplayKey(K_BTN_WEST, true));
+	assert(SS_HandleGameplayKey(K_DPAD_DOWN, true));
+	assert(p2->gb_crouched);
+	assert(SS_HandleGameplayKey(K_DPAD_DOWN, false));
+	assert(SS_HandleGameplayKey(K_DPAD_DOWN, true));
+	assert(!p2->gb_crouched);
+	assert(SS_HandleGameplayKey(K_DPAD_DOWN, false));
+	assert(SS_HandleGameplayKey(K_DPAD_DOWN, true));
+	p2->snapshot_valid = true;
+	p2->frame.playerstate.pmove.pm_type = PM_DEAD;
+	SS_BuildSlotCmd(p2);
+	assert(!p2->gb_crouched && !p2->cmd.upmove);
+	p2->gb_crouched = true;
+	SS_ClearSlotSnapshot(p2);
+	assert(!p2->gb_crouched);
+	/* Primary input is still handled by the ordinary client command path. */
+	event_gamepad = 0;
+	assert(!SS_HandleGameplayKey(K_DPAD_UP, true));
+	assert(!p1->gb_up_down && !p1->viewangles[YAW] && !p1->viewangles[PITCH]);
+}
+
+static void test_secondary_ads_level_and_mouse(void)
+{
+	ss_local_player_t *p2;
+	float pitch;
+	begin(2, 100, 200, -1, -1);
+	p2 = SS_GetSlot(1);
+	SS_GetState()->session_active = true;
+	SS_EndLobby();
+	cls.key_dest = key_game;
+	cls.nframetime = 0.1f;
+	auto_level = 1;
+	p2->viewangles[PITCH] = 30;
+	p2->ads_down = true;
+	SS_BuildSlotCmd(p2);
+	p2->ads_down = false;
+	SS_BuildSlotCmd(p2);
+	assert(fabsf(p2->viewangles[PITCH] - 18) < 0.001f);
+	SS_BuildSlotCmd(p2);
+	assert(fabsf(p2->viewangles[PITCH] - 6) < 0.001f);
+	SS_BuildSlotCmd(p2);
+	assert(fabsf(p2->viewangles[PITCH]) < 0.001f);
+	assert(SS_AssignSlotDevice(1, 1));
+	p2->ads_down = true;
+	assert(SS_AddDeviceMouseMotion(1, 20, 10));
+	assert(fabsf(p2->viewangles[YAW] - 10) < 0.001f);
+	assert(fabsf(p2->viewangles[PITCH] - 5) < 0.001f);
+	SS_BuildSlotCmd(p2);
+	/* Mouse pitch on the release frame cancels the spring before it starts. */
+	p2->ads_down = false;
+	assert(SS_AddDeviceMouseMotion(1, 0, 3));
+	pitch = p2->viewangles[PITCH];
+	SS_BuildSlotCmd(p2);
+	assert(!p2->gb_autolevel.active && p2->viewangles[PITCH] == pitch);
+	p2->ads_down = true; SS_BuildSlotCmd(p2);
+	p2->ads_down = false; SS_BuildSlotCmd(p2);
+	SS_OpenSlotMenu(p2);
+	assert(!p2->gb_autolevel.active);
+	auto_level = 0;
 }
 
 int main(void)
@@ -305,6 +468,8 @@ int main(void)
 	test_state_validation_and_reentry();
 	test_secondary_gameplay_bindings();
 	test_secondary_motion_and_menu();
+	test_secondary_gamebird_controls();
+	test_secondary_ads_level_and_mouse();
 	puts("split-screen state: assignment, readiness, hotplug, bindings, motion and player isolation passed");
 	return 0;
 }

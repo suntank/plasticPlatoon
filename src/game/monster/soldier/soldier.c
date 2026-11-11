@@ -28,6 +28,7 @@
 
 #include "../../header/local.h"
 #include "soldier.h"
+#include "../../../common/header/soldier_dimensions.h"
 
 static int sound_idle;
 static int sound_sight1;
@@ -51,9 +52,9 @@ static int soldier_weapon_model_machinegun;
  * Linked soldier weapon models are expected to use the exact same frame
  * layout as models/monsters/soldier/tris.md2.
  */
-#define SOLDIER_WEAPON_MODEL_BLASTER "models/monsters/soldier/weapon_blaster.md2"
-#define SOLDIER_WEAPON_MODEL_SHOTGUN "models/monsters/soldier/weapon_shotgun.md2"
-#define SOLDIER_WEAPON_MODEL_MACHINEGUN "models/monsters/soldier/weapon_machinegun.md2"
+#define SOLDIER_WEAPON_MODEL_BLASTER "models/monsters/soldier/tall/weapon_blaster.md2"
+#define SOLDIER_WEAPON_MODEL_SHOTGUN "models/monsters/soldier/tall/weapon_shotgun.md2"
+#define SOLDIER_WEAPON_MODEL_MACHINEGUN "models/monsters/soldier/tall/weapon_machinegun.md2"
 
 static void
 soldier_precache_weapon_models(void)
@@ -79,12 +80,12 @@ soldier_set_weapon_model(edict_t *self)
 	soldier_precache_weapon_models();
 	if (self->classname && !strcmp(self->classname, "monster_soldier_rocket"))
 	{
-		self->s.modelindex2 = gi.modelindex("models/monsters/soldier/weapon_rocket.md2");
+		self->s.modelindex2 = gi.modelindex("models/monsters/soldier/tall/weapon_rocket.md2");
 		return;
 	}
 	if (self->classname && !strcmp(self->classname, "monster_soldier_heavy"))
 	{
-		self->s.modelindex2 = gi.modelindex("models/monsters/soldier/weapon_heavy.md2");
+		self->s.modelindex2 = gi.modelindex("models/monsters/soldier/tall/weapon_heavy.md2");
 		return;
 	}
 
@@ -100,6 +101,43 @@ soldier_set_weapon_model(edict_t *self)
 	{
 		self->s.modelindex2 = soldier_weapon_model_machinegun;
 	}
+}
+
+/* Upgrade older saved levels without changing the serialized edict layout.
+ * All authored frame/animation state survives the model path substitution. */
+void
+Soldier_RefreshDimensions(edict_t *self)
+{
+	int body;
+	if (!self || !self->inuse || !self->classname ||
+		strncmp(self->classname, "monster_soldier", 15) ||
+		!(self->svflags & SVF_MONSTER) || (self->s.effects & EF_GIB))
+	{
+		return;
+	}
+	body = gi.modelindex("models/monsters/soldier/tall/tris.md2");
+	if (self->s.modelindex != body)
+	{
+		self->s.modelindex = body;
+		if (self->svflags & SVF_DEADMONSTER)
+		{
+			self->maxs[2] = PP_SOLDIER_DEAD_MAX_Z;
+		}
+		else if (self->monsterinfo.aiflags & AI_DUCKED)
+		{
+			self->maxs[2] = PP_SOLDIER_DUCK_MAX_Z;
+		}
+		else
+		{
+			self->maxs[2] = PP_SOLDIER_STAND_MAX_Z;
+		}
+		self->viewheight = (self->monsterinfo.aiflags & AI_DUCKED) ?
+			PP_SOLDIER_DUCK_VIEW_Z : PP_SOLDIER_STAND_VIEW_Z;
+	}
+	/* Cached indices can belong to the temporary map loaded before ReadLevel. */
+	soldier_weapon_model_blaster = soldier_weapon_model_shotgun =
+		soldier_weapon_model_machinegun = 0;
+	soldier_set_weapon_model(self);
 }
 
 
@@ -941,7 +979,8 @@ soldier_duck_down(edict_t *self)
 	}
 
 	self->monsterinfo.aiflags |= AI_DUCKED;
-	self->maxs[2] -= 32;
+	self->maxs[2] -= PP_SOLDIER_DUCK_DROP;
+	self->viewheight = PP_SOLDIER_DUCK_VIEW_Z;
 	self->takedamage = DAMAGE_YES;
 	self->monsterinfo.pausetime = level.time + 1;
 	gi.linkentity(self);
@@ -956,7 +995,8 @@ soldier_duck_up(edict_t *self)
 	}
 
 	self->monsterinfo.aiflags &= ~AI_DUCKED;
-	self->maxs[2] += 32;
+	self->maxs[2] += PP_SOLDIER_DUCK_DROP;
+	self->viewheight = PP_SOLDIER_STAND_VIEW_Z;
 	self->takedamage = DAMAGE_AIM;
 	gi.linkentity(self);
 }
@@ -1276,7 +1316,7 @@ soldier_dead(edict_t *self)
 	}
 
 	VectorSet(self->mins, -16, -16, -24);
-	VectorSet(self->maxs, 16, 16, -8);
+	VectorSet(self->maxs, 16, 16, PP_SOLDIER_DEAD_MAX_Z);
 	self->movetype = MOVETYPE_TOSS;
 	self->svflags |= SVF_DEADMONSTER;
 	self->nextthink = 0;
@@ -1667,11 +1707,12 @@ SP_monster_soldier_x(edict_t *self)
 	soldier_weapon_model_shotgun = 0;
 	soldier_weapon_model_machinegun = 0;
 
-	self->s.modelindex = gi.modelindex("models/monsters/soldier/tris.md2");
+	self->s.modelindex = gi.modelindex("models/monsters/soldier/tall/tris.md2");
 	soldier_precache_weapon_models();
 	self->monsterinfo.scale = MODEL_SCALE;
 	VectorSet(self->mins, -16, -16, -24);
-	VectorSet(self->maxs, 16, 16, 32);
+	VectorSet(self->maxs, 16, 16, PP_SOLDIER_STAND_MAX_Z);
+	self->viewheight = PP_SOLDIER_STAND_VIEW_Z;
 	self->movetype = MOVETYPE_STEP;
 	self->solid = SOLID_BBOX;
 
@@ -1842,8 +1883,8 @@ soldier_heavy_lower(edict_t *self)
 	if (!(self->monsterinfo.aiflags & AI_DUCKED))
 	{
 		self->monsterinfo.aiflags |= AI_DUCKED;
-		self->maxs[2] = 0;
-		self->viewheight = 0;
+		self->maxs[2] = PP_SOLDIER_DUCK_MAX_Z;
+		self->viewheight = PP_SOLDIER_DUCK_VIEW_Z;
 		self->takedamage = DAMAGE_YES;
 		gi.linkentity(self);
 	}
@@ -1863,7 +1904,7 @@ soldier_heavy_raise(edict_t *self)
 	}
 
 	VectorCopy(self->maxs, maxs);
-	maxs[2] = 32;
+	maxs[2] = PP_SOLDIER_STAND_MAX_Z;
 	tr = gi.trace(self->s.origin, self->mins, maxs, self->s.origin,
 		self, MASK_MONSTERSOLID);
 	if (tr.startsolid || tr.allsolid)
@@ -1873,8 +1914,8 @@ soldier_heavy_raise(edict_t *self)
 	}
 
 	self->monsterinfo.aiflags &= ~AI_DUCKED;
-	self->maxs[2] = 32;
-	self->viewheight = 25;
+	self->maxs[2] = PP_SOLDIER_STAND_MAX_Z;
+	self->viewheight = PP_SOLDIER_STAND_VIEW_Z;
 	self->takedamage = DAMAGE_AIM;
 	gi.linkentity(self);
 }
@@ -2231,7 +2272,7 @@ SP_monster_soldier_heavy(edict_t *self)
 	SP_monster_soldier_x(self);
 	self->mass = 250;
 	self->yaw_speed = 10;
-	self->viewheight = 25;
+	self->viewheight = PP_SOLDIER_STAND_VIEW_Z;
 	self->s.skinnum = 4;
 	soldier_set_weapon_model(self);
 	sound_pain_ss = gi.soundindex("soldier/player/pain100_1.wav");

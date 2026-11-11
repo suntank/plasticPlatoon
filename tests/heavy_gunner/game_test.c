@@ -1,5 +1,6 @@
 #include "../../src/game/header/local.h"
 #include "../../src/game/monster/soldier/soldier.h"
+#include "../../src/common/header/soldier_dimensions.h"
 #include <assert.h>
 #include <stdarg.h>
 #include <unistd.h>
@@ -21,8 +22,12 @@ static float minimum_shot_interval;
 
 static int model_index(char *name)
 {
-    if (!strcmp(name, "models/monsters/soldier/tris.md2")) return 100;
-    if (!strcmp(name, "models/monsters/soldier/weapon_heavy.md2")) return 104;
+    if (!strcmp(name, "models/monsters/soldier/tall/tris.md2")) return 100;
+    if (!strcmp(name, "models/monsters/soldier/tall/weapon_blaster.md2")) return 101;
+    if (!strcmp(name, "models/monsters/soldier/tall/weapon_shotgun.md2")) return 102;
+    if (!strcmp(name, "models/monsters/soldier/tall/weapon_machinegun.md2")) return 103;
+    if (!strcmp(name, "models/monsters/soldier/tall/weapon_heavy.md2")) return 104;
+    if (!strcmp(name, "models/monsters/soldier/tall/weapon_rocket.md2")) return 105;
     return 101;
 }
 
@@ -89,7 +94,7 @@ static void multicast(vec3_t point, multicast_t destination)
         assert(message_bytes == 3);
         assert(heavy->monsterinfo.aiflags & AI_DUCKED);
         assert(heavy->groundentity);
-        assert(heavy->maxs[2] == 0 && heavy->viewheight == 0);
+        assert(fabsf(heavy->maxs[2] - PP_SOLDIER_DUCK_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_DUCK_VIEW_Z) < .001f);
         assert(heavy->velocity[0] == 0 && heavy->velocity[1] == 0);
         if (shots && level.time > last_shot_time)
         {
@@ -162,7 +167,7 @@ static void begin_firing(edict_t *heavy)
     for (i = 0; i < 12 && !shots; i++) tick(heavy);
     assert(shots == 1);
     assert(heavy->monsterinfo.aiflags & AI_DUCKED);
-    assert(heavy->maxs[2] == 0 && heavy->viewheight == 0);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_DUCK_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_DUCK_VIEW_Z) < .001f);
     assert(last_shot_frame == FRAME_attak303);
 }
 
@@ -172,7 +177,7 @@ static void test_spawn_and_movement(void)
     int i;
     assert(heavy->health == 180 && heavy->mass == 250);
     assert(heavy->s.modelindex == 100 && heavy->s.modelindex2 == 104);
-    assert(heavy->maxs[2] == 32 && heavy->viewheight == 25);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_STAND_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_STAND_VIEW_Z) < .001f);
     assert(heavy->monsterinfo.checkattack && heavy->pain && heavy->die);
     heavy->monsterinfo.walk(heavy);
     for (i = 0; i <= heavy->monsterinfo.currentmove->lastframe -
@@ -205,13 +210,13 @@ static void test_burst_and_recovery(void)
     assert(last_shot_time - first_shot >= 1.3f && last_shot_time - first_shot <= 1.7f);
     assert(minimum_shot_interval >= FRAMETIME - 0.001f);
     assert(!(heavy->monsterinfo.aiflags & (AI_DUCKED | AI_HOLD_FRAME)));
-    assert(heavy->maxs[2] == 32 && heavy->viewheight == 25);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_STAND_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_STAND_VIEW_Z) < .001f);
     assert(ceiling_checks > 0);
     assert(heavy->monsterinfo.attack_finished > level.time);
     assert(!heavy->monsterinfo.checkattack(heavy));
     soldier_heavy_raise(heavy);
     soldier_heavy_recover(heavy);
-    assert(heavy->maxs[2] == 32 && heavy->viewheight == 25);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_STAND_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_STAND_VIEW_Z) < .001f);
 }
 
 static void test_fire_guards(void)
@@ -284,14 +289,14 @@ static void test_ceiling_and_interruptions(void)
     assert(heavy->monsterinfo.aiflags & AI_DUCKED);
     assert(heavy->monsterinfo.nextframe == FRAME_attak306 ||
             (heavy->monsterinfo.aiflags & AI_HOLD_FRAME));
-    assert(heavy->maxs[2] == 0 && heavy->viewheight == 0);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_DUCK_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_DUCK_VIEW_Z) < .001f);
     for (i = 0; i < 8; i++) tick(heavy);
-    assert(heavy->maxs[2] == 0);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_DUCK_MAX_Z) < .001f);
     assert(shots == before);
     blocked_ceiling = 0;
     soldier_heavy_raise(heavy);
     assert(!(heavy->monsterinfo.aiflags & AI_DUCKED));
-    assert(heavy->maxs[2] == 32 && heavy->viewheight == 25);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_STAND_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_STAND_VIEW_Z) < .001f);
     soldier_heavy_fire(heavy);
     assert(shots == before);
 
@@ -302,7 +307,7 @@ static void test_ceiling_and_interruptions(void)
     assert(heavy->monsterinfo.attack_finished > level.time);
     for (i = 0; i < 4 && (heavy->monsterinfo.aiflags & AI_DUCKED); i++) tick(heavy);
     assert(!(heavy->monsterinfo.aiflags & AI_DUCKED));
-    assert(heavy->maxs[2] == 32 && heavy->viewheight == 25);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_STAND_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_STAND_VIEW_Z) < .001f);
     before = shots;
     soldier_heavy_fire(heavy);
     assert(shots == before);
@@ -351,7 +356,7 @@ static void test_savegame(const char *filename)
     begin_firing(heavy);
     save_and_restore(filename, heavy);
     assert(heavy->monsterinfo.aiflags & AI_DUCKED);
-    assert(heavy->maxs[2] == 0);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_DUCK_MAX_Z) < .001f);
     before = shots;
     tick(heavy);
     assert(shots == before + 1);
@@ -361,6 +366,76 @@ static void test_savegame(const char *filename)
     heavy = new_heavy();
     heavy->pain(heavy, heavy->enemy, 1, 20);
     save_and_restore(filename, heavy);
+    unlink(filename);
+}
+
+/* Old saves carry canonical model indices and the old stance hull. Reload
+ * upgrades those together, retaining saved animation and timers. Saving the
+ * result again must not apply a second height transform. */
+static void test_old_savegame_height(const char *filename)
+{
+    int stance, pass;
+    for (stance = 0; stance < 3; stance++)
+    {
+        edict_t *heavy = new_heavy();
+        mmove_t *move;
+        int frame;
+        float nextthink, pausetime;
+        if (stance == 1) begin_firing(heavy);
+        if (stance == 2)
+        {
+            heavy->health = 0;
+            heavy->die(heavy, heavy->enemy, heavy->enemy, 20, heavy->s.origin);
+            heavy->svflags |= SVF_DEADMONSTER;
+        }
+        heavy->s.modelindex = 90;   /* Old canonical body and attachment. */
+        heavy->s.modelindex2 = 94;
+        heavy->maxs[2] = stance == 2 ? -8 : stance == 1 ? 0 : 32;
+        heavy->viewheight = stance == 1 ? 0 : 25;
+        move = heavy->monsterinfo.currentmove;
+        frame = heavy->s.frame;
+        nextthink = heavy->nextthink;
+        pausetime = heavy->monsterinfo.pausetime;
+        for (pass = 0; pass < 2; pass++)
+        {
+            save_and_restore(filename, heavy);
+            heavy = &g_edicts[2];
+            assert(heavy->s.modelindex == 100 && heavy->s.modelindex2 == 104);
+            assert(heavy->monsterinfo.currentmove == move && heavy->s.frame == frame);
+            assert(heavy->nextthink == nextthink && heavy->monsterinfo.pausetime == pausetime);
+            assert(fabsf(heavy->maxs[2] - (stance == 2 ? PP_SOLDIER_DEAD_MAX_Z :
+                    stance == 1 ? PP_SOLDIER_DUCK_MAX_Z : PP_SOLDIER_STAND_MAX_Z)) < .001f);
+            assert(heavy->viewheight == (stance == 1 ? PP_SOLDIER_DUCK_VIEW_Z : PP_SOLDIER_STAND_VIEW_Z));
+        }
+    }
+    {
+        static char *classes[] = {"monster_soldier_light", "monster_soldier",
+            "monster_soldier_ss", "monster_soldier_heavy", "monster_soldier_rocket"};
+        int i;
+        for (i = 0; i < 5; i++)
+        {
+            edict_t *soldier = new_heavy();
+            soldier->classname = classes[i];
+            soldier->s.skinnum = i * 2;
+            soldier->s.modelindex = 90;
+            soldier->s.modelindex2 = 94;
+            soldier->maxs[2] = 32;
+            Soldier_RefreshDimensions(soldier);
+            assert(soldier->s.modelindex == 100 && soldier->s.modelindex2 == 101 + i);
+            assert(fabsf(soldier->maxs[2] - PP_SOLDIER_STAND_MAX_Z) < .001f);
+        }
+    }
+    {
+        edict_t *gib = new_heavy();
+        gib->s.effects |= EF_GIB;
+        gib->s.modelindex = 90;
+        gib->s.modelindex2 = 0;
+        gib->maxs[2] = -8;
+        WriteLevel(filename);
+        ReadLevel(filename);
+        gib = &g_edicts[2];
+        assert(gib->s.modelindex == 90 && gib->s.modelindex2 == 0 && gib->maxs[2] == -8);
+    }
     unlink(filename);
 }
 
@@ -393,6 +468,7 @@ int main(int argc, char **argv)
     test_attack_selection();
     test_ceiling_and_interruptions();
     test_savegame(argv[1]);
+    test_old_savegame_height(argv[1]);
     puts("heavy gunner spawn, deployed bursts, fire guards, recovery, death and save/load passed");
     return 0;
 }

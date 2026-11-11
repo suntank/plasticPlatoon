@@ -426,26 +426,33 @@ G_SetStats(edict_t *ent)
 	ent->client->ps.stats[STAT_HEALTH] = (ent->health < -99) ? -99 : ent->health;
 
 	/* ammo */
-	if (!ent->client->ammo_index)
+	if (!ent->client->ammo_index || (ent->client->pers.weapon &&
+		!strcmp(ent->client->pers.weapon->classname, "weapon_blaster")))
 	{
+		/* Negative ammo hides the field on stock, compact and split HUDs. */
 		ent->client->ps.stats[STAT_AMMO_ICON] = 0;
-		ent->client->ps.stats[STAT_AMMO] = 0;
+		ent->client->ps.stats[STAT_AMMO] = -1;
 	}
 	else
 	{
-		/* Hide ammo display for blaster (pistol) since it doesn't use ammo */
-		if (ent->client->pers.weapon && strcmp(ent->client->pers.weapon->classname, "weapon_blaster") == 0)
-		{
-			ent->client->ps.stats[STAT_AMMO_ICON] = 0;
-			ent->client->ps.stats[STAT_AMMO] = 0;
-		}
-		else
-		{
-			item = &itemlist[ent->client->ammo_index];
-			ent->client->ps.stats[STAT_AMMO_ICON] = gi.imageindex(item->icon);
-			ent->client->ps.stats[STAT_AMMO] =
-				ent->client->pers.inventory[ent->client->ammo_index];
-		}
+		item = &itemlist[ent->client->ammo_index];
+		ent->client->ps.stats[STAT_AMMO_ICON] = gi.imageindex(item->icon);
+		ent->client->ps.stats[STAT_AMMO] =
+			ent->client->pers.inventory[ent->client->ammo_index];
+	}
+
+	/* Quick throws use hand grenades regardless of the current weapon. */
+	item = FindItem("Grenades");
+	if (item && !ent->client->resp.spectator)
+	{
+		ent->client->ps.stats[STAT_GRENADE_ICON] = gi.imageindex(item->icon);
+		ent->client->ps.stats[STAT_GRENADES] =
+			ent->client->pers.inventory[ITEM_INDEX(item)];
+	}
+	else
+	{
+		ent->client->ps.stats[STAT_GRENADE_ICON] = 0;
+		ent->client->ps.stats[STAT_GRENADES] = 0;
 	}
 
 	/* armor */

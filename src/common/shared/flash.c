@@ -25,6 +25,7 @@
  */
 
 #include "../header/shared.h"
+#include "../header/soldier_dimensions.h"
 
 vec3_t monster_flash_offset[] = {
 	/* flash 0 is not used */
@@ -109,17 +110,17 @@ vec3_t monster_flash_offset[] = {
 	{-12.4, 13.0, 20.2},
 
 	/* MZ2_SOLDIER_BLASTER_1			39 */
-	{10.6 * 1.2, 7.7 * 1.2, 7.8 * 1.2},
+	{PP_SOLDIER_XY(10.6 * 1.2), PP_SOLDIER_XY(7.7 * 1.2), PP_SOLDIER_Z(7.8 * 1.2)},
 	/* MZ2_SOLDIER_BLASTER_2			40 */
-	{21.1 * 1.2, 3.6 * 1.2, 19.0 * 1.2},
+	{PP_SOLDIER_XY(21.1 * 1.2), PP_SOLDIER_XY(3.6 * 1.2), PP_SOLDIER_Z(19.0 * 1.2)},
 	/* MZ2_SOLDIER_SHOTGUN_1			41 */
-	{10.6 * 1.2, 7.7 * 1.2, 7.8 * 1.2},
+	{PP_SOLDIER_XY(10.6 * 1.2), PP_SOLDIER_XY(7.7 * 1.2), PP_SOLDIER_Z(7.8 * 1.2)},
 	/* MZ2_SOLDIER_SHOTGUN_2			42 */
-	{21.1 * 1.2, 3.6 * 1.2, 19.0 * 1.2},
+	{PP_SOLDIER_XY(21.1 * 1.2), PP_SOLDIER_XY(3.6 * 1.2), PP_SOLDIER_Z(19.0 * 1.2)},
 	/* MZ2_SOLDIER_MACHINEGUN_1			43 */
-	{10.6 * 1.2, 7.7 * 1.2, 7.8 * 1.2},
+	{PP_SOLDIER_XY(10.6 * 1.2), PP_SOLDIER_XY(7.7 * 1.2), PP_SOLDIER_Z(7.8 * 1.2)},
 	/* MZ2_SOLDIER_MACHINEGUN_2			44 */
-	{21.1 * 1.2, 3.6 * 1.2, 19.0 * 1.2},
+	{PP_SOLDIER_XY(21.1 * 1.2), PP_SOLDIER_XY(3.6 * 1.2), PP_SOLDIER_Z(19.0 * 1.2)},
 
 	/* MZ2_GUNNER_MACHINEGUN_1			45 */
 	{30.1 * 1.15, 3.9 * 1.15, 19.6 * 1.15},
@@ -209,41 +210,41 @@ vec3_t monster_flash_offset[] = {
 	{32.5, -0.8, 10},
 
 	/* MZ2_SOLDIER_BLASTER_3			83 */
-	{20.8 * 1.2, 10.1 * 1.2, -2.7 * 1.2},
+	{PP_SOLDIER_XY(20.8 * 1.2), PP_SOLDIER_XY(10.1 * 1.2), PP_SOLDIER_Z(-2.7 * 1.2)},
 	/* MZ2_SOLDIER_SHOTGUN_3			84 */
-	{20.8 * 1.2, 10.1 * 1.2, -2.7 * 1.2},
+	{PP_SOLDIER_XY(20.8 * 1.2), PP_SOLDIER_XY(10.1 * 1.2), PP_SOLDIER_Z(-2.7 * 1.2)},
 	/* MZ2_SOLDIER_MACHINEGUN_3			85 */
-	{20.8 * 1.2, 10.1 * 1.2, -2.7 * 1.2},
+	{PP_SOLDIER_XY(20.8 * 1.2), PP_SOLDIER_XY(10.1 * 1.2), PP_SOLDIER_Z(-2.7 * 1.2)},
 	/* MZ2_SOLDIER_BLASTER_4			86 */
-	{7.6 * 1.2, 9.3 * 1.2, 0.8 * 1.2},
+	{PP_SOLDIER_XY(7.6 * 1.2), PP_SOLDIER_XY(9.3 * 1.2), PP_SOLDIER_Z(0.8 * 1.2)},
 	/* MZ2_SOLDIER_SHOTGUN_4			87 */
-	{7.6 * 1.2, 9.3 * 1.2, 0.8 * 1.2},
+	{PP_SOLDIER_XY(7.6 * 1.2), PP_SOLDIER_XY(9.3 * 1.2), PP_SOLDIER_Z(0.8 * 1.2)},
 	/* MZ2_SOLDIER_MACHINEGUN_4			88 */
-	{7.6 * 1.2, 9.3 * 1.2, 0.8 * 1.2},
+	{PP_SOLDIER_XY(7.6 * 1.2), PP_SOLDIER_XY(9.3 * 1.2), PP_SOLDIER_Z(0.8 * 1.2)},
 	/* MZ2_SOLDIER_BLASTER_5			89 */
-	{30.5 * 1.2, 9.9 * 1.2, -18.7 * 1.2},
+	{PP_SOLDIER_XY(30.5 * 1.2), PP_SOLDIER_XY(9.9 * 1.2), PP_SOLDIER_Z(-18.7 * 1.2)},
 	/* MZ2_SOLDIER_SHOTGUN_5			90 */
-	{30.5 * 1.2, 9.9 * 1.2, -18.7 * 1.2},
+	{PP_SOLDIER_XY(30.5 * 1.2), PP_SOLDIER_XY(9.9 * 1.2), PP_SOLDIER_Z(-18.7 * 1.2)},
 	/* MZ2_SOLDIER_MACHINEGUN_5			91 */
-	{30.5 * 1.2, 9.9 * 1.2, -18.7 * 1.2},
+	{PP_SOLDIER_XY(30.5 * 1.2), PP_SOLDIER_XY(9.9 * 1.2), PP_SOLDIER_Z(-18.7 * 1.2)},
 	/* MZ2_SOLDIER_BLASTER_6			92 */
-	{27.6 * 1.2, 3.4 * 1.2, -10.4 * 1.2},
+	{PP_SOLDIER_XY(27.6 * 1.2), PP_SOLDIER_XY(3.4 * 1.2), PP_SOLDIER_Z(-10.4 * 1.2)},
 	/* MZ2_SOLDIER_SHOTGUN_6			93 */
-	{27.6 * 1.2, 3.4 * 1.2, -10.4 * 1.2},
+	{PP_SOLDIER_XY(27.6 * 1.2), PP_SOLDIER_XY(3.4 * 1.2), PP_SOLDIER_Z(-10.4 * 1.2)},
 	/* MZ2_SOLDIER_MACHINEGUN_6			94 */
-	{27.6 * 1.2, 3.4 * 1.2, -10.4 * 1.2},
+	{PP_SOLDIER_XY(27.6 * 1.2), PP_SOLDIER_XY(3.4 * 1.2), PP_SOLDIER_Z(-10.4 * 1.2)},
 	/* MZ2_SOLDIER_BLASTER_7			95 */
-	{28.9 * 1.2, 4.6 * 1.2, -8.1 * 1.2},
+	{PP_SOLDIER_XY(28.9 * 1.2), PP_SOLDIER_XY(4.6 * 1.2), PP_SOLDIER_Z(-8.1 * 1.2)},
 	/* MZ2_SOLDIER_SHOTGUN_7			96 */
-	{28.9 * 1.2, 4.6 * 1.2, -8.1 * 1.2},
+	{PP_SOLDIER_XY(28.9 * 1.2), PP_SOLDIER_XY(4.6 * 1.2), PP_SOLDIER_Z(-8.1 * 1.2)},
 	/* MZ2_SOLDIER_MACHINEGUN_7			97 */
-	{28.9 * 1.2, 4.6 * 1.2, -8.1 * 1.2},
+	{PP_SOLDIER_XY(28.9 * 1.2), PP_SOLDIER_XY(4.6 * 1.2), PP_SOLDIER_Z(-8.1 * 1.2)},
 	/* MZ2_SOLDIER_BLASTER_8			98 */
-	{31.5 * 1.2, 9.6 * 1.2, 10.1 * 1.2},
+	{PP_SOLDIER_XY(31.5 * 1.2), PP_SOLDIER_XY(9.6 * 1.2), PP_SOLDIER_Z(10.1 * 1.2)},
 	/* MZ2_SOLDIER_SHOTGUN_8			99 */
-	{34.5 * 1.2, 9.6 * 1.2, 6.1 * 1.2},
+	{PP_SOLDIER_XY(34.5 * 1.2), PP_SOLDIER_XY(9.6 * 1.2), PP_SOLDIER_Z(6.1 * 1.2)},
 	/* MZ2_SOLDIER_MACHINEGUN_8			100 */
-	{34.5 * 1.2, 9.6 * 1.2, 6.1 * 1.2},
+	{PP_SOLDIER_XY(34.5 * 1.2), PP_SOLDIER_XY(9.6 * 1.2), PP_SOLDIER_Z(6.1 * 1.2)},
 
 	/* MZ2_MAKRON_BFG					101 */
 	{17, -19.5, 62.9},
@@ -476,9 +477,9 @@ vec3_t monster_flash_offset[] = {
 	{58.29, 27.11, 92.00},
 
 	/* MZ2_SOLDIER_HEAVY: crouched M60 barrel centre, frame attak303 */
-	{25.37, 4.46, 4.50},
+	{PP_SOLDIER_XY(25.37), PP_SOLDIER_XY(4.46), PP_SOLDIER_Z(4.50)},
 	/* MZ2_SOLDIER_ROCKET: crouched launcher barrel, frame attak303 */
-	{22.19, 4.72, 4.19},
+	{PP_SOLDIER_XY(22.19), PP_SOLDIER_XY(4.72), PP_SOLDIER_Z(4.19)},
 	/* Helicopter offsets use engine right, the inverse of model-local Y. */
 	/* MZ2_HELICOPTER_MACHINEGUN_L */
 	{64.0, -24.0, -10.0},

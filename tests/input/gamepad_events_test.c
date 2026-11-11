@@ -67,6 +67,7 @@ cvar_t *Cvar_Get(const char *name, const char *value, int flags)
 cvar_t *Cvar_Set(const char *name, const char *value) { return Cvar_Get(name, value, 0); }
 void Con_ToggleConsole_f(void) {}
 void M_Menu_Main_f(void) {}
+void CL_ReleaseGameBirdKeys(void) {}
 
 static void event(int pad, int key, qboolean down)
 {
@@ -118,6 +119,7 @@ static void test_session(void)
     command_text[0] = 0;
     keybindings[K_TRIG_RIGHT] = "+attack";
     event(0, K_TRIG_RIGHT, true);
+    assert(Key_UsingGamepad());
     event(1, K_TRIG_RIGHT, true);
     assert(secondary_attack && keydown[K_TRIG_RIGHT]);
     assert(commands == 1 && strstr(command_text, "+attack"));
@@ -158,6 +160,30 @@ static void test_session(void)
     assert(commands == before + 2);
 }
 
+static void test_lobby_confirm_boundary(void)
+{
+    int before;
+    session = lobby = false;
+    cls.key_dest = key_menu;
+    Key_MarkAllUp();
+    event(0, K_BTN_SOUTH, true); /* ordinary menu confirm opens the lobby */
+    assert(keydown[K_BTN_SOUTH]);
+    lobby = true;
+    event(1, K_BTN_SOUTH, true); /* another player's independent held confirm */
+    event(0, K_BTN_SOUTH, false);
+    assert(!keydown[K_BTN_SOUTH]);
+    before = menu_events[2];
+    event(1, K_BTN_SOUTH, true);
+    assert(menu_events[2] == before); /* other pad's held repeat stays owned */
+    lobby = false; /* cancel returns to ordinary menu handling */
+    before = menu_events[1];
+    event(0, K_BTN_SOUTH, true);
+    assert(menu_events[1] == before + 1); /* first new press is accepted */
+    event(0, K_BTN_SOUTH, false);
+    event(1, K_BTN_SOUTH, false);
+    Key_MarkAllUp();
+}
+
 static void test_registry(void)
 {
     int old[4] = {10, 20, 30, 40}, devices[4] = {20, 30, 40, 50}, slots[4];
@@ -171,11 +197,34 @@ static void test_registry(void)
     assert(slots[0] == 3); /* last connected pad remains pad 4 */
 }
 
+static void test_input_source(void)
+{
+    session = lobby = false;
+    cls.key_dest = key_game;
+    cls.state = ca_active;
+    Key_MarkAllUp();
+    keybindings[K_TRIG_RIGHT] = "+attack";
+    event(0, K_TRIG_RIGHT, true);
+    assert(Key_UsingGamepad());
+    event(-1, 'w', true);
+    assert(!Key_UsingGamepad());
+    event(0, K_TRIG_RIGHT, false); /* release cannot steal mouse/keyboard mode */
+    assert(!Key_UsingGamepad());
+    Key_SetInputGamepad(2); /* analog motion on primary pad 3 */
+    assert(Key_UsingGamepad());
+    Key_ClearGamepadStates(1);
+    assert(Key_UsingGamepad());
+    Key_ClearGamepadStates(2);
+    assert(!Key_UsingGamepad());
+}
+
 int main(void)
 {
     test_lobby();
+    test_lobby_confirm_boundary();
     test_session();
     test_registry();
+    test_input_source();
     puts("gamepad event isolation, launch shortcut, releases, ownership and hotplug slots passed");
     return 0;
 }

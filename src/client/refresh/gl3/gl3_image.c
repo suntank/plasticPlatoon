@@ -26,6 +26,19 @@
  */
 
 #include "header/local.h"
+#include "../color_pic_cache.h"
+
+static pp_color_pic_cache_t color_pic_cache;
+
+static void
+GL3_ReleaseColorPicture(void *ptr)
+{
+	gl3image_t *image = ptr;
+	if (image->type != it_pic || !PP_IsColorADSPicture(image->name)) return;
+	if (gl3state.currenttexture == image->texnum) gl3state.currenttexture = (GLuint)-1;
+	glDeleteTextures(1, &image->texnum);
+	memset(image, 0, sizeof(*image));
+}
 
 typedef struct
 {
@@ -644,6 +657,7 @@ GL3_FindImage(const char *originname, imagetype_t type)
 		if (!strcmp(name, image->name))
 		{
 			image->registration_sequence = registration_sequence;
+			PP_TouchColorPicture(&color_pic_cache, image, name, GL3_ReleaseColorPicture);
 			return image;
 		}
 	}
@@ -653,6 +667,7 @@ GL3_FindImage(const char *originname, imagetype_t type)
 	//
 	image = (gl3image_t *)R_LoadImage(name, namewe, ext, type,
 		r_retexturing->value, (loadimage_t)GL3_LoadPic);
+	PP_TouchColorPicture(&color_pic_cache, image, name, GL3_ReleaseColorPicture);
 
 	if (!image && r_validation->value)
 	{
@@ -736,6 +751,7 @@ GL3_ImageHasFreeSpace(void)
 void
 GL3_ShutdownImages(void)
 {
+	memset(&color_pic_cache, 0, sizeof(color_pic_cache));
 	int i;
 	gl3image_t *image;
 

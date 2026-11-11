@@ -110,16 +110,9 @@ spider_die(edict_t *self, edict_t *inflictor, edict_t *attacker,
 	(void)inflictor;
 	(void)attacker;
 	(void)point;
-	if (self->health <= self->gib_health)
-	{
-		InsectGib(self, damage, true);
+	if (self->deadflag == DEAD_DEAD && (self->s.effects & EF_GIB))
 		return;
-	}
-	if (self->deadflag == DEAD_DEAD)
-		return;
-	self->deadflag = DEAD_DEAD;
-	self->takedamage = DAMAGE_YES;
-	self->monsterinfo.currentmove = &spider_move_death;
+	InsectGib(self, damage, true);
 }
 
 /* QUAKED monster_spider (1 .5 0) (-32 -32 -24) (32 32 24) Ambush Trigger_Spawn Sight */

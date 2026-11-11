@@ -43,6 +43,7 @@
 #include "../header/client.h"
 #include "../cl_splitscreen.h"
 #include "header/controller_registry.h"
+#include "header/ads.h"
 
 // ----
 
@@ -277,7 +278,9 @@ static updates_countdown_reasons countdown_reason = REASON_CONTROLLERINIT;
 #define FLICK_TIME 100		// time it takes for a flick to execute, in ms
 static float target_angle;	// angle to end up facing at the end of a flick
 static float flick_progress = 1.0f;	// from 0.0 to 1.0
-static int started_flick;	// time of flick start
+static int flick_update_time;
+static float flick_elapsed;
+static float frame_flick_yaw;
 
 // Flick Stick's rotation input samples to smooth out
 #define MAX_SMOOTH_SAMPLES 8
@@ -1032,6 +1035,12 @@ IN_Update(void)
 			case SDL_MOUSEMOTION:
 				if (cls.key_dest == key_game && (int) cl_paused->value == 0)
 				{
+					ss_local_player_t *primary = SS_GetSlot(0);
+					if ((event.motion.xrel || event.motion.yrel) &&
+						(!SS_IsSessionActive() || (primary && primary->device_index == 1)))
+					{
+						Key_SetInputGamepad(-1);
+					}
 					mouse_x += event.motion.xrel;
 					mouse_y += event.motion.yrel;
 				}
@@ -1262,6 +1271,14 @@ IN_Update(void)
 					cls.key_dest == key_game &&
 					!SS_IsMenuInputActiveForDevice(gamepad_index + 2))
 				{
+					float deadzone = event.caxis.axis <= SDL_CONTROLLER_AXIS_LEFTY ?
+						joy_left_deadzone->value : joy_right_deadzone->value;
+					if (!isfinite(deadzone)) deadzone = 0.16f;
+					if (event.caxis.axis <= SDL_CONTROLLER_AXIS_RIGHTY &&
+						abs(axis_value) > 32768 * Q_clamp(deadzone, 0, 0.5f))
+					{
+						Key_SetInputGamepad(gamepad_index);
+					}
 					switch (event.caxis.axis)
 					{
 						case SDL_CONTROLLER_AXIS_LEFTX:
@@ -1691,7 +1708,8 @@ IN_FlickStick(thumbstick_t stick, float axial_deadzone)
 			// Flicking begins now, with a new target
 			is_flicking = true;
 			flick_progress = 0.0f;
-			started_flick = sys_frame_time;
+			flick_update_time = sys_frame_time;
+			flick_elapsed = 0.0f;
 			target_angle = stick_angle;
 			IN_ResetSmoothSamples();
 		}
@@ -1727,8 +1745,13 @@ IN_AdvanceFlickStick(void)
 	// progressively
 	if (flick_progress < 1.0f)
 	{
-		float cur_progress =
-			(float)(sys_frame_time - started_flick) / FLICK_TIME;
+		float cur_progress;
+		float delta;
+		/* Slow the scripted turn's clock, preserving its full 90/180 degree
+		 * destination even if ADS is pressed or released during the turn. */
+		flick_elapsed += (sys_frame_time - flick_update_time) * CL_ADSLookScale();
+		flick_update_time = sys_frame_time;
+		cur_progress = flick_elapsed / FLICK_TIME;
 
 		if (cur_progress > 1.0f)
 		{
@@ -1743,7 +1766,9 @@ IN_AdvanceFlickStick(void)
 			cur_progress = 1.0f - cur_progress;
 		}
 
-		cl.viewangles[YAW] += (cur_progress - flick_progress) * target_angle;
+		delta = (cur_progress - flick_progress) * target_angle;
+		cl.viewangles[YAW] += delta;
+		frame_flick_yaw += delta;
 		flick_progress = cur_progress;
 	}
 }
@@ -1965,6 +1990,9 @@ IN_Move(usercmd_t *cmd)
 {
 	static float old_mouse_x;
 	static float old_mouse_y;
+	vec3_t before_look;
+	VectorCopy(cl.viewangles, before_look);
+	frame_flick_yaw = 0.0f;
 
 	if (m_filter->value)
 	{
@@ -2081,6 +2109,10 @@ IN_Move(usercmd_t *cmd)
 			}
 		}
 	}
+	/* The flick clock already slows its target turn; scale only free look. */
+	cl.viewangles[YAW] -= frame_flick_yaw;
+	PP_ScaleADSLook(before_look, cl.viewangles, CL_ADSLookScale());
+	cl.viewangles[YAW] += frame_flick_yaw;
 }
 
 /* ------------------------------------------------------------------ */

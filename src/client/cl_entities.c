@@ -27,6 +27,7 @@
 #include <math.h>
 #include "header/client.h"
 #include "header/performance.h"
+#include "header/helicopter_rotor.h"
 #include "cl_splitscreen.h"
 #include "header/player_muzzle_points.h"
 
@@ -114,21 +115,81 @@ PP_IsBoss2Helicopter(const entity_state_t *state)
 	return model_path && !Q_stricmp(model_path, "models/monsters/boss2/tris.md2");
 }
 
+static float
+PP_AliasRollSign(void)
+{
+	/* GL alias meshes negate roll compared with AngleVectors and the
+	 * software renderer. Compose the attachment in the rendered basis. */
+	return Q_stricmp(vid_renderer->string, "soft") ? -1.0f : 1.0f;
+}
+
+/* Rotor snapshots carry their owner's entity number in skinnum and their
+ * local spin phase in frame. Keep the one-frame mesh and its skin fixed, and
+ * attach it to the same interpolated body pose the renderer displays. */
+static void
+PP_ApplyPlasticHelicopterRotor(const entity_state_t *state, const centity_t *rotor,
+		const frame_t *frame, entity_t *ent)
+{
+	const char *path;
+	centity_t *body;
+	vec3_t body_origin, body_angles;
+	float lerp, phase, previous_phase, roll_sign;
+	qboolean tail;
+	int i;
+
+	if (state->modelindex <= 0 || state->modelindex >= MAX_MODELS)
+		return;
+	path = cl.configstrings[CS_MODELS + state->modelindex];
+	if (!Q_stricmp(path, "models/monsters/plastic_helicopter/main_rotor.md2"))
+		tail = false;
+	else if (!Q_stricmp(path, "models/monsters/plastic_helicopter/tail_rotor.md2"))
+		tail = true;
+	else
+		return;
+
+	ent->frame = ent->oldframe = 0;
+	ent->backlerp = 0;
+	ent->skinnum = 0;
+	if (state->skinnum <= 0 || state->skinnum >= cl_numentities)
+		return;
+	body = &cl_entities[state->skinnum];
+	if (body->serverframe != frame->serverframe || body->current.modelindex <= 0 ||
+		body->current.modelindex >= MAX_MODELS ||
+		Q_stricmp(cl.configstrings[CS_MODELS + body->current.modelindex],
+			"models/monsters/plastic_helicopter/body.md2"))
+		return;
+
+	lerp = Q_clamp(cl.lerpfrac, 0.0f, 1.0f);
+	for (i = 0; i < 3; i++)
+	{
+		body_origin[i] = body->prev.origin[i] + lerp *
+			(body->current.origin[i] - body->prev.origin[i]);
+		body_angles[i] = LerpAngle(body->prev.angles[i], body->current.angles[i], lerp);
+	}
+	previous_phase = (rotor->prev.modelindex == state->modelindex &&
+		rotor->prev.skinnum == state->skinnum) ? rotor->prev.frame : state->frame;
+	phase = LerpAngle(previous_phase, state->frame, lerp);
+	roll_sign = PP_AliasRollSign();
+	body_angles[ROLL] *= roll_sign;
+	PP_HelicopterRotorTransform(body_origin, body_angles, phase, tail, ent->origin, ent->angles);
+	ent->angles[ROLL] *= roll_sign;
+	VectorCopy(ent->origin, ent->oldorigin);
+}
+
 static void
 PP_ApplyBoss2PropellerSpin(entity_t *ent)
 {
 	const float spin_rate = 1.8f;
+	float roll_sign = PP_AliasRollSign();
 
-	if (!ent)
-	{
-		return;
-	}
-
-	/* Keep the propeller on a static mesh frame and sell the motion with rotation. */
+	/* The propeller uses a single mesh frame, with spin in body space. */
 	ent->frame = 0;
 	ent->oldframe = 0;
 	ent->backlerp = 0.0f;
-	ent->angles[YAW] = anglemod(ent->angles[YAW] + (cl.time * spin_rate));
+	ent->angles[ROLL] *= roll_sign;
+	PP_Boss2RotorTransform(anglemod(cl.time * spin_rate), ent->origin, ent->angles);
+	ent->angles[ROLL] *= roll_sign;
+	VectorCopy(ent->origin, ent->oldorigin);
 }
 
 static qboolean
@@ -252,24 +313,13 @@ CL_IsADSActive(void)
 void
 CL_TouchADSOverlayPics(void)
 {
-	static const char *ads_overlays[] = {
-		"ads_blaster.png",
-		"ads_shotgun.png",
-		"ads_supershotgun.png",
-		"ads_machinegun.png",
-		"ads_chaingun.png",
-		"ads_handgrenade.png",
-		"ads_grenadelauncher.png",
-		"ads_rocketlauncher.png",
-		"ads_hyperblaster.png",
-		"ads_railgun.png",
-		"ads_mortar.png"
-	};
-	int i;
-
-	for (i = 0; i < (int)ARRLEN(ads_overlays); i++)
+	const char *pic;
+	/* Every overlay retains its authored 1920x1080 size. Load only the active
+	 * player/weapon color instead of preloading eleven images per color. */
+	if (cl.cmd.buttons & BUTTON_ADS)
 	{
-		Draw_FindPic(ads_overlays[i]);
+		pic = CL_PlayerADSPic(CL_ColorClientinfo(cl.playernum), CL_GetADSOverlayPicName());
+		if (pic) Draw_FindPic(pic);
 	}
 }
 
@@ -361,7 +411,7 @@ CL_MFlashTuneGetClientModelName(const clientinfo_t *ci, char *model_name, size_t
 }
 
 static struct model_s *
-CL_MFlashTuneResolveWeaponModel(const clientinfo_t *ci)
+CL_MFlashTuneResolveWeaponModel(const clientinfo_t *ci, const char **project_weapon_file)
 {
 	char model_name[MAX_QPATH];
 	char weapon_filename[MAX_QPATH];
@@ -369,27 +419,35 @@ CL_MFlashTuneResolveWeaponModel(const clientinfo_t *ci)
 	struct model_s *model;
 
 	weapon_file = CL_MFlashTuneWeaponFileForGun();
+	if (project_weapon_file) *project_weapon_file = NULL;
 	CL_MFlashTuneGetClientModelName(ci, model_name, sizeof(model_name));
 
 	Com_sprintf(weapon_filename, sizeof(weapon_filename),
 		"players/%s/%s", model_name, weapon_file);
 	model = R_RegisterModel(weapon_filename);
+	if (model && !Q_stricmp(model_name, "soldier") && project_weapon_file)
+		*project_weapon_file = weapon_file;
 
 	if (!model && Q_stricmp(model_name, "soldier"))
 	{
 		Com_sprintf(weapon_filename, sizeof(weapon_filename),
 			"players/soldier/%s", weapon_file);
 		model = R_RegisterModel(weapon_filename);
+		if (model && project_weapon_file) *project_weapon_file = weapon_file;
 	}
 
 	if (!model && ci)
 	{
 		model = ci->weaponmodel[0];
+		if (model && project_weapon_file && (ci->weapon_soldier_mask & 1U))
+			*project_weapon_file = "weapon.md2";
 	}
 
 	if (!model)
 	{
 		model = cl.baseclientinfo.weaponmodel[0];
+		if (model && project_weapon_file && (cl.baseclientinfo.weapon_soldier_mask & 1U))
+			*project_weapon_file = "weapon.md2";
 	}
 
 	return model;
@@ -458,7 +516,7 @@ CL_GetThirdPersonMuzzle(int entnum, int weapon, vec3_t origin,
 		filename = CL_MFlashTuneWeaponFileForGun();
 		if (Q_stricmp(filename, expected))
 			return false;
-		model = CL_MFlashTuneResolveWeaponModel(ci);
+		model = CL_MFlashTuneResolveWeaponModel(ci, NULL);
 	}
 	if (!model)
 		return false;
@@ -921,6 +979,7 @@ CL_AddPacketEntities(frame_t *frame)
 
 	for (pnum = 0; pnum < frame->num_entities; pnum++)
 	{
+		qboolean boss2;
 		s1 = &cl_entity_parse_stream[(frame->parse_entities +
 				pnum) & (MAX_PARSE_ENTITIES - 1)];
 
@@ -933,6 +992,13 @@ CL_AddPacketEntities(frame_t *frame)
 
 		effects = s1->effects;
 		renderfx = s1->renderfx;
+		boss2 = PP_IsBoss2Helicopter(s1);
+		/* The dropship carries RF_FRAMELERP, but old_origin can be stale.
+		 * Use snapshot interpolation so both meshes share one moving pose. */
+		if (boss2)
+		{
+			renderfx &= ~RF_FRAMELERP;
+		}
 
 		/* set frame */
 		if (effects & EF_ANIM01)
@@ -1080,6 +1146,9 @@ CL_AddPacketEntities(frame_t *frame)
 				ent.skinnum = s1->skinnum;
 				ent.skin = NULL;
 				ent.model = cl.model_draw[s1->modelindex];
+				ent.skin = CL_EnemyModelSkin(cl.configstrings[CS_MODELS + s1->modelindex],
+					s1->skinnum, s1->renderfx);
+				if (ent.skin) ent.skinnum = 0;
 
 				if ((s1->skinnum & PP_GIB_PLAYER_SKIN_OVERRIDE) &&
 					(s1->modelindex > 0) && (s1->modelindex < MAX_MODELS))
@@ -1149,7 +1218,9 @@ CL_AddPacketEntities(frame_t *frame)
 			}
 		}
 
-		if (PP_IsBoss2Helicopter(s1))
+		PP_ApplyPlasticHelicopterRotor(s1, cent, frame, &ent);
+
+		if (boss2)
 		{
 			PP_ApplyBoss2HelicopterTransform(s1, cent, &ent);
 		}
@@ -1287,17 +1358,28 @@ CL_AddPacketEntities(frame_t *frame)
 		/* duplicate for linked models */
 		if (s1->modelindex2)
 		{
+			entity_t linked;
+
 			if (s1->modelindex2 == 255)
 			{
+				char weapon_path[MAX_QPATH];
+				const char *weapon_file;
+				const clientinfo_t *source;
 				if (CL_MFlashTuneCameraActive() && (s1->number == cl.playernum + 1))
 				{
 					ci = &cl.clientinfo[cl.playernum];
-					ent.model = CL_MFlashTuneResolveWeaponModel(ci);
+					ent.model = CL_MFlashTuneResolveWeaponModel(ci, &weapon_file);
+					if (weapon_file)
+					{
+						Com_sprintf(weapon_path, sizeof(weapon_path), "players/soldier/%s", weapon_file);
+						ent.skin = CL_PlayerWeaponSkin(ci, weapon_path);
+					}
 				}
 				else
 				{
 					/* custom weapon */
 					ci = &cl.clientinfo[s1->skinnum & PP_PLAYER_SKINNUM_PLAYER_MASK];
+					source = ci;
 					i = (s1->skinnum >> PP_PLAYER_SKINNUM_WEAPON_SHIFT) & PP_PLAYER_SKINNUM_WEAPON_MASK;
 
 					if (!cl_vwep->value || (i > MAX_CLIENTWEAPONMODELS - 1))
@@ -1312,54 +1394,61 @@ CL_AddPacketEntities(frame_t *frame)
 						if (i != 0)
 						{
 							ent.model = ci->weaponmodel[0];
+							i = 0;
 						}
 
 						if (!ent.model)
 						{
 							ent.model = cl.baseclientinfo.weaponmodel[0];
+							source = &cl.baseclientinfo;
+							i = 0;
 						}
 					}
+					ent.skin = CL_PlayerLinkedWeaponSkin(ci, source, i);
 				}
 			}
 			else
 			{
 				ent.model = cl.model_draw[s1->modelindex2];
+				ent.skin = CL_EnemyModelSkin(cl.configstrings[CS_MODELS + s1->modelindex2],
+					0, s1->renderfx);
 			}
 
-			if (PP_IsBoss2Helicopter(s1) && PP_IsBoss2PropellerModel(s1->modelindex2))
+			linked = ent;
+			if (boss2 && PP_IsBoss2PropellerModel(s1->modelindex2))
 			{
-				PP_ApplyBoss2PropellerSpin(&ent);
+				PP_ApplyBoss2PropellerSpin(&linked);
 			}
 
 			/* check for the defender sphere shell and make it translucent */
 			if (!Q_strcasecmp(cl.configstrings[CS_MODELS + (s1->modelindex2)],
 						"models/items/shell/tris.md2"))
 			{
-				ent.alpha = 0.32f;
-				ent.flags = RF_TRANSLUCENT;
+				linked.alpha = 0.32f;
+				linked.flags = RF_TRANSLUCENT;
 			}
 
-			V_AddEntity(&ent);
-
-			ent.flags = 0;
-			ent.alpha = 0;
+			V_AddEntity(&linked);
 		}
 
 		if (s1->modelindex3)
 		{
 			ent.model = cl.model_draw[s1->modelindex3];
+			ent.skin = CL_EnemyModelSkin(cl.configstrings[CS_MODELS + s1->modelindex3], 0, s1->renderfx);
 			V_AddEntity(&ent);
 		}
 
 		if (s1->modelindex4)
 		{
 			ent.model = cl.model_draw[s1->modelindex4];
+			ent.skin = CL_EnemyModelSkin(cl.configstrings[CS_MODELS + s1->modelindex4], 0, s1->renderfx);
 			V_AddEntity(&ent);
 		}
 
 		if (effects & EF_POWERSCREEN)
 		{
 			ent.model = CL_PowerScreenModel();
+			ent.skin = NULL;
 			ent.oldframe = 0;
 			ent.frame = 0;
 			ent.flags |= (RF_TRANSLUCENT | RF_SHELL_GREEN);
@@ -1425,6 +1514,11 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 	if (!gun.model)
 	{
 		return;
+	}
+	if (ps->gunindex > 0 && ps->gunindex < MAX_MODELS)
+	{
+		gun.skin = CL_PlayerWeaponSkin(CL_ColorClientinfo(cl.playernum),
+			cl.configstrings[CS_MODELS + ps->gunindex]);
 	}
 
 	/* set up gun position */

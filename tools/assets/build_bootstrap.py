@@ -348,8 +348,8 @@ set lookstrafe 0
 set sensitivity 3
 set in_grab 2
 alias d1 "menu_main"
-alias newgame "map pp_sandbox_coop1"
-alias dedicated_start "map pp_sandbox_coop1"
+alias newgame "map pp_sandstorm"
+alias dedicated_start "map pp_sandstorm"
 '''
     return assets
 

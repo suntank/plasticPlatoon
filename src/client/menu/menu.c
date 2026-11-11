@@ -6912,6 +6912,8 @@ PlayerConfig_MenuDraw(void)
 		&& s_player_skin_box.curvalue < s_skinnames[s_player_model_box.curvalue].num))
 	{
 		entity_t entities[2];
+		clientinfo_t preview = {0};
+		struct image_s *body_skin;
 		char scratch[MAX_QPATH];
 		char* mdlname = s_modelname.data[s_player_model_box.curvalue];
 		char* imgname = s_skinnames[s_player_model_box.curvalue].data[s_player_skin_box.curvalue];
@@ -6925,6 +6927,9 @@ PlayerConfig_MenuDraw(void)
 		Com_sprintf(scratch, sizeof(scratch), "players/%s/%s.pcx", mdlname,
 			imgname);
 		entities[0].skin = R_RegisterSkin(scratch);
+		CL_SetClientWeaponColor(&preview, imgname);
+		body_skin = CL_PlayerBodySkin(mdlname, &preview);
+		if (body_skin) entities[0].skin = body_skin;
 
 		curTime = Sys_Milliseconds();
 
@@ -6941,6 +6946,7 @@ PlayerConfig_MenuDraw(void)
 			Com_sprintf(scratch, sizeof(scratch),
 				"players/%s/%s", mdlname, cl_weaponmodels[weapon_id]);
 			entities[1].model = R_RegisterModel(scratch);
+			entities[1].skin = CL_PlayerWeaponSkin(&preview, scratch);
 		}
 
 		/* no such weapon model */
@@ -6950,6 +6956,7 @@ PlayerConfig_MenuDraw(void)
 			Com_sprintf(scratch, sizeof(scratch),
 				"players/%s/weapon.md2", mdlname);
 			entities[1].model = R_RegisterModel(scratch);
+			entities[1].skin = CL_PlayerWeaponSkin(&preview, scratch);
 		}
 
 		curTime = curTime % 3000;

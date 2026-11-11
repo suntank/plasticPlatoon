@@ -28,6 +28,7 @@
 #include "header/client.h"
 #include "header/performance.h"
 #include "cl_splitscreen.h"
+#include "input/header/aim_assist.h"
 
 static float scr_con_current; /* aproaches scr_conlines at scr_conspeed */
 static float scr_conlines; /* 0.0 to 1.0 lines of console to display */
@@ -55,6 +56,7 @@ cvar_t *scr_drawall;
 cvar_t *r_hudscale; /* named for consistency with R1Q2 */
 cvar_t *r_consolescale;
 cvar_t *r_menuscale;
+static cvar_t *scr_gamebird_hud;
 
 typedef struct
 {
@@ -441,6 +443,7 @@ SCR_Init(void)
 	r_hudscale = Cvar_Get("r_hudscale", "-1", CVAR_ARCHIVE);
 	r_consolescale = Cvar_Get("r_consolescale", "-1", CVAR_ARCHIVE);
 	r_menuscale = Cvar_Get("r_menuscale", "-1", CVAR_ARCHIVE);
+	scr_gamebird_hud = Cvar_Get("scr_gamebird_hud", "0", CVAR_ARCHIVE);
 
 	/* register our commands */
 	Cmd_AddCommand("timerefresh", SCR_TimeRefresh_f);
@@ -922,6 +925,9 @@ DrawHUDStringScaled(const char *string, int x, int y, int centerwidth, int xor, 
 {
 	int margin;
 	int i;
+	qboolean wrap = scr_gamebird_hud && scr_gamebird_hud->value && centerwidth;
+	/* The help panel is 256 virtual pixels wide; leave eight-pixel insets. */
+	int maxwidth = wrap ? Q_max(1, Q_min(1023, (centerwidth - 80) / CHAR_SIZE)) : 1023;
 
 	margin = x;
 
@@ -933,9 +939,22 @@ DrawHUDStringScaled(const char *string, int x, int y, int centerwidth, int xor, 
 
 		width = 0;
 
-		while (*string && *string != '\n')
+		while (*string && *string != '\n' && width < maxwidth)
 		{
 			line[width++] = *string++;
+		}
+		if (wrap && width == maxwidth && *string && *string != '\n' && *string != ' ')
+		{
+			int split = width;
+			while (split > 0 && line[split - 1] != ' ')
+			{
+				split--;
+			}
+			if (split > 0)
+			{
+				string -= width - split;
+				width = split - 1;
+			}
 		}
 
 		line[width] = 0;
@@ -958,7 +977,11 @@ DrawHUDStringScaled(const char *string, int x, int y, int centerwidth, int xor, 
 
 		if (*string)
 		{
-			string++; /* skip the \n */
+			if (wrap)
+			{
+				while (*string == ' ') string++;
+			}
+			if (*string == '\n') string++;
 			y += CHAR_SIZE * factor;
 		}
 	}
@@ -1071,6 +1094,11 @@ SCR_ExecuteLayoutString(char *s)
 	float scale;
 
 	scale = SCR_GetHUDScale();
+	if (scr_gamebird_hud && scr_gamebird_hud->value)
+	{
+		/* Help/objective layouts use a 320x240 canvas, too. */
+		scale = fminf(scale, fminf(viddef.width / 320.0f, viddef.height / 240.0f));
+	}
 
 	if ((cls.state != ca_active) || !cl.refresh_prepped)
 	{
@@ -1477,6 +1505,158 @@ SCR_ExecuteLayoutString(char *s)
 	}
 }
 
+void
+SCR_DrawGrenadeHUD(const player_state_t *ps, int right, int y, float scale)
+{
+	int index = ps->stats[STAT_GRENADE_ICON];
+	const char *icon;
+	int icon_w, icon_h;
+	int icon_x, count_x, count_y;
+	const int digits = 3;
+
+	if (scale <= 0 || index <= 0 || index >= MAX_IMAGES)
+	{
+		return;
+	}
+
+	/* Other game modules may use this stat slot for a different purpose. */
+	icon = cl.configstrings[CS_IMAGES + index];
+	if (strcmp(icon, "a_grenades"))
+	{
+		return;
+	}
+
+	Draw_GetPicSize(&icon_w, &icon_h, icon);
+	if (icon_w <= 0 || icon_h <= 0)
+	{
+		return;
+	}
+
+	icon_x = right - (int)(icon_w * scale);
+	count_x = icon_x - (int)((digits * CHARACTER_WIDTH + 2) * scale);
+	count_y = y + (int)((icon_h - 24) * scale / 2);
+	Draw_PicScaled(count_x, count_y, "field_3", scale);
+	SCR_DrawFieldScaled(count_x, count_y, 0, digits, ps->stats[STAT_GRENADES], scale);
+
+	SCR_AddDirtyPoint(icon_x, y);
+	SCR_AddDirtyPoint(right - 1, y + (int)(icon_h * scale) - 1);
+	Draw_PicScaled(icon_x, y, icon, scale);
+}
+
+static const char *
+SCR_GameBirdStatIcon(const player_state_t *ps, int stat, const char *fallback)
+{
+	int index = ps->stats[stat];
+	if (index > 0 && index < MAX_IMAGES && cl.configstrings[CS_IMAGES + index][0])
+	{
+		return cl.configstrings[CS_IMAGES + index];
+	}
+	return fallback;
+}
+
+static void
+SCR_DrawGameBirdStat(const player_state_t *ps, int column, int stat, int icon_stat,
+	const char *fallback, int color, int flash, float scale, int margin)
+{
+	const char *icon = SCR_GameBirdStatIcon(ps, icon_stat, fallback);
+	int icon_w, icon_h, field_w, group_w, group_h, x, y;
+
+	Draw_GetPicSize(&icon_w, &icon_h, icon);
+	if (icon_w < 0 || icon_h < 0)
+	{
+		icon_w = icon_h = 0;
+	}
+	field_w = (int)((3 * CHARACTER_WIDTH + 2) * scale);
+	group_w = field_w + (int)((icon_w + 2) * scale);
+	group_h = (int)((icon_h > 24 ? icon_h : 24) * scale);
+	x = (2 * column + 1) * viddef.width / 6 - group_w / 2;
+	y = viddef.height - margin - group_h;
+	SCR_AddDirtyPoint(x, y);
+	SCR_AddDirtyPoint(x + group_w - 1, y + group_h - 1);
+
+	if (ps->stats[STAT_FLASHES] & flash)
+	{
+		Draw_PicScaled(x, y + (group_h - (int)(24 * scale)) / 2, "field_3", scale);
+	}
+	SCR_DrawFieldScaled(x, y + (group_h - (int)(24 * scale)) / 2,
+		color, 3, ps->stats[stat], scale);
+	if (icon_w > 0 && icon_h > 0)
+	{
+		Draw_PicScaled(x + field_w + (int)(2 * scale), y, icon, scale);
+	}
+}
+
+static void
+SCR_DrawGameBirdStats(void)
+{
+	const player_state_t *ps = &cl.frame.playerstate;
+	float scale = fminf(SCR_GetHUDScale(),
+		fminf(viddef.width / 320.0f, viddef.height / 240.0f));
+	int margin = 4;
+	int health_color, ammo_color;
+	const char *icon;
+	int icon_w, icon_h;
+
+	if (cls.state != ca_active || !cl.refresh_prepped || scale <= 0)
+	{
+		return;
+	}
+	/* Keep the three columns stable when armor/ammo are empty. */
+	health_color = ps->stats[STAT_HEALTH] > 25 ? 0 :
+		(ps->stats[STAT_HEALTH] > 0 ? (cl.frame.serverframe >> 2) & 1 : 1);
+	ammo_color = ps->stats[STAT_AMMO] > 5 ? 0 : (cl.frame.serverframe >> 2) & 1;
+	SCR_DrawGameBirdStat(ps, 0, STAT_HEALTH, STAT_HEALTH_ICON, "i_health",
+		health_color, 1, scale, margin);
+	SCR_DrawGameBirdStat(ps, 1, STAT_ARMOR, STAT_ARMOR_ICON, "i_jacketarmor",
+		0, 2, scale, margin);
+	if (ps->stats[STAT_AMMO] >= 0)
+	{
+		SCR_DrawGameBirdStat(ps, 2, STAT_AMMO, STAT_AMMO_ICON, "a_bullets",
+			ammo_color, 4, scale, margin);
+	}
+	SCR_DrawGrenadeHUD(ps, viddef.width - margin, margin, scale);
+
+	/* Keep transient status information above the bottom row. */
+	if (ps->stats[STAT_TIMER] > 0)
+	{
+		icon = SCR_GameBirdStatIcon(ps, STAT_TIMER_ICON, "");
+		SCR_DrawFieldScaled(margin, margin, 0, 2, ps->stats[STAT_TIMER], scale);
+		if (icon[0])
+		{
+			Draw_PicScaled(margin + (int)(36 * scale), margin, icon, scale);
+		}
+	}
+	if (ps->stats[STAT_PICKUP_STRING] > 0 && ps->stats[STAT_PICKUP_STRING] < MAX_CONFIGSTRINGS)
+	{
+		char text[64];
+		int columns = (viddef.width - 2 * margin) / (8 * scale);
+		Q_strlcpy(text, cl.configstrings[ps->stats[STAT_PICKUP_STRING]],
+			(size_t)Q_min(columns + 1, (int)sizeof(text)));
+		DrawStringScaled((viddef.width - (int)(strlen(text) * 8 * scale)) / 2,
+			viddef.height - margin - (int)(52 * scale), text, scale);
+	}
+	icon = SCR_GameBirdStatIcon(ps, STAT_HELPICON, "");
+	if (icon[0])
+	{
+		Draw_GetPicSize(&icon_w, &icon_h, icon);
+		if (icon_w > 0 && icon_h > 0)
+		{
+			Draw_PicScaled((viddef.width - (int)(icon_w * scale)) / 2,
+				viddef.height - margin - (int)((icon_h + 38) * scale), icon, scale);
+		}
+	}
+	icon = SCR_GameBirdStatIcon(ps, STAT_SELECTED_ICON, "");
+	if (icon[0])
+	{
+		Draw_PicScaled(margin, margin + (int)(36 * scale), icon, scale);
+	}
+	if (ps->stats[STAT_FRAGS] || ps->stats[STAT_SPECTATOR])
+	{
+		DrawStringScaled(margin, viddef.height - margin - (int)(68 * scale),
+			ps->stats[STAT_SPECTATOR] ? "SPECTATOR" : va("FRAGS %d", ps->stats[STAT_FRAGS]), scale);
+	}
+}
+
 /*
  * The status bar is a small layout program that
  * is based on the stats array
@@ -1484,7 +1664,21 @@ SCR_ExecuteLayoutString(char *s)
 static void
 SCR_DrawStats(void)
 {
+	if (scr_gamebird_hud && scr_gamebird_hud->value)
+	{
+		SCR_DrawGameBirdStats();
+		return;
+	}
 	SCR_ExecuteLayoutString(cl.configstrings[CS_STATUSBAR]);
+
+	/* Saved levels can restore a status bar from before the grenade HUD. */
+	if (cls.state == ca_active && cl.refresh_prepped)
+	{
+		float scale = SCR_GetHUDScale();
+
+		SCR_DrawGrenadeHUD(&cl.frame.playerstate, viddef.width / 2 + (int)(122 * scale),
+			viddef.height - (int)(84 * scale), scale);
+	}
 }
 
 #define STAT_LAYOUTS 13
@@ -1519,7 +1713,7 @@ SCR_DrawADSOverlay(void)
 		return;
 	}
 
-	overlay_pic = CL_GetADSOverlayPicName();
+	overlay_pic = CL_PlayerADSPic(CL_ColorClientinfo(cl.playernum), CL_GetADSOverlayPicName());
 	if (!overlay_pic)
 	{
 		ads_kick_offset = 0.0f;
@@ -1534,7 +1728,7 @@ SCR_DrawADSOverlay(void)
 		return;
 	}
 
-	kick_enabled = Q_stricmp(overlay_pic, "ads_railgun.png") != 0;
+	kick_enabled = Q_stricmp(CL_GetADSOverlayPicName(), "ads_railgun.png") != 0;
 
 	if (kick_enabled)
 	{
@@ -1995,6 +2189,7 @@ void
 SCR_DrawCrosshair(void)
 {
 	float scale;
+	float assist_x, assist_y;
 
 	if (!crosshair->value)
 	{
@@ -2021,8 +2216,11 @@ SCR_DrawCrosshair(void)
 		scale = SCR_ClampScale(crosshair_scale->value);
 	}
 
-	Draw_PicScaled(scr_vrect.x + (scr_vrect.width - crosshair_width * scale) / 2,
-			scr_vrect.y + (scr_vrect.height - crosshair_height * scale) / 2,
+	PP_AimAssistReticle(&cl.frame.playerstate, scr_vrect.width, scr_vrect.height,
+		cl.refdef.fov_x, cl.refdef.fov_y, Key_UsingGamepad() &&
+		!CL_IsADSActive() && Cvar_VariableValue("cl_aimassist") > 0, &assist_x, &assist_y);
+	Draw_PicScaled(scr_vrect.x + (scr_vrect.width - crosshair_width * scale) / 2 + (int)assist_x,
+			scr_vrect.y + (scr_vrect.height - crosshair_height * scale) / 2 + (int)assist_y,
 			crosshair_pic, scale);
 }
 

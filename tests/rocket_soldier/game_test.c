@@ -1,5 +1,6 @@
 #include "../../src/game/header/local.h"
 #include "../../src/game/monster/soldier/soldier.h"
+#include "../../src/common/header/soldier_dimensions.h"
 #include <assert.h>
 #include <stdarg.h>
 #include <unistd.h>
@@ -22,8 +23,8 @@ static int reloads, reload_precached;
 
 static int model_index(char *name)
 {
-    if (!strcmp(name, "models/monsters/soldier/tris.md2")) return 100;
-    if (!strcmp(name, "models/monsters/soldier/weapon_rocket.md2")) return 104;
+    if (!strcmp(name, "models/monsters/soldier/tall/tris.md2")) return 100;
+    if (!strcmp(name, "models/monsters/soldier/tall/weapon_rocket.md2")) return 104;
     return 101;
 }
 
@@ -104,7 +105,7 @@ static void multicast(vec3_t point, multicast_t destination)
         assert(message_bytes == 3);
         assert(heavy->monsterinfo.aiflags & AI_DUCKED);
         assert(heavy->groundentity);
-        assert(heavy->maxs[2] == 0 && heavy->viewheight == 0);
+        assert(fabsf(heavy->maxs[2] - PP_SOLDIER_DUCK_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_DUCK_VIEW_Z) < .001f);
         assert(heavy->velocity[0] == 0 && heavy->velocity[1] == 0);
         if (shots && level.time > last_shot_time)
         {
@@ -180,7 +181,7 @@ static void begin_firing(edict_t *heavy)
     assert(shots == 1);
     assert(reloads == 0);
     assert(heavy->monsterinfo.aiflags & AI_DUCKED);
-    assert(heavy->maxs[2] == 0 && heavy->viewheight == 0);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_DUCK_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_DUCK_VIEW_Z) < .001f);
     assert(last_shot_frame == FRAME_attak303);
 }
 
@@ -190,7 +191,7 @@ static void test_spawn_and_movement(void)
     int i;
     assert(heavy->health == 180 && heavy->mass == 250);
     assert(heavy->s.modelindex == 100 && heavy->s.modelindex2 == 104);
-    assert(heavy->maxs[2] == 32 && heavy->viewheight == 25);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_STAND_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_STAND_VIEW_Z) < .001f);
     assert(heavy->monsterinfo.checkattack && heavy->pain && heavy->die);
     heavy->monsterinfo.walk(heavy);
     for (i = 0; i <= heavy->monsterinfo.currentmove->lastframe -
@@ -230,14 +231,14 @@ static void test_burst_and_recovery(void)
     assert(fabsf(VectorLength(g_edicts[3].velocity) - 450) < .01f);
     assert(g_edicts[3].velocity[0] > 400);
     assert(!(heavy->monsterinfo.aiflags & (AI_DUCKED | AI_HOLD_FRAME)));
-    assert(heavy->maxs[2] == 32 && heavy->viewheight == 25);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_STAND_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_STAND_VIEW_Z) < .001f);
     assert(ceiling_checks > 0);
     assert(heavy->monsterinfo.attack_finished > level.time);
     assert(!heavy->monsterinfo.checkattack(heavy));
     soldier_heavy_raise(heavy);
     soldier_heavy_recover(heavy);
     assert(reloads == 1); /* Repeated recovery cannot replay the clip. */
-    assert(heavy->maxs[2] == 32 && heavy->viewheight == 25);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_STAND_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_STAND_VIEW_Z) < .001f);
     /* Reloading blocks a new deployment; a later deployment gets one rocket. */
     attack = heavy->monsterinfo.currentmove;
     heavy->monsterinfo.attack(heavy);
@@ -326,15 +327,15 @@ static void test_ceiling_and_interruptions(void)
     assert(heavy->monsterinfo.aiflags & AI_DUCKED);
     assert(heavy->monsterinfo.nextframe == FRAME_attak306 ||
             (heavy->monsterinfo.aiflags & AI_HOLD_FRAME));
-    assert(heavy->maxs[2] == 0 && heavy->viewheight == 0);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_DUCK_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_DUCK_VIEW_Z) < .001f);
     for (i = 0; i < 8; i++) tick(heavy);
-    assert(heavy->maxs[2] == 0);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_DUCK_MAX_Z) < .001f);
     assert(shots == before);
     assert(reloads == 0); /* No repeat while the recovery hull is blocked. */
     blocked_ceiling = 0;
     soldier_heavy_raise(heavy);
     assert(!(heavy->monsterinfo.aiflags & AI_DUCKED));
-    assert(heavy->maxs[2] == 32 && heavy->viewheight == 25);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_STAND_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_STAND_VIEW_Z) < .001f);
     soldier_heavy_fire(heavy);
     assert(shots == before);
 
@@ -345,7 +346,7 @@ static void test_ceiling_and_interruptions(void)
     assert(heavy->monsterinfo.attack_finished > level.time);
     for (i = 0; i < 4 && (heavy->monsterinfo.aiflags & AI_DUCKED); i++) tick(heavy);
     assert(!(heavy->monsterinfo.aiflags & AI_DUCKED));
-    assert(heavy->maxs[2] == 32 && heavy->viewheight == 25);
+    assert(fabsf(heavy->maxs[2] - PP_SOLDIER_STAND_MAX_Z) < .001f && fabsf(heavy->viewheight - PP_SOLDIER_STAND_VIEW_Z) < .001f);
     before = shots;
     soldier_heavy_fire(heavy);
     assert(shots == before);

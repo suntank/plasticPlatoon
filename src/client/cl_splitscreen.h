@@ -2,6 +2,7 @@
 #define CL_SPLITSCREEN_H
 
 #include "header/client.h"
+#include "input/header/ads.h"
 
 #define SS_MAX_LOCAL_PLAYERS 4
 #define SS_MAX_INPUT_DEVICES (SS_MAX_LOCAL_PLAYERS + 2)
@@ -93,6 +94,13 @@ typedef struct
 	qboolean turnright_down;
 	qboolean lookup_down;
 	qboolean lookdown_down;
+	qboolean gb_up_down;
+	qboolean gb_down_down;
+	qboolean gb_left_down;
+	qboolean gb_right_down;
+	qboolean gb_modifier_down;
+	qboolean gb_crouched;
+	pp_ads_level_t gb_autolevel;
 	qboolean ads_active;
 	int last_gunindex;
 	int muzzle_flash_seq;

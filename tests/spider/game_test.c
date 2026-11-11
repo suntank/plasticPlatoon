@@ -6,6 +6,8 @@
 
 extern void SP_monster_spider(edict_t *self);
 extern void M_MoveFrame(edict_t *self);
+extern void Killed(edict_t *targ, edict_t *inflictor, edict_t *attacker,
+        int damage, vec3_t point);
 
 static cvar_t zero, one, max_clients;
 static int blocked_sight, blocked_shots, shot_traces, links;
@@ -186,20 +188,21 @@ int main(int argc, char **argv)
     spider = &g_edicts[2];
     assert(spider->monsterinfo.currentmove == attack && spider->monsterinfo.melee);
     assert(spider->pain && spider->die && spider->enemy == &g_edicts[1]);
-    spider->die(spider, NULL, NULL, 300, vec3_origin);
-    assert(spider->deadflag == DEAD_DEAD && spider->monsterinfo.currentmove->firstframe == 44);
-    spider->monsterinfo.currentmove->endfunc(spider);
-    assert(spider->svflags & SVF_DEADMONSTER);
-    /* A corpse can still burst when sufficiently overkilled. */
+    /* Ordinary pistol-style finishing damage gibs immediately, while the
+     * real dispatcher still performs mission kill accounting exactly once. */
     blood_multicasts = gibsthisframe = 0;
-    spider->health = spider->gib_health;
-    spider->die(spider, NULL, NULL, 200, vec3_origin);
+    spider->health = -1;
+    Killed(spider, &g_edicts[1], &g_edicts[1], 15, vec3_origin);
+    assert(level.killed_monsters == 1);
     assert_spider_gib_burst(spider);
-    /* A sufficiently powerful killing hit can gib it immediately, too. */
+    Killed(spider, &g_edicts[1], &g_edicts[1], 15, vec3_origin);
+    assert(level.killed_monsters == 1);
+    /* Explosive overkill keeps the same burst, too. */
     spider = spawn_spider();
     blood_multicasts = gibsthisframe = 0;
     spider->health = spider->gib_health;
-    spider->die(spider, NULL, NULL, 500, vec3_origin);
+    Killed(spider, &g_edicts[1], &g_edicts[1], 500, vec3_origin);
+    assert(level.killed_monsters == 1);
     assert_spider_gib_burst(spider);
     unlink(argv[1]);
     puts("spider spawn, melee, save/load, death and both gib paths passed");

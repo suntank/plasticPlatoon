@@ -792,6 +792,9 @@ monster_start(edict_t *self)
 	self->nextthink = level.time + FRAMETIME;
 	self->svflags |= SVF_MONSTER;
 	self->s.renderfx |= RF_FRAMELERP;
+	self->s.renderfx &= ~(RF_PP_FRIENDLY_COLOR | RF_PP_ENEMY_COLOR);
+	self->s.renderfx |= (self->monsterinfo.aiflags & AI_GOOD_GUY) ?
+		RF_PP_FRIENDLY_COLOR : RF_PP_ENEMY_COLOR;
 	self->takedamage = DAMAGE_AIM;
 	self->air_finished = level.time + 12;
 	self->use = monster_use;

@@ -28,9 +28,15 @@
 #include "header/client.h"
 #include "cl_splitscreen.h"
 #include "input/header/input.h"
+#include "input/header/aim_assist.h"
+#include "input/header/ads.h"
 
 static cvar_t *cl_nodelta;
 static cvar_t *cl_centertime;
+static cvar_t *cl_ads_sensitivity;
+static cvar_t *cl_gamebird_autolevel;
+static cvar_t *cl_gamebird_autolevel_time;
+static pp_ads_level_t gb_autolevel;
 
 static unsigned frame_msec;
 static unsigned old_sys_frame_time;
@@ -62,6 +68,11 @@ static kbutton_t in_lookup, in_lookdown, in_moveleft, in_moveright;
 static kbutton_t in_up, in_down;
 static kbutton_t in_klook, in_speed, in_use, in_attack, in_ads;
 kbutton_t in_strafe;
+
+/* Separate buttons let a held D-pad change modes without rebinding keys or
+ * losing the release that belongs to its original press. */
+static kbutton_t in_gb_up, in_gb_down, in_gb_left, in_gb_right, in_gb_modifier;
+static qboolean gb_crouched;
 
 static int in_impulse;
 
@@ -199,6 +210,7 @@ IN_KLookUp(void)
 static void
 IN_UpDown(void)
 {
+	gb_crouched = false;
 	KeyDown(&in_up);
 }
 
@@ -364,6 +376,88 @@ IN_ADSUp(void)
 	KeyUp(&in_ads);
 }
 
+qboolean
+CL_IsADSHeld(void)
+{
+	return (in_ads.state & 1) != 0;
+}
+
+float
+CL_ADSLookScale(void)
+{
+	return PP_ADSLookScale(CL_IsADSHeld(),
+		cl_ads_sensitivity ? cl_ads_sensitivity->value : 0.5f);
+}
+
+void
+CL_ReleaseGameBirdKeys(void)
+{
+	memset(&gb_autolevel, 0, sizeof(gb_autolevel));
+	memset(&in_gb_up, 0, sizeof(in_gb_up));
+	memset(&in_gb_down, 0, sizeof(in_gb_down));
+	memset(&in_gb_left, 0, sizeof(in_gb_left));
+	memset(&in_gb_right, 0, sizeof(in_gb_right));
+	memset(&in_gb_modifier, 0, sizeof(in_gb_modifier));
+}
+
+void
+CL_ClearGameBirdInput(void)
+{
+	CL_ReleaseGameBirdKeys();
+	gb_crouched = false;
+}
+
+static void IN_GameBirdUpUp(void) { KeyUp(&in_gb_up); }
+static void IN_GameBirdDownUp(void) { KeyUp(&in_gb_down); }
+static void IN_GameBirdLeftUp(void) { KeyUp(&in_gb_left); }
+static void IN_GameBirdRightUp(void) { KeyUp(&in_gb_right); }
+static void IN_GameBirdModifierDown(void) { KeyDown(&in_gb_modifier); }
+static void IN_GameBirdModifierUp(void) { KeyUp(&in_gb_modifier); }
+
+static void
+IN_GameBirdUpDown(void)
+{
+	qboolean held = (in_gb_up.state & 1) != 0;
+	KeyDown(&in_gb_up);
+	if (!held && (in_gb_modifier.state & 1))
+	{
+		Cbuf_AddText("help\n");
+	}
+}
+
+static void
+IN_GameBirdDownDown(void)
+{
+	qboolean held = (in_gb_down.state & 1) != 0;
+	KeyDown(&in_gb_down);
+	if (!held && (in_gb_modifier.state & 1))
+	{
+		gb_crouched = !gb_crouched;
+	}
+}
+
+static void
+IN_GameBirdLeftDown(void)
+{
+	qboolean held = (in_gb_left.state & 1) != 0;
+	KeyDown(&in_gb_left);
+	if (!held && (in_gb_modifier.state & 1))
+	{
+		Cbuf_AddText("weapprev\n");
+	}
+}
+
+static void
+IN_GameBirdRightDown(void)
+{
+	qboolean held = (in_gb_right.state & 1) != 0;
+	KeyDown(&in_gb_right);
+	if (!held && (in_gb_modifier.state & 1))
+	{
+		Cbuf_AddText("weapnext\n");
+	}
+}
+
 static void
 IN_UseDown(void)
 {
@@ -444,6 +538,7 @@ CL_AdjustAngles(void)
 	{
 		speed = cls.nframetime;
 	}
+	speed *= CL_ADSLookScale();
 
 	if (!(in_strafe.state & 1))
 	{
@@ -486,6 +581,55 @@ CL_AdjustAngles(void)
 	}
 }
 
+static void
+CL_GameBirdMove(usercmd_t *cmd)
+{
+	float look_scale = CL_ADSLookScale();
+	float up = CL_KeyState(&in_gb_up);
+	float down = CL_KeyState(&in_gb_down);
+	float left = CL_KeyState(&in_gb_left);
+	float right = CL_KeyState(&in_gb_right);
+	CL_KeyState(&in_gb_modifier);
+
+	if (cl.frame.playerstate.pmove.pm_type >= PM_DEAD)
+	{
+		gb_crouched = false;
+	}
+
+	if (!(in_gb_modifier.state & 1))
+	{
+		cl.viewangles[YAW] += look_scale * cls.nframetime * cl_yawspeed->value * (left - right);
+		if (in_ads.state & 1)
+		{
+			/* The gamepad menu encodes pitch inversion in this cvar's sign. */
+			cl.viewangles[PITCH] += look_scale * cls.nframetime *
+				Cvar_VariableValue("joy_pitchspeed") * (down - up);
+		}
+		else
+		{
+			cmd->forwardmove += cl_forwardspeed->value * (up - down);
+		}
+	}
+
+	if (gb_crouched)
+	{
+		cmd->upmove -= cl_upspeed->value;
+	}
+}
+
+static void
+CL_UpdateGameBirdLevel(const vec3_t before)
+{
+	PP_UpdateADSLevel(&gb_autolevel, cl.viewangles, CL_IsADSHeld(),
+		cl_gamebird_autolevel && cl_gamebird_autolevel->value > 0 &&
+		cls.state == ca_active && cls.key_dest == key_game &&
+		cl.frame.playerstate.pmove.pm_type < PM_DEAD,
+		fabsf(cl.viewangles[PITCH] - before[PITCH]) > 0.0001f,
+		SHORT2ANGLE(cl.frame.playerstate.pmove.delta_angles[PITCH]),
+		frame_msec * 0.001f,
+		cl_gamebird_autolevel_time ? cl_gamebird_autolevel_time->value : 0.25f);
+}
+
 /*
  * Send the intended movement message to the server
  */
@@ -515,6 +659,8 @@ CL_BaseMove(usercmd_t *cmd)
 		cmd->forwardmove += cl_forwardspeed->value * CL_KeyState(&in_forward);
 		cmd->forwardmove -= cl_forwardspeed->value * CL_KeyState(&in_back);
 	}
+
+	CL_GameBirdMove(cmd);
 
 	/* adjust for speed key / running */
 	if ((in_speed.state & 1) ^ (int)(cl_run->value))
@@ -621,10 +767,26 @@ CL_InitInput(void)
 	Cmd_AddCommand("impulse", IN_Impulse);
 	Cmd_AddCommand("+klook", IN_KLookDown);
 	Cmd_AddCommand("-klook", IN_KLookUp);
+	Cmd_AddCommand("+gb_up", IN_GameBirdUpDown);
+	Cmd_AddCommand("-gb_up", IN_GameBirdUpUp);
+	Cmd_AddCommand("+gb_down", IN_GameBirdDownDown);
+	Cmd_AddCommand("-gb_down", IN_GameBirdDownUp);
+	Cmd_AddCommand("+gb_left", IN_GameBirdLeftDown);
+	Cmd_AddCommand("-gb_left", IN_GameBirdLeftUp);
+	Cmd_AddCommand("+gb_right", IN_GameBirdRightDown);
+	Cmd_AddCommand("-gb_right", IN_GameBirdRightUp);
+	Cmd_AddCommand("+gb_modifier", IN_GameBirdModifierDown);
+	Cmd_AddCommand("-gb_modifier", IN_GameBirdModifierUp);
 	CL_MFlashTune_RegisterCommands();
 
 	cl_nodelta = Cvar_Get("cl_nodelta", "0", 0);
 	cl_centertime = Cvar_Get("cl_centertime", "180", CVAR_ARCHIVE);
+	Cvar_Get("cl_aimassist", "1", CVAR_ARCHIVE);
+	Cvar_Get("cl_aimassist_strength", "8", CVAR_ARCHIVE);
+	Cvar_Get("cl_aimassist_speed", "30", CVAR_ARCHIVE);
+	cl_ads_sensitivity = Cvar_Get("cl_ads_sensitivity", "0.5", CVAR_ARCHIVE);
+	cl_gamebird_autolevel = Cvar_Get("cl_gamebird_autolevel", "0", CVAR_ARCHIVE);
+	cl_gamebird_autolevel_time = Cvar_Get("cl_gamebird_autolevel_time", "0.25", CVAR_ARCHIVE);
 
 	if (!keybindings[K_MOUSE2] || !keybindings[K_MOUSE2][0])
 	{
@@ -697,6 +859,7 @@ CL_RefreshCmd(void)
 {
 	int ms;
 	usercmd_t *cmd;
+	vec3_t before_look;
 
 	// CMD to fill
 	cmd = &cl.cmds[cls.netchan.outgoing_sequence & (CMD_BACKUP - 1)];
@@ -715,8 +878,14 @@ CL_RefreshCmd(void)
 	}
 
 	// Add movement
+	VectorCopy(cl.viewangles, before_look);
 	CL_BaseMove(cmd);
 	IN_Move(cmd);
+	CL_UpdateGameBirdLevel(before_look);
+	PP_AimAssistADS(cl.viewangles, &cl.frame.playerstate, frame_msec * 0.001f,
+		Cvar_VariableValue("cl_aimassist_strength"), Cvar_VariableValue("cl_aimassist_speed"),
+		cls.state == ca_active && cls.key_dest == key_game && CL_IsADSHeld() &&
+		Key_UsingGamepad() && Cvar_VariableValue("cl_aimassist") > 0);
 
 	// Clamp angels for prediction
 	CL_ClampPitch();
@@ -749,6 +918,7 @@ void
 CL_RefreshMove(void)
 {
 	usercmd_t *cmd;
+	vec3_t before_look;
 
 	// CMD to fill
 	cmd = &cl.cmds[cls.netchan.outgoing_sequence & (CMD_BACKUP - 1)];
@@ -767,8 +937,14 @@ CL_RefreshMove(void)
 	}
 
 	// Add movement
+	VectorCopy(cl.viewangles, before_look);
 	CL_BaseMove(cmd);
 	IN_Move(cmd);
+	CL_UpdateGameBirdLevel(before_look);
+	PP_AimAssistADS(cl.viewangles, &cl.frame.playerstate, frame_msec * 0.001f,
+		Cvar_VariableValue("cl_aimassist_strength"), Cvar_VariableValue("cl_aimassist_speed"),
+		cls.state == ca_active && cls.key_dest == key_game && CL_IsADSHeld() &&
+		Key_UsingGamepad() && Cvar_VariableValue("cl_aimassist") > 0);
 
 	old_sys_frame_time = sys_frame_time;
 }
@@ -782,6 +958,12 @@ CL_FinalizeCmd(void)
 	cmd = &cl.cmds[cls.netchan.outgoing_sequence & (CMD_BACKUP - 1)];
 
 	// Mouse button events
+	cmd->buttons &= ~BUTTON_GAMEPAD;
+	if (Key_UsingGamepad() && cls.key_dest == key_game &&
+		Cvar_VariableValue("cl_aimassist") > 0)
+	{
+		cmd->buttons |= BUTTON_GAMEPAD;
+	}
 	if (in_attack.state & 3)
 	{
 		cmd->buttons |= BUTTON_ATTACK;

@@ -370,6 +370,9 @@ VID_ShutdownRenderer(void)
 {
 	if (ref_active)
 	{
+		/* Menu previews also cache generated skins without entering a map.
+		 * Drop those pointers before destroying the renderer. */
+		CL_ClearColorSkins();
 		/* Shut down the renderer */
 		re.Shutdown();
 		GLimp_ShutdownGraphics();

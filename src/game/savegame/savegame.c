@@ -1245,6 +1245,7 @@ ReadLevel(const char *filename)
 
 		ent = &g_edicts[entnum];
 		ReadEdict(f, ent);
+		Soldier_RefreshDimensions(ent);
 
 		/* let the server rebuild world links for this ent */
 		memset(&ent->area, 0, sizeof(ent->area));

@@ -503,6 +503,8 @@ Think_Weapon(edict_t *ent)
 	/* call active weapon think routine */
 	if (ent->client->pers.weapon && ent->client->pers.weapon->weaponthink)
 	{
+		vec3_t saved_angles;
+		qboolean assisted;
 		is_quad = (ent->client->quad_framenum > level.framenum);
 
 		if (ent->client->silencer_shots)
@@ -514,7 +516,9 @@ Think_Weapon(edict_t *ent)
 			is_silenced = 0;
 		}
 
+		assisted = PP_AimAssist_BeginShot(ent, saved_angles);
 		ent->client->pers.weapon->weaponthink(ent);
+		if (assisted) PP_AimAssist_EndShot(ent, saved_angles);
 	}
 }
 

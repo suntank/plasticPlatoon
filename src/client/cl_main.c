@@ -395,6 +395,7 @@ CL_Quit_f(void)
 void
 CL_ClearState(void)
 {
+	CL_ClearGameBirdInput();
 	S_StopAllSounds();
 	CL_ClearEffects();
 	CL_ClearTEnts();

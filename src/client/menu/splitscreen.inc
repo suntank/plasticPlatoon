@@ -282,11 +282,11 @@ SplitScreenLobby_MenuDraw(void)
 	}
 	SplitScreenLobby_DrawText(x + (int)(8 * scale), y + (int)(370 * scale), w, status, scale, false);
 	SplitScreenLobby_DrawText(x + (int)(8 * scale), y + (int)(389 * scale), w,
-		japanese_confirm ? "D-pad/arrows: select & change  |  B: confirm  |  A: cancel ready" :
-		"D-pad/arrows: select & change  |  A: confirm  |  B: cancel ready", scale, false);
+		japanese_confirm ? "D-pad/arrows: select & change  |  B: confirm  |  A: cancel ready/back" :
+		"D-pad/arrows: select & change  |  A: confirm  |  B: cancel ready/back", scale, false);
 	SplitScreenLobby_DrawText(x + (int)(8 * scale), y + (int)(405 * scale), w,
-		japanese_confirm ? "Unassigned pad: B to join  |  Player 1: A again when unready goes back" :
-		"Unassigned pad: A to join  |  Player 1: B again when unready goes back", scale, false);
+		japanese_confirm ? "Unassigned pad: B to join  |  Any pad: A/Select again when unready goes back" :
+		"Unassigned pad: A to join  |  Any pad: B/Select again when unready goes back", scale, false);
 }
 
 static const char *
@@ -346,6 +346,11 @@ SplitScreenLobby_MenuKey(int key)
 	slot_index = gamepad >= 0 ? SS_FindLobbySlotForDevice(device) : s_splitscreen_keyboard_slot;
 	if (slot_index < 0)
 	{
+		if (menu_key == K_ESCAPE || menu_key == K_BACKSPACE || key == K_BTN_BACK)
+		{
+			M_PopMenu();
+			return NULL;
+		}
 		if (menu_key == K_ENTER)
 		{
 			slot_index = SS_JoinLobbyDevice(device);
@@ -366,7 +371,9 @@ SplitScreenLobby_MenuKey(int key)
 	}
 	if (menu_key == K_ESCAPE || menu_key == K_BACKSPACE || key == K_BTN_BACK)
 	{
-		if (gamepad >= 0 && slot_index == 0 && !slot->ready && menu_key == K_ESCAPE)
+		/* A lone controller may be assigned to P2 while P1 uses the keyboard.
+		 * Every local input needs a way out even when other players are absent. */
+		if (gamepad >= 0 && !slot->ready)
 		{
 			M_PopMenu();
 			return NULL;

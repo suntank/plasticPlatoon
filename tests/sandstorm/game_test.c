@@ -167,6 +167,8 @@ static edict_t *dropship(int flags)
     self->spawnflags = flags;
     self->speed = 100;
     SP_misc_platoon_dropship(self);
+    assert(self->s.renderfx & RF_PP_FRIENDLY_COLOR);
+    assert(!(self->s.renderfx & RF_PP_ENEMY_COLOR));
     return self;
 }
 static void test_flight(void)

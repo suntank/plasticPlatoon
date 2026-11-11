@@ -193,12 +193,23 @@ static void test_spawn_and_slow_motion(void)
     assert(tank->monsterinfo.stand && tank->monsterinfo.walk && tank->monsterinfo.run);
     assert(tank->monsterinfo.attack && tank->monsterinfo.checkattack && tank->pain && tank->die);
     assert(tank->svflags & SVF_MONSTER);
+    assert(tank->s.renderfx & RF_PP_ENEMY_COLOR);
     assert(level.total_monsters == 1);
     assert(turret && turret->s.modelindex && turret->s.modelindex != tank->s.modelindex);
     assert(turret->solid == SOLID_NOT && !(turret->svflags & SVF_MONSTER));
     assert(turret->s.origin[0] == tank->s.origin[0]);
     assert(turret->s.origin[1] == tank->s.origin[1]);
     assert(turret->s.origin[2] == tank->s.origin[2] + 24);
+    turret_tick(tank);
+    assert(turret->s.renderfx & RF_PP_ENEMY_COLOR);
+    turret->s.renderfx |= RF_GLOW;
+    tank->s.renderfx = (tank->s.renderfx & ~RF_PP_ENEMY_COLOR) | RF_PP_FRIENDLY_COLOR;
+    turret_tick(tank);
+    assert((turret->s.renderfx & RF_PP_FRIENDLY_COLOR) && !(turret->s.renderfx & RF_PP_ENEMY_COLOR));
+    assert(turret->s.renderfx & RF_GLOW);
+    tank->s.renderfx = (tank->s.renderfx & ~RF_PP_FRIENDLY_COLOR) | RF_PP_ENEMY_COLOR;
+    turret_tick(tank);
+    assert((turret->s.renderfx & RF_PP_ENEMY_COLOR) && !(turret->s.renderfx & RF_PP_FRIENDLY_COLOR));
     tank->monsterinfo.walk(tank);
     for (i = 0; i <= tank->monsterinfo.currentmove->lastframe -
             tank->monsterinfo.currentmove->firstframe; i++)

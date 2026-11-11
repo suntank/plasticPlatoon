@@ -26,6 +26,21 @@
 
 #include "header/local.h"
 #include "../files/texture_policy.h"
+#include "../color_pic_cache.h"
+
+static pp_color_pic_cache_t color_pic_cache;
+
+static void
+R_ReleaseColorPicture(void *ptr)
+{
+	image_t *image = ptr;
+	int unit;
+	if (image->type != it_pic || !PP_IsColorADSPicture(image->name)) return;
+	for (unit = 0; unit < MAX_TEXTURE_UNITS; unit++)
+		if (gl_state.currenttextures[unit] == image->texnum) gl_state.currenttextures[unit] = -1;
+	glDeleteTextures(1, (GLuint *)&image->texnum);
+	memset(image, 0, sizeof(*image));
+}
 
 image_t gltextures[MAX_GLTEXTURES];
 int numgltextures;
@@ -1185,6 +1200,7 @@ R_FindImage(const char *originname, imagetype_t type)
 		if (!strcmp(name, image->name))
 		{
 			image->registration_sequence = registration_sequence;
+			PP_TouchColorPicture(&color_pic_cache, image, name, R_ReleaseColorPicture);
 			return image;
 		}
 	}
@@ -1194,6 +1210,7 @@ R_FindImage(const char *originname, imagetype_t type)
 	//
 	image = (image_t *)R_LoadImage(name, namewe, ext, type,
 		r_retexturing->value, (loadimage_t)R_LoadPic);
+	PP_TouchColorPicture(&color_pic_cache, image, name, R_ReleaseColorPicture);
 
 	if (!image && r_validation->value)
 	{
@@ -1277,6 +1294,7 @@ R_ImageHasFreeSpace(void)
 void
 R_InitImages(void)
 {
+	memset(&color_pic_cache, 0, sizeof(color_pic_cache));
 	byte *colormap;
 	int i;
 	float m;

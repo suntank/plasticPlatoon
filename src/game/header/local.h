@@ -615,6 +615,13 @@ void ClientDisconnect(edict_t *ent);
 void ClientUserinfoChanged(edict_t *ent, char *userinfo);
 qboolean ClientConnect(edict_t *ent, char *userinfo);
 void ClientThink(edict_t *ent, usercmd_t *cmd);
+void PP_AimAssist_ResetClient(edict_t *ent);
+void PP_AimAssist_Update(edict_t *ent, const usercmd_t *cmd);
+qboolean PP_AimAssist_BeginShot(edict_t *ent, vec3_t saved_angles);
+void PP_AimAssist_EndShot(edict_t *ent, const vec3_t saved_angles);
+
+/* monster/soldier/soldier.c: preserve old saved actors after the height update. */
+void Soldier_RefreshDimensions(edict_t *ent);
 
 /* g_cmds.c */
 void Cmd_Help_f(edict_t *ent);

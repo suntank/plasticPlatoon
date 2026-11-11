@@ -155,12 +155,13 @@ helicopter_rotor_angles(edict_t *rotor, edict_t *body)
 	}
 }
 
+/* Called again after all physics so recycled edict slots and falling bodies
+ * cannot leave an attachment one server frame behind its owner. */
 void
-plastic_helicopter_rotor_think(edict_t *rotor)
+plastic_helicopter_sync_rotor(edict_t *rotor)
 {
 	edict_t *body;
 	vec3_t pivot;
-	float power = 1;
 	if (!rotor)
 	{
 		return;
@@ -176,14 +177,12 @@ plastic_helicopter_rotor_think(edict_t *rotor)
 		return;
 	}
 	rotor->svflags = body->svflags & SVF_NOCLIENT;
-	if (body->deadflag == DEAD_DEAD)
-	{
-		power = Q_clamp(1 - (level.time - body->pain_debounce_time) / 2.5f, .12f, 1);
-	}
-	if (!(rotor->svflags & SVF_NOCLIENT))
-	{
-		rotor->speed = anglemod(rotor->speed + (rotor->style ? 114 : 66) * power);
-	}
+	rotor->s.renderfx = (rotor->s.renderfx & ~(RF_PP_FRIENDLY_COLOR | RF_PP_ENEMY_COLOR)) |
+		(body->s.renderfx & (RF_PP_FRIENDLY_COLOR | RF_PP_ENEMY_COLOR));
+	/* The client uses these fields to attach the static mesh to the
+	 * interpolated body and interpolate spin in the rotor's local frame. */
+	rotor->s.skinnum = body->s.number;
+	rotor->s.frame = (int)anglemod(rotor->speed);
 	if (rotor->style)
 	{
 		VectorSet(pivot, -88, 8, 16);
@@ -194,8 +193,38 @@ plastic_helicopter_rotor_think(edict_t *rotor)
 	}
 	helicopter_project(body, pivot, rotor->s.origin);
 	helicopter_rotor_angles(rotor, body);
-	rotor->nextthink = level.time + FRAMETIME;
 	gi.linkentity(rotor);
+}
+
+void
+plastic_helicopter_rotor_think(edict_t *rotor)
+{
+	edict_t *body;
+	float power = 1;
+	if (!rotor)
+	{
+		return;
+	}
+	body = rotor->owner;
+	/* Validate ownership before consulting the body or advancing the spin. */
+	if (!body || !body->inuse || !body->classname ||
+		strcmp(body->classname, "monster_plastic_helicopter") || !body->chain ||
+		(!rotor->style && body->chain != rotor) ||
+		(rotor->style && body->chain->chain != rotor))
+	{
+		G_FreeEdict(rotor);
+		return;
+	}
+	if (body->deadflag == DEAD_DEAD)
+	{
+		power = Q_clamp(1 - (level.time - body->pain_debounce_time) / 2.5f, .12f, 1);
+	}
+	if (!(body->svflags & SVF_NOCLIENT))
+	{
+		rotor->speed = anglemod(rotor->speed + (rotor->style ? 114 : 66) * power);
+	}
+	rotor->nextthink = level.time + FRAMETIME;
+	plastic_helicopter_sync_rotor(rotor);
 }
 
 static qboolean

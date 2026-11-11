@@ -19,6 +19,7 @@ static SDL_JoystickID pad_ids[4];
 static ss_state_t *state;
 static client_state_t *primary;
 static client_static_t *client_static;
+static int *menu_depth;
 
 static int find_main(struct dl_phdr_info *info, size_t size, void *data)
 {
@@ -26,6 +27,8 @@ static int find_main(struct dl_phdr_info *info, size_t size, void *data)
         state = (ss_state_t *)(info->dlpi_addr + strtoull(getenv("PP_SMOKE_STATE_OFFSET"), NULL, 16));
         primary = (client_state_t *)(info->dlpi_addr + strtoull(getenv("PP_SMOKE_CLIENT_OFFSET"), NULL, 16));
         client_static = (client_static_t *)(info->dlpi_addr + strtoull(getenv("PP_SMOKE_STATIC_OFFSET"), NULL, 16));
+        if (getenv("PP_SMOKE_MENU_OFFSET"))
+            menu_depth = (int *)(info->dlpi_addr + strtoull(getenv("PP_SMOKE_MENU_OFFSET"), NULL, 16));
         return 1;
     }
     return 0;
@@ -70,8 +73,12 @@ int SDL_Init(Uint32 flags)
 
 static void snapshot(const char *label)
 {
-    fprintf(stderr, "PP_SMOKE_STATE {\"label\":\"%s\",\"lobby\":%d,\"session\":%d,\"players\":%d,\"primary_connection\":%d,\"slots\":[",
-            label, state->lobby_active, state->session_active, state->requested_players, client_static->state);
+    int connected_pads = 0;
+    for (int i = 2; i < SS_MAX_INPUT_DEVICES; i++)
+        if (state->device_connected[i]) connected_pads++;
+    fprintf(stderr, "PP_SMOKE_STATE {\"label\":\"%s\",\"lobby\":%d,\"session\":%d,\"players\":%d,\"primary_connection\":%d,\"menu_depth\":%d,\"connected_pads\":%d,\"slots\":[",
+            label, state->lobby_active, state->session_active, state->requested_players, client_static->state,
+            menu_depth ? *menu_depth : -1, connected_pads);
     for (int i = 0; i < state->requested_players; i++) {
         ss_local_player_t *slot = &state->slots[i];
         fprintf(stderr, "%s{\"device\":%d,\"ready\":%d,\"connection\":%d,\"snapshot\":%d,\"forward\":%d,\"side\":%d,\"attack\":%d,\"buttons\":%d,\"up\":%d}",

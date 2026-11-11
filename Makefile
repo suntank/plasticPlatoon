@@ -483,13 +483,18 @@ pi: config client game ref_gl1 ref_gles1 assets
 
 # Numbered stock PAKs precede loose files. A separate project archive ensures
 # Plastic Platoon's models are actually used without repacking commercial data.
-.PHONY: assets pi
+.PHONY: assets pi soldier_dimensions
+soldier_dimensions:
+	python3 tools/assets/build_soldier_height.py
+
+game client assets: soldier_dimensions
 assets:
 	python3 tools/assets/build_branding.py
 	python3 tools/assets/build_bootstrap.py
 	python3 tools/assets/build_support_sounds.py
 	python3 tools/assets/import_enemy_sounds.py --verify
 	python3 tools/assets/build_support_models.py
+	python3 tools/assets/build_color_variants.py
 	python3 tools/assets/build_overlay.py --output "$(BINDIR)/baseq2/plastic-platoon.pk3"
 	cp baseq2/operation-heavy-test.pk3 baseq2/operation-rocket-test.pk3 baseq2/operation-tank-test.pk3 baseq2/operation-helicopter-test.pk3 "$(BINDIR)/baseq2/"
 
@@ -996,6 +1001,7 @@ GAME_OBJS_ = \
 	src/game/monster/supertank/supertank.o \
 	src/game/monster/tank/tank.o \
 	src/game/player/client.o \
+	src/game/player/aim_assist.o \
 	src/game/player/hud.o \
 	src/game/player/trail.o \
 	src/game/player/view.o \
@@ -1015,6 +1021,7 @@ CLIENT_OBJS_ := \
 	src/client/cl_download.o \
 	src/client/cl_effects.o \
 	src/client/cl_entities.o \
+	src/client/cl_color_skins.o \
 	src/client/cl_input.o \
 	src/client/cl_inventory.o \
 	src/client/cl_keyboard.o \

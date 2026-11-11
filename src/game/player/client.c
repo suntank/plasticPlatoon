@@ -1640,6 +1640,7 @@ PutClientInServer(edict_t *ent)
 
 	/* clear playerstate values */
 	memset(&ent->client->ps, 0, sizeof(client->ps));
+	PP_AimAssist_ResetClient(ent);
 
 	client->ps.pmove.origin[0] = spawn_origin[0] * 8;
 	client->ps.pmove.origin[1] = spawn_origin[1] * 8;
@@ -1777,6 +1778,7 @@ ClientBegin(edict_t *ent)
 	}
 
 	ent->client = game.clients + (ent - g_edicts - 1);
+	PP_AimAssist_ResetClient(ent);
 
 	if (deathmatch->value)
 	{
@@ -2296,6 +2298,7 @@ ClientThink(edict_t *ent, usercmd_t *ucmd)
 	client->oldbuttons = client->buttons;
 	client->buttons = ucmd->buttons;
 	client->latched_buttons |= client->buttons & ~client->oldbuttons;
+	PP_AimAssist_Update(ent, ucmd);
 
 	/* Plastic Platoon: Update ADS state */
 	{

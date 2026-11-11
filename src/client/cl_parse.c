@@ -999,6 +999,11 @@ CL_LoadClientinfo(clientinfo_t *ci, char *s)
 	char skin_filename[MAX_QPATH];
 	char weapon_filename[MAX_QPATH];
 
+	CL_SetClientWeaponColor(ci, "green");
+	ci->weapon_soldier_mask = 0;
+	Q_strlcpy(model_name, "soldier", sizeof(model_name));
+	Q_strlcpy(skin_name, "green", sizeof(skin_name));
+
 	Q_strlcpy(ci->cinfo, s, sizeof(ci->cinfo));
 	s = ci->cinfo;
 
@@ -1029,6 +1034,7 @@ CL_LoadClientinfo(clientinfo_t *ci, char *s)
 
 		memset(ci->weaponmodel, 0, sizeof(ci->weaponmodel));
 		ci->weaponmodel[0] = R_RegisterModel(weapon_filename);
+		if (ci->weaponmodel[0]) ci->weapon_soldier_mask = 1;
 		ci->skin = R_RegisterSkin(skin_filename);
 		ci->icon = Draw_FindPic(ci->iconname);
 	}
@@ -1099,6 +1105,8 @@ CL_LoadClientinfo(clientinfo_t *ci, char *s)
 			Com_sprintf(weapon_filename, sizeof(weapon_filename),
 					"players/%s/%s", model_name, cl_weaponmodels[i]);
 			ci->weaponmodel[i] = R_RegisterModel(weapon_filename);
+			if (ci->weaponmodel[i] && !Q_stricmp(model_name, "soldier"))
+				ci->weapon_soldier_mask |= 1U << i;
 
 			if (!ci->weaponmodel[i] && Q_stricmp(model_name, "soldier"))
 			{
@@ -1106,6 +1114,7 @@ CL_LoadClientinfo(clientinfo_t *ci, char *s)
 				Com_sprintf(weapon_filename, sizeof(weapon_filename),
 						"players/soldier/%s", cl_weaponmodels[i]);
 				ci->weaponmodel[i] = R_RegisterModel(weapon_filename);
+				if (ci->weaponmodel[i]) ci->weapon_soldier_mask |= 1U << i;
 			}
 
 			if (!cl_vwep->value)
@@ -1125,6 +1134,12 @@ CL_LoadClientinfo(clientinfo_t *ci, char *s)
 		}
 	}
 
+	CL_SetClientWeaponColor(ci, skin_name);
+	{
+		struct image_s *body_skin = CL_PlayerBodySkin(model_name, ci);
+		if (body_skin) ci->skin = body_skin;
+	}
+
 	/* must have loaded all data types to be valid */
 	if (!ci->skin || !ci->icon || !ci->model || !ci->weaponmodel[0])
 	{
@@ -1132,6 +1147,8 @@ CL_LoadClientinfo(clientinfo_t *ci, char *s)
 		ci->icon = NULL;
 		ci->model = NULL;
 		ci->weaponmodel[0] = NULL;
+		ci->weapon_soldier_mask = 0;
+		CL_SetClientWeaponColor(ci, "green");
 		return;
 	}
 }

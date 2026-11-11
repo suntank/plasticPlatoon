@@ -1216,6 +1216,8 @@ plastic_tank_turret_think(edict_t *turret)
 	VectorCopy(hull->s.origin, turret->s.origin);
 	turret->s.origin[2] += 24;
 	turret->svflags = hull->svflags & SVF_NOCLIENT;
+	turret->s.renderfx = (turret->s.renderfx & ~(RF_PP_FRIENDLY_COLOR | RF_PP_ENEMY_COLOR)) |
+		(hull->s.renderfx & (RF_PP_FRIENDLY_COLOR | RF_PP_ENEMY_COLOR));
 	if (!(hull->svflags & SVF_NOCLIENT) && plastic_tank_live_enemy(hull) &&
 		visible(hull, hull->enemy))
 	{

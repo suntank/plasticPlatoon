@@ -1,6 +1,7 @@
 #include "cl_splitscreen.h"
 #include "header/performance.h"
 #include "input/header/input.h"
+#include "input/header/aim_assist.h"
 #define client_state_t server_client_state_t
 #include "../server/header/server.h"
 #undef client_state_t
@@ -877,6 +878,15 @@ SS_ParseConfigString(sizebuf_t *msg)
 
 	value = MSG_ReadString(msg);
 	Q_strlcpy(cl.configstrings[index], value, sizeof(cl.configstrings[index]));
+	/* Every local connection receives the same reliable broadcast. A
+	 * secondary can receive it before the primary, whose parser compares the
+	 * shared configstring to detect changes. Refresh against the loaded
+	 * clientinfo instead so packet order cannot leave body/weapon colors stale. */
+	if (cl.refresh_prepped && index >= CS_PLAYERSKINS && index < CS_PLAYERSKINS + MAX_CLIENTS &&
+		strcmp(cl.clientinfo[index - CS_PLAYERSKINS].cinfo, cl.configstrings[index]))
+	{
+		CL_ParseClientinfo(index - CS_PLAYERSKINS);
+	}
 }
 
 static void
@@ -1302,6 +1312,8 @@ SS_ClearSlotSnapshot(ss_local_player_t *slot)
 	}
 
 	slot->snapshot_valid = false;
+	slot->gb_crouched = false;
+	memset(&slot->gb_autolevel, 0, sizeof(slot->gb_autolevel));
 	slot->servercount = 0;
 	slot->playernum = -1;
 	slot->parse_entities_num = 0;
@@ -1927,11 +1939,13 @@ SS_GetViewportScale(const ss_viewport_t *viewport, float base_scale)
 }
 
 static void
-SS_DrawViewportCrosshair(const ss_viewport_t *viewport, float scale)
+SS_DrawViewportCrosshair(const ss_viewport_t *viewport, const player_state_t *ps, float scale)
 {
 	char crosshair_pic[MAX_QPATH];
 	int crosshair_width;
 	int crosshair_height;
+	float assist_x, assist_y;
+	float fov_x;
 
 	if (!viewport || scale <= 0.0f || !crosshair->value)
 	{
@@ -1964,8 +1978,12 @@ SS_DrawViewportCrosshair(const ss_viewport_t *viewport, float scale)
 		scale = SS_GetViewportScale(viewport, scale);
 	}
 
-	Draw_PicScaled(viewport->x + (viewport->w - crosshair_width * scale) / 2,
-		viewport->y + (viewport->h - crosshair_height * scale) / 2,
+	fov_x = isfinite(ps->fov) && ps->fov > 1 && ps->fov < 179 ? ps->fov : 90;
+	PP_AimAssistReticle(ps, viewport->w, viewport->h, fov_x,
+		CalcFov(fov_x, (float)viewport->w, (float)viewport->h),
+		Cvar_VariableValue("cl_aimassist") > 0, &assist_x, &assist_y);
+	Draw_PicScaled(viewport->x + (viewport->w - crosshair_width * scale) / 2 + (int)assist_x,
+		viewport->y + (viewport->h - crosshair_height * scale) / 2 + (int)assist_y,
 		crosshair_pic, scale);
 }
 
@@ -2178,7 +2196,8 @@ SS_IsSlotADSActive(int slot_index, const player_state_t *ps)
 		return false;
 	}
 
-	overlay_pic = SS_GetADSOverlayPicName(ps);
+	overlay_pic = CL_PlayerADSPic(CL_ColorClientinfo(slot ? slot->playernum : cl.playernum),
+		SS_GetADSOverlayPicName(ps));
 	return overlay_pic && Draw_FindPic(overlay_pic) != NULL;
 }
 
@@ -2387,7 +2406,8 @@ SS_DrawViewportADSOverlay(int slot_index, const ss_viewport_t *viewport,
 		return false;
 	}
 
-	overlay_pic = SS_GetADSOverlayPicName(ps);
+	overlay_pic = CL_PlayerADSPic(CL_ColorClientinfo(slot ? slot->playernum : cl.playernum),
+		SS_GetADSOverlayPicName(ps));
 
 	if (!overlay_pic)
 	{
@@ -2481,6 +2501,8 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 	{
 		return;
 	}
+	gun.skin = CL_PlayerWeaponSkin(CL_ColorClientinfo(slot ? slot->playernum : cl.playernum),
+		cl.configstrings[CS_MODELS + ps->gunindex]);
 
 	ops = SS_GetPreviousPlayerState(slot, ps);
 	lerp = SS_GetSlotViewLerp(slot);
@@ -2786,6 +2808,8 @@ SS_NormalizeAxis(int value, float deadzone)
 static void
 SS_BuildSlotCmd(ss_local_player_t *slot)
 {
+	vec3_t before_look;
+	float look_scale;
 	float move_x;
 	float move_y;
 	float look_x;
@@ -2825,6 +2849,8 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	move_y = SS_NormalizeAxis(slot->axis_left_y, left_deadzone);
 	look_x = SS_NormalizeAxis(slot->axis_right_x, right_deadzone);
 	look_y = SS_NormalizeAxis(slot->axis_right_y, right_deadzone);
+	VectorCopy(slot->viewangles, before_look);
+	look_scale = PP_ADSLookScale(slot->ads_down, Cvar_VariableValue("cl_ads_sensitivity"));
 
 	slot->viewangles[YAW] -= look_x * Cvar_VariableValue("joy_yawspeed") * cls.nframetime;
 	slot->viewangles[PITCH] += look_y * Cvar_VariableValue("joy_pitchspeed") * cls.nframetime;
@@ -2832,14 +2858,47 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 		cl_yawspeed->value * cls.nframetime;
 	slot->viewangles[PITCH] += (slot->lookdown_down - slot->lookup_down) *
 		cl_pitchspeed->value * cls.nframetime;
+	if (!slot->gb_modifier_down)
+	{
+		slot->viewangles[YAW] += (slot->gb_left_down - slot->gb_right_down) *
+			cl_yawspeed->value * cls.nframetime;
+		if (slot->ads_down)
+		{
+			slot->viewangles[PITCH] += (slot->gb_down_down - slot->gb_up_down) *
+				Cvar_VariableValue("joy_pitchspeed") * cls.nframetime;
+		}
+	}
+	PP_ScaleADSLook(before_look, slot->viewangles, look_scale);
+	PP_UpdateADSLevel(&slot->gb_autolevel, slot->viewangles, slot->ads_down,
+		Cvar_VariableValue("cl_gamebird_autolevel") > 0 &&
+		!slot->menu_open && cls.key_dest == key_game &&
+		(!slot->snapshot_valid || slot->frame.playerstate.pmove.pm_type < PM_DEAD),
+		fabsf(slot->viewangles[PITCH] - before_look[PITCH]) > 0.0001f,
+		slot->snapshot_valid ? SS_GetDeltaAngle(&slot->frame.playerstate, PITCH) : 0,
+		cls.nframetime, Cvar_VariableValue("cl_gamebird_autolevel_time"));
+	PP_AimAssistADS(slot->viewangles, slot->snapshot_valid ? &slot->frame.playerstate : NULL,
+		cls.nframetime, Cvar_VariableValue("cl_aimassist_strength"),
+		Cvar_VariableValue("cl_aimassist_speed"), slot->device_index >= 2 &&
+		slot->ads_down && !slot->menu_open && cls.key_dest == key_game &&
+		Cvar_VariableValue("cl_aimassist") > 0);
 	SS_ClampSlotPitch(slot, slot->snapshot_valid ? &slot->frame.playerstate : NULL);
 
 	cmd->angles[PITCH] = ANGLE2SHORT(slot->viewangles[PITCH]);
 	cmd->angles[YAW] = ANGLE2SHORT(slot->viewangles[YAW]);
 	cmd->angles[ROLL] = ANGLE2SHORT(slot->viewangles[ROLL]);
+	if (slot->device_index >= 2 && !slot->menu_open &&
+		Cvar_VariableValue("cl_aimassist") > 0)
+	{
+		cmd->buttons |= BUTTON_GAMEPAD;
+	}
 
 	cmd->forwardmove = (short)((slot->forward_down - slot->back_down) * cl_forwardspeed->value);
 	cmd->sidemove = (short)((slot->moveright_down - slot->moveleft_down) * cl_sidespeed->value);
+	if (!slot->gb_modifier_down && !slot->ads_down)
+	{
+		cmd->forwardmove += (slot->gb_up_down - slot->gb_down_down) *
+			cl_forwardspeed->value;
+	}
 
 	if ((slot->speed_down ? 1 : 0) ^ (int)(cl_run->value))
 	{
@@ -2858,7 +2917,12 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 		cmd->upmove += cl_upspeed->value;
 	}
 
-	if (slot->crouch_down)
+	if (slot->snapshot_valid && slot->frame.playerstate.pmove.pm_type >= PM_DEAD)
+	{
+		slot->gb_crouched = false;
+	}
+
+	if (slot->crouch_down || slot->gb_crouched)
 	{
 		cmd->upmove -= cl_upspeed->value;
 	}
@@ -3405,6 +3469,9 @@ SS_DrawViewportHUD(int slot_index)
 			ps->stats[STAT_TIMER_ICON], "TM", ps->stats[STAT_TIMER], scale);
 	}
 
+	SCR_DrawGrenadeHUD(ps, right_x,
+		viewport->y + margin + header_height + 2 * line_height, scale);
+
 	if (ps->stats[STAT_SELECTED_ICON] > 0)
 	{
 		int selected_icon_w = 0;
@@ -3445,7 +3512,7 @@ SS_DrawViewportHUD(int slot_index)
 
 	if (!ads_active && !inventory_open)
 	{
-		SS_DrawViewportCrosshair(viewport, scale);
+		SS_DrawViewportCrosshair(viewport, ps, scale);
 	}
 
 	if (inventory_open)
@@ -3613,6 +3680,7 @@ SS_SetDeviceLabel(int device_index, const char *label)
 static void
 SS_ClearSlotDeviceInput(ss_local_player_t *slot)
 {
+	memset(&slot->gb_autolevel, 0, sizeof(slot->gb_autolevel));
 	slot->axis_left_x = 0;
 	slot->axis_left_y = 0;
 	slot->axis_right_x = 0;
@@ -3633,6 +3701,11 @@ SS_ClearSlotDeviceInput(ss_local_player_t *slot)
 	slot->turnright_down = false;
 	slot->lookup_down = false;
 	slot->lookdown_down = false;
+	slot->gb_up_down = false;
+	slot->gb_down_down = false;
+	slot->gb_left_down = false;
+	slot->gb_right_down = false;
+	slot->gb_modifier_down = false;
 	slot->exit_hold_active = false;
 	slot->exit_hold_start = 0;
 }
@@ -4102,6 +4175,7 @@ SS_BeginSession(void)
 		memset(slot->parse_entities, 0, sizeof(slot->parse_entities));
 		VectorCopy(cl.viewangles, slot->viewangles);
 		SS_ClearSlotDeviceInput(slot);
+		slot->gb_crouched = false;
 		slot->ads_active = false;
 		slot->last_gunindex = 0;
 		slot->muzzle_flash_seq = 0;
@@ -4152,6 +4226,7 @@ SS_EndSession(void)
 		memset(&ss_state.slots[i].cmd, 0, sizeof(ss_state.slots[i].cmd));
 		VectorClear(ss_state.slots[i].viewangles);
 		SS_ClearSlotDeviceInput(&ss_state.slots[i]);
+		ss_state.slots[i].gb_crouched = false;
 		ss_state.slots[i].ads_active = false;
 		ss_state.slots[i].last_gunindex = 0;
 		ss_state.slots[i].muzzle_flash_seq = 0;
@@ -4397,13 +4472,54 @@ SS_HandleGameplayKey(int key, qboolean down)
 		return true;
 	}
 
+	/* Handheld mode controls remain per player, including their toggle and
+	 * one-shot actions. They must never enter the primary command buffer. */
+	if (!strcmp(binding, "+gb_up"))
+	{
+		if (down && !slot->gb_up_down && slot->gb_modifier_down)
+		{
+			SS_SendSlotStringCmdNow(slot, "help");
+		}
+		slot->gb_up_down = down;
+		return true;
+	}
+	if (!strcmp(binding, "+gb_down"))
+	{
+		if (down && !slot->gb_down_down && slot->gb_modifier_down)
+		{
+			slot->gb_crouched = !slot->gb_crouched;
+		}
+		slot->gb_down_down = down;
+		return true;
+	}
+	if (!strcmp(binding, "+gb_left") || !strcmp(binding, "+gb_right"))
+	{
+		qboolean left = !strcmp(binding, "+gb_left");
+		qboolean *held = left ? &slot->gb_left_down : &slot->gb_right_down;
+		if (down && !*held && slot->gb_modifier_down)
+		{
+			SS_SendSlotStringCmdNow(slot, left ? "weapprev" : "weapnext");
+		}
+		*held = down;
+		return true;
+	}
+	if (!strcmp(binding, "+moveup"))
+	{
+		if (down)
+		{
+			slot->gb_crouched = false;
+		}
+		slot->jump_down = down;
+		return true;
+	}
+
 #define SS_HELD_BINDING(command, field) \
 	if (!strcmp(binding, command)) { slot->field = down; return true; }
+	SS_HELD_BINDING("+gb_modifier", gb_modifier_down)
 	SS_HELD_BINDING("+attack", attack_down)
 	SS_HELD_BINDING("+ads", ads_down)
 	SS_HELD_BINDING("+use", use_down)
 	SS_HELD_BINDING("+speed", speed_down)
-	SS_HELD_BINDING("+moveup", jump_down)
 	SS_HELD_BINDING("+movedown", crouch_down)
 	SS_HELD_BINDING("+forward", forward_down)
 	SS_HELD_BINDING("+back", back_down)
@@ -4465,8 +4581,15 @@ SS_AddDeviceMouseMotion(int device_index, float yaw, float pitch)
 
 	if (!slot->menu_open && slot->state != SS_SLOT_DROPPED && cls.key_dest == key_game)
 	{
-		slot->viewangles[YAW] += yaw;
-		slot->viewangles[PITCH] += pitch;
+		float look_scale = PP_ADSLookScale(slot->ads_down,
+			Cvar_VariableValue("cl_ads_sensitivity"));
+		slot->viewangles[YAW] += yaw * look_scale;
+		slot->viewangles[PITCH] += pitch * look_scale;
+		if (fabsf(pitch) > 0.0001f)
+		{
+			slot->gb_autolevel.active = false;
+			slot->gb_autolevel.manual_pitch_pending = true;
+		}
 		SS_ClampSlotPitch(slot, slot->snapshot_valid ? &slot->frame.playerstate : NULL);
 	}
 

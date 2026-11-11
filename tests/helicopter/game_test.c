@@ -8,6 +8,7 @@ extern void SP_monster_plastic_helicopter(edict_t *self);
 extern void M_MoveFrame(edict_t *self);
 extern void plastic_helicopter_machineguns(edict_t *self);
 extern void plastic_helicopter_rockets(edict_t *self);
+extern void plastic_helicopter_sync_rotor(edict_t *rotor);
 
 #include "../vehicle_objectives/targets.h"
 
@@ -204,10 +205,14 @@ static void test_spawn_and_rotors(void)
     assert(self->solid == SOLID_BBOX && self->movetype == MOVETYPE_STEP);
     assert(self->flags & FL_FLY);
     assert(self->svflags & SVF_MONSTER);
+    assert(self->s.renderfx & RF_PP_ENEMY_COLOR);
     assert(level.total_monsters == 1);
     assert(self->monsterinfo.stand && self->monsterinfo.walk && self->monsterinfo.run);
     assert(self->monsterinfo.attack && self->monsterinfo.checkattack && self->pain && self->die);
     assert(main && tail && main != tail);
+    assert((main->s.renderfx & RF_PP_ENEMY_COLOR) && (tail->s.renderfx & RF_PP_ENEMY_COLOR));
+    assert(main->s.skinnum == self->s.number && tail->s.skinnum == self->s.number);
+    assert(main->s.frame == (int)main->speed && tail->s.frame == (int)tail->speed);
     assert(main->s.modelindex != self->s.modelindex && tail->s.modelindex != main->s.modelindex);
     assert(main->solid == SOLID_NOT && tail->solid == SOLID_NOT);
     assert(!(main->svflags & SVF_MONSTER) && !(tail->svflags & SVF_MONSTER));
@@ -226,6 +231,35 @@ static void test_spawn_and_rotors(void)
     VectorMA(expected, -8, right, expected);
     VectorMA(expected, 16, up, expected);
     for (i = 0; i < 3; i++) assert(fabsf(tail->s.origin[i] - expected[i]) < .02f);
+
+    /* Physics can move the body after an attachment's think, for example
+     * when an edict slot is reused or the wreck is falling. */
+    VectorSet(self->s.origin, 160, -35, 240);
+    VectorSet(self->s.angles, 20, 150, 30);
+    plastic_helicopter_sync_rotor(main);
+    plastic_helicopter_sync_rotor(tail);
+    AngleVectors(self->s.angles, forward, right, up);
+    VectorMA(self->s.origin, 48, up, expected);
+    for (i = 0; i < 3; i++) assert(fabsf(main->s.origin[i] - expected[i]) < .02f);
+    VectorMA(self->s.origin, -88, forward, expected);
+    VectorMA(expected, -8, right, expected);
+    VectorMA(expected, 16, up, expected);
+    for (i = 0; i < 3; i++) assert(fabsf(tail->s.origin[i] - expected[i]) < .02f);
+    assert(main->s.frame == (int)main->speed); /* Sync does not advance spin. */
+
+    /* Ownership follows the body without discarding unrelated lighting bits. */
+    main->s.renderfx |= RF_GLOW;
+    self->s.renderfx = (self->s.renderfx & ~RF_PP_ENEMY_COLOR) | RF_PP_FRIENDLY_COLOR;
+    plastic_helicopter_sync_rotor(main);
+    plastic_helicopter_sync_rotor(tail);
+    assert((main->s.renderfx & RF_PP_FRIENDLY_COLOR) && (tail->s.renderfx & RF_PP_FRIENDLY_COLOR));
+    assert(!(main->s.renderfx & RF_PP_ENEMY_COLOR) && !(tail->s.renderfx & RF_PP_ENEMY_COLOR));
+    assert(main->s.renderfx & RF_GLOW);
+    self->s.renderfx = (self->s.renderfx & ~RF_PP_FRIENDLY_COLOR) | RF_PP_ENEMY_COLOR;
+    plastic_helicopter_sync_rotor(main);
+    plastic_helicopter_sync_rotor(tail);
+    assert((main->s.renderfx & RF_PP_ENEMY_COLOR) && !(main->s.renderfx & RF_PP_FRIENDLY_COLOR));
+    assert((tail->s.renderfx & RF_PP_ENEMY_COLOR) && !(tail->s.renderfx & RF_PP_FRIENDLY_COLOR));
 }
 static float angle_delta(float a, float b)
 {

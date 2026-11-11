@@ -19,6 +19,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include "header/local.h"
+#include "../color_pic_cache.h"
+
+static pp_color_pic_cache_t color_pic_cache;
+
+static void
+R_ReleaseColorPicture(void *ptr)
+{
+	image_t *image = ptr;
+	if (image->type != it_pic || !PP_IsColorADSPicture(image->name)) return;
+	free(image->pixels[0]);
+	memset(image, 0, sizeof(*image));
+}
 
 #define	MAX_RIMAGES	1024
 static image_t		*r_whitetexture_mip = NULL;
@@ -542,6 +554,7 @@ R_FindImage(const char *originname, imagetype_t type)
 		if (!strcmp(name, image->name))
 		{
 			image->registration_sequence = registration_sequence;
+			PP_TouchColorPicture(&color_pic_cache, image, name, R_ReleaseColorPicture);
 			return image;
 		}
 	}
@@ -551,6 +564,7 @@ R_FindImage(const char *originname, imagetype_t type)
 	//
 	image = (image_t *)R_LoadImage(name, namewe, ext, type,
 		r_retexturing->value, (loadimage_t)R_LoadPic);
+	PP_TouchColorPicture(&color_pic_cache, image, name, R_ReleaseColorPicture);
 
 	if (!image && r_validation->value)
 	{
@@ -691,6 +705,7 @@ R_InitImages
 void
 R_InitImages (void)
 {
+	memset(&color_pic_cache, 0, sizeof(color_pic_cache));
 	unsigned char * table16to8;
 	registration_sequence = 1;
 	image_max = 0;

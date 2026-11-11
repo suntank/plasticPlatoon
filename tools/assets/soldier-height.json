@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "scale": 1.2,
+  "foot_z": -24,
+  "reason": "Lift enemy soldier standing heads above player eye level so the horizontal reticle meets the upper chest. Uniform scale preserves lighting normals and articulated weapon grip alignment; feet and navigation footprint remain fixed."
+}

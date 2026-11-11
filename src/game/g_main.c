@@ -92,6 +92,8 @@ cvar_t *g_quick_weap;
 cvar_t *g_swap_speed;
 
 static void G_RunFrame(void);
+void plastic_helicopter_rotor_think(edict_t *rotor);
+void plastic_helicopter_sync_rotor(edict_t *rotor);
 
 /* =================================================================== */
 
@@ -481,6 +483,13 @@ G_RunFrame(void)
 		}
 
 		level.current_entity = ent;
+		/* Refresh ownership for old saves and actors whose allegiance changes. */
+		if (!ent->client && (ent->svflags & SVF_MONSTER))
+		{
+			ent->s.renderfx &= ~(RF_PP_FRIENDLY_COLOR | RF_PP_ENEMY_COLOR);
+			ent->s.renderfx |= (ent->monsterinfo.aiflags & AI_GOOD_GUY) ?
+				RF_PP_FRIENDLY_COLOR : RF_PP_ENEMY_COLOR;
+		}
 
 		VectorCopy(ent->s.origin, ent->s.old_origin);
 
@@ -504,6 +513,15 @@ G_RunFrame(void)
 		}
 
 		G_RunEntity(ent);
+	}
+
+	/* Attachments must follow the final body pose regardless of edict order. */
+	for (i = 0, ent = g_edicts; i < globals.num_edicts; i++, ent++)
+	{
+		if (ent->inuse && ent->think == plastic_helicopter_rotor_think)
+		{
+			plastic_helicopter_sync_rotor(ent);
+		}
 	}
 
 	/* see if it is time to end a deathmatch */

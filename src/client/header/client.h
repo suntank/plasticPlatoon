@@ -100,7 +100,19 @@ typedef struct
 	struct model_s	*model_pistol;
 
 	struct model_s	*weaponmodel[MAX_CLIENTWEAPONMODELS];
+	char weaponcolor[MAX_QPATH];
+	unsigned int weapon_soldier_mask; /* generated skins require project weapon UVs */
 } clientinfo_t;
+
+void CL_ClearColorSkins(void);
+void CL_SetClientWeaponColor(clientinfo_t *ci, const char *skin_name);
+const clientinfo_t *CL_ColorClientinfo(int playernum);
+struct image_s *CL_PlayerWeaponSkin(const clientinfo_t *ci, const char *model_path);
+struct image_s *CL_PlayerBodySkin(const char *model_name, const clientinfo_t *ci);
+struct image_s *CL_PlayerLinkedWeaponSkin(const clientinfo_t *owner,
+	const clientinfo_t *source, int weapon);
+struct image_s *CL_EnemyModelSkin(const char *model_path, int skinnum, int renderfx);
+const char *CL_PlayerADSPic(const clientinfo_t *ci, const char *base_pic);
 
 typedef struct
 {
@@ -539,11 +551,15 @@ typedef struct
 extern 	kbutton_t 	in_strafe;
 
 void CL_InitInput (void);
+qboolean CL_IsADSHeld(void);
+float CL_ADSLookScale(void);
 void CL_RefreshCmd(void);
 void CL_SendCmd (void);
 void CL_RefreshMove(void);
 
 void CL_ClearState (void);
+void CL_ClearGameBirdInput(void);
+void CL_ReleaseGameBirdKeys(void);
 
 void CL_ReadPackets (void);
 
