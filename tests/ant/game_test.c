@@ -13,6 +13,10 @@ static cvar_t zero, one, max_clients;
 static int blocked_sight, blocked_shots, shot_traces, links;
 static char models[64][MAX_QPATH];
 static int model_count;
+static char sounds[64][MAX_QPATH];
+static int sound_count, sound_calls, played_sound, sound_channel;
+static float sound_volume, sound_attenuation, sound_offset;
+static int solid_floor, blocked_movement;
 
 
 static int model_index(char *name)
@@ -25,13 +29,24 @@ static int model_index(char *name)
     return model_count;
 }
 
-static int sound_index(char *name) { (void)name; return 1; }
+static int sound_index(char *name)
+{
+    int i;
+    for (i = 1; i <= sound_count; ++i)
+        if (!strcmp(sounds[i], name)) return i;
+    assert(sound_count + 1 < 64);
+    snprintf(sounds[++sound_count], MAX_QPATH, "%s", name);
+    return sound_count;
+}
 static void set_model(edict_t *ent, char *name) { ent->s.modelindex = model_index(name); }
 static void sound_effect(edict_t *ent, int channel, int index,
         float volume, float attenuation, float offset)
 {
-    (void)ent; (void)channel; (void)index;
-    (void)volume; (void)attenuation; (void)offset;
+    (void)ent;
+    assert(index > 0 && index <= sound_count);
+    ++sound_calls;
+    played_sound = index; sound_channel = channel;
+    sound_volume = volume; sound_attenuation = attenuation; sound_offset = offset;
 }
 
 static void link_entity(edict_t *ent)
@@ -59,6 +74,12 @@ static trace_t trace_world(vec3_t start, vec3_t mins, vec3_t maxs,
     trace.fraction = 1;
     trace.plane.normal[2] = 1;
     VectorCopy(end, trace.endpos);
+    if (solid_floor && mask == MASK_MONSTERSOLID) {
+        trace.fraction = 0.5f;
+        trace.endpos[2] = 24;
+        trace.ent = &g_edicts[0];
+        trace.allsolid = blocked_movement;
+    }
     if (mask == MASK_SHOT) { shot_traces++; trace.fraction = 0.5f; trace.ent = &g_edicts[1]; }
     if ((blocked_sight && mask == MASK_OPAQUE) ||
             (blocked_shots && mask == MASK_SHOT))
@@ -69,7 +90,7 @@ static trace_t trace_world(vec3_t start, vec3_t mins, vec3_t maxs,
     return trace;
 }
 
-static int point_contents(vec3_t point) { (void)point; return 0; }
+static int point_contents(vec3_t point) { return solid_floor && point[2] < 0 ? CONTENTS_SOLID : 0; }
 static void write_byte(int value) { (void)value; }
 static void write_short(int value) { (void)value; }
 static void write_vector(vec3_t value) { (void)value; }
@@ -121,6 +142,8 @@ static edict_t *spawn_ant(void)
     return ant;
 }
 
+#include "../insect_sounds/checks.h"
+
 int main(int argc, char **argv)
 {
     edict_t *ant, *enemy;
@@ -140,6 +163,7 @@ int main(int argc, char **argv)
     game.maxclients = 1; game.maxentities = 64;
     game.clients = calloc(game.maxclients, sizeof(*game.clients));
     g_edicts = calloc(game.maxentities, sizeof(*g_edicts));
+    check_insect_sounds(spawn_ant, "ant", 10, argv[1]);
     ant = spawn_ant(); enemy = ant->enemy;
     assert(ant->svflags & SVF_MONSTER);
     assert(!strcmp(models[ant->s.modelindex], "models/monsters/ant/tris.md2"));

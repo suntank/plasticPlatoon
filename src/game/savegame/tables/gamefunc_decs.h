@@ -26,6 +26,8 @@
  */
 
 extern void SP_monster_ant ( edict_t * self ) ;
+extern void ant_idle ( edict_t * self ) ;
+extern void ant_sight ( edict_t * self , edict_t * other ) ;
 extern void ant_stand ( edict_t * self ) ;
 extern void ant_walk ( edict_t * self ) ;
 extern void ant_run ( edict_t * self ) ;
@@ -34,6 +36,7 @@ extern void ant_pain ( edict_t * self , edict_t * other , float kick , int damag
 extern void ant_die ( edict_t * self , edict_t * inflictor , edict_t * attacker , int damage , vec3_t point ) ;
 extern void ant_dead ( edict_t * self ) ;
 extern void SP_monster_spider ( edict_t * self ) ;
+extern void spider_idle ( edict_t * self ) ;
 extern void spider_stand ( edict_t * self ) ;
 extern void spider_walk ( edict_t * self ) ;
 extern void spider_run ( edict_t * self ) ;

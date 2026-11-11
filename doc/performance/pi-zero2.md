@@ -25,7 +25,7 @@ On Raspberry Pi OS, install the development packages available for the installed
 release, then build as the ordinary user:
 
 ```sh
-sudo apt-get install build-essential python3 pkg-config libsdl2-dev libgl-dev libgles-dev \
+sudo apt-get install build-essential python3 python3-pil pkg-config libsdl2-dev libgl-dev libgles-dev \
   libvulkan-dev libopenal-dev libcurl4-openssl-dev zlib1g-dev
 make -j2 VERBOSE=1 pi > build-pi.log 2>&1
 ```

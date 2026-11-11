@@ -493,6 +493,8 @@ assets:
 	python3 tools/assets/build_bootstrap.py
 	python3 tools/assets/build_support_sounds.py
 	python3 tools/assets/import_enemy_sounds.py --verify
+	python3 tools/assets/import_soldier_callouts.py --verify
+	python3 tools/assets/import_insect_sounds.py --verify
 	python3 tools/assets/build_support_models.py
 	python3 tools/assets/build_color_variants.py
 	python3 tools/assets/build_overlay.py --output "$(BINDIR)/baseq2/plastic-platoon.pk3"

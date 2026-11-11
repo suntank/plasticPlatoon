@@ -87,6 +87,9 @@ manifest identifies synthesized placeholders separately from those recordings.
 The six supplied ElevenLabs soldier clips and reproducible mono conversions are
 recorded in `enemy-sounds-manifest.json`; `import_enemy_sounds.py --verify` checks
 them during both Make and CMake asset builds. See `SOLDIER-SOUNDS.md`.
+Eight additional alert takes, their MP3 exports and decoded WAV sources are
+recorded in `soldier-callouts-manifest.json`; `import_soldier_callouts.py --verify`
+checks them during both build systems without needing an MP3 decoder.
 
 ## Player colors and enemy variants
 
@@ -186,3 +189,9 @@ See [the cleanup record](STANDALONE.md) for backups, test results and remaining
 presentation/platform limitations. Historical offline model comparisons are
 retained because they show project artwork; stock-map/runtime screenshots were
 removed from the public source.
+
+## Ant and spider audio
+
+See [insect sound sources and rebuild checks](INSECT-SOUNDS.md). The eighteen
+approved effects are reproduced and checked by `import_insect_sounds.py`;
+both build systems verify them before packaging. Spider sight remains silent.

@@ -12,7 +12,7 @@ See [the cleanup and verification record](tools/assets/STANDALONE.md) and
 
 ## Build and play
 
-On a Linux development machine with a C compiler, Make, Python 3, SDL2 headers
+On a Linux development machine with a C compiler, Make, Python 3 with Pillow, SDL2 headers
 and the renderer dependencies installed:
 
 ```sh

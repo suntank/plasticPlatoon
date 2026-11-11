@@ -1272,6 +1272,24 @@ ReadLevel(const char *filename)
 			continue;
 		}
 
+		/* Older saves predate the insects' idle and alert callbacks. Keep
+		 * their entity layout and combat state intact; only fill missing
+		 * audio hooks. Spider sight deliberately stays silent. */
+		if (ent->classname && (ent->svflags & SVF_MONSTER))
+		{
+			if (!strcmp(ent->classname, "monster_ant"))
+			{
+				if (!ent->monsterinfo.idle) ent->monsterinfo.idle = ant_idle;
+				if (!ent->monsterinfo.search) ent->monsterinfo.search = ant_idle;
+				if (!ent->monsterinfo.sight) ent->monsterinfo.sight = ant_sight;
+			}
+			else if (!strcmp(ent->classname, "monster_spider"))
+			{
+				if (!ent->monsterinfo.idle) ent->monsterinfo.idle = spider_idle;
+				if (!ent->monsterinfo.search) ent->monsterinfo.search = spider_idle;
+			}
+		}
+
 		/* fire any cross-level triggers */
 		if (ent->classname)
 		{

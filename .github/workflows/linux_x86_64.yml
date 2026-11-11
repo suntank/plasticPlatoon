@@ -30,7 +30,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install libgl1-mesa-dev libopenal-dev libcurl4-openssl-dev \
-            build-essential python3
+            build-essential python3 python3-pil libsdl2-dev
     - name: Build SDL3
       uses: libsdl-org/setup-sdl@main
       with:
@@ -53,6 +53,21 @@ jobs:
     - name: Run production regressions
       run: |
         python3 -m unittest discover -s tests/performance -p 'test_*.py' -v
+        python3 tests/assets/test_insect_sounds.py
+        python3 -m unittest tests/assets/test_color_variants.py tests/assets/test_soldier_height.py
+        sh tests/input/run_gamebird_tests.sh
+        sh tests/input/run_ads_flick_tests.sh
+        sh tests/input/run_aim_assist_client_tests.sh
+        sh tests/input/run_aim_assist_server_tests.sh
+        sh tests/input/run_color_skins_tests.sh
+        sh tests/input/run_event_tests.sh
+        sh tests/renderers/run_color_pic_cache_tests.sh
+        sh tests/splitscreen/run_state_tests.sh
+        sh tests/screen_image/run_gamebird_hud_tests.sh
+        sh tests/hud/run_tests.sh
+        sh tests/ant/run_tests.sh
+        sh tests/spider/run_tests.sh
+        TEST_CFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" sh tests/insect_sounds/run_wave_tests.sh
         python3 tests/run_renderer_tests.py --sanitize
         TEST_CFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" sh tests/performance/run_effects_tests.sh
         TEST_CFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" sh tests/screen_image/run_tests.sh
