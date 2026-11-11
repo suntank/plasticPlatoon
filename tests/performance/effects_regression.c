@@ -30,6 +30,8 @@ static edict_t test_edicts[4];
 static cvar_t zero = {.string = "0", .value = 0};
 static cvar_t one = {.string = "1", .value = 1};
 static cvar_t three = {.string = "3", .value = 3};
+static cvar_t renderer = {.string = "gl1"};
+cvar_t *vid_renderer = &renderer;
 cvar_t *cl_paused = &zero, *cl_r1q2_lightstyle = &zero;
 cvar_t *cl_limitsparksounds = &zero, *cl_laseralpha = &one;
 cvar_t *maxclients = &three, *hand = &zero, *cl_vwep = &one;
@@ -61,6 +63,11 @@ void V_AddLight(vec3_t org, float intensity, float r, float g, float b) { (void)
 struct model_s *R_RegisterModel(const char *name) { snprintf(last_model_name,sizeof(last_model_name),"%s",name); return (struct model_s *)(uintptr_t)1; }
 struct image_s *R_RegisterSkin(const char *name) { (void)name; return (struct image_s *)(uintptr_t)1; }
 struct image_s *Draw_FindPic(const char *name) { (void)name; return (struct image_s *)(uintptr_t)1; }
+/* Material selection is covered by color_skins_test; this fixture stubs
+ * graphics resources while exercising the real effect submission paths. */
+struct image_s *CL_EnemyModelSkin(const char *path, int skin, int flags) { (void)path; (void)skin; (void)flags; return NULL; }
+struct image_s *CL_PlayerWeaponSkin(const clientinfo_t *ci, const char *path) { (void)ci; (void)path; return NULL; }
+struct image_s *CL_PlayerLinkedWeaponSkin(const clientinfo_t *owner, const clientinfo_t *source, int weapon) { (void)owner; (void)source; (void)weapon; return NULL; }
 struct sfx_s *S_RegisterSound(const char *name) { snprintf(last_sound_name,sizeof(last_sound_name),"%s",name); return (struct sfx_s *)(uintptr_t)1; }
 void S_StartSound(vec3_t org, int entnum, int channel, struct sfx_s *sfx, float volume, float attenuation, float offset) { (void)org;(void)entnum;(void)channel;(void)sfx;(void)volume;(void)attenuation;(void)offset; ++sound_calls; }
 int CM_PointLeafnum(vec3_t p) { return (int)p[0]; }

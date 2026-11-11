@@ -27,6 +27,11 @@ jobs:
     strategy:
       fail-fast: false
     steps:
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.13'
+    - name: Install asset Python dependencies
+      run: python -m pip install "Pillow==12.3.0"
     - name: Install build dependencies
       run: |
         # Download and extract dhewm3-libs
@@ -47,7 +52,7 @@ jobs:
         # build with cmake and visual studio
         #echo $PWD # /d/a/dhewm3/dhewm3
         # NOTE: not setting -G "Visual Studio 17 2022" so it just uses the default VS version it can find
-        cmake -A Win32 -DSDL3_SUPPORT=OFF -DYQUAKE2LIBS="../dhewm3-libs-master/i686-w64-mingw32/" -S . -B build
+        cmake -A Win32 -DSDL3_SUPPORT=OFF -DPython3_EXECUTABLE="$(python -c 'import sys; print(sys.executable)')" -DYQUAKE2LIBS="../dhewm3-libs-master/i686-w64-mingw32/" -S . -B build
         time cmake --build build/ --config RelWithDebInfo
     - name: Create testbuild package
       run: |
@@ -100,6 +105,11 @@ jobs:
     strategy:
       fail-fast: false
     steps:
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.13'
+    - name: Install asset Python dependencies
+      run: python -m pip install "Pillow==12.3.0"
     - name: Install build dependencies
       run: |
         # Download and extract dhewm3-libs
@@ -120,7 +130,7 @@ jobs:
       run: |
         # build with cmake and visual studio
         # NOTE: not setting -G "Visual Studio 17 2022" so it just uses the default VS version it can find
-        cmake -A x64 -DSDL3_SUPPORT=OFF -DYQUAKE2LIBS="../dhewm3-libs-master/x86_64-w64-mingw32/" -S . -B build
+        cmake -A x64 -DSDL3_SUPPORT=OFF -DPython3_EXECUTABLE="$(python -c 'import sys; print(sys.executable)')" -DYQUAKE2LIBS="../dhewm3-libs-master/x86_64-w64-mingw32/" -S . -B build
         time cmake --build build/ --config RelWithDebInfo
     - name: Create testbuild package
       run: |

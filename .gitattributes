@@ -1,0 +1,3 @@
+# Hash-pinned asset metadata and generators must keep identical checkout bytes.
+*.json text eol=lf
+*.py text eol=lf
