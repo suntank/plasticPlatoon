@@ -489,6 +489,7 @@ assets:
 	python3 tools/assets/build_bootstrap.py
 	python3 tools/assets/build_support_sounds.py
 	python3 tools/assets/import_enemy_sounds.py --verify
+	python3 tools/assets/import_soldier_callouts.py --verify
 	python3 tools/assets/build_support_models.py
 	python3 tools/assets/build_overlay.py --output "$(BINDIR)/baseq2/plastic-platoon.pk3"
 	cp baseq2/operation-heavy-test.pk3 baseq2/operation-rocket-test.pk3 baseq2/operation-tank-test.pk3 baseq2/operation-helicopter-test.pk3 "$(BINDIR)/baseq2/"

@@ -63,6 +63,43 @@ redistribution licensing have not been independently verified.
 
 ## Rebuild and verify
 
+### Additional alert variations (2026-11-11)
+
+All five soldier types now share ten sight-alert clips: both existing alerts
+plus eight newly generated ElevenLabs takes. The new set has two takes each of
+“Contact!”, “Enemy spotted!”, “Over here!” and “Contact, get him!”. The previous
+two audio files, idle chatter and mechanical effects remain unchanged.
+
+The selector excludes the last spoken phrase across all soldiers, including
+different takes of that phrase, then randomly chooses from the remaining clips.
+Consecutive sightings therefore cannot repeat “Contact, get him!” or any other
+wording. The original normal-soldier run-and-fire decision remains intact, and
+heavy/rocket sight callbacks still only alert. No entity layout, savegame
+callback, attack timing, damage or cooldown changed. Cosmetic selection history
+is not saved; the first alert after a fresh process/load may repeat the last
+phrase heard before quitting.
+
+The new runtime paths are `soldier/callouts/contact_a.wav`, `contact_b.wav`,
+`enemy_spotted_a.wav`, `enemy_spotted_b.wav`, `over_here_a.wav`, `over_here_b.wav`,
+`contact_get_him_a.wav` and `contact_get_him_b.wav`. Each is mono PCM16 at its
+original 44.1 kHz rate. All ten alerts are precached when a soldier spawns; sound
+indices are resolved by name when played, including after loading an old save.
+
+The original MP3 exports and canonical decoded WAVs are retained under
+`sources/elevenlabs-soldier-callouts/`. Source settings, hashes, phrases, takes
+and sample metadata are in `soldier-callouts-manifest.json`. The separate
+importer preserves the old six-source manifest and needs only Python during
+normal builds. New takes have not had an in-game listening pass. Provider
+rights and redistribution licensing have not been independently verified.
+
+```sh
+python3 tools/assets/import_soldier_callouts.py
+python3 tools/assets/import_soldier_callouts.py --verify
+python3 tests/assets/test_soldier_callouts.py
+```
+
+### Common build checks
+
 The source/output hashes, exact mappings and missing events are recorded in
 [`soldier-sounds-manifest.json`](soldier-sounds-manifest.json).
 

@@ -10,10 +10,46 @@ extern void SP_monster_soldier_rocket(edict_t *self);
 extern void soldier_footstep(edict_t *self);
 extern void soldier_cock(edict_t *self);
 extern void soldier_idle(edict_t *self);
+extern mmove_t soldier_move_attack6;
 
 static cvar_t zero, one;
 static char sound_names[128][MAX_QPATH];
 static int sound_count, last_sound, last_channel, played;
+static int previous_alert_phrase = -1;
+
+static const struct {
+    const char *path;
+    int phrase;
+} alerts[] = {
+    {"soldier/solsrch1.wav", 0},
+    {"soldier/solsght1.wav", 1},
+    {"soldier/callouts/contact_a.wav", 2},
+    {"soldier/callouts/contact_b.wav", 2},
+    {"soldier/callouts/enemy_spotted_a.wav", 1},
+    {"soldier/callouts/enemy_spotted_b.wav", 1},
+    {"soldier/callouts/over_here_a.wav", 3},
+    {"soldier/callouts/over_here_b.wav", 3},
+    {"soldier/callouts/contact_get_him_a.wav", 0},
+    {"soldier/callouts/contact_get_him_b.wav", 0},
+};
+
+static int expect_alert(void)
+{
+    size_t i;
+    assert(played == 1 && last_channel == CHAN_VOICE);
+    for (i = 0; i < sizeof(alerts) / sizeof(alerts[0]); i++)
+    {
+        if (!strcmp(sound_names[last_sound], alerts[i].path))
+        {
+            assert(alerts[i].phrase != previous_alert_phrase);
+            previous_alert_phrase = alerts[i].phrase;
+            played = 0;
+            return (int)i;
+        }
+    }
+    assert(!"unknown soldier alert");
+    return -1;
+}
 
 static int model_index(char *name) { (void)name; return 1; }
 static void set_model(edict_t *ent, char *name)
@@ -97,6 +133,7 @@ static edict_t *spawn_soldier(struct soldier_case *test)
     gibsthisframe = 0;
     soldier->inuse = true;
     soldier->classname = test->classname;
+    sound_count = 0; /* Every variant must independently precache its sounds. */
     test->spawn(soldier);
     played = 0;
     return soldier;
@@ -135,15 +172,18 @@ static void test_soldier(struct soldier_case *test)
             assert(sound_count == before);
         }
     }
+    for (i = 0; i < (int)(sizeof(alerts) / sizeof(alerts[0])); i++)
+    {
+        int before = sound_count;
+        sound_index((char *)alerts[i].path);
+        assert(sound_count == before);
+    }
     soldier_cock(soldier);
     expect_sound("infantry/infatck3.wav", CHAN_WEAPON);
     for (i = 0; i < 200 && !played; i++) soldier_idle(soldier);
     expect_sound("soldier/solidle1.wav", CHAN_VOICE);
     soldier->monsterinfo.sight(soldier, &g_edicts[0]);
-    assert(played == 1 && last_channel == CHAN_VOICE);
-    assert(!strcmp(sound_names[last_sound], "soldier/solsght1.wav") ||
-           !strcmp(sound_names[last_sound], "soldier/solsrch1.wav"));
-    played = 0;
+    expect_alert();
     {
         int before = sound_count;
         sound_index("soldier/player/death4.wav");
@@ -176,6 +216,44 @@ static void test_soldier(struct soldier_case *test)
     expect_sound("soldier/player/death4.wav", CHAN_VOICE);
 }
 
+static void test_alert_variations(struct soldier_case *test)
+{
+    edict_t *soldier = spawn_soldier(test);
+    mmove_t *move = soldier->monsterinfo.currentmove;
+    int i, seen[sizeof(alerts) / sizeof(alerts[0])] = {0};
+    int attacks = 0, before = sound_count;
+    qboolean specialist = test->spawn == SP_monster_soldier_heavy ||
+                          test->spawn == SP_monster_soldier_rocket;
+
+    skill = &one;
+    soldier->enemy = &g_edicts[1];
+    soldier->enemy->s.origin[0] = 800;
+    soldier->monsterinfo.nextframe = 17;
+    soldier->monsterinfo.pausetime = 23;
+    soldier->monsterinfo.attack_finished = 42;
+    for (i = 0; i < 512; i++)
+    {
+        soldier->monsterinfo.currentmove = move;
+        soldier->monsterinfo.sight(soldier, soldier->enemy);
+        seen[expect_alert()]++;
+        assert(sound_count == before); /* No late unregistered samples. */
+        assert(soldier->monsterinfo.nextframe == 17);
+        assert(soldier->monsterinfo.pausetime == 23);
+        assert(soldier->monsterinfo.attack_finished == 42);
+        if (specialist)
+            assert(soldier->monsterinfo.currentmove == move);
+        else if (soldier->monsterinfo.currentmove != move)
+        {
+            assert(soldier->monsterinfo.currentmove == &soldier_move_attack6);
+            attacks++;
+        }
+    }
+    for (i = 0; i < (int)(sizeof(alerts) / sizeof(alerts[0])); i++)
+        assert(seen[i] > 0);
+    if (!specialist) assert(attacks > 0 && attacks < 512);
+    skill = &zero;
+}
+
 int main(void)
 {
     size_t i;
@@ -193,9 +271,13 @@ int main(void)
     game.maxentities = 32;
     game.clients = calloc(game.maxclients, sizeof(*game.clients));
     g_edicts = calloc(game.maxentities, sizeof(*g_edicts));
-    for (i = 0; i < sizeof(cases) / sizeof(cases[0]); i++) test_soldier(&cases[i]);
+    for (i = 0; i < sizeof(cases) / sizeof(cases[0]); i++)
+    {
+        test_soldier(&cases[i]);
+        test_alert_variations(&cases[i]);
+    }
     free(game.clients);
     free(g_edicts);
-    puts("five soldier variants: player sound precaches, pain, death, gibs and footsteps passed");
+    puts("five soldier variants: all ten alerts, no repeated wording, sight combat behavior, precaches, pain, death, gibs and footsteps passed");
     return 0;
 }

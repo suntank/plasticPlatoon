@@ -30,8 +30,34 @@
 #include "soldier.h"
 
 static int sound_idle;
-static int sound_sight1;
-static int sound_sight2;
+
+/* Shared by every soldier type, including the heavy and rocket specialists. */
+enum soldier_alert_phrase {
+	SOLDIER_ALERT_CONTACT_GET_HIM,
+	SOLDIER_ALERT_CONTACT,
+	SOLDIER_ALERT_ENEMY_SPOTTED,
+	SOLDIER_ALERT_OVER_HERE
+};
+
+static const struct {
+	char *path;
+	enum soldier_alert_phrase phrase;
+} soldier_alerts[] = {
+	{"soldier/solsrch1.wav", SOLDIER_ALERT_CONTACT_GET_HIM},
+	{"soldier/solsght1.wav", SOLDIER_ALERT_ENEMY_SPOTTED},
+	{"soldier/callouts/contact_a.wav", SOLDIER_ALERT_CONTACT},
+	{"soldier/callouts/contact_b.wav", SOLDIER_ALERT_CONTACT},
+	{"soldier/callouts/enemy_spotted_a.wav", SOLDIER_ALERT_ENEMY_SPOTTED},
+	{"soldier/callouts/enemy_spotted_b.wav", SOLDIER_ALERT_ENEMY_SPOTTED},
+	{"soldier/callouts/over_here_a.wav", SOLDIER_ALERT_OVER_HERE},
+	{"soldier/callouts/over_here_b.wav", SOLDIER_ALERT_OVER_HERE},
+	{"soldier/callouts/contact_get_him_a.wav", SOLDIER_ALERT_CONTACT_GET_HIM},
+	{"soldier/callouts/contact_get_him_b.wav", SOLDIER_ALERT_CONTACT_GET_HIM}
+};
+
+/* Cosmetic history only: no entity fields or savegame callbacks change. */
+static int soldier_last_alert_phrase = -1;
+
 static int sound_pain_light;
 static int sound_pain;
 static int sound_pain_ss;
@@ -1122,6 +1148,43 @@ soldier_attack(edict_t *self)
 	}
 }
 
+static void
+soldier_alert(edict_t *self)
+{
+	size_t i;
+	int available = 0, choice;
+
+	if (!self)
+	{
+		return;
+	}
+
+	/* Exclude the last wording, not just its take, across all soldiers. */
+	for (i = 0; i < sizeof(soldier_alerts) / sizeof(soldier_alerts[0]); i++)
+	{
+		if ((int)soldier_alerts[i].phrase != soldier_last_alert_phrase)
+		{
+			available++;
+		}
+	}
+	choice = (randk() & 0x7fff) % available;
+	for (i = 0; i < sizeof(soldier_alerts) / sizeof(soldier_alerts[0]); i++)
+	{
+		if ((int)soldier_alerts[i].phrase == soldier_last_alert_phrase)
+		{
+			continue;
+		}
+		if (choice-- == 0)
+		{
+			soldier_last_alert_phrase = soldier_alerts[i].phrase;
+			/* Resolve by name so an old save cannot leave a stale cached index. */
+			gi.sound(self, CHAN_VOICE, gi.soundindex(soldier_alerts[i].path),
+					1, ATTN_NORM, 0);
+			return;
+		}
+	}
+}
+
 void
 soldier_sight(edict_t *self, edict_t *other /* unused */)
 {
@@ -1130,14 +1193,7 @@ soldier_sight(edict_t *self, edict_t *other /* unused */)
 		return;
 	}
 
-	if (random() < 0.5)
-	{
-		gi.sound(self, CHAN_VOICE, sound_sight1, 1, ATTN_NORM, 0);
-	}
-	else
-	{
-		gi.sound(self, CHAN_VOICE, sound_sight2, 1, ATTN_NORM, 0);
-	}
+	soldier_alert(self);
 
 	if ((skill->value > SKILL_EASY) && (range(self, self->enemy) >= RANGE_MID))
 	{
@@ -1652,6 +1708,8 @@ soldier_die(edict_t *self, edict_t *inflictor /* unused */,
 void
 SP_monster_soldier_x(edict_t *self)
 {
+	size_t i;
+
 	if (!self)
 	{
 		return;
@@ -1678,8 +1736,10 @@ SP_monster_soldier_x(edict_t *self)
 	/* Mono player-sound aliases spatialize NPCs without changing player audio. */
 	gi.soundindex("soldier/player/death4.wav");
 	sound_idle = gi.soundindex("soldier/solidle1.wav");
-	sound_sight1 = gi.soundindex("soldier/solsght1.wav");
-	sound_sight2 = gi.soundindex("soldier/solsrch1.wav");
+	for (i = 0; i < sizeof(soldier_alerts) / sizeof(soldier_alerts[0]); i++)
+	{
+		gi.soundindex(soldier_alerts[i].path);
+	}
 	sound_cock = gi.soundindex("infantry/infatck3.wav");
 
 	self->mass = 100;
@@ -2146,7 +2206,7 @@ void
 soldier_heavy_sight(edict_t *self, edict_t *other)
 {
 	/* Soldier sight can select a run-and-fire move; this variant only alerts. */
-	gi.sound(self, CHAN_VOICE, gi.soundindex("soldier/solsght1.wav"), 1, ATTN_NORM, 0);
+	soldier_alert(self);
 }
 
 static mframe_t soldier_heavy_frames_pain[] = {

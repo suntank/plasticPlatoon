@@ -1592,6 +1592,16 @@
       "sha256": "aac67ef660786357591fefd2d2a8fb78e4d75ffa7cc3ceec972bc87b08adac7a"
     },
     {
+      "path": "sound/endline/wheels.wav",
+      "bytes": 70604,
+      "sha256": "01c47d1c4445900b541f7b0f4b2f9a3b9c4500057684651c6b03297cba4b2c6e"
+    },
+    {
+      "path": "sound/endline/whistle.wav",
+      "bytes": 81628,
+      "sha256": "2cd0c569890fb83626aa2b23dc523a7d3948723afae55a8c04633cdfb716dab7"
+    },
+    {
       "path": "sound/gunner/death1.wav",
       "bytes": 21212,
       "sha256": "69e792812b884ee0772284ec1ce63f2bc807b072caca88ec720f96b808f7c25b"
@@ -1965,6 +1975,46 @@
       "path": "sound/player/watr_un.wav",
       "bytes": 192078,
       "sha256": "ebe1430a808b4eac6cad53d3a0c09b40d9c593cf002b718c83005e499fce8327"
+    },
+    {
+      "path": "sound/soldier/callouts/contact_a.wav",
+      "bytes": 87596,
+      "sha256": "5510630d663c43fd4dbea489b43e0aa4f1b9d7e9b914428dd9eb4220a4a0aaec"
+    },
+    {
+      "path": "sound/soldier/callouts/contact_b.wav",
+      "bytes": 94508,
+      "sha256": "ef4033d552e9f364234643ebb18d1e3c32a4a4b878299e03084f6affbda87a6e"
+    },
+    {
+      "path": "sound/soldier/callouts/contact_get_him_a.wav",
+      "bytes": 145196,
+      "sha256": "a5dc857667fc3f25925087f969f329b782e005183fd7c28b4f9cad19eb22c1ef"
+    },
+    {
+      "path": "sound/soldier/callouts/contact_get_him_b.wav",
+      "bytes": 145196,
+      "sha256": "c93be8156b1cd3e0b480b7f6e523d26c303554ce985a46cd397a6a921b5eda45"
+    },
+    {
+      "path": "sound/soldier/callouts/enemy_spotted_a.wav",
+      "bytes": 115244,
+      "sha256": "4787c4605d5eb136089cbe78451733eee62794f645434dde0c0ae29f6316143d"
+    },
+    {
+      "path": "sound/soldier/callouts/enemy_spotted_b.wav",
+      "bytes": 108332,
+      "sha256": "e08ae8c0d93be318988f8f692de7cb769e4839366916a5030fa744f9afecf4ca"
+    },
+    {
+      "path": "sound/soldier/callouts/over_here_a.wav",
+      "bytes": 87596,
+      "sha256": "132908037f5e27ce5d8da4f79e78ae48ce1e1476a99522a097bf3be26fdf4fd8"
+    },
+    {
+      "path": "sound/soldier/callouts/over_here_b.wav",
+      "bytes": 94508,
+      "sha256": "f094df0cb1aa49c377f80cd197241d3fa182ce7c88aabda37b3313bd1d7e7ad4"
     },
     {
       "path": "sound/soldier/player/death1.wav",
@@ -2757,6 +2807,6 @@
       "sha256": "219e0f1ec97fa6b944336f263726564a3eb0a176351f5fd19f805913d24a22ea"
     }
   ],
-  "archive_sha256": "9b7a395c93f935916a5b95e29c52c2dadb44b5602d3c5b4b87437bdb5c3370c7",
-  "archive_bytes": 38213097
+  "archive_sha256": "70d4a424dd9dc0a0fe8c1b3448d9330030080ad49f4aa7a3e25bc1b2323e2324",
+  "archive_bytes": 38949424
 }
