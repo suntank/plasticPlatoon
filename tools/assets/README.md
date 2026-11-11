@@ -129,3 +129,9 @@ See [the cleanup record](STANDALONE.md) for backups, test results and remaining
 presentation/platform limitations. Historical offline model comparisons are
 retained because they show project artwork; stock-map/runtime screenshots were
 removed from the public source.
+
+## Ant and spider audio
+
+See [insect sound sources and rebuild checks](INSECT-SOUNDS.md). The eighteen
+approved effects are reproduced and checked by `import_insect_sounds.py`;
+both build systems verify them before packaging. Spider sight remains silent.

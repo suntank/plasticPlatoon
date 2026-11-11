@@ -1562,6 +1562,56 @@
       "sha256": "7882ed7c05cb909903adb9fe81188a5b853ae477ce0ea300f768556ff477d080"
     },
     {
+      "path": "sound/ant/attack_01.wav",
+      "bytes": 77502,
+      "sha256": "2ec09a60d97fc6f67648035c019c5cbf03290b6848d0b26d4bcb2e28379e458f"
+    },
+    {
+      "path": "sound/ant/attack_02.wav",
+      "bytes": 77502,
+      "sha256": "c609955ed18f2a5ff0df95f210e7a65ceaf6d8d19418dda2f34bbb707a26a50b"
+    },
+    {
+      "path": "sound/ant/idle_01.wav",
+      "bytes": 115278,
+      "sha256": "04ea61e43b52b25063ff42c9ea1fb027343784a37f046b51760419199630682c"
+    },
+    {
+      "path": "sound/ant/idle_02.wav",
+      "bytes": 115278,
+      "sha256": "8b90b156078613dcd79c222a198f886f7fcdd7431314250b9e89f5519b813d78"
+    },
+    {
+      "path": "sound/ant/pain_01.wav",
+      "bytes": 46782,
+      "sha256": "c3b65e74f4e0df17f07ef6836b72fc8de5897d544333dff122579d2d26915a2b"
+    },
+    {
+      "path": "sound/ant/pain_02.wav",
+      "bytes": 46782,
+      "sha256": "9ca15ea0861a1acad9c6687120143d81126025f2f672360f0a143b7d167ff235"
+    },
+    {
+      "path": "sound/ant/scuttle_01.wav",
+      "bytes": 115278,
+      "sha256": "de3e627f90e90fa33b479bff05aed60925fddccea0c26f38f92aff43af22cb1b"
+    },
+    {
+      "path": "sound/ant/scuttle_02.wav",
+      "bytes": 115278,
+      "sha256": "0d53c1155b008214e876b12d52d6535f25a2dfcbb13a4cd61a98d33da7691c81"
+    },
+    {
+      "path": "sound/ant/sight_01.wav",
+      "bytes": 96078,
+      "sha256": "19b56e73a22857995b5a95db64782b0b7b99053a54e60d31a855686b2b22a252"
+    },
+    {
+      "path": "sound/ant/sight_02.wav",
+      "bytes": 96078,
+      "sha256": "b7f42ad12b62c65bd60edcb221ebf3a8d7035b75f02fb39c39ec6a66c22822e6"
+    },
+    {
       "path": "sound/bosshovr/BHVDETH1.wav",
       "bytes": 328624,
       "sha256": "2095a82ec625181bdc4c5242ece5ecc9b0b6864f022f9821ed97381b693063b3"
@@ -2170,6 +2220,46 @@
       "path": "sound/soldier/solsrch1.wav",
       "bytes": 158034,
       "sha256": "5188e7d451d52e7efb2ac07ecbcf813bd1375e1e04d9abc9fd2dcc319eb43928"
+    },
+    {
+      "path": "sound/spider/attack_01.wav",
+      "bytes": 77502,
+      "sha256": "cdc77561375645dbca461f52ffe7bc9502c4920c3ad984ec6443c18df8fc850d"
+    },
+    {
+      "path": "sound/spider/attack_02.wav",
+      "bytes": 77502,
+      "sha256": "922bb6f41ae30970903f1527a84a46f5d53f4ab9364163169705f37a42889df2"
+    },
+    {
+      "path": "sound/spider/idle_01.wav",
+      "bytes": 115278,
+      "sha256": "c878290430e915f9d47f7d2b68f8c8b594b0814284f0494332d31ed5557b10eb"
+    },
+    {
+      "path": "sound/spider/idle_02.wav",
+      "bytes": 115278,
+      "sha256": "e84fa5c805868f0ed4aa6c6a35bcee52325dfb3735241904781ec0acf4dee7d7"
+    },
+    {
+      "path": "sound/spider/pain_01.wav",
+      "bytes": 46782,
+      "sha256": "5410295b58921ef1bdeda9d2ac381c0b175eee05d65fd8181f1739c349d492cb"
+    },
+    {
+      "path": "sound/spider/pain_02.wav",
+      "bytes": 46782,
+      "sha256": "396a4e73c5775684bb29ee043785f0a8b95cd7dbdadf97e013129ff0c59e9eee"
+    },
+    {
+      "path": "sound/spider/scuttle_01.wav",
+      "bytes": 115278,
+      "sha256": "dd5026404e3c323d991de889728cb0d34b0b31d4990db649ef21b426b4665d59"
+    },
+    {
+      "path": "sound/spider/scuttle_02.wav",
+      "bytes": 115278,
+      "sha256": "6f8dc78fe1e418ca4d327f1d6b3d8be4708901d0e6e6459e01fba9cea72b1f55"
     },
     {
       "path": "sound/switches/butn2.wav",
@@ -2807,6 +2897,6 @@
       "sha256": "219e0f1ec97fa6b944336f263726564a3eb0a176351f5fd19f805913d24a22ea"
     }
   ],
-  "archive_sha256": "70d4a424dd9dc0a0fe8c1b3448d9330030080ad49f4aa7a3e25bc1b2323e2324",
-  "archive_bytes": 38949424
+  "archive_sha256": "16c38bbe54a22d8a1764fd9e6c8e15637bec7e774590022130a5c604d6d1a18f",
+  "archive_bytes": 40136508
 }

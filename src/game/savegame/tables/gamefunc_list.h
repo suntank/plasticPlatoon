@@ -26,6 +26,8 @@
  */
 
 {"SP_monster_ant", (byte *)SP_monster_ant},
+{"ant_idle", (byte *)ant_idle},
+{"ant_sight", (byte *)ant_sight},
 {"ant_stand", (byte *)ant_stand},
 {"ant_walk", (byte *)ant_walk},
 {"ant_run", (byte *)ant_run},
@@ -34,6 +36,7 @@
 {"ant_die", (byte *)ant_die},
 {"ant_dead", (byte *)ant_dead},
 {"SP_monster_spider", (byte *)SP_monster_spider},
+{"spider_idle", (byte *)spider_idle},
 {"spider_stand", (byte *)spider_stand},
 {"spider_walk", (byte *)spider_walk},
 {"spider_run", (byte *)spider_run},

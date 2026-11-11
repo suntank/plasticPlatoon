@@ -53,6 +53,10 @@ jobs:
     - name: Run production regressions
       run: |
         python3 -m unittest discover -s tests/performance -p 'test_*.py' -v
+        python3 tests/assets/test_insect_sounds.py
+        sh tests/ant/run_tests.sh
+        sh tests/spider/run_tests.sh
+        TEST_CFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" sh tests/insect_sounds/run_wave_tests.sh
         python3 tests/run_renderer_tests.py --sanitize
         TEST_CFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" sh tests/performance/run_effects_tests.sh
         TEST_CFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" sh tests/screen_image/run_tests.sh
