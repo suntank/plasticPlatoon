@@ -31,7 +31,7 @@ jobs:
         brew update
         brew install sdl3 openal-soft make python
     - name: Check out repository code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
     - name: Install asset Python dependencies
       run: |
         python3 -m venv "$RUNNER_TEMP/platoon-assets"

@@ -37,7 +37,7 @@ jobs:
         install-linux-dependencies: true
         version: 3-latest
     - name: Check out repository code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
     - name: Check public source and history
