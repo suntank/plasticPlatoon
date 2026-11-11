@@ -33,6 +33,8 @@ def main():
     p.add_argument('--vis', action='store_true', help='also run full VIS in preview mode')
     p.add_argument('--rad', action='store_true', help='also run VIS and RAD in preview mode')
     p.add_argument('--rad-subdiv', type=int, help='RAD patch subdivision size (8..1024); omit for compiler default')
+    p.add_argument('--rad-ambient', type=int, choices=range(256), metavar='0..255', help='Ambient fill for baked lighting')
+    p.add_argument('--large-bounds', action='store_true', help='Allow BSP geometry beyond the default 4096-unit bounds')
     p.add_argument('--allow-missing-textures', action='store_true', help='diagnostic builds only, never published')
     a = p.parse_args()
     if a.threads < 1:
@@ -77,8 +79,12 @@ def main():
         for name in stages:
             target = staged_src if name == 'bsp' else staged_src.with_suffix('.bsp')
             cmd = [tool, '-' + name, '-threads', str(a.threads), '-basedir', str(basedir)]
+            if name == 'bsp' and a.large_bounds:
+                cmd.append('-largebounds')
             if name == 'rad' and a.rad_subdiv is not None:
                 cmd += ['-subdiv', str(a.rad_subdiv)]
+            if name == 'rad' and a.rad_ambient is not None:
+                cmd += ['-ambient', str(a.rad_ambient)]
             cmd.append(str(target))
             logfile = stage / (name + '.log')
             print(f'{name.upper()}: {logfile}', flush=True)

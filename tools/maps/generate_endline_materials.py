@@ -212,7 +212,7 @@ def sign(lines, accent=CREAM, icon=None):
     return im
 
 
-def switch(label, active):
+def switch(label, active, command):
     im = surface((46, 58, 59), (128, 64), 913, 1)
     d = ImageDraw.Draw(im)
     d.rectangle((1, 1, 126, 62), outline=(164, 167, 143), width=2)
@@ -221,7 +221,7 @@ def switch(label, active):
     d.rectangle((28, 30, 99, 57), fill=(16, 23, 23))
     d.rectangle((31, 32, 96, 54), fill=GREEN if active else RED)
     d.line((32, 33, 95, 33), fill=(145, 221, 136) if active else (224, 108, 71), width=2)
-    text(d, 64, 41, 'GO' if active else 'PUSH', 1, CREAM)
+    text(d, 64, 41, 'GO' if active else command, 1, CREAM)
     for bx in (10, 117):
         for by in (10, 53):
             bolt(d, bx, by, 2)
@@ -231,9 +231,10 @@ def switch(label, active):
 def make_materials():
     result = tile_materials()
     result.update(signal_red=signal(False), signal_green=signal(True))
-    for prefix, label in [('signal_switch', 'DIVERT TRAIN'), ('depart_switch', 'DEPARTURE')]:
+    for prefix, label, command in [('signal_switch', 'DIVERT TRAIN', 'PUSH'),
+                                   ('depart_switch', 'DEPARTURE', 'SHOOT')]:
         for suffix, active in [('', False), ('_idle', False), ('_on', True), ('_on_alt', True)]:
-            result[prefix+suffix] = switch(label, active)
+            result[prefix+suffix] = switch(label, active, command)
     result['sign_signal'] = sign(['SIGNAL', 'CABIN'])
     result['sign_board'] = sign(['BOARD', 'TRAIN'], (150, 204, 172))
     result['sign_double_barrel'] = sign(['DOUBLE', 'BARREL', 'CLOSE RANGE'], (237, 185, 74))
@@ -243,7 +244,7 @@ def make_materials():
     result['sign_medic'] = sign(['MEDIC'], (150, 204, 172), icon='cross')
     result['sign_freight'] = sign(['PLATOON RAIL', 'FREIGHT 07'])
     result['sign_exit'] = sign(['BACKYARD', 'EXIT'], (150, 204, 172))
-    result['sign_mission'] = sign(['OP END OF LINE', '1 SIGNAL 2 SECURE', '3 BOARD AND DEPART'])
+    result['sign_mission'] = sign(['OP END OF LINE', 'FOLLOW FREIGHT', 'BOARD THE TRAIN'])
     # Cardboard label intentionally resembles a printed parcel stencil, not a
     # modern floating interface. It can mark the insertion box or supply crates.
     label = result['cardboard'].resize((256, 128))

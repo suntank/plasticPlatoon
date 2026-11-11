@@ -2,7 +2,7 @@
 """Capture End of the Line and exercise its mission in an isolated real engine.
 
 Only the project's original asset overlay and loose artwork are staged. No PAK
-files or user settings are read. Mission checks use ordinary button contact,
+files or user settings are read. Mission checks use ordinary movement and gunfire,
 real monster deaths (cheat-assisted telefrags), and measured engine positions;
 they are progression checks, not a combat-balance playthrough.
 """
@@ -25,7 +25,7 @@ import tempfile
 import time
 import zipfile
 
-from verify_sandkeep import enabled, entity_bounds, parse_entities, vec
+from verify_sandkeep import BSP, enabled, entity_bounds, parse_entities, vec
 
 ROOT = Path(__file__).resolve().parents[2]
 ENTITY = re.compile(r'^([A-Za-z_][A-Za-z_0-9]*):\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s*$', re.M)
@@ -71,7 +71,7 @@ class Runtime:
         width, height = map(int, args.size.split('x'))
         settings = dict(name='Player', vid_renderer=args.renderer, vid_fullscreen=0,
                         r_mode=-1, r_customwidth=width, r_customheight=height,
-                        r_farsee=1, r_vsync=0, vid_maxfps=60, cl_maxfps=60,
+                        r_farsee=args.farsee, r_vsync=0, vid_maxfps=60, cl_maxfps=60,
                         s_initsound=0, cheats=1, coop=1, maxclients=2,
                         deathmatch=0, singleplayer=0, skill=args.skill,
                         logfile=2, rcon_password=self.token, con_notifytime=0,
@@ -184,6 +184,16 @@ class Runtime:
             raise RuntimeError('Expected one live func_train, got ' + str(matches))
         return matches[0]
 
+    def game_seconds(self):
+        # Player list connection time advances with server frames, including
+        # when software-rendered split-screen runs slower than wall time.
+        start = len(self.console())
+        self.run('cmd playerlist', .25)
+        clock = self.until(lambda: re.search(r'(?m)^(\d+):(\d{2})\s+\d+\s+-?\d+\s+Player$',
+                                             self.console()[start:]),
+                           5, 'No server clock in the player list')
+        return int(clock[1]) * 60 + int(clock[2])
+
     def capture(self, name):
         self.run('cl_perf_start qa_' + name, .22)
         before = set((self.base / 'scrnshot').glob('*.png'))
@@ -267,165 +277,236 @@ def capture_views(runtime, views):
             runtime.check(view['name'] + ' message', marker in runtime.console(), marker=marker)
 
 
+def boarding_fight(runtime, bsp, min_x, stop, wave, *, name, hatch_prefix,
+                   clear_message, door_names=(), deployment_only=False):
+    """Watch live enemies board, then verify that the last kill frees the train."""
+    stop_x = vec(stop['origin'])[0]
+
+    def parked_at_stop():
+        x = min_x()
+        return x if abs(x - stop_x) < 10 and abs(min_x() - x) < 1 else None
+
+    parked_x = runtime.until(parked_at_stop, 60, f'Train did not stop at the {name}')
+    runtime.check(f'Train stops at the {name}', True, train_min_x=parked_x)
+
+    # The train's preserved footprint is 1152 units long. The last 464
+    # units are the open-topped car. Enemies in this volume below the rim
+    # have crossed the wall; their sealed spawn rooms are above the rim.
+    def boarder():
+        return next((p for kind, p in runtime.entities()
+                     if kind.startswith('monster_soldier')
+                     and parked_x + 712 < p[0] < parked_x + 1120
+                     and -108 < p[1] < 110 and 328 <= p[2] < 407), None)
+
+    enemy = runtime.until(boarder, 35, f'No live soldier dropped below the car rim at the {name}')
+    runtime.check(f'Live {name} ambusher drops into armored car', True, enemy_origin=enemy)
+    runtime.run('cl_gun 1')
+    runtime.run('+right', .5)
+    runtime.run('-right', .1)
+    runtime.capture(f'{name}_boarders')
+    if deployment_only:
+        return parked_x
+
+    def opened_doors():
+        expected = [bsp.open_door_offset(entity, model, offset)
+                    for entity, model, offset in bsp.bmodels
+                    if entity['keys'].get('targetname') in door_names
+                    or entity['keys'].get('targetname', '').startswith(hatch_prefix)]
+        actual = [p for kind, p in runtime.entities() if kind == 'func_door']
+        for offset in expected:
+            closest = min(actual, key=lambda p: math.dist(p, offset), default=None)
+            if closest is None or math.dist(closest, offset) > 2:
+                return False
+            actual.remove(closest)
+        return bool(expected)
+
+    runtime.until(opened_doors, 30, f'The {name} shutters or doors did not open')
+    runtime.check(f'All {name} shutters and doors open with train parked',
+                  abs(min_x() - parked_x) < 1)
+
+    # This check isolates progression from combat balance. Pose into each
+    # soldier to cause real damage and follow the engine's live death counter.
+    counter_line = re.compile(r'\b(\d+) more to go\.\.\.')
+    start = len(runtime.console())
+    spawn_positions = [vec(e['keys']['origin']) for e in wave]
+    x_lo = min(p[0] for p in spawn_positions) - 80
+    x_hi = parked_x + 1176
+    y_lo = min(p[1] for p in spawn_positions) - 80
+    y_hi = max(140, max(p[1] for p in spawn_positions) + 80)
+    kills_left = len(wave)
+    last_enemy_holds = False
+    deadline = time.monotonic() + 90
+
+    while kills_left and time.monotonic() < deadline:
+        positions = [p for kind, p in runtime.entities()
+                     if kind.startswith('monster_soldier')
+                     and x_lo < p[0] < x_hi and y_lo < p[1] < y_hi
+                     and 305 < p[2] < 665]
+        for x, y, z in positions:
+            runtime.pose([x, y, z - 10, 0, 0], wait=.2)
+            messages = runtime.console()[start:]
+            if 'Sequence completed!' in messages:
+                kills_left = 0
+                break
+            remaining = counter_line.findall(messages)
+            if remaining:
+                new_count = int(remaining[-1])
+                if new_count == 1 and kills_left > 1:
+                    last_enemy_holds = abs(min_x() - parked_x) < 1
+                kills_left = new_count
+
+    runtime.check(f'Train waits for the last {name} enemy', last_enemy_holds)
+    runtime.check(f'The last kill clears the {name} ambush', kills_left == 0)
+    # Put the tester back in a clear firing lane after the telefrag. A real
+    # kill never leaves the player sharing the target's collision hull.
+    runtime.pose([parked_x + 940, -76, 329, 0, 180])
+    runtime.until(lambda: clear_message in runtime.console()[start:], 12,
+                  f'The {name} clear message did not fire after the last kill')
+    return parked_x
+
+
+def garage_finale(runtime, bsp, min_x, stop, wave):
+    parked_x = boarding_fight(
+        runtime, bsp, min_x, stop, wave, name='garage', hatch_prefix='endline_ambush_hatch_',
+        clear_message='AMBUSH CLEARED', door_names=('endline_garage_door',),
+        deployment_only=runtime.args.deployment_only,
+    )
+    if runtime.args.deployment_only:
+        return
+
+    runtime.until(lambda: 'MISSION COMPLETE' in runtime.console(), 24,
+                  'The cleared ambush did not lead to intermission')
+    runtime.capture('garage_exit_intermission')
+    # Intermission suppresses client-side entity queries, but the train keeps
+    # moving during the cinematic. Capture the late camera after the final leg.
+    outside = next(e['keys'] for e in bsp.entities
+                   if e['keys'].get('targetname') == 'endline_outside')
+    train = next(e['keys'] for e in bsp.entities if e['keys']['classname'] == 'func_train')
+    outside_seconds = abs(vec(outside['origin'])[0] - parked_x) / float(train['speed'])
+    time.sleep(outside_seconds + 3)
+    runtime.capture('mission_complete')
+    runtime.check('Final path completes mission', True)
+
+
 def mission(runtime):
-    """Filled from MAP entities, so geometry edits cannot silently stale probes."""
+    """Exercise the parked train, one-way boarding, shoot switch, and ambush stops."""
     a = runtime.args
     source = parse_entities((runtime.out / 'pp_endline.map').read_text())
     live = [e for e in source if enabled(e, a.skill)]
-    def one(predicate):
-        found = [e for e in live if predicate(e['keys'])]
-        if len(found) != 1:
-            raise ValueError('Expected one mission entity, found ' + str(len(found)))
-        return found[0]
-    train = one(lambda k: k['classname'] == 'func_train')
-    train_bounds = entity_bounds(train)
+
+    def named(name):
+        return next(e for e in live if e['keys'].get('targetname') == name)
+
+    bsp = BSP(runtime.base / 'maps/pp_endline.bsp')
+    train = next(e['keys'] for e in bsp.entities if e['keys']['classname'] == 'func_train')
+    train_min_x = bsp.models[int(train['model'][1:])][0]
+
     def min_x():
-        return runtime.train()[0] + train_bounds[0]
-    def stopped_at(x):
-        if abs(min_x()-x) >= 4:
-            return False
-        time.sleep(.4)
-        return abs(min_x()-x) < 4
-    switch = one(lambda k: k['classname'] == 'func_button' and k.get('target') == 'endline_divert')
-    departure = one(lambda k: k['classname'] == 'func_button' and k.get('target') == 'depart_arm')
-    extraction = one(lambda k: k['classname'] == 'trigger_platoon_extract')
-    wave = [e for e in live if e['keys']['classname'].startswith('monster_') and e['keys'].get('deathtarget') == 'endline_wave_down']
-    runtime.check('Difficulty-selected counterattack', len(wave) == (6, 9, 12)[a.skill], enemies=len(wave))
-    if a.players > 1:
-        # Only the primary client receives console cheats. Shelter the other
-        # living client behind the medic station's walls during the long intro;
-        # leaving an idle partner exposed would test death handling instead.
-        medic = one(lambda k: k['classname'] == 'trigger_once' and k.get('target') == 'endline_secret_medic')
-        refuge = entity_bounds(medic)
-        runtime.pose([refuge[0]+48, refuge[1]+48, refuge[2]+24, 0, 90], slot=1)
-    # The spawn trigger arms the intro via ordinary player contact.
-    initial_x = min_x()
-    runtime.run('+forward', .25)
-    runtime.run('-forward', .1)
-    runtime.until(lambda: min_x() < initial_x - 80, 12, 'Intro train did not move')
-    runtime.capture('intro_train_moving')
+        return runtime.train()[0] + train_min_x
+
+    siding_x = vec(named('endline_siding')['keys']['origin'])[0]
+    bridge_stop = named('endline_bridge_stop')['keys']
+    garage_stop = named('endline_gate_stop')['keys']
+    bridge_wave = [e for e in live if e['keys'].get('deathtarget') == 'endline_bridge_down']
+    wave = [e for e in live if e['keys'].get('deathtarget') == 'endline_ambush_down']
+    runtime.check('Difficulty-selected bridge ambush', len(bridge_wave) == (6, 8, 10)[a.skill],
+                  enemies=len(bridge_wave))
+    runtime.check('Difficulty-selected garage ambush', len(wave) == (9, 12, 15)[a.skill],
+                  enemies=len(wave))
+    runtime.check('Train starts at the station', abs(min_x() - siding_x) < 4)
+    runtime.capture('window_insertion')
+
     shotgun = next(e for e in live if e['keys']['classname'] == 'weapon_supershotgun')
     runtime.pose([*vec(shotgun['keys']['origin']), 0, 90], wait=.5)
     runtime.until(lambda: 'DOUBLE BARREL SHOTGUN' in runtime.console(), 4,
                   'Double-barrel pickup did not trigger its introduction')
-    runtime.run('use Double Barrel Shotgun', .5)
-    runtime.check('Double-barrel pickup and introduction fire', True)
-    def touch_button(entity):
-        bounds = entity_bounds(entity)
-        # Approach opposite the button's push direction. The signal console
-        # pushes west; the departure console pushes north. Start outside its
-        # protective cover so an ordinary move also exercises the physical gate.
-        yaw = float(entity['keys'].get('angle', 0))
-        dx, dy = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
-        distance = (abs(dx)*(bounds[3]-bounds[0]) + abs(dy)*(bounds[4]-bounds[1]))/2 + 56
-        x = (bounds[0]+bounds[3])/2 - dx*distance
-        y = (bounds[1]+bounds[4])/2 - dy*distance
-        runtime.pose([x, y, bounds[2]-24, 0, yaw])
-        runtime.run('+forward', .65)
-        runtime.run('-forward', .1)
-    if not a.early_switch:
-        # At the negative-wait corner train_next teleports to the offstage east
-        # pocket before pausing. Both offstage pockets must be inaccessible.
-        runtime.until(lambda: stopped_at(2496), 75, 'Intro train did not reach its offstage wait')
-        parked = min_x()
-        time.sleep(.8)
-        runtime.check('Train waits for switch', abs(min_x()-parked) < 2, train_min_x=parked)
-    touch_button(switch)
-    runtime.until(lambda: 'SIGNAL GREEN' in runtime.console(), 4, 'Signal control did not activate')
-    runtime.until(lambda: min_x() < 2450, 8, 'Signal button did not dispatch train')
-    runtime.capture('signal_diverted')
-    runtime.until(lambda: stopped_at(800), 75 if a.early_switch else 35, 'Train did not reach loading siding')
-    time.sleep(.5)
-    runtime.check('Train remains at siding during defense', abs(min_x()-800) < 4, train_min_x=min_x())
-    shutters = [e for e in live if e['keys'].get('targetname') == 'endline_reserve_doors'
-                and e['keys']['classname'] == 'func_door']
-    if shutters:
-        # The four reserve doors rise; the service shortcut moves down and the
-        # departure cover remains closed, so upward origins identify them.
-        raised = [xyz for kind, xyz in runtime.entities() if kind == 'func_door' and xyz[2] > 150]
-        runtime.check('All four reinforcement shutters open', len(raised) == len(shutters) == 4,
-                      door_origins=raised)
-    if a.players == 1:
-        runtime.run('save endline_smoke', .5)
-        save = runtime.base / 'save/endline_smoke/pp_endline.sav'
-        runtime.check('Native save written at siding', save.is_file() and save.stat().st_size > 0)
-        runtime.run('load endline_smoke', 3)
-        runtime.check('Stopped train survives save/load', abs(min_x()-800) < 4, train_min_x=min_x())
-    touch_button(departure)
-    runtime.check('Departure control stays covered during defense', 'DEPARTURE REQUESTED' not in runtime.console())
-    bounds = entity_bounds(extraction)
-    deck_z = bounds[2] + 24
-    board = [(bounds[0]+bounds[3])/2, (bounds[1]+bounds[4])/2, deck_z, 0, 180]
-    # Kill exactly the difficulty-filtered counterattack through real damage.
-    for entity in wave:
-        runtime.pose([*vec(entity['keys']['origin']), 0, 90], wait=.35)
-    runtime.capture('counterattack_cleared')
-    runtime.check('Train waits for manual departure', abs(min_x()-800) < 4, train_min_x=min_x())
-    touch_button(departure)
-    runtime.pose(board)
+    runtime.check('Ground route shotgun pickup and introduction fire', True)
+
+    medic = next(e for e in live if e['keys']['classname'] == 'trigger_once'
+                 and e['keys'].get('target') == 'endline_secret_medic')
+    refuge = entity_bounds(medic)
     if a.players > 1:
-        time.sleep(1)
-        poses = runtime.capture('awaiting_living_partner')
-        runtime.check('Waiting teammate remains alive', poses.get('1', {}).get('z', -1000) > refuge[2]+38,
-                      pose=poses.get('1'))
-        runtime.check('Living teammate outside prevents departure', abs(min_x()-800) < 4, train_min_x=min_x())
-        # Keep the two players separated on the wide rear deck.
-        runtime.pose([board[0]+80, board[1], board[2], 0, 180], slot=1)
-    runtime.until(lambda: min_x() < 750, 8, 'All-aboard check did not start departure')
+        runtime.pose([refuge[0]+48, refuge[1]+48, refuge[2]+24, 0, 90], slot=1)
+    else:
+        runtime.run('save endline_station', .5)
+        saved = runtime.base / 'save/endline_station/pp_endline.sav'
+        runtime.check('Native save written at station', saved.is_file() and saved.stat().st_size > 0)
+        runtime.run('load endline_station', 2)
+        runtime.check('Station train survives save/load', abs(min_x() - siding_x) < 4)
+
+    def cover_count():
+        return sum(kind == 'func_explosive' for kind, _ in runtime.entities())
+
+    covers = cover_count()
+    runtime.check('A box covers the shoot switch', covers > 0)
+    # Begin just inside the raised station lip and use real forward input to
+    # step over the rail and fall into the armored car.
+    runtime.pose([1610, -169, 488, 15, 90], wait=.6)
+    runtime.capture('station_boarding_gantry')
+    runtime.run('+forward', .32)
+    runtime.run('-forward', .9)
+    view = runtime.capture('boarded_car')['0']
+    runtime.check('Player drops from gantry into the car',
+                  -111 < view['y'] < 110 and 348 < view['z'] < 420, view=view)
+
+    control = entity_bounds(named('endline_depart_switch'))
+    aim = [(control[i] + control[i+3]) / 2 for i in range(3)]
+    shooter = (aim[0], -34, 329)
+    dx, dy = aim[0] - shooter[0], aim[1] - shooter[1]
+    pitch = -math.degrees(math.atan2(aim[2] - shooter[2] - 22, math.hypot(dx, dy)))
+    yaw = math.degrees(math.atan2(dy, dx))
+
+    def shoot_switch():
+        runtime.pose([*shooter, pitch, yaw], wait=.5)
+        runtime.run('+attack', .85)
+        runtime.run('-attack', .12)
+
+    if a.players > 1:
+        shoot_switch()
+        runtime.check('Cover blocks gunfire until the living squad boards',
+                      cover_count() == covers and abs(min_x() - siding_x) < 4)
+        runtime.pose([1740, -75, 329, 0, 180], slot=1)
+    runtime.until(lambda: cover_count() == covers-1, 8, 'Boarding did not burst the cover box')
+    runtime.check('Boarding exposes the switch without starting the train',
+                  abs(min_x() - siding_x) < 4)
+    runtime.pose([*shooter, pitch, yaw], wait=.5)
+    runtime.capture('departure_switch_exposed')
+
+    runtime.pose([1648, -84, 329, 0, 270], wait=.5)
+    runtime.run('+forward', .22)
+    runtime.run('+moveup', .65)
+    runtime.run('-moveup', .08)
+    runtime.run('-forward', .55)
+    captive = runtime.capture('car_rim_blocks_jump')['0']
+    runtime.check('Jumping into the armored rim keeps the player aboard',
+                  -111 < captive['y'] < 110 and 348 < captive['z'] < 354, view=captive)
+
+    shoot_switch()
+    runtime.until(lambda: min_x() < siding_x - 20, 12, 'Shooting the exposed switch did not start the train')
+    runtime.check('Only a shot at the uncovered switch starts the train', True)
     before = runtime.capture('train_departing')
-    time.sleep(1)
+    time.sleep(.8)
     after = runtime.capture('train_ride')
     for slot in range(a.players):
         key = str(slot)
         runtime.check('Train carries player ' + str(slot+1),
-                      key in before and key in after and after[key]['x'] < before[key]['x'] - 30,
+                      key in before and key in after and after[key]['x'] < before[key]['x'] - 24,
                       before=before.get(key), after=after.get(key))
-    runtime.until(lambda: 'MISSION COMPLETE' in runtime.console() or 'END OF THE LINE COMPLETE' in runtime.console(),
-                   60, 'Final train path did not complete the mission')
-    runtime.capture('mission_complete')
-    runtime.check('Final path completes mission', True)
-    deaths = re.findall(r'(?m)^Player(?: P2)? (?:died\.|was squished|blew up|was in the wrong place|tried to invade).*', runtime.console())
-    runtime.check('No squad death bypassed boarding gate', not deaths, deaths=deaths)
-
-
-def deployment(runtime):
-    """Observe real AI leaving every reserve room with the activator visible."""
-    source = [e for e in parse_entities((runtime.out / 'pp_endline.map').read_text()) if enabled(e, runtime.args.skill)]
-    wave = [e for e in source if e['keys'].get('deathtarget') == 'endline_wave_down']
-    # Full room envelopes, expanded one soldier radius at the exits: a body
-    # must actually clear its doorway before it counts as deployed.
-    rooms = {'upper': (-1488, -656, 240, -880, -336, 432),
-             'lower': (-816, 848, 0, -112, 1152, 208),
-             'yard': (2096, -1728, 0, 2608, -1104, 208)}
-    def remaining():
-        actors = [xyz for kind, xyz in runtime.entities() if kind.startswith('monster_')]
-        return {name: [p for p in actors if all(bounds[i] <= p[i] <= bounds[i+3] for i in range(3))]
-                for name, bounds in rooms.items()}
-    before = remaining()
-    expected = {name: sum(e['keys'].get('_endline_reserve') == name for e in wave) for name in rooms}
-    runtime.check('Reserve rooms contain exactly the selected wave',
-                  all(len(before[name]) == expected[name] for name in rooms),
-                  before=before, expected=expected)
-    if runtime.args.players > 1:
-        runtime.pose([-2464, -1656, 24, 0, 90], slot=1)
-    switch = next(e for e in source if e['keys'].get('target') == 'endline_divert' and e['keys']['classname'] == 'func_button')
-    bounds = entity_bounds(switch)
-    runtime.run('notarget')  # OFF: triggered monsters must really acquire us.
-    runtime.pose([bounds[3]+56, (bounds[1]+bounds[4])/2, bounds[2]-24, 0, 180])
-    runtime.run('+forward', .65)
-    runtime.run('-forward', .1)
-    runtime.until(lambda: 'SIGNAL GREEN' in runtime.console(), 5, 'Signal control did not activate')
-    def deployed():
-        current = remaining()
-        runtime.report['deployment_last_remaining'] = current
-        return current if not any(current.values()) else False
-    result = runtime.until(deployed, 40, 'Counterattack troops did not leave all three reserve rooms')
-    runtime.check('Live counterattack exits all three rooms', True, remaining=result, counts=expected)
-    for name, pose in [('upper_deployed', [-1216, -224, 280, 0, 270]),
-                       ('lower_deployed', [-448, 640, 40, 0, 90]),
-                       ('storage_deployed', [1920, -1392, 56, 0, 0])]:
-        runtime.pose(pose)
-        runtime.capture(name)
+    if a.players > 1:
+        # Keep the idle second view safe while the active player observes
+        # the AI and clears the ambushes for the progression test.
+        runtime.pose([refuge[0]+48, refuge[1]+48, refuge[2]+24, 0, 90], slot=1)
+    runtime.run('notarget')  # OFF: both ambushes must really acquire the rider.
+    bridge_x = boarding_fight(
+        runtime, bsp, min_x, bridge_stop, bridge_wave, name='bridge',
+        hatch_prefix='endline_bridge_hatch_', clear_message='BRIDGE CLEAR',
+    )
+    runtime.until(lambda: min_x() < bridge_x - 20, 12,
+                  'Train did not depart the bridge after the ambush cleared')
+    runtime.check('Train resumes after the bridge ambush', True)
+    runtime.until(lambda: min_x() < -2700, 55, 'Train did not leave the west bridge')
+    runtime.capture('train_ride_west_bridge')
+    garage_finale(runtime, bsp, min_x, garage_stop, wave)
 
 
 def main():
@@ -438,9 +519,10 @@ def main():
     p.add_argument('--skill', type=int, choices=(0, 1, 2), default=1)
     p.add_argument('--players', type=int, choices=(1, 2), default=2)
     p.add_argument('--views', type=Path, help='Capture a JSON list of views instead of the mission integration test')
-    p.add_argument('--early-switch', action='store_true', help='Operate signal while intro train is moving, exercising dispatch event order')
-    p.add_argument('--deployment-only', action='store_true', help='Observe live AI leaving all three reserve rooms instead of completing the mission')
+    p.add_argument('--deployment-only', action='store_true', help='Stop after observing a live ambusher board the train')
     p.add_argument('--renderer', choices=('gl1', 'gl3', 'soft'), default='gl3')
+    p.add_argument('--farsee', type=int, choices=(0, 1), default=1,
+                   help='Start with this archived draw distance setting')
     p.add_argument('--display-backend', choices=('offscreen', 'xvfb', 'dummy', 'current'), default='xvfb')
     p.add_argument('--egl-device', type=int, default=1)
     p.add_argument('--size', default='1280x720')
@@ -457,8 +539,6 @@ def main():
         runtime.start()
         if a.views:
             capture_views(runtime, json.loads(a.views.read_text()))
-        elif a.deployment_only:
-            deployment(runtime)
         else:
             mission(runtime)
         runtime.report['passed'] = True

@@ -179,8 +179,8 @@
       ],
       "animation_next": "endline/depart_switch_idle",
       "surface_light": 0,
-      "png_sha256": "dfe1d01f4a980a1b91227e95b213d657da11e59632de56054bf3e20e83e2692c",
-      "wal_sha256": "374360ed3355b5d6256437005cfed793377705488e44dec6551cd1eb5ee26c73"
+      "png_sha256": "ac065c8808bd543079fdd9d3cf0eda7144e771c609b4e9d145511394350fe9cc",
+      "wal_sha256": "74b715fcbc8dd0b86c836e7048582602470060406315783932088ad3a841b615"
     },
     {
       "name": "endline/depart_switch_idle",
@@ -190,8 +190,8 @@
       ],
       "animation_next": "endline/depart_switch_on",
       "surface_light": 0,
-      "png_sha256": "dfe1d01f4a980a1b91227e95b213d657da11e59632de56054bf3e20e83e2692c",
-      "wal_sha256": "5b66d657cfefdd2d804d05e803102ef97e27de49bcf242c777f59ee5aaf08e64"
+      "png_sha256": "ac065c8808bd543079fdd9d3cf0eda7144e771c609b4e9d145511394350fe9cc",
+      "wal_sha256": "391a91655e8abb21002e5293839507da648a3282b8432ad0354ac22de858b282"
     },
     {
       "name": "endline/depart_switch_on",
@@ -322,8 +322,8 @@
       ],
       "animation_next": null,
       "surface_light": 0,
-      "png_sha256": "faf131da213f62931088dea6ec4e18cabf0fac5f075bfa5944a77d535d77d633",
-      "wal_sha256": "94220f3b691c93855c3a7c46e2a3096db8ebfd1d7cae6977a182a29f3913d341"
+      "png_sha256": "7b604813807c60fefb0cdf0ea48112a4aca483c679a7ad1ea5748b64d79ae79f",
+      "wal_sha256": "97e0171d34e421bd072289f04c1a512ae6ef4fe214f5d7dd3652750a97622f5a"
     },
     {
       "name": "endline/shipping_label",

@@ -41,6 +41,7 @@ BASE = ROOT / 'baseq2'
 SOURCE = ROOT / 'maps/source/pp_endline.map'
 STAGING = ROOT / 'build/endline-compile-assets'
 LOCAL_TOOL = Path.home() / 'q2tools-220/build/q2tool'
+RAD_AMBIENT = 16
 WORKAROUND = ('q2tools-220 lbmlib.c RGB PNG loader uses short-circuit && while '
               'initializing green/blue samples. Private opaque RGBA copies '
               'select its correct decoder path; original RGB pixels preserved.')
@@ -132,7 +133,8 @@ def quick_build(args, command):
     manifest.pop('output', None)
     output = stage / (SOURCE.stem+'.bsp')
     try:
-        for name, flags in (('vis', ['-fast']), ('rad', ['-subdiv', str(args.rad_subdiv)])):
+        rad_flags = ['-subdiv', str(args.rad_subdiv), '-ambient', str(RAD_AMBIENT)]
+        for name, flags in (('vis', ['-fast']), ('rad', rad_flags)):
             cmd = [manifest['tool'], '-'+name, '-threads', str(args.threads),
                    '-basedir', str(STAGING), *flags, str(output)]
             logfile = stage / (name+'.log')
@@ -204,6 +206,7 @@ def main():
                    '--source', str(SOURCE), '--basedir', str(STAGING),
                    '--output-dir', str(a.output_dir), '--build-dir', str(a.build_dir),
                    '--tool', a.tool, '--threads', str(a.threads),
+                   '--large-bounds', '--rad-ambient', str(RAD_AMBIENT),
                    '--profile', 'preview' if a.quick else a.profile, '--rad-subdiv', str(a.rad_subdiv)]
         if a.vis:
             command.append('--vis')
