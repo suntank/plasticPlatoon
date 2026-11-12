@@ -182,12 +182,55 @@ static void TestGuestEntityEvents(void)
     puts("PASS guest entity audio: footsteps, landing, teleport/respawn, order/delay, same-frame dedup, generation reset");
 }
 
+static void TestFourLocalRecipients(void)
+{
+    static client_t clients[5];
+    static edict_t edicts[6];
+    cvar_t five={.value=5};
+    vec3_t origin={0,0,0};
+    int i;
+    ResetAudioDelivery(); ss_state.requested_players=4;
+    memset(clients,0,sizeof(clients)); memset(edicts,0,sizeof(edicts));
+    svs.clients=clients; test_game.edicts=edicts; maxclients=&five;
+    for(i=0;i<5;++i) {
+        clients[i].state=cs_spawned;
+        clients[i].netchan.remote_address.type=i<4?NA_LOOPBACK:NA_IP;
+        clients[i].netchan.remote_address.port=(unsigned short)BigShort(i+1);
+        SZ_Init(&clients[i].datagram,clients[i].datagram_buf,sizeof(clients[i].datagram_buf));
+        edicts[i+1].s.origin[0]=(float)i;
+        if(i<4) {
+            ss_local_player_t *slot=&ss_state.slots[i];
+            slot->active=true; slot->state=SS_SLOT_ACTIVE;
+            slot->local_index=i; slot->loopback_slot=i;
+            slot->connection_state=ca_active;
+            slot->entities=test_entities[i?1:0]; slot->entity_count=16;
+        }
+    }
+    test_pvs=8; /* Player four hears an event outside every other PHS. */
+    MSG_WriteByte(&sv.multicast,svc_sound); MSG_WriteByte(&sv.multicast,SND_ENT);
+    MSG_WriteByte(&sv.multicast,7); MSG_WriteShort(&sv.multicast,(2<<3)|CHAN_BODY);
+    SV_Multicast(origin,MULTICAST_PHS);
+    assert(!clients[0].datagram.cursize && !clients[1].datagram.cursize && !clients[2].datagram.cursize);
+    assert(clients[3].datagram.cursize==5 && !clients[4].datagram.cursize);
+    MSG_BeginReading(&clients[3].datagram); assert(MSG_ReadByte(&clients[3].datagram)==svc_sound);
+    SS_ParseSoundPacket(&ss_state.slots[3],&clients[3].datagram); assert(sound_calls==1);
+    SZ_Clear(&clients[3].datagram);
+    MSG_WriteByte(&sv.multicast,svc_muzzleflash); MSG_WriteShort(&sv.multicast,2);
+    MSG_WriteByte(&sv.multicast,MZ_MACHINEGUN); SV_Multicast(origin,MULTICAST_ALL);
+    assert(clients[0].datagram.data[0]==svc_muzzleflash);
+    for(i=1;i<4;++i) assert(clients[i].datagram.data[0]==svc_muzzleflash_silent);
+    assert(clients[4].datagram.data[0]==svc_muzzleflash);
+    maxclients=&three;
+    puts("PASS four local listeners: player-four-only sound delivery, all-view muzzle visuals with one audio recipient");
+}
+
 int main(void)
 {
     Swap_Init();
     TestSoundOccurrences();
     TestMuzzleAudioOccurrences();
     TestGuestEntityEvents();
+    TestFourLocalRecipients();
     puts("All split-screen sound-delivery regressions passed.");
     return 0;
 }
