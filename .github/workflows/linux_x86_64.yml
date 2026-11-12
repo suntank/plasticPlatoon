@@ -63,6 +63,8 @@ jobs:
         sh tests/input/run_event_tests.sh
         sh tests/renderers/run_color_pic_cache_tests.sh
         sh tests/splitscreen/run_state_tests.sh
+        TEST_CFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" sh tests/splitscreen/run_sound_delivery_tests.sh
+        sh tests/sound/run_tests.sh
         sh tests/screen_image/run_gamebird_hud_tests.sh
         sh tests/hud/run_tests.sh
         sh tests/ant/run_tests.sh

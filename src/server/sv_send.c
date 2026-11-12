@@ -196,24 +196,36 @@ SV_WereConnected(const vec3_t origin, const byte *mask, int area1)
 }
 
 #ifndef DEDICATED_ONLY
-/* Only coalesce complete temp-entity commands. A mod can put several server
- * commands in one multicast buffer; never accidentally route its per-view
- * muzzle flashes or other messages as if the whole buffer were one temp effect.
+/* Only coalesce complete shared-effect or sound commands. A mod can put
+ * several server commands in one multicast buffer; never accidentally route
+ * its per-view muzzle flashes or other messages as shared presentation.
  * Lengths include the service and effect-type bytes (protocol 34 positions are
  * three shorts and directions are one byte). Unknown formats retain normal
  * delivery rather than guessing how to skip them. */
 static qboolean
-SV_SharedTempMessage(const sizebuf_t *message)
+SV_SharedPresentationMessage(const sizebuf_t *message)
 {
 	int offset = 0;
 	while (offset < message->cursize)
 	{
 		int length;
 		const byte *command = message->data + offset;
-		if (message->cursize - offset < 2 || command[0] != svc_temp_entity)
+		if (message->cursize - offset < 2)
 		{
 			return false;
 		}
+		if (command[0] == svc_sound)
+		{
+			int flags = command[1];
+			if (flags & ~(SND_VOLUME | SND_ATTENUATION | SND_OFFSET | SND_ENT | SND_POS)) return false;
+			/* service, flags, sample; optional scalar fields, entity and xyz */
+			length = 3 + !!(flags & SND_VOLUME) + !!(flags & SND_ATTENUATION) +
+				!!(flags & SND_OFFSET) + 2 * !!(flags & SND_ENT) + 6 * !!(flags & SND_POS);
+			if (length > message->cursize - offset) return false;
+			offset += length;
+			continue;
+		}
+		if (command[0] != svc_temp_entity) return false;
 		switch (command[1])
 		{
 			case TE_BLOOD: case TE_GUNSHOT: case TE_SPARKS:
@@ -256,6 +268,21 @@ SV_SharedTempMessage(const sizebuf_t *message)
 	}
 	return offset > 0;
 }
+/* Muzzle visuals still need every eligible observer's view and PVS. Only the
+ * selected local recipient plays audio; private silent opcodes leave ordinary
+ * network clients and demos byte-for-byte unchanged. */
+static qboolean
+SV_LocalMuzzleMessage(const sizebuf_t *message)
+{
+	int offset;
+	if (!message->cursize || message->cursize % 4) return false;
+	for (offset = 0; offset < message->cursize; offset += 4)
+	{
+		if (message->data[offset] != svc_muzzleflash &&
+			message->data[offset] != svc_muzzleflash2) return false;
+	}
+	return true;
+}
 #endif
 
 void
@@ -264,8 +291,9 @@ SV_Multicast(vec3_t origin, multicast_t to)
 	int leafnum, cluster, area1 = 0, j;
 	qboolean reliable;
 #ifndef DEDICATED_ONLY
-	qboolean shared_local_temp = false;
-	client_t *local_temp_recipient = NULL;
+	qboolean shared_local_presentation = false;
+	qboolean local_muzzle = false;
+	client_t *local_presentation_recipient = NULL;
 #endif
 	client_t *client;
 	byte *mask;
@@ -277,7 +305,8 @@ SV_Multicast(vec3_t origin, multicast_t to)
 	 * presentation, after normal visibility eligibility below. The network
 	 * protocol, remote recipients, unicast feedback, and server demos retain
 	 * their original bytes. */
-	shared_local_temp = SS_IsSessionActive() && SV_SharedTempMessage(&sv.multicast);
+	shared_local_presentation = SS_IsSessionActive() && SV_SharedPresentationMessage(&sv.multicast);
+	local_muzzle = SS_IsSessionActive() && SV_LocalMuzzleMessage(&sv.multicast);
 #endif
 
 	if ((to != MULTICAST_ALL_R) && (to != MULTICAST_ALL))
@@ -322,7 +351,7 @@ SV_Multicast(vec3_t origin, multicast_t to)
 	}
 
 #ifndef DEDICATED_ONLY
-	if (shared_local_temp)
+	if (shared_local_presentation || local_muzzle)
 	{
 		/* Prefer the primary connection whenever it is eligible, even if a
 		 * reconnect changed server-client array order. This keeps ordinary
@@ -340,9 +369,9 @@ SV_Multicast(vec3_t origin, multicast_t to)
 			{
 				continue;
 			}
-			if (!local_temp_recipient || client->netchan.remote_address.port == (unsigned short)BigShort(1))
+			if (!local_presentation_recipient || client->netchan.remote_address.port == (unsigned short)BigShort(1))
 			{
-				local_temp_recipient = client;
+				local_presentation_recipient = client;
 			}
 			if (client->netchan.remote_address.port == (unsigned short)BigShort(1))
 			{
@@ -374,9 +403,24 @@ SV_Multicast(vec3_t origin, multicast_t to)
 		}
 
 #ifndef DEDICATED_ONLY
-		if (shared_local_temp && client->netchan.remote_address.type == NA_LOOPBACK &&
-			client != local_temp_recipient)
+		if (shared_local_presentation && client->netchan.remote_address.type == NA_LOOPBACK &&
+			client != local_presentation_recipient)
 		{
+			continue;
+		}
+		if (local_muzzle && client->netchan.remote_address.type == NA_LOOPBACK &&
+			client != local_presentation_recipient)
+		{
+			byte silent_message[MAX_MSGLEN];
+			int offset;
+			memcpy(silent_message, sv.multicast.data, sv.multicast.cursize);
+			for (offset = 0; offset < sv.multicast.cursize; offset += 4)
+			{
+				silent_message[offset] = silent_message[offset] == svc_muzzleflash ?
+					svc_muzzleflash_silent : svc_muzzleflash2_silent;
+			}
+			SZ_Write(reliable ? &client->netchan.message : &client->datagram,
+				silent_message, sv.multicast.cursize);
 			continue;
 		}
 #endif

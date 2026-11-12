@@ -501,6 +501,7 @@ void CL_WidowSplash (vec3_t org);
 void CL_ParseTEnt (void);
 void CL_AddMuzzleFlash (void);
 void CL_AddMuzzleFlash2 (void);
+void CL_ParseMuzzleFlash(qboolean monster_flash, qboolean silent);
 void CL_SetEffectScope(int only_slot, int exclude_slot,
 	qboolean force_unique_dlight_keys);
 qboolean CL_EffectVisibleInRenderSlot(int only_slot, int exclude_slot);

@@ -195,6 +195,18 @@ extern vec3_t listener_forward;
 extern vec3_t listener_right;
 extern vec3_t listener_up;
 
+#define MAX_SOUND_LISTENERS 4
+#define MAX_LOOP_SOUNDS (MAX_EDICTS * MAX_SOUND_LISTENERS)
+typedef struct
+{
+	vec3_t origin, forward, right, up;
+} sound_listener_t;
+extern sound_listener_t s_listeners[MAX_SOUND_LISTENERS];
+extern int s_numlisteners;
+const sound_listener_t *S_ClosestListener(const vec3_t origin);
+void S_GetEntitySoundVelocity(int ent, vec3_t velocity);
+void S_GetSpatializedOrigin(int ent, const vec3_t fallback, vec3_t origin);
+
 extern qboolean snd_is_underwater;
 
 /*
@@ -224,7 +236,7 @@ channel_t *S_PickChannel(int entnum, int entchannel);
  * Builds a list of all
  * sound still in flight
  */
-void S_BuildSoundList(int *sounds);
+int S_BuildSoundList(entity_state_t **entities, int capacity);
 
 /* ----------------------------------------------------------------- */
 

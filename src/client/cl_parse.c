@@ -26,6 +26,7 @@
 
 #include "header/client.h"
 #include "input/header/input.h"
+#include "cl_splitscreen.h"
 
 void CL_DownloadFileName(char *dest, int destlen, char *fn);
 void CL_ParseDownload(void);
@@ -79,7 +80,9 @@ static const char *svc_strings[] = {
 	"svc_packetentities",
 	"svc_deltapacketentities",
 	"svc_frame",
-	"svc_screen_image"
+	"svc_screen_image",
+	"svc_muzzleflash_silent",
+	"svc_muzzleflash2_silent"
 };
 
 void
@@ -705,6 +708,12 @@ static void
 CL_FireEntityEvents(frame_t *frame)
 {
 	int pnum;
+
+	if (SS_IsSessionActive())
+	{
+		SS_FireEntityEvents(0, frame, cl_parse_entities);
+		return;
+	}
 
 	for (pnum = 0; pnum < frame->num_entities; pnum++)
 	{
@@ -1458,11 +1467,13 @@ CL_ParseServerMessage(void)
 				break;
 
 			case svc_muzzleflash:
-				CL_AddMuzzleFlash();
+			case svc_muzzleflash_silent:
+				CL_ParseMuzzleFlash(false, cmd == svc_muzzleflash_silent);
 				break;
 
 			case svc_muzzleflash2:
-				CL_AddMuzzleFlash2();
+			case svc_muzzleflash2_silent:
+				CL_ParseMuzzleFlash(true, cmd == svc_muzzleflash2_silent);
 				break;
 
 			case svc_download:

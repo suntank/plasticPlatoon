@@ -30,13 +30,22 @@ static ss_state_t ss_state =
 	.requested_players = 2
 };
 
+typedef struct
+{
+	int serverframe;
+	int servercount;
+	qboolean emitted;
+} ss_entity_event_frame_t;
+static ss_entity_event_frame_t ss_entity_event_frames[SS_MAX_LOCAL_PLAYERS][UPDATE_BACKUP];
+
 static qboolean SS_FindServerClientForSlot(const ss_local_player_t *slot,
 	client_t **client_out, int *client_num_out);
 static void SS_SendSlotStringCmdNow(ss_local_player_t *slot, const char *cmd);
 static void SS_ParseSharedMuzzleFlash(ss_local_player_t *slot, sizebuf_t *msg,
-	qboolean monster_flash);
+	qboolean monster_flash, qboolean silent);
 static void SS_ParseSharedTempEntity(ss_local_player_t *slot, sizebuf_t *msg);
-static void SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon);
+static void SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon,
+	qboolean silent);
 static float SS_GetSlotViewLerp(const ss_local_player_t *slot);
 static const player_state_t *SS_GetPreviousPlayerState(const ss_local_player_t *slot,
 	const player_state_t *ps);
@@ -909,23 +918,44 @@ SS_ParseBaseline(ss_local_player_t *slot, sizebuf_t *msg)
 	}
 }
 
+/* Multicast sounds have exactly one local recipient selected by the server.
+ * Unicast feedback is a separate occurrence and must still play for its slot. */
 static void
-SS_SkipSoundPacket(sizebuf_t *msg)
+SS_ParseSoundPacket(ss_local_player_t *slot, sizebuf_t *msg)
 {
-	int flags;
+	int flags = MSG_ReadByte(msg);
+	int sound_num = MSG_ReadByte(msg);
+	float volume = (flags & SND_VOLUME) ? MSG_ReadByte(msg) / 255.0f : DEFAULT_SOUND_PACKET_VOLUME;
+	float attenuation = (flags & SND_ATTENUATION) ? MSG_ReadByte(msg) / 64.0f : DEFAULT_SOUND_PACKET_ATTENUATION;
+	float offset = (flags & SND_OFFSET) ? MSG_ReadByte(msg) / 1000.0f : 0.0f;
+	int channel = (flags & SND_ENT) ? MSG_ReadShort(msg) : 0;
+	int entnum = channel >> 3;
+	vec3_t origin;
+	vec_t *position = NULL;
+	centity_t *saved_entities;
+	int saved_entity_count;
 
-	flags = MSG_ReadByte(msg);
-	(void)MSG_ReadByte(msg);
-
-	if (flags & SND_VOLUME) (void)MSG_ReadByte(msg);
-	if (flags & SND_ATTENUATION) (void)MSG_ReadByte(msg);
-	if (flags & SND_OFFSET) (void)MSG_ReadByte(msg);
-	if (flags & SND_ENT) (void)MSG_ReadShort(msg);
 	if (flags & SND_POS)
 	{
-		vec3_t pos;
-		MSG_ReadPos(msg, pos);
+		MSG_ReadPos(msg, origin);
+		position = origin;
 	}
+	if (msg->readcount > msg->cursize || sound_num < 0 || sound_num >= MAX_SOUNDS ||
+		!cl.sound_precache[sound_num])
+	{
+		return;
+	}
+
+	/* Resolve sexed samples and entity validation in the receiving view. The
+	 * mixer subsequently follows the freshest entity across all local views. */
+	saved_entities = cl_entities;
+	saved_entity_count = cl_numentities;
+	cl_entities = slot->entities;
+	cl_numentities = slot->entity_count;
+	S_StartSound(position, entnum, channel & 7, cl.sound_precache[sound_num],
+		volume, attenuation, offset);
+	cl_entities = saved_entities;
+	cl_numentities = saved_entity_count;
 }
 
 static void
@@ -964,7 +994,7 @@ SS_AllocSlotEntity(ss_local_player_t *slot, int entnum)
 
 static void
 SS_ParseSharedMuzzleFlash(ss_local_player_t *slot, sizebuf_t *msg,
-	qboolean monster_flash)
+	qboolean monster_flash, qboolean silent)
 {
 	sizebuf_t saved_message;
 	int observer_slot_index = slot ? slot->local_index : -1;
@@ -1013,14 +1043,7 @@ SS_ParseSharedMuzzleFlash(ss_local_player_t *slot, sizebuf_t *msg,
 	cl.playernum = -1;
 	CL_SetEffectScope(observer_slot_index, -1, true);
 
-	if (monster_flash)
-	{
-		CL_AddMuzzleFlash2();
-	}
-	else
-	{
-		CL_AddMuzzleFlash();
-	}
+	CL_ParseMuzzleFlash(monster_flash, silent);
 
 	cl.playernum = previous_playernum;
 	if (slot && slot->local_index > 0)
@@ -1040,7 +1063,8 @@ SS_ParseSharedMuzzleFlash(ss_local_player_t *slot, sizebuf_t *msg,
 }
 
 static void
-SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon)
+SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon,
+	qboolean silent)
 {
 	sizebuf_t saved_message;
 	sizebuf_t local_message;
@@ -1162,7 +1186,7 @@ SS_ParseLocalSlotMuzzleFlash(ss_local_player_t *slot, int entnum, int weapon)
 	 * stock muzzle-flash parser for this split-screen slot. */
 	cl.viewangles[YAW] = entity_angles[YAW] - yaw_delta;
 
-	CL_AddMuzzleFlash();
+	CL_ParseMuzzleFlash(false, silent);
 
 	pp_viewmodel_muzzle_seq = saved_muzzle_seq;
 	cl_effect_only_slot = saved_effect_only_slot;
@@ -1421,6 +1445,85 @@ SS_ParseServerData(ss_local_player_t *slot, sizebuf_t *msg)
 
 }
 
+/* Snapshot entity events are transmitted independently to each camera. Match
+ * the event's server frame in other views' retained snapshots, so an event
+ * visible only to a guest still plays once and delayed packets do not replay it. */
+static qboolean
+SS_EntityEventAlreadySeen(int observer, const frame_t *frame,
+	const entity_state_t *state, qboolean teleporter)
+{
+	int i;
+	for (i = 0; i < SS_GetSlotCount(); ++i)
+	{
+		const frame_t *other;
+		const entity_state_t *stream;
+		int parsed, j;
+		const ss_entity_event_frame_t *emitted = &ss_entity_event_frames[i][frame->serverframe & UPDATE_MASK];
+		if (i == observer || !emitted->emitted || emitted->servercount != cl.servercount ||
+			emitted->serverframe != frame->serverframe) continue;
+		if (i == 0)
+		{
+			other = &cl.frames[frame->serverframe & UPDATE_MASK];
+			stream = cl_parse_entities;
+			parsed = cl.parse_entities;
+		}
+		else
+		{
+			const ss_local_player_t *slot = &ss_state.slots[i];
+			if (slot->servercount != cl.servercount) continue;
+			other = &slot->frames[frame->serverframe & UPDATE_MASK];
+			stream = slot->parse_entities;
+			parsed = slot->parse_entities_num;
+		}
+		if (!other->valid || other->serverframe != frame->serverframe ||
+			parsed - other->parse_entities > MAX_PARSE_ENTITIES) continue;
+		for (j = 0; j < other->num_entities; ++j)
+		{
+			const entity_state_t *seen = &stream[(other->parse_entities + j) & (MAX_PARSE_ENTITIES - 1)];
+			if (seen->number == state->number &&
+				(teleporter ? !!(seen->effects & EF_TELEPORTER) : seen->event == state->event))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+void
+SS_FireEntityEvents(int observer, frame_t *frame, entity_state_t *stream)
+{
+	ss_entity_event_frame_t *emitted = &ss_entity_event_frames[observer][frame->serverframe & UPDATE_MASK];
+	centity_t *saved_entities = cl_entities;
+	int saved_entity_count = cl_numentities;
+	int i;
+	if (emitted->emitted && emitted->servercount == cl.servercount &&
+		emitted->serverframe == frame->serverframe) return;
+	if (observer > 0)
+	{
+		cl_entities = ss_state.slots[observer].entities;
+		cl_numentities = ss_state.slots[observer].entity_count;
+	}
+	for (i = 0; i < frame->num_entities; ++i)
+	{
+		entity_state_t *state = &stream[(frame->parse_entities + i) & (MAX_PARSE_ENTITIES - 1)];
+		if (state->event && !SS_EntityEventAlreadySeen(observer, frame, state, false))
+		{
+			CL_EntityEvent(state);
+		}
+		if ((state->effects & EF_TELEPORTER) &&
+			!SS_EntityEventAlreadySeen(observer, frame, state, true))
+		{
+			CL_TeleporterParticles(state);
+		}
+	}
+	cl_entities = saved_entities;
+	cl_numentities = saved_entity_count;
+	emitted->serverframe = frame->serverframe;
+	emitted->servercount = cl.servercount;
+	emitted->emitted = true;
+}
+
 static void
 SS_ParseFrame(ss_local_player_t *slot, sizebuf_t *msg)
 {
@@ -1519,6 +1622,10 @@ SS_ParseFrame(ss_local_player_t *slot, sizebuf_t *msg)
 	}
 
 	slot->snapshot_valid = newframe.valid;
+	if (newframe.valid && slot->servercount == cl.servercount)
+	{
+		SS_FireEntityEvents(slot->local_index, &slot->frame, slot->parse_entities);
+	}
 }
 
 static void
@@ -1585,7 +1692,7 @@ SS_ParseServerMessage(ss_local_player_t *slot, sizebuf_t *msg)
 				break;
 
 			case svc_sound:
-				SS_SkipSoundPacket(msg);
+				SS_ParseSoundPacket(slot, msg);
 				break;
 
 			case svc_spawnbaseline:
@@ -1597,6 +1704,7 @@ SS_ParseServerMessage(ss_local_player_t *slot, sizebuf_t *msg)
 				break;
 
 			case svc_muzzleflash:
+			case svc_muzzleflash_silent:
 			{
 				sizebuf_t saved_message;
 				sizebuf_t local_message;
@@ -1613,7 +1721,8 @@ SS_ParseServerMessage(ss_local_player_t *slot, sizebuf_t *msg)
 
 				if (slot->snapshot_valid && entnum == slot->playernum + 1)
 				{
-					SS_ParseLocalSlotMuzzleFlash(slot, entnum, weapon);
+					SS_ParseLocalSlotMuzzleFlash(slot, entnum, weapon,
+						cmd == svc_muzzleflash_silent);
 				}
 				else
 				{
@@ -1621,13 +1730,15 @@ SS_ParseServerMessage(ss_local_player_t *slot, sizebuf_t *msg)
 					MSG_WriteShort(&local_message, entnum);
 					MSG_WriteByte(&local_message, weapon);
 					MSG_BeginReading(&local_message);
-					SS_ParseSharedMuzzleFlash(slot, &local_message, false);
+					SS_ParseSharedMuzzleFlash(slot, &local_message, false,
+						cmd == svc_muzzleflash_silent);
 				}
 				break;
 			}
 
 			case svc_muzzleflash2:
-				SS_ParseSharedMuzzleFlash(slot, msg, true);
+			case svc_muzzleflash2_silent:
+				SS_ParseSharedMuzzleFlash(slot, msg, true, cmd == svc_muzzleflash2_silent);
 				break;
 
 			case svc_download:
@@ -3127,6 +3238,28 @@ SS_ApplyPlayerView(refdef_t *refdef, const ss_local_player_t *slot,
 	refdef->areabits = (byte *)areabits;
 }
 
+/* Audio uses the same interpolated eye position and orientation as rendering.
+ * Invalid secondary snapshots must not survive a disconnect or map change. */
+qboolean
+SS_GetSoundView(int slot_index, refdef_t *refdef, int *entnum)
+{
+	ss_local_player_t *slot = SS_GetSlot(slot_index);
+	client_t *server_client;
+	const player_state_t *ps;
+
+	if (!SS_IsSessionActive() || !refdef || !entnum ||
+		!SS_GetSlotPlayerState(slot_index, &server_client, &ps))
+	{
+		return false;
+	}
+
+	*refdef = cl.refdef;
+	SS_ApplyPlayerView(refdef, slot, ps, SS_GetSlotAreaBits(slot, server_client),
+		&ss_state.viewports[slot_index]);
+	*entnum = SS_GetSlotRenderPlayernum(slot, server_client) + 1;
+	return true;
+}
+
 /* Prepare the union before drawing any camera. No assumption is made that
  * slot snapshots, interpolation, visibility areas, or first-person exclusions
  * are the same. Only equivalent effect tasks are shared. */
@@ -3560,6 +3693,7 @@ SS_ResetState(void)
 {
 	int i;
 
+	memset(ss_entity_event_frames, 0, sizeof(ss_entity_event_frames));
 	for (i = 0; i < SS_MAX_LOCAL_PLAYERS; ++i)
 	{
 		SS_FreeSlotEntities(&ss_state.slots[i]);
@@ -4154,6 +4288,8 @@ void
 SS_BeginSession(void)
 {
 	int i;
+
+	memset(ss_entity_event_frames, 0, sizeof(ss_entity_event_frames));
 
 	ss_state.session_active = true;
 	NET_SetLoopbackClientCount(SS_GetSlotCount());

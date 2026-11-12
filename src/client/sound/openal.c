@@ -596,19 +596,16 @@ AL_Spatialize(channel_t *ch)
 {
 	vec3_t origin;
 	vec3_t velocity;
+	vec3_t position;
+	const sound_listener_t *listener;
 
-	if ((ch->entnum == -1) || (ch->entnum == cl.playernum + 1) || !ch->dist_mult)
+	if ((ch->entnum == -1) || S_IsLocalEntity(ch->entnum) || !ch->dist_mult)
 	{
-		/* from view entity (player) => nothing to do,
-		 * position is still (0,0,0) and relative,
-		 * as set in AL_PlayChannel() */
+		/* Every local player's own sounds stay centered at full volume. */
 
-		return;
-	}
-	else if (ch->fixed_origin)
-	{
-		VectorCopy(ch->origin, origin);
-		qalSource3f(ch->srcnum, AL_POSITION, AL_UnpackVector(origin));
+		qalSourcei(ch->srcnum, AL_SOURCE_RELATIVE, AL_TRUE);
+		qalSource3f(ch->srcnum, AL_POSITION, 0, 0, 0);
+		qalSource3f(ch->srcnum, AL_VELOCITY, 0, 0, 0);
 		return;
 	}
 	else
@@ -616,13 +613,43 @@ AL_Spatialize(channel_t *ch)
 		qboolean source_occluded = false;
 		qboolean reverb_enabled = false;
 
-		GetEntitySoundOrigin(ch->entnum, listener_origin, origin);
-		qalSource3f(ch->srcnum, AL_POSITION, AL_UnpackVector(origin));
+		S_GetSpatializedOrigin(ch->entnum, ch->fixed_origin ? ch->origin : NULL, origin);
+		listener = S_ClosestListener(origin);
+		VectorCopy(origin, position);
+		if (s_numlisteners > 1)
+		{
+			vec3_t delta;
+			int i;
+			float forward, right, up;
+			/* OpenAL has one hardware listener. Re-express each source around
+			 * the closest local camera, retaining that camera's distance and
+			 * stereo direction without playing another copy of the sound. */
+			VectorSubtract(origin, listener->origin, delta);
+			forward = DotProduct(delta, listener->forward);
+			right = DotProduct(delta, listener->right);
+			up = DotProduct(delta, listener->up);
+			for (i = 0; i < 3; ++i)
+			{
+				position[i] = listener_origin[i] + forward * listener_forward[i] +
+					right * listener_right[i] + up * listener_up[i];
+			}
+		}
+		qalSourcei(ch->srcnum, AL_SOURCE_RELATIVE, AL_FALSE);
+		qalSource3f(ch->srcnum, AL_POSITION, AL_UnpackVector(position));
+		if (ch->fixed_origin && s_numlisteners == 1)
+		{
+			return;
+		}
+		qalSourcef(ch->srcnum, AL_GAIN, Q_min(ch->oal_vol, 1.0f));
 
-		if (s_doppler->value) {
-			CL_GetEntitySoundVelocity(ch->entnum, velocity);
+		if (s_doppler->value && s_numlisteners == 1 && !ch->fixed_origin) {
+			S_GetEntitySoundVelocity(ch->entnum, velocity);
 			VectorScale(velocity, AL_METER_OF_Q2_UNIT, velocity);
 			qalSource3f(ch->srcnum, AL_VELOCITY, AL_UnpackVector(velocity));
+		}
+		else
+		{
+			qalSource3f(ch->srcnum, AL_VELOCITY, 0, 0, 0);
 		}
 
 		if (!snd_is_underwater &&
@@ -632,21 +659,19 @@ AL_Spatialize(channel_t *ch)
 			trace_t trace;
 			vec3_t mins = { 0, 0, 0 }, maxs = { 0, 0, 0 };
 
-			trace = CM_BoxTrace(origin, listener_origin, mins, maxs, 0, MASK_PLAYERSOLID);
-			if (trace.fraction < 1.0 &&
-				!(ch->entnum == -1 || ch->entnum == cl.playernum + 1 || !ch->dist_mult)
-			)
+			trace = CM_BoxTrace(origin, listener->origin, mins, maxs, 0, MASK_PLAYERSOLID);
+			if (trace.fraction < 1.0)
 			{
 				vec3_t distance;
 				float dist;
 				float final;
 
-				VectorSubtract(origin, listener_origin, distance);
+				VectorSubtract(origin, listener->origin, distance);
 				dist = VectorLength(distance);
 
 				final = 1.0 - ((dist / 1000) * (1.0 - s_occlusion_strength->value));
 
-				qalSourcef(ch->srcnum, AL_GAIN, Q_min(Q_max(final, 0), 1));
+				qalSourcef(ch->srcnum, AL_GAIN, Q_min(ch->oal_vol, 1.0f) * Q_min(Q_max(final, 0), 1));
 
 				qalSourcei(ch->srcnum, AL_DIRECT_FILTER, underwaterFilter);
 
@@ -727,7 +752,7 @@ AL_PlayChannel(channel_t *ch)
  	qalSourcei(ch->srcnum, AL_BUFFER, sc->bufnum);
 	qalSourcei(ch->srcnum, AL_LOOPING, ch->autosound ? AL_TRUE : AL_FALSE);
 
-	if ((ch->entnum == -1) || (ch->entnum == cl.playernum + 1) || !ch->dist_mult)
+	if ((ch->entnum == -1) || S_IsLocalEntity(ch->entnum) || !ch->dist_mult)
 	{
 		/* anything coming from the view entity will always
 		 * be full volume and at the listeners position */
@@ -852,30 +877,24 @@ static void
 AL_AddLoopSounds(void)
 {
 	int i;
-	int sounds[MAX_EDICTS];
+	entity_state_t *entities[MAX_LOOP_SOUNDS];
+	int count;
 
 	if ((cls.state != ca_active) || (cl_paused->value && cl_audiopaused->value) || !s_ambient->value)
 	{
 		return;
 	}
 
-	memset(&sounds, 0, sizeof(int) * MAX_EDICTS);
-	S_BuildSoundList(sounds);
+	count = S_BuildSoundList(entities, MAX_LOOP_SOUNDS);
 
-	for (i = 0; i < cl.frame.num_entities; i++)
+	for (i = 0; i < count; i++)
 	{
 		channel_t *ch;
 		sfx_t *sfx;
 		sfxcache_t *sc;
-		int num;
 		entity_state_t *ent;
 
-		if (!sounds[i])
-		{
-			continue;
-		}
-
-		sfx = cl.sound_precache[sounds[i]];
+		sfx = cl.sound_precache[entities[i]->sound];
 
 		if (!sfx)
 		{
@@ -889,8 +908,7 @@ AL_AddLoopSounds(void)
 			continue;
 		}
 
-		num = (cl.frame.parse_entities + i) & (MAX_PARSE_ENTITIES - 1);
-		ent = &cl_parse_entities[num];
+		ent = entities[i];
 
 		ch = AL_FindLoopingSound(ent->number, sfx);
 
@@ -1121,10 +1139,14 @@ AL_Update(void)
 	qalListener3f(AL_POSITION, AL_UnpackVector(listener_origin));
 	qalListenerfv(AL_ORIENTATION, orientation);
 
-	if (s_doppler->value) {
+	if (s_doppler->value && s_numlisteners == 1) {
 		CL_GetViewVelocity(listener_velocity);
 		VectorScale(listener_velocity, AL_METER_OF_Q2_UNIT, listener_velocity);
 		qalListener3f(AL_VELOCITY, AL_UnpackVector(listener_velocity));
+	}
+	else
+	{
+		qalListener3f(AL_VELOCITY, 0, 0, 0);
 	}
 
 	/* update spatialization for dynamic sounds */

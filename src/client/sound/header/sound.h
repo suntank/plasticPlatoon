@@ -54,6 +54,7 @@ void S_EndRegistration(void);
    entitiy position information, so entities can be
    dynamically re-spatialized */
 void GetEntitySoundOrigin(int ent, const vec3_t listener_org, vec3_t org);
+qboolean S_IsLocalEntity(int ent);
 qboolean GetBSPEntitySoundOrigin(int ent, const vec3_t listener_org, vec3_t org);
 void CL_GetEntitySoundVelocity(int ent, vec3_t vel);
 void CL_GetViewVelocity(vec3_t vel);

@@ -32,7 +32,7 @@ static cvar_t one = {.string = "1", .value = 1};
 static cvar_t three = {.string = "3", .value = 3};
 static cvar_t renderer = {.string = "gl1"};
 cvar_t *vid_renderer = &renderer;
-cvar_t *cl_paused = &zero, *cl_r1q2_lightstyle = &zero;
+cvar_t *cl_paused = &zero, *cl_r1q2_lightstyle = &zero, *cl_timedemo = &zero, *cl_footsteps = &one;
 cvar_t *cl_limitsparksounds = &zero, *cl_laseralpha = &one;
 cvar_t *maxclients = &three, *hand = &zero, *cl_vwep = &one;
 static unsigned int random_state = 1, random_calls;
@@ -63,6 +63,7 @@ void V_AddLight(vec3_t org, float intensity, float r, float g, float b) { (void)
 struct model_s *R_RegisterModel(const char *name) { snprintf(last_model_name,sizeof(last_model_name),"%s",name); return (struct model_s *)(uintptr_t)1; }
 struct image_s *R_RegisterSkin(const char *name) { (void)name; return (struct image_s *)(uintptr_t)1; }
 struct image_s *Draw_FindPic(const char *name) { (void)name; return (struct image_s *)(uintptr_t)1; }
+float CalcFov(float fov, float width, float height) { return atan(height / (width / tan(fov * M_PI / 360))) * 360 / M_PI; }
 /* Material selection is covered by color_skins_test; this fixture stubs
  * graphics resources while exercising the real effect submission paths. */
 struct image_s *CL_EnemyModelSkin(const char *path, int skin, int flags) { (void)path; (void)skin; (void)flags; return NULL; }
@@ -313,6 +314,97 @@ static void TestPlayerMuzzleFlashes(void)
         }
     }
     puts("PASS player muzzle flashes: every weapon event spawns first- and third-person sprites");
+}
+
+static void SetupSplitMuzzleObservers(int players, int entnum)
+{
+    int view, history;
+    ResetEffects(); ResetRecipients();
+    ss_state.transport=SS_TRANSPORT_SPLITSCREEN;
+    ss_state.requested_players=players;
+    memset(test_entities,0,sizeof(test_entities));
+    for (history=0; history<2; ++history) {
+        centity_t *ent=&test_entities[history][entnum];
+        ent->serverframe=cl.frame.serverframe;
+        ent->current.number=entnum; ent->current.modelindex=1;
+        ent->current.origin[0]=100; ent->prev=ent->current;
+    }
+    for (view=0; view<players; ++view) {
+        ss_local_player_t *slot=&ss_state.slots[view];
+        slot->local_index=view; slot->playernum=view;
+        slot->active=slot->snapshot_valid=true; slot->state=SS_SLOT_ACTIVE;
+        slot->connection_state=ca_active; slot->frame=cl.frame;
+        slot->frame.playerstate.fov=90;
+        slot->entities=test_entities[view?1:0]; slot->entity_count=16;
+    }
+    cl_entities=test_entities[0]; cl_numentities=16; cl.playernum=0;
+}
+
+static void TestSplitMuzzleScopes(void)
+{
+    byte data[8];
+    int players, shooter, view, thirdperson;
+    for (thirdperson=0; thirdperson<2; ++thirdperson) {
+        muzzle_flash_config_t *cfg=CL_GetMuzzleFlashConfig(MZ_MACHINEGUN,thirdperson);
+        memset(cfg,0,sizeof(*cfg));
+        cfg->enabled=true; cfg->scale=20; cfg->duration_ms=50;
+        strcpy(cfg->image,"sprites/muzzleFlashSmall.png");
+    }
+    /* Each connection receives the same shot. The shooter gets only its
+     * first-person pair of crossed planes; each other camera gets exactly
+     * one attached third-person billboard and its own light. */
+    for (players=2; players<=4; ++players) {
+        for (shooter=0; shooter<players; ++shooter) {
+            SetupSplitMuzzleObservers(players,shooter+1);
+            SZ_Init(&net_message,data,sizeof(data));
+            MSG_WriteShort(&net_message,shooter+1); MSG_WriteByte(&net_message,MZ_MACHINEGUN);
+            MSG_BeginReading(&net_message); CL_ParseMuzzleFlash(false,false);
+            for (view=1; view<players; ++view) {
+                ss_local_player_t *slot=&ss_state.slots[view];
+                if (view==shooter) SS_ParseLocalSlotMuzzleFlash(slot,shooter+1,MZ_MACHINEGUN,true);
+                else {
+                    sizebuf_t msg;
+                    SZ_Init(&msg,data,sizeof(data));
+                    MSG_WriteShort(&msg,shooter+1); MSG_WriteByte(&msg,MZ_MACHINEGUN);
+                    MSG_BeginReading(&msg); SS_ParseSharedMuzzleFlash(slot,&msg,false,true);
+                }
+                assert(!cl_effect_only_slot && !cl_effect_exclude_slot && !cl_effect_force_unique_dlight_keys);
+            }
+            assert(sound_calls==1);
+            CL_PrepareTEnts();
+            for (view=0; view<players; ++view) {
+                ResetOutput(); cl_effect_render_slot=view;
+                cl_entities=test_entities[view?1:0];
+                CL_AddTEnts(); CL_AddDLights();
+                assert(submitted_entities==(view==shooter?2u:1u));
+                assert(submitted_lights==1);
+            }
+        }
+        /* Monster flash sprites, lights and particles must also remain
+         * with the observer whose packet spawned them. */
+        SetupSplitMuzzleObservers(players,10);
+        cl_mod_smoke=cl_mod_flash=NULL;
+        cl_mod_smoke_sprite=(struct model_s *)(uintptr_t)1;
+        cl_mod_explosion_sprite=(struct model_s *)(uintptr_t)2;
+        SZ_Init(&net_message,data,sizeof(data));
+        MSG_WriteShort(&net_message,10); MSG_WriteByte(&net_message,MZ2_INFANTRY_MACHINEGUN_1);
+        MSG_BeginReading(&net_message); CL_ParseMuzzleFlash(true,false);
+        for (view=1; view<players; ++view) {
+            sizebuf_t msg;
+            SZ_Init(&msg,data,sizeof(data));
+            MSG_WriteShort(&msg,10); MSG_WriteByte(&msg,MZ2_INFANTRY_MACHINEGUN_1);
+            MSG_BeginReading(&msg); SS_ParseSharedMuzzleFlash(&ss_state.slots[view],&msg,true,true);
+        }
+        assert(sound_calls==1);
+        CL_PrepareTEnts(); CL_PrepareParticles();
+        for (view=0; view<players; ++view) {
+            ResetOutput(); cl_effect_render_slot=view;
+            CL_AddTEnts(); CL_AddDLights(); CL_AddParticles();
+            assert(submitted_entities==2 && submitted_lights==1 && submitted_particles==40);
+        }
+    }
+    memset(&ss_state,0,sizeof(ss_state));
+    puts("PASS split muzzle scopes: every shooter in 2/3/4 views sees only first-person flashes; observers and monster sprites/lights/particles have one copy");
 }
 /* Independent reproduction of the GL alias matrix, without AngleVectors. */
 static void AliasMatrixPoint(const vec3_t angles, const vec3_t point, vec3_t result)
@@ -808,7 +900,7 @@ static void TestMapTransition(void)
 int main(void)
 {
     Swap_Init();
-    TestOccurrences(); TestParticleFrame(); TestPlayerMuzzleFlashes(); TestMuzzleModelMatrix(); TestAttachedPlayerMuzzleFlashes(); TestSoldierPlayerReports(); TestHeavyMuzzleFlash(); TestHelicopterMuzzleFlash(); TestTrailInputs(); TestSpritePreparation(); TestBulletImpacts(); TestBeamViews(); TestMapTransition();
+    TestOccurrences(); TestParticleFrame(); TestPlayerMuzzleFlashes(); TestSplitMuzzleScopes(); TestMuzzleModelMatrix(); TestAttachedPlayerMuzzleFlashes(); TestSoldierPlayerReports(); TestHeavyMuzzleFlash(); TestHelicopterMuzzleFlash(); TestTrailInputs(); TestSpritePreparation(); TestBulletImpacts(); TestBeamViews(); TestMapTransition();
     puts("All shared-effect production regressions passed.");
     return 0;
 }

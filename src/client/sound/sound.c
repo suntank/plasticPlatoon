@@ -28,7 +28,9 @@
  * =======================================================================
  */
 
+#include <float.h>
 #include "../header/client.h"
+#include "../cl_splitscreen.h"
 #include "header/local.h"
 #include "header/qal.h"
 #include "header/vorbis.h"
@@ -57,6 +59,89 @@ vec3_t listener_origin;
 vec3_t listener_forward;
 vec3_t listener_right;
 vec3_t listener_up;
+sound_listener_t s_listeners[MAX_SOUND_LISTENERS];
+int s_numlisteners;
+
+static qboolean
+S_ValidSoundSlot(const ss_local_player_t *slot)
+{
+	return SS_IsSessionActive() && slot && slot->active &&
+		slot->state != SS_SLOT_DROPPED && slot->connection_state == ca_active &&
+		slot->snapshot_valid && slot->frame.valid && slot->servercount == cl.servercount;
+}
+
+qboolean
+S_IsLocalEntity(int ent)
+{
+	int i;
+	if (ent == cl.playernum + 1 && ent > 0)
+	{
+		return true;
+	}
+	for (i = 0; i < SS_MAX_LOCAL_PLAYERS; ++i)
+	{
+		const ss_local_player_t *slot = SS_GetSlot(i);
+		if (S_ValidSoundSlot(slot) && slot->playernum + 1 == ent)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+/* An entity outside player one's snapshot may exist only in another local
+ * client's PVS. Prefer its newest received state rather than a stale origin. */
+static centity_t *
+S_SoundEntity(int ent)
+{
+	centity_t *entity = (ent >= 0 && ent < cl_numentities) ? &cl_entities[ent] : NULL;
+	int i;
+	for (i = 1; i < SS_MAX_LOCAL_PLAYERS; ++i)
+	{
+		const ss_local_player_t *slot = SS_GetSlot(i);
+		if (S_ValidSoundSlot(slot) && ent >= 0 && ent < slot->entity_count &&
+			(!entity || slot->entities[ent].serverframe > entity->serverframe))
+		{
+			entity = &slot->entities[ent];
+		}
+	}
+	return entity;
+}
+
+const sound_listener_t *
+S_ClosestListener(const vec3_t origin)
+{
+	const sound_listener_t *closest = &s_listeners[0];
+	float closest_distance = FLT_MAX;
+	int i;
+	for (i = 0; i < s_numlisteners; ++i)
+	{
+		vec3_t delta;
+		float distance;
+		VectorSubtract(origin, s_listeners[i].origin, delta);
+		distance = DotProduct(delta, delta);
+		if (distance < closest_distance)
+		{
+			closest_distance = distance;
+			closest = &s_listeners[i];
+		}
+	}
+	return closest;
+}
+
+void
+S_GetEntitySoundVelocity(int ent, vec3_t velocity)
+{
+	centity_t *entity = S_SoundEntity(ent);
+	if (entity)
+	{
+		VectorSubtract(entity->current.origin, entity->prev.origin, velocity);
+	}
+	else
+	{
+		VectorClear(velocity);
+	}
+}
 
 static playsound_t s_playsounds[MAX_PLAYSOUNDS];
 static playsound_t s_freeplays;
@@ -930,8 +1015,8 @@ S_PickChannel(int entnum, int entchannel)
 		}
 
 		/* don't let monster sounds override player sounds */
-		if ((channels[ch_idx].entnum == cl.playernum + 1) &&
-			(entnum != cl.playernum + 1) && channels[ch_idx].sfx)
+		if (S_IsLocalEntity(channels[ch_idx].entnum) &&
+			!S_IsLocalEntity(entnum) && channels[ch_idx].sfx)
 		{
 			continue;
 		}
@@ -1120,14 +1205,19 @@ S_StartSound(vec3_t origin, int entnum, int entchannel, sfx_t *sfx,
 	}
 
 	/* -1 means localized (menu sounds, etc.) */
-	if ((entnum < -1) || (entnum >= cl_numentities))
+	if ((entnum < -1) || (entnum > MAX_CL_ENTNUM))
 	{
 		return;
 	}
 
 	if (sfx->name[0] == '*')
 	{
-		sfx = S_RegisterSexedSound(&cl_entities[entnum].current, sfx->name);
+		centity_t *entity = S_SoundEntity(entnum);
+		if (!entity)
+		{
+			return;
+		}
+		sfx = S_RegisterSexedSound(&entity->current, sfx->name);
 
 		if (!sfx)
 		{
@@ -1154,10 +1244,7 @@ S_StartSound(vec3_t origin, int entnum, int entchannel, sfx_t *sfx,
 
 	if (origin)
 	{
-		if (!GetBSPEntitySoundOrigin(entnum, listener_origin, ps->origin))
-		{
-			VectorCopy(origin, ps->origin);
-		}
+		S_GetSpatializedOrigin(entnum, origin, ps->origin);
 
 		ps->fixed_origin = true;
 	}
@@ -1389,32 +1476,62 @@ S_StopAllSounds(void)
 /*
  * Builds a list of all sounds
  */
-void
-S_BuildSoundList(int *sounds)
+int
+S_BuildSoundList(entity_state_t **entities, int capacity)
 {
-	int i;
+	frame_t *frames[MAX_SOUND_LISTENERS];
+	entity_state_t *streams[MAX_SOUND_LISTENERS];
+	byte seen[MAX_CL_ENTNUM + 1] = {0};
+	int frame_count = 1, count = 0, i, j;
 
-	for (i = 0; i < cl.frame.num_entities && i <= MAX_CL_ENTNUM; i++)
+	frames[0] = &cl.frame;
+	streams[0] = cl_parse_entities;
+	for (i = 1; i < SS_MAX_LOCAL_PLAYERS; ++i)
 	{
-		int num;
-		entity_state_t *ent;
-
-		num = (cl.frame.parse_entities + i) & (MAX_PARSE_ENTITIES - 1);
-		ent = &cl_parse_entities[num];
-
-		if ((s_ambient->value == 2) && !ent->modelindex)
+		ss_local_player_t *slot = SS_GetSlot(i);
+		if (S_ValidSoundSlot(slot))
 		{
-			sounds[i] = 0;
-		}
-		else if ((s_ambient->value == 3) && (ent->number != cl.playernum + 1))
-		{
-			sounds[i] = 0;
-		}
-		else
-		{
-			sounds[i] = ent->sound;
+			frames[frame_count] = &slot->frame;
+			streams[frame_count++] = slot->parse_entities;
 		}
 	}
+
+	/* Newer snapshots take precedence, including a sound stopping in one
+	 * stream while another observer still has the preceding frame. */
+	for (i = 0; i < frame_count; ++i)
+	{
+		for (j = i + 1; j < frame_count; ++j)
+		{
+			if (frames[j]->serverframe > frames[i]->serverframe)
+			{
+				frame_t *frame = frames[i];
+				entity_state_t *stream = streams[i];
+				frames[i] = frames[j]; streams[i] = streams[j];
+				frames[j] = frame; streams[j] = stream;
+			}
+		}
+		for (j = 0; j < frames[i]->num_entities; ++j)
+		{
+			entity_state_t *ent = &streams[i][(frames[i]->parse_entities + j) &
+				(MAX_PARSE_ENTITIES - 1)];
+			if (ent->number < 0 || ent->number > MAX_CL_ENTNUM || seen[ent->number])
+			{
+				continue;
+			}
+			seen[ent->number] = true;
+			if (ent->sound <= 0 || ent->sound >= MAX_SOUNDS ||
+				(s_ambient->value == 2 && !ent->modelindex) ||
+				(s_ambient->value == 3 && !S_IsLocalEntity(ent->number)))
+			{
+				continue;
+			}
+			if (count < capacity)
+			{
+				entities[count++] = ent;
+			}
+		}
+	}
+	return count;
 }
 
 /*
@@ -1459,6 +1576,7 @@ S_RawSamples(int samples, int rate, int width,
 void
 S_Update(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up)
 {
+	int i;
 
 	if (sound_started == SS_NOT)
 	{
@@ -1474,6 +1592,22 @@ S_Update(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up)
 	VectorCopy(forward, listener_forward);
 	VectorCopy(right, listener_right);
 	VectorCopy(up, listener_up);
+	VectorCopy(origin, s_listeners[0].origin);
+	VectorCopy(forward, s_listeners[0].forward);
+	VectorCopy(right, s_listeners[0].right);
+	VectorCopy(up, s_listeners[0].up);
+	s_numlisteners = 1;
+	for (i = 1; i < SS_MAX_LOCAL_PLAYERS; ++i)
+	{
+		refdef_t refdef;
+		int entnum;
+		if (SS_GetSoundView(i, &refdef, &entnum))
+		{
+			sound_listener_t *listener = &s_listeners[s_numlisteners++];
+			VectorCopy(refdef.vieworg, listener->origin);
+			AngleVectors(refdef.viewangles, listener->forward, listener->right, listener->up);
+		}
+	}
 
 #if USE_OPENAL
 	if (sound_started == SS_OAL)
@@ -1797,12 +1931,11 @@ GetBSPEntitySoundOrigin(int ent, const vec3_t listener_org, vec3_t org)
 	vec3_t amin, amax;
 	int mi;
 
-	if ((ent < 0) || (ent >= cl_numentities))
+	old = S_SoundEntity(ent);
+	if (!old)
 	{
 		return false;
 	}
-
-	old = &cl_entities[ent];
 
 	mi = old->current.modelindex;
 	cm = (mi > 0 && mi < MAX_MODELS) ? cl.model_clip[mi] : NULL;
@@ -1854,10 +1987,50 @@ GetEntitySoundOrigin(int ent, const vec3_t listener_org, vec3_t org)
 
 	if (!GetBSPEntitySoundOrigin(ent, listener_org, org))
 	{
-		lerp_origin = ((ent >= 0) && (ent < cl_numentities)) ?
-			cl_entities[ent].lerp_origin : vec3_origin;
+		centity_t *entity = S_SoundEntity(ent);
+		lerp_origin = entity ? entity->lerp_origin : vec3_origin;
 
 		VectorCopy(lerp_origin, org);
+	}
+}
+
+/* A long brush model can be close to a guest at its far end. Select its
+ * nearest surface for every local eye before selecting the audible origin. */
+void
+S_GetSpatializedOrigin(int ent, const vec3_t fallback, vec3_t origin)
+{
+	vec3_t point;
+	float closest_distance = FLT_MAX;
+	int i;
+	qboolean brush = false;
+
+	for (i = 0; i < s_numlisteners; ++i)
+	{
+		vec3_t delta;
+		float distance;
+		if (!GetBSPEntitySoundOrigin(ent, s_listeners[i].origin, point))
+		{
+			break;
+		}
+		brush = true;
+		VectorSubtract(point, s_listeners[i].origin, delta);
+		distance = DotProduct(delta, delta);
+		if (distance < closest_distance)
+		{
+			closest_distance = distance;
+			VectorCopy(point, origin);
+		}
+	}
+	if (!brush)
+	{
+		if (fallback)
+		{
+			VectorCopy(fallback, origin);
+		}
+		else
+		{
+			GetEntitySoundOrigin(ent, listener_origin, origin);
+		}
 	}
 }
 

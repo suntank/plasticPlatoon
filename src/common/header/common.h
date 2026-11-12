@@ -224,7 +224,12 @@ enum svc_ops_e
 	svc_frame,
 
 	/* Plastic Platoon extension; preserve all original protocol opcodes. */
-	svc_screen_image
+	svc_screen_image,
+
+	/* Local split-screen observers receive separate visual muzzle events,
+	 * with only one audible occurrence across their shared sound output. */
+	svc_muzzleflash_silent,
+	svc_muzzleflash2_silent
 };
 
 /* ============================================== */

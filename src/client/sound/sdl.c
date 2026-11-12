@@ -596,6 +596,7 @@ SDL_SpatializeOrigin(vec3_t origin, float master_vol, float dist_mult, int *left
 	vec_t dist;
 	vec_t lscale, rscale, scale;
 	vec3_t source_vec;
+	const sound_listener_t *listener;
 
 	if (cls.state != ca_active)
 	{
@@ -604,7 +605,8 @@ SDL_SpatializeOrigin(vec3_t origin, float master_vol, float dist_mult, int *left
 	}
 
 	/* Calculate stereo seperation and distance attenuation */
-	VectorSubtract(origin, listener_origin, source_vec);
+	listener = S_ClosestListener(origin);
+	VectorSubtract(origin, listener->origin, source_vec);
 
 	dist = VectorNormalize(source_vec);
 	dist -= SDL_FULLVOLUME;
@@ -615,7 +617,7 @@ SDL_SpatializeOrigin(vec3_t origin, float master_vol, float dist_mult, int *left
 	}
 
 	dist *= dist_mult;
-	dot = DotProduct(listener_right, source_vec);
+	dot = DotProduct(listener->right, source_vec);
 
 	if ((sound.channels == 1) || !dist_mult)
 	{
@@ -656,23 +658,29 @@ SDL_Spatialize(channel_t *ch)
 
 	/* Anything coming from the view entity
 	   will always be full volume */
-	if (ch->entnum == cl.playernum + 1)
+	if (ch->entnum == -1 || S_IsLocalEntity(ch->entnum))
 	{
 		ch->leftvol = ch->master_vol;
 		ch->rightvol = ch->master_vol;
 		return;
 	}
 
-	if (ch->fixed_origin)
-	{
-		VectorCopy(ch->origin, origin);
-	}
-	else
-	{
-		GetEntitySoundOrigin(ch->entnum, listener_origin, origin);
-	}
+	S_GetSpatializedOrigin(ch->entnum, ch->fixed_origin ? ch->origin : NULL, origin);
 
 	SDL_SpatializeOrigin(origin, (float)ch->master_vol, ch->dist_mult, &ch->leftvol, &ch->rightvol);
+}
+
+static void
+SDL_SpatializeLoop(entity_state_t *ent, int *left, int *right)
+{
+	vec3_t origin;
+	if (S_IsLocalEntity(ent->number))
+	{
+		*left = *right = 255;
+		return;
+	}
+	S_GetSpatializedOrigin(ent->number, ent->origin, origin);
+	SDL_SpatializeOrigin(origin, 255.0f, SDL_LOOPATTENUATE, left, right);
 }
 
 /*
@@ -684,7 +692,8 @@ void
 SDL_AddLoopSounds(void)
 {
 	int i;
-	int sounds[MAX_EDICTS];
+	entity_state_t *entities[MAX_LOOP_SOUNDS];
+	int count;
 
 	if ((cls.state != ca_active) || (cl_paused->value && cl_audiopaused->value) ||
 	    !cl.sound_prepped || !s_ambient->value)
@@ -692,26 +701,23 @@ SDL_AddLoopSounds(void)
 		return;
 	}
 
-	memset(&sounds, 0, sizeof(int) * MAX_EDICTS);
-	S_BuildSoundList(sounds);
+	count = S_BuildSoundList(entities, MAX_LOOP_SOUNDS);
 
-	for (i = 0; i < cl.frame.num_entities; i++)
+	for (i = 0; i < count; i++)
 	{
 		int left, right, left_total, right_total;
 		channel_t *ch;
 		sfx_t *sfx;
 		sfxcache_t *sc;
-		int num;
 		entity_state_t *ent;
-		vec3_t org;
 		int j;
 
-		if (!sounds[i])
+		if (!entities[i])
 		{
 			continue;
 		}
 
-		sfx = cl.sound_precache[sounds[i]];
+		sfx = cl.sound_precache[entities[i]->sound];
 
 		if (!sfx)
 		{
@@ -725,34 +731,20 @@ SDL_AddLoopSounds(void)
 			continue;
 		}
 
-		num = (cl.frame.parse_entities + i) & (MAX_PARSE_ENTITIES - 1);
-		ent = &cl_parse_entities[num];
-
-		if (!GetBSPEntitySoundOrigin(ent->number, listener_origin, org))
-		{
-			VectorCopy(ent->origin, org);
-		}
+		ent = entities[i];
 
 		/* find the total contribution of all sounds of this type */
-		SDL_SpatializeOrigin(org, 255.0f, SDL_LOOPATTENUATE, &left_total, &right_total);
+		SDL_SpatializeLoop(ent, &left_total, &right_total);
 
-		for (j = i + 1; j < cl.frame.num_entities; j++)
+		for (j = i + 1; j < count; j++)
 		{
-			if (sounds[j] != sounds[i])
+			if (!entities[j] || entities[j]->sound != entities[i]->sound)
 			{
 				continue;
 			}
 
-			sounds[j] = 0; /* don't check this again later */
-			num = (cl.frame.parse_entities + j) & (MAX_PARSE_ENTITIES - 1);
-			ent = &cl_parse_entities[num];
-
-			if (!GetBSPEntitySoundOrigin(ent->number, listener_origin, org))
-			{
-				VectorCopy(ent->origin, org);
-			}
-
-			SDL_SpatializeOrigin(org, 255.0f, SDL_LOOPATTENUATE, &left, &right);
+			SDL_SpatializeLoop(entities[j], &left, &right);
+			entities[j] = NULL; /* don't check this again later */
 
 			left_total += left;
 			right_total += right;

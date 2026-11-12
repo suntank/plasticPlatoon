@@ -201,5 +201,7 @@ qboolean SS_RenderViews(float stereo_separation);
 void SS_DrawGameplayHUD(void);
 void SS_DrawSessionOverlay(void);
 void SS_RunLocalClients(void);
+void SS_FireEntityEvents(int observer, frame_t *frame, entity_state_t *stream);
+qboolean SS_GetSoundView(int slot_index, refdef_t *refdef, int *entnum);
 
 #endif

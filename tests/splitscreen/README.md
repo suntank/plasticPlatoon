@@ -6,6 +6,8 @@ Build the SDL2 client, then run the production-code regression suites:
 make -j4 client
 sh tests/input/run_event_tests.sh
 sh tests/splitscreen/run_state_tests.sh
+sh tests/splitscreen/run_sound_delivery_tests.sh
+sh tests/sound/run_tests.sh
 python3 tests/input/test_controller_migration.py
 ```
 
