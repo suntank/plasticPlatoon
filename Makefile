@@ -495,6 +495,7 @@ assets:
 	python3 tools/assets/import_enemy_sounds.py --verify
 	python3 tools/assets/import_soldier_callouts.py --verify
 	python3 tools/assets/import_insect_sounds.py --verify
+	python3 tools/assets/import_support_recordings.py --verify
 	python3 tools/assets/build_support_models.py
 	python3 tools/assets/verify_m16_runtime.py
 	python3 tools/assets/verify_pistol_runtime.py

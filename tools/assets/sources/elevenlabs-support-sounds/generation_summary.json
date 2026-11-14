@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-12",
+  "model": "ElevenLabs Sound Effects v3",
+  "prompt_influence": 0.3,
+  "prompt_enhancement": true,
+  "private_generation": true,
+  "credits_used": 357,
+  "accepted_prompt_count": 32,
+  "total_generation_submissions": 34,
+  "accepted_export_count": 40,
+  "raw_stereo_format": "48 kHz 16-bit PCM WAV",
+  "loops_requested": true,
+  "loop_auditory_qa": false,
+  "implementation": false,
+  "notes": [
+    "Six unproven runtime slots deferred; computer-confirmation experiment retained locally outside delivery.",
+    "Protection-expiry prompt replaced with blocked-hit cue after source semantics correction.",
+    "Laser impact export uses generated take 2, not take 1.",
+    "One legacy boss BFG impact kept separately as conditional; not current mortar.",
+    "Four armor candidates reused from prior task without new generation.",
+    "Full source takes untrimmed; audible quality, timing and loop seams not yet verified."
+  ]
+}

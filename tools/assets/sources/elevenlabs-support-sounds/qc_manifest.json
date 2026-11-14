@@ -1,0 +1,1174 @@
+[
+  {
+    "id": "health_small",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/health_small_01.wav",
+    "mono": "mono/health_small_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "080d66c966d07f8f258945a877d602c3176f21a4f6d1dec8db7b2c1f593a7e91",
+    "mono_pcm_sha256": "f435f67ff7f1cac3ad735ba8896fc6de8ce0a4fa6cfbab3aaf367ec41aecbc1d",
+    "peak_dbfs": -10.81,
+    "rms_dbfs": -35.89,
+    "full_scale_samples": 0,
+    "prompt": "Tiny plastic medical capsule snaps shut with a soft airy healing puff. Light, reassuring toy-soldier health pickup, not an electronic beep. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/s_health.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "health_normal",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/health_normal_01.wav",
+    "mono": "mono/health_normal_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "bafec7be26bd2fad27d730402719167e7f9058b1dd5632ffbd3f33f5eb2ac5ce",
+    "mono_pcm_sha256": "1b7348601d214efa91236ec070491b82b45fabedffddcc3325f4c89ea5faddf9",
+    "peak_dbfs": -14.69,
+    "rms_dbfs": -36.57,
+    "full_scale_samples": 0,
+    "prompt": "Small plastic field medkit latch clicks open, a brief soft pressurized healing hiss and satisfying snap. Positive toy-soldier health pickup, not a beep. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/n_health.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "health_normal",
+    "take": 2,
+    "source_take": 2,
+    "raw": "raw/health_normal_02.wav",
+    "mono": "mono/health_normal_02.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "88208e57a8382b2a9dec720e1f0e9cff9abdf6003844a2bcea3eaa0590fd3050",
+    "mono_pcm_sha256": "0bbb8183c5a73c58376604775d96b48ed06f058e9cc033982fe7d7ae7373c833",
+    "peak_dbfs": -6.88,
+    "rms_dbfs": -31.62,
+    "full_scale_samples": 0,
+    "prompt": "Small plastic field medkit latch clicks open, a brief soft pressurized healing hiss and satisfying snap. Positive toy-soldier health pickup, not a beep. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/n_health.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "health_small",
+    "take": 2,
+    "source_take": 2,
+    "raw": "raw/health_small_02.wav",
+    "mono": "mono/health_small_02.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "0b8d353e9b971d5fdfee40b0d1ce1a0db24145b56e8f4baa23682de29ac66b0f",
+    "mono_pcm_sha256": "d147d048885a22ddac2aa0d2b27fd78f9ed8274b455c9b0b5f51316ecde64eb2",
+    "peak_dbfs": -6.74,
+    "rms_dbfs": -34.85,
+    "full_scale_samples": 0,
+    "prompt": "Tiny plastic medical capsule snaps shut with a soft airy healing puff. Light, reassuring toy-soldier health pickup, not an electronic beep. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/s_health.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "health_large",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/health_large_01.wav",
+    "mono": "mono/health_large_01.wav",
+    "duration_seconds": 0.6065,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.6065,
+      "full_scale_samples": 0
+    },
+    "sha256": "daa4232948fcaf36f8457171828fa3ea9aa9e365c5d7f70e2a3dbc8fc82a1840",
+    "mono_pcm_sha256": "fed7cd34fee7f9882e9210a233daaed3dd33b7dff4539d5c97633ee1326f5086",
+    "peak_dbfs": -0.81,
+    "rms_dbfs": -28.37,
+    "full_scale_samples": 0,
+    "prompt": "Sturdy plastic field medkit opens with a double latch click, a fuller restorative air puff and firm closing snap. Strong toy-soldier health pickup, no beep. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/l_health.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "health_large",
+    "take": 2,
+    "source_take": 2,
+    "raw": "raw/health_large_02.wav",
+    "mono": "mono/health_large_02.wav",
+    "duration_seconds": 0.6065,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.6065,
+      "full_scale_samples": 0
+    },
+    "sha256": "89e6830105a50310080439c840efbc98222a05a406c069e2bfb699a2334ed0a1",
+    "mono_pcm_sha256": "481c66fd0f6e7b58d0a31cbf0f3c6582239b568552e6f9a4e98a5e6b651454a8",
+    "peak_dbfs": -3.45,
+    "rms_dbfs": -32.98,
+    "full_scale_samples": 0,
+    "prompt": "Sturdy plastic field medkit opens with a double latch click, a fuller restorative air puff and firm closing snap. Strong toy-soldier health pickup, no beep. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/l_health.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "health_mega",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/health_mega_01.wav",
+    "mono": "mono/health_mega_01.wav",
+    "duration_seconds": 0.8065,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.8065,
+      "full_scale_samples": 0
+    },
+    "sha256": "43195acab112e3754e5dd156611d782abe5b16d0ecdfd81206d3c85e02678664",
+    "mono_pcm_sha256": "07380792e9c376013c98838f865b34f2d8e74ab361bb7fc97c10facaa9dfe254",
+    "peak_dbfs": -2.7,
+    "rms_dbfs": -31.96,
+    "full_scale_samples": 0,
+    "prompt": "Large toy medical supply pack releases with a firm plastic clack and powerful clean restorative rush, ending in a satisfying snap. Rare major health pickup, no beep. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/m_health.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "health_mega",
+    "take": 2,
+    "source_take": 2,
+    "raw": "raw/health_mega_02.wav",
+    "mono": "mono/health_mega_02.wav",
+    "duration_seconds": 0.8065,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.8065,
+      "full_scale_samples": 0
+    },
+    "sha256": "0ad9eeceff096d72034faf0710a700be818b0a2162964cb698a6bee136c5837f",
+    "mono_pcm_sha256": "f698d95580066e081abc80b14309cb18ca82ad054e41d88af41dfcf3a5b86816",
+    "peak_dbfs": -2.98,
+    "rms_dbfs": -35.45,
+    "full_scale_samples": 0,
+    "prompt": "Large toy medical supply pack releases with a firm plastic clack and powerful clean restorative rush, ending in a satisfying snap. Rare major health pickup, no beep. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/m_health.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "pickup_generic",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/pickup_generic_01.wav",
+    "mono": "mono/pickup_generic_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "ac8560bd46745872f2ab9e97d5a437d2fe73d7b277cc6b8a50e1280acae2a2cc",
+    "mono_pcm_sha256": "c31609fcfeeefca48f4ed9061faf051d285d6a11accee3657ba9e2164603788f",
+    "peak_dbfs": -10.77,
+    "rms_dbfs": -30.29,
+    "full_scale_samples": 0,
+    "prompt": "A small plastic equipment piece clicks securely into a toy soldier backpack, with a crisp latch and tiny fabric rustle. Satisfying collectible pickup, no beep. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/pkup.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "item_respawn",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/item_respawn_01.wav",
+    "mono": "mono/item_respawn_01.wav",
+    "duration_seconds": 0.6865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.6865,
+      "full_scale_samples": 0
+    },
+    "sha256": "4b5cd2b5be7357de1e9ce469182b2adb5e7d431b6dd51dd446990d104878e599",
+    "mono_pcm_sha256": "554097350455633ab155df459f21ad34bad165f1515a142f7396dde0b1e37af8",
+    "peak_dbfs": -6.03,
+    "rms_dbfs": -25.25,
+    "full_scale_samples": 0,
+    "prompt": "A toy supply item materializes with a quick airy inward whoosh and crisp plastic pop. Compact playful sci-fi effect, no musical chime. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/respawn1.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "damage_powerup",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/damage_powerup_01.wav",
+    "mono": "mono/damage_powerup_01.wav",
+    "duration_seconds": 0.6865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.6865,
+      "full_scale_samples": 0
+    },
+    "sha256": "29d3bc041378d2ab958c99ec76b5c9196e6e23ec0a97dbc5f502ce3f614eb367",
+    "mono_pcm_sha256": "e81d6dc62789f3c6cd57552533a2396a5115dfea0b417bd98f3e6c7c337a1255",
+    "peak_dbfs": -4.21,
+    "rms_dbfs": -22.13,
+    "full_scale_samples": 0,
+    "prompt": "A toy power cell locks in with a clack and a fierce rising electric surge, ending abruptly with energized crackle. Powerful combat boost, no melody. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/damage.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "protection_powerup",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/protection_powerup_01.wav",
+    "mono": "mono/protection_powerup_01.wav",
+    "duration_seconds": 0.6865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.6865,
+      "full_scale_samples": 0
+    },
+    "sha256": "3c59953fdeba1c4b71b0147aa4e234b6692cd4c45c41dbb84662ea6e0e00980d",
+    "mono_pcm_sha256": "48367c91e5e7ceef11973b1e54470e77f2247509d7fc5bc4e20f7608bef8d389",
+    "peak_dbfs": -4.4,
+    "rms_dbfs": -28.91,
+    "full_scale_samples": 0,
+    "prompt": "A toy soldier energy shield engages: firm latch click, rounded electric swell, compact shimmering barrier snap. Strong protective effect, no melody. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/protect.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "key_denied",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/key_denied_01.wav",
+    "mono": "mono/key_denied_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "a53fc81b11c567a4499c72c125e77b17b3a79af44d67ce9e7a636290603a707e",
+    "mono_pcm_sha256": "854eb6495e4ab6446854025aa1fbf22efed1db9b62979f721d3f269c8fa7cb39",
+    "peak_dbfs": -2.99,
+    "rms_dbfs": -28.1,
+    "full_scale_samples": 0,
+    "prompt": "A small locked metal latch resists a quick turn, gives a muted double clunk and stops. Clear denied interaction, no electronic error beep. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "misc/keytry.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "key_accepted",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/key_accepted_01.wav",
+    "mono": "mono/key_accepted_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "b4c465233196b7d4fcdf48a00c37f9a10390d32c8e4ae353f5865b945fc2f295",
+    "mono_pcm_sha256": "0af5f9493c976525d933a6fc9750a35d4a340f6f96c8ea7aeb7850891532c341",
+    "peak_dbfs": -4.17,
+    "rms_dbfs": -32.74,
+    "full_scale_samples": 0,
+    "prompt": "A small key turns and releases a spring lock with a crisp click-clack. Clear successful unlock, no electronic beep. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "misc/keyuse.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "switch_press",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/switch_press_01.wav",
+    "mono": "mono/switch_press_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "9dc4e1dcbeb1ede04265a2167c55ebb3205b52a3a983d15edc9755b7338a20bb",
+    "mono_pcm_sha256": "857e1209e0bb7544939af551f49c7d017782f325f2e73af0041fddcf5970581c",
+    "peak_dbfs": -7.19,
+    "rms_dbfs": -34.25,
+    "full_scale_samples": 0,
+    "prompt": "A chunky plastic military control button presses down with a crisp tactile click and tiny spring return. Single switch activation. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "switches/butn2.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "menu_move",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/menu_move_01.wav",
+    "mono": "mono/menu_move_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "4058a00928d3cc5786101d7367e8bea5cf2c2a003878b5855b4f13acf018075f",
+    "mono_pcm_sha256": "9dc9e0870757d39414acff053525ab6301d669680e380dd741a7d8227a94c26f",
+    "peak_dbfs": -1.35,
+    "rms_dbfs": -31.07,
+    "full_scale_samples": 0,
+    "prompt": "One tiny dry plastic toggle tick, crisp and very brief, quiet tactile menu navigation. No beep, ringing or musical note. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "misc/menu1.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "menu_confirm",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/menu_confirm_01.wav",
+    "mono": "mono/menu_confirm_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "af529169aa823113dbd1270aba8cfffcf685114a21252f9d3336f381303b308e",
+    "mono_pcm_sha256": "f3b500eabe1181e198d5f40a1eec1a9ac4221ad27290bd86fd32a344ea6841ce",
+    "peak_dbfs": -17.28,
+    "rms_dbfs": -39.99,
+    "full_scale_samples": 0,
+    "prompt": "A precise plastic button gives a satisfying short double click and soft latch snap. Tactile menu confirmation, no beep or musical note. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "misc/menu2.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "menu_back",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/menu_back_01.wav",
+    "mono": "mono/menu_back_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "bac687ee5b2a51f2d0c7c38d103a73311732b8603be654d1c371c983fc3d3eed",
+    "mono_pcm_sha256": "95d6a06f4b699643e91ecc99d919913900bd836e10be029428f0cddda98f341d",
+    "peak_dbfs": -13.96,
+    "rms_dbfs": -39.89,
+    "full_scale_samples": 0,
+    "prompt": "A small plastic latch softly releases with a low short click and light spring flick. Tactile menu back action, no beep or musical note. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "misc/menu3.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "secret_found",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/secret_found_01.wav",
+    "mono": "mono/secret_found_01.wav",
+    "duration_seconds": 0.8865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.8865,
+      "full_scale_samples": 0
+    },
+    "sha256": "53e664d69b98397aed531b1222282298943a6660a3b9b9e0e301471d3160ec93",
+    "mono_pcm_sha256": "2df82239d508a1acd0b84136d9561eb726dcaab6186c2d668970ca72be53613d",
+    "peak_dbfs": -8.71,
+    "rms_dbfs": -28.87,
+    "full_scale_samples": 0,
+    "prompt": "Hidden toy supply cache discovery: quick latch click, bright magical airy sparkle and a satisfying compact reveal flourish. Exciting but restrained, no melody. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "misc/secret.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "chat_notification",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/chat_notification_01.wav",
+    "mono": "mono/chat_notification_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "aac87f05d862244c73cd1035825fe8e90759792034d99ac8f38bb5450fd7fb1a",
+    "mono_pcm_sha256": "e1646a01e5fee88a43ea9b2a9588b63e4e62e697433edc57c94266482bdab9f1",
+    "peak_dbfs": -1.17,
+    "rms_dbfs": -16.41,
+    "full_scale_samples": 0,
+    "prompt": "One quiet military radio squelch click with a tiny static flutter. Brief unobtrusive incoming message notification, no voice or beep. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "misc/talk1.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "water_splash",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/water_splash_01.wav",
+    "mono": "mono/water_splash_01.wav",
+    "duration_seconds": 0.6865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.6865,
+      "full_scale_samples": 0
+    },
+    "sha256": "5e7e0242db8abbd001bce5b5c3ebae00cb42e9fb2157715b722882f7d536a257",
+    "mono_pcm_sha256": "f29f8fd71fd8dea14cb47bf16b47c28bd54ea78bf025e1e6fce706b58a489650",
+    "peak_dbfs": -3.02,
+    "rms_dbfs": -26.09,
+    "full_scale_samples": 0,
+    "prompt": "A small toy soldier lands in shallow water: single sharp splash, brief scattered droplets and quick settling slosh. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "misc/h2ohit1.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "plastic_shatter",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/plastic_shatter_01.wav",
+    "mono": "mono/plastic_shatter_01.wav",
+    "duration_seconds": 0.8065,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.8065,
+      "full_scale_samples": 0
+    },
+    "sha256": "11e3da358afd0da2c73d69e444738e8ab564adf91d6329db3405f783aadfbc62",
+    "mono_pcm_sha256": "42e5265abf81487e5391d38baf2183c095cbcf3859df6c089ab9d3c938838f08",
+    "peak_dbfs": -2.08,
+    "rms_dbfs": -35.85,
+    "full_scale_samples": 0,
+    "prompt": "A hard hollow plastic action figure breaks apart with a crisp crack, chunky shell clatter and tiny fragments bouncing. No flesh or gore. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "misc/udeath.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "landing_light",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/landing_light_01.wav",
+    "mono": "mono/landing_light_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "11f3166c4be8db3dbc147e47e2b4f6a8d4e82f76a702d31e9e9b702572088a12",
+    "mono_pcm_sha256": "2e18407442b6b8ac9401bb1367ad8e1e7c5b4dcdaf499b5659df5f1aa6bc773b",
+    "peak_dbfs": -2.82,
+    "rms_dbfs": -22.48,
+    "full_scale_samples": 0,
+    "prompt": "A toy soldier lands lightly on a hard surface: short boot thud with a tiny plastic equipment rattle, no grunt. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "player/fall1.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "landing_heavy",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/landing_heavy_01.wav",
+    "mono": "mono/landing_heavy_01.wav",
+    "duration_seconds": 0.6065,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.6065,
+      "full_scale_samples": 0
+    },
+    "sha256": "07668bb2515ed5f7f5245ab9563476e0058834b402ee157416402667557de8c6",
+    "mono_pcm_sha256": "5212c9bdb7fd619a53d7111d15a4e2fb66996f280e2ec8f42939445f7e54a720",
+    "peak_dbfs": -4.24,
+    "rms_dbfs": -25.71,
+    "full_scale_samples": 0,
+    "prompt": "A toy soldier lands hard on a solid surface: weighty short double boot thump, plastic gear clack and brief scrape, no grunt. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "player/fall2.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "world_landing",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/world_landing_01.wav",
+    "mono": "mono/world_landing_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "3b551c9fe4dbdfdd27a34a2a5d3c4ef5de56ed2e85a8b87fa99e0de905bbf9e8",
+    "mono_pcm_sha256": "6b6158ded3a72049ef346b33fa02d8d01cfe5907a430c4be73f63d319c8544a5",
+    "peak_dbfs": -5.97,
+    "rms_dbfs": -32.49,
+    "full_scale_samples": 0,
+    "prompt": "A small rigid plastic object drops onto a solid tabletop with a single dry hollow thock and tiny bounce. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "world/land.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "protection_hit",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/protection_hit_01.wav",
+    "mono": "mono/protection_hit_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "72c57580e9521bea963e4585fd4c0a00668daaa46d95a92e096dae90bdb6449c",
+    "mono_pcm_sha256": "8d97a1c0b2b11dec3098b4976fbb4e57b3106d66ea6a539f26be8e77773c7dbc",
+    "peak_dbfs": -1.72,
+    "rms_dbfs": -22.42,
+    "full_scale_samples": 0,
+    "prompt": "An incoming projectile hits an invulnerable energy shield: sharp deflecting crack, compact resonant electric thump and tiny bright ricochet fizz. Strong protective impact, no shield shutdown or melody. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "items/protect4.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "breathing_in",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/breathing_in_01.wav",
+    "mono": "mono/breathing_in_01.wav",
+    "duration_seconds": 0.8065,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.8065,
+      "full_scale_samples": 0
+    },
+    "sha256": "56ecd7b40d3799861e876ea39e52de1aa9c10d6aed61a35c78fade5219c8443f",
+    "mono_pcm_sha256": "66df03c7844a9107456dbb55715dbaa2406ec441bcf12a6b438679dab0ebdced",
+    "peak_dbfs": -5.79,
+    "rms_dbfs": -27.95,
+    "full_scale_samples": 0,
+    "prompt": "One short inhale through an underwater breathing regulator: compressed airy intake with a subtle valve click. No words, no surfacing splash. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "player/u_breath1.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "breathing_out",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/breathing_out_01.wav",
+    "mono": "mono/breathing_out_01.wav",
+    "duration_seconds": 0.8865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.8865,
+      "full_scale_samples": 0
+    },
+    "sha256": "e28cd5ceff1d41400d08acaa4abb2f684afba310bd3998eb42671fa25c6bbf53",
+    "mono_pcm_sha256": "34b568930f0246e7566445da4937426ef8a234bd7d939a6ad39545755caff718",
+    "peak_dbfs": -5.47,
+    "rms_dbfs": -22.72,
+    "full_scale_samples": 0,
+    "prompt": "One short exhale through an underwater breathing regulator: muffled airy release with a small cluster of escaping bubbles. No words. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "player/u_breath2.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "corpse_flies",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/corpse_flies_01.wav",
+    "mono": "mono/corpse_flies_01.wav",
+    "duration_seconds": 2.0,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 2.0,
+      "full_scale_samples": 0
+    },
+    "sha256": "14ac6c807a1033eed6a982182bed5896a88255a768779ba875948633834ffd22",
+    "mono_pcm_sha256": "547d853790df4c0398b7d03bbbc9c972fdbabc6a0218b10afdbbcb2b97a6947a",
+    "peak_dbfs": -27.73,
+    "rms_dbfs": -42.9,
+    "full_scale_samples": 0,
+    "prompt": "A quiet cluster of small flies buzzing close by, organic irregular wing hum, restrained and thin, no giant insect screeches. Seamless steady loop, no intro or ending. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "infantry/inflies1.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": true,
+    "loop_boundary_step_pcm": 30,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "laser_flight",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/laser_flight_01.wav",
+    "mono": "mono/laser_flight_01.wav",
+    "duration_seconds": 2.0,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 2.0,
+      "full_scale_samples": 0
+    },
+    "sha256": "8b6e9360ec97206155c023724726f0901286bf9413fcf025f05d1aec5daaa3d9",
+    "mono_pcm_sha256": "f0859fe97b100a901fc424b5530dcde54128bd9c1c8f849cb1422e9a5bea95b4",
+    "peak_dbfs": -4.31,
+    "rms_dbfs": -23.49,
+    "full_scale_samples": 0,
+    "prompt": "A small plasma bolt sustained flight texture: narrow airy electric fizz with a smooth bright buzz, compact and unobtrusive, no impacts. Seamless steady loop, no intro or ending. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "misc/lasfly.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": true,
+    "loop_boundary_step_pcm": 1,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "flamethrower_loop",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/flamethrower_loop_01.wav",
+    "mono": "mono/flamethrower_loop_01.wav",
+    "duration_seconds": 2.0,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 2.0,
+      "full_scale_samples": 0
+    },
+    "sha256": "493ab02870aaad30f8cabb11e00da0e0f8431586284566c946441f9eab43c5a0",
+    "mono_pcm_sha256": "3ef6f20b9bf4af88e9811bd093ce00a4e5d921928de18b40b73608508cc43fd3",
+    "peak_dbfs": -5.79,
+    "rms_dbfs": -18.52,
+    "full_scale_samples": 0,
+    "prompt": "A compact flamethrower firing continuously: forceful rushing pressurized flame with a coarse roaring hiss and fine crackling fire texture. Steady intensity, no explosions or laser tones. Seamless steady loop, no intro or ending. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "weapons/bfg__l1a.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": true,
+    "loop_boundary_step_pcm": 29,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "large_energy_impact",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/large_energy_impact_01.wav",
+    "mono": "mono/large_energy_impact_01.wav",
+    "duration_seconds": 0.8865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.8865,
+      "full_scale_samples": 0
+    },
+    "sha256": "37adb7fe60bed1a2fb4ec9fcea2d256f25402bd4604dd76ccd887c06c509f07a",
+    "mono_pcm_sha256": "b1e784270868d69a4a2f519bf873f89d23496dc7112718548ffaea75e6e7549a",
+    "peak_dbfs": -2.34,
+    "rms_dbfs": -17.0,
+    "full_scale_samples": 0,
+    "prompt": "A heavy plasma orb strikes: powerful compact electrical burst with a deep punch, crunchy ionized crackle and a fast airy decay. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "weapons/bfg__x1b.wav"
+    ],
+    "plan_status": "conditional_legacy_boss",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "mission_alarm",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/mission_alarm_01.wav",
+    "mono": "mono/mission_alarm_01.wav",
+    "duration_seconds": 2.0,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 2.0,
+      "full_scale_samples": 0
+    },
+    "sha256": "33332516d295f73b517871646231aa88464a3d5ba794384a6ce4a0a134b2af7d",
+    "mono_pcm_sha256": "8be16907ca77a5bfdb665436b54051d8655a63b3fbe3cc9bfc169c0a597ace09",
+    "peak_dbfs": -6.06,
+    "rms_dbfs": -23.57,
+    "full_scale_samples": 0,
+    "prompt": "A compact military base warning klaxon, alternating two harsh mechanical horn pulses, urgent but not overwhelming. Seamless steady loop, no intro or ending. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "world/klaxon1.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": true,
+    "loop_boundary_step_pcm": 213,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "ricochet",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/ricochet_01.wav",
+    "mono": "mono/ricochet_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "e4c2bca21eb4a48df00e85bb4035b29fe72087da04feb9c0dcefc1f351fcdd06",
+    "mono_pcm_sha256": "d452da49b9ce277d8c8280483bbb57297ee8819221fc67cc545352943406451f",
+    "peak_dbfs": -2.12,
+    "rms_dbfs": -24.19,
+    "full_scale_samples": 0,
+    "prompt": "A single small projectile ricochets from a hard plastic toy surface: sharp tick and very brief zipping deflection with dry shell resonance. No gunshot. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "world/ric1.wav",
+      "world/ric2.wav",
+      "world/ric3.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "ricochet",
+    "take": 2,
+    "source_take": 2,
+    "raw": "raw/ricochet_02.wav",
+    "mono": "mono/ricochet_02.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "4cd0f5fa2e24285cd420638623a0606c3704c06ebcb5fc20cf788bcf90449aa1",
+    "mono_pcm_sha256": "db8ebebc720d971c9ef93f466650dadc2c892bb098913098b075adab60478731",
+    "peak_dbfs": -1.62,
+    "rms_dbfs": -24.5,
+    "full_scale_samples": 0,
+    "prompt": "A single small projectile ricochets from a hard plastic toy surface: sharp tick and very brief zipping deflection with dry shell resonance. No gunshot. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "world/ric1.wav",
+      "world/ric2.wav",
+      "world/ric3.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "ricochet",
+    "take": 3,
+    "source_take": 3,
+    "raw": "raw/ricochet_03.wav",
+    "mono": "mono/ricochet_03.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "2e4d3daf049854211c69045f2b0067cc1dcd6bc7c4649da554b91b397b789c2d",
+    "mono_pcm_sha256": "49e01a90e5f94b6ec2d39eb0b0e625b0633fa5a10b0077003d98efa741763de2",
+    "peak_dbfs": -2.65,
+    "rms_dbfs": -25.23,
+    "full_scale_samples": 0,
+    "prompt": "A single small projectile ricochets from a hard plastic toy surface: sharp tick and very brief zipping deflection with dry shell resonance. No gunshot. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "world/ric1.wav",
+      "world/ric2.wav",
+      "world/ric3.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "spark",
+    "take": 1,
+    "source_take": 1,
+    "raw": "raw/spark_01.wav",
+    "mono": "mono/spark_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "b9456522c608e9efbe71751ff19b3deaa7dcc2c3488f377861e0142026f84b3d",
+    "mono_pcm_sha256": "9986bfcbb6b864c51a29066fd57f6f40e405a6c6cc9a3e9bcedf6422851dc4fc",
+    "peak_dbfs": -10.87,
+    "rms_dbfs": -29.06,
+    "full_scale_samples": 0,
+    "prompt": "One tiny electrical short circuit: sharp dry spark snap with a brief brittle crackle. No sustained hum. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "world/spark5.wav",
+      "world/spark6.wav",
+      "world/spark7.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "spark",
+    "take": 2,
+    "source_take": 2,
+    "raw": "raw/spark_02.wav",
+    "mono": "mono/spark_02.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "733bc0a01d53565dfd397616ccd9d510dfdbecc30b3239fc2ddd9e2152130085",
+    "mono_pcm_sha256": "64c1d6412e0b81790b9319f31caab48e2a46d2e26c674da08a3df254e754b78a",
+    "peak_dbfs": -9.61,
+    "rms_dbfs": -35.86,
+    "full_scale_samples": 0,
+    "prompt": "One tiny electrical short circuit: sharp dry spark snap with a brief brittle crackle. No sustained hum. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "world/spark5.wav",
+      "world/spark6.wav",
+      "world/spark7.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "spark",
+    "take": 3,
+    "source_take": 3,
+    "raw": "raw/spark_03.wav",
+    "mono": "mono/spark_03.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "23bd7b4f439fb74b6d73fce13985864f8ede868d834c86ea81219f4169a3ad4d",
+    "mono_pcm_sha256": "5cc8d582b433a0e9f02aa5f2a7e3ff303102978855b0a39825c50510435791ed",
+    "peak_dbfs": -9.61,
+    "rms_dbfs": -26.58,
+    "full_scale_samples": 0,
+    "prompt": "One tiny electrical short circuit: sharp dry spark snap with a brief brittle crackle. No sustained hum. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "world/spark5.wav",
+      "world/spark6.wav",
+      "world/spark7.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  },
+  {
+    "id": "laser_impact",
+    "take": 1,
+    "source_take": 2,
+    "raw": "raw/laser_impact_01.wav",
+    "mono": "mono/laser_impact_01.wav",
+    "duration_seconds": 0.4865,
+    "source_format": {
+      "channels": 2,
+      "rate": 48000,
+      "bits": 16,
+      "duration": 0.4865,
+      "full_scale_samples": 0
+    },
+    "sha256": "94083da7af9471829959c67ef086e8b6dc28ab4bf9c59171dec56149d5f97a1f",
+    "mono_pcm_sha256": "f087bfe41f344c6ddcd5a9298a75ce057d19c4a5dfd49bc67cfa97bb7a6eb969",
+    "peak_dbfs": -1.35,
+    "rms_dbfs": -23.85,
+    "full_scale_samples": 0,
+    "prompt": "A tiny laser strikes a hard plastic surface: sharp bright snap with a very short brittle sizzle. No gunshot boom. One short isolated sound, immediate onset and fast clean decay. Dry close-up game sound. No music, speech or background ambience.",
+    "target_paths": [
+      "weapons/lashit.wav"
+    ],
+    "plan_status": "accepted_plan",
+    "loop_requested": false,
+    "loop_boundary_step_pcm": null,
+    "loop_seam_audibly_verified": false,
+    "processing": "Stereo downmix to mono PCM16 48 kHz. No trim, fade, gain, pitch or timing changes. Audible quality and gameplay timing not verified."
+  }
+]

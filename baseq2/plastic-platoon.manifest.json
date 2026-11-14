@@ -3638,53 +3638,53 @@
     },
     {
       "path": "sound/infantry/inflies1.wav",
-      "bytes": 44144,
-      "sha256": "02872926a72b7343f72858e5e24c1996898b536a68035cdaa3aff88b6c6bdf56"
+      "bytes": 188204,
+      "sha256": "6814f00c83c6465c95ecd28257726a54f2a66d75dfea91091aaf4a8a5f6f626d"
     },
     {
       "path": "sound/items/damage.wav",
-      "bytes": 18566,
-      "sha256": "4eb40cd9bbef1729b37f1878b7c93c554fdf6cf385f2a89eae726abe6451b76b"
+      "bytes": 65982,
+      "sha256": "caaf843419047ae3ef8c131c014321f572a154941179805ddec19b76d2ab5849"
     },
     {
       "path": "sound/items/l_health.wav",
-      "bytes": 11068,
-      "sha256": "9ef926356bdf5b5fee1248960c65ad956b3500093310030ae0a142af8f6cb1de"
+      "bytes": 58302,
+      "sha256": "67777604c720a2d4cba90c62583fad305fc8e1bc6095a93d08c9a978107be9dd"
     },
     {
       "path": "sound/items/m_health.wav",
-      "bytes": 15920,
-      "sha256": "88cbf3a3ec8fd9b62c9639db7e53115026d594621699666e48dee6eb499b009c"
+      "bytes": 77502,
+      "sha256": "b168c7398f3d0f059e1431af34ef0f2665258a7a2473e4d04c204afaf2197d98"
     },
     {
       "path": "sound/items/n_health.wav",
-      "bytes": 8424,
-      "sha256": "252fb49f325834579a95f22a14f2214992dc9efd9c6078cc94736b0d873c292f"
+      "bytes": 46782,
+      "sha256": "c623f3d7ac81f96df4e68ad2d87c54a7a7aeffb31cae524701a105137cfef444"
     },
     {
       "path": "sound/items/pkup.wav",
-      "bytes": 7982,
-      "sha256": "51e95e202b9d2cc82f3b4c8f8c183788aaf04f32eaf6ba123f693142ca9c4988"
+      "bytes": 46782,
+      "sha256": "975e6305a982a3972f600d77b2aee38787e07c779d4709415d21d744a2076eeb"
     },
     {
       "path": "sound/items/protect.wav",
-      "bytes": 19448,
-      "sha256": "10c5a904e9a819d90d6170e3053a6d1e636259d30633d31f20146c55c306f982"
+      "bytes": 65982,
+      "sha256": "50e12dbb522200cdf183e849f906345a3726373ccbb00e2fa89469c538fbb908"
     },
     {
       "path": "sound/items/protect4.wav",
-      "bytes": 14156,
-      "sha256": "61885bde4ce3a7e6b35a84e10acb6d367de7b156c5c620cbfcd74a9e153d075f"
+      "bytes": 46782,
+      "sha256": "dad8fdcacd1750b9f98495b3f1f23d11aee2ebdb79b40b2560cf7b186e3a46fd"
     },
     {
       "path": "sound/items/respawn1.wav",
-      "bytes": 15038,
-      "sha256": "8f473d2a8f6d9412c3a967bc3248ecb82918fc54a980df2894476edb322d6b03"
+      "bytes": 65982,
+      "sha256": "3629c8f4da06815b32b726fcf8132e149fd6a9357177795f7fe7d78e54e1e0f7"
     },
     {
       "path": "sound/items/s_health.wav",
-      "bytes": 6218,
-      "sha256": "a472d83bd6a5a32484003a52f387c34ff847c42060843186aca3a6fb379adc3e"
+      "bytes": 46782,
+      "sha256": "5e36c62cb7470645638079dfa2ccd27bb445659c5e2d86cbd312bd25bbdbae7c"
     },
     {
       "path": "sound/misc/am_pkup.wav",
@@ -3693,48 +3693,48 @@
     },
     {
       "path": "sound/misc/ar1_pkup.wav",
-      "bytes": 9304,
-      "sha256": "b7d7a138a9740042dd88ed22f6345b736fd26824c7cc8448125fc9709c2cf261"
+      "bytes": 77502,
+      "sha256": "a94d6eccdaaa36af75e13fd7455bf62ca2a915387bc65b8c627f48f4000144b8"
     },
     {
       "path": "sound/misc/ar2_pkup.wav",
-      "bytes": 12392,
-      "sha256": "252460de3245b5c297d97c934409b7710e78ce62c9fd7bb06dd900a3ea297a91"
+      "bytes": 77502,
+      "sha256": "6f51a08128287100f5d03b9bf7c08137e15cd493d283ae0b61e45a4fdf2f7831"
     },
     {
       "path": "sound/misc/h2ohit1.wav",
-      "bytes": 16802,
-      "sha256": "de8d22a903637750ca5e3cc2631ae536de139b300ea5683b5b8c671c3de9106e"
+      "bytes": 65982,
+      "sha256": "86030bccaa19c410a754fc1249d658b105bb5713fc6500291f50014b741e1f3d"
     },
     {
       "path": "sound/misc/keytry.wav",
-      "bytes": 7542,
-      "sha256": "a60ed6e55e532929e19d27c3dbc8bc69782022e2d0ca6a106213a685b274d8f6"
+      "bytes": 46782,
+      "sha256": "d0b197647d67f49e0fb7251cf2c212131cc9a06cb8e717b2934702929d574c2c"
     },
     {
       "path": "sound/misc/keyuse.wav",
-      "bytes": 9304,
-      "sha256": "1c1a164651ca644a365a84a3f88a8f3e44ae35ae17f6649b87e62ef82a323241"
+      "bytes": 46782,
+      "sha256": "2f6c99a19994878be69904151fed5046edba6ba0add975d64e65298ef7ba6b35"
     },
     {
       "path": "sound/misc/lasfly.wav",
-      "bytes": 44144,
-      "sha256": "2bd97535880edf36886fa257bf4286dcefa2266319eee7f0cba06808ebcd59b7"
+      "bytes": 188204,
+      "sha256": "89a92a50d69f12ece441cb06157c0423a1aeca7a72a82162d1fac1d3b7f7c714"
     },
     {
       "path": "sound/misc/menu1.wav",
-      "bytes": 3352,
-      "sha256": "93fad6274621f4ac98a9d1dde9a5185fdb97d314377d73b7bf9844fac4b49dcf"
+      "bytes": 46782,
+      "sha256": "02cb59f90e2c851080ac0167c4770935ce14f78511e8723bdecb04b332da4d09"
     },
     {
       "path": "sound/misc/menu2.wav",
-      "bytes": 5336,
-      "sha256": "1c8eff4970358f561f478f7126e840ade35c6bff2a5ee892ca7971d9dde2bc90"
+      "bytes": 46782,
+      "sha256": "51d105a5e735d27cdf1def8d8bdb54430758d7e427c46cc0b5d3521e56a112a1"
     },
     {
       "path": "sound/misc/menu3.wav",
-      "bytes": 4454,
-      "sha256": "9441f3a292a1eb421f96661299d12c1af090e4d9e276144cc628776e34ace8b6"
+      "bytes": 46782,
+      "sha256": "c073387cfb5d320d155019c6a352611a98797fe5183a74e2546e86b646cba6bd"
     },
     {
       "path": "sound/misc/pc_up.wav",
@@ -3743,18 +3743,18 @@
     },
     {
       "path": "sound/misc/secret.wav",
-      "bytes": 19888,
-      "sha256": "19da8d433eab1382ffced6023c39ece7b407c438b85930ed53f9a3939d7d948b"
+      "bytes": 85182,
+      "sha256": "fe1fef3c033670a01b619d0cb2f9c3d61e8e201380aaf772721756c3e7417ae0"
     },
     {
       "path": "sound/misc/talk1.wav",
-      "bytes": 4454,
-      "sha256": "c240a191245fa0fb421cec6dba7c0d0cc10a1f433c0917c81fc002a3f4c3e89b"
+      "bytes": 46782,
+      "sha256": "5c2d71b2c55088ef48c1cdfbcc38f06d51a48939262e13af1507eb26c859bfd1"
     },
     {
       "path": "sound/misc/udeath.wav",
-      "bytes": 19448,
-      "sha256": "4cbc9e1a8b7a31a6f203f9539d84078ee2b4125d760767437991609db5871650"
+      "bytes": 77502,
+      "sha256": "db6d714894d4b88907bd8268c1add77d44766c0fe3ee9f72b28743db380943e9"
     },
     {
       "path": "sound/misc/w_pkup.wav",
@@ -3778,13 +3778,13 @@
     },
     {
       "path": "sound/player/fall1.wav",
-      "bytes": 9746,
-      "sha256": "0e07aa202992d21f9de251fc422c454d45dba754a9f78f831b34f1bc301aba30"
+      "bytes": 46782,
+      "sha256": "36abea8ccc8c47b73a40abadb5bfb6976429ac373c8951fca2ecba34ab0bc192"
     },
     {
       "path": "sound/player/fall2.wav",
-      "bytes": 14596,
-      "sha256": "2f7ac2531453322c11e3ffc254575d5105d70bb2fc3d1fca7224005e40968c5c"
+      "bytes": 58302,
+      "sha256": "9d42005273dd776d68153cbdaee0f84db3b2c6ee2f623565e2d945e0eb8f5132"
     },
     {
       "path": "sound/player/fry.wav",
@@ -3938,13 +3938,13 @@
     },
     {
       "path": "sound/player/u_breath1.wav",
-      "bytes": 28708,
-      "sha256": "b53bb2e2cd20cd5b09f46720f13e364f29e4876987be2a6089266ae43cf43955"
+      "bytes": 77502,
+      "sha256": "cde463072790d765d0ab97e6e004a0dbf39a0db9b916e1f9b35c81483eb7af14"
     },
     {
       "path": "sound/player/u_breath2.wav",
-      "bytes": 33120,
-      "sha256": "29477fb2d9faabce8e73052fe978fc249d9c9df4b314031326447c5224fe4fb3"
+      "bytes": 85182,
+      "sha256": "5e2e5e6e377769c2bd7c333361ac1c0c3b3f317b76274f77c9b060f1bfdd600e"
     },
     {
       "path": "sound/player/watr_in.wav",
@@ -4198,8 +4198,8 @@
     },
     {
       "path": "sound/switches/butn2.wav",
-      "bytes": 5776,
-      "sha256": "bba6188b581e8aa3f663bd4cfaf72744f0c2d4fb4caaee69152081b1f16dab9f"
+      "bytes": 46782,
+      "sha256": "31e09c0b35cd3098eabfefb1b1aa592d61907c7c41535ffd8acd5683a363731a"
     },
     {
       "path": "sound/tank/death.wav",
@@ -4283,8 +4283,8 @@
     },
     {
       "path": "sound/weapons/bfg__l1a.wav",
-      "bytes": 44144,
-      "sha256": "ce2a3125d920f84c2ac71460bdabe88d0a541778c871bb4a23afc12accf6e7cb"
+      "bytes": 188204,
+      "sha256": "cea06dc6841b29a3f7e6b25be406ad33b437d9eed3d9ad33fbf83fd84f1e09ec"
     },
     {
       "path": "sound/weapons/bfg__x1b.wav",
@@ -4368,8 +4368,8 @@
     },
     {
       "path": "sound/weapons/lashit.wav",
-      "bytes": 7542,
-      "sha256": "8ee3e036dcfc1ec972b8169f1aabcda05183ecbc3d681523588f65fa42ee5af5"
+      "bytes": 46782,
+      "sha256": "0d01bf0777a65949ae8a22c50340f2168d99bc7f24cebad31f89cfa12277ca58"
     },
     {
       "path": "sound/weapons/m601.wav",
@@ -4523,43 +4523,43 @@
     },
     {
       "path": "sound/world/klaxon1.wav",
-      "bytes": 44144,
-      "sha256": "f6ecebe7e1b07aaf5deb603bbca383fec59dda130b08d6d1aabb934572d4a9e7"
+      "bytes": 188204,
+      "sha256": "072b8241ada68506816b41f8b4d771e34adf14ca279fbbf39f67b7f34a237b5e"
     },
     {
       "path": "sound/world/land.wav",
-      "bytes": 6660,
-      "sha256": "3ffc0bf2f7417580bf8708bb3637661011077af16191b5105eee1bf0f5aa7cf0"
+      "bytes": 46782,
+      "sha256": "c3081b020e62851ed5646c050377ad03412d154e21eefb739825bbd7d2bbc577"
     },
     {
       "path": "sound/world/ric1.wav",
-      "bytes": 7100,
-      "sha256": "336faec9f0295e533611b392aafb2f2857c239bc21462a715d175887d79a276b"
+      "bytes": 46782,
+      "sha256": "f794e23ace9e70361321d042dffcefdb7307c6684bd78355432e00fa0b421d34"
     },
     {
       "path": "sound/world/ric2.wav",
-      "bytes": 8424,
-      "sha256": "63ca0a64859c9482cae695de2343bbeb826d01bd113fe3616c11e46a255be48f"
+      "bytes": 46782,
+      "sha256": "7dd25b0f29c3f65d3c327b732b2c7143271f998bab1b204dacd3773fea9c6a09"
     },
     {
       "path": "sound/world/ric3.wav",
-      "bytes": 6218,
-      "sha256": "f158345ed994893eaf251b3f8a8677f0d0b82130305070090090a5b693778dea"
+      "bytes": 46782,
+      "sha256": "a0da1fe1188f2813c6405ee6309aee4aafd5646248caf0ddf1b7ee42ea55a2fc"
     },
     {
       "path": "sound/world/spark5.wav",
-      "bytes": 7100,
-      "sha256": "c4fd737ea0dbb0e12b92c697b914b1452af028399413cc0810e84fd0cf70afbd"
+      "bytes": 46782,
+      "sha256": "1cf7f7f9269d5d9122ab0df6e1282320b680d1ed991b7bc32abe7d1b918cef54"
     },
     {
       "path": "sound/world/spark6.wav",
-      "bytes": 9304,
-      "sha256": "22faefec2ab27de89bd474f4f8e73e5be80ffd45b0786b9058389931299beec9"
+      "bytes": 46782,
+      "sha256": "515e9aea8c8abe65f0912cd1a1f75b92691f0a39b2e51b1453b842a3d3cbb7f1"
     },
     {
       "path": "sound/world/spark7.wav",
-      "bytes": 5776,
-      "sha256": "5d9b0c38b4274a2ef2efced348887c8243a3fed27dee811a0cb3893ee9af6f94"
+      "bytes": 46782,
+      "sha256": "fc2ee57733235039772d280aaebaba24153b413e084b373ee2e396c27b52023c"
     },
     {
       "path": "sprites/explosion.png",
@@ -4832,6 +4832,6 @@
       "sha256": "219e0f1ec97fa6b944336f263726564a3eb0a176351f5fd19f805913d24a22ea"
     }
   ],
-  "archive_sha256": "af5a2f49854cd3d1244f6f16534e036bcbbc0853d348aef221e8bc2cabd4ed20",
-  "archive_bytes": 76181175
+  "archive_sha256": "468aafd9781f3319b8dea6324d56792b2f136f20220d1be354d74587befb51be",
+  "archive_bytes": 77458657
 }

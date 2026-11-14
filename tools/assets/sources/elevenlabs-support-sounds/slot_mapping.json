@@ -1,0 +1,316 @@
+[
+  {
+    "target": "sound/items/s_health.wav",
+    "options": [
+      "mono/health_small_01.wav",
+      "mono/health_small_02.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/items/n_health.wav",
+    "options": [
+      "mono/health_normal_01.wav",
+      "mono/health_normal_02.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/items/l_health.wav",
+    "options": [
+      "mono/health_large_01.wav",
+      "mono/health_large_02.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/items/m_health.wav",
+    "options": [
+      "mono/health_mega_01.wav",
+      "mono/health_mega_02.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/items/pkup.wav",
+    "options": [
+      "mono/pickup_generic_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/items/respawn1.wav",
+    "options": [
+      "mono/item_respawn_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/items/damage.wav",
+    "options": [
+      "mono/damage_powerup_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/items/protect.wav",
+    "options": [
+      "mono/protection_powerup_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/items/protect4.wav",
+    "options": [
+      "mono/protection_hit_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/misc/keytry.wav",
+    "options": [
+      "mono/key_denied_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/misc/keyuse.wav",
+    "options": [
+      "mono/key_accepted_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/switches/butn2.wav",
+    "options": [
+      "mono/switch_press_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/misc/menu1.wav",
+    "options": [
+      "mono/menu_move_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/misc/menu2.wav",
+    "options": [
+      "mono/menu_confirm_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/misc/menu3.wav",
+    "options": [
+      "mono/menu_back_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/misc/secret.wav",
+    "options": [
+      "mono/secret_found_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/misc/talk1.wav",
+    "options": [
+      "mono/chat_notification_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/misc/h2ohit1.wav",
+    "options": [
+      "mono/water_splash_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/misc/udeath.wav",
+    "options": [
+      "mono/plastic_shatter_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/player/fall1.wav",
+    "options": [
+      "mono/landing_light_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/player/fall2.wav",
+    "options": [
+      "mono/landing_heavy_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/world/land.wav",
+    "options": [
+      "mono/world_landing_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/player/u_breath1.wav",
+    "options": [
+      "mono/breathing_in_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/player/u_breath2.wav",
+    "options": [
+      "mono/breathing_out_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/infantry/inflies1.wav",
+    "options": [
+      "mono/corpse_flies_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": true
+  },
+  {
+    "target": "sound/misc/lasfly.wav",
+    "options": [
+      "mono/laser_flight_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": true
+  },
+  {
+    "target": "sound/weapons/bfg__l1a.wav",
+    "options": [
+      "mono/flamethrower_loop_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": true
+  },
+  {
+    "target": "sound/weapons/bfg__x1b.wav",
+    "options": [
+      "mono/large_energy_impact_01.wav"
+    ],
+    "status": "Conditional legacy boss candidate; not part of the core preview.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/weapons/lashit.wav",
+    "options": [
+      "mono/laser_impact_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/world/klaxon1.wav",
+    "options": [
+      "mono/mission_alarm_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": true
+  },
+  {
+    "target": "sound/world/ric1.wav",
+    "options": [
+      "mono/ricochet_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/world/ric2.wav",
+    "options": [
+      "mono/ricochet_02.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/world/ric3.wav",
+    "options": [
+      "mono/ricochet_03.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/world/spark5.wav",
+    "options": [
+      "mono/spark_01.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/world/spark6.wav",
+    "options": [
+      "mono/spark_02.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/world/spark7.wav",
+    "options": [
+      "mono/spark_03.wav"
+    ],
+    "status": "New audition candidate; not installed.",
+    "loop_requested": false
+  },
+  {
+    "target": "sound/misc/ar1_pkup.wav",
+    "role": "All full armor: body, combat and jacket",
+    "options": [
+      "reused_armor/mono/PP_Armor_01_PlasticSnap.wav",
+      "reused_armor/mono/PP_Armor_02_ShieldPulse.wav",
+      "reused_armor/mono/PP_Armor_03_RatchetLock.wav",
+      "reused_armor/mono/PP_Armor_04_HelmetPop.wav"
+    ],
+    "status": "Previous armor options reused; not selected or installed."
+  },
+  {
+    "target": "sound/misc/ar2_pkup.wav",
+    "role": "Armor shards",
+    "options": [
+      "reused_armor/mono/PP_Armor_01_PlasticSnap.wav",
+      "reused_armor/mono/PP_Armor_02_ShieldPulse.wav",
+      "reused_armor/mono/PP_Armor_03_RatchetLock.wav",
+      "reused_armor/mono/PP_Armor_04_HelmetPop.wav"
+    ],
+    "status": "Previous armor options reused; not selected or installed."
+  }
+]
