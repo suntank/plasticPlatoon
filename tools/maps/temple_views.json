@@ -1,0 +1,210 @@
+[
+  {
+    "name": "main_hall_aperture",
+    "reference_room": 11,
+    "source_position": [
+      -74,
+      221,
+      350
+    ],
+    "pose": [
+      -41.260606,
+      -195.151515,
+      147.349242,
+      10,
+      90.0
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "lower_chamber_opening",
+    "reference_room": 4,
+    "source_position": [
+      -74,
+      -221,
+      200
+    ],
+    "pose": [
+      -41.260606,
+      -111.515152,
+      -99.099242,
+      -61.469192,
+      90.0
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "west_high_chamber",
+    "reference_room": 15,
+    "source_position": [
+      -1103,
+      0,
+      -1200
+    ],
+    "pose": [
+      -615.006061,
+      669.090909,
+      24.125,
+      -25,
+      270.0
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "west_crossing",
+    "reference_room": 13,
+    "source_position": [
+      -1103,
+      0,
+      100
+    ],
+    "pose": [
+      -615.006061,
+      -55.757576,
+      24.125,
+      -21.464233,
+      90.0
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "eastern_pillar_hall",
+    "reference_room": 1,
+    "source_position": [
+      1765,
+      -147,
+      200
+    ],
+    "pose": [
+      984.121212,
+      -111.515152,
+      -57.838636,
+      -9.328987,
+      90.0
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "northeast_sloping_passage",
+    "reference_room": 1,
+    "source_position": [
+      1400,
+      -147,
+      -1618
+    ],
+    "pose": [
+      780.606061,
+      902.157576,
+      -57.838636,
+      -15.922167,
+      180.0
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "southern_rear_crossing",
+    "reference_room": 6,
+    "source_position": [
+      250,
+      0,
+      1326
+    ],
+    "pose": [
+      139.393939,
+      -739.345455,
+      24.125,
+      -3.456125,
+      180.0
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "eastern_upper_gallery",
+    "reference_room": 20,
+    "source_position": [
+      1680,
+      221,
+      735
+    ],
+    "pose": [
+      936.727273,
+      -409.818182,
+      147.349242,
+      -27.944841,
+      0.0
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  }
+]

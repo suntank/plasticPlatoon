@@ -83,6 +83,7 @@ typedef struct model_s
 
 	modtype_t	type;
 	int		numframes;
+	struct model_s *pickup_lod; /* separately registered optional distant mesh */
 
 	int		flags;
 

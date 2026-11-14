@@ -30,6 +30,9 @@
 #include "header/local.h"
 #include "../perf_impl.h"
 #include "../gpu_timer_impl.h"
+#include "../files/pickup_lod.h"
+
+static cvar_t *r_pickup_lod;
 
 #define HANDMADE_MATH_IMPLEMENTATION
 #include "header/HandmadeMath.h"
@@ -270,6 +273,7 @@ GL3_Register(void)
 	gl_znear = ri.Cvar_Get("gl_znear", "4", CVAR_ARCHIVE);
 
 	gl3_usefbo = ri.Cvar_Get("gl3_usefbo", "1", CVAR_ARCHIVE); // use framebuffer object for postprocess effects (water)
+	r_pickup_lod = ri.Cvar_Get("r_pickup_lod", "1", CVAR_ARCHIVE);
 
 #if 0 // TODO!
 	//gl_lefthand = ri.Cvar_Get("hand", "0", CVAR_USERINFO | CVAR_ARCHIVE);
@@ -1166,6 +1170,9 @@ GL3_DrawEntitiesOnList(void)
 	{
 		return;
 	}
+	const pp_pickup_lod_view_t pickup_view = PP_PickupLODView(
+		r_pickup_lod->value != 0, r_newrefdef.vieworg, vpn,
+		r_newrefdef.height, r_newrefdef.fov_y);
 
 	GL3_ResetShadowAliasModels();
 
@@ -1196,7 +1203,11 @@ GL3_DrawEntitiesOnList(void)
 			switch (currentmodel->type)
 			{
 				case mod_alias:
-					GL3_DrawAliasModel(currententity);
+					GL3_DrawAliasModel(currententity, currentmodel->pickup_lod &&
+						VectorCompare(currententity->origin, currententity->oldorigin) &&
+						PP_PickupLODUse(&pickup_view, currententity->flags, currententity->origin,
+							currentmodel->radius, currententity->frame, currententity->oldframe)
+						? currentmodel->pickup_lod : currentmodel);
 					break;
 				case mod_brush:
 					GL3_DrawBrushModel(currententity, currentmodel);
@@ -1242,7 +1253,11 @@ GL3_DrawEntitiesOnList(void)
 			switch (currentmodel->type)
 			{
 				case mod_alias:
-					GL3_DrawAliasModel(currententity);
+					GL3_DrawAliasModel(currententity, currentmodel->pickup_lod &&
+						VectorCompare(currententity->origin, currententity->oldorigin) &&
+						PP_PickupLODUse(&pickup_view, currententity->flags, currententity->origin,
+							currentmodel->radius, currententity->frame, currententity->oldframe)
+						? currentmodel->pickup_lod : currentmodel);
 					break;
 				case mod_brush:
 					GL3_DrawBrushModel(currententity, currentmodel);
@@ -1413,7 +1428,7 @@ GL3_SetPerspective(GLdouble fovy)
 {
 	// gluPerspective() / R_MYgluPerspective() style parameters
 	const GLdouble zNear = Q_max(gl_znear->value, 0.1f);
-	const GLdouble zFar = (r_farsee->value) ? 8192.0f : 4096.0f;
+	GLdouble zFar = (r_farsee->value) ? 8192.0f : 4096.0f;
 	const GLdouble aspect = (GLdouble)r_newrefdef.width / r_newrefdef.height;
 
 	// calculation of left, right, bottom, top is from R_MYgluPerspective() of old gl backend
@@ -1421,6 +1436,12 @@ GL3_SetPerspective(GLdouble fovy)
 	// and thus also from HMM_Perspective()
 	GLdouble left, right, bottom, top;
 	float A, B, C, D;
+
+	if (!(r_newrefdef.rdflags & RDF_NOWORLDMODEL) && gl3_worldmodel)
+	{
+		zFar = R_WorldFarClip(zFar, gl3_worldmodel->submodels[0].mins,
+			gl3_worldmodel->submodels[0].maxs, vpn);
+	}
 
 	top = zNear * tan(fovy * M_PI / 360.0);
 	right = top * aspect;

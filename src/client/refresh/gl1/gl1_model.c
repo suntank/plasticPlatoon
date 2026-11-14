@@ -25,6 +25,7 @@
  */
 
 #include "header/local.h"
+#include "../files/pickup_lod.h"
 
 #define MAX_MOD_KNOWN 512
 
@@ -756,12 +757,17 @@ Mod_LoadBrushModel(model_t *mod, void *buffer, int modfilelen)
 	Mod_LoadSubmodels (mod, mod_base, &header->lumps[LUMP_MODELS]);
 	mod->numframes = 2; /* regular and alternate animation */
 	R_BuildWorldBuffers(mod);
+	R_BuildInlineSurfaceOrders(mod);
+	R_BuildWorldSurfaceBatches(mod);
 }
 
 void
 Mod_Free(model_t *mod)
 {
+	R_ClearAliasColorCache();
 	if (mod->type == mod_brush) R_ClearVisibilityCache();
+	if (mod->type == mod_brush) R_FreeInlineSurfaceOrders(mod);
+	if (mod->type == mod_brush) R_FreeWorldSurfaceBatches(mod);
 	R_FreeWorldBuffers(mod);
 	R_FreeAliasBuffers(mod);
 	Hunk_Free(mod->extradata);
@@ -790,6 +796,7 @@ RI_BeginRegistration(const char *model)
 {
 	char fullname[MAX_QPATH];
 	cvar_t *flushmap;
+	R_ClearAliasColorCache();
 
 	R_ClearVisibilityCache();
 	registration_sequence++;
@@ -839,6 +846,16 @@ RI_RegisterModel(const char *name)
 			/* numframes is unused for SP2 but lets set it also  */
 			mod->numframes = Mod_ReLoadSkins((struct image_s **)mod->skins,
 				(findimage_t)R_FindImage, mod->extradata, mod->type);
+		}
+
+		const char *lod_name = PP_PickupLODPath(name);
+		if (mod->type == mod_alias && mod->numframes == 1 && lod_name)
+		{
+			/* Normal registration owns the sibling's skins, buffers and lifetime.
+			 * The sibling is not itself whitelisted, so recursion stops here. */
+			model_t *lod = RI_RegisterModel(lod_name);
+			mod->pickup_lod = lod && lod->type == mod_alias && lod->numframes == 1 ? lod : NULL;
+			mod->radius = PP_PickupLODRadius(mod->extradata);
 		}
 	}
 

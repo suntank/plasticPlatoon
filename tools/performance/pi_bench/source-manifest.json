@@ -1,0 +1,25 @@
+{
+  "files_sha256": {
+    "test_tool.py": "5616fb95cb3d5041dee7aa9fb086fabb0cc54120337bb2588c24301f8951591f",
+    "pp-bench": "9787994e904768a78906c1c1cfa41344f60f1ebecb8444fc5ef1c5debbcb0e26",
+    "presets.json": "18b0c83876a6aea82effd96c13b19c14269f7d2a3b6c1d084ede63a0ec9013b0",
+    "pi-installed-source-manifest.json": "cfc535831327040bc5f8ab603c07ba76b903a171af7d3bb14d74e77f33133379",
+    "README.md": "3b52a2c754dae6b03832655a8e9b5072aace047bc1ae0db39197ef3490113e62",
+    "input_driver.c": "4c6a9b09ed1b09f5cc019f039c1282686b3e59414a93f69e8127c8409aceae79",
+    "input_driver.so": "d42e05e4c4374cc334bcfd75113415e49c64de413a5a90b852bfe6b3a97fce21",
+    "input_driver-pc.so": "ef7eca1afea52841b3ed2f1e9137bb45c4e371bcfe882067001f235890e4ad4c",
+    "lib/experiment_support.py": "8e96ebd5d6b3859285c348dd76ff7610e41c9fefa009592cce8aeb9cdd183f56",
+    "lib/content_identity.py": "b8e1472146f03d70a460bed6d531bd85867829cc43da9bf1b0dc0413aad36331",
+    "lib/summarize.py": "40c6ba68a5ef77e658f18044e0f518d822660b388091c61fd4053c4893689c79",
+    "lib/model_probe.py": "068cfde6e4b904dffa27363bf787d8cd8d38a21d3505a98f1e9bef94983d7d21",
+    "lib/prelaunch_memory.py": "c862a074cf913fb7975ddf71ed488b6fdd39f708b3c74ec68e2a1636fa318585",
+    "lib/platform_support.py": "5279b237ad1bb2a07700d0f82c8a7c1c5529b70c9cb2adc67b7388ca3b5c6145",
+    "lib/scene_controls.py": "48e2f5afdd0453e32d6e7f63f7ad8c3f2d19959f7b79ccae4aff5982290fbc68",
+    "lib/profile_probe.py": "03190bdd6a8e68522733bf8c17d4dc6b671576249f76b43205e2e94c8585ced0",
+    "lib/run_suite.py": "7c95428c6a681516692fa4ed952a8223ecc7cb65d51c911bde021fe8981d1ccc",
+    "lib/quiet_audio.py": "d2c12a25b5947111ba2b15e9ee595b3f4de2d9aac6136e158587a53880c780ef",
+    "lib/input_isolation.py": "712982fe84015ecdfa0412b35ab81f8c1d8998d77b8633f1042d99644d502410",
+    "../bench-pc": "2bb8fa37fff86b29531a9aed780d3f229d10432390fa501147d4e809051830da",
+    "../bench-pi": "4818c66447187e429d89d874bdc4fc3e1cb51625eb6e7302cafb538b6ea8bba7"
+  }
+}

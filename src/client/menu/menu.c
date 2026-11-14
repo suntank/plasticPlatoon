@@ -48,6 +48,10 @@ static char *menu_in_sound = "misc/menu1.wav";
 static char *menu_move_sound = "misc/menu2.wav";
 static char *menu_out_sound = "misc/menu3.wav";
 
+static char *m_popup_string;
+static int m_popup_endtime;
+
+
 void M_Menu_Main_f(void);
 static void M_Menu_Game_f(void);
 static void M_Menu_LoadGame_f(void);
@@ -110,6 +114,11 @@ M_Banner(const char *name)
 	int w, h;
 	float scale = SCR_GetMenuScale();
 
+	if (Menu_IsCompact())
+	{
+		return; /* Compact menus draw a text heading in their shared frame. */
+	}
+
 	Draw_GetPicSize(&w, &h, name);
 	Draw_PicScaled(viddef.width / 2 - (w * scale) / 2, viddef.height / 2 - (110 * scale), name, scale);
 }
@@ -122,6 +131,8 @@ M_ForceMenuOff(void)
 		SplitScreenLobby_Close();
 	}
 
+	m_popup_string = NULL;
+	m_popup_endtime = 0;
 	cls.key_dest = key_game;
 	m_active.draw = NULL;
 	m_active.key  = NULL;
@@ -138,6 +149,8 @@ M_PopMenu(void)
 		SplitScreenLobby_Close();
 	}
 
+	m_popup_string = NULL;
+	m_popup_endtime = 0;
 	S_StartLocalSound(menu_out_sound);
 
 	if (m_menudepth < 1)
@@ -554,8 +567,36 @@ M_DrawTextBox(int x, int y, int width, int lines)
 	M_DrawCharacter(cx * scale, cy * scale + 8 * scale, 9);
 }
 
-static char *m_popup_string;
-static int m_popup_endtime;
+/* Keep system messages legible at one physical pixel per font pixel. */
+static int
+M_CompactWrapLines(const char *text, char lines[][80], int columns, int maxlines)
+{
+	int count = 0;
+
+	columns = Q_clamp(columns, 1, 79);
+	while (*text && count < maxlines)
+	{
+		int length = 0, split = -1, take;
+
+		while (text[length] && text[length] != '\n' && length < columns)
+		{
+			if (text[length] == ' ') split = length;
+			length++;
+		}
+		take = length;
+		if (text[length] && text[length] != '\n' && split > 0)
+		{
+			take = split;
+		}
+		memcpy(lines[count], text, take);
+		lines[count++][take] = '\0';
+		text += take;
+		while (*text == ' ') text++;
+		if (*text == '\n') text++;
+	}
+	return count;
+}
+
 
 static void
 M_Popup(void)
@@ -577,6 +618,27 @@ M_Popup(void)
 
 	if (!R_EndWorldRenderpass())
 	{
+		return;
+	}
+
+	if (Menu_IsCompact())
+	{
+		char wrapped[12][80];
+		int i, columns = (viddef.width - 36) / 8;
+		int count = M_CompactWrapLines(m_popup_string, wrapped, columns,
+			Q_clamp((viddef.height - 88) / 14, 1, 12));
+		int top = Q_max(48, (viddef.height - count * 14) / 2);
+
+		/* Flush queued glyphs before opaque modal panels cover the old UI. */
+		Draw_FadeScreen();
+		Menu_DrawCompactFrame("TRANSMISSION", "System message");
+		Draw_Fill(8, top - 12, viddef.width - 16, count * 14 + 24, 221);
+		Draw_Fill(8, top - 12, 3, count * 14 + 24, 140);
+		for (i = 0; i < count; i++)
+		{
+			Menu_DrawCompactText(18, top + i * 14, wrapped[i], columns, false);
+		}
+		Menu_DrawCompactFooter(m_popup_endtime ? "Please wait..." : "Press a button to close");
 		return;
 	}
 
@@ -627,6 +689,15 @@ static menubitmap_s s_multiplayer;
 static menubitmap_s s_options;
 static menubitmap_s s_video;
 static menubitmap_s s_quit;
+static menuaction_s s_compact_main[6];
+
+static void
+ResumeGameFunc(void *unused)
+{
+	/* Pop normally so pause-with-game music resumes as well. */
+	while (m_menudepth > 0) M_PopMenu();
+}
+
 
 static void
 GameFunc(void *unused)
@@ -677,6 +748,36 @@ InitMainMenu(void)
 		"m_main_quit",
 		0
 	};
+
+	if (Menu_IsCompact())
+	{
+		static const char *labels[] = {
+			"Resume mission", "New game / saves", "Multiplayer",
+			"Options & controls", "Display settings", "Return to Game Bird"
+		};
+		static const char *help[] = {
+			"Return to the action", "Difficulty, load & save",
+			"Local co-op & network play", "Sound, input & aiming",
+			"Video & performance", "Close Plastic Platoon"
+		};
+		void (*callbacks[])(void *) = {
+			ResumeGameFunc, GameFunc, MultiplayerFunc, OptionsFunc, VideoFunc, QuitFunc
+		};
+
+		memset(&s_main, 0, sizeof(s_main));
+		memset(s_compact_main, 0, sizeof(s_compact_main));
+		s_main.title = "PLASTIC PLATOON";
+		s_main.subtitle = cls.state == ca_active ? "MISSION PAUSED" : "FIELD COMMAND";
+		for (i = cls.state == ca_active ? 0 : 1; i < 6; i++)
+		{
+			s_compact_main[i].generic.type = MTYPE_ACTION;
+			s_compact_main[i].generic.name = labels[i];
+			s_compact_main[i].generic.statusbar = help[i];
+			s_compact_main[i].generic.callback = callbacks[i];
+			Menu_AddItem(&s_main, &s_compact_main[i]);
+		}
+		return;
+	}
 
 	for (i = 0; names[i] != 0; i++)
 	{
@@ -792,7 +893,9 @@ M_Main_Draw(void)
 		y = item->y;
 	}
 
+	s_main.title = "PLASTIC PLATOON";
 	Menu_Draw(&s_main);
+	if (Menu_IsCompact()) return;
 	M_DrawCursor(x - m_cursor_width, y,
 		( int )(cls.realtime / 100) % NUM_CURSOR_FRAMES);
 }
@@ -901,6 +1004,7 @@ Multiplayer_MenuDraw(void)
 	M_Banner("m_banner_multiplayer");
 
 	Menu_AdjustCursor(&s_multiplayer_menu, 1);
+	s_multiplayer_menu.title = "MULTIPLAYER";
 	Menu_Draw(&s_multiplayer_menu);
 }
 
@@ -1100,7 +1204,7 @@ M_UnbindCommand(char *command, int scope)
 }
 
 static void
-M_FindKeysForCommand(char *command, int *twokeys, int scope)
+M_FindKeysForCommand(const char *command, int *twokeys, int scope)
 {
 	int count;
 	int j;
@@ -1145,6 +1249,61 @@ M_FindKeysForCommand(char *command, int *twokeys, int scope)
 }
 
 static void
+M_CompactAppendBindingName(char *value, size_t size, int key, qboolean joy_names)
+{
+	const char *name = NULL;
+	if (key >= K_JOY_FIRST_BTN_ALT)
+	{
+		Q_strlcat(value, "MOD + ", size);
+		key -= K_JOY_FIRST_BTN_ALT - K_JOY_FIRST_BTN;
+	}
+	switch (key)
+	{
+		case K_BTN_SOUTH: name = "A"; break;
+		case K_BTN_EAST: name = "B"; break;
+		case K_BTN_WEST: name = "X"; break;
+		case K_BTN_NORTH: name = "Y"; break;
+		case K_BTN_BACK: name = "SELECT"; break;
+		case K_BTN_START: name = "START"; break;
+		case K_BTN_GUIDE: name = "HOME"; break;
+		case K_SHOULDER_LEFT: name = "L"; break;
+		case K_SHOULDER_RIGHT: name = "R"; break;
+		case K_STICK_LEFT: name = "LEFT STICK"; break;
+		case K_STICK_RIGHT: name = "RIGHT STICK"; break;
+		case K_TRIG_LEFT: name = "LEFT TRIGGER"; break;
+		case K_TRIG_RIGHT: name = "RIGHT TRIGGER"; break;
+		case K_DPAD_UP: name = "D-PAD UP"; break;
+		case K_DPAD_DOWN: name = "D-PAD DOWN"; break;
+		case K_DPAD_LEFT: name = "D-PAD LEFT"; break;
+		case K_DPAD_RIGHT: name = "D-PAD RIGHT"; break;
+		default: name = joy_names ? Key_KeynumToString_Joy(key) : Key_KeynumToString(key); break;
+	}
+	Q_strlcat(value, name, size);
+}
+
+static const char *
+M_CompactBinding(const char *command, int group, qboolean joy_names, qboolean binding)
+{
+	static char value[128];
+	int keys[2];
+
+	M_FindKeysForCommand(command, keys, group);
+	if (binding)
+	{
+		return "Press a button...";
+	}
+	if (keys[0] == -1) return "Unbound";
+	value[0] = '\0';
+	M_CompactAppendBindingName(value, sizeof(value), keys[0], joy_names);
+	if (keys[1] != -1)
+	{
+		Q_strlcat(value, " / ", sizeof(value));
+		M_CompactAppendBindingName(value, sizeof(value), keys[1], joy_names);
+	}
+	return value;
+}
+
+static void
 KeyCursorDrawFunc(menuframework_s *menu)
 {
 	float scale = SCR_GetMenuScale();
@@ -1158,6 +1317,14 @@ KeyCursorDrawFunc(menuframework_s *menu)
 		Draw_CharScaled(menu->x, (menu->y + menu->cursor * 9) * scale, 12 +
 				  ((int)(Sys_Milliseconds() / 250) & 1), scale);
 	}
+}
+
+static const char *
+DrawKeyBindingFuncCompactValue(void *self)
+{
+	menuaction_s *a = (menuaction_s *)self;
+	return M_CompactBinding(bindnames[a->generic.localdata[0]][0], KEYS_KEYBOARD_MOUSE, false,
+		menukeyitem_bind && Menu_ItemAtCursor(a->generic.parent) == a);
 }
 
 static void
@@ -1212,7 +1379,7 @@ KeyBindingFunc(void *self)
 
 	menukeyitem_bind = true;
 
-	Menu_SetStatusBar(&s_keys_menu, "press a key or button for this action");
+	Menu_SetStatusBar(&s_keys_menu, Menu_IsCompact() ? "PRESS A KEY OR BUTTON" : "press a key or button for this action");
 }
 
 static void
@@ -1231,13 +1398,14 @@ Keys_MenuInit(void)
 		s_keys_actions[i].generic.x = 0;
 		s_keys_actions[i].generic.y = (i * 9);
 		s_keys_actions[i].generic.ownerdraw = DrawKeyBindingFunc;
+		s_keys_actions[i].generic.compact_value = DrawKeyBindingFuncCompactValue;
 		s_keys_actions[i].generic.localdata[0] = i;
 		s_keys_actions[i].generic.name = bindnames[s_keys_actions[i].generic.localdata[0]][1];
 
 		Menu_AddItem(&s_keys_menu, (void *)&s_keys_actions[i]);
 	}
 
-	Menu_SetStatusBar(&s_keys_menu, "ENTER to change, BACKSPACE to clear");
+	Menu_SetStatusBar(&s_keys_menu, Menu_IsCompact() ? "ENTER: SET  BKSP: CLEAR" : "ENTER to change, BACKSPACE to clear");
 	Menu_Center(&s_keys_menu);
 }
 
@@ -1245,6 +1413,7 @@ static void
 Keys_MenuDraw(void)
 {
 	Menu_AdjustCursor(&s_keys_menu, 1);
+	s_keys_menu.title = "KEYBOARD CONTROLS";
 	Menu_Draw(&s_keys_menu);
 }
 
@@ -1265,7 +1434,7 @@ Keys_MenuKey(int key)
 			Cbuf_InsertText(cmd);
 		}
 
-		Menu_SetStatusBar(&s_keys_menu, "ENTER to change, BACKSPACE to clear");
+		Menu_SetStatusBar(&s_keys_menu, Menu_IsCompact() ? "ENTER: SET  BKSP: CLEAR" : "ENTER to change, BACKSPACE to clear");
 		menukeyitem_bind = false;
 		return menu_out_sound;
 	}
@@ -1311,6 +1480,14 @@ char *multiplayer_key_bindnames[][2] =
 
 static menuframework_s s_multiplayer_keys_menu;
 static menuaction_s s_multiplayer_keys_actions[ARRLEN(multiplayer_key_bindnames)];
+
+static const char *
+MultiplayerDrawKeyBindingFuncCompactValue(void *self)
+{
+	menuaction_s *a = (menuaction_s *)self;
+	return M_CompactBinding(multiplayer_key_bindnames[a->generic.localdata[0]][0], KEYS_ALL, false,
+		menukeyitem_bind && Menu_ItemAtCursor(a->generic.parent) == a);
+}
 
 static void
 MultiplayerDrawKeyBindingFunc(void *self)
@@ -1364,7 +1541,7 @@ MultiplayerKeyBindingFunc(void *self)
 
 	menukeyitem_bind = true;
 
-	Menu_SetStatusBar(&s_multiplayer_keys_menu, "press a key or button for this action");
+	Menu_SetStatusBar(&s_multiplayer_keys_menu, Menu_IsCompact() ? "PRESS A KEY OR BUTTON" : "press a key or button for this action");
 }
 
 static void
@@ -1383,13 +1560,14 @@ MultiplayerKeys_MenuInit(void)
 		s_multiplayer_keys_actions[i].generic.x = 0;
 		s_multiplayer_keys_actions[i].generic.y = (i * 9);
 		s_multiplayer_keys_actions[i].generic.ownerdraw = MultiplayerDrawKeyBindingFunc;
+		s_multiplayer_keys_actions[i].generic.compact_value = MultiplayerDrawKeyBindingFuncCompactValue;
 		s_multiplayer_keys_actions[i].generic.localdata[0] = i;
 		s_multiplayer_keys_actions[i].generic.name = multiplayer_key_bindnames[s_multiplayer_keys_actions[i].generic.localdata[0]][1];
 
 		Menu_AddItem(&s_multiplayer_keys_menu, (void *)&s_multiplayer_keys_actions[i]);
 	}
 
-	Menu_SetStatusBar(&s_multiplayer_keys_menu, "ENTER to change, BACKSPACE to clear");
+	Menu_SetStatusBar(&s_multiplayer_keys_menu, Menu_IsCompact() ? "ENTER: SET  BKSP: CLEAR" : "ENTER to change, BACKSPACE to clear");
 	Menu_Center(&s_multiplayer_keys_menu);
 }
 
@@ -1397,6 +1575,7 @@ static void
 MultiplayerKeys_MenuDraw(void)
 {
 	Menu_AdjustCursor(&s_multiplayer_keys_menu, 1);
+	s_multiplayer_keys_menu.title = "MULTIPLAYER CONTROLS";
 	Menu_Draw(&s_multiplayer_keys_menu);
 }
 
@@ -1417,7 +1596,7 @@ MultiplayerKeys_MenuKey(int key)
 			Cbuf_InsertText(cmd);
 		}
 
-		Menu_SetStatusBar(&s_multiplayer_keys_menu, "ENTER to change, BACKSPACE to clear");
+		Menu_SetStatusBar(&s_multiplayer_keys_menu, Menu_IsCompact() ? "ENTER: SET  BKSP: CLEAR" : "ENTER to change, BACKSPACE to clear");
 		menukeyitem_bind = false;
 		return menu_out_sound;
 	}
@@ -1455,6 +1634,12 @@ GamepadMenu_StatusPrompt(menuframework_s *m)
 {
 	static char m_gamepadbind_statusbar[64];
 	int btn_confirm, btn_cancel;
+
+	if (Menu_IsCompact())
+	{
+		Menu_SetStatusBar(m, japanese_confirm ? "B: ASSIGN  Y: CLEAR" : "A: ASSIGN  Y: CLEAR");
+		return;
+	}
 
 	if (japanese_confirm)
 	{
@@ -1509,6 +1694,14 @@ char *controller_bindnames[][2] =
 static menuframework_s s_controller_buttons_menu;
 static menuaction_s s_controller_buttons_actions[ARRLEN(controller_bindnames)];
 
+static const char *
+DrawControllerButtonBindingFuncCompactValue(void *self)
+{
+	menuaction_s *a = (menuaction_s *)self;
+	return M_CompactBinding(controller_bindnames[a->generic.localdata[0]][0], KEYS_CONTROLLER, true,
+		menukeyitem_bind && Menu_ItemAtCursor(a->generic.parent) == a);
+}
+
 static void
 DrawControllerButtonBindingFunc(void *self)
 {
@@ -1561,7 +1754,7 @@ ControllerButtonBindingFunc(void *self)
 
 	menukeyitem_bind = true;
 
-	Menu_SetStatusBar(&s_controller_buttons_menu, "press a button for this action");
+	Menu_SetStatusBar(&s_controller_buttons_menu, Menu_IsCompact() ? "PRESS A BUTTON TO ASSIGN" : "press a button for this action");
 }
 
 static void
@@ -1580,6 +1773,7 @@ ControllerButtons_MenuInit(void)
 		s_controller_buttons_actions[i].generic.x = 0;
 		s_controller_buttons_actions[i].generic.y = (i * 9);
 		s_controller_buttons_actions[i].generic.ownerdraw = DrawControllerButtonBindingFunc;
+		s_controller_buttons_actions[i].generic.compact_value = DrawControllerButtonBindingFuncCompactValue;
 		s_controller_buttons_actions[i].generic.localdata[0] = i;
 		s_controller_buttons_actions[i].generic.name = controller_bindnames[s_controller_buttons_actions[i].generic.localdata[0]][1];
 
@@ -1594,6 +1788,7 @@ static void
 ControllerButtons_MenuDraw(void)
 {
 	Menu_AdjustCursor(&s_controller_buttons_menu, 1);
+	s_controller_buttons_menu.title = "GAMEPAD BUTTONS";
 	Menu_Draw(&s_controller_buttons_menu);
 }
 
@@ -1682,6 +1877,14 @@ char *controller_alt_bindnames[][2] =
 static menuframework_s s_controller_alt_buttons_menu;
 static menuaction_s s_controller_alt_buttons_actions[ARRLEN(controller_alt_bindnames)];
 
+static const char *
+DrawControllerAltButtonBindingFuncCompactValue(void *self)
+{
+	menuaction_s *a = (menuaction_s *)self;
+	return M_CompactBinding(controller_alt_bindnames[a->generic.localdata[0]][0], KEYS_CONTROLLER_ALT, true,
+		menukeyitem_bind && Menu_ItemAtCursor(a->generic.parent) == a);
+}
+
 static void
 DrawControllerAltButtonBindingFunc(void *self)
 {
@@ -1734,7 +1937,7 @@ ControllerAltButtonBindingFunc(void *self)
 
 	menukeyitem_bind = true;
 
-	Menu_SetStatusBar(&s_controller_alt_buttons_menu, "press a button for this action");
+	Menu_SetStatusBar(&s_controller_alt_buttons_menu, Menu_IsCompact() ? "PRESS A BUTTON TO ASSIGN" : "press a button for this action");
 }
 
 static void
@@ -1753,6 +1956,7 @@ ControllerAltButtons_MenuInit(void)
 		s_controller_alt_buttons_actions[i].generic.x = 0;
 		s_controller_alt_buttons_actions[i].generic.y = (i * 9);
 		s_controller_alt_buttons_actions[i].generic.ownerdraw = DrawControllerAltButtonBindingFunc;
+		s_controller_alt_buttons_actions[i].generic.compact_value = DrawControllerAltButtonBindingFuncCompactValue;
 		s_controller_alt_buttons_actions[i].generic.localdata[0] = i;
 		s_controller_alt_buttons_actions[i].generic.name = controller_alt_bindnames[s_controller_alt_buttons_actions[i].generic.localdata[0]][1];
 
@@ -1767,6 +1971,7 @@ static void
 ControllerAltButtons_MenuDraw(void)
 {
 	Menu_AdjustCursor(&s_controller_alt_buttons_menu, 1);
+	s_controller_alt_buttons_menu.title = "MODIFIER BUTTONS";
 	Menu_Draw(&s_controller_alt_buttons_menu);
 }
 
@@ -1885,30 +2090,30 @@ Stick_MenuInit(void)
 	s_stk_title_text[0].generic.name = "left stick";
 	s_stk_title_text[0].generic.y = (y += 22);
 
-	s_stk_expo_slider[0].generic.name = "expo";
+	s_stk_expo_slider[0].generic.name = Menu_IsCompact() ? "Left stick response" : "expo";
 	s_stk_expo_slider[0].generic.y = (y += 14);
 	s_stk_expo_slider[0].cvar = "joy_left_expo";
 
-	s_stk_deadzone_slider[0].generic.name = "snap to axis";
+	s_stk_deadzone_slider[0].generic.name = Menu_IsCompact() ? "Left stick axis snap" : "snap to axis";
 	s_stk_deadzone_slider[0].generic.y = (y += 10);
 	s_stk_deadzone_slider[0].cvar = "joy_left_snapaxis";
 
-	s_stk_deadzone_slider[1].generic.name = "deadzone";
+	s_stk_deadzone_slider[1].generic.name = Menu_IsCompact() ? "Left stick deadzone" : "deadzone";
 	s_stk_deadzone_slider[1].generic.y = (y += 10);
 	s_stk_deadzone_slider[1].cvar = "joy_left_deadzone";
 
 	s_stk_title_text[1].generic.name = "right stick";
 	s_stk_title_text[1].generic.y = (y += 22);
 
-	s_stk_expo_slider[1].generic.name = "expo";
+	s_stk_expo_slider[1].generic.name = Menu_IsCompact() ? "Right stick response" : "expo";
 	s_stk_expo_slider[1].generic.y = (y += 14);
 	s_stk_expo_slider[1].cvar = "joy_right_expo";
 
-	s_stk_deadzone_slider[2].generic.name = "snap to axis";
+	s_stk_deadzone_slider[2].generic.name = Menu_IsCompact() ? "Right stick axis snap" : "snap to axis";
 	s_stk_deadzone_slider[2].generic.y = (y += 10);
 	s_stk_deadzone_slider[2].cvar = "joy_right_snapaxis";
 
-	s_stk_deadzone_slider[3].generic.name = "deadzone";
+	s_stk_deadzone_slider[3].generic.name = Menu_IsCompact() ? "Right stick deadzone" : "deadzone";
 	s_stk_deadzone_slider[3].generic.y = (y += 10);
 	s_stk_deadzone_slider[3].cvar = "joy_right_deadzone";
 
@@ -1966,6 +2171,7 @@ static void
 Stick_MenuDraw(void)
 {
 	Menu_AdjustCursor(&s_sticks_config_menu, 1);
+	s_sticks_config_menu.title = "ANALOG STICKS";
 	Menu_Draw(&s_sticks_config_menu);
 }
 
@@ -2203,7 +2409,7 @@ Gyro_MenuInit(void)
 		s_gyro_accel_mult_slider.generic.type = MTYPE_SLIDER;
 		s_gyro_accel_mult_slider.generic.x = 0;
 		s_gyro_accel_mult_slider.generic.y = (y += 10);
-		s_gyro_accel_mult_slider.generic.name = "multiplier";
+		s_gyro_accel_mult_slider.generic.name = Menu_IsCompact() ? "Accel multiplier" : "multiplier";
 		s_gyro_accel_mult_slider.cvar = "gyro_accel_multiplier";
 		s_gyro_accel_mult_slider.minvalue = GYRO_MIN_ACCEL_MULT;
 		s_gyro_accel_mult_slider.maxvalue = GYRO_MAX_ACCEL_MULT;
@@ -2212,7 +2418,7 @@ Gyro_MenuInit(void)
 		s_gyro_accel_lower_thresh_slider.generic.type = MTYPE_SLIDER;
 		s_gyro_accel_lower_thresh_slider.generic.x = 0;
 		s_gyro_accel_lower_thresh_slider.generic.y = (y += 10);
-		s_gyro_accel_lower_thresh_slider.generic.name = "lower thresh";
+		s_gyro_accel_lower_thresh_slider.generic.name = Menu_IsCompact() ? "Accel lower threshold" : "lower thresh";
 		s_gyro_accel_lower_thresh_slider.generic.callback = GyroAcceThreshFunc;
 		s_gyro_accel_lower_thresh_slider.cvar = "gyro_accel_lower_thresh";
 		s_gyro_accel_lower_thresh_slider.minvalue = GYRO_MIN_ACCEL_THRESH;
@@ -2223,7 +2429,7 @@ Gyro_MenuInit(void)
 		s_gyro_accel_upper_thresh_slider.generic.type = MTYPE_SLIDER;
 		s_gyro_accel_upper_thresh_slider.generic.x = 0;
 		s_gyro_accel_upper_thresh_slider.generic.y = (y += 10);
-		s_gyro_accel_upper_thresh_slider.generic.name = "upper thresh";
+		s_gyro_accel_upper_thresh_slider.generic.name = Menu_IsCompact() ? "Accel upper threshold" : "upper thresh";
 		s_gyro_accel_upper_thresh_slider.generic.callback = GyroAcceThreshFunc;
 		s_gyro_accel_upper_thresh_slider.cvar = "gyro_accel_upper_thresh";
 		s_gyro_accel_upper_thresh_slider.minvalue = GYRO_MIN_ACCEL_THRESH;
@@ -2235,12 +2441,12 @@ Gyro_MenuInit(void)
 	s_calibrating_text[0].generic.type = MTYPE_SEPARATOR;
 	s_calibrating_text[0].generic.x = 48 * scale + 32;
 	s_calibrating_text[0].generic.y = (y += 20);
-	s_calibrating_text[0].generic.name = "place the gamepad on a flat,";
+	s_calibrating_text[0].generic.name = Menu_IsCompact() ? "Place gamepad on a flat," : "place the gamepad on a flat,";
 
 	s_calibrating_text[1].generic.type = MTYPE_SEPARATOR;
 	s_calibrating_text[1].generic.x = 48 * scale + 32;
 	s_calibrating_text[1].generic.y = (y += 10);
-	s_calibrating_text[1].generic.name = "stable surface to...";
+	s_calibrating_text[1].generic.name = Menu_IsCompact() ? "stable surface, then:" : "stable surface to...";
 
 	s_calibrate_gyro.generic.type = MTYPE_ACTION;
 	s_calibrate_gyro.generic.x = 0;
@@ -2285,6 +2491,7 @@ static void
 Gyro_MenuDraw(void)
 {
 	Menu_AdjustCursor(&s_gyro_menu, 1);
+	s_gyro_menu.title = "GYRO AIMING";
 	Menu_Draw(&s_gyro_menu);
 	M_Popup();
 }
@@ -2523,7 +2730,7 @@ Joy_MenuInit(void)
 	s_joy_stickcfg_action.generic.type = MTYPE_ACTION;
 	s_joy_stickcfg_action.generic.x = 0;
 	s_joy_stickcfg_action.generic.y = (y += 20);
-	s_joy_stickcfg_action.generic.name = "sticks config";
+	s_joy_stickcfg_action.generic.name = Menu_IsCompact() ? "Analog stick settings" : "sticks config";
 	s_joy_stickcfg_action.generic.callback = ConfigStickFunc;
 	Menu_AddItem(&s_joy_menu, (void *)&s_joy_stickcfg_action);
 
@@ -2547,7 +2754,7 @@ Joy_MenuInit(void)
 	s_joy_customize_alt_buttons_action.generic.type = MTYPE_ACTION;
 	s_joy_customize_alt_buttons_action.generic.x = 0;
 	s_joy_customize_alt_buttons_action.generic.y = (y += 10);
-	s_joy_customize_alt_buttons_action.generic.name = "custom. alt buttons";
+	s_joy_customize_alt_buttons_action.generic.name = Menu_IsCompact() ? "Modifier buttons" : "custom. alt buttons";
 	s_joy_customize_alt_buttons_action.generic.callback = CustomizeControllerAltButtonsFunc;
 	Menu_AddItem(&s_joy_menu, (void *)&s_joy_customize_alt_buttons_action);
 
@@ -2558,6 +2765,7 @@ static void
 Joy_MenuDraw(void)
 {
 	Menu_AdjustCursor(&s_joy_menu, 1);
+	s_joy_menu.title = "GAMEPAD SETTINGS";
 	Menu_Draw(&s_joy_menu);
 }
 
@@ -2813,7 +3021,7 @@ Options_MenuInit(void)
 	s_options_oggvolume_slider.generic.type = MTYPE_SLIDER;
 	s_options_oggvolume_slider.generic.x = 0;
 	s_options_oggvolume_slider.generic.y = (y += 10);
-	s_options_oggvolume_slider.generic.name = "OGG volume";
+	s_options_oggvolume_slider.generic.name = Menu_IsCompact() ? "Music volume" : "OGG volume";
 	s_options_oggvolume_slider.cvar = "ogg_volume";
 	s_options_oggvolume_slider.minvalue = 0.0f;
 	s_options_oggvolume_slider.maxvalue = 1.0f;
@@ -2821,14 +3029,14 @@ Options_MenuInit(void)
 	s_options_oggenable_box.generic.type = MTYPE_SPINCONTROL;
 	s_options_oggenable_box.generic.x = 0;
 	s_options_oggenable_box.generic.y = (y += 10);
-	s_options_oggenable_box.generic.name = "OGG music";
+	s_options_oggenable_box.generic.name = Menu_IsCompact() ? "Music playback" : "OGG music";
 	s_options_oggenable_box.generic.callback = EnableOGGMusic;
 	s_options_oggenable_box.itemnames = able_items;
 
 	s_options_oggshuffle_box.generic.type = MTYPE_SPINCONTROL;
 	s_options_oggshuffle_box.generic.x = 0;
 	s_options_oggshuffle_box.generic.y = (y += 10);
-	s_options_oggshuffle_box.generic.name = "OGG shuffle";
+	s_options_oggshuffle_box.generic.name = Menu_IsCompact() ? "Shuffle music" : "OGG shuffle";
 	s_options_oggshuffle_box.generic.callback = OGGShuffleFunc;
 	s_options_oggshuffle_box.itemnames = ogg_shuffle_items;
 
@@ -2948,6 +3156,7 @@ Options_MenuDraw(void)
 {
 	M_Banner("m_banner_options");
 	Menu_AdjustCursor(&s_options_menu, 1);
+	s_options_menu.title = "OPTIONS";
 	Menu_Draw(&s_options_menu);
 	M_Popup();
 }
@@ -3346,6 +3555,33 @@ M_Credits_Draw(void)
 	int i, y;
 	float scale = SCR_GetMenuScale();
 
+	if (Menu_IsCompact())
+	{
+		int columns = (viddef.width - 24) / 8;
+		y = viddef.height - 28 - (cls.realtime - credits_start_time) / 60;
+		Menu_DrawCompactFrame("ROLL OF HONOR", "Plastic Platoon credits");
+		for (i = 0; credits[i]; i++)
+		{
+			char wrapped[8][80];
+			int line, count;
+			qboolean accent = credits[i][0] == '+';
+			const char *text = credits[i] + (accent ? 1 : 0);
+
+			count = *text ? M_CompactWrapLines(text, wrapped, columns, 8) : 1;
+			for (line = 0; line < count; line++, y += 16)
+			{
+				if (*text && y >= 44 && y + 8 < viddef.height - 30)
+				{
+					int x = (viddef.width - (int)strlen(wrapped[line]) * 8) / 2;
+					Menu_DrawCompactText(x, y, wrapped[line], columns, accent);
+				}
+			}
+		}
+		if (y < 44) credits_start_time = cls.realtime;
+		Menu_DrawCompactFooter("B: Back");
+		return;
+	}
+
 	/* draw the credits */
 	for (
 		i = 0,
@@ -3669,6 +3905,7 @@ static void
 Mods_MenuDraw(void)
 {
 	Menu_AdjustCursor(&s_mods_menu, 1);
+	s_mods_menu.title = "GAME PACKS";
 	Menu_Draw(&s_mods_menu);
 	M_Popup();
 }
@@ -3865,6 +4102,7 @@ Game_MenuDraw(void)
 {
 	M_Banner("m_banner_game");
 	Menu_AdjustCursor(&s_game_menu, 1);
+	s_game_menu.title = "NEW GAME & SAVES";
 	Menu_Draw(&s_game_menu);
 }
 
@@ -3900,6 +4138,8 @@ static char m_quicksavestring[32];
 static qboolean m_quicksavevalid;
 
 static char m_savestrings[MAX_SAVESLOTS][32];
+static char m_compact_quicksavestring[64];
+static char m_compact_savestrings[MAX_SAVESLOTS][64];
 static qboolean m_savevalid[MAX_SAVESLOTS];
 
 static int m_loadsave_page;
@@ -3941,7 +4181,7 @@ PromptDeleteSaveFunc(menuframework_s *m)
 
 	if (menukeyitem_delete)
 	{
-		Menu_SetStatusBar( m, "are you sure you want to delete? y\\n" );
+		Menu_SetStatusBar(m, Menu_IsCompact() ? (japanese_confirm ? "B: Delete   A: Keep save" : "A: Delete   B: Keep save") : "are you sure you want to delete? y\\n");
 	}
 }
 
@@ -3968,6 +4208,19 @@ ExecDeleteSaveFunc(menuframework_s *m, int menu_key)
 	}
 	Menu_SetStatusBar( m, m_loadsave_statusbar );
 	return false;
+}
+
+/* Slot and mission names take priority over timestamps on a 240px panel. */
+static const char *
+M_CompactSaveTitle(const char *comment)
+{
+	if (!strncmp(comment, "QUICKSAVE ", 10)) return comment + 10;
+	if (!strncmp(comment, "ENTERING ", 9)) return comment + 9;
+	if (strlen(comment) > 13 && comment[2] == ':' && comment[8] == '/')
+	{
+		return comment + 13;
+	}
+	return comment;
 }
 
 static void
@@ -4024,8 +4277,24 @@ Create_Savestrings(void)
 		else
 		{
 			FS_Read(m_savestrings[i], sizeof(m_savestrings[i]), f);
+			m_savestrings[i][sizeof(m_savestrings[i]) - 1] = '\0';
 			FS_FCloseFile(f);
 			m_savevalid[i] = true;
+		}
+	}
+	Com_sprintf(m_compact_quicksavestring, sizeof(m_compact_quicksavestring),
+		"QUICK / %s", m_quicksavevalid ? M_CompactSaveTitle(m_quicksavestring) : "EMPTY");
+	for (i = 0; i < MAX_SAVESLOTS; i++)
+	{
+		int slot = m_loadsave_page * MAX_SAVESLOTS + i;
+		const char *mission = m_savevalid[i] ? M_CompactSaveTitle(m_savestrings[i]) : "EMPTY";
+		if (slot == 0)
+		{
+			Com_sprintf(m_compact_savestrings[i], sizeof(m_compact_savestrings[i]), "AUTO / %s", mission);
+		}
+		else
+		{
+			Com_sprintf(m_compact_savestrings[i], sizeof(m_compact_savestrings[i]), "%02d / %s", slot, mission);
 		}
 	}
 }
@@ -4064,6 +4333,11 @@ LoadSave_AdjustPage(int dir)
 
 		Q_strlcat(m_loadsave_statusbar, str, sizeof(m_loadsave_statusbar));
 	}
+	if (Menu_IsCompact())
+	{
+		Com_sprintf(m_loadsave_statusbar, sizeof(m_loadsave_statusbar),
+			"LEFT/RIGHT: PAGE %d/%d", m_loadsave_page + 1, MAX_SAVEPAGES);
+	}
 }
 
 static void
@@ -4097,7 +4371,7 @@ LoadGame_MenuInit(void)
 
 	// The quicksave slot...
 	s_loadgame_actions[0].generic.type = MTYPE_ACTION;
-	s_loadgame_actions[0].generic.name = m_quicksavestring;
+	s_loadgame_actions[0].generic.name = Menu_IsCompact() ? m_compact_quicksavestring : m_quicksavestring;
 	s_loadgame_actions[0].generic.x = 0;
 	s_loadgame_actions[0].generic.y = 0;
 	s_loadgame_actions[0].generic.localdata[0] = -1;
@@ -4118,7 +4392,7 @@ LoadGame_MenuInit(void)
 	for (i = 0; i < MAX_SAVESLOTS; i++)
 	{
 		s_loadgame_actions[i + 1].generic.type = MTYPE_ACTION;
-		s_loadgame_actions[i + 1].generic.name = m_savestrings[i];
+		s_loadgame_actions[i + 1].generic.name = Menu_IsCompact() ? m_compact_savestrings[i] : m_savestrings[i];
 		s_loadgame_actions[i + 1].generic.x = 0;
 		s_loadgame_actions[i + 1].generic.y = i * 10 + 20;
 		s_loadgame_actions[i + 1].generic.localdata[0] = i + m_loadsave_page * MAX_SAVESLOTS;
@@ -4144,6 +4418,7 @@ LoadGame_MenuDraw(void)
 {
 	M_Banner("m_banner_load_game");
 	Menu_AdjustCursor(&s_loadgame_menu, 1);
+	s_loadgame_menu.title = menukeyitem_delete ? "DELETE THIS SAVE?" : "LOAD GAME";
 	Menu_Draw(&s_loadgame_menu);
 }
 
@@ -4256,6 +4531,7 @@ SaveGame_MenuDraw(void)
 {
 	M_Banner("m_banner_save_game");
 	Menu_AdjustCursor(&s_savegame_menu, 1);
+	s_savegame_menu.title = menukeyitem_delete ? "DELETE THIS SAVE?" : "SAVE GAME";
 	Menu_Draw(&s_savegame_menu);
 	M_Popup();
 }
@@ -4274,7 +4550,7 @@ SaveGame_MenuInit(void)
 
 	// The quicksave slot...
 	s_savegame_actions[0].generic.type = MTYPE_ACTION;
-	s_savegame_actions[0].generic.name = m_quicksavestring;
+	s_savegame_actions[0].generic.name = Menu_IsCompact() ? m_compact_quicksavestring : m_quicksavestring;
 	s_savegame_actions[0].generic.x = 0;
 	s_savegame_actions[0].generic.y = 0;
 	s_savegame_actions[0].generic.localdata[0] = -1;
@@ -4287,7 +4563,7 @@ SaveGame_MenuInit(void)
 	for (i = 0; i < MAX_SAVESLOTS; i++)
 	{
 		s_savegame_actions[i + 1].generic.type = MTYPE_ACTION;
-		s_savegame_actions[i + 1].generic.name = m_savestrings[i];
+		s_savegame_actions[i + 1].generic.name = Menu_IsCompact() ? m_compact_savestrings[i] : m_savestrings[i];
 		s_savegame_actions[i + 1].generic.x = 0;
 		s_savegame_actions[i + 1].generic.y = i * 10 + 20;
 		s_savegame_actions[i + 1].generic.localdata[0] = i + m_loadsave_page * MAX_SAVESLOTS;
@@ -4562,6 +4838,7 @@ static void
 JoinServer_MenuDraw(void)
 {
 	M_Banner("m_banner_join_server");
+	s_joinserver_menu.title = "JOIN A GAME";
 	Menu_Draw(&s_joinserver_menu);
 	M_Popup();
 }
@@ -5250,7 +5527,7 @@ StartServer_MenuInit(void)
 			"%d", SS_GetPlayerCount());
 		s_startserver_dmoptions_action.generic.y = 76;
 		s_startserver_start_action.generic.y = 96;
-		Menu_SetStatusBar(&s_startserver_menu, "1. Match settings   2. Controllers   3. Play");
+		Menu_SetStatusBar(&s_startserver_menu, Menu_IsCompact() ? "1 MATCH > 2 SQUAD > 3 PLAY" : "1. Match settings   2. Controllers   3. Play");
 	}
 	Menu_AddItem(&s_startserver_menu, &s_startserver_dmoptions_action);
 	Menu_AddItem(&s_startserver_menu, &s_startserver_start_action);
@@ -5264,6 +5541,7 @@ StartServer_MenuInit(void)
 static void
 StartServer_MenuDraw(void)
 {
+	s_startserver_menu.title = "MATCH SETTINGS";
 	Menu_Draw(&s_startserver_menu);
 }
 
@@ -5752,6 +6030,7 @@ DMOptions_MenuInit(void)
 static void
 DMOptions_MenuDraw(void)
 {
+	s_dmoptions_menu.title = "MATCH RULES";
 	Menu_Draw(&s_dmoptions_menu);
 }
 
@@ -5920,6 +6199,7 @@ DownloadOptions_MenuInit(void)
 static void
 DownloadOptions_MenuDraw(void)
 {
+	s_downloadoptions_menu.title = "DOWNLOADS";
 	Menu_Draw(&s_downloadoptions_menu);
 }
 
@@ -5947,6 +6227,10 @@ M_Menu_DownloadOptions_f(void)
 
 static menuframework_s s_addressbook_menu;
 static menufield_s s_addressbook_fields[NUM_ADDRESSBOOK_ENTRIES];
+static const char *s_addressbook_labels[NUM_ADDRESSBOOK_ENTRIES] = {
+	"Server 1", "Server 2", "Server 3", "Server 4", "Server 5",
+	"Server 6", "Server 7", "Server 8", "Server 9"
+};
 
 static void
 AddressBook_MenuInit(void)
@@ -5971,7 +6255,7 @@ AddressBook_MenuInit(void)
 		f = &s_addressbook_fields[i];
 
 		f->generic.type = MTYPE_FIELD;
-		f->generic.name = 0;
+		f->generic.name = Menu_IsCompact() ? s_addressbook_labels[i] : NULL;
 		f->generic.callback = 0;
 		f->generic.x = 0;
 		f->generic.y = i * 18 + 0;
@@ -6009,6 +6293,7 @@ static void
 AddressBook_MenuDraw(void)
 {
 	M_Banner("m_banner_addressbook");
+	s_addressbook_menu.title = "SERVER ADDRESSES";
 	Menu_Draw(&s_addressbook_menu);
 }
 
@@ -6796,6 +7081,7 @@ PlayerConfig_MenuInit(void)
 	s_player_model_box.generic.x = -56 * scale;
 	s_player_model_box.generic.y = 70;
 	s_player_model_box.generic.callback = ModelCallback;
+	s_player_model_box.generic.name = Menu_IsCompact() ? "Model" : NULL;
 	s_player_model_box.generic.cursor_offset = -48;
 	s_player_model_box.curvalue = mdlindex;
 	s_player_model_box.itemnames = (const char**)s_modelname.data;
@@ -6808,7 +7094,7 @@ PlayerConfig_MenuInit(void)
 	s_player_skin_box.generic.type = MTYPE_SPINCONTROL;
 	s_player_skin_box.generic.x = -56 * scale;
 	s_player_skin_box.generic.y = 94;
-	s_player_skin_box.generic.name = 0;
+	s_player_skin_box.generic.name = Menu_IsCompact() ? "Color / skin" : NULL;
 	s_player_skin_box.generic.callback = 0;
 	s_player_skin_box.generic.cursor_offset = -48;
 	s_player_skin_box.curvalue = imgindex;
@@ -6830,7 +7116,7 @@ PlayerConfig_MenuInit(void)
 	s_player_rate_box.generic.type = MTYPE_SPINCONTROL;
 	s_player_rate_box.generic.x = -56 * scale;
 	s_player_rate_box.generic.y = 166;
-	s_player_rate_box.generic.name = 0;
+	s_player_rate_box.generic.name = Menu_IsCompact() ? "Connection speed" : NULL;
 	s_player_rate_box.generic.cursor_offset = -48;
 	s_player_rate_box.generic.callback = RateCallback;
 	s_player_rate_box.curvalue = i;
@@ -6846,16 +7132,16 @@ PlayerConfig_MenuInit(void)
 
 	Menu_AddItem(&s_player_config_menu, &s_player_name_field);
 	Menu_AddItem(&s_player_config_menu, &s_player_icon_bitmap);
-	Menu_AddItem(&s_player_config_menu, &s_player_model_title);
+	if (!Menu_IsCompact()) Menu_AddItem(&s_player_config_menu, &s_player_model_title);
 	Menu_AddItem(&s_player_config_menu, &s_player_model_box);
 
 	if (s_player_skin_box.itemnames)
 	{
-		Menu_AddItem(&s_player_config_menu, &s_player_skin_title);
+		if (!Menu_IsCompact()) Menu_AddItem(&s_player_config_menu, &s_player_skin_title);
 		Menu_AddItem(&s_player_config_menu, &s_player_skin_box);
 	}
 
-	Menu_AddItem(&s_player_config_menu, &s_player_rate_title);
+	if (!Menu_IsCompact()) Menu_AddItem(&s_player_config_menu, &s_player_rate_title);
 	Menu_AddItem(&s_player_config_menu, &s_player_rate_box);
 	Menu_AddItem(&s_player_config_menu, &s_player_download_action);
 
@@ -6895,6 +7181,31 @@ PlayerConfig_MenuDraw(void)
 {
 	refdef_t refdef;
 	float scale = SCR_GetMenuScale();
+
+	if (Menu_IsCompact())
+	{
+		int width, height;
+		char icon[MAX_QPATH];
+
+		s_player_config_menu.title = "YOUR SOLDIER";
+		s_player_config_menu.subtitle = "Identity & uniform";
+		Menu_Draw(&s_player_config_menu);
+		if (s_player_model_box.curvalue >= 0 && s_player_model_box.curvalue < s_modelname.num &&
+			s_player_skin_box.curvalue >= 0 &&
+			s_player_skin_box.curvalue < s_skinnames[s_player_model_box.curvalue].num)
+		{
+			Com_sprintf(icon, sizeof(icon), "/players/%s/%s_i.pcx",
+				s_modelname.data[s_player_model_box.curvalue],
+				s_skinnames[s_player_model_box.curvalue].data[s_player_skin_box.curvalue]);
+			Draw_GetPicSize(&width, &height, icon);
+			if (width > 0 && height > 0)
+			{
+				float icon_scale = 16.0f / Q_max(width, height);
+				Draw_PicScaled(viddef.width - 30, 4, icon, icon_scale);
+			}
+		}
+		return;
+	}
 
 	memset(&refdef, 0, sizeof(refdef));
 
@@ -6988,6 +7299,7 @@ PlayerConfig_MenuDraw(void)
 		// icon bitmap to draw
 		s_player_icon_bitmap.generic.name = scratch;
 
+		s_player_config_menu.title = "YOUR SOLDIER";
 		Menu_Draw(&s_player_config_menu);
 
 		M_DrawTextBox(((int)(refdef.x) * (320.0F / viddef.width) - 8),
@@ -7083,6 +7395,18 @@ M_Quit_Draw(void)
 	int w, h;
 	float scale = SCR_GetMenuScale();
 
+	if (Menu_IsCompact())
+	{
+		Menu_DrawCompactFrame("LEAVE THE MISSION?", "Return to Game Bird");
+		Draw_Fill(10, 68, viddef.width - 20, 100, 221);
+		Draw_Fill(10, 68, 3, 100, 140);
+		Menu_DrawCompactText(22, 86, "Quit Plastic Platoon?", (viddef.width - 36) / 8, false);
+		Menu_DrawCompactText(22, 110, "Save your progress", (viddef.width - 36) / 8, false);
+		Menu_DrawCompactText(22, 124, "before leaving.", (viddef.width - 36) / 8, false);
+		Menu_DrawCompactFooter(japanese_confirm ? "B: Quit   A: Stay" : "A: Quit   B: Stay");
+		return;
+	}
+
 	Draw_GetPicSize(&w, &h, "quit");
 	Draw_PicScaled((viddef.width - w * scale) / 2, (viddef.height - h * scale) / 2, "quit", scale);
 }
@@ -7174,7 +7498,13 @@ M_Draw(void)
 		Draw_FadeScreen();
 	}
 
-	if (m_active.draw)
+	/* GL1 batches glyphs independently of immediate solid fills. Draw compact
+	 * notices as their own screen, so old menu text cannot bleed through. */
+	if (Menu_IsCompact() && m_popup_string)
+	{
+		M_Popup();
+	}
+	if ((!Menu_IsCompact() || !m_popup_string) && m_active.draw)
 	{
 		m_active.draw();
 	}

@@ -1,0 +1,202 @@
+[
+  {
+    "name": "blue_loading_floor",
+    "pose": [
+      -896,
+      160,
+      24.125,
+      -10,
+      50
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "red_loading_floor",
+    "pose": [
+      896,
+      -640,
+      24.125,
+      -10,
+      135
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "service_track",
+    "pose": [
+      0,
+      -480,
+      -103.875,
+      -12,
+      90
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "twin_crossings",
+    "pose": [
+      0,
+      448,
+      -103.875,
+      -14,
+      270
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "blue_upper_landing",
+    "pose": [
+      -400,
+      640,
+      184.125,
+      8,
+      315
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "upper_crossing",
+    "pose": [
+      -272,
+      -256,
+      184.125,
+      0,
+      0
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "red_gallery",
+    "pose": [
+      272,
+      512,
+      184.125,
+      0,
+      270
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "west_ramp",
+    "pose": [
+      -768,
+      0,
+      24.125,
+      4,
+      0
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "east_ramp",
+    "pose": [
+      736,
+      192,
+      24.125,
+      5,
+      180
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  },
+  {
+    "name": "north_crossstreet",
+    "pose": [
+      -640,
+      864,
+      24.125,
+      0,
+      0
+    ],
+    "after_pose": [
+      {
+        "command": "noclip",
+        "wait": 0.3
+      },
+      {
+        "command": "noclip",
+        "wait": 0.3
+      }
+    ]
+  }
+]

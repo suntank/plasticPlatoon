@@ -1,0 +1,805 @@
+{
+  "schema": 1,
+  "config_sha256": "226dc6cb93771817f084d24fedef6799fcd42b6116d25c7df175f5ff186a6481",
+  "generator_sha256": "effc31090ba932c1988873d27dd3381f959bad43e2ee5e7e5d527cab89070bd9",
+  "helper_sha256": {
+    "tools/assets/md2_assets.py": "894c26ea6d87858bfea877267657a97addad6b238cbb89f1f112a591d0062c2b",
+    "tools/assets/asset_sources.py": "56b5778c08d9625bbf9307bcc880ea33f0f012a318abbcefd9fcbcc4619bc264",
+    "src/client/refresh/constants/anorms.h": "d0b5680cd33d784bc6f510525601b3baef2d78602a0127045daffcca2ceec49c"
+  },
+  "source_archives": {
+    "pickups": {
+      "path": "tools/assets/sources/pickups-local.pk3",
+      "sha256": "6c6dcc1d9a9a44aa666285a9add3ff439fc5561791e46529ef91b7ee5866bf37",
+      "origin": "Original owner-authored Plastic Platoon pickup models and textures"
+    },
+    "platoon": {
+      "path": "tools/assets/sources/platoon-originals.pk3",
+      "sha256": "308e7b7e07f08ecbd0f7487e8a37440ab07c28bb83896b0f4c959a29fdcbf7e4",
+      "bytes": 47317833,
+      "origin": "Original owner-authored Plastic Platoon model, texture and sprite inputs recovered before public history cleanup",
+      "license": "GPL-2.0-or-later",
+      "excluded": [
+        "Legacy players/male assets",
+        "Inherited soldier portrait PCXs"
+      ]
+    }
+  },
+  "tools": {
+    "numpy": "2.5.4",
+    "Pillow": "12.3.0",
+    "pymeshlab": "2025.7.post1"
+  },
+  "policy": "Additive distant LODs only; canonical models, skins, frame lattice and gameplay are unchanged.",
+  "assets": [
+    {
+      "classname": "ammo_bullets",
+      "canonical": "models/items/ammo/bullets/medium/tris.md2",
+      "lod": "models/items/ammo/bullets/medium/lod1.md2",
+      "source_sha256": "acec81547616988f017a3494777702b2846c36e74167f103da58d8cee3ada6d2",
+      "skin": "models/items/ammo/bullets/medium/skin.png",
+      "skin_sha256": "0ab76a6128213c6c170976829bff39849971996c4578df94b7e429c51d481c56",
+      "recipe": "ammo_box",
+      "design": "Five solid tray panels, a raised hinged lid, and five broad cartridge blocks; omit subpixel ribs, bevels and tiny rounds.",
+      "before": {
+        "sha256": "fc45f24b2d2e83efb565889c27546a637355b2ddaa3776ba75e21a065820e4ab",
+        "file_bytes": 49196,
+        "triangles": 999,
+        "position_vertices": 458,
+        "gl_primitives": 583,
+        "frames": 1,
+        "skins": [
+          "models/items/ammo/bullets/medium/skin.png"
+        ],
+        "skin_dimensions": [
+          256,
+          256
+        ],
+        "frame_name_hex": "6672616d655f31000000000000000000",
+        "scale": [
+          0.11544150114059448,
+          0.07609144598245621,
+          0.10677646100521088
+        ],
+        "translation": [
+          -14.733217239379883,
+          -9.608536720275879,
+          -14.293102264404297
+        ],
+        "bounds": [
+          [
+            -14.733217239379883,
+            -9.38026238232851,
+            -14.293102264404297
+          ],
+          [
+            14.70436555147171,
+            9.642599113285542,
+            12.721342369914055
+          ]
+        ]
+      },
+      "after": {
+        "sha256": "60cbb31ac917fee62e523a2a5f03630980f3da94eb29c7978355552e6d654eed",
+        "file_bytes": 4624,
+        "triangles": 132,
+        "position_vertices": 88,
+        "gl_primitives": 33,
+        "frames": 1,
+        "skins": [
+          "models/items/ammo/bullets/medium/skin.png"
+        ],
+        "skin_dimensions": [
+          256,
+          256
+        ],
+        "frame_name_hex": "6672616d655f31000000000000000000",
+        "scale": [
+          0.11544150114059448,
+          0.07609144598245621,
+          0.10677646100521088
+        ],
+        "translation": [
+          -14.733217239379883,
+          -9.608536720275879,
+          -14.293102264404297
+        ],
+        "bounds": [
+          [
+            -14.733217239379883,
+            -9.608536720275879,
+            -14.293102264404297
+          ],
+          [
+            14.70436555147171,
+            9.794782005250454,
+            12.934895291924477
+          ]
+        ]
+      },
+      "offline_review": {
+        "path": "build/pi-four-player-20261112/pickup-lods-review/ammo_bullets.png",
+        "sha256": "ca4147cb4dff0c5bca96ea6f67a3dc8bad3bf45b8b86e12532f5ad3a35ea7d5c",
+        "note": "Offline raster review; 16/12/8px native silhouettes plus 2x nearest enlargement. Near inspection intentionally shows LOD simplification; close rendering keeps canonical model.",
+        "metrics": [
+          {
+            "angle": 25,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.8024691358024691
+          },
+          {
+            "angle": 25,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.8085106382978723
+          },
+          {
+            "angle": 25,
+            "raster_pixels": 8,
+            "silhouette_iou": 1.0
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.8316831683168316
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.9423076923076923
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 8,
+            "silhouette_iou": 0.9583333333333334
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.8108108108108109
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.7272727272727273
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 8,
+            "silhouette_iou": 1.0
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.84375
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.9215686274509803
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 8,
+            "silhouette_iou": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "classname": "ammo_shells",
+      "canonical": "models/items/ammo/shells/medium/tris.md2",
+      "lod": "models/items/ammo/shells/medium/lod1.md2",
+      "source_sha256": "93367d01fe4ddde3e6ef0fd48f023656b4b2652d153cd5a9853d8a8924295045",
+      "skin": "models/items/ammo/shells/medium/skin.png",
+      "skin_sha256": "e631d95ed5e32d309709b2a0facee28f63c2ed93e531f57592ff2083ebe000e4",
+      "recipe": "ammo_box",
+      "design": "Five solid tray panels, a raised hinged lid, and five broad cartridge blocks; omit subpixel ribs, bevels and tiny rounds.",
+      "before": {
+        "sha256": "4a33719467649de417ba974321f6e26c7476d2f36b5c2ddee063b7ecaca09eda",
+        "file_bytes": 49776,
+        "triangles": 1000,
+        "position_vertices": 456,
+        "gl_primitives": 594,
+        "frames": 1,
+        "skins": [
+          "models/items/ammo/shells/medium/skin.png",
+          "models/items/ammo/shells/medium/skin.png"
+        ],
+        "skin_dimensions": [
+          480,
+          480
+        ],
+        "frame_name_hex": "6672616d655f31000000000000000000",
+        "scale": [
+          0.081569604575634,
+          0.052341386675834656,
+          0.07048214226961136
+        ],
+        "translation": [
+          -10.411757469177246,
+          -6.628451824188232,
+          -14.109903335571289
+        ],
+        "bounds": [
+          [
+            -10.248618260025978,
+            -6.4714276641607285,
+            -14.109903335571289
+          ],
+          [
+            10.30692209303379,
+            6.66626039147377,
+            3.8630429431796074
+          ]
+        ]
+      },
+      "after": {
+        "sha256": "dc19ebad7e3cf34ca05b5a1c7e3c33ebb35285ca6c2f51b987c137fd818b44b1",
+        "file_bytes": 4688,
+        "triangles": 132,
+        "position_vertices": 88,
+        "gl_primitives": 33,
+        "frames": 1,
+        "skins": [
+          "models/items/ammo/shells/medium/skin.png",
+          "models/items/ammo/shells/medium/skin.png"
+        ],
+        "skin_dimensions": [
+          480,
+          480
+        ],
+        "frame_name_hex": "6672616d655f31000000000000000000",
+        "scale": [
+          0.081569604575634,
+          0.052341386675834656,
+          0.07048214226961136
+        ],
+        "translation": [
+          -10.411757469177246,
+          -6.628451824188232,
+          -14.109903335571289
+        ],
+        "bounds": [
+          [
+            -10.411757469177246,
+            -6.628451824188232,
+            -14.109903335571289
+          ],
+          [
+            10.388491697609425,
+            6.718601778149605,
+            3.8630429431796074
+          ]
+        ]
+      },
+      "offline_review": {
+        "path": "build/pi-four-player-20261112/pickup-lods-review/ammo_shells.png",
+        "sha256": "1e334f546efa2d4c51405a25d8f4ff690e62e9ce36b6a071e69d156d0e88304e",
+        "note": "Offline raster review; 16/12/8px native silhouettes plus 2x nearest enlargement. Near inspection intentionally shows LOD simplification; close rendering keeps canonical model.",
+        "metrics": [
+          {
+            "angle": 25,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.8227848101265823
+          },
+          {
+            "angle": 25,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.7659574468085106
+          },
+          {
+            "angle": 25,
+            "raster_pixels": 8,
+            "silhouette_iou": 0.9444444444444444
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.8247422680412371
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.9411764705882353
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 8,
+            "silhouette_iou": 0.875
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.7567567567567568
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.7045454545454546
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 8,
+            "silhouette_iou": 0.875
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.8210526315789474
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.9591836734693877
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 8,
+            "silhouette_iou": 0.875
+          }
+        ]
+      }
+    },
+    {
+      "classname": "ammo_grenades",
+      "canonical": "models/items/ammo/grenades/medium/tris.md2",
+      "lod": "models/items/ammo/grenades/medium/lod1.md2",
+      "source_sha256": "c6b775f241d37166a535bf522cd1691bfa9a24590b1f3bd2de0dbdf058e2ffde",
+      "skin": "models/items/ammo/grenades/medium/skin.png",
+      "skin_sha256": "30c163ca8659dd7957b37022b95c066364f56f4093b66b90321bdd2e2a7601bb",
+      "recipe": "qem",
+      "design": "Source UV-aware reduction with smooth source-surface normal transfer; rounded silhouette and original pigment retained.",
+      "before": {
+        "sha256": "95e9b7a37f8c5ee6fb47009caf1cf3d08416acb2b927a66466fa028a34339871",
+        "file_bytes": 37256,
+        "triangles": 800,
+        "position_vertices": 398,
+        "gl_primitives": 413,
+        "frames": 1,
+        "skins": [
+          "models/items/ammo/grenades/medium/skin.png"
+        ],
+        "skin_dimensions": [
+          480,
+          480
+        ],
+        "frame_name_hex": "6672616d655f31000000000000000000",
+        "scale": [
+          0.02883419767022133,
+          0.026278549805283546,
+          0.04892862215638161
+        ],
+        "translation": [
+          -3.6939916610717773,
+          -3.3438024520874023,
+          -12.000975608825684
+        ],
+        "bounds": [
+          [
+            -3.6939916610717773,
+            -3.2649668026715517,
+            -12.000975608825684
+          ],
+          [
+            3.6587287448346615,
+            3.357227748259902,
+            0.4758230410516262
+          ]
+        ]
+      },
+      "after": {
+        "sha256": "d6e89fd84e02533ee93ca98f6c02bd40e5910ec7cedf838887c0d1f101bcef01",
+        "file_bytes": 9000,
+        "triangles": 180,
+        "position_vertices": 88,
+        "gl_primitives": 103,
+        "frames": 1,
+        "skins": [
+          "models/items/ammo/grenades/medium/skin.png"
+        ],
+        "skin_dimensions": [
+          480,
+          480
+        ],
+        "frame_name_hex": "6672616d655f31000000000000000000",
+        "scale": [
+          0.02883419767022133,
+          0.026278549805283546,
+          0.04892862215638161
+        ],
+        "translation": [
+          -3.6939916610717773,
+          -3.3438024520874023,
+          -12.000975608825684
+        ],
+        "bounds": [
+          [
+            -3.3768154866993427,
+            -2.9759027548134327,
+            -12.000975608825684
+          ],
+          [
+            3.6587287448346615,
+            3.068163700401783,
+            0.4268944188952446
+          ]
+        ]
+      },
+      "offline_review": {
+        "path": "build/pi-four-player-20261112/pickup-lods-review/ammo_grenades.png",
+        "sha256": "f524db6c8eba17afe97b20fb83f92b0a4573208bcc6e6def732296627cf6f76f",
+        "note": "Offline raster review; 16/12/8px native silhouettes plus 2x nearest enlargement. Near inspection intentionally shows LOD simplification; close rendering keeps canonical model.",
+        "metrics": [
+          {
+            "angle": 25,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.96875
+          },
+          {
+            "angle": 25,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.9230769230769231
+          },
+          {
+            "angle": 25,
+            "raster_pixels": 8,
+            "silhouette_iou": 0.8421052631578947
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.9259259259259259
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.9318181818181818
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 8,
+            "silhouette_iou": 1.0
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.8823529411764706
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.9487179487179487
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 8,
+            "silhouette_iou": 0.8888888888888888
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.9
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.9772727272727273
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 8,
+            "silhouette_iou": 0.9473684210526315
+          }
+        ]
+      }
+    },
+    {
+      "classname": "item_armor_shard",
+      "canonical": "models/items/armor/shard/tris.md2",
+      "lod": "models/items/armor/shard/lod1.md2",
+      "source_sha256": "b3a8eceadaef73e7725ab0131b30b2d2f54fae491a5c0ca71b09947c22889a65",
+      "skin": "models/items/armor/shard/skin.png",
+      "skin_sha256": "738605133c9109b110357fc84cc37373b5e93aa6f4deb98d93405e05d786b6fc",
+      "recipe": "qem",
+      "design": "Source UV-aware reduction with smooth source-surface normal transfer; rounded silhouette and original pigment retained.",
+      "before": {
+        "sha256": "e11f9b6037c8e979c81b76cd8cbccef9ba09a56b952baad8c3b1046412ce819e",
+        "file_bytes": 35696,
+        "triangles": 800,
+        "position_vertices": 382,
+        "gl_primitives": 377,
+        "frames": 1,
+        "skins": [
+          "models/items/armor/shard/skin.png"
+        ],
+        "skin_dimensions": [
+          256,
+          256
+        ],
+        "frame_name_hex": "6672616d655f31000000000000000000",
+        "scale": [
+          0.03689427673816681,
+          0.02574780583381653,
+          0.04126276448369026
+        ],
+        "translation": [
+          -4.711928367614746,
+          -3.2774510383605957,
+          -5.261002540588379
+        ],
+        "bounds": [
+          [
+            -4.711928367614746,
+            -3.2774510383605957,
+            -5.261002540588379
+          ],
+          [
+            4.69611220061779,
+            3.288239449262619,
+            5.137214109301567
+          ]
+        ]
+      },
+      "after": {
+        "sha256": "6b38e80205c603106dc67bce3985753a3dd97ec669418194d4ab37a9972e7008",
+        "file_bytes": 10240,
+        "triangles": 200,
+        "position_vertices": 82,
+        "gl_primitives": 123,
+        "frames": 1,
+        "skins": [
+          "models/items/armor/shard/skin.png"
+        ],
+        "skin_dimensions": [
+          256,
+          256
+        ],
+        "frame_name_hex": "6672616d655f31000000000000000000",
+        "scale": [
+          0.03689427673816681,
+          0.02574780583381653,
+          0.04126276448369026
+        ],
+        "translation": [
+          -4.711928367614746,
+          -3.2774510383605957,
+          -5.261002540588379
+        ],
+        "bounds": [
+          [
+            -4.711928367614746,
+            -2.994225174188614,
+            -4.518272779881954
+          ],
+          [
+            4.69611220061779,
+            3.288239449262619,
+            4.518272642046213
+          ]
+        ]
+      },
+      "offline_review": {
+        "path": "build/pi-four-player-20261112/pickup-lods-review/item_armor_shard.png",
+        "sha256": "6a2781c0f6d88d117f512959ea71e5ce30204fab82eceba864866ac846dc4722",
+        "note": "Offline raster review; 16/12/8px native silhouettes plus 2x nearest enlargement. Near inspection intentionally shows LOD simplification; close rendering keeps canonical model.",
+        "metrics": [
+          {
+            "angle": 25,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.891566265060241
+          },
+          {
+            "angle": 25,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.8181818181818182
+          },
+          {
+            "angle": 25,
+            "raster_pixels": 8,
+            "silhouette_iou": 0.7727272727272727
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.87
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.9090909090909091
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 8,
+            "silhouette_iou": 0.88
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.8902439024390244
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.782608695652174
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 8,
+            "silhouette_iou": 0.7619047619047619
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.8431372549019608
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.8928571428571429
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 8,
+            "silhouette_iou": 0.92
+          }
+        ]
+      }
+    },
+    {
+      "classname": "item_health_small",
+      "canonical": "models/items/healing/stimpack/tris.md2",
+      "lod": "models/items/healing/stimpack/lod1.md2",
+      "source_sha256": "bbfd4015f6d4e5e011f2f0614b805f3ea8ff3f3d71c29e1d4623b03241c5dbff",
+      "skin": "models/items/healing/stimpack/skin.png",
+      "skin_sha256": "e6d94324ad0028f0e8e427b8a5523223d7d64da66939eaf2263f744b200ea4d5",
+      "recipe": "qem",
+      "design": "Source UV-aware reduction with smooth source-surface normal transfer; rounded silhouette and original pigment retained.",
+      "before": {
+        "sha256": "b732f8175f78e1e34e7ddf096ce6d3ef490a9218c13c07c76d79d6676f039abf",
+        "file_bytes": 34480,
+        "triangles": 800,
+        "position_vertices": 402,
+        "gl_primitives": 347,
+        "frames": 1,
+        "skins": [
+          "models/items/healing/stimpack/skin.png",
+          "models/items/healing/stimpack/skin.png"
+        ],
+        "skin_dimensions": [
+          480,
+          480
+        ],
+        "frame_name_hex": "6672616d655f30000000000000000000",
+        "scale": [
+          0.025005675852298737,
+          0.01520017720758915,
+          0.058749984949827194
+        ],
+        "translation": [
+          -3.1914665699005127,
+          -1.931037425994873,
+          0.0
+        ],
+        "bounds": [
+          [
+            -3.166460894048214,
+            -1.931037425994873,
+            0.0
+          ],
+          [
+            3.1599750965833664,
+            1.929807584732771,
+            14.981246162205935
+          ]
+        ]
+      },
+      "after": {
+        "sha256": "2bbb3ad9020d85b4c83b5b9f82708a0ff3ea7ff053023d9dd57e08f967a99349",
+        "file_bytes": 8592,
+        "triangles": 180,
+        "position_vertices": 92,
+        "gl_primitives": 91,
+        "frames": 1,
+        "skins": [
+          "models/items/healing/stimpack/skin.png",
+          "models/items/healing/stimpack/skin.png"
+        ],
+        "skin_dimensions": [
+          480,
+          480
+        ],
+        "frame_name_hex": "6672616d655f30000000000000000000",
+        "scale": [
+          0.025005675852298737,
+          0.01520017720758915,
+          0.058749984949827194
+        ],
+        "translation": [
+          -3.1914665699005127,
+          -1.931037425994873,
+          0.0
+        ],
+        "bounds": [
+          [
+            -3.1914665699005127,
+            -1.931037425994873,
+            0.0
+          ],
+          [
+            3.184980772435665,
+            1.94500776194036,
+            14.981246162205935
+          ]
+        ]
+      },
+      "offline_review": {
+        "path": "build/pi-four-player-20261112/pickup-lods-review/item_health_small.png",
+        "sha256": "76d0a0fd649013671852c302d840289452e60bf68703e1e0fdd4df39e1c6ab1e",
+        "note": "Offline raster review; 16/12/8px native silhouettes plus 2x nearest enlargement. Near inspection intentionally shows LOD simplification; close rendering keeps canonical model.",
+        "metrics": [
+          {
+            "angle": 25,
+            "raster_pixels": 16,
+            "silhouette_iou": 1.0
+          },
+          {
+            "angle": 25,
+            "raster_pixels": 12,
+            "silhouette_iou": 0.9411764705882353
+          },
+          {
+            "angle": 25,
+            "raster_pixels": 8,
+            "silhouette_iou": 1.0
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.972972972972973
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 12,
+            "silhouette_iou": 1.0
+          },
+          {
+            "angle": 115,
+            "raster_pixels": 8,
+            "silhouette_iou": 1.0
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 16,
+            "silhouette_iou": 1.0
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 12,
+            "silhouette_iou": 1.0
+          },
+          {
+            "angle": 205,
+            "raster_pixels": 8,
+            "silhouette_iou": 1.0
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 16,
+            "silhouette_iou": 0.972972972972973
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 12,
+            "silhouette_iou": 1.0
+          },
+          {
+            "angle": 295,
+            "raster_pixels": 8,
+            "silhouette_iou": 1.0
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -28,6 +28,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 #include "header/local.h"
+#include "../files/pickup_lod.h"
+
+static cvar_t *r_pickup_lod;
 
 #define NUMSTACKEDGES		2048
 #define NUMSTACKSURFACES	1024
@@ -410,6 +413,7 @@ R_RegisterVariables (void)
 	r_dspeeds = ri.Cvar_Get ("r_dspeeds", "0", 0);
 	r_lightlevel = ri.Cvar_Get ("r_lightlevel", "0", 0);
 	r_lerpmodels = ri.Cvar_Get( "r_lerpmodels", "1", 0 );
+	r_pickup_lod = ri.Cvar_Get("r_pickup_lod", "1", CVAR_ARCHIVE);
 	r_novis = ri.Cvar_Get( "r_novis", "0", 0 );
 	r_modulate = ri.Cvar_Get("r_modulate", "1", CVAR_ARCHIVE);
 	r_vsync = ri.Cvar_Get("r_vsync", "1", CVAR_ARCHIVE);
@@ -829,6 +833,9 @@ R_DrawEntitiesOnList (void)
 	{
 		return;
 	}
+	const pp_pickup_lod_view_t pickup_view = PP_PickupLODView(
+		r_pickup_lod->value != 0, r_newrefdef.vieworg, vpn,
+		r_newrefdef.height, r_newrefdef.fov_y);
 
 	// all bmodels have already been drawn by the edge list
 	for (i = 0; i < r_newrefdef.num_entities; i++)
@@ -867,7 +874,11 @@ R_DrawEntitiesOnList (void)
 				break;
 
 			case mod_alias:
-				R_DrawAliasModel(currententity, currentmodel);
+				R_DrawAliasModel(currententity, currentmodel->pickup_lod &&
+					VectorCompare(currententity->origin, currententity->oldorigin) &&
+					PP_PickupLODUse(&pickup_view, currententity->flags, currententity->origin,
+						currentmodel->radius, currententity->frame, currententity->oldframe)
+					? currentmodel->pickup_lod : currentmodel);
 				break;
 
 			case mod_brush:
@@ -921,7 +932,11 @@ R_DrawEntitiesOnList (void)
 				break;
 
 			case mod_alias:
-				R_DrawAliasModel(currententity, currentmodel);
+				R_DrawAliasModel(currententity, currentmodel->pickup_lod &&
+					VectorCompare(currententity->origin, currententity->oldorigin) &&
+					PP_PickupLODUse(&pickup_view, currententity->flags, currententity->origin,
+						currentmodel->radius, currententity->frame, currententity->oldframe)
+					? currentmodel->pickup_lod : currentmodel);
 				break;
 
 			case mod_brush:

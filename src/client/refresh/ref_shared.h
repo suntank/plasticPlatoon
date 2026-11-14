@@ -182,6 +182,24 @@ typedef struct mleaf_s
 extern refdef_t r_newrefdef;
 extern viddef_t vid;
 
+/* Keep the visible BSP inside the depth range even on oversized maps. */
+static inline float
+R_WorldFarClip(float minimum, const vec3_t mins, const vec3_t maxs,
+	const vec3_t forward)
+{
+	float depth = 0.0f;
+	int i;
+
+	/* Project the farthest corner of the world bounds onto the view axis. */
+	for (i = 0; i < 3; ++i)
+	{
+		float edge = forward[i] < 0.0f ? mins[i] : maxs[i];
+		depth += (edge - r_newrefdef.vieworg[i]) * forward[i];
+	}
+
+	return Q_max(minimum, depth + 64.0f);
+}
+
 /* Renderer-owned presentation data; the on-disk MD2 layout is unchanged. */
 #include "files/alias_topology.h"
 typedef struct

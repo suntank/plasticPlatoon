@@ -206,6 +206,25 @@ SS_DrawString(int x, int y, const char *text, qboolean highlighted, float scale)
 	}
 }
 
+/* Handheld overlays use whole font pixels and bounded text, independently of
+ * the desktop menu scale and each gameplay viewport's dimensions. */
+static void
+SS_DrawCompactString(int x, int y, const char *text, int columns, qboolean accent)
+{
+	int i, length;
+
+	if (!text || columns <= 0)
+	{
+		return;
+	}
+	length = strlen(text);
+	for (i = 0; i < length && i < columns; ++i)
+	{
+		int character = (length > columns && i == columns - 1) ? '>' : (unsigned char)text[i];
+		Draw_CharScaled(x + i * 8, y, character + (accent ? 128 : 0), 1);
+	}
+}
+
 static void
 SS_DrawCenteredStringInRect(const ss_viewport_t *viewport, int y, const char *text,
 	qboolean highlighted, float scale)
@@ -1351,6 +1370,7 @@ SS_ClearSlotSnapshot(ss_local_player_t *slot)
 	memset(&slot->screen_image, 0, sizeof(slot->screen_image));
 	slot->muzzle_flash_seq = slot->last_muzzle_flash_seq = 0;
 	slot->ads_active = false;
+	memset(&slot->model_ads, 0, sizeof(slot->model_ads));
 	slot->last_gunindex = 0;
 	slot->viewmodel_recoil = slot->viewmodel_raise = 0.0f;
 	slot->last_attack_time = slot->ads_kick_offset = 0.0f;
@@ -1873,6 +1893,42 @@ SS_DrawSharedScoreboard(void)
 		}
 	}
 
+	if (viddef.width <= 400 || viddef.height <= 300)
+	{
+		int score_x = viddef.width - 104;
+		int ping_x = viddef.width - 48;
+		int name_columns = (score_x - 20) / 8;
+		int visible = (viddef.height - 62) / 14;
+
+		Draw_Fill(0, 0, viddef.width, viddef.height, 219);
+		Draw_Fill(8, 8, 3, 18, 140);
+		SS_DrawCompactString(20, 13, "SCOREBOARD", (viddef.width - 28) / 8, true);
+		Draw_Fill(8, 34, viddef.width - 16, 1, 140);
+		SS_DrawCompactString(12, 43, "PLAYER", name_columns, false);
+		SS_DrawCompactString(score_x, 43, "SCORE", 5, false);
+		SS_DrawCompactString(ping_x, 43, "PING", 4, false);
+		for (i = 0; i < count && i < visible; ++i)
+		{
+			char name[48];
+			qboolean local = entries[i].local_slot >= 0;
+			y = 58 + i * 14;
+			if (local)
+			{
+				Draw_Fill(8, y - 3, viddef.width - 16, 13, 50);
+				Com_sprintf(name, sizeof(name), "P%d %s", entries[i].local_slot + 1,
+					entries[i].server_client->name);
+			}
+			else
+			{
+				Q_strlcpy(name, entries[i].server_client->name, sizeof(name));
+			}
+			SS_DrawCompactString(12, y, name, name_columns, local);
+			SS_DrawCompactString(score_x, y, va("%d", entries[i].score), 5, local);
+			SS_DrawCompactString(ping_x, y, va("%d", entries[i].server_client->ping), 4, local);
+		}
+		return;
+	}
+
 	scale = SCR_GetMenuScale();
 	Draw_Fill(0, 0, viddef.width, viddef.height, 0);
 	Draw_Fill((int)(24 * scale), (int)(18 * scale),
@@ -2269,10 +2325,10 @@ SS_GetADSOverlayPicName(const player_state_t *ps)
 		return NULL;
 	}
 
-	if (strstr(gun_model, "v_blast")) return "ads_blaster.png";
+	if (strstr(gun_model, "v_blast")) return NULL; /* aligned 3D viewmodel */
 	if (strstr(gun_model, "v_shotg2")) return "ads_supershotgun.png";
 	if (strstr(gun_model, "v_shotg")) return "ads_shotgun.png";
-	if (strstr(gun_model, "v_machn")) return "ads_machinegun.png";
+	if (strstr(gun_model, "v_machn")) return NULL; /* aligned 3D viewmodel */
 	if (strstr(gun_model, "v_chain")) return "ads_chaingun.png";
 	if (strstr(gun_model, "v_handgr")) return "ads_handgrenade.png";
 	if (strstr(gun_model, "v_launch")) return "ads_grenadelauncher.png";
@@ -2305,6 +2361,11 @@ SS_IsSlotADSActive(int slot_index, const player_state_t *ps)
 	else if (!slot->ads_down || slot->menu_open || slot->state == SS_SLOT_DROPPED)
 	{
 		return false;
+	}
+
+	if (CL_UsesModelADS(ps))
+	{
+		return true;
 	}
 
 	overlay_pic = CL_PlayerADSPic(CL_ColorClientinfo(slot ? slot->playernum : cl.playernum),
@@ -2474,6 +2535,8 @@ SS_UpdateSlotCombatVisualState(int slot_index, const player_state_t *ps,
 	slot->previous_attack_down = attack_active;
 	slot->last_muzzle_flash_seq = muzzle_seq;
 	slot->ads_active = ads_active;
+	PP_ModelADSUpdate(&slot->model_ads, CL_UsesModelADS(ps), ads_active,
+		ps->gunindex, cl.servercount, current_time, dt);
 	slot->viewmodel_recoil -= dt * recoil_cfg->recoil_recovery;
 
 	if (slot->viewmodel_recoil < 0.0f)
@@ -2515,6 +2578,11 @@ SS_DrawViewportADSOverlay(int slot_index, const ss_viewport_t *viewport,
 	if (!viewport || !SS_IsSlotADSActive(slot_index, ps))
 	{
 		return false;
+	}
+	/* Keep the normal crosshair suppressed while drawing the actual sights. */
+	if (CL_UsesModelADS(ps))
+	{
+		return true;
 	}
 
 	overlay_pic = CL_PlayerADSPic(CL_ColorClientinfo(slot ? slot->playernum : cl.playernum),
@@ -2582,9 +2650,12 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 	float bob_right;
 	float hide;
 	float lerp;
+	float ads_blend;
+	pp_model_ads_config_t ads_config;
 	int i;
 
-	if (!refdef || !ps || !cl_gun->value || SS_IsSlotADSActive(slot_index, ps))
+	if (!refdef || !ps || !cl_gun->value ||
+		(SS_IsSlotADSActive(slot_index, ps) && !CL_UsesModelADS(ps)))
 	{
 		return;
 	}
@@ -2617,24 +2688,30 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 
 	ops = SS_GetPreviousPlayerState(slot, ps);
 	lerp = SS_GetSlotViewLerp(slot);
+	ads_blend = slot && CL_UsesModelADS(ps) ? PP_ModelADSAmount(&slot->model_ads) : 0.0f;
+	ads_config = CL_GetModelADSConfig(ps);
+	AngleVectors(refdef->viewangles, forward, right, up);
 
 	for (i = 0; i < 3; ++i)
 	{
-		gun.origin[i] = refdef->vieworg[i] + ops->gunoffset[i] +
-			lerp * (ps->gunoffset[i] - ops->gunoffset[i]);
+		gun.origin[i] = refdef->vieworg[i] + (1.0f - ads_blend) * (ops->gunoffset[i] +
+			lerp * (ps->gunoffset[i] - ops->gunoffset[i]));
 		gun.oldorigin[i] = gun.origin[i];
-		gun.angles[i] = refdef->viewangles[i] +
+		gun.angles[i] = refdef->viewangles[i] + (1.0f - ads_blend) *
 			LerpAngle(ops->gunangles[i], ps->gunangles[i], lerp);
 	}
+	VectorMA(gun.origin, ads_blend * ads_config.forward, forward, gun.origin);
+	VectorMA(gun.origin, ads_blend * ads_config.right, right, gun.origin);
+	VectorMA(gun.origin, ads_blend * ads_config.up, up, gun.origin);
 
 	VectorCopy(gun.origin, base_origin);
 	VectorCopy(gun.angles, base_angles);
 
-	AngleVectors(refdef->viewangles, forward, right, up);
 	recoil_cfg = SS_GetViewmodelRecoil(ps);
 	current_time = cls.realtime * 0.001f;
 	time_since_fire = current_time - (slot ? slot->last_attack_time : 0.0f);
 	bob_scale = (time_since_fire < 0.25f) ? 0.25f : 1.0f;
+	bob_scale *= 1.0f - ads_blend;
 	bob_up = sinf(current_time * 2.0f) * 0.45f * bob_scale;
 	bob_right = sinf(current_time * 1.5f) * 0.35f * bob_scale;
 	hide = 1.0f - (slot ? slot->viewmodel_raise : 1.0f);
@@ -2717,9 +2794,17 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 		}
 	}
 
-	gun.frame = ps->gunframe;
-	gun.oldframe = ps->gunframe;
+	/* Authored weapon recoil/raise is procedural. A single MD2 frame enables
+	 * the renderer's static geometry cache in every split viewport. */
+	gun.frame = CL_UsesModelADS(ps) ? 0 : ps->gunframe;
+	gun.oldframe = gun.frame;
 	gun.backlerp = 0.0f;
+	if (CL_UsesModelADS(ps))
+	{
+		/* The complete procedural pose is already resolved. Matching the
+		 * final origins also satisfies the one-frame alias-cache predicate. */
+		VectorCopy(gun.origin, gun.oldorigin);
+	}
 	gun.flags = RF_MINLIGHT | RF_DEPTHHACK | RF_WEAPONMODEL;
 	V_AddEntity(&gun);
 }
@@ -4313,6 +4398,7 @@ SS_BeginSession(void)
 		SS_ClearSlotDeviceInput(slot);
 		slot->gb_crouched = false;
 		slot->ads_active = false;
+		memset(&slot->model_ads, 0, sizeof(slot->model_ads));
 		slot->last_gunindex = 0;
 		slot->muzzle_flash_seq = 0;
 		slot->last_muzzle_flash_seq = 0;
@@ -4364,6 +4450,7 @@ SS_EndSession(void)
 		SS_ClearSlotDeviceInput(&ss_state.slots[i]);
 		ss_state.slots[i].gb_crouched = false;
 		ss_state.slots[i].ads_active = false;
+		memset(&ss_state.slots[i].model_ads, 0, sizeof(ss_state.slots[i].model_ads));
 		ss_state.slots[i].last_gunindex = 0;
 		ss_state.slots[i].muzzle_flash_seq = 0;
 		ss_state.slots[i].last_muzzle_flash_seq = 0;
@@ -4801,6 +4888,62 @@ SS_RenderViews(float stereo_separation)
 	return true;
 }
 
+static void
+SS_DrawCompactSessionMenu(int slot_index, const ss_viewport_t *viewport,
+	ss_local_player_t *slot)
+{
+	static const char *actions[SS_SESSION_ACTION_COUNT] = {"Resume", "Drop Out", "Exit Match"};
+	int x = viewport->x + 8;
+	int columns = (viewport->w - 16) / 8;
+	int row, row_y = viewport->y + 26;
+	int row_height = Q_clamp((viewport->h - 56) / SS_SESSION_ACTION_COUNT, 15, 22);
+	unsigned int elapsed = 0;
+
+	Draw_Fill(viewport->x, viewport->y, viewport->w, viewport->h, 219);
+	Draw_Fill(viewport->x + 4, viewport->y + 4, 2, viewport->h - 8, 140);
+	SS_DrawCompactString(x, viewport->y + 9, va("P%d PAUSED", slot_index + 1), columns, true);
+	for (row = 0; row < SS_SESSION_ACTION_COUNT; ++row)
+	{
+		int y = row_y + row * row_height;
+		qboolean selected = slot->menu_cursor == row;
+		if (selected)
+		{
+			Draw_Fill(x - 1, y - 3, viewport->w - 15, row_height - 2, 50);
+			Draw_Fill(x - 1, y - 3, 2, row_height - 2, 140);
+		}
+		SS_DrawCompactString(x + 5, y, actions[row], columns - 1, selected);
+	}
+	if (!SS_IsDeviceConnected(slot->device_index))
+	{
+		SS_DrawCompactString(x, viewport->y + viewport->h - 26, "Reconnect pad", columns, true);
+	}
+	else if (slot->menu_cursor != SS_SESSION_ACTION_EXIT)
+	{
+		SS_DrawCompactString(x, viewport->y + viewport->h - 26,
+			slot->device_index == 1 ? "Enter: select" : "A: select", columns, false);
+	}
+	if (slot->menu_cursor == SS_SESSION_ACTION_EXIT)
+	{
+		SS_DrawCompactString(x, viewport->y + viewport->h - 26,
+			slot->device_index == 1 ? "Hold Enter 3s" : "Hold A 3s", columns, true);
+		if (slot->exit_hold_active)
+		{
+			elapsed = Sys_Milliseconds() - slot->exit_hold_start;
+			if (elapsed >= 3000)
+			{
+				SS_ExitToMultiplayerMenu();
+				return;
+			}
+		}
+		Draw_Fill(x, viewport->y + viewport->h - 11, viewport->w - 16, 4, 50);
+		if (elapsed)
+		{
+			Draw_Fill(x, viewport->y + viewport->h - 11,
+				(int)((viewport->w - 16) * elapsed / 3000.0f), 4, 140);
+		}
+	}
+}
+
 void
 SS_DrawSessionOverlay(void)
 {
@@ -4837,14 +4980,42 @@ SS_DrawSessionOverlay(void)
 		if (slot->state == SS_SLOT_DROPPED)
 		{
 			Draw_Fill(viewport->x, viewport->y, viewport->w, viewport->h, 0);
-			SS_DrawCenteredStringInRect(viewport,
-				viewport->y + viewport->h / 2 - (int)(12 * scale),
-				va("P%d DROPPED", i + 1), true, scale);
+			if (viddef.width <= 400 || viddef.height <= 300)
+			{
+				SS_DrawCompactString(viewport->x + 8, viewport->y + viewport->h / 2 - 4,
+					va("P%d DROPPED", i + 1), (viewport->w - 16) / 8, true);
+			}
+			else
+			{
+				SS_DrawCenteredStringInRect(viewport,
+					viewport->y + viewport->h / 2 - (int)(12 * scale),
+					va("P%d DROPPED", i + 1), true, scale);
+			}
 			continue;
 		}
 
 		if (!slot->menu_open)
 		{
+			if ((viddef.width <= 400 || viddef.height <= 300) &&
+				!SS_IsDeviceConnected(slot->device_index))
+			{
+				Draw_Fill(viewport->x + 4, viewport->y + 4, viewport->w - 8, 28, 221);
+				Draw_Fill(viewport->x + 4, viewport->y + 4, 2, 28, 140);
+				SS_DrawCompactString(viewport->x + 9, viewport->y + 8,
+					va("PLAYER %d", i + 1), (viewport->w - 18) / 8, true);
+				SS_DrawCompactString(viewport->x + 9, viewport->y + 20,
+					"RECONNECT PAD", (viewport->w - 18) / 8, false);
+			}
+			continue;
+		}
+
+		if (viddef.width <= 400 || viddef.height <= 300)
+		{
+			SS_DrawCompactSessionMenu(i, viewport, slot);
+			if (!ss_state.session_active)
+			{
+				return;
+			}
 			continue;
 		}
 

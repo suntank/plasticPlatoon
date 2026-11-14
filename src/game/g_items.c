@@ -1852,7 +1852,7 @@ static const gitem_t gameitemlist[] = {
 		NULL,
 		Weapon_Blaster,
 		"misc/w_pkup.wav",
-		NULL, 0,
+		"models/weapons/g_blast/tris.md2", EF_ROTATE,
 		"models/weapons/v_blast/tris.md2",
 		"w_blaster",
 		"Pistol",

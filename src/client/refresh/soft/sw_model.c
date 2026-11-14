@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <limits.h>
 #include "header/local.h"
+#include "../files/pickup_lod.h"
 
 static void Mod_LoadBrushModel(model_t *mod, void *buffer, int modfilelen);
 
@@ -784,6 +785,14 @@ RE_RegisterModel (const char *name)
 			/* numframes is unused for SP2 but lets set it also  */
 			mod->numframes = Mod_ReLoadSkins((struct image_s **)mod->skins,
 				(findimage_t)R_FindImage, mod->extradata, mod->type);
+		}
+
+		const char *lod_name = PP_PickupLODPath(name);
+		if (mod->type == mod_alias && mod->numframes == 1 && lod_name)
+		{
+			model_t *lod = RE_RegisterModel(lod_name);
+			mod->pickup_lod = lod && lod->type == mod_alias && lod->numframes == 1 ? lod : NULL;
+			mod->radius = PP_PickupLODRadius(mod->extradata);
 		}
 	}
 	return mod;

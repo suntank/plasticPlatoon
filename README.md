@@ -47,6 +47,16 @@ The Bedroom, Sandkeep and Sandwatch missions also have `_coop.cfg` launch
 configs. See each mission's guide under `maps/` for details. Weapons and muzzle
 flashes use [the versioned tuning profile](baseq2/tuning/README.md).
 
+The N64 GoldenEye **Temple** multiplayer recreation is available as `map pp_temple`
+or `exec temple_dm.cfg`, and in the split-screen map selector. It follows the
+original room coordinates with existing Plastic Platoon materials; see
+[the Temple guide](maps/README-temple.md) for scale, reference credits and rebuilds.
+
+**Operation Switchyard** is an original toy-depot deathmatch arena with three
+walking elevations and open loading floors for custom blocks and cover.
+Use `map pp_switchyard` or `exec switchyard_dm.cfg`; see
+[the Switchyard guide](maps/README-switchyard.md) for layout, editing and checks.
+
 End of the Line also has `endline_easy.cfg`, `endline_hard.cfg`, and
 `endline_coop.cfg`. Its shared objectives, double-barrel introduction, alternate
 routes and original railway assets are described in [the mission guide](maps/README-endline.md).

@@ -259,7 +259,7 @@
       "skins": [
         "models/weapons/v_blast/skin.png"
       ],
-      "model_sha256": "ab29c62474b12912b61e31c5fb5ef617e55a5d27439fdbcdfdfef0cb5d56e543",
+      "model_sha256": "567433dff6c0104f5b67a5da51793e7dde3c4e7e57707d7ca73e592ab68210c9",
       "variants": {
         "red": [
           "models/monsters/soldier/colors/weapon_blaster_red.png"
@@ -285,7 +285,7 @@
       "skins": [
         "models/weapons/g_machn/skin.png"
       ],
-      "model_sha256": "2b7d01f663f5e87474d825d5e6b3ba91b4fb0bcb9f2111b60d1698c1ee43428a",
+      "model_sha256": "afc1cac83c3da76ddfe826940997e7726b6391ccc226d311c043ba3baea1e31a",
       "variants": {
         "red": [
           "models/monsters/soldier/colors/weapon_machinegun_red.png"
@@ -337,7 +337,7 @@
       "skins": [
         "models/weapons/v_blast/skin.png"
       ],
-      "model_sha256": "912ee2a079fe7b015f3849fd10cfa7a1925d8bbef9dd9e2cf507781b82e20c5b",
+      "model_sha256": "5db85d7a184d62bd53cab878dc15d20e20fcde6b69d5380ab81ed80dc3e70777",
       "variants": {
         "red": [
           "models/monsters/soldier/colors/weapon_blaster_red.png"
@@ -363,7 +363,7 @@
       "skins": [
         "models/weapons/g_machn/skin.png"
       ],
-      "model_sha256": "c44c70b25c3edc1f65cfcdf9195a2163f7751efd63ebe07fcad05c655a6ba022",
+      "model_sha256": "f2fcf0d5e50990d6fb2113c7cb3b77fe7bafa756adb063d9e1899ca7c8aaa908",
       "variants": {
         "red": [
           "models/monsters/soldier/colors/weapon_machinegun_red.png"
@@ -676,7 +676,7 @@
       "skins": [
         "models/weapons/v_blast/skin.png"
       ],
-      "model_sha256": "e9ef32e21870c9f30b987d28c18478a5871fc9e5ff5b4c7c1b24de917dce94f8",
+      "model_sha256": "91fe5079d1c38aba9552d01886d8f7ba4ac3ada04b8d1dc28b8c8f4cb0af4675",
       "variants": {
         "blue": [
           "players/soldier/colors/w_blaster_blue.png"
@@ -837,7 +837,7 @@
       "skins": [
         "models/weapons/g_machn/skin.png"
       ],
-      "model_sha256": "f516f09bc3fe5f8e165a2e8818a29c8127631ec61fd9ecfc937a8ffaa826ef72",
+      "model_sha256": "5bfdcf6a5bc64005d9f6e27622f9c7dce0f38a820afc354e7c73b281d6875c52",
       "variants": {
         "blue": [
           "players/soldier/colors/w_machinegun_blue.png"
@@ -1037,7 +1037,7 @@
       "skins": [
         "models/weapons/g_machn/skin.png"
       ],
-      "model_sha256": "f516f09bc3fe5f8e165a2e8818a29c8127631ec61fd9ecfc937a8ffaa826ef72",
+      "model_sha256": "5bfdcf6a5bc64005d9f6e27622f9c7dce0f38a820afc354e7c73b281d6875c52",
       "variants": {
         "blue": [
           "players/soldier/colors/weapon_blue.png"
@@ -1117,7 +1117,7 @@
       "skins": [
         "models/weapons/v_blast/skin.png"
       ],
-      "model_sha256": "595781811a34061ace430362d6f7976a4c72a69073c70ca4c85ea09adfa37106",
+      "model_sha256": "f6e3d459ca6ebd8afa64829ac2fc93a9a28a9190d1990fde85e38533af0fcc51",
       "variants": {
         "blue": [
           "models/weapons/v_blast/colors/tris_blue.png"
@@ -1319,7 +1319,7 @@
       "skins": [
         "models/weapons/v_machn/skin.png"
       ],
-      "model_sha256": "11d4af2e26f337cc2ced073714e115fd580067e5004b56e471153dc44c2bb22d",
+      "model_sha256": "237d5e2f2b43608a9dbaeda197baeffafb6e82152ef7b18ff0673742c5b2c66c",
       "variants": {
         "blue": [
           "models/weapons/v_machn/colors/tris_blue.png"
@@ -1860,18 +1860,18 @@
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "enemy",
       "color": "red",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "2672e67a93e9dbf5dce65a9877e998291b43f726026e297696047dd2a1d583a5",
-      "bytes": 98368,
+      "sha256": "f7b62b136c3e6b119c888d00599653abc899a153de2998690efe424b1d8e7175",
+      "bytes": 3809,
       "path": "models/monsters/soldier/colors/weapon_blaster_red.png"
     },
     {
@@ -1892,18 +1892,18 @@
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "enemy",
       "color": "red",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "fc5c43bdcc5be454e30a4ce6de4e5651fc989a6d6bdded96d456c84fdda46033",
-      "bytes": 27794,
+      "sha256": "b73095190519b0c928038769b2536ae4b82c4d350c1528322942be159b1e347e",
+      "bytes": 3728,
       "path": "models/monsters/soldier/colors/weapon_machinegun_red.png"
     },
     {
@@ -2388,162 +2388,162 @@
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "blue",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "120e37d95e25039974f69aa76393007a59d4e945b125b368260a47ebbf7a7a7a",
-      "bytes": 101353,
+      "sha256": "6197a850ed876253677a73758455723a1f90288f9cc1aa68483b65b6daefac4d",
+      "bytes": 4068,
       "path": "models/weapons/v_blast/colors/tris_blue.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "gray",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "b930cd675ef29b87eea93f7fabd6e67ade3dfd462ca1043e21a7df99608b3374",
-      "bytes": 117358,
+      "sha256": "5e3c2936f6f5da912bd6897fe5bb55ebf33090c1489cf5ed9bf68786e314d54c",
+      "bytes": 4096,
       "path": "models/weapons/v_blast/colors/tris_gray.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "green",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "89c550cf3bc38543e829d5d0bf12736aeb864c07b39984af628af083754b9b84",
-      "bytes": 96252,
+      "sha256": "92ac795b53d0b0e96f399a54d29a9f51b5805d55279da9792c83576385ee8a1d",
+      "bytes": 3808,
       "path": "models/weapons/v_blast/colors/tris_green.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "orange",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "a87e939fdfebaa8d6c51a779d30428c4d454548abbdbdd5f08b40ecb9abfd916",
-      "bytes": 119234,
+      "sha256": "cbb642ecdc864ab27f3bc1dbbf0a40d7057522726ef6a36679c6df15396f51da",
+      "bytes": 4678,
       "path": "models/weapons/v_blast/colors/tris_orange.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "pink",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "f1832da8909ba47f4276084480826ff2436a287f52538da8f629481ae3473b8c",
-      "bytes": 139151,
+      "sha256": "b29afb48fe32477cbe17b2592e9d009a845a0f1955178d9f6fe89a0e0cc6cb31",
+      "bytes": 4925,
       "path": "models/weapons/v_blast/colors/tris_pink.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "purple",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "324a58dd641610ab712a86cc2016f64fae62e23eb0a2b3bc0166a0aa1b40e8e3",
-      "bytes": 123385,
+      "sha256": "81145b1860b10fa279124e546b071188d3909d2447d3315fcf450cae88bfaa6e",
+      "bytes": 4645,
       "path": "models/weapons/v_blast/colors/tris_purple.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "red",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "d2fc79cd068c65a8c68dea6e242af1fbda409ecbe8a6296abf52b50dd3885343",
-      "bytes": 99714,
+      "sha256": "bcc1dc5b4fa1226a0a3529e6be1403dc598d949cdd0092074fb3074a50291bd5",
+      "bytes": 3948,
       "path": "models/weapons/v_blast/colors/tris_red.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "skin",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "c7b86ab2558ea29ba94a9e2d45b5be037ff9c9362b5b435734cf0a0492e1751f",
-      "bytes": 138296,
+      "sha256": "bc9422c23aa32f56607c5f608387947966eff118bc5f5a5b2ff083f1819f6220",
+      "bytes": 4769,
       "path": "models/weapons/v_blast/colors/tris_skin.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "tan",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "69a0906f1830a1b7fe1098060cffda5b303f104e3af98c4365367a7941acb169",
-      "bytes": 141912,
+      "sha256": "391ffd0fc68a5346b6e72b533f9540fb53c852dfc89c907c4ad17145428e5c70",
+      "bytes": 4907,
       "path": "models/weapons/v_blast/colors/tris_tan.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "white",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "3662f041a31ffb8c1335f0c66a126bc9e5f3b77aa8b8c05dcb970eb8b0dabfe5",
-      "bytes": 119207,
+      "sha256": "5273bb6993a6a8888c33835c3e4ec261596f7ef4350038172a130de7e458836c",
+      "bytes": 4412,
       "path": "models/weapons/v_blast/colors/tris_white.png"
     },
     {
@@ -3188,162 +3188,162 @@
     },
     {
       "source": "models/weapons/v_machn/skin.png",
-      "source_sha256": "b0044c88694268f4f45b7c47889dc5f562af8496cb0b429dcfd49ed771a4aa85",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "blue",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "e9fbee3a64c49ec76980bbddecbe1979072799697eb68773dd263da559b2de51",
-      "plastic_pixels": 133930,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "040a061deadd4c56a8c9d83a2a64bd3616fc9c1cd566321fa27bf1851d5a351a",
-      "bytes": 96174,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57",
+      "bytes": 3987,
       "path": "models/weapons/v_machn/colors/tris_blue.png"
     },
     {
       "source": "models/weapons/v_machn/skin.png",
-      "source_sha256": "b0044c88694268f4f45b7c47889dc5f562af8496cb0b429dcfd49ed771a4aa85",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "gray",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "e9fbee3a64c49ec76980bbddecbe1979072799697eb68773dd263da559b2de51",
-      "plastic_pixels": 133930,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "e83e2ed2de2f2bda9171d8efa78050ebe41de0c966d80b107015b8a6620a6dbe",
-      "bytes": 96566,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d",
+      "bytes": 3995,
       "path": "models/weapons/v_machn/colors/tris_gray.png"
     },
     {
       "source": "models/weapons/v_machn/skin.png",
-      "source_sha256": "b0044c88694268f4f45b7c47889dc5f562af8496cb0b429dcfd49ed771a4aa85",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "green",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "e9fbee3a64c49ec76980bbddecbe1979072799697eb68773dd263da559b2de51",
-      "plastic_pixels": 133930,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "faa23688f9ffac64a9e69554bca5ab80cfe507945c76888ec0be192d18f25e59",
-      "bytes": 82204,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a",
+      "bytes": 3731,
       "path": "models/weapons/v_machn/colors/tris_green.png"
     },
     {
       "source": "models/weapons/v_machn/skin.png",
-      "source_sha256": "b0044c88694268f4f45b7c47889dc5f562af8496cb0b429dcfd49ed771a4aa85",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "orange",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "e9fbee3a64c49ec76980bbddecbe1979072799697eb68773dd263da559b2de51",
-      "plastic_pixels": 133930,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "33c731b8a5d7260af002b8add78c5e4dba4aff0ece869fbfdf341bfbe1c13053",
-      "bytes": 109258,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288",
+      "bytes": 4545,
       "path": "models/weapons/v_machn/colors/tris_orange.png"
     },
     {
       "source": "models/weapons/v_machn/skin.png",
-      "source_sha256": "b0044c88694268f4f45b7c47889dc5f562af8496cb0b429dcfd49ed771a4aa85",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "pink",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "e9fbee3a64c49ec76980bbddecbe1979072799697eb68773dd263da559b2de51",
-      "plastic_pixels": 133930,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "4008c35e9e05020cec4d6dc39739451548e159cfdab51b71ff573f7ae2d862d3",
-      "bytes": 129919,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4",
+      "bytes": 4831,
       "path": "models/weapons/v_machn/colors/tris_pink.png"
     },
     {
       "source": "models/weapons/v_machn/skin.png",
-      "source_sha256": "b0044c88694268f4f45b7c47889dc5f562af8496cb0b429dcfd49ed771a4aa85",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "purple",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "e9fbee3a64c49ec76980bbddecbe1979072799697eb68773dd263da559b2de51",
-      "plastic_pixels": 133930,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "81cec88015a842765f25b034d8c432d26f864309756da2e03bf73959c1c3e382",
-      "bytes": 114403,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e",
+      "bytes": 4563,
       "path": "models/weapons/v_machn/colors/tris_purple.png"
     },
     {
       "source": "models/weapons/v_machn/skin.png",
-      "source_sha256": "b0044c88694268f4f45b7c47889dc5f562af8496cb0b429dcfd49ed771a4aa85",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "red",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "e9fbee3a64c49ec76980bbddecbe1979072799697eb68773dd263da559b2de51",
-      "plastic_pixels": 133930,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "77e5c4e5f5eb779b8bdeffa92efa32da9c1b3308a63c5ba7598e972ec792f87d",
-      "bytes": 89337,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2",
+      "bytes": 3873,
       "path": "models/weapons/v_machn/colors/tris_red.png"
     },
     {
       "source": "models/weapons/v_machn/skin.png",
-      "source_sha256": "b0044c88694268f4f45b7c47889dc5f562af8496cb0b429dcfd49ed771a4aa85",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "skin",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "e9fbee3a64c49ec76980bbddecbe1979072799697eb68773dd263da559b2de51",
-      "plastic_pixels": 133930,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "1c3cd448836c7cb2e88ef1168f7c6235727a2b177d1217fc142d430d10fe6ee2",
-      "bytes": 129448,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe",
+      "bytes": 4691,
       "path": "models/weapons/v_machn/colors/tris_skin.png"
     },
     {
       "source": "models/weapons/v_machn/skin.png",
-      "source_sha256": "b0044c88694268f4f45b7c47889dc5f562af8496cb0b429dcfd49ed771a4aa85",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "tan",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "e9fbee3a64c49ec76980bbddecbe1979072799697eb68773dd263da559b2de51",
-      "plastic_pixels": 133930,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "c5197e2d657b6d765eca685db82ff1ed4e95512e1c9f13f5b74d0a409c40d107",
-      "bytes": 124078,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835",
+      "bytes": 4774,
       "path": "models/weapons/v_machn/colors/tris_tan.png"
     },
     {
       "source": "models/weapons/v_machn/skin.png",
-      "source_sha256": "b0044c88694268f4f45b7c47889dc5f562af8496cb0b429dcfd49ed771a4aa85",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "white",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "e9fbee3a64c49ec76980bbddecbe1979072799697eb68773dd263da559b2de51",
-      "plastic_pixels": 133930,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "e8c9b52d57f0cc5a1c791cf75ee6d63fab5e688bd4415a4730ca2040011dd4e6",
-      "bytes": 111301,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763",
+      "bytes": 4306,
       "path": "models/weapons/v_machn/colors/tris_white.png"
     },
     {
@@ -6068,162 +6068,162 @@
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "blue",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "120e37d95e25039974f69aa76393007a59d4e945b125b368260a47ebbf7a7a7a",
-      "bytes": 101353,
+      "sha256": "6197a850ed876253677a73758455723a1f90288f9cc1aa68483b65b6daefac4d",
+      "bytes": 4068,
       "path": "players/soldier/colors/w_blaster_blue.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "gray",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "b930cd675ef29b87eea93f7fabd6e67ade3dfd462ca1043e21a7df99608b3374",
-      "bytes": 117358,
+      "sha256": "5e3c2936f6f5da912bd6897fe5bb55ebf33090c1489cf5ed9bf68786e314d54c",
+      "bytes": 4096,
       "path": "players/soldier/colors/w_blaster_gray.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "green",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "89c550cf3bc38543e829d5d0bf12736aeb864c07b39984af628af083754b9b84",
-      "bytes": 96252,
+      "sha256": "92ac795b53d0b0e96f399a54d29a9f51b5805d55279da9792c83576385ee8a1d",
+      "bytes": 3808,
       "path": "players/soldier/colors/w_blaster_green.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "orange",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "a87e939fdfebaa8d6c51a779d30428c4d454548abbdbdd5f08b40ecb9abfd916",
-      "bytes": 119234,
+      "sha256": "cbb642ecdc864ab27f3bc1dbbf0a40d7057522726ef6a36679c6df15396f51da",
+      "bytes": 4678,
       "path": "players/soldier/colors/w_blaster_orange.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "pink",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "f1832da8909ba47f4276084480826ff2436a287f52538da8f629481ae3473b8c",
-      "bytes": 139151,
+      "sha256": "b29afb48fe32477cbe17b2592e9d009a845a0f1955178d9f6fe89a0e0cc6cb31",
+      "bytes": 4925,
       "path": "players/soldier/colors/w_blaster_pink.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "purple",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "324a58dd641610ab712a86cc2016f64fae62e23eb0a2b3bc0166a0aa1b40e8e3",
-      "bytes": 123385,
+      "sha256": "81145b1860b10fa279124e546b071188d3909d2447d3315fcf450cae88bfaa6e",
+      "bytes": 4645,
       "path": "players/soldier/colors/w_blaster_purple.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "red",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "d2fc79cd068c65a8c68dea6e242af1fbda409ecbe8a6296abf52b50dd3885343",
-      "bytes": 99714,
+      "sha256": "bcc1dc5b4fa1226a0a3529e6be1403dc598d949cdd0092074fb3074a50291bd5",
+      "bytes": 3948,
       "path": "players/soldier/colors/w_blaster_red.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "skin",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "c7b86ab2558ea29ba94a9e2d45b5be037ff9c9362b5b435734cf0a0492e1751f",
-      "bytes": 138296,
+      "sha256": "bc9422c23aa32f56607c5f608387947966eff118bc5f5a5b2ff083f1819f6220",
+      "bytes": 4769,
       "path": "players/soldier/colors/w_blaster_skin.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "tan",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "69a0906f1830a1b7fe1098060cffda5b303f104e3af98c4365367a7941acb169",
-      "bytes": 141912,
+      "sha256": "391ffd0fc68a5346b6e72b533f9540fb53c852dfc89c907c4ad17145428e5c70",
+      "bytes": 4907,
       "path": "players/soldier/colors/w_blaster_tan.png"
     },
     {
       "source": "models/weapons/v_blast/skin.png",
-      "source_sha256": "763b9861e601609618e5d2d7837dd227eef6fd263d0bf8b5cfa9e8b6581943f0",
+      "source_sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9",
       "role": "player",
       "color": "white",
       "size": [
-        512,
-        512
+        256,
+        256
       ],
-      "mask_sha256": "96027ba84644fe1d29b296b29a834430d1875527d1f804a716243f9ac2a74213",
-      "plastic_pixels": 146923,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "3662f041a31ffb8c1335f0c66a126bc9e5f3b77aa8b8c05dcb970eb8b0dabfe5",
-      "bytes": 119207,
+      "sha256": "5273bb6993a6a8888c33835c3e4ec261596f7ef4350038172a130de7e458836c",
+      "bytes": 4412,
       "path": "players/soldier/colors/w_blaster_white.png"
     },
     {
@@ -6708,162 +6708,162 @@
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "blue",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "d355f5d35dad35f3fc21cc6ac2375cb7d56c9e65cc9c528f888b5fd0c7340300",
-      "bytes": 31551,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57",
+      "bytes": 3987,
       "path": "players/soldier/colors/w_machinegun_blue.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "gray",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "470b2af21e2edf241b1e7dc0c7e1559de90c95cf82c804241b8833cd8b055f44",
-      "bytes": 32303,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d",
+      "bytes": 3995,
       "path": "players/soldier/colors/w_machinegun_gray.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "green",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "b3b92ea2127c2d276388a13b11dbe6637efdc7ae42ff26e1ae254c3135a02d7e",
-      "bytes": 26505,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a",
+      "bytes": 3731,
       "path": "players/soldier/colors/w_machinegun_green.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "orange",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "8af837119185136aec9d0fb1811055284426938dab872cfe464eedf4612735e5",
-      "bytes": 35402,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288",
+      "bytes": 4545,
       "path": "players/soldier/colors/w_machinegun_orange.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "pink",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "81a792a6c875559ebd5ab792160fa98c4502bc001736422b443156b3dfb53b2f",
-      "bytes": 43003,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4",
+      "bytes": 4831,
       "path": "players/soldier/colors/w_machinegun_pink.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "purple",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "0052967bdf4054d36324533714ac74de666f62a197f8a5d1e90419bdcbda06fb",
-      "bytes": 37373,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e",
+      "bytes": 4563,
       "path": "players/soldier/colors/w_machinegun_purple.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "red",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "757a18fab99e72503795ddf7e72f78c9c0f62d129ec4bd9424167bd2ae3e46ff",
-      "bytes": 29022,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2",
+      "bytes": 3873,
       "path": "players/soldier/colors/w_machinegun_red.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "skin",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "f251f2542b53c30f2a4f7596b585fa51a509960ebafcfc2f880e9cbceea172e5",
-      "bytes": 42639,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe",
+      "bytes": 4691,
       "path": "players/soldier/colors/w_machinegun_skin.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "tan",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "fc24d951df0b0721e627a060e658217f7f904c02e16a4b54c04d0bcca93639ba",
-      "bytes": 40827,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835",
+      "bytes": 4774,
       "path": "players/soldier/colors/w_machinegun_tan.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "white",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "086d12e9f5d7c109a373ba6ae290a60e1a5653e18c97f6a7cd1d027104af5c5e",
-      "bytes": 37384,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763",
+      "bytes": 4306,
       "path": "players/soldier/colors/w_machinegun_white.png"
     },
     {
@@ -7508,162 +7508,162 @@
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "blue",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "d355f5d35dad35f3fc21cc6ac2375cb7d56c9e65cc9c528f888b5fd0c7340300",
-      "bytes": 31551,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57",
+      "bytes": 3987,
       "path": "players/soldier/colors/weapon_blue.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "gray",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "470b2af21e2edf241b1e7dc0c7e1559de90c95cf82c804241b8833cd8b055f44",
-      "bytes": 32303,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d",
+      "bytes": 3995,
       "path": "players/soldier/colors/weapon_gray.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "green",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "b3b92ea2127c2d276388a13b11dbe6637efdc7ae42ff26e1ae254c3135a02d7e",
-      "bytes": 26505,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a",
+      "bytes": 3731,
       "path": "players/soldier/colors/weapon_green.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "orange",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "8af837119185136aec9d0fb1811055284426938dab872cfe464eedf4612735e5",
-      "bytes": 35402,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288",
+      "bytes": 4545,
       "path": "players/soldier/colors/weapon_orange.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "pink",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "81a792a6c875559ebd5ab792160fa98c4502bc001736422b443156b3dfb53b2f",
-      "bytes": 43003,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4",
+      "bytes": 4831,
       "path": "players/soldier/colors/weapon_pink.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "purple",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "0052967bdf4054d36324533714ac74de666f62a197f8a5d1e90419bdcbda06fb",
-      "bytes": 37373,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e",
+      "bytes": 4563,
       "path": "players/soldier/colors/weapon_purple.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "red",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "757a18fab99e72503795ddf7e72f78c9c0f62d129ec4bd9424167bd2ae3e46ff",
-      "bytes": 29022,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2",
+      "bytes": 3873,
       "path": "players/soldier/colors/weapon_red.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "skin",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "f251f2542b53c30f2a4f7596b585fa51a509960ebafcfc2f880e9cbceea172e5",
-      "bytes": 42639,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe",
+      "bytes": 4691,
       "path": "players/soldier/colors/weapon_skin.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "tan",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "fc24d951df0b0721e627a060e658217f7f904c02e16a4b54c04d0bcca93639ba",
-      "bytes": 40827,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835",
+      "bytes": 4774,
       "path": "players/soldier/colors/weapon_tan.png"
     },
     {
       "source": "models/weapons/g_machn/skin.png",
-      "source_sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c",
+      "source_sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a",
       "role": "player",
       "color": "white",
       "size": [
         256,
         256
       ],
-      "mask_sha256": "a7afd741f3706e93e8ff28d29c7942a872d617d948038e9caa86902b6511163b",
-      "plastic_pixels": 33910,
+      "mask_sha256": "a864de8aabd937517ecb5fbef548fb728a67fb1c94c7d74f4e9b2b944d09a8c3",
+      "plastic_pixels": 61440,
       "mask_rule": "green plastic; preserve neutral mechanics and black shadows",
-      "sha256": "086d12e9f5d7c109a373ba6ae290a60e1a5653e18c97f6a7cd1d027104af5c5e",
-      "bytes": 37384,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763",
+      "bytes": 4306,
       "path": "players/soldier/colors/weapon_white.png"
     }
   ],

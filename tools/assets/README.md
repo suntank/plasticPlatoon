@@ -33,6 +33,19 @@ and is excluded from both the source tree and its conversion inputs.
 
 ## Reproduce models and textures
 
+The M16 is an original simple-shape replacement, with first-person mitten
+hands and model-based ADS. Its current budgets are 800 first-person triangles
+including arms/hands, and 256 triangles for pickup/player/enemy versions.
+See [the M16 experiment](../../doc/performance/m16-simple-shapes.md) for
+rebuilding, visual review, validation and performance limits. Its dedicated
+generator and manifest own these paths; the old decimation records remain
+under `superseded_*` only for historical comparison.
+
+The long beveled pistol uses 598 first-person triangles with a fitted high
+mitten grip and tapered wrist, and 200 for each world/held version. It shares
+the M16's molded-plastic palette and hand style. It uses actual
+model sights in single-player and split-screen. See [the pistol notes](../../doc/performance/pistol-simple-shapes.md).
+
 Install the tested conversion dependencies separately from the game build:
 
 ```sh
@@ -55,14 +68,16 @@ reader falls back to Git history or an installed game.
 python3 tests/assets/test_source_archives.py
 ```
 
-To rebuild the 16 pickup pairs, then the complete optimized model/texture set:
+To rebuild the 15 decimated pickup pairs, then the complete optimized
+model/texture set (including the authored M16 and pistol):
 
 ```sh
 .venv/bin/python tools/assets/md2_assets.py build --write --review
 .venv/bin/python tools/assets/build_platoon.py build --write --review
 ```
 
-The full model manifest covers 66 custom MD2s and 77 PNGs. Independent procedural
+The legacy model manifest covers 58 custom MD2s and 73 PNGs; authored weapons
+have separate `m16-manifest.json` and `pistol-manifest.json` inventories. Independent procedural
 vehicle builders reproduce the tan tank and attack helicopter; the attachment
 builder retargets existing project weapon models to the soldier animation:
 
@@ -90,6 +105,46 @@ them during both Make and CMake asset builds. See `SOLDIER-SOUNDS.md`.
 Eight additional alert takes, their MP3 exports and decoded WAV sources are
 recorded in `soldier-callouts-manifest.json`; `import_soldier_callouts.py --verify`
 checks them during both build systems without needing an MP3 decoder.
+
+## Distant pickup models
+
+Five common pickups have additive `lod1.md2` siblings. The existing `tris.md2`
+models and their skins remain the close-up versions:
+
+| Pickup | Close triangles | Distant triangles |
+| --- | ---: | ---: |
+| Bullet ammo | 999 | 132 |
+| Shell ammo | 1,000 | 132 |
+| Grenade ammo | 800 | 180 |
+| Armor shard | 800 | 200 |
+| Small health | 800 | 180 |
+
+`r_pickup_lod 1` enables these models by default in GL1/GLES1, GL3/GLES3 and the
+software renderer. Each camera selects independently: the pickup must be at
+least 256 units away and its canonical bounding sphere must project to no more
+than 12 pixels in diameter. Larger displays and zoom retain the close model
+until it is sufficiently small. Animated frames, renderer-origin interpolation
+and special rendering effects keep the original mesh. Missing LOD files also
+fall back to the original.
+`r_pickup_lod 0` disables substitution for comparisons.
+
+The configuration and output hashes are in `pickup-lods.json` and
+`pickup-lods-manifest.json`. The ammo trays use authored simple geometry; the
+other three models use reductions of pinned original source geometry. All five
+reuse their original skin files and coordinate systems. Generation and checks:
+
+```sh
+.venv/bin/python tools/assets/build_pickup_lods.py --review
+python3 -S tools/assets/build_pickup_lods.py --verify
+sh tests/renderers/run_pickup_lod_tests.sh
+python3 tools/performance/capture_pickup_lod.py
+```
+
+Normal Make/CMake asset builds verify the checked-in LODs before packaging;
+they do not require conversion dependencies. The runtime capture checks mixed
+near/far cameras, exact triangle reductions, renderer restart, map reload,
+toggle restoration and absent-LOD fallback. Host captures verify behavior and
+appearance; Pi performance must be measured on the device.
 
 ## Player colors and enemy variants
 
@@ -195,3 +250,47 @@ removed from the public source.
 See [insect sound sources and rebuild checks](INSECT-SOUNDS.md). The eighteen
 approved effects are reproduced and checked by `import_insect_sounds.py`;
 both build systems verify them before packaging. Spider sight remains silent.
+
+## Optional Pi actor models
+
+The Pi profile uses a separate model-only overlay. Canonical player, enemy,
+carried-gun and first-person assets remain the high-detail source inputs for
+desktop builds. Rebuild the accepted Pi topology with the pinned asset virtual
+environment:
+
+```sh
+.venv/bin/python tools/assets/build_pi_actor_models.py
+.venv/bin/python tools/assets/build_pi_actor_models.py --verify
+```
+
+The output is `build/assets/pi-actor-models.pkz`; install it explicitly in the
+Pi package's `baseq2/`. It is deliberately outside the normal asset build.
+The current pack replaces four body models, ten carried guns and eight
+static first-person guns. Five M16 and three pistol entries from the original
+recipe are omitted: the main package supplies those authored weapons,
+including hands and model ADS. Rebuild the Pi pack after integrating either
+replacement; an older installed PKZ can override the main PK3.
+Player bodies use 1,012/994 triangles instead of
+1,766/1,768; normal and taller soldier bodies use 1,028 instead of 1,784.
+The M16 uses 256 triangles when carried and 800 in first person, including
+hands. Four carried-gun sources with nonmanifold UV topology retain
+their original bytes and are omitted from the overlay.
+Yamagi loads PKZ archives after PK3 archives, placing them earlier in the search
+path. A `zz` prefix alone does not guarantee precedence among this engine's
+unsorted PK3 files. Remove the PKZ to restore the original models.
+
+`pi-actor-models.json` records the reviewed topology, original vertex indices,
+UVs, and exact source/output hashes. Animated models retain every original
+frame, name, skin reference, quantization lattice and surviving packed vertex
+and normal byte. The builder replays the accepted topology on the original
+frames and requires byte-exact reproduction. It does not rerun an unconstrained
+decimator. The embedded manifest records triangle counts and quality evidence.
+
+First-person cleanup retains all original vertex/frame/skin/ST bytes and the
+draw order of surviving triangles. The certificate in
+`pi-firstperson-proof.json` covers default zero `gun_x/y/z` with `r_cull 1`,
+including normal recoil, bob, lowering, mirrored hands and FOV changes. Removed
+faces remain back-facing throughout a conservative 29-unit translation bound.
+Nonzero development gun offsets and disabled back-face culling are outside
+this optional asset profile. The animated grenade and uncertified faces remain
+unchanged. No texture, renderer, game logic, level or map source is in the pack.

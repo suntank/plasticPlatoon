@@ -1,0 +1,326 @@
+#!/usr/bin/env python3
+"""Interactive four-player experiments on Linux PC or the Game Bird Pi."""
+import argparse
+import copy
+import csv
+import fcntl
+import datetime
+import hashlib
+import html
+import json
+import math
+import os
+from pathlib import Path
+import re
+import shutil
+import signal
+import struct
+import subprocess
+import sys
+import tempfile
+import zipfile
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE / 'lib'))
+from summarize import summarize
+from scene_controls import ordinary_counters
+from platform_support import is_pi
+
+PACKAGE = Path('/home/gamebird/gamebird-shell/data/nest/games/plastic-platoon')
+SAVES = Path('/home/gamebird/gamebird-shell/data/nest/saves/plastic-platoon')
+ENGINE = '469799840e708f5f1fa5ee9b7f95e23bfcf34587426000b04f8edccd9049b178'
+RENDERER = '27a4d6e891501114c761359682df324f665d2a6ce561760d68d36b8c5aa3e702'
+DRIVER = 'd42e05e4c4374cc334bcfd75113415e49c64de413a5a90b852bfe6b3a97fce21'
+PC_ENGINE = 'a0604bd40aef42d2d8dab274b8219c17808f232b0e7c117634d58525c9240577'
+PC_RENDERER = 'a48a49cc00aa77ac203a957f65e7282381007c48d8ea4e01903748c3b556be6e'
+PC_DRIVER = 'ef7eca1afea52841b3ed2f1e9137bb45c4e371bcfe882067001f235890e4ad4c'
+REPO = next((p for p in HERE.parents if (p/'src/client/cl_splitscreen.h').is_file()), HERE)
+
+def compare_context(old, new):
+    # Historical reports were all Pi/240x240. Preserve their interpretation.
+    for key, default in [('target','pi'),('framebuffer','240x240'),('display_backend','native')]:
+        if old.get(key,default)!=new.get(key,default):
+            raise ValueError('Comparison '+key+' differs; PC/Pi, resolutions and headless/native timings must be compared separately')
+
+def sha(path):
+    h = hashlib.sha256()
+    with Path(path).open('rb') as f:
+        for chunk in iter(lambda: f.read(1024*1024), b''): h.update(chunk)
+    return h.hexdigest()
+
+def maps(runtime, addon=None):
+    """Enumerate actual compiled maps, including Quake PAK and ZIP archives."""
+    result = {}
+    base = runtime / 'baseq2'
+    archives = sorted(p for p in base.iterdir() if p.suffix.lower() in ('.pk3', '.pkz', '.pak'))
+    if addon: archives.append(addon)
+    for archive in archives:
+        if archive.suffix.lower() == '.pak':
+            with archive.open('rb') as f:
+                magic, start, length = struct.unpack('<4sii', f.read(12))
+                if magic != b'PACK' or length < 0 or length % 64: raise ValueError('Bad PAK: '+str(archive))
+                f.seek(start)
+                entries = [struct.unpack('<56sii', f.read(64)) for _ in range(length//64)]
+                for raw, offset, size in entries:
+                    name = raw.split(b'\0')[0].decode('latin1')
+                    if name.startswith('maps/') and name.endswith('.bsp'):
+                        result[name[5:-4]] = (archive, name)
+        else:
+            with zipfile.ZipFile(archive) as z:
+                for name in z.namelist():
+                    if name.startswith('maps/') and name.endswith('.bsp'): result[name[5:-4]] = (archive, name)
+    for p in (base/'maps').rglob('*.bsp'):
+        result[p.relative_to(base/'maps').with_suffix('').as_posix()] = (p, None)
+    return result
+
+def read_map(source):
+    path, member = source
+    if not member: return path.read_bytes()
+    if path.suffix.lower() != '.pak':
+        with zipfile.ZipFile(path) as z: return z.read(member)
+    with path.open('rb') as f:
+        _, start, length = struct.unpack('<4sii', f.read(12)); f.seek(start)
+        for _ in range(length//64):
+            name, offset, size = struct.unpack('<56sii', f.read(64))
+            if name.split(b'\0')[0].decode('latin1') == member:
+                f.seek(offset); return f.read(size)
+    raise ValueError('Map missing from PAK')
+
+def entities(data):
+    if data[:4] != b'IBSP' or struct.unpack_from('<i', data, 4)[0] != 38: raise ValueError('Expected compiled Quake II IBSP38 map')
+    start, size = struct.unpack_from('<ii', data, 8)
+    if start < 0 or size < 0 or start+size > len(data): raise ValueError('Invalid BSP entity lump')
+    return [dict(re.findall(r'"([^"\n]*)"\s*"([^"\n]*)"', e)) for e in re.findall(r'\{([^{}]*)\}', data[start:start+size].decode('latin1'))]
+
+def generic_scene(mapname, mode, quality, ents, template):
+    p = copy.deepcopy(template)
+    p.update(map=mapname, dm=mode=='dm', warmup=24)
+    p.pop('prepare_deathmatch', None)
+    p['phases'] = [dict(label='spawn', seconds=12, require_four_ready=True, require_alive=True)]
+    equip = [f'pp_test_slot {s} {c}' for c in ('god', 'give Machinegun', 'give bullets 10000', 'use Machinegun') for s in range(4)]
+    if mode == 'dm':
+        spawns = [e for e in ents if e.get('classname')=='info_player_deathmatch']
+        if len(spawns) < 4: raise ValueError('Generic DM needs four spawn points; supply a --scene JSON with four safe positions.')
+        poses = []
+        for s, e in enumerate(spawns[:4]):
+            xyz = [float(v) for v in e['origin'].split()]
+            yaw = float(e.get('angle', '0'))
+            if len(xyz)!=3 or not all(math.isfinite(v) and abs(v)<32700 for v in xyz+[yaw]): raise ValueError('Invalid spawn position')
+            poses.append(f'cl_bench_pose {s} {xyz[0]} {xyz[1]} {xyz[2]+8} 0 {yaw}')
+        p['prepare_deathmatch'] = dict(poses=poses, gunmodel='models/weapons/v_machn/tris.md2', timeout=75, equip_timeout=15)
+        equip = []  # DM preparation equips and enables god once after respawn.
+    p['phases'] += [dict(label='four-guns-turning', commands=equip+[f'pp_test_input {s} {c} 1' for c in ('attack','left') for s in range(4)], settle=4, seconds=20, require_four_ready=True, require_four_attack=True, require_alive=True, required_gunmodel='models/weapons/v_machn/tris.md2')]
+    return p
+
+def report(run, invocation, previous=None):
+    meta = json.loads((run/'metadata.json').read_text())
+    rows = []
+    for session in meta['sessions']:
+        for phase in session['phases']:
+            folder = run/session['label']
+            path = folder/'saves/baseq2/perf'/(phase['label']+'-frames.csv')
+            s = summarize(path, 10 if phase['seconds'] >= 10 else 0)
+            with path.open() as f:raw_frames=list(csv.DictReader(f))
+            with path.with_name(path.name.replace('-frames.csv','-views.csv')).open() as f:raw_views=list(csv.DictReader(f))
+            raw_proof=ordinary_counters(raw_frames,raw_views)
+            metrics = s['metrics']; frame = metrics['frame_ms']
+            telemetry = json.loads((folder/(phase['label']+'-telemetry.json')).read_text())
+            def status_value(point, field):
+                m = re.search(r'^'+field+r':\s+(\d+)', point.get('status',''), re.M)
+                return int(m[1])/1024 if m else None
+            temps = [float(m[1]) for t in telemetry if (m:=re.search(r'=([\d.]+)',t.get('temp','')))]
+            rss = [v for t in telemetry if (v:=status_value(t,'VmRSS')) is not None]
+            swap = [v for t in telemetry if (v:=status_value(t,'VmSwap')) is not None]
+            majors=[]; identities=[]
+            for t in telemetry:
+                fields=t.get('proc_stat','').rsplit(') ',1)
+                if len(fields)==2:
+                    fields=fields[1].split();majors.append(int(fields[9]));identities.append(fields[19])
+            faults=majors[-1]-majors[0] if len(majors)>1 and len(set(identities))==1 else None
+            throttle_samples=[int(m[1],16)&15 for t in telemetry if (m:=re.search(r'0x([0-9a-fA-F]+)',t.get('throttled','')))]
+            throttle=any(throttle_samples) if throttle_samples else None
+            row = dict(quality=session['comparison']['quality'],phase=phase['label'],fps=s['frames']/s['elapsed_seconds'],frame_p95_ms=frame['p95'],frame_p99_ms=frame['p99'],over_33ms_percent=s['over_33_333_ms_percent'],draws=metrics['draws']['mean'],world_triangles=metrics['world_triangles']['mean'],model_triangles=metrics['model_triangles']['mean'],server_ms=metrics.get('server_ms',{}).get('mean'),max_rss_mib=max(rss,default=None),max_swap_mib=max(swap,default=None),sampled_major_faults=faults,max_temperature_c=max(temps,default=None),current_throttle_observed=throttle,hard_checks=all(phase['assertions'].values()),camera_matched=phase['matched_scene_qualification']['passed'],frames=s['frames'],raw_summary=s)
+            rows.append(row)
+            row['hard_checks']=row['hard_checks'] and raw_proof['passed'] and all(math.isfinite(float(f['frame_ms'])) and float(f['frame_ms'])>=0 and f['views']=='4' for f in raw_frames)
+            row['ordinary_counter_proof']=raw_proof
+            row['effective_settings']=phase['effective_settings']
+            row['mean_cpu_stages_ms']={k:metrics[k]['mean'] for k in ('server_ms','simulation_ms','submit_ms','model_ms','visibility_ms','present_ms') if k in metrics}
+            clocks=[t['cpu_khz']/1000 for t in telemetry if 'cpu_khz' in t]
+            row['sampled_cpu_mhz_range']=[min(clocks),max(clocks)] if clocks else None
+    valid = not meta.get('error') and all(meta.get(k) is True for k in ('package_hashes_unchanged','save_hashes_unchanged','runtime_hashes_unchanged','assets_maps_visibility_unchanged','shell_restored')) and all(r['hard_checks'] for r in rows)
+    target=invocation.get('target','pi');size=invocation.get('framebuffer','240x240')
+    audio='Pi physical PCM stays muted; software sound mixing remains enabled.' if target=='pi' else 'PC test audio uses SDL dummy output; global mixer and normal sound settings are unchanged.'
+    result=dict(schema=1,valid=bool(rows) and valid,invocation=invocation,rows=rows,package_sha256=meta['package_hashes'],runtime_sha256=meta['runtime_hashes'],limitations=[f'FPS is for the complete {size} display on {target.upper()} with four local views, not FPS per quadrant.','One live simulation per scene: AI, recoil and effects vary. Small FPS differences can be noise.','Known presets use historical positions. If geometry changes, edit/export the scene and inspect screenshots and camera qualifications.','Generic spawn tests are not full mission coverage. No-friendly-fire is default; monsters, hazards and self-damage can still kill players. Optional --god adds shell passes and changes comparability.',audio+' Detailed draw profiling and GPU monitoring stay off.','Ten initial frames are excluded from performance phases only. All raw CSV rows, logs, screenshots, settings and telemetry are retained. Unknown sampled faults are not zero.'])
+    if target=='pc':result['limitations'].append('PC timings do not predict Pi FPS. Pi temperature/throttle sensors are unavailable on PC; empty readings are not evidence of zero throttling.')
+    if invocation.get('display_backend')=='headless-software':result['limitations'].append('HEADLESS SOFTWARE VALIDATION: Xvfb/llvmpipe timings are not desktop hardware GPU measurements.')
+    if previous:
+        old=json.loads(previous.read_text());result['comparison_source']=str(previous)
+        compare_context(old['invocation'],invocation)
+        if old.get('valid') is not True:raise ValueError('Previous report did not pass validation')
+        if old['invocation']['map']!=invocation['map']:raise ValueError('Comparison map differs')
+        if old['invocation'].get('god_mode')!=invocation.get('god_mode'):result['limitations'].append('WARNING: God-mode protection differs from the previous run; FPS deltas are not a controlled map comparison.')
+        index={(r['quality'],r['phase']):r for r in old['rows']}
+        for row in rows:
+            before=index.get((row['quality'],row['phase']))
+            if before:row['previous_fps']=before['fps'];row['fps_change_percent']=100*(row['fps']/before['fps']-1)
+        result['limitations'].append('Previous-run deltas do not certify identical scene geometry, model work, settings or resource conditions; compare saved plans and fingerprints.')
+    (run/'report.json').write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
+    lines=[f"Four-player benchmark: {invocation['map']} — {target.upper()} / {size} / {invocation.get('display_backend','native')}", 'Protection: '+('GOD MODE (extra shell passes)' if invocation.get('god_mode') else 'NO FRIENDLY FIRE, model teams (no god mode)'), 'Validation: '+('PASS' if valid else 'FAILED — inspect metadata.json'), 'Quality / scene                 FPS    P95 ms   >33ms    Draws    World tris  Model tris']
+    for r in rows:
+        lines.append(f"{r['quality']+'/'+r['phase']:<31} {r['fps']:6.2f} {r['frame_p95_ms']:8.2f} {r['over_33ms_percent']:6.1f}% {r['draws']:8.0f} {r['world_triangles']:11.0f} {r['model_triangles']:11.0f}"+ (f"  change {r['fps_change_percent']:+.1f}%" if 'fps_change_percent' in r else ''))
+        notes=[]
+        if not r['camera_matched']:notes.append('CAMERA DRIFT: not a matched-view comparison')
+        if r['sampled_major_faults'] is None:notes.append('fault sample unknown')
+        elif r['sampled_major_faults']:notes.append('game major page faults observed')
+        if r['current_throttle_observed']:notes.append('THROTTLING/UNDERVOLTAGE observed')
+        if r['max_swap_mib']:notes.append('game has swapped pages')
+        lines.append(f"  RSS {r['max_rss_mib']} MiB; swap {r['max_swap_mib']} MiB; sampled faults {r['sampled_major_faults']}; temp {str(r['max_temperature_c'])+' C' if r['max_temperature_c'] is not None else 'unavailable'}"+('; '+', '.join(notes) if notes else ''))
+    lines+=['',*result['limitations'],'', 'Raw results: '+str(run)]
+    text='\n'.join(lines)+'\n';(run/'report.txt').write_text(text)
+    images=[]
+    for p in run.glob('*/saves/baseq2/scrnshot/*.png'):images.append('<img width="240" src="'+html.escape(p.relative_to(run).as_posix(),quote=True)+'">')
+    (run/'report.html').write_text('<!doctype html><meta charset="utf-8"><title>Pi four-player benchmark</title><style>body{font:15px system-ui;margin:25px}pre{overflow:auto;line-height:1.6}img{margin:4px;image-rendering:pixelated}</style><pre>'+html.escape(text)+'</pre>'+''.join(images))
+    print(text);return valid
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--target',choices=['auto','pc','pi'],default='auto',help='auto detects this computer; pi means run locally on the Pi')
+    p.add_argument('--size',help='complete framebuffer WIDTHxHEIGHT; PC default960x960, Pi fixed240x240')
+    p.add_argument('--headless',action='store_true',help='PC software validation via Xvfb; not hardware GPU timings')
+    p.add_argument('--map');p.add_argument('--quality',choices=['normal','low','both'],default='both')
+    p.add_argument('--mode',choices=['auto','coop','dm'],default='auto')
+    p.add_argument('--god',action='store_true',help='opt in to historical god-mode protection and its visible shells; default uses no-friendly-fire instead')
+    p.add_argument('--preset',choices=['auto','spawn'],default='auto',help='auto uses the earlier recorded scenes on the four original maps')
+    p.add_argument('--runtime',type=Path);p.add_argument('--saves',type=Path)
+    p.add_argument('--output',type=Path,help='new results directory (never overwritten)')
+    p.add_argument('--map-file',type=Path,help='experimental compiled BSP, copied only into private runtime')
+    p.add_argument('--addon',type=Path,help='test-only .pk3/.pkz/.pak copied into private runtime')
+    p.add_argument('--scene',type=Path,help='JSON list of sessions exported with --export-scene; permits custom positions')
+    p.add_argument('--export-scene',type=Path,help='write editable plan and exit without launching')
+    p.add_argument('--compare',type=Path,help='previous report.json; print FPS deltas without discarding any rows')
+    p.add_argument('--list',action='store_true');p.add_argument('--seconds',type=int,help='override long capture durations, 5..300 seconds')
+    p.add_argument('--warmup',type=int,default=24,help='startup settling seconds, 0..120')
+    p.add_argument('--keep-runtime',action='store_true',help='retain private runtime copy after success; raw results are always kept')
+    a=p.parse_args()
+    target=('pi' if is_pi() else 'pc') if a.target=='auto' else a.target
+    a.runtime=a.runtime or (PACKAGE if target=='pi' else REPO/'release')
+    a.saves=a.saves or (SAVES if target=='pi' else Path.home()/'.yq2')
+    runtime=a.runtime.resolve();size=a.size or ('240x240' if target=='pi' else '960x960')
+    if not re.fullmatch(r'\d+x\d+',size):p.error('--size must be WIDTHxHEIGHT')
+    width,height=map(int,size.split('x'))
+    if min(width,height)<64 or max(width,height)>8192 or width%2 or height%2:p.error('Size must have even dimensions between64 and8192')
+    if target=='pi' and (size!='240x240' or a.headless):p.error('Pi tests use240x240 on the native device display')
+    if a.seconds is not None and not 5<=a.seconds<=300:p.error('--seconds must be 5..300')
+    if not 0<=a.warmup<=120:p.error('--warmup must be 0..120')
+    if a.map_file:a.map_file=a.map_file.resolve();a.map=a.map or a.map_file.stem
+    if a.addon:a.addon=a.addon.resolve()
+    available=maps(runtime,a.addon)
+    if a.map_file:available[a.map]=(a.map_file,None)
+    if a.list:
+        print('\n'.join(sorted(available)));return 0
+    if not a.map:
+        if not sys.stdin.isatty():p.error('Specify --map NAME, or run interactively to choose a level')
+        names=sorted(available)
+        for i,n in enumerate(names,1):print(f'{i:2}. {n}')
+        choice=input('Level name or number: ').strip();a.map=names[int(choice)-1] if choice.isdigit() and 1<=int(choice)<=len(names) else choice
+    if not re.fullmatch(r'[A-Za-z0-9_/-]+',a.map) or '..' in a.map or a.map not in available:p.error('Unknown/invalid map. Use --list or --map-file FILE.bsp.')
+    data=read_map(available[a.map]);ents=entities(data)
+    mode=a.mode if a.mode!='auto' else ('dm' if a.map in ('pp_sandbox2','pp_temple') or any(e.get('classname')=='info_player_deathmatch' for e in ents) and not any(e.get('classname')=='info_player_coop' for e in ents) else 'coop')
+    presets=json.loads((HERE/'presets.json').read_text());qualities=('normal','low') if a.quality=='both' else (a.quality,)
+    if a.scene:
+        plan=json.loads(a.scene.read_text())
+        if not isinstance(plan,list) or not plan or any(s.get('map')!=a.map or s.get('players')!=4 for s in plan):p.error('--scene must be a nonempty session list for this map and four players')
+    else:
+        plan=[]
+        for q in qualities:
+            match=next((copy.deepcopy(s) for s in presets if s['map']==a.map and s['comparison']['quality']==q and s['dm']==(mode=='dm')),None)
+            if match and a.preset=='auto':session=match
+            else:
+                template=next(s for s in presets if s['comparison']['quality']==q)
+                session=generic_scene(a.map,mode,q,ents,template)
+            session['comparison']={'kind':'user_experiment','quality':q};session['label']=q;session['warmup']=a.warmup
+            if a.seconds:
+                for phase in session['phases']:
+                    if phase['seconds']>=10:phase['seconds']=a.seconds
+            plan.append(session)
+    if target=='pc':
+        for session in plan:
+            for phase in session['phases']:
+                if phase.get('resource_qualification',{}).get('mode')=='gate':phase['resource_qualification']['current_throttle_bits']=None
+    for session in plan:
+        if not re.fullmatch(r'[A-Za-z0-9_-]{1,55}',session.get('label','')):p.error('Invalid scene label')
+        for phase in session['phases']:
+            if not re.fullmatch(r'[A-Za-z0-9_-]{1,55}',phase.get('label','')) or not 1<=phase.get('seconds',0)<=300:p.error('Invalid phase label/duration')
+        session.setdefault('settings',{})['r_gl1_world_arrays']=1
+        session.setdefault('require_cvars',{})['r_gl1_world_arrays']=1
+        # DF_NO_FRIENDLY_FIRE only applies to teammates. Model-team mode
+        # puts all four benchmark soldiers on the same team. The current
+        # game checks OnSameTeam in co-op too, so keep model teams there too.
+        flags=256 | 128
+        session['settings']['dmflags']=flags
+        session['require_cvars']['dmflags']=flags
+        if 'prepare_deathmatch' in session:session['prepare_deathmatch']['god']=a.god
+        if a.god and not session.get('dm') and not any(re.fullmatch(r'pp_test_slot [0-3] god', c) for phase in session['phases'] for c in phase.get('commands',[])):
+            armed=next((phase for phase in session['phases'] if any('give Machinegun' in c for c in phase.get('commands',[]))),None)
+            if armed:armed['commands']=[f'pp_test_slot {slot} god' for slot in range(4)]+armed['commands']
+        if not a.god:
+            for phase in session['phases']:
+                phase['commands']=[c for c in phase.get('commands',[]) if not re.fullmatch(r'pp_test_slot [0-3] god',c)]
+    if len({s['label'] for s in plan})!=len(plan):p.error('Scene labels must be unique')
+    if a.export_scene:
+        with a.export_scene.open('x') as f:json.dump(plan,f,indent=2);f.write('\n')
+        print('Edit positions/commands in '+str(a.export_scene));return 0
+    if target=='pi' and not is_pi():p.error('Run --target pi on the Pi; use tools/performance/bench-pi to launch it over SSH from this PC')
+    driver=HERE/('input_driver.so' if target=='pi' else 'input_driver-pc.so')
+    for file,expected in [(runtime/'quake2',ENGINE if target=='pi' else PC_ENGINE),(runtime/'ref_gl1.so',RENDERER if target=='pi' else PC_RENDERER),(driver,DRIVER if target=='pi' else PC_DRIVER)]:
+        if sha(file)!=expected:p.error('Input-driver ABI compatibility not established for '+str(file)+'. Map edits are supported; rebuild/revalidate the helper after an engine/renderer update.')
+    lock=open(Path(tempfile.gettempdir())/f'pp-bench-{os.getuid()}.lock','a')
+    try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    except BlockingIOError:p.error('Another benchmark is already running')
+    if subprocess.run(['pgrep','-x','quake2'],capture_output=True).returncode==0:p.error('Close the running game first. This command launches a separate test session.')
+    result_root=HERE/'results' if target=='pi' else REPO/'build/pc-bench-results'
+    out=(a.output or result_root/datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ')).resolve()
+    for protected in (runtime,a.saves.resolve(),HERE/'lib'):
+        if out==protected or out.is_relative_to(protected) or protected.is_relative_to(out):p.error('Results must be outside runtime, real saves and tool libraries')
+    if out.exists():p.error('Output already exists; choose a new directory')
+    if target=='pi' and not out.is_relative_to(Path('/data').resolve()):p.error('Use an --output directory under /data. The Pi home/root and /tmp are RAM-backed and distort memory/performance measurements.')
+    out.parent.mkdir(parents=True,exist_ok=True)
+    required=sum(f.stat().st_size for f in runtime.rglob('*') if f.is_file())+32*1024*1024
+    if shutil.disk_usage(out.parent).free < required:p.error('Insufficient free space for the private runtime. Choose an --output directory on /data, not the RAM-backed home/root overlay.')
+    invocation=dict(map=a.map,target=target,display_backend='headless-software' if a.headless else 'native',mode=mode,quality=a.quality,preset=a.preset,god_mode=a.god,protection='friendly fire disabled; same-model team',map_candidate_sha256=hashlib.sha256(data).hexdigest(),map_file=str(a.map_file) if a.map_file else None,addon=str(a.addon) if a.addon else None,command=sys.argv,players=4,framebuffer=size,runtime=str(runtime))
+    if a.compare:
+        old=json.loads(a.compare.read_text());compare_context(old['invocation'],invocation)
+        if old['invocation']['map']!=a.map:p.error('Comparison map differs')
+    # Worker releases Python asset buffers before launch. The parent also frees
+    # its map before waiting, to avoid retaining a large map on the 512 MiB Pi.
+    del data,ents,available
+    import gc,ctypes
+    gc.collect();ctypes.CDLL(None).malloc_trim(0)
+    with tempfile.TemporaryDirectory(prefix='pp-bench-plan-') as temp:
+        planpath=Path(temp)/'plan.json';planpath.write_text(json.dumps(plan,indent=2)+'\n')
+        command=[sys.executable,str(HERE/'lib/run_suite.py'),'--output',str(out),'--plan',str(planpath),'--shim',str(driver),'--runtime-source',str(runtime),'--saves',str(a.saves.resolve()),'--target',target,'--size',size]
+        env=dict(os.environ)
+        if a.headless:
+            if not shutil.which('xvfb-run'):p.error('--headless needs xvfb-run')
+            command=['xvfb-run','-a','-s',f'-screen 0 {max(width,1024)}x{max(height,1024)}x24',*command]
+            env['LIBGL_ALWAYS_SOFTWARE']='1'
+        if a.map_file:command+=['--map-file',str(a.map_file)]
+        if a.addon:command+=['--addon',str(a.addon)]
+        print('Launching four local players. Leave controls alone; Ctrl+C stops the test.\nResults: '+str(out),flush=True)
+        worker=subprocess.Popen(command,start_new_session=True,env=env)
+        try:code=worker.wait()
+        except KeyboardInterrupt:
+            if a.headless:os.killpg(worker.pid,signal.SIGINT)
+            else:worker.send_signal(signal.SIGINT)
+            print('\nStopping test and restoring the shell; please wait.',flush=True)
+            code=worker.wait()
+        try:
+            valid=report(out,invocation,a.compare)
+        except Exception as e:
+            print('No complete report: '+str(e)+'; retained raw output: '+str(out),file=sys.stderr);return 1
+        if code==0 and valid and not a.keep_runtime:shutil.rmtree(out/'runtime')
+        return 0 if code==0 and valid else 1
+
+if __name__=='__main__':
+    try:sys.exit(main())
+    except (ValueError,OSError,RuntimeError) as e:print('Benchmark error: '+str(e),file=sys.stderr);sys.exit(1)

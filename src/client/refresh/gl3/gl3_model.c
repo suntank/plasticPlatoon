@@ -26,6 +26,7 @@
  */
 
 #include "header/local.h"
+#include "../files/pickup_lod.h"
 
 enum { MAX_MOD_KNOWN = 512 };
 
@@ -836,6 +837,14 @@ GL3_RegisterModel(const char *name)
 			/* numframes is unused for SP2 but lets set it also  */
 			mod->numframes = Mod_ReLoadSkins((struct image_s **)mod->skins,
 				(findimage_t)GL3_FindImage, mod->extradata, mod->type);
+		}
+
+		const char *lod_name = PP_PickupLODPath(name);
+		if (mod->type == mod_alias && mod->numframes == 1 && lod_name)
+		{
+			gl3model_t *lod = GL3_RegisterModel(lod_name);
+			mod->pickup_lod = lod && lod->type == mod_alias && lod->numframes == 1 ? lod : NULL;
+			mod->radius = PP_PickupLODRadius(mod->extradata);
 		}
 	}
 

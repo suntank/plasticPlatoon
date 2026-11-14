@@ -37,3 +37,8 @@ with tempfile.TemporaryDirectory(prefix='pp-renderer-tests-') as temp:
                     *flags, *sdl_define, str(root / 'tests/renderer_perf_lifecycle_test.c'),
                     *shlex.split(sdl.stdout), '-o', str(diagnostic)], check=True, cwd=root)
     subprocess.run([str(diagnostic)], check=True, cwd=root)
+    profile = Path(temp) / 'renderer-draw-profile-test'
+    subprocess.run([os.environ.get('CC', 'cc'), '-std=c11', '-Wall', '-Wextra',
+                    *flags, *sdl_define, str(root / 'tests/renderer_draw_profile_test.c'),
+                    *shlex.split(sdl.stdout), '-o', str(profile)], check=True, cwd=root)
+    subprocess.run([str(profile)], check=True, cwd=root)

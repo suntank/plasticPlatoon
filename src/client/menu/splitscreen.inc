@@ -18,6 +18,7 @@ static int s_splitscreen_lobby_cursor[SS_MAX_LOCAL_PLAYERS];
 static int s_splitscreen_keyboard_slot;
 static char s_splitscreen_notice[96];
 static int s_splitscreen_notice_until;
+static int s_splitscreen_compact_slot;
 
 static void
 SplitScreenLobby_Notice(const char *message)
@@ -121,6 +122,7 @@ SplitScreenLobby_MenuInit(void)
 	SS_RefreshDevices();
 	SS_BeginLobby();
 	s_splitscreen_keyboard_slot = 0;
+	s_splitscreen_compact_slot = 0;
 	s_splitscreen_notice_until = 0;
 
 	for (i = 0; i < SS_GetPlayerCount(); ++i)
@@ -229,6 +231,66 @@ SplitScreenLobby_DrawPanel(int slot_index, int x, int y, int w, int h, float sca
 }
 
 static void
+SplitScreenLobby_DrawCompact(void)
+{
+	const ss_match_config_t *match = SS_GetPendingMatch();
+	ss_local_player_t *slot;
+	int i, row, count = SS_GetPlayerCount();
+	int card_width = (viddef.width - 16) / count;
+	char text[128];
+	const char *help;
+
+	s_splitscreen_compact_slot = Q_clamp(s_splitscreen_compact_slot, 0, count - 1);
+	slot = SS_GetSlot(s_splitscreen_compact_slot);
+	Menu_DrawCompactFrame("SQUAD SETUP", match->startmap);
+	/* All ready states remain visible; the detail card follows the last input.
+	 * Four controllers get the same readable type as two, without shrinking. */
+	for (i = 0; i < count; ++i)
+	{
+		ss_local_player_t *player = SS_GetSlot(i);
+		int x = 8 + i * card_width;
+		Draw_Fill(x, 42, card_width - 3, 22, i == s_splitscreen_compact_slot ? 50 : 221);
+		Com_sprintf(text, sizeof(text), "P%d %s", i + 1, player->ready ? "OK" : "--");
+		Menu_DrawCompactText(x + 4, 49, text, (card_width - 6) / 8, player->ready);
+	}
+	Com_sprintf(text, sizeof(text), "PLAYER %d / %s", s_splitscreen_compact_slot + 1,
+		!SS_IsDeviceConnected(slot->device_index) ? "NO INPUT" : slot->ready ? "READY" : "CHOOSE SETUP");
+	Menu_DrawCompactText(16, 74, text, (viddef.width - 32) / 8, true);
+	for (row = 0; row < SS_LOBBY_ROWS; ++row)
+	{
+		int y = 90 + row * 28;
+		qboolean selected = s_splitscreen_lobby_cursor[s_splitscreen_compact_slot] == row;
+		switch (row)
+		{
+			case SS_LOBBY_DEVICE:
+				Com_sprintf(text, sizeof(text), "INPUT: %s", SS_GetDeviceLabel(slot->device_index));
+				break;
+			case SS_LOBBY_MODEL:
+				Com_sprintf(text, sizeof(text), "MODEL: %s", slot->model);
+				break;
+			case SS_LOBBY_SKIN:
+				Com_sprintf(text, sizeof(text), "COLOR: %s", slot->skin);
+				break;
+			default:
+				Q_strlcpy(text, slot->ready ? "CANCEL READY" : "READY TO PLAY", sizeof(text));
+				break;
+		}
+		Draw_Fill(8, y, viddef.width - 20, 25, selected ? 50 : 221);
+		if (selected)
+		{
+			Draw_Fill(8, y, 3, 25, 140);
+		}
+		Menu_DrawCompactText(16, y + 9, text, (viddef.width - 40) / 8, selected);
+	}
+	help = SS_AreAllSlotsReady() ? "ALL READY! START: PLAY" : "EACH PLAYER: CONFIRM READY";
+	if (cls.realtime < s_splitscreen_notice_until)
+	{
+		help = s_splitscreen_notice;
+	}
+	Menu_DrawCompactFooter(help);
+}
+
+static void
 SplitScreenLobby_MenuDraw(void)
 {
 	float scale = SCR_GetMenuScale();
@@ -238,6 +300,11 @@ SplitScreenLobby_MenuDraw(void)
 	const char *status;
 
 	SS_RefreshDevices();
+	if (Menu_IsCompact())
+	{
+		SplitScreenLobby_DrawCompact();
+		return;
+	}
 	/* A fitted canvas also works when the user selects an oversized menu scale. */
 	if (scale > viddef.width / 640.0f)
 	{
@@ -341,6 +408,7 @@ SplitScreenLobby_MenuKey(int key)
 	if (gamepad < 0 && key == K_TAB)
 	{
 		s_splitscreen_keyboard_slot = (s_splitscreen_keyboard_slot + 1) % SS_GetPlayerCount();
+		s_splitscreen_compact_slot = s_splitscreen_keyboard_slot;
 		return menu_move_sound;
 	}
 	slot_index = gamepad >= 0 ? SS_FindLobbySlotForDevice(device) : s_splitscreen_keyboard_slot;
@@ -356,6 +424,7 @@ SplitScreenLobby_MenuKey(int key)
 			slot_index = SS_JoinLobbyDevice(device);
 			if (slot_index >= 0)
 			{
+				s_splitscreen_compact_slot = slot_index;
 				s_splitscreen_lobby_cursor[slot_index] = SS_LOBBY_READY;
 				SplitScreenLobby_Notice("Controller joined. Confirm Ready when you are set.");
 				return menu_in_sound;
@@ -369,6 +438,7 @@ SplitScreenLobby_MenuKey(int key)
 	{
 		return NULL;
 	}
+	s_splitscreen_compact_slot = slot_index;
 	if (menu_key == K_ESCAPE || menu_key == K_BACKSPACE || key == K_BTN_BACK)
 	{
 		/* A lone controller may be assigned to P2 while P1 uses the keyboard.

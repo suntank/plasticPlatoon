@@ -15,6 +15,8 @@ import generate_sandkeep as brush
 
 ROOT = Path(__file__).resolve().parents[2]
 WORLD, ENTITIES, ROUTES = [], [], []
+RAIL_HALF_GAUGE = 100
+RAIL_HEAD_Z = 257
 
 
 def material(text):
@@ -180,6 +182,9 @@ def envelope():
         wb((x-88,-32,1080),(x+88,32,1088),"sandkeep/lamp",detail=True,
            face_overrides={4:dict(texture="sandkeep/lamp",flags=1,value=160)})
         light(x,0,1000,1200)
+    # Side fill makes the wheels and couplers readable at the tunnel mouths.
+    light(2768,0,552,450,".88 .93 1")
+    light(-3008,0,552,380,".83 .90 1")
     light(-3750,0,384,900,".72 .90 1")
 
 
@@ -188,16 +193,25 @@ def railway():
     wb((-3712,-160,216),(3712,160,232),"sleeper_wood",detail=True)
     for x in range(-3680,3681,128):
         wb((x,-152,232),(x+32,152,240),"sleeper_wood",detail=True)
-    for y in (-104,96):
-        wb((-3712,y,240),(3712,y+8,248),"rail_metal",detail=True)
+    # A foot, web and running surface make the track readable at wheel height.
+    # The mover's one-unit padded bounds put its 256-unit treads at z=257.
+    for y in (-RAIL_HALF_GAUGE, RAIL_HALF_GAUGE):
+        wb((-3712,y-7,238),(3712,y+7,243),"rail_metal",detail=True)
+        wb((-3712,y-2,243),(3712,y+2,252),"rail_metal",detail=True)
+        wb((-3712,y-5,252),(3712,y+5,RAIL_HEAD_Z),"rail_metal",detail=True)
     # Colorful wooden block piers; the lower approach winds between them.
-    for n,x in enumerate((-2464,-1936,-960,0,640,2208)):
+    for n,x in enumerate((-3504,-2864,-2464,-1936,-960,0,640,2208,2672,3392)):
         for y in (-128,32):
-            wb((x,y,0),(x+128,y+96,208),f"sandbox/abc_block_{'abcdef'[n]}",detail=True,scale=1)
+            wb((x,y,0),(x+128,y+96,208),f"sandbox/abc_block_{'efabcdefab'[n]}",detail=True,scale=1)
         wb((x-16,-176,208),(x+144,176,216),"sandbox/wood1",detail=True)
     for x,X in [(-2464,-1808),(-1808,-832),(-832,128),(128,768),(768,2336)]:
         for y in (-168,152):
             wb((x,y,192),(X,y+16,216),"loco_red",detail=True)
+    # Pools of light under the bridge reveal the block piers and lower lane.
+    for x in (-1584,-528,432):
+        wb((x-28,80,204),(x+28,128,216),"rail_metal",detail=True,
+           face_overrides={4:dict(texture="sandkeep/lamp",flags=1,value=55)})
+        light(x,104,190,185,".93 .84 .65")
     # Upper service walk deliberately has broken chest-high cover and railing.
     wb((-1856,-352,224),(352,-176,240),"sleeper_wood",detail=True)
     upper_steps=stair_x(352,-352,4,floor=240)
@@ -343,12 +357,19 @@ def station():
     wb((544,-432,288),(736,-352,304),"sleeper_wood",detail=True)
     CABIN_STEPS.extend(stair_y(608,-1664,19,width=192))
     wb((608,-1056,288),(800,-1024,304),"sandkeep/plastic_blue_smooth",detail=True)
-    # Chunky signal lever: switch texture visibly changes using engine frames.
-    wb((528,-960,304),(608,-880,352),"toolbox_blue",detail=True)
+    # The animated face presses into a fixed cabinet. Keep the bezel behind
+    # the face at both ends of its travel so a player can reach the switch.
+    wb((524,-964,304),(604,-876,312),"rail_metal",detail=True)
+    wb((528,-960,312),(600,-880,420),"toolbox_blue",detail=True)
+    wb((524,-964,420),(604,-876,428),"rail_metal",detail=True)
+    for lo,hi in [((600,-960,344),(604,-952,420)),((600,-888,344),(604,-880,420)),
+                  ((600,-952,344),(604,-888,352)),((600,-952,416),(604,-888,420))]:
+        wb(lo,hi,"rail_metal",detail=True)
     ent("func_button",geometry=[box((600,-952,352),(616,-888,416),"rail_metal",
         face_overrides={1:dict(texture="signal_switch",scale=(.5,1),shift=(1904,416))})],
         angle=180,lip=12,speed=32,wait=-1,sounds=1,target="endline_divert",
         _endline_objective="signal")
+    light(680,-904,456,140,"1 .92 .78")
     sign(672,-1048,376,"sign_signal",width=144,height=72,facing="north")
     # Large external red/green signal switches its glowing lenses physically.
     wb((472,-488,544),(488,-472,768),"rail_metal",detail=True)
@@ -502,7 +523,8 @@ def train():
         tb((a,-136,288),(b,136,304),"sleeper_wood")
         tb((a,-144,272),(b,144,288),"loco_red")
         for x in (a+32,b-80):
-            for y in (-128,96):
+            # Center the 32-unit treads on the rails after the mover's +1 Y offset.
+            for y in (-RAIL_HALF_GAUGE-17,RAIL_HALF_GAUGE-17):
                 geo.append(wheel(X+x+24,y,280,24,32))
                 geo.append(wheel(X+x+24,y-2,280,10,36,"rail_metal"))
     # Coupling walkways are wide and flush, with no mandatory jumping.
@@ -530,7 +552,15 @@ def train():
         tb((a+16,36,304),(a+24,124,384),"rail_metal")
     tb((1128,-136,304),(1152,136,352),"loco_red")
     tb((704,128,304),(1128,136,344),"loco_red")
-    ent("func_train",geometry=geo,targetname="endline_train",target="endline_intro_start",speed=176,
+    # The moving brushes carry the lighting baked in the east pocket.
+    # Light the running gear from both sides and the van from below its roof.
+    for y in (-180, 180):
+        light(X+128,y,302,160,".83 .90 1")
+    light(X+496,0,386,150,"1 .90 .76")
+    light(X+880,0,544,250,"1 .90 .76")
+    # Compile the brushes around a local pivot so the moving origin fits the
+    # signed 16-bit network coordinate range across the entire route.
+    ent("func_train",(X+576,0,320),geometry=geo,targetname="endline_train",target="endline_intro_start",speed=176,
         spawnflags=6,dmg=0,noise="endline/wheels.wav",_endline_objective="train")
     ent("path_corner",(2496,-144,256),targetname="endline_intro_start",target="endline_hold")
     ent("path_corner",(-3552,-144,256),targetname="endline_hold",target="endline_loop",wait=-1,pathtarget="endline_intro_done")
@@ -569,13 +599,23 @@ def train():
     relay("endline_board_ready","endline_depart_permission")
     relay("endline_board_ready",message="TRAIN READY - DEPARTURE CONTROL UNLOCKED\nTouch the departure control beside the rear flatcar.\nThe train waits until every living squad member is aboard.")
     helptext("endline_board_ready","3. Touch DEPART on the loading platform. Assemble every living player on the rear flatcar. Ride out together.")
-    # Shrouded manual button. Physical cover prevents pre-arming the extraction.
-    wb((1912,-240,304),(1992,-176,376),"toolbox_blue",detail=True)
+    # The departure face sits in a backed cabinet. Its security cover slides
+    # between two fixed guides and remains visibly mounted when raised.
+    wb((1904,-248,304),(2000,-172,316),"rail_metal",detail=True)
+    wb((1912,-240,316),(1992,-176,424),"toolbox_blue",detail=True)
+    wb((1904,-244,424),(2000,-172,432),"rail_metal",detail=True)
+    for x in (1904,1992):
+        wb((x,-264,316),(x+8,-236,526),"rail_metal",detail=True)
+    wb((1904,-264,526),(2000,-236,538),"rail_metal",detail=True)
+    for lo,hi in [((1912,-244,344),(1920,-240,424)),((1984,-244,344),(1992,-240,424)),
+                  ((1920,-244,344),(1984,-240,352)),((1920,-244,408),(1984,-240,424))]:
+        wb(lo,hi,"rail_metal",detail=True)
     ent("func_button",geometry=[box((1920,-248,352),(1984,-240,408),"rail_metal",
         face_overrides={2:dict(texture="depart_switch",scale=(.5,.875),shift=(-3840,408/.875))})],
         target="depart_arm",angle=90,lip=6,speed=16,wait=-1,sounds=1,_endline_objective="departure")
-    ent("func_door",geometry=[box((1904,-264,336),(2000,-248,432),"hazard")],
+    ent("func_door",geometry=[box((1912,-264,336),(1992,-248,432),"hazard")],
         targetname="endline_control_cover",angle=-1,speed=64,wait=-1,lip=0,sounds=1)
+    light(1952,-344,460,175,"1 .92 .78")
     relay("depart_arm","endline_depart_permission")
     ent("trigger_counter",targetname="endline_depart_permission",target="endline_extract",count=2,spawnflags=1)
     relay("depart_arm",message="DEPARTURE REQUESTED\nAll living players: board the REAR flatcar.\nThe train will leave when everyone is aboard.")

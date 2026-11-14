@@ -105,7 +105,12 @@ def main():
     source = args.source.resolve()
     map_file = (args.map or source / "baseq2/maps" / (args.map_name + ".bsp")).resolve()
     required = [source / "quake2", source / f"ref_{args.renderer}.so",
-                source / "baseq2/game.so", source / "baseq2/pak0.pak", map_file]
+                source / "baseq2/game.so", map_file]
+    # Standalone releases carry the complete project media in this PK3.
+    # Retain support for older runtimes that used a PAK without requiring one.
+    if not any((source / "baseq2" / name).is_file()
+               for name in ("plastic-platoon.pk3", "pak0.pak")):
+        parser.error("runtime needs baseq2/plastic-platoon.pk3 or baseq2/pak0.pak")
     missing = [str(p) for p in required if not p.is_file()]
     if missing:
         parser.error("missing runtime files: " + ", ".join(missing))
@@ -173,7 +178,7 @@ def main():
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as reservation:
         reservation.bind(("127.0.0.1", 0))
         port = reservation.getsockname()[1]
-    settings = dict(vid_renderer=args.renderer, r_farsee=int(args.farsee), vid_fullscreen=0, r_mode=-1,
+    settings = dict(name='Player', vid_renderer=args.renderer, r_farsee=int(args.farsee), vid_fullscreen=0, r_mode=-1,
         r_customwidth=width, r_customheight=height, r_vsync=0, vid_maxfps=60,
         cl_maxfps=60, cl_async=1, s_initsound=0, cheats=1, skill=1,
         maxclients=2, coop=1, singleplayer=0, deathmatch=0,

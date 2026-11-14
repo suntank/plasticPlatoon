@@ -224,6 +224,8 @@ RDraw_Fill(int x, int y, int w, int h, int c)
 		Com_Error(ERR_FATAL, "%s: bad color", __func__);
 	}
 
+	/* Opaque panels must cover earlier queued HUD and console glyphs. */
+	R_ApplyGLBuffer();
 	glDisable(GL_TEXTURE_2D);
 
 	color.c = d_8to24table[c];

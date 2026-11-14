@@ -55,10 +55,12 @@ class PlayerMuzzlePointsTests(unittest.TestCase):
                 vertices = [tuple(data[offset+40+4*i+a]*st[a]+st[a+3] for a in range(3)) for i in selected]
                 expected = tuple(sum(v[a] for v in vertices)/len(vertices) for a in range(3))
                 for a in range(3):self.assertAlmostEqual(actual[a],expected[a],delta=.000001,msg=f'{name} frame {frame} axis {a}')
-            # Current source anatomy: rifles' tips are ~16 units above model
-            # origin standing and ~1 unit below crouching. Never add eye height.
+            # Tips are ~16 units above the model origin standing and below it
+            # crouching. The high pistol grip puts its new tip slightly lower
+            # while preserving the held hand attachment. Never add eye height.
             self.assertTrue(14.0 < generated[0][2] < 18.0,name)
-            self.assertTrue(-2.0 < generated[160][2] < 0.0,name)
+            self.assertTrue((-2.5 if name=='w_blaster.md2' else -2.0)
+                            < generated[160][2] < 0.0,name)
             self.assertGreater(generated[46][0]-generated[47][0],2.0,name)
 
     def test_changed_source_requires_visual_review(self):

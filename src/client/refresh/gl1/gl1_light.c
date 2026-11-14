@@ -341,6 +341,8 @@ R_LightPoint(entity_t *currententity, vec3_t p, vec3_t color)
 void
 R_AddDynamicLights(msurface_t *surf)
 {
+	double dp_started = pp_drawprofile_active ? PP_DPClock() : 0;
+	int dp_hits = 0, dp_passes = 0;
 	int lnum;
 	int sd, td;
 	float fdist, frad, fminlight;
@@ -363,6 +365,7 @@ R_AddDynamicLights(msurface_t *surf)
 		{
 			continue; /* not lit by this light */
 		}
+		if (pp_drawprofile_active) ++dp_hits;
 
 		dl = &r_newrefdef.dlights[lnum];
 		frad = dl->intensity;
@@ -379,6 +382,7 @@ R_AddDynamicLights(msurface_t *surf)
 		}
 
 		fminlight = frad - fminlight;
+		if (pp_drawprofile_active) ++dp_passes;
 
 		for (i = 0; i < 3; i++)
 		{
@@ -392,6 +396,49 @@ R_AddDynamicLights(msurface_t *surf)
 				   tex->vecs[1]) + tex->vecs[1][3] - surf->texturemins[1];
 
 		pfBL = s_blocklights;
+
+		/* Preserve truncation and ordered additions while
+		 * computing each column distance once. Oversized/one-row inputs keep
+		 * the scalar path below. This array never outlives this function. */
+		if (r_gl1_lightmap_opt && r_gl1_lightmap_opt->value &&
+			smax <= BLOCK_WIDTH && tmax > 1)
+		{
+			int column_distance[BLOCK_WIDTH];
+			int minimum_sd = 0;
+			for (s = 0, fsacc = 0; s < smax; s++, fsacc += 16)
+			{
+				sd = Q_ftol(local[0] - fsacc);
+				column_distance[s] = sd < 0 ? -sd : sd;
+				if (!s || column_distance[s] < minimum_sd)
+					minimum_sd = column_distance[s];
+			}
+			/* The original distance is also >=sd, for every row. */
+			if (minimum_sd >= fminlight) continue;
+			for (t = 0, ftacc = 0; t < tmax; t++, ftacc += 16)
+			{
+				td = local[1] - ftacc;
+				if (td < 0) td = -td;
+				/* For nonnegative sd/td, the original distance is >=td. */
+				if (td >= fminlight)
+				{
+					pfBL += smax * 3;
+					continue;
+				}
+				for (s = 0; s < smax; s++, pfBL += 3)
+				{
+					sd = column_distance[s];
+					if (sd > td) fdist = sd + (td >> 1);
+					else fdist = td + (sd >> 1);
+					if (fdist < fminlight)
+					{
+						pfBL[0] += (frad - fdist) * dl->color[0];
+						pfBL[1] += (frad - fdist) * dl->color[1];
+						pfBL[2] += (frad - fdist) * dl->color[2];
+					}
+				}
+			}
+			continue;
+		}
 
 		for (t = 0, ftacc = 0; t < tmax; t++, ftacc += 16)
 		{
@@ -429,6 +476,15 @@ R_AddDynamicLights(msurface_t *surf)
 			}
 		}
 	}
+	if (pp_drawprofile_active)
+	{
+		PP_DP_WORLD_ADD(DPW_LM_DYNAMIC_MS, PP_DPClock() - dp_started);
+		PP_DP_WORLD_ADD(DPW_LM_DYNAMIC_SURFACES, 1);
+		PP_DP_WORLD_ADD(DPW_LM_DYNAMIC_LIGHT_TESTS, r_newrefdef.num_dlights);
+		PP_DP_WORLD_ADD(DPW_LM_DYNAMIC_LIGHT_HITS, dp_hits);
+		PP_DP_WORLD_ADD(DPW_LM_DYNAMIC_LIGHT_PASSES, dp_passes);
+		PP_DP_WORLD_ADD(DPW_LM_DYNAMIC_TEXEL_TESTS, dp_passes * smax * tmax);
+	}
 }
 
 void
@@ -450,6 +506,8 @@ R_SetCacheState(msurface_t *surf)
 void
 R_BuildLightMap(msurface_t *surf, byte *dest, int stride)
 {
+	double dp_build_started = PP_DPClock();
+	double dp_stage_started = 0;
 	int smax, tmax;
 	int r, g, b, a, max;
 	int i, j, size;
@@ -472,6 +530,7 @@ R_BuildLightMap(msurface_t *surf, byte *dest, int stride)
 	{
 		Com_Error(ERR_DROP, "%s: Bad s_blocklights size", __func__);
 	}
+	if (pp_drawprofile_active) dp_stage_started = PP_DPClock();
 
 	/* set to full bright if no light data */
 	if (!surf->samples)
@@ -480,6 +539,8 @@ R_BuildLightMap(msurface_t *surf, byte *dest, int stride)
 		{
 			s_blocklights[i] = 255;
 		}
+		PP_DP_WORLD_ADD(DPW_LM_STATIC_MS, PP_DPClock() - dp_stage_started);
+		PP_DP_WORLD_ADD(DPW_LM_FULLBRIGHT_TEXELS, size);
 
 		goto store;
 	}
@@ -573,12 +634,16 @@ R_BuildLightMap(msurface_t *surf, byte *dest, int stride)
 	}
 
 	/* add all the dynamic lights */
+	PP_DP_WORLD_ADD(DPW_LM_STATIC_MS, PP_DPClock() - dp_stage_started);
+	PP_DP_WORLD_ADD(DPW_LM_STYLE_LAYERS, nummaps);
+	PP_DP_WORLD_ADD(DPW_LM_STYLE_TEXELS, nummaps * size);
 	if (surf->dlightframe == r_framecount)
 	{
 		R_AddDynamicLights(surf);
 	}
 
 store:
+	if (pp_drawprofile_active) dp_stage_started = PP_DPClock();
 
 	stride -= (smax << 2);
 	bl = s_blocklights;
@@ -656,5 +721,10 @@ store:
 			dest += 4;
 		}
 	}
+	PP_DP_WORLD_ADD(DPW_LM_PACK_MS, PP_DPClock() - dp_stage_started);
+	PP_DP_WORLD_ADD(DPW_LM_BUILD_MS, PP_DPClock() - dp_build_started);
+	PP_DP_WORLD_ADD(DPW_LM_BUILD_CALLS, 1);
+	PP_DP_WORLD_ADD(DPW_LM_BUILD_TEXELS, size);
+
 }
 

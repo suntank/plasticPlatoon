@@ -2191,7 +2191,7 @@ SCR_DrawCrosshair(void)
 	float scale;
 	float assist_x, assist_y;
 
-	if (!crosshair->value)
+	if (!crosshair->value || (CL_UsesModelADS(&cl.frame.playerstate) && CL_IsADSActive()))
 	{
 		return;
 	}

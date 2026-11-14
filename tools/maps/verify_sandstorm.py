@@ -24,6 +24,54 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def verify_filled_bucket(bsp, source, expectation):
+    """Prove the authored bucket replacement is solid floor with reachable armor.
+
+    Optional route metadata selects this new layout feature; the old swimming
+    feature remains checked by old route documents rather than being skipped.
+    """
+    low, high = expectation['xy_bounds']
+    floor_z = float(expectation['floor_z'])
+    armor_origin = tuple(expectation['armor_origin'])
+    spacing = 16
+    nx = max(1, math.ceil((high[0] - low[0]) / spacing))
+    ny = max(1, math.ceil((high[1] - low[1]) / spacing))
+    failures = []
+    checked = 0
+    clear_standing = 0
+    for xi in range(nx + 1):
+        for yi in range(ny + 1):
+            x = low[0] + (high[0] - low[0]) * xi / nx
+            y = low[1] + (high[1] - low[1]) * yi / ny
+            body = (x, y, floor_z + 24)
+            solid_below = bool(bsp.point_contents((x, y, floor_z - 1)) & SOLID)
+            hit = bsp.collision(body, PLAYER_MINS, PLAYER_MAXS, PLAYER_MASK)
+            supported = bool(bsp.collision((x, y, floor_z + 22), PLAYER_MINS, PLAYER_MAXS, PLAYER_MASK))
+            checked += 1
+            clear_standing += not hit and supported
+            # Retained cover can occupy part of the old pool footprint. The
+            # feature contract is an unbroken solid floor; its walking route
+            # and pickup separately prove clear supported player access.
+            if not solid_below:
+                failures.append({'point': body, 'solid_below': solid_below,
+                                 'standing_blocker': hit, 'supported': supported})
+    armor = [e['keys'] for e in source
+             if e['keys'].get('classname') == 'item_armor_jacket'
+             and e['keys'].get('origin')
+             and math.dist(vec(e['keys']['origin']), armor_origin) < .01]
+    armor_hit = bsp.collision(armor_origin, (-15,) * 3, (15,) * 3, SOLID)
+    player_hit = bsp.collision(armor_origin, PLAYER_MINS, PLAYER_MAXS, PLAYER_MASK)
+    player_supported = bool(bsp.collision((armor_origin[0],armor_origin[1],armor_origin[2]-2),
+                                         PLAYER_MINS,PLAYER_MAXS,PLAYER_MASK))
+    if len(armor) != 1 or armor_hit or player_hit or not player_supported:
+        failures.append({'armor_origin': armor_origin, 'matching_armor_entities': len(armor),
+                         'armor_blocker': armor_hit, 'player_blocker': player_hit,
+                         'player_supported': player_supported})
+    return {'passed': not failures, 'sampled_floor_points': checked,
+            'clear_supported_standing_samples': clear_standing,
+            'floor_z': floor_z, 'armor_origin': armor_origin, 'failures': failures}
+
+
 def verify(args):
     source = parse_entities(args.map.read_text())
     bsp = BSP(args.bsp)
@@ -230,6 +278,18 @@ def verify(args):
             require(not overlaps or reuse, f'Overlapping enemy spawns at {origin} / {q}')
 
     document = json.loads(args.routes.read_text())
+    filled_bucket = None
+    expectation = document.get('layout_expectations', {}).get('filled_bucket')
+    if expectation:
+        filled_bucket = verify_filled_bucket(bsp, source, expectation)
+        require(filled_bucket['passed'],
+                f"Filled bucket floor/armor replacement failed: {filled_bucket['failures'][:6]}")
+        armor_routes = [route for route in document.get('routes', [])
+                        if route.get('name') == expectation['armor_route']]
+        require(len(armor_routes) == 1 and not armor_routes[0].get('mode')
+                and any(math.dist(point, expectation['armor_origin']) < .01
+                        for point in armor_routes[0].get('points', [])),
+                'Filled bucket armor must have a walking route reaching its authored pickup')
     require(bool(document.get('routes')), 'No authored walking routes to validate')
 
     # The drain encounter is a set of defenders who already exist when the
@@ -457,7 +517,7 @@ def verify(args):
             'difficulty': difficulty, 'placements': placements,
             'routes': route_results, 'gates': gates, 'sightlines': sightlines,
             'drain_defenders': len(defenders), 'spawn_safety': spawn_safety,
-            'blocked_probes': blocked_probes}
+            'blocked_probes': blocked_probes, 'filled_bucket': filled_bucket}
 
 
 def main():

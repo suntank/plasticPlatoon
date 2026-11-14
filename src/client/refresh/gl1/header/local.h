@@ -165,10 +165,16 @@ extern glbuffer_t gl_buf;
 void R_ClearVisibilityCache(void);
 void R_BuildWorldBuffers(model_t *model);
 void R_FreeWorldBuffers(model_t *model);
+void R_BuildInlineSurfaceOrders(model_t *world);
+void R_FreeInlineSurfaceOrders(model_t *world);
+void R_BuildWorldSurfaceBatches(model_t *world);
+void R_FreeWorldSurfaceBatches(model_t *world);
 qboolean R_BufferStaticPoly(const glpoly_t *poly);
 void R_CreateAliasBuffers(model_t *model);
 void R_FreeAliasBuffers(model_t *model);
 void R_DrawAliasCache(const model_t *model, const float *positions, qboolean static_pose);
+void R_DrawAliasCacheColors(const model_t *model, const float *positions, qboolean static_pose, const byte *colors);
+void R_ClearAliasColorCache(void);
 extern float gldepthmin, gldepthmax;
 
 extern image_t gltextures[MAX_GLTEXTURES];
@@ -237,6 +243,9 @@ extern cvar_t *gl_lightmap;
 extern cvar_t *gl_shadows;
 extern cvar_t *gl1_stencilshadow;
 extern cvar_t *gl1_dynamic;
+extern cvar_t *r_gl1_lightmap_opt;
+extern cvar_t *r_gl1_alias_colors;
+extern cvar_t *r_gl1_world_arrays;
 extern cvar_t *gl_nobind;
 extern cvar_t *gl1_round_down;
 extern cvar_t *gl1_picmip;
@@ -345,6 +354,8 @@ int Scrap_AllocBlock(int w, int h, int *x, int *y);
 	gl_buf.clr[gl_buf.cl+2] = gammatable[B]; gl_buf.clr[gl_buf.cl+3] = A; gl_buf.cl += 4;
 
 void R_ApplyGLBuffer(void);
+void R_BeginWorldArrayScope(void);
+void R_EndWorldArrayScope(void);
 void R_UpdateGLBuffer(buffered_draw_t type, int colortex, int lighttex, int flags, float alpha);
 void R_Buffer2DQuad(GLfloat ul_vx, GLfloat ul_vy, GLfloat dr_vx, GLfloat dr_vy,
 	GLfloat ul_tx, GLfloat ul_ty, GLfloat dr_tx, GLfloat dr_ty);
@@ -523,6 +534,8 @@ extern void RDraw_Fill(int x, int y, int w, int h, int c);
 extern void RDraw_FadeScreen(void);
 extern void RDraw_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int bits);
 
+#include "draw_profile.h"
+#define PP_PROFILE_DRAW() PP_DPDraw()
 #include "../../draw_stats.h"
 
 #endif

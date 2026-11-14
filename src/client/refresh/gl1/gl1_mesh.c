@@ -47,6 +47,8 @@ extern vec3_t lightspot;
 
 extern unsigned char minlight[256];
 
+#include "alias_color_cache.h"
+
 static void
 R_LerpVerts(entity_t *currententity, int nverts, dtrivertx_t *v, dtrivertx_t *ov,
 		dtrivertx_t *verts, float *lerp, float move[3],
@@ -120,6 +122,15 @@ R_DrawAliasFrameLerp(entity_t *currententity, const model_t *model, dmdl_t *pali
 	else
 	{
 		alpha = 1.0;
+	}
+
+	const byte *prepared_colors = R_AliasPreparedColors(model, mesh, verts, alpha,
+		currententity->flags & (RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE), static_pose);
+	if (prepared_colors)
+	{
+		PP_PERF(model_ms, PP_PerfNow() - prep_started);
+		R_DrawAliasCacheColors(model, cache->static_xyz, true, prepared_colors);
+		return;
 	}
 
 	frontlerp = 1.0 - backlerp;

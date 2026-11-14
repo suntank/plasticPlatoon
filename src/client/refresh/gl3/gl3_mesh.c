@@ -50,6 +50,7 @@ typedef struct gl3_shadowinfo_s {
 	vec3_t    shadevector;
 	dmdl_t*   paliashdr;
 	entity_t* entity;
+	const gl3model_t *model; /* view-selected mesh; entity retains canonical model */
 } gl3_shadowinfo_t;
 
 DA_TYPEDEF(gl3_shadowinfo_t, ShadowInfoArray_t);
@@ -454,7 +455,7 @@ DrawAliasShadow(gl3_shadowinfo_t* shadowInfo)
 
 	dmdl_t* paliashdr = shadowInfo->paliashdr;
 	entity_t* entity = shadowInfo->entity;
-	const gl3model_t *model = entity->model;
+	const gl3model_t *model = shadowInfo->model;
 	const pp_alias_cache_t *cache = model->aliascache;
 	qboolean static_pose = cache && cache->static_xyz && VectorCompare(entity->origin, entity->oldorigin);
 	double prep_started = PP_PerfNow();
@@ -805,7 +806,7 @@ CullAliasModel(vec3_t bbox[8], entity_t *e)
 }
 
 void
-GL3_DrawAliasModel(entity_t *entity)
+GL3_DrawAliasModel(entity_t *entity, const gl3model_t *model)
 {
 	int i;
 	dmdl_t *paliashdr;
@@ -834,7 +835,6 @@ GL3_DrawAliasModel(entity_t *entity)
 		}
 	}
 
-	gl3model_t* model = entity->model;
 	paliashdr = (dmdl_t *)model->extradata;
 
 	/* get lighting information */
@@ -1095,6 +1095,7 @@ GL3_DrawAliasModel(entity_t *entity)
 		VectorCopy(shadevector, si.shadevector);
 		si.paliashdr = paliashdr;
 		si.entity = entity;
+		si.model = model;
 
 		da_push(shadowModels, si);
 	}

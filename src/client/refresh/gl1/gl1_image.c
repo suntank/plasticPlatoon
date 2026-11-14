@@ -1367,6 +1367,7 @@ R_InitImages(void)
 		intensitytable[i] = j;
 	}
 
+	R_ClearAliasColorCache();
 	// I know, minimum light level's calculation is much simpler than gamma.
 	// But will still need a vid_restart to apply its values to currently loaded
 	// lightmaps. Also, memory is cheaper than CPU.

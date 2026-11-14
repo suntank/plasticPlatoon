@@ -27,6 +27,10 @@
 #include "header/local.h"
 #include "../perf_impl.h"
 #include "../gpu_timer_impl.h"
+#include "../files/pickup_lod.h"
+
+static cvar_t *r_pickup_lod;
+#include "draw_profile_impl.h"
 
 #define NUM_BEAM_SEGS 6
 
@@ -113,6 +117,9 @@ cvar_t *r_2D_unfiltered;
 cvar_t *r_videos_unfiltered;
 
 cvar_t *gl1_dynamic;
+cvar_t *r_gl1_lightmap_opt;
+cvar_t *r_gl1_alias_colors;
+cvar_t *r_gl1_world_arrays;
 cvar_t *r_modulate;
 cvar_t *gl_nobind;
 cvar_t *gl1_round_down;
@@ -370,6 +377,9 @@ R_DrawEntitiesOnList(void)
 	{
 		return;
 	}
+	const pp_pickup_lod_view_t pickup_view = PP_PickupLODView(
+		r_pickup_lod->value != 0, r_newrefdef.vieworg, vpn,
+		r_newrefdef.height, r_newrefdef.fov_y);
 
 	/* draw non-transparent first */
 	for (i = 0; i < r_newrefdef.num_entities; i++)
@@ -381,6 +391,8 @@ R_DrawEntitiesOnList(void)
 			continue; /* solid */
 		}
 
+		PP_DPEnter(PP_DPEntity(currententity, currententity->model),
+			currententity->model ? ((model_t *)currententity->model)->name : NULL);
 		if (currententity->flags & RF_BEAM)
 		{
 			R_DrawBeam(currententity);
@@ -392,13 +404,18 @@ R_DrawEntitiesOnList(void)
 			if (!currentmodel)
 			{
 				R_DrawNullModel(currententity);
+				PP_DPLeave();
 				continue;
 			}
 
 			switch (currentmodel->type)
 			{
 				case mod_alias:
-					R_DrawAliasModel(currententity, currentmodel);
+					R_DrawAliasModel(currententity, currentmodel->pickup_lod &&
+						VectorCompare(currententity->origin, currententity->oldorigin) &&
+						PP_PickupLODUse(&pickup_view, currententity->flags, currententity->origin,
+							currentmodel->radius, currententity->frame, currententity->oldframe)
+						? currentmodel->pickup_lod : currentmodel);
 					break;
 				case mod_brush:
 					R_DrawBrushModel(currententity, currentmodel);
@@ -411,6 +428,7 @@ R_DrawEntitiesOnList(void)
 					break;
 			}
 		}
+		PP_DPLeave();
 	}
 
 	/* draw transparent entities
@@ -427,6 +445,8 @@ R_DrawEntitiesOnList(void)
 			continue; /* solid */
 		}
 
+		PP_DPEnter(PP_DPEntity(currententity, currententity->model),
+			currententity->model ? ((model_t *)currententity->model)->name : NULL);
 		if (currententity->flags & RF_BEAM)
 		{
 			R_DrawBeam(currententity);
@@ -438,13 +458,18 @@ R_DrawEntitiesOnList(void)
 			if (!currentmodel)
 			{
 				R_DrawNullModel(currententity);
+				PP_DPLeave();
 				continue;
 			}
 
 			switch (currentmodel->type)
 			{
 				case mod_alias:
-					R_DrawAliasModel(currententity, currentmodel);
+					R_DrawAliasModel(currententity, currentmodel->pickup_lod &&
+						VectorCompare(currententity->origin, currententity->oldorigin) &&
+						PP_PickupLODUse(&pickup_view, currententity->flags, currententity->origin,
+							currentmodel->radius, currententity->frame, currententity->oldframe)
+						? currentmodel->pickup_lod : currentmodel);
 					break;
 				case mod_brush:
 					R_DrawBrushModel(currententity, currentmodel);
@@ -457,6 +482,7 @@ R_DrawEntitiesOnList(void)
 					break;
 			}
 		}
+		PP_DPLeave();
 	}
 
 	glDepthMask(GL_TRUE); /* back to writing */
@@ -781,10 +807,16 @@ R_SetPerspective(GLdouble fovy)
 {
 	// gluPerspective style parameters
 	const GLdouble zNear = Q_max(gl_znear->value, 0.1f);
-	const GLdouble zFar = (r_farsee->value) ? 8192.0f : 4096.0f;
+	GLdouble zFar = (r_farsee->value) ? 8192.0f : 4096.0f;
 	const GLdouble aspectratio = (GLdouble)r_newrefdef.width / r_newrefdef.height;
 
 	GLdouble xmin, xmax, ymin, ymax;
+
+	if (!(r_newrefdef.rdflags & RDF_NOWORLDMODEL) && r_worldmodel)
+	{
+		zFar = R_WorldFarClip(zFar, r_worldmodel->submodels[0].mins,
+			r_worldmodel->submodels[0].maxs, vpn);
+	}
 
 	// traditional gluPerspective calculations - https://youtu.be/YqSNGcF5nvM?t=644
 	ymax = zNear * tan(fovy * M_PI / 360.0);
@@ -1169,17 +1201,29 @@ R_RenderView(refdef_t *fd)
 	R_MarkLeaves(); /* done here so we know if we're in water */
 	PP_PERF(visibility_ms, PP_PerfNow() - vis_started);
 
+	PP_DPEnter(DP_WORLD, NULL);
 	R_DrawWorld();
+	PP_DPLeave();
 
 	R_DrawEntitiesOnList();
 
+	PP_DPEnter(DP_EFFECTS, NULL);
 	R_RenderDlights();
 
 	R_DrawParticles();
+	PP_DPLeave();
 
+	PP_DPEnter(DP_WORLD, NULL);
+	double alpha_started = PP_DPClock();
+	uint64_t alpha_draws = PP_DPTotalDraws();
 	R_DrawAlphaSurfaces();
+	PP_DP_WORLD_ADD(DPW_WORLD_ALPHA_MS, PP_DPClock() - alpha_started);
+	PP_DP_WORLD_ADD(DPW_WORLD_ALPHA_DRAWS, PP_DPTotalDraws() - alpha_draws);
+	PP_DPLeave();
 
+	PP_DPEnter(DP_EFFECTS, NULL);
 	R_Flash();
+	PP_DPLeave();
 
 	if (r_speeds->value)
 	{
@@ -1264,13 +1308,15 @@ R_SetLightLevel(entity_t *currententity)
 static void
 RI_RenderFrame(refdef_t *fd)
 {
-	R_ApplyGLBuffer();	// menu rendering when needed
+	R_EndWorldArrayScope();	// menu rendering and prior-view state when needed
 	PP_PerfBegin();
+	PP_DPBegin();
 	PP_GPUTimerBegin();
 	R_RenderView(fd);
 	R_SetLightLevel (NULL);
 	R_SetGL2D();
 	PP_GPUTimerEnd();
+	PP_DPEnd();
 	PP_PerfEnd();
 }
 
@@ -1311,9 +1357,13 @@ R_Register(void)
 	gl_shadows = ri.Cvar_Get("r_shadows", "0", CVAR_ARCHIVE);
 	gl1_stencilshadow = ri.Cvar_Get("gl1_stencilshadow", "0", CVAR_ARCHIVE);
 	gl1_dynamic = ri.Cvar_Get("gl1_dynamic", "1", 0);
+	r_gl1_lightmap_opt = ri.Cvar_Get("r_gl1_lightmap_opt", "1", 0);
+	r_gl1_alias_colors = ri.Cvar_Get("r_gl1_alias_colors", "1", 0);
+	r_gl1_world_arrays = ri.Cvar_Get("r_gl1_world_arrays", "1", 0);
 	gl_nobind = ri.Cvar_Get("gl_nobind", "0", 0);
 	gl1_round_down = ri.Cvar_Get("gl1_round_down", "1", 0);
 	gl1_picmip = ri.Cvar_Get("gl1_picmip", "0", 0);
+	r_pickup_lod = ri.Cvar_Get("r_pickup_lod", "1", CVAR_ARCHIVE);
 	gl_showtris = ri.Cvar_Get("gl_showtris", "0", 0);
 	gl_showbbox = ri.Cvar_Get("gl_showbbox", "0", 0);
 	gl1_ztrick = ri.Cvar_Get("gl1_ztrick", "0", 0);
@@ -1837,6 +1887,7 @@ RI_Init(void)
 void
 RI_Shutdown(void)
 {
+	R_EndWorldArrayScope();
 	ri.Cmd_RemoveCommand("modellist");
 	ri.Cmd_RemoveCommand("screenshot");
 	ri.Cmd_RemoveCommand("imagelist");

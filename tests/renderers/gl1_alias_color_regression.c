@@ -15,12 +15,16 @@ glbuffer_t gl_buf;
 glstate_t gl_state;
 pp_refperf_t pp_refperf;
 cvar_t *r_perf;
+static cvar_t alias_colors;
+cvar_t *r_gl1_alias_colors = &alias_colors;
 static cvar_t shadows;
 cvar_t *gl_shadows = &shadows;
 unsigned char minlight[256], gammatable[256];
 static volatile unsigned checksum;
 static const float *submitted_positions;
 static qboolean submitted_static;
+static const byte *submitted_colors;
+static unsigned prepared_calls;
 
 double PP_PerfNow(void) { return 0; }
 void R_SetBufferIndices(GLenum mode, GLuint count)
@@ -29,7 +33,14 @@ void R_DrawAliasCache(const model_t *model, const float *positions, qboolean sta
 {
     submitted_positions = positions;
     submitted_static = static_pose;
+    submitted_colors = gl_buf.clr;
     checksum += gl_buf.clr[model->aliascache->topology->num_vertices*4-4];
+}
+void R_DrawAliasCacheColors(const model_t *model, const float *positions, qboolean static_pose, const byte *colors)
+{
+    submitted_positions = positions; submitted_static = static_pose;
+    submitted_colors = colors; ++prepared_calls;
+    checksum += colors[model->aliascache->topology->num_vertices*4-4];
 }
 
 static void verify(const model_t *model, dmdl_t *header, entity_t *entity)
@@ -55,7 +66,7 @@ static void verify(const model_t *model, dmdl_t *header, entity_t *entity)
             int color = brightness * shadelight[c] * 255;
             if (color < 0) color = 0;
             if (color > 255) color = 255;
-            assert(gl_buf.clr[k*4+c] == (gl_state.minlight_set ? minlight[color] : color));
+            assert(submitted_colors[k*4+c] == (gl_state.minlight_set ? minlight[color] : color));
             float back = entity->backlerp, front = 1.0f-back;
             float expected = back*(move[c]+old->translate[c]) + front*frame->translate[c]
                 + old->verts[source].v[c]*(back*old->scale[c])
@@ -63,7 +74,7 @@ static void verify(const model_t *model, dmdl_t *header, entity_t *entity)
             if (shell) expected += r_avertexnormals[frame->verts[source].lightnormalindex][c]*POWERSUIT_SCALE;
             assert(fabsf(submitted_positions[k*3+c]-expected) < .0001f);
         }
-        assert(gl_buf.clr[k*4+3] == (byte)(alpha*255));
+        assert(submitted_colors[k*4+3] == (byte)(alpha*255));
     }
 }
 
@@ -95,6 +106,9 @@ int main(int argc, char **argv)
                             RF_SHELL_DOUBLE, RF_SHELL_HALF_DAM|RF_TRANSLUCENT};
         const float fractions[] = {0, .33f, 1};
         const float lights[][3] = {{.2f,.6f,.9f}, {-1, 2, .5f}, {0,0,0}};
+        for (unsigned cached = 0; cached < 2; ++cached)
+        {
+        alias_colors.value = cached; R_ClearAliasColorCache();
         for (unsigned flag = 0; flag < sizeof(flags)/sizeof(*flags); ++flag)
         for (unsigned lerp = 0; lerp < 3; ++lerp)
         for (unsigned light = 0; light < 3; ++light)
@@ -111,9 +125,11 @@ int main(int argc, char **argv)
             R_DrawAliasFrameLerp(&entity, &model, header, entity.backlerp);
             verify(&model, header, &entity);
         }
+        }
         /* Exercise the threshold and all 256 byte lighting indices independently
          * of the normals present in the asset. Shell extrusion is disabled here. */
         daliasframe_t *frame = (void *)((byte *)header + header->ofs_frames + entity.frame*header->framesize);
+        alias_colors.value = 0; R_ClearAliasColorCache();
         entity.flags = 0;
         unsigned original_vertices = model.aliascache->topology->num_vertices;
         for (unsigned n = 0; n < 256; ++n)
@@ -141,5 +157,6 @@ int main(int argc, char **argv)
         Mod_FreeAliasCache(model.aliascache);
         free(header);
     }
-    puts("GL1 alias colors and positions match the original formula across shells, alpha, interpolation and minimum-light cases");
+    assert(prepared_calls > 0);
+    puts("GL1 alias colors and positions match the original formula with prepared cache0/1 across shells, alpha, interpolation and minimum-light cases");
 }

@@ -25,6 +25,7 @@
  */
 
 #include "header/client.h"
+#include "header/weapon_model_ads.h"
 
 #include "cl_splitscreen.h"
 
@@ -623,6 +624,22 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	{
 		up_offset += local_split_up_nudge;
 		flash2_up_offset += local_split_up_nudge;
+	}
+	if (!thirdperson && (weapon == MZ_MACHINEGUN || weapon == MZ_BLASTER))
+	{
+		/* This model now supplies its own sights. Use the same continuously
+		 * blended model-space muzzle for hip fire and ADS in every viewport,
+		 * rather than the old image-overlay/split-screen nudges. */
+		/* Effect scope is one-based (zero means unscoped), slot indices are
+		 * zero-based. Decode before reading independent player ADS state. */
+		float blend = CL_GetModelADSBlend(PP_ModelADSSlotForEffectScope(cl_effect_only_slot));
+		pp_model_ads_config_t pose = PP_ModelADSConfig(weapon == MZ_BLASTER);
+		fwd_offset = pose.muzzle_forward + blend * pose.forward;
+		right_offset = pose.muzzle_right + blend * pose.right;
+		up_offset = pose.muzzle_up + blend * pose.up;
+		flash2_forward_offset = fwd_offset;
+		flash2_right_offset = right_offset;
+		flash2_up_offset = up_offset;
 	}
 	duration = (float)cfg->duration_ms;
 	vel_scale = cfg->velocity_scale;

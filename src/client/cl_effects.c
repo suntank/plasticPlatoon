@@ -1189,7 +1189,7 @@ CL_AddMuzzleFlash(void)
 			mflash_velocity[2] = (float)cl.frame.playerstate.pmove.velocity[2] * vel_scale;
 
 			ads_active = CL_IsADSActive();
-			if (ads_active)
+			if (ads_active && !CL_UsesModelADS(&cl.frame.playerstate))
 			{
 				cfg = CL_GetMuzzleFlashConfig(weapon, false);
 				if (cfg)

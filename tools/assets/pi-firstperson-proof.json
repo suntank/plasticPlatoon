@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "passed": true,
+  "analytic_passed": true,
+  "pixel_exact": true,
+  "analytic_bound_units": 29,
+  "models": {
+    "models/weapons/v_bfg/tris.md2": {
+      "source_sha256": "4b9346d2b9a3bb6a5e8a42df5ce8ff398868f54514084c4cfc8adc0da94ca35b",
+      "output_sha256": "c307526203495a6398c5a688ac48183650b68a57655aea63474a928b676b2db1"
+    },
+    "models/weapons/v_chain/tris.md2": {
+      "source_sha256": "7028f3d8e1f4f11a39e1dee436603dbd74e8d01faba5d964494a053821029338",
+      "output_sha256": "57ca0114481293615b6cf98b8c23c01ee5516a3d199cc18b8cc1c9af10f20643"
+    },
+    "models/weapons/v_hyperb/tris.md2": {
+      "source_sha256": "d1e4161a6ffe5be86194d70ca6311ad362b1af2abeb1b07df1856d9fd06327ea",
+      "output_sha256": "6e047814ed22da54ed1e3d2ae2260bd33415d325bea42b578f433e80c5a1124a"
+    },
+    "models/weapons/v_launch/tris.md2": {
+      "source_sha256": "e9b59f1a25a21099a741415a2c3de3f4ca7d8b2185606cbca34b184331447ae9",
+      "output_sha256": "c6d9b7bb9d56151b9893aa0e6be2a02d47429983a9b0344d72fd03b9a7103ce9"
+    },
+    "models/weapons/v_machn/tris.md2": {
+      "source_sha256": "11d4af2e26f337cc2ced073714e115fd580067e5004b56e471153dc44c2bb22d",
+      "output_sha256": "0f1fc1119591851043c6094b8c8caf0e1ef688c2d5b3d414fd3d9fd54c0637ef"
+    },
+    "models/weapons/v_rail/tris.md2": {
+      "source_sha256": "b054dd4bcff037b1bffb93dad3d6118a07507856d4c3fe53302827c415a7d134",
+      "output_sha256": "a5d2479355006d91f006d2d44ccd2beb83a5bb60ec5e86278c1be96da19052a3"
+    },
+    "models/weapons/v_rocket/tris.md2": {
+      "source_sha256": "751a57ab2a39e381ac792b87dbf59172a3746ac40d46f6bf0444a0ee82e8d41e",
+      "output_sha256": "53b8edff0906fdf119387c96366aa29fbdc4088e7dd7a57914f18d1bd87c6681"
+    },
+    "models/weapons/v_shotg/tris.md2": {
+      "source_sha256": "d58b3bc8a1ca838e30e1a6afe281dbb4d8dbd5f8f90a55bdd86f8b52941a04a0",
+      "output_sha256": "849fde366f7b8f376716163baa0b0824f8af135a2d805eec1f10768b19de143f"
+    },
+    "models/weapons/v_shotg2/tris.md2": {
+      "source_sha256": "6c3c2eab6535213bd72e6e65a4ae0ac6f4dcf3d0ab417a38bb3aa287e236648b",
+      "output_sha256": "d1896c2cb62860b17ac46589e174ae210350cdda0a3870a6d24644eeb22a83bf"
+    }
+  },
+  "total_removed_triangles": 350,
+  "host_per_view_comparisons": 612,
+  "native_source_sha256": {
+    "src/client/cl_splitscreen.c": "f1a6d4fc5d7d3aab519d8c6606e06093070ebf6067fa764fb0032d76c13725c7",
+    "src/client/cl_entities.c": "397b67458eb424791cb8f9d229b5cfeb076f1643a54e5b30906d42ab81f3fa78",
+    "src/client/refresh/gl1/gl1_main.c": "d89bbd6b3f34cfdc14c8221402cc2698bb94414f04dbe5a93bef56c550ea0bd2",
+    "src/client/refresh/gl1/gl1_mesh.c": "28c073acae7d589f6d47fcfdbef11b3b4e0bd7834bacc623ab547bdf8fbd6d2c",
+    "src/client/refresh/gl1/gl1_buffer.c": "b678559b74818c0c715685f27d9e52bd9ff4a73bb10562a4f3c6290c18a1d72a",
+    "src/game/player/view.c": "0989d6974d8a05ba4d1eca5fbfee27bbc1138de75ab9946d61c3aef29cf0ab77"
+  },
+  "engine_sha256": "469799840e708f5f1fa5ee9b7f95e23bfcf34587426000b04f8edccd9049b178",
+  "renderer_sha256": "283370f17f1e36f5e52c9cfebb9b217e77a9ef3a9591f1812b38d068dd6f041a",
+  "required_native_defaults": {
+    "gun_x": 0,
+    "gun_y": 0,
+    "gun_z": 0,
+    "r_cull": 1
+  },
+  "body_actor_assets_changed": false,
+  "source_manifest_sha256": "086f608e4f763492cfd49cfea0b9f616dd1b6a968c2538adbac1e9eab534933f",
+  "host_qa_report_sha256": "80bf7ab1794b3bf39ad6283921d716f8629d25caa84827265e38bfdd0f593e48",
+  "scope": "Asset-only hidden faces in the default zero-gun-offset, culling-enabled envelope. Both host GL1 and native Pi GL1 pass 612 bit-exact RGBA/depth/coverage comparisons each, without world/body entity occlusion. All rotations/FOVs analytically covered; pistol and animated grenade remain unchanged.",
+  "native_fixture_passed": true,
+  "native_acceptance": {
+    "report": {
+      "path": "build/pi-actor-models-20261113/native-results/firstperson/firstperson-native-qa/report.json",
+      "sha256": "d77a1b40b0eff03f893cbe93c07f87966a41c1db43b7f9e53c944ed704b80a06"
+    },
+    "guards": {
+      "path": "build/pi-actor-models-20261113/native-results/firstperson/firstperson-native-qa/native-guards.json",
+      "sha256": "568129b3b6da1c1cd31c64767c3e6325b9ede5ff60e8ff6443556ecafbb4368c"
+    },
+    "per_view_comparisons": 612,
+    "RGBA_depth_coverage_bit_exact": true,
+    "device": "Raspberry Pi Zero 2 W Rev 1.0"
+  }
+}

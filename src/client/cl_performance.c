@@ -19,7 +19,26 @@ static const char *perf_metrics[] = {
 	"model_triangles", "static_vertex_bytes", "static_index_bytes",
 	"dynamic_vertex_bytes", "dynamic_index_bytes", "client_vertex_bytes",
 	"client_index_bytes", "pose_vertices", "topology_builds", "pvs_builds",
-	"pvs_hits", "lightmap_bytes", "pose_cache_hits"
+	"pvs_hits", "lightmap_bytes", "pose_cache_hits",
+	"dp_enabled", "dp_world_draws", "dp_world_ms", "dp_inline_draws", "dp_inline_ms",
+	"dp_pickup_draws", "dp_pickup_ms", "dp_npc_body_draws", "dp_npc_body_ms", "dp_npc_held_draws",
+	"dp_npc_held_ms", "dp_player_body_draws", "dp_player_body_ms", "dp_player_held_draws", "dp_player_held_ms",
+	"dp_viewweapon_draws", "dp_viewweapon_ms", "dp_alias_other_draws", "dp_alias_other_ms", "dp_sprite_draws",
+	"dp_sprite_ms", "dp_effects_draws", "dp_effects_ms", "dp_other_draws", "dp_other_ms",
+	"dp_flush_type", "dp_flush_color", "dp_flush_lightmap", "dp_flush_flags", "dp_flush_alpha",
+	"dp_flush_vbo", "dp_flush_capacity", "dp_flush_explicit", "dp_inline_top0_model", "dp_inline_top0_draws",
+	"dp_inline_top0_ms", "dp_inline_top1_model", "dp_inline_top1_draws", "dp_inline_top1_ms", "dp_inline_top2_model",
+	"dp_inline_top2_draws", "dp_inline_top2_ms", "dp_inline_top3_model", "dp_inline_top3_draws", "dp_inline_top3_ms",
+	"dp_world_mark_ms", "dp_brush_light_ms", "dp_brush_light_models", "dp_brush_light_surface_tests",
+	"dp_brush_light_dlight_tests", "dp_lm_regen_ms", "dp_lm_regen_runs", "dp_lm_atlases_scanned",
+	"dp_lm_surfaces_scanned", "dp_lm_changed_surfaces", "dp_lm_build_ms", "dp_lm_build_calls",
+	"dp_lm_build_texels", "dp_lm_upload_ms", "dp_lm_upload_calls", "dp_lm_upload_bytes",
+	"dp_world_chain_ms", "dp_world_chain_draws", "dp_world_blend_ms", "dp_world_blend_draws",
+	"dp_world_sky_ms", "dp_world_sky_draws", "dp_world_alpha_ms", "dp_world_alpha_draws",
+	"dp_world_visible_surfaces", "dp_world_flush_type", "dp_world_flush_color", "dp_world_flush_lightmap",
+	"dp_world_flush_flags", "dp_world_flush_alpha", "dp_world_flush_vbo", "dp_world_flush_capacity",
+	"dp_world_flush_explicit", "dp_mtex_enabled", "dp_lm_copy_enabled", "dp_lm_atlas_count",
+	"dp_lm_static_ms", "dp_lm_dynamic_ms", "dp_lm_pack_ms", "dp_lm_style_layers", "dp_lm_style_texels", "dp_lm_fullbright_texels", "dp_lm_dynamic_surfaces", "dp_lm_dynamic_light_tests", "dp_lm_dynamic_light_hits", "dp_lm_dynamic_light_passes", "dp_lm_dynamic_texel_tests", "dp_lm_upload_setup_ms", "dp_lm_regen_useful_texels", "dp_lm_regen_rect_texels", "dp_lm_regen_upload_texels"
 };
 #define PERF_METRICS (sizeof(perf_metrics) / sizeof(perf_metrics[0]))
 
@@ -36,6 +55,7 @@ static cvar_t *perf_frames, *perf_quit, *perf_screenshot;
 static FILE *perf_csv, *perf_views, *perf_meta;
 static perf_view_t perf_view[PERF_VIEWS];
 static int perf_count, perf_view_count, perf_depth, perf_display_active;
+static size_t perf_metric_count, perf_base_metric_count;
 static int perf_initialized;
 static long long perf_begin, perf_last_end, perf_prepare_begin, perf_prepare;
 static long long perf_present_begin, perf_present, perf_server, perf_simulation;
@@ -209,6 +229,12 @@ CL_PerfStart_f(void)
 	}
 	CL_PerfStop_f();
 	perf_csv = files[0]; perf_views = files[1]; perf_meta = files[2];
+	/* Freeze this capture's schema. Ordinary timing captures retain the original
+	 * columns and avoid all opt-in draw-profiler lookup/formatting work. */
+	perf_base_metric_count = 0;
+	while (perf_base_metric_count < PERF_METRICS &&
+		strncmp(perf_metrics[perf_base_metric_count], "dp_", 3)) ++perf_base_metric_count;
+	perf_metric_count = Cvar_VariableValue("r_drawprofile") != 0 ? PERF_METRICS : perf_base_metric_count;
 	Cvar_Set("r_perf", "1");
 	perf_count = 0;
 	perf_last_end = perf_server = perf_simulation = perf_snapshot = perf_client = 0;
@@ -217,10 +243,10 @@ CL_PerfStart_f(void)
 	perf_effect_previous = *CL_GetEffectStats();
 #endif
 	fprintf(perf_csv, "frame,frame_ms,screen_ms,server_ms,simulation_ms,snapshot_send_ms,client_update_ms,prepare_ms,submit_ms,present_ms,views,width,height,server_edicts,monsters,dead_monsters,projectiles_by_effect,rss_kib");
-	for (i = 0; i < PERF_METRICS; ++i) fprintf(perf_csv, ",%s", perf_metrics[i]);
+	for (i = 0; i < perf_metric_count; ++i) fprintf(perf_csv, ",%s", perf_metrics[i]);
 	fprintf(perf_csv, "%s\n", perf_effect_names);
 	fprintf(perf_views, "frame,slot,submit_ms,width,height,x,y,z,pitch,yaw,roll,entities,particles,lights,renderer_counters,renderer_serial,gpu_supported,gpu_origin_serial,gpu_ms");
-	for (i = 0; i < PERF_METRICS; ++i) fprintf(perf_views, ",%s", perf_metrics[i]);
+	for (i = 0; i < perf_metric_count; ++i) fprintf(perf_views, ",%s", perf_metrics[i]);
 	fprintf(perf_views, "\n");
 	fprintf(perf_meta, "All *_ms except gpu_ms are CPU-side wall times.\n"
 		"gpu_ms is optional asynchronous GPU work for gpu_origin_serial, which can be a preceding view; -1 means unavailable.\n"
@@ -229,7 +255,8 @@ CL_PerfStart_f(void)
 		"server_ms includes simulation + snapshot/send; submit_ms includes visibility and model work. Do not add nested columns.\n"
 		"rss_kib is process resident memory sampled every 60 frames on Linux; -1 means unavailable.\n"
 		"monsters/dead_monsters use server flags; projectiles_by_effect is an estimate, not a gameplay entity census.\n"
-		"r_perf counters exclude 2D/HUD. Unsupported renderer counters are -1 in per-view CSV.\n");
+		"r_perf counters exclude 2D/HUD. Unsupported renderer counters are -1 in per-view CSV.\n"
+		"Draw-profiler columns are fixed at capture start; begin another capture to change its schema.\n");
 	Com_Printf("Performance capture: %s/perf/%s-{frames,views}.csv\n", FS_Gamedir(), label);
 }
 
@@ -305,7 +332,17 @@ CL_PerfEndView(int slot, const void *refdef)
 	v->gpu_supported = v->supported && Cvar_VariableValue("r_perf_gpu_supported");
 	v->gpu_serial = v->gpu_supported ? strtoull(Cvar_VariableString("r_perf_gpu_serial"), NULL, 10) : 0;
 	v->gpu_ms = v->gpu_supported ? Cvar_VariableValue("r_perf_gpu_ms") : -1;
-	for (i = 0; i < PERF_METRICS; ++i) {
+	int profile_supported = 0;
+	if (perf_metric_count > perf_base_metric_count) {
+		const char *renderer = Cvar_VariableString("vid_renderer");
+		profile_supported = Cvar_VariableValue("r_drawprofile") != 0 &&
+			(!strcmp(renderer, "gl1") || !strcmp(renderer, "gles1"));
+	}
+	for (i = 0; i < perf_metric_count; ++i) {
+		if (i >= perf_base_metric_count && !profile_supported) {
+			v->values[i] = 0;
+			continue;
+		}
 		Com_sprintf(name, sizeof(name), "r_perf_%s", perf_metrics[i]);
 		v->values[i] = v->supported ? Cvar_VariableValue(name) : -1;
 	}
@@ -328,12 +365,12 @@ CL_PerfSettings(void)
 		"vid_renderer", "vid_fullscreen", "r_mode", "r_customwidth", "r_customheight",
 		"r_vsync", "cl_async", "cl_maxfps", "vid_maxfps", "gl_finish",
 		"gl1_picmip", "gl_texturemode", "gl1_dynamic", "r_shadows", "r_anisotropic", "r_msaa_samples",
-		"r_novis", "r_cull", "r_fullbright", "r_drawentities", "r_drawworld", "r_retexturing", "r_lerpmodels",
+		"r_novis", "r_cull", "r_fullbright", "r_drawentities", "r_drawworld", "r_retexturing", "r_lerpmodels", "r_pickup_lod",
 		"gl1_static_world", "gl3_static_world", "r_viscache", "r_modulate", "r_clear", "vid_gamma",
 		"gl1_overbrightbits", "gl3_overbrightbits", "gl3_intensity", "gl1_multitexture", "gl1_lightmapcopies",
 		"r_perf_static_vertex_total", "r_perf_static_index_total", "r_perf_gpu_supported",
 		"cl_entities", "cl_particles", "cl_lights", "cl_blend", "paused", "timescale",
-		"skill", "coop", "deathmatch", "maxclients", "ss_active", "ss_players"
+		"skill", "coop", "deathmatch", "maxclients", "ss_active", "ss_players", "r_drawprofile", "r_gl1_batch_inline", "r_gl1_batch_world", "r_gl1_lightmap_opt"
 	};
 	size_t i;
 	fprintf(perf_meta, "map=%s\nframebuffer=%dx%d\n", cl.configstrings[CS_MODELS + 1], viddef.width, viddef.height);
@@ -384,9 +421,14 @@ CL_PerfEndDisplay(void)
 			v->origin[0], v->origin[1], v->origin[2], v->angles[0], v->angles[1], v->angles[2],
 			v->entities, v->particles, v->lights, v->supported, v->completed_serial,
 			v->gpu_supported, v->gpu_serial, v->gpu_ms);
-		for (i = 0; i < PERF_METRICS; ++i) {
+		for (i = 0; i < perf_metric_count; ++i) {
 			fprintf(perf_views, ",%.3f", v->values[i]);
-			if (v->supported) sum[i] += v->values[i];
+			if (v->supported) {
+				if (i >= perf_base_metric_count &&
+					((strstr(perf_metrics[i], "dp_inline_top") && strstr(perf_metrics[i], "_model")) ||
+					 !strcmp(perf_metrics[i], "dp_lm_atlas_count"))) sum[i] = -1;
+				else sum[i] += v->values[i];
+			}
 			else all_supported = 0;
 		}
 		fputc('\n', perf_views);
@@ -397,7 +439,7 @@ CL_PerfEndDisplay(void)
 		perf_snapshot / 1000.0, perf_client / 1000.0, perf_prepare / 1000.0,
 		submit / 1000.0, perf_present / 1000.0, perf_view_count, viddef.width, viddef.height,
 		entities, monsters, dead, projectiles, perf_rss);
-	for (i = 0; i < PERF_METRICS; ++i) fprintf(perf_csv, ",%.3f", all_supported ? sum[i] : -1.0);
+	for (i = 0; i < perf_metric_count; ++i) fprintf(perf_csv, ",%.3f", all_supported ? sum[i] : -1.0);
 #ifndef PP_PERF_BASELINE
 	{
 		const cl_effect_stats_t *s = CL_GetEffectStats();

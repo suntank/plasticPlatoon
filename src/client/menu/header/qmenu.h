@@ -66,6 +66,11 @@ typedef struct _tag_menuframework
 	void (*draw)(void);
     	const char *(*key)(int k);
 	void (*cursordraw)(struct _tag_menuframework *m);
+
+	/* Small displays reflow rows independently of the desktop coordinates. */
+	const char *title;
+	const char *subtitle;
+	int compact_top;
 } menuframework_s;
 
 typedef struct
@@ -84,6 +89,7 @@ typedef struct
 	void (*statusbarfunc)(void *self);
 	void (*ownerdraw)(void *self);
 	void (*cursordraw)(void *self);
+	const char *(*compact_value)(void *self);
 } menucommon_s;
 
 typedef struct
@@ -154,6 +160,11 @@ void Menu_DrawString(int, int, const char *);
 void Menu_DrawStringDark(int, int, const char *);
 void Menu_DrawStringR2L(int, int, const char *);
 void Menu_DrawStringR2LDark(int, int, const char *);
+
+qboolean Menu_IsCompact(void);
+void Menu_DrawCompactText(int x, int y, const char *text, int maxchars, qboolean accent);
+void Menu_DrawCompactFrame(const char *title, const char *subtitle);
+void Menu_DrawCompactFooter(const char *help);
 
 float ClampCvar(float min, float max, float value);
 

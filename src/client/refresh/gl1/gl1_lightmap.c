@@ -82,10 +82,12 @@ LM_UploadBlock(qboolean dynamic)
 	const int texture = (dynamic)? 0 : gl_lms.current_lightmap_texture;
 	const int buffer = (gl_config.multitexture)? gl_lms.current_lightmap_texture : 0;
 	int height = 0, i;
+	double dp_setup_started = pp_drawprofile_active ? PP_DPClock() : 0;
 
 	R_Bind(gl_state.lightmap_textures + texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	if (dynamic) PP_DP_WORLD_ADD(DPW_LM_UPLOAD_SETUP_MS, PP_DPClock() - dp_setup_started);
 
 	if (dynamic)
 	{
@@ -97,9 +99,13 @@ LM_UploadBlock(qboolean dynamic)
 			}
 		}
 
+		double upload_started = PP_DPClock();
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, BLOCK_WIDTH,
 				height, GL_LIGHTMAP_FORMAT, GL_UNSIGNED_BYTE,
 				gl_lms.lightmap_buffer[buffer]);
+		PP_DP_WORLD_ADD(DPW_LM_UPLOAD_MS, PP_DPClock() - upload_started);
+		PP_DP_WORLD_ADD(DPW_LM_UPLOAD_CALLS, 1);
+		PP_DP_WORLD_ADD(DPW_LM_UPLOAD_BYTES, BLOCK_WIDTH*height*LIGHTMAP_BYTES);
 		PP_PERF(lightmap_bytes, BLOCK_WIDTH*height*LIGHTMAP_BYTES);
 	}
 	else

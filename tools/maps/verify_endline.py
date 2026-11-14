@@ -41,6 +41,15 @@ def train_side(y):
     return "left" if y < 0 else "right"
 
 
+def station_contract_offset(siding):
+    """Translate original station probes with the authored siding path corner.
+
+    Their reference layout parked the locomotive at X=800. Keep the same
+    boarding/rim/interior tests when an author moves the station along X.
+    """
+    return vec(siding["origin"])[0] - 800
+
+
 def verify(args):
     source = parse_entities(args.map.read_text())
     keys = [e["keys"] for e in source]
@@ -528,8 +537,11 @@ def verify(args):
         report["window_flight"] = {"path": flight, "blockers": flight_hits, "fall_bounds": fall_bounds}
 
     if train_model is not None and "endline_siding" in train_origins:
+        station_dx = station_contract_offset(siding)
         # At the station, players can walk off the gantry's lip and land below the rim.
-        boarding_path = [(1632, -154, 488), (1632, -102, 488), (1632, -102, 329)]
+        boarding_path = [(1632 + station_dx, -154, 488),
+                         (1632 + station_dx, -102, 488),
+                         (1632 + station_dx, -102, 329)]
         blockers = [(p, hit) for a, b in zip(boarding_path, boarding_path[1:]) for p in samples(a, b)
                     if (hit := bsp.collision(p, PLAYER_MINS, PLAYER_MAXS, PLAYER_MASK))]
         landing = boarding_path[-1]
@@ -537,8 +549,8 @@ def verify(args):
         require(not blockers and train_label in (support or ""),
                 f"The station gantry must allow a clear drop into the armored car: {blockers[:4]}")
         # The rim has firing slots, but their gaps must not fit a crouched player.
-        rim = [(x, y) for x in range(1505, 1938, 16) for y in (-128, 130)]
-        rim.extend((x, y) for x in (1495, 1941) for y in range(-106, 110, 16))
+        rim = [(x + station_dx, y) for x in range(1505, 1938, 16) for y in (-128, 130)]
+        rim.extend((x + station_dx, y) for x in (1495, 1941) for y in range(-106, 110, 16))
         holes = [(x, y, z) for x, y in rim for z in (329, 348, 368, 392, 416, 442)
                  if train_label not in (bsp.collision((x, y, z), PLAYER_MINS, (16, 16, 4), PLAYER_MASK) or "")]
         require(not holes, f"The armored car must hold crouching or jumping riders: {holes[:6]}")
@@ -547,7 +559,7 @@ def verify(args):
         for brush in authored_train["brushes"]:
             bounds = entity_bounds({"brushes": [brush]})
             x, y, z, X, Y, Z = (v + offset[i % 3] for i, v in enumerate(bounds))
-            if x < 1937 and X > 1506 and y < 108 and Y > -107:
+            if x < 1937 + station_dx and X > 1506 + station_dx and y < 108 and Y > -107:
                 interior.append(Z)
         max_cover = max([cover_bounds[5]] + interior) if cover_bounds else max(interior, default=449)
         # A 270-unit jump under default 800 gravity rises about 46 units.
@@ -566,7 +578,8 @@ def verify(args):
                     opened and "func_button endline_depart_switch" in opened[0]["entity"],
                     "The car's departure switch must be shielded before boarding and shootable after")
         report["armored_car"] = {"drop": boarding_path, "rim_samples": len(rim) * 6,
-                                 "holes": holes, "highest_cover": max_cover}
+                                 "holes": holes, "highest_cover": max_cover,
+                                 "station_contract_offset_x": station_dx}
 
     placements, actors = [], []
     for e in source:

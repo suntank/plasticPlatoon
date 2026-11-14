@@ -1,122 +1,162 @@
 [
   {
-    "name": "drop_zone",
+    "name": "spawn_slot0",
     "pose": [
-      -19.2,
-      -1766.4,
-      57.6,
-      -6,
-      105
-    ]
-  },
-  {
-    "name": "sandbox_breach",
-    "pose": [
-      0.0,
-      -950.4,
-      68.8,
-      -8,
-      90
-    ]
-  },
-  {
-    "name": "courtyard",
-    "pose": [
-      -268.8,
-      -681.6,
-      130.4,
-      0,
-      70
-    ]
-  },
-  {
-    "name": "tower_overwatch",
-    "pose": [
-      -595.2,
-      -496.0,
-      158.4,
-      0,
-      58
-    ]
-  },
-  {
-    "name": "drain_access",
-    "pose": [
-      -1017.6,
-      -1228.8,
-      -26.4,
-      0,
-      90
-    ]
-  },
-  {
-    "name": "medical_station",
-    "pose": [
-      403.2,
-      -28.8,
-      52.0,
-      0,
-      35
-    ]
-  },
-  {
-    "name": "compound_foyer",
-    "pose": [
-      0.0,
-      667.2,
-      26.8,
-      0,
-      90
-    ]
-  },
-  {
-    "name": "west_barracks",
-    "pose": [
-      -172.8,
-      1046.4,
-      26.8,
-      0,
-      155
-    ]
-  },
-  {
-    "name": "communications_objective",
-    "pose": [
-      0.0,
-      1377.6,
-      26.8,
-      -7,
-      90
-    ]
-  },
-  {
-    "name": "rooftop_overview",
-    "pose": [
-      -432.0,
-      1728.0,
-      427.2,
+      -38.4,
+      -1670.4,
       24,
-      315
-    ]
-  },
-  {
-    "name": "rooftop_fight",
-    "pose": [
-      -499.2,
-      1488.0,
-      250.8,
       0,
-      320
+      130
     ]
   },
   {
-    "name": "extraction_pad",
+    "name": "spawn_slot1",
     "pose": [
-      -240.0,
-      1080.0,
-      250.8,
-      -3,
-      230
+      38.4,
+      -1670.4,
+      24,
+      0,
+      130
+    ]
+  },
+  {
+    "name": "spawn_slot2",
+    "pose": [
+      -38.4,
+      -1728,
+      24,
+      0,
+      130
+    ]
+  },
+  {
+    "name": "spawn_slot3",
+    "pose": [
+      38.4,
+      -1728,
+      24,
+      0,
+      130
+    ]
+  },
+  {
+    "name": "roof-four-guns_slot0",
+    "pose": [
+      172.4,
+      1728,
+      248,
+      0,
+      180
+    ]
+  },
+  {
+    "name": "roof-four-guns_slot1",
+    "pose": [
+      -144,
+      1560,
+      248,
+      0,
+      0
+    ]
+  },
+  {
+    "name": "roof-four-guns_slot2",
+    "pose": [
+      -144,
+      1370,
+      248,
+      0,
+      45
+    ]
+  },
+  {
+    "name": "roof-four-guns_slot3",
+    "pose": [
+      48,
+      1370,
+      248,
+      0,
+      135
+    ]
+  },
+  {
+    "name": "underground_slot0",
+    "pose": [
+      -1080,
+      -1000,
+      -88,
+      0,
+      90
+    ]
+  },
+  {
+    "name": "underground_slot1",
+    "pose": [
+      -1000,
+      -1000,
+      -88,
+      0,
+      90
+    ]
+  },
+  {
+    "name": "underground_slot2",
+    "pose": [
+      -1080,
+      -880,
+      -88,
+      0,
+      90
+    ]
+  },
+  {
+    "name": "underground_slot3",
+    "pose": [
+      -1000,
+      -880,
+      -88,
+      0,
+      90
+    ]
+  },
+  {
+    "name": "layout-tour_slot0",
+    "pose": [
+      -38.4,
+      -1670.4,
+      24,
+      0,
+      90
+    ]
+  },
+  {
+    "name": "layout-tour_slot1",
+    "pose": [
+      -1040,
+      -960,
+      -88,
+      0,
+      90
+    ]
+  },
+  {
+    "name": "layout-tour_slot2",
+    "pose": [
+      0,
+      672,
+      24,
+      0,
+      90
+    ]
+  },
+  {
+    "name": "layout-tour_slot3",
+    "pose": [
+      -456,
+      1114,
+      248,
+      0,
+      90
     ]
   }
 ]

@@ -30,5 +30,37 @@
       "Legacy players/male assets",
       "Inherited soldier portrait PCXs"
     ]
+  },
+  "procedural_replacements": {
+    "m16": {
+      "generator": "tools/assets/build_m16.py",
+      "manifest": "tools/assets/m16-manifest.json",
+      "models": [
+        "models/monsters/soldier/weapon_machinegun.md2",
+        "models/weapons/g_machn/tris.md2",
+        "models/weapons/v_machn/tris.md2",
+        "players/soldier/w_machinegun.md2",
+        "players/soldier/weapon.md2"
+      ],
+      "textures": [
+        "models/weapons/g_machn/skin.png",
+        "models/weapons/g_machn/skin_pickup.png",
+        "models/weapons/v_machn/skin.png"
+      ]
+    },
+    "pistol": {
+      "generator": "tools/assets/build_pistol.py",
+      "manifest": "tools/assets/pistol-manifest.json",
+      "models": [
+        "models/weapons/g_blast/tris.md2",
+        "models/weapons/v_blast/tris.md2",
+        "players/soldier/w_blaster.md2",
+        "models/monsters/soldier/weapon_blaster.md2"
+      ],
+      "textures": [
+        "models/weapons/g_blast/skin.png",
+        "models/weapons/v_blast/skin.png"
+      ]
+    }
   }
 }

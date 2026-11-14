@@ -663,6 +663,8 @@ R_DrawSkyBox(void)
 		}
 	}
 
+	/* Keep the sky behind distant geometry, including on oversized maps. */
+	glDepthRange(gldepthmax, gldepthmax);
 	glPushMatrix();
 	glTranslatef(r_origin[0], r_origin[1], r_origin[2]);
 	glRotatef(r_newrefdef.time * skyrotate, skyaxis[0], skyaxis[1], skyaxis[2]);
@@ -706,6 +708,7 @@ R_DrawSkyBox(void)
 	}
 
 	glPopMatrix();
+	glDepthRange(gldepthmin, gldepthmax);
 }
 
 void

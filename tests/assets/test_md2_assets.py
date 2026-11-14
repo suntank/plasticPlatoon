@@ -162,12 +162,15 @@ class AssetTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "archive hash changed"):
             md2.pickup_source_bytes(bad, "baseq2/" + manifest["assets"][0]["model"])
         originals, outputs = build_platoon.pickup_overrides(manifest)
-        self.assertEqual(len(outputs), 16)
+        self.assertEqual(len(outputs), len(CONFIG['assets']))
         for entry in manifest["assets"]:
             self.assertEqual(md2.sha(outputs[entry["model"]]), entry["after"]["sha256"])
             self.assertEqual(md2.sha(originals[entry["model"]]), entry["before"]["sha256"])
-        self.assertEqual(originals["models/weapons/g_machn/skin_pickup.png"],
-                         originals["models/weapons/g_machn/skin.png"])
+        # The new M16 has its own original geometry and atlas. A complete
+        # legacy conversion must neither claim nor overwrite that output.
+        self.assertNotIn('models/weapons/g_machn/tris.md2', outputs)
+        self.assertIn('models/weapons/g_machn/tris.md2',
+                      build_platoon.procedural_paths(json.loads(build_platoon.CONFIG.read_text())))
 
 
 if __name__ == "__main__":

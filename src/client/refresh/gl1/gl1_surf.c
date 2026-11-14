@@ -41,6 +41,342 @@ static cvar_t *r_viscache;
 static qboolean previous_allvisible;
 void R_ClearVisibilityCache(void) { PP_ClearVisibilityCache(&visibility_cache); previous_allvisible = true; }
 
+static cvar_t *r_gl1_batch_inline, *inline_static_world;
+static cvar_t *r_gl1_batch_world, *world_static_world;
+static void R_RenderLightmappedPoly(msurface_t *surf);
+
+typedef struct
+{
+	qboolean eligible, barrier;
+	vec3_t mins, maxs;
+} inline_batch_info_t;
+
+/* Sort only immutable, ordinary multitextured faces. Special surfaces remain
+ * source-order barriers; their animation, scrolling and ordered passes retain
+ * the legacy path. The existing buffer still enforces its ushort capacities. */
+static qboolean
+R_InlineBatchEligible(const msurface_t *surface)
+{
+	const glpoly_t *poly = surface->polys;
+	return !(surface->texinfo->flags &
+		(SURF_SKY | SURF_TRANS33 | SURF_TRANS66 | SURF_WARP | SURF_FLOWING)) &&
+		!(surface->flags & (SURF_DRAWTURB | SURF_DRAWSKY)) &&
+		!surface->texinfo->next && poly && poly->static_vbo &&
+		poly->static_indices && poly->static_index_count > 0 &&
+		poly->static_index_count < MAX_INDICES;
+}
+
+static int
+R_InlineMaterialCompare(const msurface_t *a, const msurface_t *b)
+{
+	int color_a = a->texinfo->image->texnum, color_b = b->texinfo->image->texnum;
+	if (color_a != color_b) return color_a < color_b ? -1 : 1;
+	if (a->lightmaptexturenum != b->lightmaptexturenum)
+		return a->lightmaptexturenum < b->lightmaptexturenum ? -1 : 1;
+	if (a->polys->static_vbo != b->polys->static_vbo)
+		return a->polys->static_vbo < b->polys->static_vbo ? -1 : 1;
+	return 0;
+}
+
+static int
+R_InlineOrderCompare(const void *left, const void *right)
+{
+	const msurface_t *a = *(msurface_t *const *)left;
+	const msurface_t *b = *(msurface_t *const *)right;
+	int material = R_InlineMaterialCompare(a, b);
+	/* Every entry belongs to one surface array. Preserve equal-key source order. */
+	return material ? material : (a > b) - (a < b);
+}
+
+static qboolean
+R_InlineSamePlane(const msurface_t *a, const msurface_t *b)
+{
+	float sign_a = a->flags & SURF_PLANEBACK ? -1.0f : 1.0f;
+	float sign_b = b->flags & SURF_PLANEBACK ? -1.0f : 1.0f;
+	for (int axis = 0; axis < 3; ++axis)
+		if (a->plane->normal[axis] * sign_a != b->plane->normal[axis] * sign_b)
+			return false;
+	return a->plane->dist * sign_a == b->plane->dist * sign_b;
+}
+
+static qboolean
+R_InlinePlaneOverlap(const msurface_t *surface, const inline_batch_info_t *a,
+	const inline_batch_info_t *b)
+{
+	int dropped = 0;
+	for (int axis = 1; axis < 3; ++axis)
+		if (fabsf(surface->plane->normal[axis]) > fabsf(surface->plane->normal[dropped]))
+			dropped = axis;
+	for (int axis = 0; axis < 3; ++axis)
+	{
+		if (axis == dropped) continue;
+		/* Touching edges have zero area. AABB false positives are conservative. */
+		if (a->maxs[axis] <= b->mins[axis] || b->maxs[axis] <= a->mins[axis])
+			return false;
+	}
+	return true;
+}
+
+void
+R_FreeInlineSurfaceOrders(model_t *world)
+{
+	if (!world || !world->submodels) return;
+	for (int i = 1; i < world->numsubmodels; ++i)
+	{
+		free(world->submodels[i].inline_surface_order);
+		world->submodels[i].inline_surface_order = NULL;
+	}
+}
+
+void
+R_BuildInlineSurfaceOrders(model_t *world)
+{
+	if (!r_gl1_batch_inline) r_gl1_batch_inline = ri.Cvar_Get("r_gl1_batch_inline", "1", 0);
+	if (!inline_static_world) inline_static_world = ri.Cvar_Get("gl1_static_world", "1", 0);
+	R_FreeInlineSurfaceOrders(world);
+	if (!world || !world->submodels) return;
+	for (int model_index = 1; model_index < world->numsubmodels; ++model_index)
+	{
+		model_t *model = &world->submodels[model_index];
+		int count = model->nummodelsurfaces, eligible = 0;
+		if (count < 2) continue;
+		inline_batch_info_t *info = calloc((size_t)count, sizeof(*info));
+		if (!info) continue; /* Allocation failure leaves the original order. */
+		msurface_t *surfaces = model->surfaces + model->firstmodelsurface;
+		for (int i = 0; i < count; ++i)
+		{
+			msurface_t *surface = &surfaces[i];
+			info[i].eligible = R_InlineBatchEligible(surface);
+			if (!info[i].eligible) continue;
+			++eligible;
+			for (int axis = 0; axis < 3; ++axis)
+				info[i].mins[axis] = info[i].maxs[axis] = surface->polys->verts[0][axis];
+			for (int vertex = 1; vertex < surface->polys->numverts; ++vertex)
+				for (int axis = 0; axis < 3; ++axis)
+				{
+					float value = surface->polys->verts[vertex][axis];
+					if (value < info[i].mins[axis]) info[i].mins[axis] = value;
+					if (value > info[i].maxs[axis]) info[i].maxs[axis] = value;
+				}
+		}
+		if (eligible < 2) { free(info); continue; }
+		/* Preserve source-order depth ties on overlapping coplanar materials.
+		 * This registration-only scan also permits adjacent wall/train panels. */
+		for (int i = 0; i < count; ++i)
+		{
+			if (!info[i].eligible) continue;
+			for (int j = 0; j < i; ++j)
+				if (info[j].eligible && R_InlineMaterialCompare(&surfaces[i], &surfaces[j]) &&
+					R_InlineSamePlane(&surfaces[i], &surfaces[j]) &&
+					R_InlinePlaneOverlap(&surfaces[i], &info[i], &info[j]))
+					info[i].barrier = info[j].barrier = true;
+		}
+		msurface_t **order = malloc((size_t)count * sizeof(*order));
+		if (!order) { free(info); continue; }
+		for (int i = 0; i < count; ++i) order[i] = &surfaces[i];
+		for (int start = 0; start < count; )
+		{
+			if (!info[start].eligible || info[start].barrier) { ++start; continue; }
+			int end = start + 1;
+			while (end < count && info[end].eligible && !info[end].barrier) ++end;
+			if (end - start > 1)
+				qsort(order + start, (size_t)(end - start), sizeof(*order), R_InlineOrderCompare);
+			start = end;
+		}
+		model->inline_surface_order = order;
+		free(info);
+	}
+}
+
+typedef struct { msurface_t *head, *tail; int next_active; } world_batch_group_t;
+typedef struct { int first, count, active_first, active_last; } world_batch_range_t;
+typedef struct
+{
+	msurface_t *surface;
+	vec3_t normal, mins, maxs;
+	float distance;
+	int image, dropped;
+	qboolean barrier;
+} world_batch_info_t;
+
+static world_batch_group_t *world_batch_groups;
+static world_batch_range_t world_batch_ranges[MAX_GLTEXTURES];
+static model_t *world_batch_owner;
+static int world_batch_count;
+
+static qboolean
+R_WorldSurfaceRange(const model_t *world, int *first, int *count)
+{
+	if (!world || !world->submodels || world->numsubmodels < 1) return false;
+	*first = world->submodels[0].firstmodelsurface;
+	*count = world->submodels[0].nummodelsurfaces;
+	return *first >= 0 && *count >= 0 && *first <= world->numsurfaces &&
+		*count <= world->numsurfaces - *first;
+}
+
+void
+R_FreeWorldSurfaceBatches(model_t *world)
+{
+	int first, count;
+	if (world != world_batch_owner) return;
+	if (R_WorldSurfaceRange(world, &first, &count))
+		for (int i = first; i < first + count; ++i)
+		{
+			world->surfaces[i].world_batch_group = 0;
+			world->surfaces[i].world_batch_next = NULL;
+		}
+	free(world_batch_groups); world_batch_groups = NULL;
+	memset(world_batch_ranges, 0, sizeof(world_batch_ranges));
+	world_batch_owner = NULL; world_batch_count = 0;
+}
+
+static int
+R_WorldImageIndex(const image_t *image)
+{
+	uintptr_t at = (uintptr_t)image, start = (uintptr_t)gltextures;
+	if (at < start || at >= start + sizeof(gltextures) || (at - start) % sizeof(*image))
+		return -1;
+	return (int)((at - start) / sizeof(*image));
+}
+
+static int
+R_WorldPlaneKeyCompare(const world_batch_info_t *a, const world_batch_info_t *b)
+{
+	if (a->image != b->image) return a->image < b->image ? -1 : 1;
+	for (int axis = 0; axis < 3; ++axis)
+		if (a->normal[axis] != b->normal[axis]) return a->normal[axis] < b->normal[axis] ? -1 : 1;
+	if (a->distance != b->distance) return a->distance < b->distance ? -1 : 1;
+	return 0;
+}
+
+static int
+R_WorldPlaneOrderCompare(const void *left, const void *right)
+{
+	const world_batch_info_t *a = left, *b = right;
+	int plane = R_WorldPlaneKeyCompare(a, b);
+	if (plane) return plane;
+	int sweep = a->dropped == 0 ? 1 : 0;
+	if (a->mins[sweep] != b->mins[sweep]) return a->mins[sweep] < b->mins[sweep] ? -1 : 1;
+	return (a->surface > b->surface) - (a->surface < b->surface);
+}
+
+static int
+R_WorldMaterialOrderCompare(const void *left, const void *right)
+{
+	const world_batch_info_t *a = left, *b = right;
+	if (a->image != b->image) return a->image < b->image ? -1 : 1;
+	int material = R_InlineMaterialCompare(a->surface, b->surface);
+	return material ? material : (a->surface > b->surface) - (a->surface < b->surface);
+}
+
+void
+R_BuildWorldSurfaceBatches(model_t *world)
+{
+	int first, count, eligible = 0;
+	if (!r_gl1_batch_world) r_gl1_batch_world = ri.Cvar_Get("r_gl1_batch_world", "1", 0);
+	if (!world_static_world) world_static_world = ri.Cvar_Get("gl1_static_world", "1", 0);
+	R_FreeWorldSurfaceBatches(world_batch_owner);
+	if (!R_WorldSurfaceRange(world, &first, &count)) return;
+	for (int i = first; i < first + count; ++i)
+	{
+		msurface_t *surface = &world->surfaces[i];
+		surface->world_batch_group = 0; surface->world_batch_next = NULL;
+		if (R_InlineBatchEligible(surface) && R_WorldImageIndex(surface->texinfo->image) >= 0)
+			++eligible;
+	}
+	if (eligible < 2) return;
+	world_batch_info_t *info = calloc((size_t)eligible, sizeof(*info));
+	if (!info) return;
+	int used = 0;
+	for (int i = first; i < first + count; ++i)
+	{
+		msurface_t *surface = &world->surfaces[i];
+		int image = R_WorldImageIndex(surface->texinfo->image);
+		if (!R_InlineBatchEligible(surface) || image < 0) continue;
+		world_batch_info_t *item = &info[used++];
+		item->surface = surface; item->image = image;
+		float sign = surface->flags & SURF_PLANEBACK ? -1.0f : 1.0f;
+		item->distance = sign * surface->plane->dist;
+		for (int axis = 0; axis < 3; ++axis)
+		{
+			item->normal[axis] = sign * surface->plane->normal[axis];
+			if (fabsf(item->normal[axis]) > fabsf(item->normal[item->dropped])) item->dropped = axis;
+			item->mins[axis] = item->maxs[axis] = surface->polys->verts[0][axis];
+		}
+		for (int vertex = 1; vertex < surface->polys->numverts; ++vertex)
+			for (int axis = 0; axis < 3; ++axis)
+			{
+				float value = surface->polys->verts[vertex][axis];
+				if (value < item->mins[axis]) item->mins[axis] = value;
+				if (value > item->maxs[axis]) item->maxs[axis] = value;
+			}
+	}
+	/* Registration-only coplanar sweep, rather than an all-face quadratic scan.
+	 * Image order is unchanged; guard depth ties only within the same image. */
+	qsort(info, (size_t)eligible, sizeof(*info), R_WorldPlaneOrderCompare);
+	for (int start = 0; start < eligible; )
+	{
+		int end = start + 1;
+		while (end < eligible && !R_WorldPlaneKeyCompare(&info[start], &info[end])) ++end;
+		int sweep = info[start].dropped == 0 ? 1 : 0;
+		int other = 3 - info[start].dropped - sweep;
+		for (int i = start; i < end; ++i)
+			for (int j = i + 1; j < end && info[j].mins[sweep] < info[i].maxs[sweep]; ++j)
+				if (R_InlineMaterialCompare(info[i].surface, info[j].surface) &&
+					info[i].maxs[other] > info[j].mins[other] && info[j].maxs[other] > info[i].mins[other])
+					info[i].barrier = info[j].barrier = true;
+		start = end;
+	}
+	world_batch_group_t *groups = calloc((size_t)eligible + 1, sizeof(*groups));
+	if (!groups) { free(info); return; }
+	qsort(info, (size_t)eligible, sizeof(*info), R_WorldMaterialOrderCompare);
+	msurface_t *previous = NULL;
+	int previous_image = -1;
+	for (int i = 0; i < eligible; ++i)
+	{
+		if (info[i].barrier) continue;
+		msurface_t *surface = info[i].surface;
+		world_batch_range_t *range = &world_batch_ranges[info[i].image];
+		if (!previous || previous_image != info[i].image || R_InlineMaterialCompare(previous, surface))
+		{
+			++world_batch_count;
+			if (!range->count) range->first = world_batch_count;
+			++range->count;
+		}
+		surface->world_batch_group = world_batch_count;
+		previous = surface;
+		previous_image = info[i].image;
+	}
+	world_batch_groups = groups; world_batch_owner = world;
+	free(info);
+}
+
+static void
+R_DrawWorldBucketRange(image_t *image, world_batch_range_t *range)
+{
+	/* First-seen group order needs no sort and visits only visible state keys.
+	 * Equal-key faces keep their original chain order within each bucket. */
+	int group = range->active_first;
+	while (group)
+	{
+		world_batch_group_t *bucket = &world_batch_groups[group];
+		int next_group = bucket->next_active;
+		msurface_t *surface = bucket->head;
+		while (surface)
+		{
+			msurface_t *next = surface->world_batch_next;
+			surface->world_batch_next = NULL;
+			R_UpdateGLBuffer(buf_mtex, image->texnum, surface->lightmaptexturenum, 0, 1);
+			R_RenderLightmappedPoly(surface);
+			surface = next;
+		}
+		bucket->head = bucket->tail = NULL;
+		bucket->next_active = 0;
+		group = next_group;
+	}
+	range->active_first = range->active_last = 0;
+}
+
 static vec3_t modelorg; /* relative to viewpoint */
 msurface_t *r_alpha_surfaces;
 
@@ -457,10 +793,17 @@ R_RenderBrushPoly(msurface_t *fa)
 			R_BuildLightMap(fa, (void *)temp, smax * 4);
 			R_SetCacheState(fa);
 
-			R_Bind(gl_state.lightmap_textures + fa->lightmaptexturenum);
-
-			glTexSubImage2D(GL_TEXTURE_2D, 0, fa->light_s, fa->light_t,
+			{
+				double setup_started = pp_drawprofile_active ? PP_DPClock() : 0;
+				R_Bind(gl_state.lightmap_textures + fa->lightmaptexturenum);
+				PP_DP_WORLD_ADD(DPW_LM_UPLOAD_SETUP_MS, PP_DPClock() - setup_started);
+				double upload_started = PP_DPClock();
+				glTexSubImage2D(GL_TEXTURE_2D, 0, fa->light_s, fa->light_t,
 					smax, tmax, GL_LIGHTMAP_FORMAT, GL_UNSIGNED_BYTE, temp);
+				PP_DP_WORLD_ADD(DPW_LM_UPLOAD_MS, PP_DPClock() - upload_started);
+				PP_DP_WORLD_ADD(DPW_LM_UPLOAD_CALLS, 1);
+				PP_DP_WORLD_ADD(DPW_LM_UPLOAD_BYTES, smax*tmax*LIGHTMAP_BYTES);
+			}
 			PP_PERF(lightmap_bytes, smax*tmax*LIGHTMAP_BYTES);
 
 			fa->lightmapchain = gl_lms.lightmap_surfaces[fa->lightmaptexturenum];
@@ -607,6 +950,8 @@ R_RegenAllLightmaps()
 		return;
 	}
 
+	PP_DP_WORLD_ADD(DPW_LM_REGEN_RUNS, 1);
+
 	if (gl_config.lightmapcopies)
 	{
 		cur_lm_copy = (cur_lm_copy + 1) % MAX_LIGHTMAP_COPIES;	// select the next lightmap copy
@@ -623,12 +968,15 @@ R_RegenAllLightmaps()
 		msurface_t *surf;
 		byte *base;
 		qboolean affected_lightmap;
+		unsigned dp_useful_texels = 0;
+		double dp_setup_started;
 
 		if (!gl_lms.lightmap_surfaces[i] || !gl_lms.lightmap_buffer[i])
 		{
 			continue;
 		}
 
+		PP_DP_WORLD_ADD(DPW_LM_ATLASES_SCANNED, 1);
 		affected_lightmap = false;
 		best.top = BLOCK_HEIGHT;
 		best.left = BLOCK_WIDTH;
@@ -639,6 +987,7 @@ R_RegenAllLightmaps()
 			 surf = surf->lightmapchain)
 		{
 			int map;
+			PP_DP_WORLD_ADD(DPW_LM_SURFACES_SCANNED, 1);
 
 			if (surf->texinfo->flags & (SURF_SKY | SURF_TRANS33 | SURF_TRANS66 | SURF_WARP))
 			{
@@ -661,12 +1010,15 @@ R_RegenAllLightmaps()
 			}
 
 dynamic_surf:
+			PP_DP_WORLD_ADD(DPW_LM_CHANGED_SURFACES, 1);
 			affected_lightmap = true;
 
 			current.left = surf->light_s;
 			current.right = surf->light_s + (surf->extents[0] >> 4) + 1;	// + smax
 			current.top = surf->light_t;
 			current.bottom = surf->light_t + (surf->extents[1] >> 4) + 1;	// + tmax
+			if (pp_drawprofile_active)
+				dp_useful_texels += (current.right-current.left)*(current.bottom-current.top);
 
 			base = gl_lms.lightmap_buffer[i];
 			base += (current.top * BLOCK_WIDTH + current.left) * LIGHTMAP_BYTES;
@@ -721,6 +1073,10 @@ dynamic_surf:
 			}
 		}
 
+		/* Useful area is this view's rebuilds, excluding any older copy history. */
+		PP_DP_WORLD_ADD(DPW_LM_REGEN_USEFUL_TEXELS, dp_useful_texels);
+		PP_DP_WORLD_ADD(DPW_LM_REGEN_RECT_TEXELS, (best.right-best.left)*(best.bottom-best.top));
+		dp_setup_started = pp_drawprofile_active ? PP_DPClock() : 0;
 #ifndef YQ2_GL1_GLES
 		if (!pixelstore_set)
 		{
@@ -736,19 +1092,35 @@ dynamic_surf:
 		base += (best.top * BLOCK_WIDTH) * LIGHTMAP_BYTES;
 
 		R_Bind(gl_state.lightmap_textures + i + lmtex);
+		PP_DP_WORLD_ADD(DPW_LM_UPLOAD_SETUP_MS, PP_DPClock() - dp_setup_started);
+		PP_DP_WORLD_ADD(DPW_LM_REGEN_UPLOAD_TEXELS, BLOCK_WIDTH*(best.bottom-best.top));
 
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, best.top,
+		{
+			double upload_started = PP_DPClock();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, best.top,
 			BLOCK_WIDTH, best.bottom - best.top,
 			GL_LIGHTMAP_FORMAT, GL_UNSIGNED_BYTE, base);
+			PP_DP_WORLD_ADD(DPW_LM_UPLOAD_MS, PP_DPClock() - upload_started);
+			PP_DP_WORLD_ADD(DPW_LM_UPLOAD_CALLS, 1);
+			PP_DP_WORLD_ADD(DPW_LM_UPLOAD_BYTES, BLOCK_WIDTH*(best.bottom-best.top)*LIGHTMAP_BYTES);
+		}
 		PP_PERF(lightmap_bytes, BLOCK_WIDTH*(best.bottom-best.top)*LIGHTMAP_BYTES);
 #else
 		base += (best.top * BLOCK_WIDTH + best.left) * LIGHTMAP_BYTES;
 
 		R_Bind(gl_state.lightmap_textures + i + lmtex);
+		PP_DP_WORLD_ADD(DPW_LM_UPLOAD_SETUP_MS, PP_DPClock() - dp_setup_started);
+		PP_DP_WORLD_ADD(DPW_LM_REGEN_UPLOAD_TEXELS, (best.right-best.left)*(best.bottom-best.top));
 
-		glTexSubImage2D(GL_TEXTURE_2D, 0, best.left, best.top,
+		{
+			double upload_started = PP_DPClock();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, best.left, best.top,
 			best.right - best.left, best.bottom - best.top,
 			GL_LIGHTMAP_FORMAT, GL_UNSIGNED_BYTE, base);
+			PP_DP_WORLD_ADD(DPW_LM_UPLOAD_MS, PP_DPClock() - upload_started);
+			PP_DP_WORLD_ADD(DPW_LM_UPLOAD_CALLS, 1);
+			PP_DP_WORLD_ADD(DPW_LM_UPLOAD_BYTES, (best.right-best.left)*(best.bottom-best.top)*LIGHTMAP_BYTES);
+		}
 		PP_PERF(lightmap_bytes, (best.right-best.left)*(best.bottom-best.top)*LIGHTMAP_BYTES);
 #endif
 	}
@@ -756,7 +1128,9 @@ dynamic_surf:
 #ifndef YQ2_GL1_GLES
 	if (pixelstore_set)
 	{
+		double started = pp_drawprofile_active ? PP_DPClock() : 0;
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+		PP_DP_WORLD_ADD(DPW_LM_UPLOAD_SETUP_MS, PP_DPClock() - started);
 	}
 #endif
 }
@@ -767,6 +1141,9 @@ R_DrawTextureChains(void)
 	int i;
 	msurface_t *s;
 	image_t *image;
+	qboolean batch_world = r_gl1_batch_world && r_gl1_batch_world->value &&
+		world_static_world && world_static_world->value &&
+		world_batch_owner == r_worldmodel && world_batch_groups && world_batch_count;
 
 	c_visible_textures = 0;
 
@@ -800,6 +1177,7 @@ R_DrawTextureChains(void)
 	}
 	else	// multitexture
 	{
+		R_BeginWorldArrayScope();
 		for (i = 0, image = gltextures; i < numgltextures; i++, image++)
 		{
 			if (!image->registration_sequence || !image->texturechain)
@@ -809,16 +1187,36 @@ R_DrawTextureChains(void)
 
 			c_visible_textures++;
 
+			world_batch_range_t range = batch_world ? world_batch_ranges[i] : (world_batch_range_t){0};
 			for (s = image->texturechain; s; s = s->texturechain)
 			{
+				int group = s->world_batch_group;
+				if (range.count && group >= range.first && group < range.first + range.count)
+				{
+					world_batch_group_t *bucket = &world_batch_groups[group];
+					s->world_batch_next = NULL;
+					if (bucket->tail) bucket->tail->world_batch_next = s;
+					else
+					{
+						bucket->head = s;
+						if (range.active_last) world_batch_groups[range.active_last].next_active = group;
+						else range.active_first = group;
+						range.active_last = group;
+					}
+					bucket->tail = s;
+					continue;
+				}
+				/* Preserve each visible special/coplanar barrier in chain order. */
+				if (range.active_first) R_DrawWorldBucketRange(image, &range);
 				if (!(s->flags & SURF_DRAWTURB))
 				{
 					R_UpdateGLBuffer(buf_mtex, image->texnum, s->lightmaptexturenum, 0, 1);
 					R_RenderLightmappedPoly(s);
 				}
 			}
+			if (range.active_first) R_DrawWorldBucketRange(image, &range);
 		}
-		R_ApplyGLBuffer();
+		R_EndWorldArrayScope();
 
 		R_EnableMultitexture(false);	// force disabling, SURF_DRAWTURB surfaces may not exist
 
@@ -853,6 +1251,9 @@ R_DrawInlineBModel(entity_t *currententity, const model_t *currentmodel)
 	msurface_t *psurf;
 	dlight_t *lt;
 	image_t *image;
+	msurface_t **order = r_gl1_batch_inline && r_gl1_batch_inline->value &&
+		inline_static_world && inline_static_world->value && gl_config.multitexture &&
+		!(currententity->flags & RF_TRANSLUCENT) ? currentmodel->inline_surface_order : NULL;
 
 	/* calculate dynamic lighting for bmodel */
 	if (!gl_config.multitexture && !gl1_flashblend->value)
@@ -867,18 +1268,18 @@ R_DrawInlineBModel(entity_t *currententity, const model_t *currentmodel)
 		}
 	}
 
-	psurf = &currentmodel->surfaces[currentmodel->firstmodelsurface];
-
 	if (currententity->flags & RF_TRANSLUCENT)
 	{
 		glEnable(GL_BLEND);
 		glColor4f(1, 1, 1, 0.25);
 		R_TexEnv(GL_MODULATE);
 	}
+	else R_BeginWorldArrayScope();
 
 	/* draw texture */
-	for (i = 0; i < currentmodel->nummodelsurfaces; i++, psurf++)
+	for (i = 0; i < currentmodel->nummodelsurfaces; i++)
 	{
+		psurf = order ? order[i] : &currentmodel->surfaces[currentmodel->firstmodelsurface + i];
 		/* find which side of the node we are on */
 		pplane = psurf->plane;
 
@@ -912,7 +1313,8 @@ R_DrawInlineBModel(entity_t *currententity, const model_t *currentmodel)
 			}
 		}
 	}
-	R_ApplyGLBuffer();
+	if (currententity->flags & RF_TRANSLUCENT) R_ApplyGLBuffer();
+	else R_EndWorldArrayScope();
 
 	if (!(currententity->flags & RF_TRANSLUCENT))
 	{
@@ -1109,6 +1511,7 @@ R_RecursiveWorldNode(entity_t *currententity, mnode_t *node)
 			continue; /* wrong side */
 		}
 
+		PP_DP_WORLD_ADD(DPW_WORLD_VISIBLE_SURFACES, 1);
 		if (surf->texinfo->flags & SURF_SKY)
 		{
 			/* just adds to visible sky bounds */
@@ -1176,6 +1579,7 @@ R_GetBrushesLighting(void)
 			continue;
 		}
 
+		PP_DP_WORLD_ADD(DPW_BRUSH_LIGHT_MODELS, 1);
 		// from R_DrawBrushModel()
 		if (currententity->angles[0] || currententity->angles[1] || currententity->angles[2])
 		{
@@ -1201,6 +1605,7 @@ R_GetBrushesLighting(void)
 
 		for (k = 0; k < r_newrefdef.num_dlights; k++, lt++)
 		{
+			PP_DP_WORLD_ADD(DPW_BRUSH_LIGHT_DLIGHT_TESTS, 1);
 			R_MarkLights(lt, 1 << k,
 				currentmodel->nodes + currentmodel->firstnode,
 				r_dlightframecount, R_MarkSurfaceLights);
@@ -1210,6 +1615,7 @@ R_GetBrushesLighting(void)
 
 		for (k = 0; k < currentmodel->nummodelsurfaces; k++, surf++)
 		{
+			PP_DP_WORLD_ADD(DPW_BRUSH_LIGHT_SURFACE_TESTS, 1);
 			if (surf->texinfo->flags & (SURF_TRANS33 | SURF_TRANS66 | SURF_WARP)
 				|| surf->flags & SURF_DRAWTURB || surf->lmchain_frame == r_framecount)
 			{
@@ -1246,6 +1652,8 @@ R_DrawWorld(void)
 		return;
 	}
 
+	PP_DP_WORLD_ADD(DPW_LM_ATLAS_COUNT, gl_lms.current_lightmap_texture > 0 ? gl_lms.current_lightmap_texture - 1 : 0);
+
 	VectorCopy(r_newrefdef.vieworg, modelorg);
 
 	/* auto cycle the world frame for texture animation */
@@ -1258,12 +1666,42 @@ R_DrawWorld(void)
 	memset(gl_lms.lightmap_surfaces, 0, sizeof(gl_lms.lightmap_surfaces));
 
 	R_ClearSkyBox();
-	R_RecursiveWorldNode(&ent, r_worldmodel->nodes);
-	R_GetBrushesLighting();
-	R_RegenAllLightmaps();
-	R_DrawTextureChains();
-	R_BlendLightmaps(r_worldmodel);
-	R_DrawSkyBox();
+	{
+		double started = PP_DPClock();
+		R_RecursiveWorldNode(&ent, r_worldmodel->nodes);
+		PP_DP_WORLD_ADD(DPW_WORLD_MARK_MS, PP_DPClock() - started);
+	}
+	{
+		double started = PP_DPClock();
+		R_GetBrushesLighting();
+		PP_DP_WORLD_ADD(DPW_BRUSH_LIGHT_MS, PP_DPClock() - started);
+	}
+	{
+		double started = PP_DPClock();
+		R_RegenAllLightmaps();
+		PP_DP_WORLD_ADD(DPW_LM_REGEN_MS, PP_DPClock() - started);
+	}
+	{
+		double started = PP_DPClock();
+		uint64_t draws = PP_DPTotalDraws();
+		R_DrawTextureChains();
+		PP_DP_WORLD_ADD(DPW_WORLD_CHAIN_MS, PP_DPClock() - started);
+		PP_DP_WORLD_ADD(DPW_WORLD_CHAIN_DRAWS, PP_DPTotalDraws() - draws);
+	}
+	{
+		double started = PP_DPClock();
+		uint64_t draws = PP_DPTotalDraws();
+		R_BlendLightmaps(r_worldmodel);
+		PP_DP_WORLD_ADD(DPW_WORLD_BLEND_MS, PP_DPClock() - started);
+		PP_DP_WORLD_ADD(DPW_WORLD_BLEND_DRAWS, PP_DPTotalDraws() - draws);
+	}
+	{
+		double started = PP_DPClock();
+		uint64_t draws = PP_DPTotalDraws();
+		R_DrawSkyBox();
+		PP_DP_WORLD_ADD(DPW_WORLD_SKY_MS, PP_DPClock() - started);
+		PP_DP_WORLD_ADD(DPW_WORLD_SKY_DRAWS, PP_DPTotalDraws() - draws);
+	}
 	R_DrawTriangleOutlines();
 }
 

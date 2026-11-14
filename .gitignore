@@ -45,3 +45,6 @@ __pycache__/
 # Editor snapshots and obsolete third-party logo artwork stay local.
 /baseq2/maps/autosave/
 /stuff/icon/
+/.codex-attachments/
+/maps/source/autosave/
+/tools/performance/pi_bench/input_driver*.so

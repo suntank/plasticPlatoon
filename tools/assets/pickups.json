@@ -97,14 +97,6 @@
       "instances": 1
     },
     {
-      "model": "models/weapons/g_machn/tris.md2",
-      "triangles": 800,
-      "texture_size": 256,
-      "classname": "weapon_machinegun",
-      "instances": 2,
-      "output_skin": "models/weapons/g_machn/skin_pickup.png"
-    },
-    {
       "model": "models/weapons/g_rocket/tris.md2",
       "triangles": 800,
       "texture_size": 256,
@@ -130,5 +122,16 @@
     "path": "tools/assets/sources/pickups-local.pk3",
     "sha256": "6c6dcc1d9a9a44aa666285a9add3ff439fc5561791e46529ef91b7ee5866bf37",
     "origin": "Original owner-authored Plastic Platoon pickup models and textures"
-  }
+  },
+  "superseded_assets": [
+    {
+      "model": "models/weapons/g_machn/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "weapon_machinegun",
+      "instances": 2,
+      "output_skin": "models/weapons/g_machn/skin_pickup.png"
+    }
+  ],
+  "procedural_replacement_note": "M16 is now authored by m16_geometry.py and build_m16.py; historical decimation records remain below for comparison only."
 }

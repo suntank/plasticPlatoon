@@ -1,0 +1,1506 @@
+{
+  "schema_version": 1,
+  "map": "pp_switchyard",
+  "nodes": {
+    "blue_south": [
+      -832,
+      -416,
+      0
+    ],
+    "blue_north": [
+      -832,
+      416,
+      0
+    ],
+    "red_north": [
+      832,
+      416,
+      0
+    ],
+    "red_south": [
+      832,
+      -416,
+      0
+    ],
+    "west_junction": [
+      -800,
+      0,
+      0
+    ],
+    "east_junction": [
+      672,
+      0,
+      0
+    ],
+    "north_loop": [
+      0,
+      864,
+      0
+    ],
+    "south_loop": [
+      0,
+      -864,
+      0
+    ],
+    "west_dock_north": [
+      -256,
+      448,
+      0
+    ],
+    "west_dock_south": [
+      -256,
+      -448,
+      0
+    ],
+    "east_dock_north": [
+      256,
+      368,
+      0
+    ],
+    "east_dock_south": [
+      256,
+      -400,
+      0
+    ],
+    "track_center": [
+      0,
+      0,
+      -128
+    ],
+    "track_north": [
+      0,
+      512,
+      -128
+    ],
+    "track_south": [
+      0,
+      -512,
+      -128
+    ],
+    "west_gallery_north": [
+      -272,
+      640,
+      160
+    ],
+    "west_gallery_south": [
+      -272,
+      -640,
+      160
+    ],
+    "east_gallery_north": [
+      272,
+      640,
+      160
+    ],
+    "east_gallery_south": [
+      272,
+      -640,
+      160
+    ],
+    "blue_upper": [
+      -496,
+      640,
+      160
+    ],
+    "red_upper": [
+      496,
+      -640,
+      160
+    ]
+  },
+  "routes": [
+    {
+      "name": "blue_south__west_junction",
+      "from": "blue_south",
+      "to": "west_junction",
+      "points": [
+        [
+          -832,
+          -416,
+          0
+        ],
+        [
+          -800,
+          -160,
+          0
+        ],
+        [
+          -800,
+          0,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "west_junction__blue_north",
+      "from": "west_junction",
+      "to": "blue_north",
+      "points": [
+        [
+          -800,
+          0,
+          0
+        ],
+        [
+          -800,
+          160,
+          0
+        ],
+        [
+          -832,
+          416,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "red_south__east_junction",
+      "from": "red_south",
+      "to": "east_junction",
+      "points": [
+        [
+          832,
+          -416,
+          0
+        ],
+        [
+          704,
+          -320,
+          0
+        ],
+        [
+          704,
+          -96,
+          0
+        ],
+        [
+          672,
+          0,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "east_junction__red_north",
+      "from": "east_junction",
+      "to": "red_north",
+      "points": [
+        [
+          672,
+          0,
+          0
+        ],
+        [
+          736,
+          192,
+          0
+        ],
+        [
+          736,
+          288,
+          0
+        ],
+        [
+          832,
+          416,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "blue_north__north_loop",
+      "from": "blue_north",
+      "to": "north_loop",
+      "points": [
+        [
+          -832,
+          416,
+          0
+        ],
+        [
+          -720,
+          640,
+          0
+        ],
+        [
+          -720,
+          864,
+          0
+        ],
+        [
+          0,
+          864,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "north_loop__red_north",
+      "from": "north_loop",
+      "to": "red_north",
+      "points": [
+        [
+          0,
+          864,
+          0
+        ],
+        [
+          720,
+          864,
+          0
+        ],
+        [
+          720,
+          640,
+          0
+        ],
+        [
+          832,
+          416,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "blue_south__south_loop",
+      "from": "blue_south",
+      "to": "south_loop",
+      "points": [
+        [
+          -832,
+          -416,
+          0
+        ],
+        [
+          -560,
+          -640,
+          0
+        ],
+        [
+          -560,
+          -864,
+          0
+        ],
+        [
+          0,
+          -864,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "south_loop__red_south",
+      "from": "south_loop",
+      "to": "red_south",
+      "points": [
+        [
+          0,
+          -864,
+          0
+        ],
+        [
+          720,
+          -864,
+          0
+        ],
+        [
+          720,
+          -640,
+          0
+        ],
+        [
+          832,
+          -416,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "blue_north__west_dock_north",
+      "from": "blue_north",
+      "to": "west_dock_north",
+      "points": [
+        [
+          -832,
+          416,
+          0
+        ],
+        [
+          -672,
+          192,
+          0
+        ],
+        [
+          -288,
+          192,
+          0
+        ],
+        [
+          -288,
+          288,
+          0
+        ],
+        [
+          -256,
+          448,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "blue_south__west_dock_south",
+      "from": "blue_south",
+      "to": "west_dock_south",
+      "points": [
+        [
+          -832,
+          -416,
+          0
+        ],
+        [
+          -640,
+          -448,
+          0
+        ],
+        [
+          -256,
+          -448,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "red_north__east_dock_north",
+      "from": "red_north",
+      "to": "east_dock_north",
+      "points": [
+        [
+          832,
+          416,
+          0
+        ],
+        [
+          640,
+          368,
+          0
+        ],
+        [
+          256,
+          368,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "red_south__east_dock_south",
+      "from": "red_south",
+      "to": "east_dock_south",
+      "points": [
+        [
+          832,
+          -416,
+          0
+        ],
+        [
+          704,
+          -640,
+          0
+        ],
+        [
+          288,
+          -640,
+          0
+        ],
+        [
+          288,
+          -544,
+          0
+        ],
+        [
+          256,
+          -400,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "west_dock_south__west_dock_north",
+      "from": "west_dock_south",
+      "to": "west_dock_north",
+      "points": [
+        [
+          -256,
+          -448,
+          0
+        ],
+        [
+          -288,
+          96,
+          0
+        ],
+        [
+          -288,
+          288,
+          0
+        ],
+        [
+          -256,
+          448,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "east_dock_south__east_dock_north",
+      "from": "east_dock_south",
+      "to": "east_dock_north",
+      "points": [
+        [
+          256,
+          -400,
+          0
+        ],
+        [
+          256,
+          368,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "west_dock_north__north_loop",
+      "from": "west_dock_north",
+      "to": "north_loop",
+      "points": [
+        [
+          -256,
+          448,
+          0
+        ],
+        [
+          -256,
+          864,
+          0
+        ],
+        [
+          0,
+          864,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "east_dock_south__south_loop",
+      "from": "east_dock_south",
+      "to": "south_loop",
+      "points": [
+        [
+          256,
+          -400,
+          0
+        ],
+        [
+          288,
+          -544,
+          0
+        ],
+        [
+          288,
+          -736,
+          0
+        ],
+        [
+          256,
+          -800,
+          0
+        ],
+        [
+          256,
+          -864,
+          0
+        ],
+        [
+          0,
+          -864,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "track_center__track_north",
+      "from": "track_center",
+      "to": "track_north",
+      "points": [
+        [
+          0,
+          0,
+          -128
+        ],
+        [
+          -96,
+          0,
+          -128
+        ],
+        [
+          -96,
+          192,
+          -128
+        ],
+        [
+          0,
+          256,
+          -128
+        ],
+        [
+          0,
+          512,
+          -128
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "track_center__track_south",
+      "from": "track_center",
+      "to": "track_south",
+      "points": [
+        [
+          0,
+          0,
+          -128
+        ],
+        [
+          96,
+          0,
+          -128
+        ],
+        [
+          96,
+          -192,
+          -128
+        ],
+        [
+          0,
+          -256,
+          -128
+        ],
+        [
+          0,
+          -512,
+          -128
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "track_north__north_loop",
+      "from": "track_north",
+      "to": "north_loop",
+      "points": [
+        [
+          0,
+          512,
+          -128
+        ],
+        [
+          0,
+          544,
+          -128
+        ],
+        [
+          0,
+          800,
+          0
+        ],
+        [
+          0,
+          864,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "track_south__south_loop",
+      "from": "track_south",
+      "to": "south_loop",
+      "points": [
+        [
+          0,
+          -512,
+          -128
+        ],
+        [
+          0,
+          -544,
+          -128
+        ],
+        [
+          0,
+          -800,
+          0
+        ],
+        [
+          0,
+          -864,
+          0
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "west_junction__track_center",
+      "from": "west_junction",
+      "to": "track_center",
+      "points": [
+        [
+          -800,
+          0,
+          0
+        ],
+        [
+          -640,
+          0,
+          0
+        ],
+        [
+          -320,
+          0,
+          -128
+        ],
+        [
+          0,
+          0,
+          -128
+        ],
+        [
+          0,
+          0,
+          -128
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "east_junction__track_center",
+      "from": "east_junction",
+      "to": "track_center",
+      "points": [
+        [
+          672,
+          0,
+          0
+        ],
+        [
+          672,
+          192,
+          0
+        ],
+        [
+          640,
+          192,
+          0
+        ],
+        [
+          320,
+          192,
+          -128
+        ],
+        [
+          0,
+          192,
+          -128
+        ],
+        [
+          -96,
+          192,
+          -128
+        ],
+        [
+          -96,
+          0,
+          -128
+        ],
+        [
+          0,
+          0,
+          -128
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "blue_north__blue_upper",
+      "from": "blue_north",
+      "to": "blue_upper",
+      "points": [
+        [
+          -832,
+          416,
+          0
+        ],
+        [
+          -672,
+          224,
+          0
+        ],
+        [
+          -496,
+          224,
+          0
+        ],
+        [
+          -496,
+          256,
+          0
+        ],
+        [
+          -496,
+          576,
+          160
+        ],
+        [
+          -496,
+          640,
+          160
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "blue_upper__west_gallery_north",
+      "from": "blue_upper",
+      "to": "west_gallery_north",
+      "points": [
+        [
+          -496,
+          640,
+          160
+        ],
+        [
+          -272,
+          640,
+          160
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "red_south__red_upper",
+      "from": "red_south",
+      "to": "red_upper",
+      "points": [
+        [
+          832,
+          -416,
+          0
+        ],
+        [
+          672,
+          -224,
+          0
+        ],
+        [
+          496,
+          -224,
+          0
+        ],
+        [
+          496,
+          -256,
+          0
+        ],
+        [
+          496,
+          -576,
+          160
+        ],
+        [
+          496,
+          -640,
+          160
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "red_upper__east_gallery_south",
+      "from": "red_upper",
+      "to": "east_gallery_south",
+      "points": [
+        [
+          496,
+          -640,
+          160
+        ],
+        [
+          272,
+          -640,
+          160
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "west_gallery_south__west_gallery_north",
+      "from": "west_gallery_south",
+      "to": "west_gallery_north",
+      "points": [
+        [
+          -272,
+          -640,
+          160
+        ],
+        [
+          -272,
+          640,
+          160
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "east_gallery_south__east_gallery_north",
+      "from": "east_gallery_south",
+      "to": "east_gallery_north",
+      "points": [
+        [
+          272,
+          -640,
+          160
+        ],
+        [
+          272,
+          640,
+          160
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "west_gallery_north__east_gallery_north",
+      "from": "west_gallery_north",
+      "to": "east_gallery_north",
+      "points": [
+        [
+          -272,
+          640,
+          160
+        ],
+        [
+          -272,
+          320,
+          160
+        ],
+        [
+          272,
+          320,
+          160
+        ],
+        [
+          272,
+          640,
+          160
+        ]
+      ],
+      "bidirectional": true
+    },
+    {
+      "name": "west_gallery_south__east_gallery_south",
+      "from": "west_gallery_south",
+      "to": "east_gallery_south",
+      "points": [
+        [
+          -272,
+          -640,
+          160
+        ],
+        [
+          -272,
+          -256,
+          160
+        ],
+        [
+          272,
+          -256,
+          160
+        ],
+        [
+          272,
+          -640,
+          160
+        ]
+      ],
+      "bidirectional": true
+    }
+  ],
+  "floor_probes": [
+    {
+      "name": "blue_south",
+      "point": [
+        -832,
+        -416,
+        0
+      ]
+    },
+    {
+      "name": "blue_north",
+      "point": [
+        -832,
+        416,
+        0
+      ]
+    },
+    {
+      "name": "red_north",
+      "point": [
+        832,
+        416,
+        0
+      ]
+    },
+    {
+      "name": "red_south",
+      "point": [
+        832,
+        -416,
+        0
+      ]
+    },
+    {
+      "name": "west_junction",
+      "point": [
+        -800,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "east_junction",
+      "point": [
+        672,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "north_loop",
+      "point": [
+        0,
+        864,
+        0
+      ]
+    },
+    {
+      "name": "south_loop",
+      "point": [
+        0,
+        -864,
+        0
+      ]
+    },
+    {
+      "name": "west_dock_north",
+      "point": [
+        -256,
+        448,
+        0
+      ]
+    },
+    {
+      "name": "west_dock_south",
+      "point": [
+        -256,
+        -448,
+        0
+      ]
+    },
+    {
+      "name": "east_dock_north",
+      "point": [
+        256,
+        368,
+        0
+      ]
+    },
+    {
+      "name": "east_dock_south",
+      "point": [
+        256,
+        -400,
+        0
+      ]
+    },
+    {
+      "name": "track_center",
+      "point": [
+        0,
+        0,
+        -128
+      ]
+    },
+    {
+      "name": "track_north",
+      "point": [
+        0,
+        512,
+        -128
+      ]
+    },
+    {
+      "name": "track_south",
+      "point": [
+        0,
+        -512,
+        -128
+      ]
+    },
+    {
+      "name": "west_gallery_north",
+      "point": [
+        -272,
+        640,
+        160
+      ]
+    },
+    {
+      "name": "west_gallery_south",
+      "point": [
+        -272,
+        -640,
+        160
+      ]
+    },
+    {
+      "name": "east_gallery_north",
+      "point": [
+        272,
+        640,
+        160
+      ]
+    },
+    {
+      "name": "east_gallery_south",
+      "point": [
+        272,
+        -640,
+        160
+      ]
+    },
+    {
+      "name": "blue_upper",
+      "point": [
+        -496,
+        640,
+        160
+      ]
+    },
+    {
+      "name": "red_upper",
+      "point": [
+        496,
+        -640,
+        160
+      ]
+    },
+    {
+      "name": "spawn_floor_0",
+      "point": [
+        -832,
+        -576,
+        0.0
+      ]
+    },
+    {
+      "name": "spawn_floor_1",
+      "point": [
+        -832,
+        480,
+        0.0
+      ]
+    },
+    {
+      "name": "spawn_floor_2",
+      "point": [
+        832,
+        512,
+        0.0
+      ]
+    },
+    {
+      "name": "spawn_floor_3",
+      "point": [
+        832,
+        -544,
+        0.0
+      ]
+    },
+    {
+      "name": "spawn_floor_4",
+      "point": [
+        -800,
+        0,
+        0.0
+      ]
+    },
+    {
+      "name": "spawn_floor_5",
+      "point": [
+        480,
+        864,
+        0.0
+      ]
+    },
+    {
+      "name": "spawn_floor_6",
+      "point": [
+        -480,
+        -864,
+        0.0
+      ]
+    },
+    {
+      "name": "spawn_floor_7",
+      "point": [
+        480,
+        -640,
+        160.0
+      ]
+    }
+  ],
+  "open_build_areas": [
+    {
+      "name": "blue_north_build_pad",
+      "min": [
+        -960,
+        352
+      ],
+      "max": [
+        -640,
+        640
+      ],
+      "z": 0
+    },
+    {
+      "name": "blue_south_build_pad",
+      "min": [
+        -960,
+        -640
+      ],
+      "max": [
+        -640,
+        -352
+      ],
+      "z": 0
+    },
+    {
+      "name": "red_north_build_pad",
+      "min": [
+        640,
+        352
+      ],
+      "max": [
+        960,
+        640
+      ],
+      "z": 0
+    },
+    {
+      "name": "red_south_build_pad",
+      "min": [
+        640,
+        -640
+      ],
+      "max": [
+        960,
+        -352
+      ],
+      "z": 0
+    }
+  ],
+  "spawns": [
+    {
+      "origin": [
+        -832,
+        -576,
+        24.125
+      ],
+      "angle": 15
+    },
+    {
+      "origin": [
+        -832,
+        480,
+        24.125
+      ],
+      "angle": 330
+    },
+    {
+      "origin": [
+        832,
+        512,
+        24.125
+      ],
+      "angle": 180
+    },
+    {
+      "origin": [
+        832,
+        -544,
+        24.125
+      ],
+      "angle": 90
+    },
+    {
+      "origin": [
+        -800,
+        0,
+        24.125
+      ],
+      "angle": 0
+    },
+    {
+      "origin": [
+        480,
+        864,
+        24.125
+      ],
+      "angle": 180
+    },
+    {
+      "origin": [
+        -480,
+        -864,
+        24.125
+      ],
+      "angle": 0
+    },
+    {
+      "origin": [
+        480,
+        -640,
+        184.125
+      ],
+      "angle": 90
+    }
+  ],
+  "pickups": [
+    {
+      "classname": "weapon_shotgun",
+      "origin": [
+        -848,
+        -448,
+        24
+      ]
+    },
+    {
+      "classname": "weapon_shotgun",
+      "origin": [
+        848,
+        448,
+        24
+      ]
+    },
+    {
+      "classname": "weapon_machinegun",
+      "origin": [
+        -848,
+        448,
+        24
+      ]
+    },
+    {
+      "classname": "weapon_machinegun",
+      "origin": [
+        848,
+        -448,
+        24
+      ]
+    },
+    {
+      "classname": "weapon_supershotgun",
+      "origin": [
+        -800,
+        0,
+        24
+      ]
+    },
+    {
+      "classname": "weapon_chaingun",
+      "origin": [
+        -480,
+        640,
+        184
+      ]
+    },
+    {
+      "classname": "weapon_grenadelauncher",
+      "origin": [
+        272,
+        320,
+        184
+      ]
+    },
+    {
+      "classname": "weapon_rocketlauncher",
+      "origin": [
+        0,
+        0,
+        -104
+      ]
+    },
+    {
+      "classname": "item_armor_body",
+      "origin": [
+        848,
+        640,
+        24
+      ]
+    },
+    {
+      "classname": "item_health_large",
+      "origin": [
+        -848,
+        640,
+        24
+      ]
+    },
+    {
+      "classname": "item_health_large",
+      "origin": [
+        848,
+        -640,
+        24
+      ]
+    },
+    {
+      "classname": "ammo_shells",
+      "origin": [
+        -912,
+        -448,
+        24
+      ]
+    },
+    {
+      "classname": "ammo_shells",
+      "origin": [
+        912,
+        448,
+        24
+      ]
+    },
+    {
+      "classname": "ammo_shells",
+      "origin": [
+        -736,
+        0,
+        24
+      ]
+    },
+    {
+      "classname": "ammo_shells",
+      "origin": [
+        -736,
+        -864,
+        24
+      ]
+    },
+    {
+      "classname": "ammo_bullets",
+      "origin": [
+        -912,
+        448,
+        24
+      ]
+    },
+    {
+      "classname": "ammo_bullets",
+      "origin": [
+        912,
+        -448,
+        24
+      ]
+    },
+    {
+      "classname": "ammo_bullets",
+      "origin": [
+        -432,
+        640,
+        184
+      ]
+    },
+    {
+      "classname": "ammo_bullets",
+      "origin": [
+        -528,
+        640,
+        184
+      ]
+    },
+    {
+      "classname": "ammo_bullets",
+      "origin": [
+        736,
+        864,
+        24
+      ]
+    },
+    {
+      "classname": "ammo_bullets",
+      "origin": [
+        -256,
+        -448,
+        24
+      ]
+    },
+    {
+      "classname": "ammo_gl_rounds",
+      "origin": [
+        272,
+        448,
+        184
+      ]
+    },
+    {
+      "classname": "ammo_gl_rounds",
+      "origin": [
+        272,
+        512,
+        184
+      ]
+    },
+    {
+      "classname": "ammo_rockets",
+      "origin": [
+        96,
+        -96,
+        -104
+      ]
+    },
+    {
+      "classname": "ammo_rockets",
+      "origin": [
+        -96,
+        192,
+        -104
+      ]
+    }
+  ],
+  "budget_note": "At most7/6 Temple compiled/renderable triangles; runtime samples reported separately."
+}

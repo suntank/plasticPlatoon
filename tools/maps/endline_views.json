@@ -1,58 +1,98 @@
 [
   {
-    "name": "insertion",
+    "name": "window_sill_screens",
+    "pose": [
+      -3280,
+      -1776,
+      680,
+      6,
+      30
+    ]
+  },
+  {
+    "name": "window_dogleg",
+    "pose": [
+      -3016,
+      -1560,
+      392,
+      12,
+      85
+    ]
+  },
+  {
+    "name": "window_descent_back",
+    "pose": [
+      -2960,
+      -1360,
+      88,
+      -12,
+      220
+    ]
+  },
+  {
+    "name": "storage_west_south",
+    "pose": [
+      -1888,
+      -1056,
+      304,
+      -12,
+      15
+    ]
+  },
+  {
+    "name": "storage_north_bay",
+    "pose": [
+      -1360,
+      736,
+      224,
+      -8,
+      15
+    ]
+  },
+  {
+    "name": "arch_east_to_west",
+    "pose": [
+      -1856,
+      0,
+      336,
+      -4,
+      180
+    ]
+  },
+  {
+    "name": "arch_west_to_east",
     "pose": [
       -2368,
-      -1184,
-      32,
       0,
-      25
+      336,
+      -4,
+      0
     ]
   },
   {
-    "name": "bridge_and_double_barrel",
+    "name": "new_station_overview",
     "pose": [
-      -1760,
+      1168,
+      -704,
+      392,
+      12,
+      147
+    ]
+  },
+  {
+    "name": "new_loading_gantry",
+    "pose": [
+      840,
       -544,
-      24,
-      -12,
-      20
-    ]
-  },
-  {
-    "name": "upper_approach",
-    "pose": [
-      -1648,
-      -256,
-      264,
+      368,
       0,
-      0
+      100
     ]
   },
   {
-    "name": "under_the_bridge",
+    "name": "relocated_signal_cabin",
     "pose": [
-      -1680,
-      240,
-      24,
-      0,
-      0
-    ]
-  },
-  {
-    "name": "lower_passages",
-    "pose": [
-      -1104,
-      528,
-      24,
-      0,
-      0
-    ]
-  },
-  {
-    "name": "signal_cabin",
-    "pose": [
-      704,
+      -320,
       -800,
       328,
       0,
@@ -60,33 +100,23 @@
     ]
   },
   {
-    "name": "switching_yard",
+    "name": "unchanged_bridge_rider",
     "pose": [
-      1728,
-      736,
-      24,
+      -1236,
+      -34,
+      329,
       0,
-      235
+      180
     ]
   },
   {
-    "name": "loading_platform",
+    "name": "unchanged_final_gate",
     "pose": [
-      1680,
-      -848,
-      120,
-      -12,
-      90
-    ]
-  },
-  {
-    "name": "workbench_overview",
-    "pose": [
-      -2208,
-      928,
-      592,
-      12,
-      335
+      -3440,
+      -320,
+      640,
+      8,
+      180
     ]
   }
 ]

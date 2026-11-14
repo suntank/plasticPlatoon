@@ -497,7 +497,7 @@ extern void GL3_DrawWorld(void);
 extern void GL3_MarkLeaves(void);
 
 // gl3_mesh.c
-extern void GL3_DrawAliasModel(entity_t *e);
+extern void GL3_DrawAliasModel(entity_t *e, const gl3model_t *model);
 extern void GL3_ResetShadowAliasModels(void);
 extern void GL3_DrawAliasShadows(void);
 extern void GL3_ShutdownMeshes(void);

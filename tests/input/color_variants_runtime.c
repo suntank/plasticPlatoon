@@ -28,6 +28,7 @@ static void (*set_info)(char *, const char *, const char *);
 static ss_local_player_t *(*get_slot)(int);
 static cvar_t *(*set_cvar)(const char *, const char *);
 static void (*add_text)(const char *);
+static float (*model_ads_blend)(int);
 static int initialized;
 static long control_offset;
 extern int PP_ColorGameEquip(void *, uintptr_t, const char *);
@@ -77,6 +78,7 @@ static int find_main(struct dl_phdr_info *info, size_t size, void *data)
 	get_slot = symbol(info->dlpi_addr, "SS_GetSlot");
 	set_cvar = symbol(info->dlpi_addr, "Cvar_Set");
 	if (getenv("PP_COLOR_Cbuf_AddText")) add_text = symbol(info->dlpi_addr, "Cbuf_AddText");
+	if (getenv("PP_COLOR_CL_GetModelADSBlend")) model_ads_blend = symbol(info->dlpi_addr, "CL_GetModelADSBlend");
 	return 1;
 }
 
@@ -144,14 +146,15 @@ static void state(const char *label)
 		fputs(",\"slot_skin\":", stderr); json_string(slot ? slot->skin : "");
 		fprintf(stderr, ",\"gunindex\":%d,\"gunmodel\":", frame->playerstate.gunindex);
 		json_string(model_name(frame->playerstate.gunindex));
-		fprintf(stderr, ",\"server_gunindex\":%d,\"linked_modelindex\":%d,\"weapon_slot\":%d,\"server_flags\":%d,\"ads_held\":%s,\"cmd_ads\":%s}",
+		fprintf(stderr, ",\"server_gunindex\":%d,\"linked_modelindex\":%d,\"weapon_slot\":%d,\"server_flags\":%d,\"ads_held\":%s,\"cmd_ads\":%s,\"model_ads_blend\":%.6f}",
 			server_client && edict(server_number + 1)->client ? edict(server_number + 1)->client->ps.gunindex : -1,
 			server_client ? edict(server_number + 1)->s.modelindex2 : -1,
 			server_client ? edict(server_number + 1)->s.skinnum >> 8 : -1,
 			server_client ? edict(server_number + 1)->s.renderfx : 0,
 			slot && slot->ads_down ? "true" : "false",
 			i ? slot && (slot->cmd.buttons & BUTTON_ADS) ? "true" : "false" :
-			(color_cl->cmd.buttons & BUTTON_ADS) ? "true" : "false");
+			(color_cl->cmd.buttons & BUTTON_ADS) ? "true" : "false",
+			model_ads_blend ? model_ads_blend(i) : -1.0f);
 	}
 	fputs("]}\n", stderr); fflush(stderr);
 }
@@ -214,6 +217,12 @@ static void controls(void)
 	fclose(file);
 	if (sscanf(line, "%31s %127s", op, arg) < 1) return;
 	if (!strcmp(op, "state")) state(arg);
+	else if (!strcmp(op, "console") && add_text) {
+		/* File-driven commands let screenshot runners share the same native
+		 * command path without depending on another process's UDP namespace. */
+		const char *text = strchr(line, ' ');
+		if (text) add_text(text + 1);
+	}
 	else if (!strcmp(op, "enemy_state")) enemy_state(arg);
 	else if (!strcmp(op, "skin") && sscanf(line, "%*s %d %127s", &slot, arg) == 2) skin(slot, arg);
 	else if (!strcmp(op, "ads") && sscanf(line, "%*s %d %d", &slot, &value) == 2 &&
@@ -225,6 +234,14 @@ static void controls(void)
 			else fputs("PP_COLOR_ERROR primary ads needs PP_COLOR_Cbuf_AddText\n", stderr);
 		}
 		fprintf(stderr, "PP_COLOR_APPLIED ads %d %d\n", slot, value);
+		fflush(stderr);
+	}
+	else if (!strcmp(op, "attack") && sscanf(line, "%*s %d %d", &slot, &value) == 2 &&
+		slot >= 0 && slot < SS_MAX_LOCAL_PLAYERS && (value == 0 || value == 1)) {
+		ss_local_player_t *player = get_slot(slot);
+		if (player) player->attack_down = value != 0;
+		if (!slot && add_text) add_text(value ? "+attack\n" : "-attack\n");
+		fprintf(stderr, "PP_COLOR_APPLIED attack %d %d\n", slot, value);
 		fflush(stderr);
 	}
 	else if (!strcmp(op, "equip") && sscanf(line, "%*s %d %n", &slot, &offset) == 1) {

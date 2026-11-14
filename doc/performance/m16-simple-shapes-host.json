@@ -1,0 +1,2122 @@
+{
+  "schema_version": 1,
+  "title": "M16 four-player host workload comparison",
+  "baseline_commit": "7b30465800c9aa479d4e231010772e49a4358559",
+  "is_raspberry_pi_benchmark": false,
+  "environment": {
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "architecture": "x86_64",
+    "renderer": "GL1",
+    "GL_VENDOR": "Mesa",
+    "GL_RENDERER": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "GL_VERSION": "4.5 (Compatibility Profile) Mesa 25.0.7-2+deb13u1",
+    "SDL_VIDEODRIVER": "offscreen",
+    "LP_NUM_THREADS": 2,
+    "resolution": [
+      1280,
+      720
+    ],
+    "local_players": 4,
+    "frame_limit": 120,
+    "frames_per_capture": 480,
+    "warmup_frames_discarded": 120,
+    "fullbright": false,
+    "map_source": "maps/fixtures/pp_m16_review.map",
+    "compiled_map_sha256": "d16699d921b1797f31de9fbbfd9449324b16c6663ac48509b8e99e365ef1b28f"
+  },
+  "method": [
+    "Same current executable, game library, renderer, baked-light fixture and camera positions in both runs; only the M16 package assets differ.",
+    "All four players hold their M16 at hip. Aim and firing captures occur after timing collection.",
+    "Runs are sequential. Blender and other task renders had completed.",
+    "Counters are summed across all four viewports per display frame. 360 samples remain after dropping the first 120 frames."
+  ],
+  "interpretation": [
+    "Model triangles and client vertex submission bytes decreased with the same draw count and world triangle count.",
+    "Median whole-display completion time remained near the 120 FPS frame cap. This does not establish a meaningful whole-game FPS gain.",
+    "CPU-side screen work was lower in this host sample, but a single sequential software-renderer pair is not a Raspberry Pi performance forecast.",
+    "Pose interpolation work increased in this sample: 1580 to 2350 vertices, with eight to six pose-cache hits. The pattern is consistent with two distinct idle pose keys instead of one; actor pose timing was not synchronized. It is not evidence for a measured pose CPU reduction.",
+    "Resident buffer totals include the world and all registered models. The viewmodel xyz calculation isolates the M16 static position buffer. Per-frame static uploads remained zero after registration.",
+    "The M16 first-person muzzle flash follows the ADS translation; existing recoil, raise and bob still make its camera-basis anchor an approximation, not an exact attachment to the final procedural barrel pose."
+  ],
+  "comparison": {
+    "model_triangles": {
+      "before_median": 21420.0,
+      "after_median": 11996.0,
+      "change_percent": -43.99626517273576
+    },
+    "client_vertex_bytes": {
+      "before_median": 285200.0,
+      "after_median": 183296.0,
+      "change_percent": -35.73071528751753
+    },
+    "pose_vertices": {
+      "before_median": 1580.0,
+      "after_median": 2350.0,
+      "change_percent": 48.734177215189874
+    },
+    "pose_cache_hits": {
+      "before_median": 8.0,
+      "after_median": 6.0,
+      "change_percent": -25.0
+    },
+    "draws": {
+      "before_median": 34.0,
+      "after_median": 34.0,
+      "change_percent": 0.0
+    },
+    "world_triangles": {
+      "before_median": 1051.0,
+      "after_median": 1051.0,
+      "change_percent": 0.0
+    },
+    "screen_ms": {
+      "before_median": 4.1274999999999995,
+      "after_median": 3.0075000000000003,
+      "change_percent": -27.135069654754677
+    },
+    "submit_ms": {
+      "before_median": 3.7415000000000003,
+      "after_median": 2.646,
+      "change_percent": -29.279700654817596
+    },
+    "model_ms": {
+      "before_median": 0.071,
+      "after_median": 0.069,
+      "change_percent": -2.8169014084506876
+    },
+    "frame_ms": {
+      "before_median": 8.4805,
+      "after_median": 8.4465,
+      "change_percent": -0.40091975708978156
+    }
+  },
+  "m16_triangle_draws": {
+    "first_person_draws": 4,
+    "player_attachment_draws": 5,
+    "before_triangles": 12590,
+    "after_triangles": 3166,
+    "unchanged_other_model_triangles": 8830
+  },
+  "captures": [
+    {
+      "label": "baseline",
+      "manifest": {
+        "label": "baseline-four",
+        "renderer": "gl1",
+        "players": 4,
+        "executable_sha256": "6d002bc9dd8476dd9ec1c45e08f12617a26a7084892be36cd63bbc6ca8834a56",
+        "game_sha256": "7789423145d4647a2c357af381b4bc4d86dc6883c729b194444e58a7f1a018a5",
+        "renderer_sha256": "31e2b58a018439af64011cd97a2bcb583118c839035dbdd46e6d52901e616f57",
+        "package_sha256": "a3f91b74cf389adfdafb396a1d2e1d3bf254fc7ce40580934bfa4b06a373af3f",
+        "map": "pp_m16_review",
+        "backend": "SDL offscreen, llvmpipe",
+        "pi_benchmark": false,
+        "fullbright": false,
+        "target": false,
+        "views": [
+          {
+            "name": "four-player",
+            "screenshot": "four-player.png",
+            "sha256": "cb40bcae2539b646d01d20952a8a5ee1df0a58c5edfcaf7bf7ba231ae62912c6",
+            "view": "four-player"
+          }
+        ],
+        "states": {
+          "ready-0": {
+            "label": "ready-0",
+            "connection": 3,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 0,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 1,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 1,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 2,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 2,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 3,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 3,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              }
+            ]
+          },
+          "ready-1": {
+            "label": "ready-1",
+            "connection": 3,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 0,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 1,
+                "spawned": true,
+                "server_client": 1,
+                "playernum": 1,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 2,
+                "spawned": true,
+                "server_client": 2,
+                "playernum": 2,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 3,
+                "spawned": true,
+                "server_client": 3,
+                "playernum": 3,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              }
+            ]
+          },
+          "ready-2": {
+            "label": "ready-2",
+            "connection": 3,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 0,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 1,
+                "spawned": true,
+                "server_client": 1,
+                "playernum": 1,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P2\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 2,
+                "spawned": true,
+                "server_client": 2,
+                "playernum": 2,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P3\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 3,
+                "spawned": true,
+                "server_client": 3,
+                "playernum": 3,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P4\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              }
+            ]
+          },
+          "ready-3": {
+            "label": "ready-3",
+            "connection": 4,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": true,
+                "server_client": 0,
+                "playernum": 0,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 1,
+                "spawned": true,
+                "server_client": 1,
+                "playernum": 1,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P2\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 2,
+                "spawned": true,
+                "server_client": 2,
+                "playernum": 2,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P3\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 3,
+                "spawned": true,
+                "server_client": 3,
+                "playernum": 3,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P4\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              }
+            ]
+          },
+          "four-equipped": {
+            "label": "four-equipped",
+            "connection": 4,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": true,
+                "server_client": 0,
+                "playernum": 0,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 1,
+                "spawned": true,
+                "server_client": 1,
+                "playernum": 1,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P2\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 2,
+                "spawned": true,
+                "server_client": 2,
+                "playernum": 2,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P3\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 3,
+                "spawned": true,
+                "server_client": 3,
+                "playernum": 3,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P4\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              }
+            ]
+          }
+        },
+        "returncode": 0,
+        "complete": true
+      },
+      "source_files": {
+        "m16-four-frames.csv": "ac95fb3910937755ea44ae93b047077013d1edffe2bedea7379423453c4788cd",
+        "m16-four-settings.txt": "bac6c0231c30882b1051ddb664347d2c76a601509a8fd9d0341e4344fa36b9de",
+        "m16-four-views.csv": "6419018a6bd2c70ae99908dae9953fd49bc63a912fe0f66c4967e8825b505d51"
+      },
+      "summary": {
+        "warmup_frames": 120,
+        "frames": 360,
+        "metrics": {
+          "frame_ms": {
+            "median": 8.4805,
+            "p95": 20.99745,
+            "p99": 36.38159000000004,
+            "maximum": 56.26,
+            "mean": 9.99393888888889,
+            "minimum": 3.374
+          },
+          "screen_ms": {
+            "median": 4.1274999999999995,
+            "p95": 16.57645,
+            "p99": 35.55262000000004,
+            "maximum": 55.573,
+            "mean": 6.074197222222222,
+            "minimum": 2.551
+          },
+          "server_ms": {
+            "median": 0.02,
+            "p95": 0.08005000000000001,
+            "p99": 0.21305000000000013,
+            "maximum": 0.55,
+            "mean": 0.030758333333333332,
+            "minimum": 0.015
+          },
+          "simulation_ms": {
+            "median": 0.0,
+            "p95": 0.011,
+            "p99": 0.014410000000000025,
+            "maximum": 0.086,
+            "mean": 0.0014194444444444443,
+            "minimum": 0.0
+          },
+          "snapshot_send_ms": {
+            "median": 0.0,
+            "p95": 0.009,
+            "p99": 0.030690000000000224,
+            "maximum": 0.112,
+            "mean": 0.0016444444444444445,
+            "minimum": 0.0
+          },
+          "client_update_ms": {
+            "median": 0.697,
+            "p95": 1.9805000000000008,
+            "p99": 6.805840000000035,
+            "maximum": 17.455,
+            "mean": 0.9505222222222223,
+            "minimum": 0.459
+          },
+          "prepare_ms": {
+            "median": 0.051,
+            "p95": 0.144,
+            "p99": 0.4081100000000018,
+            "maximum": 0.713,
+            "mean": 0.06837777777777777,
+            "minimum": 0.037
+          },
+          "submit_ms": {
+            "median": 3.7415000000000003,
+            "p95": 15.986450000000001,
+            "p99": 34.72410000000003,
+            "maximum": 53.885,
+            "mean": 5.619866666666667,
+            "minimum": 2.287
+          },
+          "present_ms": {
+            "median": 0.006,
+            "p95": 0.008,
+            "p99": 0.10581000000000103,
+            "maximum": 0.28,
+            "mean": 0.009102777777777777,
+            "minimum": 0.004
+          },
+          "views": {
+            "median": 4.0,
+            "p95": 4.0,
+            "p99": 4.0,
+            "maximum": 4.0,
+            "mean": 4.0,
+            "minimum": 4.0
+          },
+          "width": {
+            "median": 1280.0,
+            "p95": 1280.0,
+            "p99": 1280.0,
+            "maximum": 1280.0,
+            "mean": 1280.0,
+            "minimum": 1280.0
+          },
+          "height": {
+            "median": 720.0,
+            "p95": 720.0,
+            "p99": 720.0,
+            "maximum": 720.0,
+            "mean": 720.0,
+            "minimum": 720.0
+          },
+          "server_edicts": {
+            "median": 25.0,
+            "p95": 25.0,
+            "p99": 25.0,
+            "maximum": 25.0,
+            "mean": 25.0,
+            "minimum": 25.0
+          },
+          "monsters": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "dead_monsters": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "projectiles_by_effect": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "rss_kib": {
+            "median": 421880.0,
+            "p95": 482556.0,
+            "p99": 482556.0,
+            "maximum": 482556.0,
+            "mean": 419562.0,
+            "minimum": 368348.0
+          },
+          "cpu_ms": {
+            "median": 3.4475,
+            "p95": 15.7313,
+            "p99": 34.35012000000003,
+            "maximum": 53.199,
+            "mean": 5.307311111111111,
+            "minimum": 2.091
+          },
+          "visibility_ms": {
+            "median": 0.001,
+            "p95": 0.001,
+            "p99": 0.001410000000000025,
+            "maximum": 0.156,
+            "mean": 0.0014611111111111112,
+            "minimum": 0.0
+          },
+          "model_ms": {
+            "median": 0.071,
+            "p95": 0.18130000000000007,
+            "p99": 0.5288200000000001,
+            "maximum": 1.37,
+            "mean": 0.09104444444444444,
+            "minimum": 0.048
+          },
+          "draws": {
+            "median": 34.0,
+            "p95": 34.0,
+            "p99": 34.0,
+            "maximum": 34.0,
+            "mean": 34.0,
+            "minimum": 34.0
+          },
+          "world_triangles": {
+            "median": 1051.0,
+            "p95": 1051.0,
+            "p99": 1051.0,
+            "maximum": 1051.0,
+            "mean": 1051.0,
+            "minimum": 1051.0
+          },
+          "model_triangles": {
+            "median": 21420.0,
+            "p95": 21420.0,
+            "p99": 21420.0,
+            "maximum": 21420.0,
+            "mean": 21420.0,
+            "minimum": 21420.0
+          },
+          "static_vertex_bytes": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "static_index_bytes": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "dynamic_vertex_bytes": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "dynamic_index_bytes": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "client_vertex_bytes": {
+            "median": 285200.0,
+            "p95": 285200.0,
+            "p99": 285200.0,
+            "maximum": 285200.0,
+            "mean": 285200.0,
+            "minimum": 285200.0
+          },
+          "client_index_bytes": {
+            "median": 6306.0,
+            "p95": 6306.0,
+            "p99": 6306.0,
+            "maximum": 6306.0,
+            "mean": 6306.0,
+            "minimum": 6306.0
+          },
+          "pose_vertices": {
+            "median": 1580.0,
+            "p95": 1580.0,
+            "p99": 1580.0,
+            "maximum": 1580.0,
+            "mean": 1580.0,
+            "minimum": 1580.0
+          },
+          "topology_builds": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "pvs_builds": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "pvs_hits": {
+            "median": 4.0,
+            "p95": 4.0,
+            "p99": 4.0,
+            "maximum": 4.0,
+            "mean": 4.0,
+            "minimum": 4.0
+          },
+          "lightmap_bytes": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "pose_cache_hits": {
+            "median": 8.0,
+            "p95": 8.0,
+            "p99": 8.0,
+            "maximum": 8.0,
+            "mean": 8.0,
+            "minimum": 8.0
+          },
+          "particles_created": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "particle_updates": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "particles_expired": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "shared_preparations": {
+            "median": 1.0,
+            "p95": 1.0,
+            "p99": 1.0,
+            "maximum": 1.0,
+            "mean": 1.0,
+            "minimum": 1.0
+          },
+          "entity_effect_evaluations": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "entity_effect_reuses": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "temp_events_parsed": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "sprite_updates": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "active_particles": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "prepared_particles": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          }
+        },
+        "over_33_333_ms_percent": 1.3888888888888888,
+        "elapsed_seconds": 3.597818,
+        "rss_kib_first_last": [
+          368348.0,
+          482556.0
+        ],
+        "server_edicts_first_last": [
+          25.0,
+          25.0
+        ],
+        "monsters_first_last": [
+          0.0,
+          0.0
+        ],
+        "dead_monsters_first_last": [
+          0.0,
+          0.0
+        ],
+        "active_particles_first_last": [
+          0.0,
+          0.0
+        ]
+      },
+      "resident_buffers_after_registration": {
+        "static_vertex_bytes": 359096,
+        "static_index_bytes": 174960
+      },
+      "viewmodel_static_xyz": {
+        "render_vertices": 1480,
+        "bytes": 17760,
+        "calculation": "One resident xyz buffer, three float32 components per render vertex; shared across four view draws."
+      }
+    },
+    {
+      "label": "rebuilt",
+      "manifest": {
+        "label": "rebuilt-four",
+        "renderer": "gl1",
+        "players": 4,
+        "executable_sha256": "6d002bc9dd8476dd9ec1c45e08f12617a26a7084892be36cd63bbc6ca8834a56",
+        "game_sha256": "7789423145d4647a2c357af381b4bc4d86dc6883c729b194444e58a7f1a018a5",
+        "renderer_sha256": "31e2b58a018439af64011cd97a2bcb583118c839035dbdd46e6d52901e616f57",
+        "package_sha256": "a33bd406b4af74a43b228ca2d482fb4caf8d9c1d2b3532ccd23553600e24b181",
+        "map": "pp_m16_review",
+        "backend": "SDL offscreen, llvmpipe",
+        "pi_benchmark": false,
+        "fullbright": false,
+        "target": false,
+        "views": [
+          {
+            "name": "four-player",
+            "screenshot": "four-player.png",
+            "sha256": "162fcc2c0f08a204542aff1525aeacc0d6abbbd2c07366835ab0eab55df06ea4",
+            "view": "four-player"
+          },
+          {
+            "name": "four-mixed-ads",
+            "screenshot": "four-mixed-ads.png",
+            "sha256": "b9e6e01b0c72ea94a14fc998cba0f672afe689dfb1835b11d01192573f81ee66",
+            "view": "slots 1/3 aimed, 2/4 hip"
+          },
+          {
+            "name": "four-mixed-ads-fire",
+            "screenshot": "four-mixed-ads-fire.png",
+            "sha256": "cfa857dcae0d12f15c41a9e2e9571bf51347603d1721d441fdf4e1af1ce8faf8",
+            "view": "four firing, slots 1/3 aimed"
+          },
+          {
+            "name": "four-mixed-ads-reversed",
+            "screenshot": "four-mixed-ads-reversed.png",
+            "sha256": "81dcb572e4d0ee30825c55ba9164f023f1c6c905047059ad5742f60e369698f9",
+            "view": "slots 2/4 aimed, 1/3 hip"
+          },
+          {
+            "name": "four-mixed-ads-reversed-fire",
+            "screenshot": "four-mixed-ads-reversed-fire.png",
+            "sha256": "18b85967ec6f9ea35877be52d2c4ea58ae966e4fcf04554dfa8dd84820b3473f",
+            "view": "four firing, slots 2/4 aimed"
+          }
+        ],
+        "states": {
+          "ready-0": {
+            "label": "ready-0",
+            "connection": 3,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 0,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 1,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 0,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 2,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 0,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 3,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 0,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              }
+            ]
+          },
+          "ready-1": {
+            "label": "ready-1",
+            "connection": 3,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 0,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 1,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 1,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 2,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 2,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 3,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 3,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              }
+            ]
+          },
+          "ready-2": {
+            "label": "ready-2",
+            "connection": 3,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 0,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 1,
+                "spawned": true,
+                "server_client": 1,
+                "playernum": 1,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 2,
+                "spawned": true,
+                "server_client": 2,
+                "playernum": 2,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 3,
+                "spawned": true,
+                "server_client": 3,
+                "playernum": 3,
+                "weaponcolor": "",
+                "clientinfo": "",
+                "body_skin": "",
+                "body_image": "",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              }
+            ]
+          },
+          "ready-3": {
+            "label": "ready-3",
+            "connection": 3,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": false,
+                "server_client": -1,
+                "playernum": 0,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 0,
+                "gunmodel": "",
+                "server_gunindex": -1,
+                "linked_modelindex": -1,
+                "weapon_slot": -1,
+                "server_flags": 0,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 1,
+                "spawned": true,
+                "server_client": 1,
+                "playernum": 1,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P2\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 2,
+                "spawned": true,
+                "server_client": 2,
+                "playernum": 2,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P3\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 3,
+                "spawned": true,
+                "server_client": 3,
+                "playernum": 3,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P4\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              }
+            ]
+          },
+          "ready-4": {
+            "label": "ready-4",
+            "connection": 4,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": true,
+                "server_client": 0,
+                "playernum": 0,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 1,
+                "spawned": true,
+                "server_client": 1,
+                "playernum": 1,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P2\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 2,
+                "spawned": true,
+                "server_client": 2,
+                "playernum": 2,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P3\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 3,
+                "spawned": true,
+                "server_client": 3,
+                "playernum": 3,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P4\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 2,
+                "gunmodel": "models/weapons/v_blast/tris.md2",
+                "server_gunindex": 2,
+                "linked_modelindex": 255,
+                "weapon_slot": 65,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              }
+            ]
+          },
+          "four-equipped": {
+            "label": "four-equipped",
+            "connection": 4,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": true,
+                "server_client": 0,
+                "playernum": 0,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 1,
+                "spawned": true,
+                "server_client": 1,
+                "playernum": 1,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P2\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 2,
+                "spawned": true,
+                "server_client": 2,
+                "playernum": 2,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P3\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 3,
+                "spawned": true,
+                "server_client": 3,
+                "playernum": 3,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P4\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              }
+            ]
+          },
+          "four-mixed-ads": {
+            "label": "four-mixed-ads",
+            "connection": 4,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": true,
+                "server_client": 0,
+                "playernum": 0,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": true,
+                "cmd_ads": true,
+                "model_ads_blend": 1.0
+              },
+              {
+                "slot": 1,
+                "spawned": true,
+                "server_client": 1,
+                "playernum": 1,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P2\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 2,
+                "spawned": true,
+                "server_client": 2,
+                "playernum": 2,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P3\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": true,
+                "cmd_ads": true,
+                "model_ads_blend": 1.0
+              },
+              {
+                "slot": 3,
+                "spawned": true,
+                "server_client": 3,
+                "playernum": 3,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P4\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              }
+            ]
+          },
+          "four-mixed-ads-reversed": {
+            "label": "four-mixed-ads-reversed",
+            "connection": 4,
+            "clients": [
+              {
+                "slot": 0,
+                "spawned": true,
+                "server_client": 0,
+                "playernum": 0,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 1,
+                "spawned": true,
+                "server_client": 1,
+                "playernum": 1,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P2\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": true,
+                "cmd_ads": true,
+                "model_ads_blend": 1.0
+              },
+              {
+                "slot": 2,
+                "spawned": true,
+                "server_client": 2,
+                "playernum": 2,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P3\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": false,
+                "cmd_ads": false,
+                "model_ads_blend": 0.0
+              },
+              {
+                "slot": 3,
+                "spawned": true,
+                "server_client": 3,
+                "playernum": 3,
+                "weaponcolor": "green",
+                "clientinfo": "M16 review P4\\soldier/green",
+                "body_skin": "soldier/green",
+                "body_image": "players/soldier/colors/body_green.png",
+                "slot_skin": "green",
+                "gunindex": 21,
+                "gunmodel": "models/weapons/v_machn/tris.md2",
+                "server_gunindex": 21,
+                "linked_modelindex": 255,
+                "weapon_slot": 4,
+                "server_flags": 32768,
+                "ads_held": true,
+                "cmd_ads": true,
+                "model_ads_blend": 1.0
+              }
+            ]
+          }
+        },
+        "returncode": 0,
+        "complete": true
+      },
+      "source_files": {
+        "m16-four-frames.csv": "99c2415174a6bf14a3ce5bc59eaf0b6f3c69c60fa5ebc4bbfb17120aed9b94ca",
+        "m16-four-settings.txt": "98466b092db17bc627bd351d89901ed8083c123b3a7120e42fbfb7d15a54d115",
+        "m16-four-views.csv": "4942b7e3bbaded9e85bd20e07b4152a6767bf6c91105e4e40bf84d8a96766c68"
+      },
+      "summary": {
+        "warmup_frames": 120,
+        "frames": 360,
+        "metrics": {
+          "frame_ms": {
+            "median": 8.4465,
+            "p95": 12.901,
+            "p99": 15.129560000000003,
+            "maximum": 15.653,
+            "mean": 8.844483333333333,
+            "minimum": 2.841
+          },
+          "screen_ms": {
+            "median": 3.0075000000000003,
+            "p95": 11.6362,
+            "p99": 13.202020000000003,
+            "maximum": 14.623,
+            "mean": 4.229855555555556,
+            "minimum": 1.886
+          },
+          "server_ms": {
+            "median": 0.02,
+            "p95": 0.05505000000000001,
+            "p99": 0.1509200000000003,
+            "maximum": 0.349,
+            "mean": 0.026447222222222223,
+            "minimum": 0.014
+          },
+          "simulation_ms": {
+            "median": 0.0,
+            "p95": 0.009,
+            "p99": 0.01,
+            "maximum": 0.011,
+            "mean": 0.0007638888888888889,
+            "minimum": 0.0
+          },
+          "snapshot_send_ms": {
+            "median": 0.0,
+            "p95": 0.008,
+            "p99": 0.0156400000000001,
+            "maximum": 0.039,
+            "mean": 0.0009555555555555555,
+            "minimum": 0.0
+          },
+          "client_update_ms": {
+            "median": 0.6675,
+            "p95": 0.9451500000000003,
+            "p99": 1.2603700000000015,
+            "maximum": 3.523,
+            "mean": 0.7022722222222222,
+            "minimum": 0.449
+          },
+          "prepare_ms": {
+            "median": 0.05,
+            "p95": 0.09730000000000007,
+            "p99": 0.16807000000000066,
+            "maximum": 0.275,
+            "mean": 0.054780555555555555,
+            "minimum": 0.034
+          },
+          "submit_ms": {
+            "median": 2.646,
+            "p95": 10.7771,
+            "p99": 12.256960000000003,
+            "maximum": 13.466,
+            "mean": 3.807427777777778,
+            "minimum": 1.633
+          },
+          "present_ms": {
+            "median": 0.006,
+            "p95": 0.007,
+            "p99": 0.10346000000000015,
+            "maximum": 0.532,
+            "mean": 0.008869444444444445,
+            "minimum": 0.004
+          },
+          "views": {
+            "median": 4.0,
+            "p95": 4.0,
+            "p99": 4.0,
+            "maximum": 4.0,
+            "mean": 4.0,
+            "minimum": 4.0
+          },
+          "width": {
+            "median": 1280.0,
+            "p95": 1280.0,
+            "p99": 1280.0,
+            "maximum": 1280.0,
+            "mean": 1280.0,
+            "minimum": 1280.0
+          },
+          "height": {
+            "median": 720.0,
+            "p95": 720.0,
+            "p99": 720.0,
+            "maximum": 720.0,
+            "mean": 720.0,
+            "minimum": 720.0
+          },
+          "server_edicts": {
+            "median": 25.0,
+            "p95": 25.0,
+            "p99": 25.0,
+            "maximum": 25.0,
+            "mean": 25.0,
+            "minimum": 25.0
+          },
+          "monsters": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "dead_monsters": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "projectiles_by_effect": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "rss_kib": {
+            "median": 382442.0,
+            "p95": 472948.0,
+            "p99": 472948.0,
+            "maximum": 472948.0,
+            "mean": 386192.6666666667,
+            "minimum": 302688.0
+          },
+          "cpu_ms": {
+            "median": 2.377,
+            "p95": 10.456000000000001,
+            "p99": 11.861120000000001,
+            "maximum": 13.193,
+            "mean": 3.5334694444444446,
+            "minimum": 1.395
+          },
+          "visibility_ms": {
+            "median": 0.001,
+            "p95": 0.001,
+            "p99": 0.001,
+            "maximum": 0.077,
+            "mean": 0.0011444444444444445,
+            "minimum": 0.0
+          },
+          "model_ms": {
+            "median": 0.069,
+            "p95": 0.11810000000000001,
+            "p99": 0.16364000000000012,
+            "maximum": 0.216,
+            "mean": 0.06698055555555556,
+            "minimum": 0.039
+          },
+          "draws": {
+            "median": 34.0,
+            "p95": 34.0,
+            "p99": 34.0,
+            "maximum": 34.0,
+            "mean": 34.0,
+            "minimum": 34.0
+          },
+          "world_triangles": {
+            "median": 1051.0,
+            "p95": 1051.0,
+            "p99": 1051.0,
+            "maximum": 1051.0,
+            "mean": 1051.0,
+            "minimum": 1051.0
+          },
+          "model_triangles": {
+            "median": 11996.0,
+            "p95": 11996.0,
+            "p99": 11996.0,
+            "maximum": 11996.0,
+            "mean": 11996.0,
+            "minimum": 11996.0
+          },
+          "static_vertex_bytes": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "static_index_bytes": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "dynamic_vertex_bytes": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "dynamic_index_bytes": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "client_vertex_bytes": {
+            "median": 183296.0,
+            "p95": 183296.0,
+            "p99": 183296.0,
+            "maximum": 183296.0,
+            "mean": 183296.0,
+            "minimum": 183296.0
+          },
+          "client_index_bytes": {
+            "median": 6306.0,
+            "p95": 6306.0,
+            "p99": 6306.0,
+            "maximum": 6306.0,
+            "mean": 6306.0,
+            "minimum": 6306.0
+          },
+          "pose_vertices": {
+            "median": 2350.0,
+            "p95": 2350.0,
+            "p99": 2350.0,
+            "maximum": 2350.0,
+            "mean": 2350.0,
+            "minimum": 2350.0
+          },
+          "topology_builds": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "pvs_builds": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "pvs_hits": {
+            "median": 4.0,
+            "p95": 4.0,
+            "p99": 4.0,
+            "maximum": 4.0,
+            "mean": 4.0,
+            "minimum": 4.0
+          },
+          "lightmap_bytes": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "pose_cache_hits": {
+            "median": 6.0,
+            "p95": 6.0,
+            "p99": 6.0,
+            "maximum": 6.0,
+            "mean": 6.0,
+            "minimum": 6.0
+          },
+          "particles_created": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "particle_updates": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "particles_expired": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "shared_preparations": {
+            "median": 1.0,
+            "p95": 1.0,
+            "p99": 1.0,
+            "maximum": 1.0,
+            "mean": 1.0,
+            "minimum": 1.0
+          },
+          "entity_effect_evaluations": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "entity_effect_reuses": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "temp_events_parsed": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "sprite_updates": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "active_particles": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          },
+          "prepared_particles": {
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "minimum": 0.0
+          }
+        },
+        "over_33_333_ms_percent": 0.0,
+        "elapsed_seconds": 3.1840140000000003,
+        "rss_kib_first_last": [
+          302688.0,
+          472948.0
+        ],
+        "server_edicts_first_last": [
+          25.0,
+          25.0
+        ],
+        "monsters_first_last": [
+          0.0,
+          0.0
+        ],
+        "dead_monsters_first_last": [
+          0.0,
+          0.0
+        ],
+        "active_particles_first_last": [
+          0.0,
+          0.0
+        ]
+      },
+      "resident_buffers_after_registration": {
+        "static_vertex_bytes": 328316,
+        "static_index_bytes": 155640
+      },
+      "viewmodel_static_xyz": {
+        "render_vertices": 861,
+        "bytes": 10332,
+        "calculation": "One resident xyz buffer, three float32 components per render vertex; shared across four view draws."
+      }
+    }
+  ],
+  "visual_validation": {
+    "single_manifest_sha256": "d3dc7354dbc356a38aa04fdaabe567c44ac09a72af19489486945aff1db4f4f1",
+    "single_capture_complete": true,
+    "single_checks": [
+      "Full actual-model ADS reaches blend 1; target remains visible through open sights.",
+      "Releasing ADS returns blend to 0.",
+      "Pistol switch retains the image overlay and has model ADS blend 0.",
+      "Aimed firing, held-player and pickup captures complete."
+    ],
+    "four_checks": [
+      "All four local players spawned and equipped the M16.",
+      "Slots 1 and 3 aim at blend 1 while slots 2 and 4 remain at blend 0.",
+      "Roles reverse to blends [0,1,0,1].",
+      "All four players fire in both mixed aim arrangements."
+    ]
+  }
+}

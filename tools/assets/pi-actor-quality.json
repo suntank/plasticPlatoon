@@ -1,0 +1,260 @@
+{
+  "schema": 1,
+  "passed": true,
+  "scope": "Frozen geometry/animation/skin identity and host shared-depth actor render acceptance; native first-person pixel acceptance. Native four-map gameplay and performance acceptance is recorded separately before installation.",
+  "models": {
+    "players/soldier/tris.md2": {
+      "source_sha256": "e0679b4bfa8099fc207abcfa4cc3ed0839c085c5c41d378131469f8395bedbd7",
+      "output_sha256": "3f13d75add9cd88812223c2144b41b9e0965b309059ac6c47ec847ff9c727557"
+    },
+    "players/soldier/tris_pistol.md2": {
+      "source_sha256": "247dc0c2d99e7b2345eb5aaf20ca11b13312df1f6faaad614e41b0f6fc140963",
+      "output_sha256": "f9e2ed2f798682ae9366ce7ed097cb0326f2b680e7a8ab796ece5230bae85761"
+    },
+    "models/monsters/soldier/tris.md2": {
+      "source_sha256": "9363f8d2fcb22c0d738ddf12f33a7e873ecb30f7badc8d704ecc565c812a2f05",
+      "output_sha256": "8e5ece30abdcf4c682f639deed30f608a347b7e5ce6561859a7b835eb357eb29"
+    },
+    "models/monsters/soldier/tall/tris.md2": {
+      "source_sha256": "122c0f291a075757137125747574c30b13bc82c53765fbdf87454e29eedb7adf",
+      "output_sha256": "4d77f2f77a62c3ae0b1e0455ebe7030bb4361d3d01ffbb13767cc1b192c7095c"
+    },
+    "players/soldier/w_bfg.md2": {
+      "source_sha256": "bd4b45055a3ba4d59baaae850816927cb53e9f5fd56b39b69cc84488842b32c4",
+      "output_sha256": "95001fec4f12df2208df8240e26a707ebea0c46c4fe0f94c4366e6688ac5e41d"
+    },
+    "players/soldier/w_blaster.md2": {
+      "source_sha256": "e9ef32e21870c9f30b987d28c18478a5871fc9e5ff5b4c7c1b24de917dce94f8",
+      "output_sha256": "e90334ebc8065285fc7cdf20acc40a52a08b2cee8b597b50036152a34a4054c3"
+    },
+    "players/soldier/w_chaingun.md2": {
+      "source_sha256": "4e061cc055f001f86e4be9b348f7566778913ee50a7d5f7d66e90470316eeed8",
+      "output_sha256": "9f3e6af7588b21800125d8fe624e16b0265f310bd8d9139dc2c33776930e1bd7"
+    },
+    "players/soldier/w_glauncher.md2": {
+      "source_sha256": "464aef9819300433b656fd5a5d7db70032e1967689eaca26596a3551927175e1",
+      "output_sha256": "af66a959fd8c0eb095f0c0b5fcb57e55909f939bae7667f85aea40f95146c411"
+    },
+    "players/soldier/w_hyperblaster.md2": {
+      "source_sha256": "e40b6d06c18850dcf019d17a8bb48d2d1dca455a1114bfad97c4c75d6e4a1d34",
+      "output_sha256": "3d83d1f29c9b828ffe264cfb67b29e6d64f72eb219f5d00ac18690142197f2c8"
+    },
+    "players/soldier/w_machinegun.md2": {
+      "source_sha256": "f516f09bc3fe5f8e165a2e8818a29c8127631ec61fd9ecfc937a8ffaa826ef72",
+      "output_sha256": "c369adf77d9a1abba001bce685fa37745717a77aaf903fea1fecfc672b4fde33"
+    },
+    "players/soldier/w_rlauncher.md2": {
+      "source_sha256": "ed73d6194eee3af276000032290ca2854262e800a90330ffbb5e871227f99f04",
+      "output_sha256": "b395a48e9988e19a526578f5e91ee118772fc052a5d21e3e32d47cd8b0cd6b5e"
+    },
+    "players/soldier/w_sshotgun.md2": {
+      "source_sha256": "0e835341e2300376d88d51a6380d6f84ebfe2e9569cffec0b65a094bdfc9a55b",
+      "output_sha256": "67e8e6f8da9ab1765da0d609ebd82c1d7726c9af56d30554b48d0b5be9d678f1"
+    },
+    "players/soldier/weapon.md2": {
+      "source_sha256": "f516f09bc3fe5f8e165a2e8818a29c8127631ec61fd9ecfc937a8ffaa826ef72",
+      "output_sha256": "c369adf77d9a1abba001bce685fa37745717a77aaf903fea1fecfc672b4fde33"
+    },
+    "models/monsters/soldier/weapon_blaster.md2": {
+      "source_sha256": "912ee2a079fe7b015f3849fd10cfa7a1925d8bbef9dd9e2cf507781b82e20c5b",
+      "output_sha256": "db6a6b7d140c7e86e3f0aa772a055d1cdfda650f33bbafe9b8a819bd460108f9"
+    },
+    "models/monsters/soldier/weapon_heavy.md2": {
+      "source_sha256": "cc59137e12c7a94a16ad19d6b29a3f7bc96aee0a17967160f0d0b6e72e6e4ef6",
+      "output_sha256": "e52e962e2e26ea2237f4af224282559958b67c05f4404c4043cb8dcf97c1b0ba"
+    },
+    "models/monsters/soldier/weapon_machinegun.md2": {
+      "source_sha256": "c44c70b25c3edc1f65cfcdf9195a2163f7751efd63ebe07fcad05c655a6ba022",
+      "output_sha256": "916b448193ae0750c32f71777f5f0d1437520a131a83664ab8fbdcb49f073e79"
+    },
+    "models/monsters/soldier/weapon_rocket.md2": {
+      "source_sha256": "6bdf833ee3cb7d8de945fb445d27c130dee600b0d74684414690893b04c26676",
+      "output_sha256": "41abe5b3654eb74ddec124290a4750c27db0c8996f97a8a5350e957e09cda2bb"
+    },
+    "models/monsters/soldier/tall/weapon_blaster.md2": {
+      "source_sha256": "ab29c62474b12912b61e31c5fb5ef617e55a5d27439fdbcdfdfef0cb5d56e543",
+      "output_sha256": "75e92d77421b0e0263c8b28a51f4df4b9b933eedd285094826b881cb883265d7"
+    },
+    "models/monsters/soldier/tall/weapon_heavy.md2": {
+      "source_sha256": "8faf9da46f264c89138535cb5a1df6d4533c2016703a23b5c480fdd652f8cdda",
+      "output_sha256": "bbc203a7d9d4796e4ba34965265be95c753d51a50278a3892dddbe385ce03b3c"
+    },
+    "models/monsters/soldier/tall/weapon_machinegun.md2": {
+      "source_sha256": "2b7d01f663f5e87474d825d5e6b3ba91b4fb0bcb9f2111b60d1698c1ee43428a",
+      "output_sha256": "b0a143bf7dfcdefedc173789b1b4b972f3111134fbcd3c475ea2cc1fe4652044"
+    },
+    "models/monsters/soldier/tall/weapon_rocket.md2": {
+      "source_sha256": "9bc7aeb2c5a4b47f125d7583073dfc472d6f5367e7a51dffc12182cfaf7acab1",
+      "output_sha256": "1099ddb8490ed541a39cbd86fb1b9291fe113bd9b521e973089806d9561d03e0"
+    },
+    "models/weapons/v_bfg/tris.md2": {
+      "source_sha256": "4b9346d2b9a3bb6a5e8a42df5ce8ff398868f54514084c4cfc8adc0da94ca35b",
+      "output_sha256": "c307526203495a6398c5a688ac48183650b68a57655aea63474a928b676b2db1"
+    },
+    "models/weapons/v_chain/tris.md2": {
+      "source_sha256": "7028f3d8e1f4f11a39e1dee436603dbd74e8d01faba5d964494a053821029338",
+      "output_sha256": "57ca0114481293615b6cf98b8c23c01ee5516a3d199cc18b8cc1c9af10f20643"
+    },
+    "models/weapons/v_hyperb/tris.md2": {
+      "source_sha256": "d1e4161a6ffe5be86194d70ca6311ad362b1af2abeb1b07df1856d9fd06327ea",
+      "output_sha256": "6e047814ed22da54ed1e3d2ae2260bd33415d325bea42b578f433e80c5a1124a"
+    },
+    "models/weapons/v_launch/tris.md2": {
+      "source_sha256": "e9b59f1a25a21099a741415a2c3de3f4ca7d8b2185606cbca34b184331447ae9",
+      "output_sha256": "c6d9b7bb9d56151b9893aa0e6be2a02d47429983a9b0344d72fd03b9a7103ce9"
+    },
+    "models/weapons/v_machn/tris.md2": {
+      "source_sha256": "11d4af2e26f337cc2ced073714e115fd580067e5004b56e471153dc44c2bb22d",
+      "output_sha256": "0f1fc1119591851043c6094b8c8caf0e1ef688c2d5b3d414fd3d9fd54c0637ef"
+    },
+    "models/weapons/v_rail/tris.md2": {
+      "source_sha256": "b054dd4bcff037b1bffb93dad3d6118a07507856d4c3fe53302827c415a7d134",
+      "output_sha256": "a5d2479355006d91f006d2d44ccd2beb83a5bb60ec5e86278c1be96da19052a3"
+    },
+    "models/weapons/v_rocket/tris.md2": {
+      "source_sha256": "751a57ab2a39e381ac792b87dbf59172a3746ac40d46f6bf0444a0ee82e8d41e",
+      "output_sha256": "53b8edff0906fdf119387c96366aa29fbdc4088e7dd7a57914f18d1bd87c6681"
+    },
+    "models/weapons/v_shotg/tris.md2": {
+      "source_sha256": "d58b3bc8a1ca838e30e1a6afe281dbb4d8dbd5f8f90a55bdd86f8b52941a04a0",
+      "output_sha256": "849fde366f7b8f376716163baa0b0824f8af135a2d805eec1f10768b19de143f"
+    },
+    "models/weapons/v_shotg2/tris.md2": {
+      "source_sha256": "6c3c2eab6535213bd72e6e65a4ae0ac6f4dcf3d0ab417a38bb3aa287e236648b",
+      "output_sha256": "d1896c2cb62860b17ac46589e174ae210350cdda0a3870a6d24644eeb22a83bf"
+    }
+  },
+  "body_quality": {
+    "schema": 1,
+    "host_quality_checks_passed": true,
+    "native_attachment_skin_animation_acceptance_pending": true,
+    "performance_claim": "None: native four-player timing remains separate.",
+    "total_raw_md2_bytes_saved": 2145072,
+    "quality_policy": "UV/manifold/raw-frame identity, all original and sampled adjacent pose bounds, zero new triangle area collapses across source-valid interpolation pairs, and selected textured visual inspection. Reference-normal disagreement retained as angular context, not geometric fold proof.",
+    "models": [
+      {
+        "path": "players/soldier/tris.md2",
+        "source_sha256": "e0679b4bfa8099fc207abcfa4cc3ed0839c085c5c41d378131469f8395bedbd7",
+        "output_sha256": "3f13d75add9cd88812223c2144b41b9e0965b309059ac6c47ec847ff9c727557",
+        "triangles_before": 1766,
+        "triangles_after": 1012,
+        "frames": 198,
+        "all_frame_headers_survivor_coordinates_normals_exact": true,
+        "uv_charts_before": 117,
+        "uv_charts_after": 117,
+        "oriented_closed_manifold_euler2": true,
+        "grip_sole_helmet_anchors_exact": true,
+        "source_valid_interpolation_pairs": 6983,
+        "continuous_area_method": "Numerical ALL real stationary roots+endpoints of squared-area quartic; threshold max source endpoint diagonal squared times1e-10; not formal interval/selfintersection proof.",
+        "new_collapsed_face_pair_events": 0,
+        "angular_context_negative_dot_samples": 7531,
+        "angular_context_below_5pct_relative_area_samples": 37,
+        "silhouette_all_original_frames_angles48px_iou_mean": 0.9661217915439164,
+        "silhouette_iou_min": 0.9333333333333333,
+        "max_cluster_displacement_units": 3.28751775695148
+      },
+      {
+        "path": "players/soldier/tris_pistol.md2",
+        "source_sha256": "247dc0c2d99e7b2345eb5aaf20ca11b13312df1f6faaad614e41b0f6fc140963",
+        "output_sha256": "f9e2ed2f798682ae9366ce7ed097cb0326f2b680e7a8ab796ece5230bae85761",
+        "triangles_before": 1768,
+        "triangles_after": 994,
+        "frames": 198,
+        "all_frame_headers_survivor_coordinates_normals_exact": true,
+        "uv_charts_before": 117,
+        "uv_charts_after": 117,
+        "oriented_closed_manifold_euler2": true,
+        "grip_sole_helmet_anchors_exact": true,
+        "source_valid_interpolation_pairs": 6983,
+        "continuous_area_method": "Numerical ALL real stationary roots+endpoints of squared-area quartic; threshold max source endpoint diagonal squared times1e-10; not formal interval/selfintersection proof.",
+        "new_collapsed_face_pair_events": 0,
+        "angular_context_negative_dot_samples": 8552,
+        "angular_context_below_5pct_relative_area_samples": 46,
+        "silhouette_all_original_frames_angles48px_iou_mean": 0.9659833191946867,
+        "silhouette_iou_min": 0.9244604316546763,
+        "max_cluster_displacement_units": 3.28751775695148
+      },
+      {
+        "path": "models/monsters/soldier/tris.md2",
+        "source_sha256": "9363f8d2fcb22c0d738ddf12f33a7e873ecb30f7badc8d704ecc565c812a2f05",
+        "output_sha256": "8e5ece30abdcf4c682f639deed30f608a347b7e5ce6561859a7b835eb357eb29",
+        "triangles_before": 1784,
+        "triangles_after": 1028,
+        "frames": 475,
+        "all_frame_headers_survivor_coordinates_normals_exact": true,
+        "uv_charts_before": 117,
+        "uv_charts_after": 117,
+        "oriented_closed_manifold_euler2": true,
+        "grip_sole_helmet_anchors_exact": true,
+        "source_valid_interpolation_pairs": 8540,
+        "continuous_area_method": "Numerical ALL real stationary roots+endpoints of squared-area quartic; threshold max source endpoint diagonal squared times1e-10; not formal interval/selfintersection proof.",
+        "new_collapsed_face_pair_events": 0,
+        "angular_context_negative_dot_samples": 1580,
+        "angular_context_below_5pct_relative_area_samples": 7,
+        "silhouette_all_original_frames_angles48px_iou_mean": 0.9635833918471914,
+        "silhouette_iou_min": 0.92018779342723,
+        "max_cluster_displacement_units": 3.4809436782108376
+      },
+      {
+        "path": "models/monsters/soldier/tall/tris.md2",
+        "source_sha256": "122c0f291a075757137125747574c30b13bc82c53765fbdf87454e29eedb7adf",
+        "output_sha256": "4d77f2f77a62c3ae0b1e0455ebe7030bb4361d3d01ffbb13767cc1b192c7095c",
+        "triangles_before": 1784,
+        "triangles_after": 1028,
+        "frames": 475,
+        "all_frame_headers_survivor_coordinates_normals_exact": true,
+        "uv_charts_before": 117,
+        "uv_charts_after": 117,
+        "oriented_closed_manifold_euler2": true,
+        "grip_sole_helmet_anchors_exact": true,
+        "source_valid_interpolation_pairs": 8540,
+        "continuous_area_method": "Numerical ALL real stationary roots+endpoints of squared-area quartic; threshold max source endpoint diagonal squared times1e-10; not formal interval/selfintersection proof.",
+        "new_collapsed_face_pair_events": 0,
+        "angular_context_negative_dot_samples": 1580,
+        "angular_context_below_5pct_relative_area_samples": 7,
+        "silhouette_all_original_frames_angles48px_iou_mean": 0.9635833918471914,
+        "silhouette_iou_min": 0.92018779342723,
+        "max_cluster_displacement_units": 4.177132492533932
+      }
+    ],
+    "evidence_sha256": {
+      "manifest.json": "a9671bce2fa1a045b484bf78cddb8ce0e1a21aeccb0ce8f1e9297eb7485ae4e8",
+      "topology-recipes.json": "2972456a35a9a5ac6537fe9d460bb5877a0b35576789fcc795809e0f9e6f516f",
+      "export-audit.json": "05c0532b02b047275eb38cbe3130bef6aef343ac6e4a376cc2c443b0e78db6e7",
+      "candidate-checks.json": "91331f0fdf101dff41d06fa33e490f67a17f82374084607787ab881863160a16",
+      "review/review-manifest.json": "f4effb77e607e6b8654f6d3f27c76317736e312b5437b027bd7e914585272b7b"
+    }
+  },
+  "body_freeze": {
+    "path": "build/pi-actor-models-20261113/bodies/candidates/approved-area-bodies/candidate-freeze.json",
+    "sha256": "c863427441ae7ad89eea8a1e6e0eff129e7d4b39a9db589d4946318a5d86e6bb"
+  },
+  "held_freeze": {
+    "path": "build/pi-actor-models-20261113/weapons/held-source-freeze.json",
+    "sha256": "3122421359cef9417c648e70363cd5bc2bd4b49ac7b6809c2c56a2665066c1a4"
+  },
+  "held_manifest": {
+    "path": "build/pi-actor-models-20261113/weapons/manifest.json",
+    "sha256": "d3564411dfe656c54da82d97fb29dd880467786d9eb62af641a168bf08fa1ca5"
+  },
+  "host_joint_render": {
+    "path": "build/pi-actor-models-20261113/weapons/joint-host-full/report.json",
+    "sha256": "af027c9891ff0b56acb0bc44f177390a760a6f3b96d58a6e340aafe320ddf339"
+  },
+  "first_person_proof": {
+    "path": "tools/assets/pi-firstperson-proof.json",
+    "sha256": "677a9ef9ac7db2b4d08e742372ac9edca3f0ff5988302e3fff23cc933a2c0072"
+  },
+  "unchanged_held_models": [
+    "players/soldier/w_railgun.md2",
+    "players/soldier/w_shotgun.md2",
+    "models/monsters/soldier/weapon_shotgun.md2",
+    "models/monsters/soldier/tall/weapon_shotgun.md2"
+  ],
+  "source_originals_untouched": true,
+  "manual_visual_review": {
+    "passed": true,
+    "scope": "Selected final body action/worst-close sheets and actual GL1 joint body/gun contacts. Root inspected green player machinegun standing, red tall soldier machinegun firing and blue pistol player firing; independent reviewer also inspected tan player firing, blue pistol crouching and red soldier rocket running. This is selected visual review, not exhaustive manual inspection of every frame/camera."
+  },
+  "interpretation": "Bodies and carried guns are approximate lower-detail artwork, not pixel-identical. All original animation frames remain. Reference-normal angular disagreements at some corpse blends are context rather than inversion proof. Bodies pass all legal-pair numerical continuous-area checks; carried guns pass all original frames and quarter/mid/three-quarter rendered-lifecycle orientation/area samples. Original canonical high models remain available outside the optional Pi overlay."
+}

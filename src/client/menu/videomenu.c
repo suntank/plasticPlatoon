@@ -529,6 +529,13 @@ VID_MenuInit(void)
 			0
 	};
 
+	static const char *compact_fullscreen_names[] = {
+		"window",
+		"full screen",
+		"borderless",
+		0
+	};
+
 	static const char *pow2_names[] = {
 		"off",
 		"2x",
@@ -598,6 +605,7 @@ VID_MenuInit(void)
 
 	s_opengl_menu.x = viddef.width * 0.50;
 	s_opengl_menu.nitems = 0;
+	s_opengl_menu.title = "DISPLAY";
 
 	s_renderer_list.generic.type = MTYPE_SPINCONTROL;
 	s_renderer_list.generic.name = "renderer";
@@ -607,7 +615,7 @@ VID_MenuInit(void)
 	s_renderer_list.curvalue = Renderer_GetRenderer();
 
 	s_mode_list.generic.type = MTYPE_SPINCONTROL;
-	s_mode_list.generic.name = "video mode";
+	s_mode_list.generic.name = Menu_IsCompact() ? "resolution" : "video mode";
 	s_mode_list.generic.x = 0;
 	s_mode_list.generic.y = (y += 10);
 	s_mode_list.itemnames = resolutions;
@@ -766,7 +774,7 @@ VID_MenuInit(void)
 	}
 
 	s_uiscale_list.generic.type = MTYPE_SPINCONTROL;
-	s_uiscale_list.generic.name = "ui scale";
+	s_uiscale_list.generic.name = Menu_IsCompact() ? "HUD / text size" : "ui scale";
 	s_uiscale_list.generic.x = 0;
 	s_uiscale_list.generic.y = (y += 10);
 	s_uiscale_list.itemnames = uiscale_names;
@@ -792,21 +800,21 @@ VID_MenuInit(void)
 	}
 
 	s_fs_box.generic.type = MTYPE_SPINCONTROL;
-	s_fs_box.generic.name = "fullscreen";
+	s_fs_box.generic.name = Menu_IsCompact() ? "screen mode" : "fullscreen";
 	s_fs_box.generic.x = 0;
 	s_fs_box.generic.y = (y += 10);
-	s_fs_box.itemnames = fullscreen_names;
+	s_fs_box.itemnames = Menu_IsCompact() ? compact_fullscreen_names : fullscreen_names;
 	s_fs_box.curvalue = (int)vid_fullscreen->value;
 
 	s_vsync_list.generic.type = MTYPE_SPINCONTROL;
-	s_vsync_list.generic.name = "vertical sync";
+	s_vsync_list.generic.name = Menu_IsCompact() ? "screen sync" : "vertical sync";
 	s_vsync_list.generic.x = 0;
 	s_vsync_list.generic.y = (y += 10);
 	s_vsync_list.itemnames = yesno_names;
 	s_vsync_list.curvalue = (r_vsync->value != 0);
 
 	s_af_list.generic.type = MTYPE_SPINCONTROL;
-	s_af_list.generic.name = "aniso filtering";
+	s_af_list.generic.name = Menu_IsCompact() ? "distant detail" : "aniso filtering";
 	s_af_list.generic.x = 0;
 	s_af_list.generic.y = (y += 10);
 	s_af_list.itemnames = pow2_names;
@@ -822,7 +830,7 @@ VID_MenuInit(void)
 	}
 
 	s_msaa_list.generic.type = MTYPE_SPINCONTROL;
-	s_msaa_list.generic.name = "multisampling";
+	s_msaa_list.generic.name = Menu_IsCompact() ? "smooth edges" : "multisampling";
 	s_msaa_list.generic.x = 0;
 	s_msaa_list.generic.y = (y += 10);
 	s_msaa_list.itemnames = pow2_names;
@@ -890,13 +898,13 @@ VID_MenuInit(void)
 	s_filter_list.curvalue = mode;
 
 	s_defaults_action.generic.type = MTYPE_ACTION;
-	s_defaults_action.generic.name = "reset to default";
+	s_defaults_action.generic.name = Menu_IsCompact() ? "Reload display settings" : "reset to default";
 	s_defaults_action.generic.x = 0;
 	s_defaults_action.generic.y = (y += 20);
 	s_defaults_action.generic.callback = ResetDefaults;
 
 	s_apply_action.generic.type = MTYPE_ACTION;
-	s_apply_action.generic.name = "apply";
+	s_apply_action.generic.name = Menu_IsCompact() ? "Apply display changes" : "apply";
 	s_apply_action.generic.x = 0;
 	s_apply_action.generic.y = (y += 10);
 	s_apply_action.generic.callback = ApplyChanges;
@@ -943,6 +951,19 @@ VID_MenuInit(void)
 	Menu_AddItem(&s_opengl_menu, (void *)&s_defaults_action);
 	Menu_AddItem(&s_opengl_menu, (void *)&s_apply_action);
 
+	if (Menu_IsCompact())
+	{
+		s_renderer_list.generic.statusbar = "Apply to switch renderer";
+		s_mode_list.generic.statusbar = "Custom keeps the panel size";
+		s_uiscale_list.generic.statusbar = "Handheld menus fit the panel";
+		s_fs_box.generic.statusbar = "Apply to change screen mode";
+		s_vsync_list.generic.statusbar = "Sync frames to the display";
+		s_af_list.generic.statusbar = "Off is fastest on handheld";
+		s_msaa_list.generic.statusbar = "Off is fastest on handheld";
+		s_defaults_action.generic.statusbar = "Reload current settings";
+		s_apply_action.generic.statusbar = "Apply and return to the game";
+	}
+
 	Menu_SetStatusBar(&s_opengl_menu, NULL);
 	Menu_Center(&s_opengl_menu);
 	s_opengl_menu.x -= 8;
@@ -954,10 +975,13 @@ VID_MenuDraw(void)
 	int w, h;
 	float scale = SCR_GetMenuScale();
 
-	/* draw the banner */
-	Draw_GetPicSize(&w, &h, "m_banner_video");
-	Draw_PicScaled(viddef.width / 2 - (w * scale) / 2, viddef.height / 2 - (110 * scale),
-			"m_banner_video", scale);
+	/* Small displays use the shared text header instead of a wide bitmap. */
+	if (!Menu_IsCompact())
+	{
+		Draw_GetPicSize(&w, &h, "m_banner_video");
+		Draw_PicScaled(viddef.width / 2 - (w * scale) / 2, viddef.height / 2 - (110 * scale),
+				"m_banner_video", scale);
+	}
 
 	/* move cursor to a reasonable starting position */
 	Menu_AdjustCursor(&s_opengl_menu, 1);

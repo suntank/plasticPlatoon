@@ -1429,123 +1429,6 @@
       }
     },
     {
-      "model": "models/weapons/g_machn/tris.md2",
-      "classname": "weapon_machinegun",
-      "sandbox_instances": 2,
-      "target_triangles": 800,
-      "before": {
-        "triangles": 1990,
-        "position_vertices": 991,
-        "render_vertices": 1880,
-        "frames": 1,
-        "frame_names": [
-          "frame_1"
-        ],
-        "skin_references": [
-          "models/weapons/g_machn/skin.png"
-        ],
-        "skin_coordinate_dimensions": [
-          256,
-          256
-        ],
-        "gl_command_primitives": 1113,
-        "gl_command_triangles": 1991,
-        "duplicate_gl_triangles": 1,
-        "unused_bytes_per_frame": 2973,
-        "file_bytes": 93569,
-        "sha256": "100181847139211d3c5daedb00b30e6c0c313e72422c621b66dab8568c30a7a8",
-        "bounds": [
-          [
-            -36.38828659057617,
-            -2.5957117080688477,
-            7.422466278076172
-          ],
-          [
-            36.37745162844658,
-            2.5268960148096085,
-            26.337841786444187
-          ]
-        ]
-      },
-      "after": {
-        "triangles": 800,
-        "position_vertices": 396,
-        "render_vertices": 974,
-        "frames": 1,
-        "frame_names": [
-          "frame_1"
-        ],
-        "skin_references": [
-          "models/weapons/g_machn/skin_pickup.png"
-        ],
-        "skin_coordinate_dimensions": [
-          256,
-          256
-        ],
-        "gl_command_primitives": 357,
-        "gl_command_triangles": 800,
-        "duplicate_gl_triangles": 0,
-        "unused_bytes_per_frame": 0,
-        "file_bytes": 34752,
-        "sha256": "869fdd0e8756cd95808467718374f12e4a124f2673d4ee5e80477963047660be",
-        "bounds": [
-          [
-            -36.38828659057617,
-            -2.5957117080688477,
-            7.4966442212462425
-          ],
-          [
-            36.09209579229355,
-            2.5268960148096085,
-            26.263663843274117
-          ]
-        ]
-      },
-      "texture_before": {
-        "path": "models/weapons/g_machn/skin.png",
-        "dimensions": [
-          2048,
-          2048
-        ],
-        "mode": "RGBA",
-        "file_bytes": 798991,
-        "decoded_rgba_bytes": 16777216,
-        "rgba_mip_chain_bytes": 22369620,
-        "sha256": "98a2c927f49449188ff5035167886ec23fa3f7addff6d229cdad85706e444b93"
-      },
-      "texture_after": {
-        "path": "models/weapons/g_machn/skin_pickup.png",
-        "dimensions": [
-          256,
-          256
-        ],
-        "mode": "RGBA",
-        "file_bytes": 28478,
-        "decoded_rgba_bytes": 262144,
-        "rgba_mip_chain_bytes": 349524,
-        "sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c"
-      },
-      "visual_review": {
-        "comparison": "doc/performance/asset-comparisons/models_weapons_g_machn.png",
-        "comparison_sha256": "b0e0cd2cff0b2de47cd119b38616a3f7b84a7f766cb273dfd97b4da91425d82d",
-        "inspection_pixels": 224,
-        "coverage_pixels": 48,
-        "angles_degrees": [
-          25,
-          115,
-          205,
-          295
-        ],
-        "silhouette_iou_at_48px": [
-          1.0,
-          0.9776119402985075,
-          0.9156626506024096,
-          0.9787234042553191
-        ],
-        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
-      }
-    },
-    {
       "model": "models/weapons/g_rocket/tris.md2",
       "classname": "weapon_rocketlauncher",
       "sandbox_instances": 1,
@@ -1903,11 +1786,131 @@
     "origin": "Original owner-authored Plastic Platoon pickup models and textures"
   },
   "totals": {
-    "sandbox_instances": 92,
-    "triangles_before": 36064,
-    "triangles_after": 13094,
-    "instance_weighted_triangles_before": 211975,
-    "instance_weighted_triangles_after": 74769
+    "sandbox_instances": 90,
+    "triangles_before": 34074,
+    "triangles_after": 12294,
+    "instance_weighted_triangles_before": 207995,
+    "instance_weighted_triangles_after": 73169
   },
-  "source_migration": "Original input hashes and runtime output hashes preserved; source lookup now uses the committed archive without private Git history."
+  "source_migration": "Original input hashes and runtime output hashes preserved; source lookup now uses the committed archive without private Git history.",
+  "superseded_assets": [
+    {
+      "model": "models/weapons/g_machn/tris.md2",
+      "classname": "weapon_machinegun",
+      "sandbox_instances": 2,
+      "target_triangles": 800,
+      "before": {
+        "triangles": 1990,
+        "position_vertices": 991,
+        "render_vertices": 1880,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_machn/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 1113,
+        "gl_command_triangles": 1991,
+        "duplicate_gl_triangles": 1,
+        "unused_bytes_per_frame": 2973,
+        "file_bytes": 93569,
+        "sha256": "100181847139211d3c5daedb00b30e6c0c313e72422c621b66dab8568c30a7a8",
+        "bounds": [
+          [
+            -36.38828659057617,
+            -2.5957117080688477,
+            7.422466278076172
+          ],
+          [
+            36.37745162844658,
+            2.5268960148096085,
+            26.337841786444187
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 800,
+        "position_vertices": 396,
+        "render_vertices": 974,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/weapons/g_machn/skin_pickup.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 357,
+        "gl_command_triangles": 800,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 34752,
+        "sha256": "869fdd0e8756cd95808467718374f12e4a124f2673d4ee5e80477963047660be",
+        "bounds": [
+          [
+            -36.38828659057617,
+            -2.5957117080688477,
+            7.4966442212462425
+          ],
+          [
+            36.09209579229355,
+            2.5268960148096085,
+            26.263663843274117
+          ]
+        ]
+      },
+      "texture_before": {
+        "path": "models/weapons/g_machn/skin.png",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "file_bytes": 798991,
+        "decoded_rgba_bytes": 16777216,
+        "rgba_mip_chain_bytes": 22369620,
+        "sha256": "98a2c927f49449188ff5035167886ec23fa3f7addff6d229cdad85706e444b93"
+      },
+      "texture_after": {
+        "path": "models/weapons/g_machn/skin_pickup.png",
+        "dimensions": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "file_bytes": 28478,
+        "decoded_rgba_bytes": 262144,
+        "rgba_mip_chain_bytes": 349524,
+        "sha256": "35cd59838e754dccc424c10e37ee0a46b1b9326100c1bb311c926e1ca937043c"
+      },
+      "visual_review": {
+        "comparison": "doc/performance/asset-comparisons/models_weapons_g_machn.png",
+        "comparison_sha256": "b0e0cd2cff0b2de47cd119b38616a3f7b84a7f766cb273dfd97b4da91425d82d",
+        "inspection_pixels": 224,
+        "coverage_pixels": 48,
+        "angles_degrees": [
+          25,
+          115,
+          205,
+          295
+        ],
+        "silhouette_iou_at_48px": [
+          1.0,
+          0.9776119402985075,
+          0.9156626506024096,
+          0.9787234042553191
+        ],
+        "note": "Offline rasterizer review; silhouette IoU is a screening metric, not visual equivalence proof."
+      }
+    }
+  ],
+  "procedural_replacement_note": "M16 is now authored by m16_geometry.py and build_m16.py; historical decimation records remain below for comparison only."
 }

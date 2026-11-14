@@ -3,6 +3,7 @@
 
 #include "header/client.h"
 #include "input/header/ads.h"
+#include "header/weapon_model_ads.h"
 
 #define SS_MAX_LOCAL_PLAYERS 4
 #define SS_MAX_INPUT_DEVICES (SS_MAX_LOCAL_PLAYERS + 2)
@@ -102,6 +103,7 @@ typedef struct
 	qboolean gb_crouched;
 	pp_ads_level_t gb_autolevel;
 	qboolean ads_active;
+	pp_model_ads_state_t model_ads;
 	int last_gunindex;
 	int muzzle_flash_seq;
 	int last_muzzle_flash_seq;

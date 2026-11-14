@@ -30,6 +30,7 @@
 #include "header/helicopter_rotor.h"
 #include "cl_splitscreen.h"
 #include "header/player_muzzle_points.h"
+#include "header/weapon_model_ads.h"
 
 /* Weapon types for per-weapon recoil tuning */
 typedef enum {
@@ -81,6 +82,7 @@ static pp_weapon_type_t pp_current_weapon = PP_WEAPON_UNKNOWN;
 static vec3_t pp_viewmodel_smoothed_origin;
 static vec3_t pp_viewmodel_smoothed_angles;
 static qboolean pp_viewmodel_smoothed_valid = false;
+static pp_model_ads_state_t pp_model_ads;
 
 static float
 PP_ViewmodelAngleOffset(float angle, float base)
@@ -230,11 +232,11 @@ PP_ApplyBoss2HelicopterTransform(const entity_state_t *state,
 }
 
 static pp_weapon_type_t
-PP_DetectWeaponType(player_state_t *ps)
+PP_DetectWeaponType(const player_state_t *ps)
 {
 	const char *model;
 
-	if (!ps || ps->gunindex <= 0)
+	if (!ps || ps->gunindex <= 0 || ps->gunindex >= MAX_MODELS)
 	{
 		return PP_WEAPON_UNKNOWN;
 	}
@@ -265,10 +267,10 @@ PP_ADSOverlayPicForWeapon(pp_weapon_type_t weapon)
 {
 	switch (weapon)
 	{
-		case PP_WEAPON_M9_PISTOL: return "ads_blaster.png";
+		case PP_WEAPON_M9_PISTOL: return NULL; /* aligned 3D viewmodel */
 		case PP_WEAPON_SHOTGUN: return "ads_shotgun.png";
 		case PP_WEAPON_SUPER_SHOTGUN: return "ads_supershotgun.png";
-		case PP_WEAPON_M16: return "ads_machinegun.png";
+		case PP_WEAPON_M16: return NULL; /* aligned 3D viewmodel */
 		case PP_WEAPON_M60: return "ads_chaingun.png";
 		case PP_WEAPON_HAND_GRENADE: return "ads_handgrenade.png";
 		case PP_WEAPON_GRENADE_LAUNCHER: return "ads_grenadelauncher.png";
@@ -290,6 +292,31 @@ CL_GetADSOverlayPicName(void)
 }
 
 qboolean
+CL_UsesModelADS(const player_state_t *ps)
+{
+	pp_weapon_type_t weapon = PP_DetectWeaponType(ps);
+	return weapon == PP_WEAPON_M16 || weapon == PP_WEAPON_M9_PISTOL;
+}
+
+pp_model_ads_config_t
+CL_GetModelADSConfig(const player_state_t *ps)
+{
+	return PP_ModelADSConfig(PP_DetectWeaponType(ps) == PP_WEAPON_M9_PISTOL);
+}
+
+float
+CL_GetModelADSBlend(int slot_index)
+{
+	const ss_local_player_t *slot;
+	if (SS_IsSessionActive() && slot_index >= 0 &&
+		(slot = SS_GetSlot(slot_index)) != NULL)
+	{
+		return PP_ModelADSAmount(&slot->model_ads);
+	}
+	return PP_ModelADSAmount(&pp_model_ads);
+}
+
+qboolean
 CL_IsADSActive(void)
 {
 	if (cls.state != ca_active)
@@ -307,7 +334,7 @@ CL_IsADSActive(void)
 		return false;
 	}
 
-	return CL_GetADSOverlayPicName() != NULL;
+	return CL_UsesModelADS(&cl.frame.playerstate) || CL_GetADSOverlayPicName() != NULL;
 }
 
 void
@@ -1468,6 +1495,9 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 	entity_t gun = {0}; /* view model */
 	vec3_t base_origin;
 	vec3_t base_angles;
+	float ads_blend;
+	qboolean model_ads = CL_UsesModelADS(ps);
+	pp_model_ads_config_t ads_config = CL_GetModelADSConfig(ps);
 	int i;
 
 	if (cl_skip_view_weapon)
@@ -1487,7 +1517,9 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 		return;
 	}
 
-	if (CL_IsADSActive())
+	ads_blend = PP_ModelADSUpdate(&pp_model_ads, model_ads, CL_IsADSActive(),
+		ps->gunindex, cl.servercount, cls.realtime * 0.001f, cls.rframetime);
+	if (CL_IsADSActive() && !model_ads)
 	{
 		return;
 	}
@@ -1524,11 +1556,14 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 	/* set up gun position */
 	for (i = 0; i < 3; i++)
 	{
-		gun.origin[i] = cl.refdef.vieworg[i] + ops->gunoffset[i]
-			+ cl.lerpfrac * (ps->gunoffset[i] - ops->gunoffset[i]);
-		gun.angles[i] = cl.refdef.viewangles[i] + LerpAngle(ops->gunangles[i],
-			ps->gunangles[i], cl.lerpfrac);
+		gun.origin[i] = cl.refdef.vieworg[i] + (1.0f - ads_blend) * (ops->gunoffset[i]
+			+ cl.lerpfrac * (ps->gunoffset[i] - ops->gunoffset[i]));
+		gun.angles[i] = cl.refdef.viewangles[i] + (1.0f - ads_blend) *
+			LerpAngle(ops->gunangles[i], ps->gunangles[i], cl.lerpfrac);
 	}
+	VectorMA(gun.origin, ads_blend * ads_config.forward, cl.v_forward, gun.origin);
+	VectorMA(gun.origin, ads_blend * ads_config.right, cl.v_right, gun.origin);
+	VectorMA(gun.origin, ads_blend * ads_config.up, cl.v_up, gun.origin);
 
 	VectorCopy(gun.origin, base_origin);
 	VectorCopy(gun.angles, base_angles);
@@ -1637,6 +1672,7 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 			bob_scale = 1.0f;
 		}
 
+		bob_scale *= 1.0f - ads_blend;
 		bob_up = sinf(t * 2.0f) * 0.45f * raise * bob_scale;
 		bob_right = sinf(t * 1.5f) * 0.35f * raise * bob_scale;
 

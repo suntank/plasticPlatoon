@@ -1,0 +1,577 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_pistol.py",
+  "dependencies_sha256": {
+    "build_pistol.py": "8dde869036abd5cd7121b6e4f53b8fff13dd351ff54a01538ae6bc7cd4379c57",
+    "pistol_geometry.py": "3d8a048b2172570feef4f120f7ff9e95aa42b128c0a4c058138da6ea89da7a42",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+  },
+  "source_archive": {
+    "path": "tools/assets/sources/platoon-originals.pk3",
+    "sha256": "308e7b7e07f08ecbd0f7487e8a37440ab07c28bb83896b0f4c959a29fdcbf7e4",
+    "bytes": 47317833,
+    "origin": "Original owner-authored Plastic Platoon model, texture and sprite inputs recovered before public history cleanup",
+    "license": "GPL-2.0-or-later",
+    "excluded": [
+      "Legacy players/male assets",
+      "Inherited soldier portrait PCXs"
+    ]
+  },
+  "method": "authored closed primitives; archived rigid poses",
+  "hand": "pistol_geometry.add_pistol_hand; exterior grip wrap, curled finger bank and continuous wrist",
+  "palette": "M16 plastic values; pistol-local rear serrations and finger creases",
+  "models": [
+    {
+      "path": "models/weapons/g_blast/tris.md2",
+      "role": "pickup",
+      "baseline": null,
+      "after": {
+        "triangles": 200,
+        "position_vertices": 202,
+        "render_vertices": 276,
+        "frames": 1,
+        "skin_references": [
+          "models/weapons/g_blast/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 65,
+        "gl_command_triangles": 200,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 7920,
+        "sha256": "0bb30ed203f28792ea766ac8e4c0fb848d6f32eddb001284c22a61e18db10c45",
+        "bounds": [
+          [
+            -8.635000228881836,
+            -1.127500057220459,
+            5.0
+          ],
+          [
+            8.635000869631767,
+            1.1275001028552651,
+            15.010000467300415
+          ]
+        ]
+      },
+      "pose_transfer": null,
+      "validation": {
+        "max_vertex_quantization_error": 0.0370954272272,
+        "minimum_quantized_double_triangle_area": 0.0753286263188,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          -8.635000000000005,
+          0.0,
+          13.2225
+        ],
+        "rear_sight": [
+          7.809999999999999,
+          0.0,
+          14.845
+        ],
+        "front_sight": [
+          -7.315000000000005,
+          0.0,
+          14.845
+        ],
+        "grip": [
+          5.169999999999998,
+          0.0,
+          8.135
+        ]
+      },
+      "parts": [
+        {
+          "name": "frame",
+          "first_triangle": 0,
+          "triangle_count": 32
+        },
+        {
+          "name": "grip",
+          "first_triangle": 32,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 52,
+          "triangle_count": 32
+        },
+        {
+          "name": "slide",
+          "first_triangle": 84,
+          "triangle_count": 60
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 144,
+          "triangle_count": 20
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 164,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 176,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 188,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/weapons/v_blast/tris.md2",
+      "role": "view",
+      "baseline": {
+        "triangles": 1400,
+        "position_vertices": 700,
+        "frames": 1,
+        "file_bytes": 56768
+      },
+      "after": {
+        "triangles": 598,
+        "position_vertices": 429,
+        "render_vertices": 625,
+        "frames": 1,
+        "skin_references": [
+          "models/weapons/v_blast/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 138,
+        "gl_command_triangles": 598,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 21144,
+        "sha256": "f6e3d459ca6ebd8afa64829ac2fc93a9a28a9190d1990fde85e38533af0fcc51",
+        "bounds": [
+          [
+            10.700249671936035,
+            -17.460800170898438,
+            -23.75400733947754
+          ],
+          [
+            44.58570659160614,
+            -5.9809568747878075,
+            -1.2000002786517143
+          ]
+        ]
+      },
+      "pose_transfer": null,
+      "validation": {
+        "max_vertex_quantization_error": 0.0797750223314,
+        "minimum_quantized_double_triangle_area": 0.0231293270993,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          44.585708390831954,
+          -8.8,
+          -3.3306863780319698
+        ],
+        "rear_sight": [
+          24.983393712937833,
+          -8.8,
+          -1.396678742587567
+        ],
+        "front_sight": [
+          43.01227845013142,
+          -8.8,
+          -1.396678742587567
+        ],
+        "grip": [
+          28.130253594338896,
+          -8.8,
+          -9.394947607815267
+        ]
+      },
+      "parts": [
+        {
+          "name": "frame",
+          "first_triangle": 0,
+          "triangle_count": 32
+        },
+        {
+          "name": "grip",
+          "first_triangle": 32,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 52,
+          "triangle_count": 32
+        },
+        {
+          "name": "slide",
+          "first_triangle": 84,
+          "triangle_count": 60
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 144,
+          "triangle_count": 28
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 172,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 184,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 196,
+          "triangle_count": 12
+        },
+        {
+          "name": "slide_stop",
+          "first_triangle": 208,
+          "triangle_count": 12
+        },
+        {
+          "name": "arm_right",
+          "first_triangle": 220,
+          "triangle_count": 56
+        },
+        {
+          "name": "hand_right_palm",
+          "first_triangle": 276,
+          "triangle_count": 266
+        },
+        {
+          "name": "hand_right_thumb",
+          "first_triangle": 542,
+          "triangle_count": 56
+        }
+      ]
+    },
+    {
+      "path": "players/soldier/w_blaster.md2",
+      "role": "player",
+      "baseline": {
+        "triangles": 1580,
+        "position_vertices": 790,
+        "frames": 198,
+        "file_bytes": 694880
+      },
+      "after": {
+        "triangles": 200,
+        "position_vertices": 202,
+        "render_vertices": 276,
+        "frames": 198,
+        "skin_references": [
+          "models/weapons/v_blast/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 65,
+        "gl_command_triangles": 200,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 174976,
+        "sha256": "91fe5079d1c38aba9552d01886d8f7ba4ac3ada04b8d1dc28b8c8f4cb0af4675",
+        "bounds": [
+          [
+            -44.159812927246094,
+            -26.771697998046875,
+            -24.112714767456055
+          ],
+          [
+            45.861581299453974,
+            29.446262806653976,
+            33.3588494900614
+          ]
+        ]
+      },
+      "pose_transfer": {
+        "rms_max": 0.0149543495227,
+        "frames": 198
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0211142383384,
+        "minimum_quantized_double_triangle_area": 0.01370247587,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          16.069085630814815,
+          -4.99334933,
+          14.86444136501852
+        ],
+        "rear_sight": [
+          8.044084355518518,
+          -4.99334933,
+          15.65620570488889
+        ],
+        "front_sight": [
+          15.42493837125926,
+          -4.99334933,
+          15.65620570488889
+        ],
+        "grip": [
+          9.33237887462963,
+          -4.99334933,
+          12.381790468814815
+        ]
+      },
+      "parts": [
+        {
+          "name": "frame",
+          "first_triangle": 0,
+          "triangle_count": 32
+        },
+        {
+          "name": "grip",
+          "first_triangle": 32,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 52,
+          "triangle_count": 32
+        },
+        {
+          "name": "slide",
+          "first_triangle": 84,
+          "triangle_count": 60
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 144,
+          "triangle_count": 20
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 164,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 176,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 188,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/monsters/soldier/weapon_blaster.md2",
+      "role": "enemy",
+      "baseline": {
+        "triangles": 1616,
+        "position_vertices": 808,
+        "frames": 475,
+        "file_bytes": 1616844
+      },
+      "after": {
+        "triangles": 200,
+        "position_vertices": 202,
+        "render_vertices": 276,
+        "frames": 475,
+        "skin_references": [
+          "models/weapons/v_blast/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 65,
+        "gl_command_triangles": 200,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 409872,
+        "sha256": "5db85d7a184d62bd53cab878dc15d20e20fcde6b69d5380ab81ed80dc3e70777",
+        "bounds": [
+          [
+            -32.89153289794922,
+            -30.520984649658203,
+            -24.372344970703125
+          ],
+          [
+            51.3987294472754,
+            29.40209599584341,
+            36.62715037167072
+          ]
+        ]
+      },
+      "pose_transfer": {
+        "rms_max": 0.0149155089144,
+        "frames": 475
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0223223496602,
+        "minimum_quantized_double_triangle_area": 0.0133197744267,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          16.069085630814815,
+          -4.99334933,
+          14.86444136501852
+        ],
+        "rear_sight": [
+          8.044084355518518,
+          -4.99334933,
+          15.65620570488889
+        ],
+        "front_sight": [
+          15.42493837125926,
+          -4.99334933,
+          15.65620570488889
+        ],
+        "grip": [
+          9.33237887462963,
+          -4.99334933,
+          12.381790468814815
+        ]
+      },
+      "parts": [
+        {
+          "name": "frame",
+          "first_triangle": 0,
+          "triangle_count": 32
+        },
+        {
+          "name": "grip",
+          "first_triangle": 32,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 52,
+          "triangle_count": 32
+        },
+        {
+          "name": "slide",
+          "first_triangle": 84,
+          "triangle_count": 60
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 144,
+          "triangle_count": 20
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 164,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 176,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 188,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/monsters/soldier/tall/weapon_blaster.md2",
+      "role": "enemy_tall",
+      "baseline": {
+        "triangles": 1616,
+        "position_vertices": 808,
+        "frames": 475,
+        "file_bytes": 1616844
+      },
+      "after": {
+        "triangles": 200,
+        "position_vertices": 202,
+        "render_vertices": 276,
+        "frames": 475,
+        "skin_references": [
+          "models/weapons/v_blast/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 65,
+        "gl_command_triangles": 200,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 409872,
+        "sha256": "567433dff6c0104f5b67a5da51793e7dde3c4e7e57707d7ca73e592ab68210c9",
+        "bounds": [
+          [
+            -39.46984100341797,
+            -36.62518310546875,
+            -24.446813583374023
+          ],
+          [
+            61.678476862609386,
+            35.282515577971935,
+            48.752581018954515
+          ]
+        ]
+      }
+    }
+  ],
+  "ads_header": {
+    "path": "src/client/header/pistol_model_ads.h",
+    "sha256": "f3d266090cc5418755512901eec507afc09205924836f373f6a150a6e4f508bb"
+  },
+  "files": [
+    {
+      "path": "models/monsters/soldier/tall/weapon_blaster.md2",
+      "bytes": 409872,
+      "sha256": "567433dff6c0104f5b67a5da51793e7dde3c4e7e57707d7ca73e592ab68210c9"
+    },
+    {
+      "path": "models/monsters/soldier/weapon_blaster.md2",
+      "bytes": 409872,
+      "sha256": "5db85d7a184d62bd53cab878dc15d20e20fcde6b69d5380ab81ed80dc3e70777"
+    },
+    {
+      "path": "models/weapons/g_blast/skin.png",
+      "bytes": 6096,
+      "sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9"
+    },
+    {
+      "path": "models/weapons/g_blast/tris.md2",
+      "bytes": 7920,
+      "sha256": "0bb30ed203f28792ea766ac8e4c0fb848d6f32eddb001284c22a61e18db10c45"
+    },
+    {
+      "path": "models/weapons/v_blast/skin.png",
+      "bytes": 6096,
+      "sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9"
+    },
+    {
+      "path": "models/weapons/v_blast/tris.md2",
+      "bytes": 21144,
+      "sha256": "f6e3d459ca6ebd8afa64829ac2fc93a9a28a9190d1990fde85e38533af0fcc51"
+    },
+    {
+      "path": "players/soldier/w_blaster.md2",
+      "bytes": 174976,
+      "sha256": "91fe5079d1c38aba9552d01886d8f7ba4ac3ada04b8d1dc28b8c8f4cb0af4675"
+    }
+  ]
+}

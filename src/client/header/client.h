@@ -59,6 +59,7 @@
 #include "screen.h"
 #include "keyboard.h"
 #include "console.h"
+#include "weapon_model_ads.h"
 
 typedef struct
 {
@@ -521,6 +522,9 @@ void CL_AddDLights (void);
 void CL_AddTEnts (void);
 void CL_AddLightStyles (void);
 qboolean CL_IsADSActive(void);
+qboolean CL_UsesModelADS(const player_state_t *ps);
+pp_model_ads_config_t CL_GetModelADSConfig(const player_state_t *ps);
+float CL_GetModelADSBlend(int slot_index);
 const char *CL_GetADSOverlayPicName(void);
 void CL_TouchADSOverlayPics(void);
 struct sfx_s *CL_RandomFootstepSfx (void);

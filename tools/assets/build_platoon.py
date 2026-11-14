@@ -31,6 +31,12 @@ def input_hashes():
     return {name: md2.sha((ROOT / name).read_bytes()) for name in CONVERSION_INPUTS}
 
 
+def procedural_paths(config):
+    """Explicit ownership prevents a full legacy rebuild restoring old meshes."""
+    return {path for replacement in config.get('procedural_replacements', {}).values()
+            for kind in ('models', 'textures') for path in replacement[kind]}
+
+
 def pickup_overrides(prior):
     """Keep corrected pickups paired with their audited models and textures."""
     if "source_archive" not in prior:
@@ -117,7 +123,8 @@ def build(args):
     params = json.loads(Path(__file__).with_name("pickups.json").read_text())["parameters"]
     originals = {p.removeprefix("baseq2/"): raw for p, raw in md2.source_files(config).items()
                  if Path(p).suffix.lower() in (".md2", ".png")
-                 and not p.startswith("baseq2/players/male/")}
+                 and not p.startswith("baseq2/players/male/")
+                 and p.removeprefix('baseq2/') not in procedural_paths(config)}
     overrides, pickup_outputs = pickup_overrides(prior)
     originals.update(overrides)
     textures = {}
@@ -133,6 +140,7 @@ def build(args):
     manifest = {"schema": 1, "source_archive": config["source_archive"], "config_sha256": md2.sha(CONFIG.read_bytes()),
                 "converter_sha256": converter_hashes(),
                 "conversion_inputs_sha256": input_hashes(),
+                "procedural_replacements": config.get('procedural_replacements', {}),
                 "tools": {p: importlib.metadata.version(p) for p in ("numpy", "Pillow", "pymeshlab")},
                 "models": [], "textures": []}
     if "source_archive" in prior:
@@ -197,6 +205,25 @@ def build(args):
             if args.write and (not args.pickups_only or path in overrides):
                 (ROOT / "baseq2" / path).write_bytes(data)
     args.manifest.write_text(json.dumps(manifest, indent=2) + "\n")
+    if args.write and not args.only:
+        # Each replacement has its own topology/pose tests and deterministic
+        # manifest. It must never enter the old source-vertex decimation path.
+        import build_m16
+        outputs, replacement_manifest = build_m16.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        (ROOT / config['procedural_replacements']['m16']['manifest']).write_text(
+            json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_pistol
+        outputs, replacement_manifest, header = build_pistol.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_pistol.ADS_HEADER.write_bytes(header)
+        build_pistol.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
 
 
 def verify(args):
@@ -219,6 +246,10 @@ def verify(args):
             assert md2.sha((ROOT / review["path"]).read_bytes()) == review["sha256"], path
     for entry in manifest["textures"]:
         assert md2.texture_stats((ROOT / "baseq2" / entry["path"]).read_bytes()) == entry["after"], entry["path"]
+    from verify_m16_runtime import verify as verify_m16
+    verify_m16()
+    from verify_pistol_runtime import verify as verify_pistol
+    verify_pistol()
     print(f"Verified {len(manifest['models'])} MD2 models and {len(manifest['textures'])} PNG textures")
 
 

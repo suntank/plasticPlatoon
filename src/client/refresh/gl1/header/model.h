@@ -62,6 +62,8 @@ typedef struct msurface_s
 	glpoly_t *polys;                /* multiple if warped */
 	struct  msurface_s *texturechain;
 	struct  msurface_s *lightmapchain;
+	struct  msurface_s *world_batch_next; /* per-view visible bucket; not a visibility stamp */
+	int world_batch_group; /* registration-owned group, zero keeps legacy order */
 	int lmchain_frame;	// avoids adding this surface twice to the lightmap chain
 
 	mtexinfo_t *texinfo;
@@ -87,6 +89,7 @@ typedef struct model_s
 
 	modtype_t type;
 	int numframes;
+	struct model_s *pickup_lod; /* separately registered optional distant mesh */
 
 	int flags;
 
@@ -126,6 +129,8 @@ typedef struct model_s
 
 	int numsurfaces;
 	msurface_t *surfaces;
+	/* Optional registration-time order for ordinary opaque inline surfaces. */
+	msurface_t **inline_surface_order;
 
 	int numsurfedges;
 	int *surfedges;

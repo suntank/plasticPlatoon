@@ -1,0 +1,1368 @@
+[
+  {
+    "label": "sandstorm-normal-glworld-optimized",
+    "map": "pp_sandstorm",
+    "players": 4,
+    "renderer": "gl1",
+    "warmup": 24,
+    "dm": false,
+    "settings": {
+      "r_pickup_lod": 1,
+      "gl1_picmip": 0,
+      "gl1_dynamic": 1,
+      "r_shadows": 0,
+      "r_msaa_samples": 0,
+      "r_anisotropic": 0,
+      "gl1_static_world": 1,
+      "r_viscache": 1,
+      "gl1_multitexture": 1,
+      "cl_particles": 1,
+      "cl_lights": 1,
+      "r_drawentities": 1,
+      "cl_gun": 2,
+      "r_gl1_batch_inline": 1,
+      "r_gl1_batch_world": 1,
+      "r_drawprofile": 0,
+      "r_gl1_lightmap_opt": 1,
+      "gl1_lightmapcopies": 0,
+      "r_gl1_alias_colors": 1
+    },
+    "phases": [
+      {
+        "label": "spawn",
+        "seconds": 12,
+        "require_four_ready": true,
+        "require_alive": true,
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "roof-four-guns",
+        "commands": [
+          "pp_test_slot 0 god",
+          "pp_test_slot 1 god",
+          "pp_test_slot 2 god",
+          "pp_test_slot 3 god",
+          "pp_test_slot 0 give Machinegun",
+          "pp_test_slot 1 give Machinegun",
+          "pp_test_slot 2 give Machinegun",
+          "pp_test_slot 3 give Machinegun",
+          "pp_test_slot 0 give bullets 10000",
+          "pp_test_slot 1 give bullets 10000",
+          "pp_test_slot 2 give bullets 10000",
+          "pp_test_slot 3 give bullets 10000",
+          "pp_test_slot 0 use Machinegun",
+          "pp_test_slot 1 use Machinegun",
+          "pp_test_slot 2 use Machinegun",
+          "pp_test_slot 3 use Machinegun",
+          "cl_bench_pose 0 172.4 1728 248 0 180",
+          "cl_bench_pose 1 -144 1560 248 0 0",
+          "cl_bench_pose 2 -144 1370 248 0 45",
+          "cl_bench_pose 3 48 1370 248 0 135",
+          "pp_test_input 0 attack 1",
+          "pp_test_input 1 attack 1",
+          "pp_test_input 2 attack 1",
+          "pp_test_input 3 attack 1"
+        ],
+        "settle": 4,
+        "seconds": 20,
+        "require_four_ready": true,
+        "require_four_attack": true,
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      }
+    ],
+    "comparison": {
+      "kind": "user_experiment",
+      "quality": "normal"
+    },
+    "startup_settings": {
+      "gl1_lightmapcopies": 0
+    },
+    "required_startup_messages": [
+      "Lightmap copies: Disabled"
+    ],
+    "require_cvars": {
+      "r_pickup_lod": 1,
+      "r_gl1_batch_inline": 1,
+      "r_gl1_batch_world": 1,
+      "r_gl1_lightmap_opt": 1,
+      "gl1_lightmapcopies": 0,
+      "r_drawprofile": 0,
+      "r_gl1_alias_colors": 1
+    }
+  },
+  {
+    "label": "sandstorm-low-glworld-optimized",
+    "map": "pp_sandstorm",
+    "players": 4,
+    "renderer": "gl1",
+    "warmup": 24,
+    "dm": false,
+    "settings": {
+      "r_pickup_lod": 1,
+      "gl1_picmip": 1,
+      "gl1_dynamic": 0,
+      "r_shadows": 0,
+      "r_msaa_samples": 0,
+      "r_anisotropic": 0,
+      "gl1_static_world": 1,
+      "r_viscache": 1,
+      "gl1_multitexture": 1,
+      "cl_particles": 1,
+      "cl_lights": 1,
+      "r_drawentities": 1,
+      "cl_gun": 2,
+      "r_gl1_batch_inline": 1,
+      "r_gl1_batch_world": 1,
+      "r_drawprofile": 0,
+      "r_gl1_lightmap_opt": 1,
+      "gl1_lightmapcopies": 0,
+      "r_gl1_alias_colors": 1
+    },
+    "phases": [
+      {
+        "label": "spawn",
+        "seconds": 12,
+        "require_four_ready": true,
+        "require_alive": true,
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "roof-four-guns",
+        "commands": [
+          "pp_test_slot 0 god",
+          "pp_test_slot 1 god",
+          "pp_test_slot 2 god",
+          "pp_test_slot 3 god",
+          "pp_test_slot 0 give Machinegun",
+          "pp_test_slot 1 give Machinegun",
+          "pp_test_slot 2 give Machinegun",
+          "pp_test_slot 3 give Machinegun",
+          "pp_test_slot 0 give bullets 10000",
+          "pp_test_slot 1 give bullets 10000",
+          "pp_test_slot 2 give bullets 10000",
+          "pp_test_slot 3 give bullets 10000",
+          "pp_test_slot 0 use Machinegun",
+          "pp_test_slot 1 use Machinegun",
+          "pp_test_slot 2 use Machinegun",
+          "pp_test_slot 3 use Machinegun",
+          "cl_bench_pose 0 172.4 1728 248 0 180",
+          "cl_bench_pose 1 -144 1560 248 0 0",
+          "cl_bench_pose 2 -144 1370 248 0 45",
+          "cl_bench_pose 3 48 1370 248 0 135",
+          "pp_test_input 0 attack 1",
+          "pp_test_input 1 attack 1",
+          "pp_test_input 2 attack 1",
+          "pp_test_input 3 attack 1"
+        ],
+        "settle": 4,
+        "seconds": 20,
+        "require_four_ready": true,
+        "require_four_attack": true,
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      }
+    ],
+    "comparison": {
+      "kind": "user_experiment",
+      "quality": "low"
+    },
+    "startup_settings": {
+      "gl1_lightmapcopies": 0
+    },
+    "required_startup_messages": [
+      "Lightmap copies: Disabled"
+    ],
+    "require_cvars": {
+      "r_pickup_lod": 1,
+      "r_gl1_batch_inline": 1,
+      "r_gl1_batch_world": 1,
+      "r_gl1_lightmap_opt": 1,
+      "gl1_lightmapcopies": 0,
+      "r_drawprofile": 0,
+      "r_gl1_alias_colors": 1
+    }
+  },
+  {
+    "label": "endline-normal-glworld-optimized",
+    "map": "pp_endline",
+    "players": 4,
+    "renderer": "gl1",
+    "warmup": 24,
+    "dm": false,
+    "settings": {
+      "r_pickup_lod": 1,
+      "gl1_picmip": 0,
+      "gl1_dynamic": 1,
+      "r_shadows": 0,
+      "r_msaa_samples": 0,
+      "r_anisotropic": 0,
+      "gl1_static_world": 1,
+      "r_viscache": 1,
+      "gl1_multitexture": 1,
+      "cl_particles": 1,
+      "cl_lights": 1,
+      "r_drawentities": 1,
+      "cl_gun": 2,
+      "r_gl1_batch_inline": 1,
+      "r_gl1_batch_world": 1,
+      "r_drawprofile": 0,
+      "r_gl1_lightmap_opt": 1,
+      "gl1_lightmapcopies": 0,
+      "r_gl1_alias_colors": 1
+    },
+    "phases": [
+      {
+        "label": "spawn",
+        "seconds": 12,
+        "require_four_ready": true,
+        "require_alive": true,
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "boarding-clear-floor",
+        "commands": [
+          "pp_test_slot 0 god",
+          "pp_test_slot 1 god",
+          "pp_test_slot 2 god",
+          "pp_test_slot 3 god",
+          "pp_test_slot 0 give Machinegun",
+          "pp_test_slot 1 give Machinegun",
+          "pp_test_slot 2 give Machinegun",
+          "pp_test_slot 3 give Machinegun",
+          "pp_test_slot 0 give bullets 10000",
+          "pp_test_slot 1 give bullets 10000",
+          "pp_test_slot 2 give bullets 10000",
+          "pp_test_slot 3 give bullets 10000",
+          "pp_test_slot 0 use Machinegun",
+          "pp_test_slot 1 use Machinegun",
+          "pp_test_slot 2 use Machinegun",
+          "pp_test_slot 3 use Machinegun",
+          "cl_bench_pose 0 848 -34 329 -16.7 270",
+          "cl_bench_pose 1 716 -75 329 0 180",
+          "cl_bench_pose 2 608 -75 329 0 180",
+          "cl_bench_pose 3 848 75 329 0 180"
+        ],
+        "settle": 2,
+        "seconds": 4,
+        "probe_train": true,
+        "require_four_ready": true,
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "resource_qualification": {
+          "mode": "observe_only",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "bridge-four-guns",
+        "commands": [
+          "pp_test_input 0 attack 1",
+          "pp_test_input 1 attack 1",
+          "pp_test_input 2 attack 1",
+          "pp_test_input 3 attack 1"
+        ],
+        "settle": 45,
+        "seconds": 20,
+        "probe_train": true,
+        "require_four_ready": true,
+        "require_four_attack": true,
+        "motion_reference": "boarding-clear-floor",
+        "minimum_camera_x_shift": 2000,
+        "require_train_x": [
+          -860,
+          -830
+        ],
+        "require_messages": [
+          "TRAIN DEPARTING"
+        ],
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      }
+    ],
+    "comparison": {
+      "kind": "user_experiment",
+      "quality": "normal"
+    },
+    "startup_settings": {
+      "gl1_lightmapcopies": 0
+    },
+    "required_startup_messages": [
+      "Lightmap copies: Disabled"
+    ],
+    "require_cvars": {
+      "r_pickup_lod": 1,
+      "r_gl1_batch_inline": 1,
+      "r_gl1_batch_world": 1,
+      "r_gl1_lightmap_opt": 1,
+      "gl1_lightmapcopies": 0,
+      "r_drawprofile": 0,
+      "r_gl1_alias_colors": 1
+    }
+  },
+  {
+    "label": "endline-low-glworld-optimized",
+    "map": "pp_endline",
+    "players": 4,
+    "renderer": "gl1",
+    "warmup": 24,
+    "dm": false,
+    "settings": {
+      "r_pickup_lod": 1,
+      "gl1_picmip": 1,
+      "gl1_dynamic": 0,
+      "r_shadows": 0,
+      "r_msaa_samples": 0,
+      "r_anisotropic": 0,
+      "gl1_static_world": 1,
+      "r_viscache": 1,
+      "gl1_multitexture": 1,
+      "cl_particles": 1,
+      "cl_lights": 1,
+      "r_drawentities": 1,
+      "cl_gun": 2,
+      "r_gl1_batch_inline": 1,
+      "r_gl1_batch_world": 1,
+      "r_drawprofile": 0,
+      "r_gl1_lightmap_opt": 1,
+      "gl1_lightmapcopies": 0,
+      "r_gl1_alias_colors": 1
+    },
+    "phases": [
+      {
+        "label": "spawn",
+        "seconds": 12,
+        "require_four_ready": true,
+        "require_alive": true,
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "boarding-clear-floor",
+        "commands": [
+          "pp_test_slot 0 god",
+          "pp_test_slot 1 god",
+          "pp_test_slot 2 god",
+          "pp_test_slot 3 god",
+          "pp_test_slot 0 give Machinegun",
+          "pp_test_slot 1 give Machinegun",
+          "pp_test_slot 2 give Machinegun",
+          "pp_test_slot 3 give Machinegun",
+          "pp_test_slot 0 give bullets 10000",
+          "pp_test_slot 1 give bullets 10000",
+          "pp_test_slot 2 give bullets 10000",
+          "pp_test_slot 3 give bullets 10000",
+          "pp_test_slot 0 use Machinegun",
+          "pp_test_slot 1 use Machinegun",
+          "pp_test_slot 2 use Machinegun",
+          "pp_test_slot 3 use Machinegun",
+          "cl_bench_pose 0 848 -34 329 -16.7 270",
+          "cl_bench_pose 1 716 -75 329 0 180",
+          "cl_bench_pose 2 608 -75 329 0 180",
+          "cl_bench_pose 3 848 75 329 0 180"
+        ],
+        "settle": 2,
+        "seconds": 4,
+        "probe_train": true,
+        "require_four_ready": true,
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "resource_qualification": {
+          "mode": "observe_only",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "bridge-four-guns",
+        "commands": [
+          "pp_test_input 0 attack 1",
+          "pp_test_input 1 attack 1",
+          "pp_test_input 2 attack 1",
+          "pp_test_input 3 attack 1"
+        ],
+        "settle": 45,
+        "seconds": 20,
+        "probe_train": true,
+        "require_four_ready": true,
+        "require_four_attack": true,
+        "motion_reference": "boarding-clear-floor",
+        "minimum_camera_x_shift": 2000,
+        "require_train_x": [
+          -860,
+          -830
+        ],
+        "require_messages": [
+          "TRAIN DEPARTING"
+        ],
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      }
+    ],
+    "comparison": {
+      "kind": "user_experiment",
+      "quality": "low"
+    },
+    "startup_settings": {
+      "gl1_lightmapcopies": 0
+    },
+    "required_startup_messages": [
+      "Lightmap copies: Disabled"
+    ],
+    "require_cvars": {
+      "r_pickup_lod": 1,
+      "r_gl1_batch_inline": 1,
+      "r_gl1_batch_world": 1,
+      "r_gl1_lightmap_opt": 1,
+      "gl1_lightmapcopies": 0,
+      "r_drawprofile": 0,
+      "r_gl1_alias_colors": 1
+    }
+  },
+  {
+    "label": "sandbox2-normal-glworld-optimized",
+    "map": "pp_sandbox2",
+    "players": 4,
+    "renderer": "gl1",
+    "warmup": 24,
+    "dm": true,
+    "settings": {
+      "r_pickup_lod": 1,
+      "gl1_picmip": 0,
+      "gl1_dynamic": 1,
+      "r_shadows": 0,
+      "r_msaa_samples": 0,
+      "r_anisotropic": 0,
+      "gl1_static_world": 1,
+      "r_viscache": 1,
+      "gl1_multitexture": 1,
+      "cl_particles": 1,
+      "cl_lights": 1,
+      "r_drawentities": 1,
+      "cl_gun": 2,
+      "r_gl1_batch_inline": 1,
+      "r_gl1_batch_world": 1,
+      "r_drawprofile": 0,
+      "r_gl1_lightmap_opt": 1,
+      "gl1_lightmapcopies": 0,
+      "r_gl1_alias_colors": 1
+    },
+    "phases": [
+      {
+        "label": "spawn",
+        "seconds": 12,
+        "require_four_ready": true,
+        "commands": [],
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "dm-separated",
+        "commands": [
+          "pp_test_slot 0 give Machinegun",
+          "pp_test_slot 1 give Machinegun",
+          "pp_test_slot 2 give Machinegun",
+          "pp_test_slot 3 give Machinegun",
+          "pp_test_slot 0 give bullets 10000",
+          "pp_test_slot 1 give bullets 10000",
+          "pp_test_slot 2 give bullets 10000",
+          "pp_test_slot 3 give bullets 10000",
+          "pp_test_slot 0 use Machinegun",
+          "pp_test_slot 1 use Machinegun",
+          "pp_test_slot 2 use Machinegun",
+          "pp_test_slot 3 use Machinegun",
+          "cl_bench_pose 0 -2312 128 -968 0 90",
+          "cl_bench_pose 1 -3312 -800 -984 0 90",
+          "cl_bench_pose 2 -1392 1368 -984 0 225",
+          "cl_bench_pose 3 -2432 424 -680 0 270"
+        ],
+        "seconds": 12,
+        "require_four_ready": true,
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "dm-four-guns-turning",
+        "commands": [
+          "pp_test_input 0 attack 1",
+          "pp_test_input 1 attack 1",
+          "pp_test_input 2 attack 1",
+          "pp_test_input 3 attack 1",
+          "pp_test_input 0 left 1",
+          "pp_test_input 1 left 1",
+          "pp_test_input 2 left 1",
+          "pp_test_input 3 left 1"
+        ],
+        "seconds": 20,
+        "require_four_ready": true,
+        "require_four_attack": true,
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "functional-four-deaths",
+        "seconds": 2,
+        "commands": [
+          "pp_test_input 0 attack 0",
+          "pp_test_input 1 attack 0",
+          "pp_test_input 2 attack 0",
+          "pp_test_input 3 attack 0",
+          "pp_test_input 0 left 0",
+          "pp_test_input 1 left 0",
+          "pp_test_input 2 left 0",
+          "pp_test_input 3 left 0",
+          "pp_test_slot 0 kill",
+          "pp_test_slot 1 kill",
+          "pp_test_slot 2 kill",
+          "pp_test_slot 3 kill"
+        ],
+        "require_four_ready": true,
+        "expected_alive": false,
+        "resource_qualification": {
+          "mode": "observe_only",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "functional-four-respawns",
+        "seconds": 3,
+        "commands": [],
+        "settle": 4,
+        "require_four_ready": true,
+        "expected_alive": true,
+        "sequential_respawn": {
+          "poses": [
+            "cl_bench_pose 0 -2312 128 -968 0 90",
+            "cl_bench_pose 1 -3312 -800 -984 0 90",
+            "cl_bench_pose 2 -1392 1368 -984 0 225",
+            "cl_bench_pose 3 -2432 424 -680 0 270"
+          ],
+          "timeout": 75
+        },
+        "resource_qualification": {
+          "mode": "observe_only",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      }
+    ],
+    "comparison": {
+      "kind": "user_experiment",
+      "quality": "normal"
+    },
+    "startup_settings": {
+      "gl1_lightmapcopies": 0
+    },
+    "required_startup_messages": [
+      "Lightmap copies: Disabled"
+    ],
+    "prepare_deathmatch": {
+      "poses": [
+        "cl_bench_pose 0 -2312 128 -968 0 90",
+        "cl_bench_pose 1 -3312 -800 -984 0 90",
+        "cl_bench_pose 2 -1392 1368 -984 0 225",
+        "cl_bench_pose 3 -2432 424 -680 0 270"
+      ],
+      "gunmodel": "models/weapons/v_machn/tris.md2",
+      "timeout": 75,
+      "equip_timeout": 15
+    },
+    "require_cvars": {
+      "r_gl1_alias_colors": 1
+    }
+  },
+  {
+    "label": "sandbox2-low-glworld-optimized",
+    "map": "pp_sandbox2",
+    "players": 4,
+    "renderer": "gl1",
+    "warmup": 24,
+    "dm": true,
+    "settings": {
+      "r_pickup_lod": 1,
+      "gl1_picmip": 1,
+      "gl1_dynamic": 0,
+      "r_shadows": 0,
+      "r_msaa_samples": 0,
+      "r_anisotropic": 0,
+      "gl1_static_world": 1,
+      "r_viscache": 1,
+      "gl1_multitexture": 1,
+      "cl_particles": 1,
+      "cl_lights": 1,
+      "r_drawentities": 1,
+      "cl_gun": 2,
+      "r_gl1_batch_inline": 1,
+      "r_gl1_batch_world": 1,
+      "r_drawprofile": 0,
+      "r_gl1_lightmap_opt": 1,
+      "gl1_lightmapcopies": 0,
+      "r_gl1_alias_colors": 1
+    },
+    "phases": [
+      {
+        "label": "spawn",
+        "seconds": 12,
+        "require_four_ready": true,
+        "commands": [],
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "dm-separated",
+        "commands": [
+          "pp_test_slot 0 give Machinegun",
+          "pp_test_slot 1 give Machinegun",
+          "pp_test_slot 2 give Machinegun",
+          "pp_test_slot 3 give Machinegun",
+          "pp_test_slot 0 give bullets 10000",
+          "pp_test_slot 1 give bullets 10000",
+          "pp_test_slot 2 give bullets 10000",
+          "pp_test_slot 3 give bullets 10000",
+          "pp_test_slot 0 use Machinegun",
+          "pp_test_slot 1 use Machinegun",
+          "pp_test_slot 2 use Machinegun",
+          "pp_test_slot 3 use Machinegun",
+          "cl_bench_pose 0 -2312 128 -968 0 90",
+          "cl_bench_pose 1 -3312 -800 -984 0 90",
+          "cl_bench_pose 2 -1392 1368 -984 0 225",
+          "cl_bench_pose 3 -2432 424 -680 0 270"
+        ],
+        "seconds": 12,
+        "require_four_ready": true,
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "dm-four-guns-turning",
+        "commands": [
+          "pp_test_input 0 attack 1",
+          "pp_test_input 1 attack 1",
+          "pp_test_input 2 attack 1",
+          "pp_test_input 3 attack 1",
+          "pp_test_input 0 left 1",
+          "pp_test_input 1 left 1",
+          "pp_test_input 2 left 1",
+          "pp_test_input 3 left 1"
+        ],
+        "seconds": 20,
+        "require_four_ready": true,
+        "require_four_attack": true,
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "functional-four-deaths",
+        "seconds": 2,
+        "commands": [
+          "pp_test_input 0 attack 0",
+          "pp_test_input 1 attack 0",
+          "pp_test_input 2 attack 0",
+          "pp_test_input 3 attack 0",
+          "pp_test_input 0 left 0",
+          "pp_test_input 1 left 0",
+          "pp_test_input 2 left 0",
+          "pp_test_input 3 left 0",
+          "pp_test_slot 0 kill",
+          "pp_test_slot 1 kill",
+          "pp_test_slot 2 kill",
+          "pp_test_slot 3 kill"
+        ],
+        "require_four_ready": true,
+        "expected_alive": false,
+        "resource_qualification": {
+          "mode": "observe_only",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "functional-four-respawns",
+        "seconds": 3,
+        "commands": [],
+        "settle": 4,
+        "require_four_ready": true,
+        "expected_alive": true,
+        "sequential_respawn": {
+          "poses": [
+            "cl_bench_pose 0 -2312 128 -968 0 90",
+            "cl_bench_pose 1 -3312 -800 -984 0 90",
+            "cl_bench_pose 2 -1392 1368 -984 0 225",
+            "cl_bench_pose 3 -2432 424 -680 0 270"
+          ],
+          "timeout": 75
+        },
+        "resource_qualification": {
+          "mode": "observe_only",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      }
+    ],
+    "comparison": {
+      "kind": "user_experiment",
+      "quality": "low"
+    },
+    "startup_settings": {
+      "gl1_lightmapcopies": 0
+    },
+    "required_startup_messages": [
+      "Lightmap copies: Disabled"
+    ],
+    "prepare_deathmatch": {
+      "poses": [
+        "cl_bench_pose 0 -2312 128 -968 0 90",
+        "cl_bench_pose 1 -3312 -800 -984 0 90",
+        "cl_bench_pose 2 -1392 1368 -984 0 225",
+        "cl_bench_pose 3 -2432 424 -680 0 270"
+      ],
+      "gunmodel": "models/weapons/v_machn/tris.md2",
+      "timeout": 75,
+      "equip_timeout": 15
+    },
+    "require_cvars": {
+      "r_gl1_alias_colors": 1
+    }
+  },
+  {
+    "label": "temple-normal-glworld-optimized",
+    "map": "pp_temple",
+    "players": 4,
+    "renderer": "gl1",
+    "warmup": 24,
+    "dm": true,
+    "settings": {
+      "r_pickup_lod": 1,
+      "gl1_picmip": 0,
+      "gl1_dynamic": 1,
+      "r_shadows": 0,
+      "r_msaa_samples": 0,
+      "r_anisotropic": 0,
+      "gl1_static_world": 1,
+      "r_viscache": 1,
+      "gl1_multitexture": 1,
+      "cl_particles": 1,
+      "cl_lights": 1,
+      "r_drawentities": 1,
+      "cl_gun": 2,
+      "r_gl1_batch_inline": 1,
+      "r_gl1_batch_world": 1,
+      "r_drawprofile": 0,
+      "r_gl1_lightmap_opt": 1,
+      "gl1_lightmapcopies": 0,
+      "dmflags": 512,
+      "r_gl1_alias_colors": 1
+    },
+    "phases": [
+      {
+        "label": "spawn",
+        "seconds": 12,
+        "require_four_ready": true,
+        "commands": [],
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "expected_camera_xy": {
+          "0": [
+            -41.260606,
+            -195.151515
+          ],
+          "1": [
+            -615.006061,
+            669.090909
+          ],
+          "2": [
+            -615.006061,
+            -55.757576
+          ],
+          "3": [
+            780.606061,
+            902.157576
+          ]
+        },
+        "camera_xy_tolerance": 2,
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "dm-separated",
+        "commands": [
+          "pp_test_slot 0 give Machinegun",
+          "pp_test_slot 1 give Machinegun",
+          "pp_test_slot 2 give Machinegun",
+          "pp_test_slot 3 give Machinegun",
+          "pp_test_slot 0 give bullets 10000",
+          "pp_test_slot 1 give bullets 10000",
+          "pp_test_slot 2 give bullets 10000",
+          "pp_test_slot 3 give bullets 10000",
+          "pp_test_slot 0 use Machinegun",
+          "pp_test_slot 1 use Machinegun",
+          "pp_test_slot 2 use Machinegun",
+          "pp_test_slot 3 use Machinegun",
+          "cl_bench_pose 0 -41.260606 -195.151515 147.349242 10 90.0",
+          "cl_bench_pose 1 -615.006061 669.090909 24.125 -25 270.0",
+          "cl_bench_pose 2 -615.006061 -55.757576 24.125 -21.464233 90.0",
+          "cl_bench_pose 3 780.606061 902.157576 -57.838636 -15.922167 180.0"
+        ],
+        "seconds": 12,
+        "require_four_ready": true,
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "expected_camera_xy": {
+          "0": [
+            -41.260606,
+            -195.151515
+          ],
+          "1": [
+            -615.006061,
+            669.090909
+          ],
+          "2": [
+            -615.006061,
+            -55.757576
+          ],
+          "3": [
+            780.606061,
+            902.157576
+          ]
+        },
+        "camera_xy_tolerance": 2,
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "dm-four-guns-turning",
+        "commands": [
+          "pp_test_input 0 attack 1",
+          "pp_test_input 1 attack 1",
+          "pp_test_input 2 attack 1",
+          "pp_test_input 3 attack 1",
+          "pp_test_input 0 left 1",
+          "pp_test_input 1 left 1",
+          "pp_test_input 2 left 1",
+          "pp_test_input 3 left 1"
+        ],
+        "seconds": 20,
+        "require_four_ready": true,
+        "require_four_attack": true,
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "expected_camera_xy": {
+          "0": [
+            -41.260606,
+            -195.151515
+          ],
+          "1": [
+            -615.006061,
+            669.090909
+          ],
+          "2": [
+            -615.006061,
+            -55.757576
+          ],
+          "3": [
+            780.606061,
+            902.157576
+          ]
+        },
+        "camera_xy_tolerance": 2,
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "functional-four-deaths",
+        "seconds": 2,
+        "commands": [
+          "pp_test_input 0 attack 0",
+          "pp_test_input 1 attack 0",
+          "pp_test_input 2 attack 0",
+          "pp_test_input 3 attack 0",
+          "pp_test_input 0 left 0",
+          "pp_test_input 1 left 0",
+          "pp_test_input 2 left 0",
+          "pp_test_input 3 left 0",
+          "pp_test_slot 0 kill",
+          "pp_test_slot 1 kill",
+          "pp_test_slot 2 kill",
+          "pp_test_slot 3 kill"
+        ],
+        "require_four_ready": true,
+        "expected_alive": false,
+        "resource_qualification": {
+          "mode": "observe_only",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "functional-four-respawns",
+        "seconds": 3,
+        "commands": [],
+        "settle": 4,
+        "require_four_ready": true,
+        "expected_alive": true,
+        "sequential_respawn": {
+          "poses": [
+            "cl_bench_pose 0 -41.260606 -195.151515 147.349242 10 90.0",
+            "cl_bench_pose 1 -615.006061 669.090909 24.125 -25 270.0",
+            "cl_bench_pose 2 -615.006061 -55.757576 24.125 -21.464233 90.0",
+            "cl_bench_pose 3 780.606061 902.157576 -57.838636 -15.922167 180.0"
+          ],
+          "timeout": 75
+        },
+        "resource_qualification": {
+          "mode": "observe_only",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      }
+    ],
+    "comparison": {
+      "kind": "user_experiment",
+      "quality": "normal"
+    },
+    "startup_settings": {
+      "gl1_lightmapcopies": 0
+    },
+    "required_startup_messages": [
+      "Lightmap copies: Disabled"
+    ],
+    "prepare_deathmatch": {
+      "poses": [
+        "cl_bench_pose 0 -41.260606 -195.151515 147.349242 10 90.0",
+        "cl_bench_pose 1 -615.006061 669.090909 24.125 -25 270.0",
+        "cl_bench_pose 2 -615.006061 -55.757576 24.125 -21.464233 90.0",
+        "cl_bench_pose 3 780.606061 902.157576 -57.838636 -15.922167 180.0"
+      ],
+      "gunmodel": "models/weapons/v_machn/tris.md2",
+      "timeout": 75,
+      "equip_timeout": 15
+    },
+    "require_cvars": {
+      "dmflags": 512,
+      "r_gl1_alias_colors": 1
+    }
+  },
+  {
+    "label": "temple-low-glworld-optimized",
+    "map": "pp_temple",
+    "players": 4,
+    "renderer": "gl1",
+    "warmup": 24,
+    "dm": true,
+    "settings": {
+      "r_pickup_lod": 1,
+      "gl1_picmip": 1,
+      "gl1_dynamic": 0,
+      "r_shadows": 0,
+      "r_msaa_samples": 0,
+      "r_anisotropic": 0,
+      "gl1_static_world": 1,
+      "r_viscache": 1,
+      "gl1_multitexture": 1,
+      "cl_particles": 1,
+      "cl_lights": 1,
+      "r_drawentities": 1,
+      "cl_gun": 2,
+      "r_gl1_batch_inline": 1,
+      "r_gl1_batch_world": 1,
+      "r_drawprofile": 0,
+      "r_gl1_lightmap_opt": 1,
+      "gl1_lightmapcopies": 0,
+      "dmflags": 512,
+      "r_gl1_alias_colors": 1
+    },
+    "phases": [
+      {
+        "label": "spawn",
+        "seconds": 12,
+        "require_four_ready": true,
+        "commands": [],
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "expected_camera_xy": {
+          "0": [
+            -41.260606,
+            -195.151515
+          ],
+          "1": [
+            -615.006061,
+            669.090909
+          ],
+          "2": [
+            -615.006061,
+            -55.757576
+          ],
+          "3": [
+            780.606061,
+            902.157576
+          ]
+        },
+        "camera_xy_tolerance": 2,
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "dm-separated",
+        "commands": [
+          "pp_test_slot 0 give Machinegun",
+          "pp_test_slot 1 give Machinegun",
+          "pp_test_slot 2 give Machinegun",
+          "pp_test_slot 3 give Machinegun",
+          "pp_test_slot 0 give bullets 10000",
+          "pp_test_slot 1 give bullets 10000",
+          "pp_test_slot 2 give bullets 10000",
+          "pp_test_slot 3 give bullets 10000",
+          "pp_test_slot 0 use Machinegun",
+          "pp_test_slot 1 use Machinegun",
+          "pp_test_slot 2 use Machinegun",
+          "pp_test_slot 3 use Machinegun",
+          "cl_bench_pose 0 -41.260606 -195.151515 147.349242 10 90.0",
+          "cl_bench_pose 1 -615.006061 669.090909 24.125 -25 270.0",
+          "cl_bench_pose 2 -615.006061 -55.757576 24.125 -21.464233 90.0",
+          "cl_bench_pose 3 780.606061 902.157576 -57.838636 -15.922167 180.0"
+        ],
+        "seconds": 12,
+        "require_four_ready": true,
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "expected_camera_xy": {
+          "0": [
+            -41.260606,
+            -195.151515
+          ],
+          "1": [
+            -615.006061,
+            669.090909
+          ],
+          "2": [
+            -615.006061,
+            -55.757576
+          ],
+          "3": [
+            780.606061,
+            902.157576
+          ]
+        },
+        "camera_xy_tolerance": 2,
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "dm-four-guns-turning",
+        "commands": [
+          "pp_test_input 0 attack 1",
+          "pp_test_input 1 attack 1",
+          "pp_test_input 2 attack 1",
+          "pp_test_input 3 attack 1",
+          "pp_test_input 0 left 1",
+          "pp_test_input 1 left 1",
+          "pp_test_input 2 left 1",
+          "pp_test_input 3 left 1"
+        ],
+        "seconds": 20,
+        "require_four_ready": true,
+        "require_four_attack": true,
+        "require_alive": true,
+        "required_gunmodel": "models/weapons/v_machn/tris.md2",
+        "expected_camera_xy": {
+          "0": [
+            -41.260606,
+            -195.151515
+          ],
+          "1": [
+            -615.006061,
+            669.090909
+          ],
+          "2": [
+            -615.006061,
+            -55.757576
+          ],
+          "3": [
+            780.606061,
+            902.157576
+          ]
+        },
+        "camera_xy_tolerance": 2,
+        "resource_qualification": {
+          "mode": "gate",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "functional-four-deaths",
+        "seconds": 2,
+        "commands": [
+          "pp_test_input 0 attack 0",
+          "pp_test_input 1 attack 0",
+          "pp_test_input 2 attack 0",
+          "pp_test_input 3 attack 0",
+          "pp_test_input 0 left 0",
+          "pp_test_input 1 left 0",
+          "pp_test_input 2 left 0",
+          "pp_test_input 3 left 0",
+          "pp_test_slot 0 kill",
+          "pp_test_slot 1 kill",
+          "pp_test_slot 2 kill",
+          "pp_test_slot 3 kill"
+        ],
+        "require_four_ready": true,
+        "expected_alive": false,
+        "resource_qualification": {
+          "mode": "observe_only",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      },
+      {
+        "label": "functional-four-respawns",
+        "seconds": 3,
+        "commands": [],
+        "settle": 4,
+        "require_four_ready": true,
+        "expected_alive": true,
+        "sequential_respawn": {
+          "poses": [
+            "cl_bench_pose 0 -41.260606 -195.151515 147.349242 10 90.0",
+            "cl_bench_pose 1 -615.006061 669.090909 24.125 -25 270.0",
+            "cl_bench_pose 2 -615.006061 -55.757576 24.125 -21.464233 90.0",
+            "cl_bench_pose 3 780.606061 902.157576 -57.838636 -15.922167 180.0"
+          ],
+          "timeout": 75
+        },
+        "resource_qualification": {
+          "mode": "observe_only",
+          "window_seconds": 2,
+          "consecutive_windows": 2,
+          "maximum_seconds": 20,
+          "own_major_faults": 0,
+          "current_throttle_bits": 0,
+          "rss_relative_delta_max": 0.05
+        }
+      }
+    ],
+    "comparison": {
+      "kind": "user_experiment",
+      "quality": "low"
+    },
+    "startup_settings": {
+      "gl1_lightmapcopies": 0
+    },
+    "required_startup_messages": [
+      "Lightmap copies: Disabled"
+    ],
+    "prepare_deathmatch": {
+      "poses": [
+        "cl_bench_pose 0 -41.260606 -195.151515 147.349242 10 90.0",
+        "cl_bench_pose 1 -615.006061 669.090909 24.125 -25 270.0",
+        "cl_bench_pose 2 -615.006061 -55.757576 24.125 -21.464233 90.0",
+        "cl_bench_pose 3 780.606061 902.157576 -57.838636 -15.922167 180.0"
+      ],
+      "gunmodel": "models/weapons/v_machn/tris.md2",
+      "timeout": 75,
+      "equip_timeout": 15
+    },
+    "require_cvars": {
+      "dmflags": 512,
+      "r_gl1_alias_colors": 1
+    }
+  }
+]
