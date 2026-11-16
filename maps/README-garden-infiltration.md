@@ -1,6 +1,7 @@
 # Operation Garden Ghost
 
-`pp_garden_infiltration` is a mission version of `pp_garden`.
+`pp_garden_infiltration` is Level 1 and the New Game starting map.
+It is a mission version of `pp_garden`.
 The original Garden source and BSP are retained as a separate map. The mission
 source includes later manual terrain, cover and encounter edits; its original
 four player starts remain intact. The generator's initial additive version

@@ -20,7 +20,8 @@ make -j4 all
 ./release/play-portable.sh
 ```
 
-The launcher and new games start `pp_sandstorm`. The game uses only its own data
+Level 1 is `pp_garden_infiltration`; the launcher and new games start here.
+The game uses only its own data
 directory and keeps settings and saves in `release/baseq2`. Copy the entire `release` folder
 to another compatible machine. No numbered Quake II PAKs are release inputs.
 Packaging creates original palette, font, menus, HUD, player icons and support

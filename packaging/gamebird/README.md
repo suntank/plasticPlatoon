@@ -3,8 +3,8 @@
 These files adapt Plastic Platoon to the current Game Bird native-package
 format used alongside Drop Grid. `game.json` launches `launch.sh`; copy
 `gamebird.cfg` into the package's `baseq2/` directory. The default launch starts
-`pp_sandstorm`. No global SDL, input, boot, or root-filesystem changes are
-needed.
+`pp_garden_infiltration`, the official first level. No global SDL, input, boot,
+or root-filesystem changes are needed.
 
 ## Installed Pi
 

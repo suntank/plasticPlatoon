@@ -8,7 +8,8 @@ Original project assets use GPL-2.0-or-later too; see ASSET-LICENSE.md and
 asset-provenance.json for the owner's declaration and legacy-content exclusions.
 
 WASD move, mouse look, left mouse fire, space jump, tilde console.
-The launcher and new games start pp_sandstorm. From the console try:
+Level 1 is pp_garden_infiltration; the launcher and new games start here.
+From the console try:
   exec heavy_test.cfg
   exec rocket_test.cfg
   exec tank_test.cfg
