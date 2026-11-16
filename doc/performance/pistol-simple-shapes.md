@@ -76,6 +76,8 @@ library. Reauthoring needs NumPy and Pillow.
 `capture_m16.py --weapon Pistol --ads` captures actual first-person, sight,
 firing, release, held and world views in an isolated game. Add `--four` and
 `--mixed-weapons` to check pistol/M16 aiming independently across four players.
+`--weapon Shotgun` selects the authored pump shotgun and its model sights.
+The double-barrel shotgun also uses this model-ADS path with its own offsets.
 The geometry reduction is measured; a Raspberry Pi frame-rate improvement
 requires a separate target-device comparison.
 

@@ -2317,8 +2317,8 @@ SP_misc_platoon_dropship(edict_t *self)
 	self->movetype = MOVETYPE_NONE;
 	self->solid = SOLID_NOT;
 	self->s.renderfx |= RF_FRAMELERP | RF_PP_FRIENDLY_COLOR;
-	self->s.modelindex = gi.modelindex("models/monsters/boss2/tris.md2");
-	self->s.modelindex2 = gi.modelindex("models/monsters/boss2/propeller.md2");
+	self->s.modelindex = gi.modelindex("models/vehicles/platoon_dropship/body.md2");
+	self->s.modelindex2 = gi.modelindex("models/vehicles/platoon_dropship/main_rotor.md2");
 	self->noise_index = gi.soundindex("bosshovr/bhvengn1.wav");
 	self->speed = self->speed > 0 ? self->speed : 240;
 	self->use = platoon_dropship_use;

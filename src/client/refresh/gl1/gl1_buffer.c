@@ -82,7 +82,7 @@ R_EndWorldArrayScope(void)
 	world_array_scope = false;
 }
 
-extern void R_SetPerspective(GLdouble fovy);
+extern void R_SetPerspective(GLdouble fovy, qboolean weapon_model);
 
 void
 R_ResetGLBuffer(void)
@@ -171,7 +171,7 @@ R_ApplyGLBuffer(void)
 				glScalef(-1, 1, 1);
 			}
 
-			R_SetPerspective( (r_gunfov->value < 0) ? r_newrefdef.fov_y : r_gunfov->value );
+			R_SetPerspective( (r_gunfov->value < 0) ? r_newrefdef.fov_y : r_gunfov->value, true );
 
 			glMatrixMode(GL_MODELVIEW);
 

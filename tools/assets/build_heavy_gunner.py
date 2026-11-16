@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Retarget an existing held M60 or rocket launcher to all 475 soldier frames.
+"""Build authored M60 or rocket-launcher enemy attachments.
 
-Both player weapons share the enemy attachment's first-frame grip coordinates.
-The enemy's machinegun is a rigid object, so a least-squares rigid transform per
-frame transfers its authored motion to the M60 without changing the body mesh.
+Dedicated weapon generators own both enemy meshes and their retarget reports.
+Archived soldier attachment motion supplies all 475 poses without body edits.
 """
 from __future__ import annotations
 
@@ -40,6 +39,18 @@ def load(path: str) -> MD2:
 
 
 def build() -> tuple[bytes, dict]:
+    if WEAPON == "players/soldier/w_chaingun.md2":
+        # The M60 is an authored replacement. Its generator exports enemy
+        # geometry directly rather than re-quantizing the player frame zero.
+        from build_m60 import build_assets
+        assets, manifest, _ = build_assets()
+        return assets[OUTPUT], manifest['enemy_retarget']
+    if WEAPON == "players/soldier/w_rlauncher.md2":
+        # Export the canonical rocket mesh in archived enemy poses, avoiding
+        # the previous runtime M16/launcher hash pins and extra quantization.
+        from build_rlauncher import build_assets
+        assets, manifest, _ = build_assets()
+        return assets[OUTPUT], manifest['enemy_retarget']
     motion, weapon, body = load(MOTION), load(WEAPON), load(BODY)
     if motion.names != body.names:
         raise ValueError("body and attachment animation frames disagree")
@@ -152,8 +163,6 @@ def main() -> None:
         SOURCES.pop("players/soldier/w_chaingun.md2", None)
         SOURCES[WEAPON] = "ed73d6194eee3af276000032290ca2854262e800a90330ffbb5e871227f99f04"
     data, report = build()
-    if args.weapon == "rocket":
-        report["method"] = report["method"].replace("M60", "rocket launcher")
     path = ROOT / "baseq2" / OUTPUT
     if args.verify:
         if path.read_bytes() != data or json.loads(REPORT.read_text()) != report:

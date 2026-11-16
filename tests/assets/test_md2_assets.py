@@ -160,17 +160,94 @@ class AssetTests(unittest.TestCase):
         bad = copy.deepcopy(manifest)
         bad["source_archive"]["sha256"] = "0" * 64
         with self.assertRaisesRegex(ValueError, "archive hash changed"):
-            md2.pickup_source_bytes(bad, "baseq2/" + manifest["assets"][0]["model"])
+            md2.pickup_source_bytes(bad, "baseq2/" +
+                (manifest["assets"] or manifest["superseded_assets"])[0]["model"])
         originals, outputs = build_platoon.pickup_overrides(manifest)
         self.assertEqual(len(outputs), len(CONFIG['assets']))
         for entry in manifest["assets"]:
             self.assertEqual(md2.sha(outputs[entry["model"]]), entry["after"]["sha256"])
             self.assertEqual(md2.sha(originals[entry["model"]]), entry["before"]["sha256"])
-        # The new M16 has its own original geometry and atlas. A complete
-        # legacy conversion must neither claim nor overwrite that output.
-        self.assertNotIn('models/weapons/g_machn/tris.md2', outputs)
-        self.assertIn('models/weapons/g_machn/tris.md2',
-                      build_platoon.procedural_paths(json.loads(build_platoon.CONFIG.read_text())))
+        # Authored weapons have their own geometry and atlases. A complete
+        # legacy conversion must neither claim nor overwrite their outputs.
+        owned = build_platoon.procedural_paths(json.loads(build_platoon.CONFIG.read_text()))
+        legacy = json.loads(build_platoon.MANIFEST.read_text())
+        active = {entry['path'] for kind in ('models', 'textures') for entry in legacy[kind]}
+        for path in ('models/weapons/g_machn/tris.md2',
+                     'models/weapons/g_blast/tris.md2',
+                     'models/weapons/g_shotg/tris.md2',
+                     'models/weapons/g_shotg2/tris.md2',
+                     'models/weapons/g_chain/tris.md2',
+                     'models/weapons/g_launch/tris.md2',
+                     'models/weapons/g_rocket/tris.md2',
+                     'models/weapons/g_rail/tris.md2',
+                     'models/weapons/g_hyperb/tris.md2',
+                     'models/weapons/g_bfg/tris.md2',
+                     'models/items/ammo/shells/medium/tris.md2',
+                     'models/items/ammo/bullets/medium/tris.md2',
+                     'models/items/ammo/grenades/medium/tris.md2',
+                     'models/items/ammo/gl_ammo/medium/tris.md2',
+                     'models/items/ammo/rockets/medium/tris.md2',
+                     'models/items/ammo/cells/medium/tris.md2',
+                     'models/items/ammo/slugs/medium/tris.md2',
+                     'models/objects/rocket/tris.md2',
+                     'models/objects/grenade2/tris.md2',
+                     'models/objects/grenade/tris.md2',
+                     'models/items/healing/stimpack/tris.md2',
+                     'models/items/healing/medium/tris.md2',
+                     'models/items/healing/large/tris.md2',
+                     'models/items/mega_h/tris.md2',
+                     'models/items/adrenal/tris.md2',
+                     'models/items/healing/stimpack/lod1.md2',
+                     'models/items/armor/shard/tris.md2',
+                     'models/items/armor/jacket/tris.md2',
+                     'models/items/armor/combat/tris.md2',
+                     'models/items/armor/body/tris.md2',
+                     'models/items/armor/shard/lod1.md2',
+                     'models/vehicles/platoon_dropship/body.md2',
+                     'models/vehicles/platoon_dropship/main_rotor.md2'):
+            self.assertNotIn(path, outputs)
+            self.assertIn(path, owned)
+        self.assertFalse(active & owned, 'legacy converter still claims authored weapon outputs')
+        # The old rocket atlas remains a projectile dependency; its pickup
+        # uses a separate atlas so mission archives cannot change that art.
+        rocket_skin = 'models/items/ammo/rockets/medium/skin.png'
+        self.assertIn(rocket_skin, active)
+        self.assertNotIn(rocket_skin, owned)
+        self.assertIn('models/items/ammo/rockets/medium/skin_ammo.png', owned)
+
+
+    def test_shared_rocket_projectile_texture_keeps_corrected_source(self):
+        config = json.loads(build_platoon.CONFIG.read_text())
+        prior = json.loads((ROOT / config['pickup_manifest']).read_text())
+        path = 'models/items/ammo/rockets/medium/skin.png'
+        self.assertIn(path, config['pickup_texture_overrides'])
+        originals, outputs = build_platoon.pickup_overrides(prior, config['pickup_texture_overrides'])
+        self.assertNotIn('models/items/ammo/rockets/medium/tris.md2', outputs)
+        corrected = md2.pickup_source_bytes(prior, 'baseq2/' + path)
+        self.assertEqual(originals[path], corrected)
+        expected = md2.resize_texture(originals[path], config['world_texture_size'])
+        self.assertEqual((ROOT / 'baseq2' / path).read_bytes(), expected)
+        # Both mission rocket effects and a full asset rebuild must retain
+        # the same projectile art after its old pickup is no longer converted.
+        for package in (ROOT / 'baseq2').glob('operation-*.pk3'):
+            with zipfile.ZipFile(package) as archive:
+                if path in archive.namelist():
+                    self.assertEqual(archive.read(path), expected, str(package))
+
+
+    def test_shared_health_compatibility_atlas_keeps_corrected_source(self):
+        config = json.loads(build_platoon.CONFIG.read_text())
+        prior = json.loads((ROOT / config['pickup_manifest']).read_text())
+        path = 'models/items/healing/large/skin.png'
+        self.assertIn(path, config['pickup_texture_overrides'])
+        originals, outputs = build_platoon.pickup_overrides(prior, config['pickup_texture_overrides'])
+        self.assertNotIn('models/items/healing/large/tris.md2', outputs)
+        expected = md2.resize_texture(originals[path], config['world_texture_size'])
+        self.assertEqual((ROOT / 'baseq2' / path).read_bytes(), expected)
+        for package in (ROOT / 'baseq2').glob('operation-*.pk3'):
+            with zipfile.ZipFile(package) as archive:
+                if path in archive.namelist():
+                    self.assertEqual(archive.read(path), expected, str(package))
 
 
 if __name__ == "__main__":

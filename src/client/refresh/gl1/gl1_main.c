@@ -28,6 +28,7 @@
 #include "../perf_impl.h"
 #include "../gpu_timer_impl.h"
 #include "../files/pickup_lod.h"
+#include "../view_weapon_clip.h"
 
 static cvar_t *r_pickup_lod;
 #include "draw_profile_impl.h"
@@ -803,10 +804,10 @@ R_SetupFrame(void)
 }
 
 void
-R_SetPerspective(GLdouble fovy)
+R_SetPerspective(GLdouble fovy, qboolean weapon_model)
 {
 	// gluPerspective style parameters
-	const GLdouble zNear = Q_max(gl_znear->value, 0.1f);
+	const GLdouble zNear = PP_RenderNearClip(gl_znear->value, weapon_model);
 	GLdouble zFar = (r_farsee->value) ? 8192.0f : 4096.0f;
 	const GLdouble aspectratio = (GLdouble)r_newrefdef.width / r_newrefdef.height;
 
@@ -834,7 +835,11 @@ R_SetPerspective(GLdouble fovy)
 
 	if (gl_state.camera_separation)
 	{
-		const GLdouble separation = - gl1_stereo_convergence->value * (2 * gl_state.camera_separation) / zNear;
+		const GLdouble worldNear = PP_RenderNearClip(gl_znear->value, false);
+		GLdouble separation = - gl1_stereo_convergence->value * (2 * gl_state.camera_separation) / worldNear;
+		/* Preserve the existing XY stereo projection while changing only
+		 * the weapon's depth clipping. Frustum XY scales with its near plane. */
+		if (weapon_model) separation *= zNear / worldNear;
 		xmin += separation;
 		xmax += separation;
 	}
@@ -877,7 +882,7 @@ R_SetupGL(void)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	R_SetPerspective(r_newrefdef.fov_y);
+	R_SetPerspective(r_newrefdef.fov_y, false);
 
 	glCullFace(GL_FRONT);
 

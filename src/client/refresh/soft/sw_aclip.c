@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "header/local.h"
 
-void R_AliasProjectAndClipTestFinalVert (finalvert_t *fv);
+void R_AliasProjectAndClipTestFinalVert (const entity_t *currententity, finalvert_t *fv);
 
 /*
 ================
@@ -31,17 +31,18 @@ pfv0 is the unclipped vertex, pfv1 is the z-clipped vertex
 ================
 */
 static void
-R_Alias_clip_z (const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *out)
+R_Alias_clip_z (const entity_t *currententity, const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *out)
 {
 	float scale;
 	int i;
 
-	scale = (ALIAS_Z_CLIP_PLANE - pfv0->xyz[2]) /
+	const float near_clip = PP_RenderNearClip(ALIAS_Z_CLIP_PLANE, currententity->flags & RF_WEAPONMODEL);
+	scale = (near_clip - pfv0->xyz[2]) /
 			(pfv1->xyz[2] - pfv0->xyz[2]);
 
 	out->xyz[0] = pfv0->xyz[0] + (pfv1->xyz[0] - pfv0->xyz[0]) * scale;
 	out->xyz[1] = pfv0->xyz[1] + (pfv1->xyz[1] - pfv0->xyz[1]) * scale;
-	out->xyz[2] = ALIAS_Z_CLIP_PLANE;
+	out->xyz[2] = near_clip;
 
 	out->cv.s =	pfv0->cv.s + (pfv1->cv.s - pfv0->cv.s) * scale;
 	out->cv.t =	pfv0->cv.t + (pfv1->cv.t - pfv0->cv.t) * scale;
@@ -49,7 +50,7 @@ R_Alias_clip_z (const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *o
 	for(i=0; i<3; i++)
 		out->cv.l[i] =	pfv0->cv.l[i] + (pfv1->cv.l[i] - pfv0->cv.l[i]) * scale;
 
-	R_AliasProjectAndClipTestFinalVert (out);
+	R_AliasProjectAndClipTestFinalVert (currententity, out);
 }
 
 static void
@@ -69,8 +70,9 @@ R_Alias_clip_scale (const finalvert_t *pfv0, const finalvert_t *pfv1, float scal
 }
 
 static void
-R_Alias_clip_left (const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *out)
+R_Alias_clip_left (const entity_t *currententity, const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *out)
 {
+	(void)currententity;
 	float		scale;
 
 	if (pfv0->cv.v >= pfv1->cv.v )
@@ -90,8 +92,9 @@ R_Alias_clip_left (const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t
 }
 
 static void
-R_Alias_clip_right (const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *out)
+R_Alias_clip_right (const entity_t *currententity, const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *out)
 {
+	(void)currententity;
 	float scale;
 
 	if ( pfv0->cv.v >= pfv1->cv.v )
@@ -111,8 +114,9 @@ R_Alias_clip_right (const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_
 }
 
 static void
-R_Alias_clip_top (const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *out)
+R_Alias_clip_top (const entity_t *currententity, const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *out)
 {
+	(void)currententity;
 	float		scale;
 
 	if (pfv0->cv.v >= pfv1->cv.v)
@@ -133,8 +137,9 @@ R_Alias_clip_top (const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t 
 
 
 static void
-R_Alias_clip_bottom (const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *out)
+R_Alias_clip_bottom (const entity_t *currententity, const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *out)
 {
+	(void)currententity;
 	float		scale;
 
 	if (pfv0->cv.v >= pfv1->cv.v)
@@ -155,8 +160,8 @@ R_Alias_clip_bottom (const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert
 
 
 int
-R_AliasClip (const finalvert_t *in, finalvert_t *out, int flag, int count,
-	void(*clip)(const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *out) )
+R_AliasClip (const entity_t *currententity, const finalvert_t *in, finalvert_t *out, int flag, int count,
+	void(*clip)(const entity_t *currententity, const finalvert_t *pfv0, const finalvert_t *pfv1, finalvert_t *out) )
 {
 	int			i,j,k;
 
@@ -176,7 +181,7 @@ R_AliasClip (const finalvert_t *in, finalvert_t *out, int flag, int count,
 		}
 		if (oldflags ^ flags)
 		{
-			clip (&in[j], &in[i], &out[k]);
+			clip (currententity, &in[j], &in[i], &out[k]);
 			out[k].flags = 0;
 			if (out[k].cv.u < r_refdef.aliasvrect.x)
 				out[k].flags |= ALIAS_LEFT_CLIP;
@@ -222,7 +227,7 @@ R_AliasClipTriangle(const entity_t *currententity, const finalvert_t *index0, co
 
 	if (clipflags & ALIAS_Z_CLIP)
 	{
-		k = R_AliasClip (fv[0], fv[1], ALIAS_Z_CLIP, 3, R_Alias_clip_z);
+		k = R_AliasClip (currententity, fv[0], fv[1], ALIAS_Z_CLIP, 3, R_Alias_clip_z);
 		if (k == 0)
 			return;
 
@@ -237,7 +242,7 @@ R_AliasClipTriangle(const entity_t *currententity, const finalvert_t *index0, co
 
 	if (clipflags & ALIAS_LEFT_CLIP)
 	{
-		k = R_AliasClip (fv[pingpong], fv[pingpong ^ 1],
+		k = R_AliasClip (currententity, fv[pingpong], fv[pingpong ^ 1],
 							ALIAS_LEFT_CLIP, k, R_Alias_clip_left);
 		if (k == 0)
 			return;
@@ -247,7 +252,7 @@ R_AliasClipTriangle(const entity_t *currententity, const finalvert_t *index0, co
 
 	if (clipflags & ALIAS_RIGHT_CLIP)
 	{
-		k = R_AliasClip (fv[pingpong], fv[pingpong ^ 1],
+		k = R_AliasClip (currententity, fv[pingpong], fv[pingpong ^ 1],
 							ALIAS_RIGHT_CLIP, k, R_Alias_clip_right);
 		if (k == 0)
 			return;
@@ -257,7 +262,7 @@ R_AliasClipTriangle(const entity_t *currententity, const finalvert_t *index0, co
 
 	if (clipflags & ALIAS_BOTTOM_CLIP)
 	{
-		k = R_AliasClip (fv[pingpong], fv[pingpong ^ 1],
+		k = R_AliasClip (currententity, fv[pingpong], fv[pingpong ^ 1],
 							ALIAS_BOTTOM_CLIP, k, R_Alias_clip_bottom);
 		if (k == 0)
 			return;
@@ -267,7 +272,7 @@ R_AliasClipTriangle(const entity_t *currententity, const finalvert_t *index0, co
 
 	if (clipflags & ALIAS_TOP_CLIP)
 	{
-		k = R_AliasClip (fv[pingpong], fv[pingpong ^ 1],
+		k = R_AliasClip (currententity, fv[pingpong], fv[pingpong ^ 1],
 							ALIAS_TOP_CLIP, k, R_Alias_clip_top);
 		if (k == 0)
 			return;

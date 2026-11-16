@@ -1,0 +1,631 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_sniper.py",
+  "dependencies_sha256": {
+    "build_sniper.py": "1df068a7881c2ad029c1fb18ca363a928cb141e995900cb349ca6e8bd55f8202",
+    "sniper_geometry.py": "1175798b7ff9044cd5e858569a3a6f13a827352ae2cf32d9e68dabc4b6261acd",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+  },
+  "source_archive": {
+    "path": "tools/assets/sources/platoon-originals.pk3",
+    "sha256": "308e7b7e07f08ecbd0f7487e8a37440ab07c28bb83896b0f4c959a29fdcbf7e4",
+    "bytes": 47317833,
+    "origin": "Original owner-authored Plastic Platoon model, texture and sprite inputs recovered before public history cleanup",
+    "license": "GPL-2.0-or-later",
+    "excluded": [
+      "Legacy players/male assets",
+      "Inherited soldier portrait PCXs"
+    ]
+  },
+  "method": "authored closed primitives; archived rigid poses",
+  "hand": "m16_geometry.add_hands; existing closed molded mittens and forearms around trigger and forward grips",
+  "palette": "Shared M16 army-man plastic and mitten atlas",
+  "models": [
+    {
+      "path": "models/weapons/g_rail/tris.md2",
+      "role": "pickup",
+      "baseline": {
+        "triangles": 1200,
+        "position_vertices": 596,
+        "frames": 1,
+        "file_bytes": 51944
+      },
+      "after": {
+        "triangles": 492,
+        "position_vertices": 536,
+        "render_vertices": 878,
+        "frames": 1,
+        "skin_references": [
+          "models/weapons/g_rail/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 221,
+        "gl_command_triangles": 492,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 20856,
+        "sha256": "00e84487809bb8adaf5e49b0aee1f088ade68be86db8ba6cde1f9bda24e2fa46",
+        "bounds": [
+          [
+            -44.79999923706055,
+            -4.434621810913086,
+            4.760000228881836
+          ],
+          [
+            44.799998462200165,
+            5.600000385195017,
+            32.19999980926514
+          ]
+        ]
+      },
+      "pose_transfer": null,
+      "validation": {
+        "max_vertex_quantization_error": 0.173368130432,
+        "minimum_quantized_double_triangle_area": 0.254071537578,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          -44.80000000000001,
+          0.0,
+          18.44
+        ],
+        "rear_sight": [
+          22.399999999999995,
+          0.0,
+          26.6
+        ],
+        "front_sight": [
+          6.3999999999999915,
+          0.0,
+          26.6
+        ],
+        "grip": [
+          17.599999999999994,
+          0.0,
+          10.6
+        ],
+        "support": [
+          -4.800000000000004,
+          0.0,
+          15.4
+        ]
+      },
+      "parts": [
+        {
+          "name": "stock",
+          "first_triangle": 0,
+          "triangle_count": 24
+        },
+        {
+          "name": "butt_plate",
+          "first_triangle": 24,
+          "triangle_count": 12
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 36,
+          "triangle_count": 24
+        },
+        {
+          "name": "grip",
+          "first_triangle": 60,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 80,
+          "triangle_count": 32
+        },
+        {
+          "name": "magazine",
+          "first_triangle": 112,
+          "triangle_count": 12
+        },
+        {
+          "name": "handguard",
+          "first_triangle": 124,
+          "triangle_count": 44
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 168,
+          "triangle_count": 28
+        },
+        {
+          "name": "muzzle_brake",
+          "first_triangle": 196,
+          "triangle_count": 60
+        },
+        {
+          "name": "scope_mount_rear",
+          "first_triangle": 256,
+          "triangle_count": 12
+        },
+        {
+          "name": "scope_mount_front",
+          "first_triangle": 268,
+          "triangle_count": 12
+        },
+        {
+          "name": "scope",
+          "first_triangle": 280,
+          "triangle_count": 128
+        },
+        {
+          "name": "reticle_right",
+          "first_triangle": 408,
+          "triangle_count": 12
+        },
+        {
+          "name": "reticle_left",
+          "first_triangle": 420,
+          "triangle_count": 12
+        },
+        {
+          "name": "reticle_lower",
+          "first_triangle": 432,
+          "triangle_count": 12
+        },
+        {
+          "name": "reticle_upper",
+          "first_triangle": 444,
+          "triangle_count": 12
+        },
+        {
+          "name": "scope_turret",
+          "first_triangle": 456,
+          "triangle_count": 12
+        },
+        {
+          "name": "bolt_handle",
+          "first_triangle": 468,
+          "triangle_count": 12
+        },
+        {
+          "name": "bolt_knob",
+          "first_triangle": 480,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/weapons/v_rail/tris.md2",
+      "role": "view",
+      "baseline": {
+        "triangles": 2000,
+        "position_vertices": 996,
+        "frames": 1,
+        "file_bytes": 82716
+      },
+      "after": {
+        "triangles": 920,
+        "position_vertices": 832,
+        "render_vertices": 1330,
+        "frames": 1,
+        "skin_references": [
+          "models/weapons/v_rail/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 329,
+        "gl_command_triangles": 920,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 35936,
+        "sha256": "455f0aac6e047f21cf243919cc4ece3279766bf36dab847f2b77dfa15bbe6f73",
+        "bounds": [
+          [
+            -7.0,
+            -17.344497680664062,
+            -30.28422737121582
+          ],
+          [
+            66.42672795057297,
+            2.0923466458916664,
+            2.456320583820343
+          ]
+        ]
+      },
+      "pose_transfer": null,
+      "validation": {
+        "max_vertex_quantization_error": 0.151739010407,
+        "minimum_quantized_double_triangle_area": 0.166372008828,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          66.42673056602479,
+          -8.5,
+          -8.819927544474602
+        ],
+        "rear_sight": [
+          11.356682641506197,
+          -8.5,
+          -2.1328502964973453
+        ],
+        "front_sight": [
+          24.46859881401062,
+          -8.5,
+          -2.1328502964973453
+        ],
+        "grip": [
+          15.290257493257524,
+          -8.5,
+          -15.244766469001771
+        ],
+        "support": [
+          33.64694013476372,
+          -8.5,
+          -11.311191617250442
+        ]
+      },
+      "parts": [
+        {
+          "name": "stock",
+          "first_triangle": 0,
+          "triangle_count": 24
+        },
+        {
+          "name": "butt_plate",
+          "first_triangle": 24,
+          "triangle_count": 12
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 36,
+          "triangle_count": 24
+        },
+        {
+          "name": "grip",
+          "first_triangle": 60,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 80,
+          "triangle_count": 32
+        },
+        {
+          "name": "magazine",
+          "first_triangle": 112,
+          "triangle_count": 12
+        },
+        {
+          "name": "handguard",
+          "first_triangle": 124,
+          "triangle_count": 44
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 168,
+          "triangle_count": 28
+        },
+        {
+          "name": "muzzle_brake",
+          "first_triangle": 196,
+          "triangle_count": 60
+        },
+        {
+          "name": "scope_mount_rear",
+          "first_triangle": 256,
+          "triangle_count": 12
+        },
+        {
+          "name": "scope_mount_front",
+          "first_triangle": 268,
+          "triangle_count": 12
+        },
+        {
+          "name": "scope",
+          "first_triangle": 280,
+          "triangle_count": 128
+        },
+        {
+          "name": "reticle_right",
+          "first_triangle": 408,
+          "triangle_count": 12
+        },
+        {
+          "name": "reticle_left",
+          "first_triangle": 420,
+          "triangle_count": 12
+        },
+        {
+          "name": "reticle_lower",
+          "first_triangle": 432,
+          "triangle_count": 12
+        },
+        {
+          "name": "reticle_upper",
+          "first_triangle": 444,
+          "triangle_count": 12
+        },
+        {
+          "name": "scope_turret",
+          "first_triangle": 456,
+          "triangle_count": 12
+        },
+        {
+          "name": "bolt_handle",
+          "first_triangle": 468,
+          "triangle_count": 12
+        },
+        {
+          "name": "bolt_knob",
+          "first_triangle": 480,
+          "triangle_count": 12
+        },
+        {
+          "name": "arm_right",
+          "first_triangle": 492,
+          "triangle_count": 20
+        },
+        {
+          "name": "cuff_right",
+          "first_triangle": 512,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_right_wrist",
+          "first_triangle": 532,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_right_palm",
+          "first_triangle": 552,
+          "triangle_count": 76
+        },
+        {
+          "name": "hand_right_thumb",
+          "first_triangle": 628,
+          "triangle_count": 44
+        },
+        {
+          "name": "hand_right_fingers",
+          "first_triangle": 672,
+          "triangle_count": 60
+        },
+        {
+          "name": "arm_left",
+          "first_triangle": 732,
+          "triangle_count": 20
+        },
+        {
+          "name": "cuff_left",
+          "first_triangle": 752,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_left_palm",
+          "first_triangle": 772,
+          "triangle_count": 60
+        },
+        {
+          "name": "hand_left_fingers",
+          "first_triangle": 832,
+          "triangle_count": 44
+        },
+        {
+          "name": "hand_left_thumb",
+          "first_triangle": 876,
+          "triangle_count": 44
+        }
+      ]
+    },
+    {
+      "path": "players/soldier/w_railgun.md2",
+      "role": "player",
+      "baseline": {
+        "triangles": 2664,
+        "position_vertices": 1328,
+        "frames": 198,
+        "file_bytes": 1163736
+      },
+      "after": {
+        "triangles": 492,
+        "position_vertices": 536,
+        "render_vertices": 878,
+        "frames": 198,
+        "skin_references": [
+          "models/weapons/v_rail/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 221,
+        "gl_command_triangles": 492,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 451104,
+        "sha256": "fdfd9c62ba2f78204dc39d59ed59937c9e4e55044428fbe59e8ca12cacf96f48",
+        "bounds": [
+          [
+            -59.2668571472168,
+            -37.29278564453125,
+            -26.166667938232422
+          ],
+          [
+            63.26076591014862,
+            46.72829358279705,
+            45.11937481164932
+          ]
+        ]
+      },
+      "pose_transfer": {
+        "rms_max": 0.0633169897604,
+        "frames": 198
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0705997131322,
+        "minimum_quantized_double_triangle_area": 0.0052623612138,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          33.6,
+          -4.75,
+          15.740000000000002
+        ],
+        "rear_sight": [
+          8.4,
+          -4.75,
+          18.8
+        ],
+        "front_sight": [
+          14.399999999999999,
+          -4.75,
+          18.8
+        ],
+        "grip": [
+          10.2,
+          -4.75,
+          12.8
+        ],
+        "support": [
+          18.599999999999998,
+          -4.75,
+          14.600000000000001
+        ]
+      },
+      "parts": [
+        {
+          "name": "stock",
+          "first_triangle": 0,
+          "triangle_count": 24
+        },
+        {
+          "name": "butt_plate",
+          "first_triangle": 24,
+          "triangle_count": 12
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 36,
+          "triangle_count": 24
+        },
+        {
+          "name": "grip",
+          "first_triangle": 60,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 80,
+          "triangle_count": 32
+        },
+        {
+          "name": "magazine",
+          "first_triangle": 112,
+          "triangle_count": 12
+        },
+        {
+          "name": "handguard",
+          "first_triangle": 124,
+          "triangle_count": 44
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 168,
+          "triangle_count": 28
+        },
+        {
+          "name": "muzzle_brake",
+          "first_triangle": 196,
+          "triangle_count": 60
+        },
+        {
+          "name": "scope_mount_rear",
+          "first_triangle": 256,
+          "triangle_count": 12
+        },
+        {
+          "name": "scope_mount_front",
+          "first_triangle": 268,
+          "triangle_count": 12
+        },
+        {
+          "name": "scope",
+          "first_triangle": 280,
+          "triangle_count": 128
+        },
+        {
+          "name": "reticle_right",
+          "first_triangle": 408,
+          "triangle_count": 12
+        },
+        {
+          "name": "reticle_left",
+          "first_triangle": 420,
+          "triangle_count": 12
+        },
+        {
+          "name": "reticle_lower",
+          "first_triangle": 432,
+          "triangle_count": 12
+        },
+        {
+          "name": "reticle_upper",
+          "first_triangle": 444,
+          "triangle_count": 12
+        },
+        {
+          "name": "scope_turret",
+          "first_triangle": 456,
+          "triangle_count": 12
+        },
+        {
+          "name": "bolt_handle",
+          "first_triangle": 468,
+          "triangle_count": 12
+        },
+        {
+          "name": "bolt_knob",
+          "first_triangle": 480,
+          "triangle_count": 12
+        }
+      ]
+    }
+  ],
+  "ads_header": {
+    "path": "src/client/header/sniper_model_ads.h",
+    "sha256": "e949e3b696c630d1443f1fd5f4e2a891a0d6a7173a405ae9f03b2ae2bcd952bc"
+  },
+  "files": [
+    {
+      "path": "models/weapons/g_rail/skin.png",
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
+    },
+    {
+      "path": "models/weapons/g_rail/tris.md2",
+      "bytes": 20856,
+      "sha256": "00e84487809bb8adaf5e49b0aee1f088ade68be86db8ba6cde1f9bda24e2fa46"
+    },
+    {
+      "path": "models/weapons/v_rail/skin.png",
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
+    },
+    {
+      "path": "models/weapons/v_rail/tris.md2",
+      "bytes": 35936,
+      "sha256": "455f0aac6e047f21cf243919cc4ece3279766bf36dab847f2b77dfa15bbe6f73"
+    },
+    {
+      "path": "players/soldier/w_railgun.md2",
+      "bytes": 451104,
+      "sha256": "fdfd9c62ba2f78204dc39d59ed59937c9e4e55044428fbe59e8ca12cacf96f48"
+    }
+  ]
+}

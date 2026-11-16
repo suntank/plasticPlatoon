@@ -37,8 +37,8 @@ def procedural_paths(config):
             for kind in ('models', 'textures') for path in replacement[kind]}
 
 
-def pickup_overrides(prior):
-    """Keep corrected pickups paired with their audited models and textures."""
+def pickup_overrides(prior, preserved_textures=()):
+    """Keep audited pickups and shared projectile textures on corrected sources."""
     if "source_archive" not in prior:
         return {}, {}
     originals, outputs = {}, {}
@@ -52,6 +52,8 @@ def pickup_overrides(prior):
         if md2.sha(output) != entry["after"]["sha256"]:
             raise ValueError(f"rebuild pickups with md2_assets.py before the full release: {path}")
         outputs[path] = output
+    for path in preserved_textures:
+        originals[path] = md2.pickup_source_bytes(prior, 'baseq2/' + path)
     return originals, outputs
 
 
@@ -125,7 +127,7 @@ def build(args):
                  if Path(p).suffix.lower() in (".md2", ".png")
                  and not p.startswith("baseq2/players/male/")
                  and p.removeprefix('baseq2/') not in procedural_paths(config)}
-    overrides, pickup_outputs = pickup_overrides(prior)
+    overrides, pickup_outputs = pickup_overrides(prior, config.get('pickup_texture_overrides', ()))
     originals.update(overrides)
     textures = {}
     for path, raw in originals.items():
@@ -141,6 +143,7 @@ def build(args):
                 "converter_sha256": converter_hashes(),
                 "conversion_inputs_sha256": input_hashes(),
                 "procedural_replacements": config.get('procedural_replacements', {}),
+                "pickup_texture_overrides": config.get('pickup_texture_overrides', []),
                 "tools": {p: importlib.metadata.version(p) for p in ("numpy", "Pillow", "pymeshlab")},
                 "models": [], "textures": []}
     if "source_archive" in prior:
@@ -224,6 +227,142 @@ def build(args):
             destination.write_bytes(raw)
         build_pistol.ADS_HEADER.write_bytes(header)
         build_pistol.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_shotgun
+        outputs, replacement_manifest, header = build_shotgun.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_shotgun.ADS_HEADER.write_bytes(header)
+        build_shotgun.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_sshotgun
+        outputs, replacement_manifest, header = build_sshotgun.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_sshotgun.ADS_HEADER.write_bytes(header)
+        build_sshotgun.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_m60
+        outputs, replacement_manifest, header = build_m60.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_m60.ADS_HEADER.write_bytes(header)
+        build_m60.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        build_m60.HEAVY_MANIFEST.write_text(
+            json.dumps(replacement_manifest['enemy_retarget'], indent=2) + '\n')
+        import build_glauncher
+        outputs, replacement_manifest, header = build_glauncher.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_glauncher.ADS_HEADER.write_bytes(header)
+        build_glauncher.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_rlauncher
+        outputs, replacement_manifest, header = build_rlauncher.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_rlauncher.ADS_HEADER.write_bytes(header)
+        build_rlauncher.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        build_rlauncher.ROCKET_MANIFEST.write_text(
+            json.dumps(replacement_manifest['enemy_retarget'], indent=2) + '\n')
+        import build_sniper
+        outputs, replacement_manifest, header = build_sniper.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_sniper.ADS_HEADER.write_bytes(header)
+        build_sniper.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_flamethrower
+        outputs, replacement_manifest, header = build_flamethrower.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_flamethrower.ADS_HEADER.write_bytes(header)
+        build_flamethrower.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_mortar
+        outputs, replacement_manifest, header = build_mortar.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_mortar.ADS_HEADER.write_bytes(header)
+        build_mortar.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_ammo
+        outputs, replacement_manifest = build_ammo.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_ammo.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_health
+        outputs, replacement_manifest = build_health.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_health.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_armor
+        outputs, replacement_manifest = build_armor.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_armor.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_barrels
+        outputs, replacement_manifest = build_barrels.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_barrels.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_boss_helicopter
+        outputs, replacement_manifest = build_boss_helicopter.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_boss_helicopter.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_body_parts
+        build_body_parts.main([])
+        import build_body_parts_overlays
+        build_body_parts_overlays.sync()
+        # Pickup owners also supply the existing distant siblings. Refresh
+        # only metadata derived from their independently verified outputs.
+        import build_pickup_lods
+        build_pickup_lods.refresh_authored(json.loads(build_pickup_lods.CONFIG.read_text()))
+        import build_projectiles
+        outputs, replacement_manifest = build_projectiles.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_projectiles.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_dropship
+        outputs, replacement_manifest = build_dropship.build_assets()
+        for path, raw in outputs.items():
+            destination = ROOT / 'baseq2' / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(raw)
+        build_dropship.MANIFEST.write_text(json.dumps(replacement_manifest, indent=2) + '\n')
+        import build_soldier_height
+        for destination, raw in build_soldier_height.generate().items():
+            build_soldier_height.write_if_changed(destination, raw)
+        import build_soldier_body_test
+        build_soldier_body_test.main([])
+        import build_projectile_overlays
+        build_projectile_overlays.sync()
+        import build_health_overlays
+        build_health_overlays.sync()
+        import build_dropship_overlays
+        build_dropship_overlays.sync()
 
 
 def verify(args):
@@ -231,8 +370,9 @@ def verify(args):
     assert manifest["config_sha256"] == md2.sha(CONFIG.read_bytes()), "optimization configuration changed"
     assert manifest["converter_sha256"] == converter_hashes(), "conversion tools changed"
     assert manifest["conversion_inputs_sha256"] == input_hashes(), "conversion inputs changed"
-    prior = json.loads((ROOT / json.loads(CONFIG.read_text())["pickup_manifest"]).read_text())
-    overrides, _ = pickup_overrides(prior)
+    config = json.loads(CONFIG.read_text())
+    prior = json.loads((ROOT / config["pickup_manifest"]).read_text())
+    overrides, _ = pickup_overrides(prior, config.get('pickup_texture_overrides', ()))
     for entry in manifest["models"]:
         path = entry["path"]
         raw = overrides[path] if path in overrides else md2.source_bytes(manifest, "baseq2/" + path)
@@ -250,6 +390,48 @@ def verify(args):
     verify_m16()
     from verify_pistol_runtime import verify as verify_pistol
     verify_pistol()
+    from verify_shotgun_runtime import verify as verify_shotgun
+    verify_shotgun()
+    from verify_sshotgun_runtime import verify as verify_sshotgun
+    verify_sshotgun()
+    from verify_m60_runtime import verify as verify_m60
+    verify_m60()
+    from verify_glauncher_runtime import verify as verify_glauncher
+    verify_glauncher()
+    from verify_rlauncher_runtime import verify as verify_rlauncher
+    verify_rlauncher()
+    from verify_sniper_runtime import verify as verify_sniper
+    verify_sniper()
+    from verify_flamethrower_runtime import verify as verify_flamethrower
+    verify_flamethrower()
+    from verify_mortar_runtime import verify as verify_mortar
+    verify_mortar()
+    from verify_ammo_runtime import verify as verify_ammo
+    verify_ammo()
+    from verify_health_runtime import verify as verify_health
+    verify_health()
+    from verify_armor_runtime import verify as verify_armor
+    verify_armor()
+    from verify_barrels_runtime import verify as verify_barrels
+    verify_barrels()
+    from verify_boss_helicopter_runtime import verify as verify_boss_helicopter
+    verify_boss_helicopter()
+    from verify_body_parts_runtime import verify as verify_body_parts
+    verify_body_parts()
+    import build_body_parts_overlays
+    build_body_parts_overlays.verify()
+    from verify_projectiles_runtime import verify as verify_projectiles
+    verify_projectiles()
+    from verify_dropship_runtime import verify as verify_dropship
+    verify_dropship()
+    from verify_soldier_body_test import verify as verify_soldier_body_test
+    verify_soldier_body_test()
+    import build_projectile_overlays
+    build_projectile_overlays.verify()
+    import build_health_overlays
+    build_health_overlays.verify()
+    import build_dropship_overlays
+    build_dropship_overlays.verify()
     print(f"Verified {len(manifest['models'])} MD2 models and {len(manifest['textures'])} PNG textures")
 
 

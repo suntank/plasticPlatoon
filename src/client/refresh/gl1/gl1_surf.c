@@ -44,6 +44,7 @@ void R_ClearVisibilityCache(void) { PP_ClearVisibilityCache(&visibility_cache); 
 static cvar_t *r_gl1_batch_inline, *inline_static_world;
 static cvar_t *r_gl1_batch_world, *world_static_world;
 static void R_RenderLightmappedPoly(msurface_t *surf);
+static void R_ClearWorldCullData(const model_t *world);
 
 typedef struct
 {
@@ -218,6 +219,7 @@ void
 R_FreeWorldSurfaceBatches(model_t *world)
 {
 	int first, count;
+	R_ClearWorldCullData(world);
 	if (world != world_batch_owner) return;
 	if (R_WorldSurfaceRange(world, &first, &count))
 		for (int i = first; i < first + count; ++i)
@@ -1412,8 +1414,76 @@ R_DrawBrushModel(entity_t *currententity, const model_t *currentmodel)
 	}
 }
 
+/* A child box is usually contained by its parent, but BSP compiler rounding
+ * can let it spill by a unit. Record the safe edges once rather than doing
+ * six bounds comparisons per edge in every camera. An unsafe edge restores
+ * all four plane tests, preserving the original visible-surface decisions. */
+enum { WORLD_CLIP_ALL = 15, WORLD_CLIP_LEGACY = 16, WORLD_CLIP_DISABLED = 32 };
+static cvar_t *r_gl1_hierarchical_cull;
+static const model_t *world_cull_owner;
+static const mnode_t *world_cull_nodes;
+static int world_cull_count, world_cull_registration;
+static byte *world_cull_edges;
+
 static void
-R_RecursiveWorldNode(entity_t *currententity, mnode_t *node)
+R_ClearWorldCullData(const model_t *world)
+{
+	if (world != world_cull_owner) return;
+	free(world_cull_edges);
+	world_cull_edges = NULL;
+	world_cull_owner = NULL;
+	world_cull_nodes = NULL;
+	world_cull_count = world_cull_registration = 0;
+}
+
+static qboolean
+R_WorldChildContained(const mnode_t *parent, const mnode_t *child)
+{
+	if (child->contents == CONTENTS_SOLID) return true;
+	for (int axis = 0; axis < 3; ++axis)
+	{
+		if (!isfinite(parent->minmaxs[axis]) || !isfinite(parent->minmaxs[axis+3]) ||
+			!isfinite(child->minmaxs[axis]) || !isfinite(child->minmaxs[axis+3]) ||
+			parent->minmaxs[axis] > parent->minmaxs[axis+3] ||
+			child->minmaxs[axis] > child->minmaxs[axis+3] ||
+			child->minmaxs[axis] < parent->minmaxs[axis] ||
+			child->minmaxs[axis+3] > parent->minmaxs[axis+3]) return false;
+	}
+	return true;
+}
+
+static unsigned
+R_WorldClipFlags(void)
+{
+	if (!r_cull->value) return WORLD_CLIP_DISABLED;
+	if (!r_gl1_hierarchical_cull)
+		r_gl1_hierarchical_cull = ri.Cvar_Get("r_gl1_hierarchical_cull", "1", 0);
+	if (!r_gl1_hierarchical_cull->value) return WORLD_CLIP_LEGACY;
+	if (world_cull_owner != r_worldmodel || world_cull_nodes != r_worldmodel->nodes ||
+		world_cull_count != r_worldmodel->numnodes || world_cull_registration != registration_sequence)
+	{
+		R_ClearWorldCullData(world_cull_owner);
+		world_cull_owner = r_worldmodel;
+		world_cull_nodes = r_worldmodel->nodes;
+		world_cull_count = r_worldmodel->numnodes;
+		world_cull_registration = registration_sequence;
+		if (world_cull_count > 0) world_cull_edges = malloc((size_t)world_cull_count);
+		if (world_cull_edges)
+			for (int i = 0; i < world_cull_count; ++i)
+			{
+				mnode_t *node = r_worldmodel->nodes+i;
+				world_cull_edges[i] = 0;
+				for (int side = 0; side < 2; ++side)
+					if (R_WorldChildContained(node, node->children[side]))
+						world_cull_edges[i] |= 1u << side;
+			}
+	}
+	/* Failed allocation is cached for this registration; do not retry per view. */
+	return world_cull_edges ? WORLD_CLIP_ALL : WORLD_CLIP_LEGACY;
+}
+
+static void
+R_RecursiveWorldNode(entity_t *currententity, mnode_t *node, unsigned clipflags)
 {
 	int c, side, sidebit;
 	cplane_t *plane;
@@ -1432,9 +1502,20 @@ R_RecursiveWorldNode(entity_t *currententity, mnode_t *node)
 		return;
 	}
 
-	if (r_cull->value && R_CullBox(node->minmaxs, node->minmaxs + 3, frustum))
+	if (clipflags == WORLD_CLIP_LEGACY)
 	{
-		return;
+		if (R_CullBox(node->minmaxs, node->minmaxs + 3, frustum)) return;
+	}
+	else if (clipflags & WORLD_CLIP_ALL)
+	{
+		for (unsigned plane = 0; plane < 4; ++plane)
+		{
+			unsigned bit = 1u << plane;
+			if (!(clipflags & bit)) continue;
+			int sides = BOX_ON_PLANE_SIDE(node->minmaxs, node->minmaxs + 3, frustum+plane);
+			if (sides == 2) return;
+			if (sides == 1) clipflags &= ~bit;
+		}
 	}
 
 	/* if a leaf node, draw stuff */
@@ -1494,7 +1575,14 @@ R_RecursiveWorldNode(entity_t *currententity, mnode_t *node)
 	}
 
 	/* recurse down the children, front side first */
-	R_RecursiveWorldNode(currententity, node->children[side]);
+	unsigned childflags[2] = {clipflags, clipflags};
+	if (clipflags != WORLD_CLIP_LEGACY && clipflags != WORLD_CLIP_DISABLED && world_cull_edges)
+	{
+		byte contained = world_cull_edges[node - world_cull_nodes];
+		for (int child = 0; child < 2; ++child)
+			if (!(contained & (1u << child))) childflags[child] = WORLD_CLIP_ALL;
+	}
+	R_RecursiveWorldNode(currententity, node->children[side], childflags[side]);
 
 	/* draw stuff */
 	for (c = node->numsurfaces,
@@ -1540,7 +1628,7 @@ R_RecursiveWorldNode(entity_t *currententity, mnode_t *node)
 	}
 
 	/* recurse down the back side */
-	R_RecursiveWorldNode(currententity, node->children[!side]);
+	R_RecursiveWorldNode(currententity, node->children[!side], childflags[!side]);
 }
 
 /*
@@ -1668,7 +1756,7 @@ R_DrawWorld(void)
 	R_ClearSkyBox();
 	{
 		double started = PP_DPClock();
-		R_RecursiveWorldNode(&ent, r_worldmodel->nodes);
+		R_RecursiveWorldNode(&ent, r_worldmodel->nodes, R_WorldClipFlags());
 		PP_DP_WORLD_ADD(DPW_WORLD_MARK_MS, PP_DPClock() - started);
 	}
 	{

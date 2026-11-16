@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_barrels.py",
+  "dependencies_sha256": {
+    "build_barrels.py": "7e5b1bfd0a9e6f13b5a1d3f513a1dcdfe1f34c32179d7cc78286d3ef8e6b2963",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d",
+    "md2_assets.py": "894c26ea6d87858bfea877267657a97addad6b238cbb89f1f112a591d0062c2b",
+    "asset_sources.py": "56b5778c08d9625bbf9307bcc880ea33f0f012a318abbcefd9fcbcc4619bc264"
+  },
+  "source_archive": {
+    "path": "tools/assets/sources/platoon-originals.pk3",
+    "sha256": "308e7b7e07f08ecbd0f7487e8a37440ab07c28bb83896b0f4c959a29fdcbf7e4",
+    "bytes": 47317833,
+    "origin": "Original owner-authored Plastic Platoon model, texture and sprite inputs recovered before public history cleanup",
+    "license": "GPL-2.0-or-later",
+    "excluded": [
+      "Legacy players/male assets",
+      "Inherited soldier portrait PCXs"
+    ]
+  },
+  "method": "original eight-sided closed drum, two rolling hoops, recessed lid and two hexagonal bungs",
+  "shading": "circumferential smooth normals across UV seams; hard hoop shoulders and flat lid/rim",
+  "gameplay": "Shared original model path; original collision, pushing, health, damage, explosion and debris code unchanged",
+  "original": {
+    "triangles": 1999,
+    "position_vertices": 1002,
+    "render_vertices": 2043,
+    "frames": 1,
+    "frame_names": [
+      "frame_1"
+    ],
+    "skin_references": [
+      "models/objects/barrels/skin.png"
+    ],
+    "skin_coordinate_dimensions": [
+      256,
+      256
+    ],
+    "gl_command_primitives": 921,
+    "gl_command_triangles": 2000,
+    "duplicate_gl_triangles": 1,
+    "unused_bytes_per_frame": 3006,
+    "file_bytes": 89138,
+    "sha256": "2bdcc295ba958a1714ff222f493e688e623ecc6c472b70721454981719385733",
+    "bounds": [
+      [
+        -16.314340591430664,
+        -16.222217559814453,
+        0.2834281921386719
+      ],
+      [
+        16.250960767269135,
+        16.27535243332386,
+        39.60296592116356
+      ]
+    ]
+  },
+  "after": {
+    "triangles": 260,
+    "position_vertices": 456,
+    "render_vertices": 484,
+    "frames": 1,
+    "frame_names": [
+      "frame_1"
+    ],
+    "skin_references": [
+      "models/objects/barrels/skin.png"
+    ],
+    "skin_coordinate_dimensions": [
+      256,
+      256
+    ],
+    "gl_command_primitives": 122,
+    "gl_command_triangles": 260,
+    "duplicate_gl_triangles": 0,
+    "unused_bytes_per_frame": 0,
+    "file_bytes": 11832,
+    "sha256": "fdafa5cebf7c81e6955e0d8c7b29a0ff152d161bccec99b65fc4be3ae35e4d76",
+    "bounds": [
+      [
+        -16.0,
+        -16.0,
+        0.0
+      ],
+      [
+        16.00000189244747,
+        16.00000189244747,
+        39.79999914765358
+      ]
+    ]
+  },
+  "previous_runtime": {
+    "triangles": 899,
+    "file_bytes": 38728
+  },
+  "validation": {
+    "max_vertex_quantization_error": 0.0757311338156,
+    "minimum_quantized_double_triangle_area": 1.2731103902,
+    "all_frames_nondegenerate": true,
+    "outward_normals_clockwise_triangles": true
+  },
+  "parts": [
+    {
+      "name": "eight_sided_drum_with_two_rolling_hoops",
+      "first_triangle": 0,
+      "triangle_count": 220
+    },
+    {
+      "name": "large_bung",
+      "first_triangle": 220,
+      "triangle_count": 20
+    },
+    {
+      "name": "small_bung",
+      "first_triangle": 240,
+      "triangle_count": 20
+    }
+  ],
+  "files": [
+    {
+      "path": "models/objects/barrels/skin.png",
+      "bytes": 965,
+      "sha256": "73e091abfc9c8f1f2e71f60b77c339895d6d09b915fd733aac3742247edd3293"
+    },
+    {
+      "path": "models/objects/barrels/tris.md2",
+      "bytes": 11832,
+      "sha256": "fdafa5cebf7c81e6955e0d8c7b29a0ff152d161bccec99b65fc4be3ae35e4d76"
+    }
+  ]
+}

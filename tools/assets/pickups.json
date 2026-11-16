@@ -11,76 +11,34 @@
     "preservenormal": true,
     "planarquadric": true
   },
-  "assets": [
+  "assets": [],
+  "source_archive": {
+    "path": "tools/assets/sources/pickups-local.pk3",
+    "sha256": "6c6dcc1d9a9a44aa666285a9add3ff439fc5561791e46529ef91b7ee5866bf37",
+    "origin": "Original owner-authored Plastic Platoon pickup models and textures"
+  },
+  "superseded_assets": [
     {
-      "model": "models/items/armor/shard/tris.md2",
+      "model": "models/weapons/g_machn/tris.md2",
       "triangles": 800,
       "texture_size": 256,
-      "classname": "item_armor_shard",
-      "instances": 18
+      "classname": "weapon_machinegun",
+      "instances": 2,
+      "output_skin": "models/weapons/g_machn/skin_pickup.png"
     },
     {
-      "model": "models/items/healing/stimpack/tris.md2",
+      "model": "models/weapons/g_shotg/tris.md2",
       "triangles": 800,
       "texture_size": 256,
-      "classname": "item_health_small",
-      "instances": 15
+      "classname": "weapon_shotgun",
+      "instances": 3
     },
     {
-      "model": "models/items/healing/medium/tris.md2",
+      "model": "models/weapons/g_shotg2/tris.md2",
       "triangles": 800,
       "texture_size": 256,
-      "classname": "item_health",
-      "instances": 11
-    },
-    {
-      "model": "models/items/healing/large/tris.md2",
-      "triangles": 1000,
-      "texture_size": 256,
-      "classname": "item_health_large",
-      "instances": 12
-    },
-    {
-      "model": "models/items/armor/combat/tris.md2",
-      "triangles": 1000,
-      "texture_size": 256,
-      "classname": "item_armor_combat",
+      "classname": "weapon_supershotgun",
       "instances": 1
-    },
-    {
-      "model": "models/items/armor/body/tris.md2",
-      "triangles": 1000,
-      "texture_size": 256,
-      "classname": "item_armor_body",
-      "instances": 2
-    },
-    {
-      "model": "models/items/armor/jacket/tris.md2",
-      "triangles": 800,
-      "texture_size": 256,
-      "classname": "item_armor_jacket",
-      "instances": 2
-    },
-    {
-      "model": "models/items/ammo/grenades/medium/tris.md2",
-      "triangles": 800,
-      "texture_size": 256,
-      "classname": "ammo_grenades",
-      "instances": 16
-    },
-    {
-      "model": "models/items/ammo/rockets/medium/tris.md2",
-      "triangles": 500,
-      "texture_size": 256,
-      "classname": "ammo_rockets",
-      "instances": 6
-    },
-    {
-      "model": "models/items/mega_h/tris.md2",
-      "triangles": 800,
-      "texture_size": 256,
-      "classname": "item_health_mega",
-      "instances": 0
     },
     {
       "model": "models/weapons/g_chain/tris.md2",
@@ -104,34 +62,75 @@
       "instances": 1
     },
     {
-      "model": "models/weapons/g_shotg/tris.md2",
+      "model": "models/items/ammo/grenades/medium/tris.md2",
       "triangles": 800,
       "texture_size": 256,
-      "classname": "weapon_shotgun",
-      "instances": 3
+      "classname": "ammo_grenades",
+      "instances": 16
     },
     {
-      "model": "models/weapons/g_shotg2/tris.md2",
-      "triangles": 800,
+      "model": "models/items/ammo/rockets/medium/tris.md2",
+      "triangles": 500,
       "texture_size": 256,
-      "classname": "weapon_supershotgun",
-      "instances": 1
-    }
-  ],
-  "source_archive": {
-    "path": "tools/assets/sources/pickups-local.pk3",
-    "sha256": "6c6dcc1d9a9a44aa666285a9add3ff439fc5561791e46529ef91b7ee5866bf37",
-    "origin": "Original owner-authored Plastic Platoon pickup models and textures"
-  },
-  "superseded_assets": [
+      "classname": "ammo_rockets",
+      "instances": 6
+    },
     {
-      "model": "models/weapons/g_machn/tris.md2",
+      "model": "models/items/healing/stimpack/tris.md2",
       "triangles": 800,
       "texture_size": 256,
-      "classname": "weapon_machinegun",
-      "instances": 2,
-      "output_skin": "models/weapons/g_machn/skin_pickup.png"
+      "classname": "item_health_small",
+      "instances": 15
+    },
+    {
+      "model": "models/items/healing/medium/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "item_health",
+      "instances": 11
+    },
+    {
+      "model": "models/items/healing/large/tris.md2",
+      "triangles": 1000,
+      "texture_size": 256,
+      "classname": "item_health_large",
+      "instances": 12
+    },
+    {
+      "model": "models/items/mega_h/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "item_health_mega",
+      "instances": 0
+    },
+    {
+      "model": "models/items/armor/shard/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "item_armor_shard",
+      "instances": 18
+    },
+    {
+      "model": "models/items/armor/combat/tris.md2",
+      "triangles": 1000,
+      "texture_size": 256,
+      "classname": "item_armor_combat",
+      "instances": 1
+    },
+    {
+      "model": "models/items/armor/body/tris.md2",
+      "triangles": 1000,
+      "texture_size": 256,
+      "classname": "item_armor_body",
+      "instances": 2
+    },
+    {
+      "model": "models/items/armor/jacket/tris.md2",
+      "triangles": 800,
+      "texture_size": 256,
+      "classname": "item_armor_jacket",
+      "instances": 2
     }
   ],
-  "procedural_replacement_note": "M16 is now authored by m16_geometry.py and build_m16.py; historical decimation records remain below for comparison only."
+  "procedural_replacement_note": "All original pickup pairs now have dedicated authored owners; historical conversion records and source archives are retained for provenance and shared compatibility textures."
 }

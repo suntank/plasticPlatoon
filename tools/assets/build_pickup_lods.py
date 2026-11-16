@@ -3,9 +3,8 @@
 
 Generation needs the pinned tools/assets requirements. --verify is deliberately
 standard-library-only so normal asset builds and the Pi can audit shipped LODs.
-Original geometry comes exclusively from the audited source archives named by
-pickup-lods.json. The two open ammo trays use a simple authored shape recipe;
-the other silhouettes use independent reduction from their original inputs.
+Ammo, health and armor LODs use their exact authored low-poly meshes. Historical
+reduction recipes remain available only for older audited configurations.
 """
 from __future__ import annotations
 
@@ -25,6 +24,9 @@ MANIFEST = Path(__file__).with_name("pickup-lods-manifest.json")
 HEADER = struct.Struct("<17i")
 HELPERS = ("tools/assets/md2_assets.py", "tools/assets/asset_sources.py",
            "src/client/refresh/constants/anorms.h")
+AUTHORED_RECIPES = {"authored_ammo": ("ammo", "build_ammo"),
+                    "authored_health": ("health", "build_health"),
+                    "authored_armor": ("armor", "build_armor")}
 
 
 def sha(raw):
@@ -120,18 +122,56 @@ def inputs(config):
         if sha(raw) != entry["sha256"]:
             raise ValueError("pinned source archive changed: " + entry["path"])
         archives[key] = raw
+    owned = authored_inventories(config)
     for spec in config["assets"]:
         canonical = checked_path("baseq2/" + spec["canonical"]).read_bytes()
         texture = checked_path("baseq2/" + spec["skin"]).read_bytes()
         if sha(canonical) != spec["canonical_sha256"] or sha(texture) != spec["skin_sha256"]:
             raise ValueError("canonical pickup or texture changed: " + spec["canonical"])
-        with zipfile.ZipFile(io.BytesIO(archives[spec["source_archive"]])) as archive:
-            original = archive.read("baseq2/" + spec["canonical"])
-        if sha(original) != spec["source_sha256"]:
-            raise ValueError("pinned original pickup changed: " + spec["canonical"])
+        if spec["recipe"] in AUTHORED_RECIPES:
+            for name in (spec["canonical"], spec["lod"], spec["skin"]):
+                if name not in owned[spec["recipe"]]:
+                    raise ValueError("authored owner omits configured LOD input/output: " + name)
+            original = canonical
+        else:
+            with zipfile.ZipFile(io.BytesIO(archives[spec["source_archive"]])) as archive:
+                original = archive.read("baseq2/" + spec["canonical"])
+            if sha(original) != spec["source_sha256"]:
+                raise ValueError("pinned original pickup changed: " + spec["canonical"])
         if spec["lod"] != spec["canonical"].replace("/tris.md2", "/lod1.md2"):
             raise ValueError("LOD output must be an additive sibling of tris.md2")
         yield spec, original, canonical, texture
+
+
+def owner_inventory(config, recipe):
+    """Audit the owning generator and outputs without importing its toolchain."""
+    kind, _ = AUTHORED_RECIPES[recipe]
+    owner = config[recipe]
+    manifest = json.loads(checked_path(owner["manifest"]).read_text())
+    if manifest["generator"] != owner["generator"]:
+        raise ValueError("unexpected authored " + kind + " generator")
+    for name, expected in manifest["dependencies_sha256"].items():
+        if sha(checked_path("tools/assets/" + name).read_bytes()) != expected:
+            raise ValueError(kind + " generator changed; run " + owner["generator"])
+    inventory = {entry["path"]: entry for entry in manifest["files"]}
+    ownership = json.loads(checked_path("tools/assets/platoon.json").read_text())["procedural_replacements"][kind]
+    if len(inventory) != len(manifest["files"]) or set(ownership["models"] + ownership["textures"]) != set(inventory):
+        raise ValueError(kind + " owner manifest differs from registered outputs")
+    for name, entry in inventory.items():
+        raw = checked_path("baseq2/" + name).read_bytes()
+        if sha(raw) != entry["sha256"] or len(raw) != entry["bytes"]:
+            raise ValueError("stale authored " + kind + " output: " + name)
+    return inventory
+
+
+def ammo_inventory(config):
+    return owner_inventory(config, "authored_ammo")
+
+
+def authored_inventories(config):
+    recipes = {spec["recipe"] for spec in config["assets"]} & AUTHORED_RECIPES.keys()
+    return {recipe: ammo_inventory(config) if recipe == "authored_ammo" else owner_inventory(config, recipe)
+            for recipe in recipes}
 
 
 def validate_pair(spec, canonical, lod):
@@ -139,13 +179,38 @@ def validate_pair(spec, canonical, lod):
     for key in ("skins", "skin_dimensions", "scale", "translation", "frame_name_hex", "frames"):
         if before[key] != after[key]:
             raise ValueError("close/LOD frame identity or skin mismatch: " + key)
-    if not 100 <= after["triangles"] <= 200 or after["triangles"] > spec["target_triangles"]:
+    if spec["recipe"] in AUTHORED_RECIPES:
+        if canonical != lod:
+            raise ValueError("authored pickup must keep the exact close mesh at distance")
+        if not 0 < after["triangles"] <= spec["target_triangles"]:
+            raise ValueError("authored pickup exceeds its triangle budget")
+    elif not 100 <= after["triangles"] <= 200 or after["triangles"] > spec["target_triangles"]:
         raise ValueError("distant pickup exceeds its authored 100-200 triangle budget")
     for axis in range(3):
         extent = before["bounds"][1][axis] - before["bounds"][0][axis]
         if after["bounds"][0][axis] < before["bounds"][0][axis] - extent * .05 or after["bounds"][1][axis] > before["bounds"][1][axis] + extent * .05:
             raise ValueError("LOD grows beyond the original pickup bounds")
     return before, after
+
+
+def record(spec, canonical, lod):
+    before, after = validate_pair(spec, canonical, lod)
+    entry = dict(classname=spec["classname"], canonical=spec["canonical"], lod=spec["lod"],
+                 skin=spec["skin"], skin_sha256=spec["skin_sha256"], recipe=spec["recipe"],
+                 design=spec["design"], before=before, after=after)
+    if spec["recipe"] not in AUTHORED_RECIPES:
+        entry["source_sha256"] = spec["source_sha256"]
+    else:
+        entry["owner_manifest"] = "tools/assets/" + AUTHORED_RECIPES[spec["recipe"]][0] + "-manifest.json"
+    return entry
+
+
+def manifest_header(config, tools):
+    return dict(schema=1, config_sha256=sha(CONFIG.read_bytes()),
+                generator_sha256=sha(Path(__file__).read_bytes()),
+                helper_sha256={name: sha(checked_path(name).read_bytes()) for name in HELPERS},
+                source_archives=config["source_archives"], tools=tools,
+                policy="Authored ammo, health and armor retain identical close/distant meshes. Skins, frame identity and gameplay are preserved.", assets=[])
 
 
 def ammo_box(source, texture, texel):
@@ -233,23 +298,30 @@ def build(config, review):
     import importlib.metadata
     import numpy as np
     import md2_assets as md2
-    manifest = dict(schema=1, config_sha256=sha(CONFIG.read_bytes()),
-                    generator_sha256=sha(Path(__file__).read_bytes()),
-                    helper_sha256={name: sha(checked_path(name).read_bytes()) for name in HELPERS},
-                    source_archives=config["source_archives"],
-                    tools={name: importlib.metadata.version(name) for name in ("numpy", "Pillow", "pymeshlab")},
-                    policy="Additive distant LODs only; canonical models, skins, frame lattice and gameplay are unchanged.", assets=[])
+    packages = ("numpy", "Pillow") + (("pymeshlab",) if any(spec["recipe"] == "qem" for spec in config["assets"]) else ())
+    manifest = manifest_header(config, {name: importlib.metadata.version(name) for name in packages})
+    authored = {}
     for spec, original, canonical, texture in inputs(config):
         source = md2.MD2.read(original, source_compat=True)
         full = md2.MD2.read(canonical)
-        if spec["recipe"] == "ammo_box":
+        if spec["recipe"] in AUTHORED_RECIPES:
+            recipe = spec["recipe"]
+            if recipe not in authored:
+                import importlib
+                authored[recipe], _ = importlib.import_module(AUTHORED_RECIPES[recipe][1]).build_assets()
+            if authored[recipe][spec["canonical"]] != canonical:
+                raise ValueError("regenerate authored pickups before their LOD manifest")
+            data = authored[recipe][spec["lod"]]
+        elif spec["recipe"] == "ammo_box":
             positions, faces, uvs = ammo_box(source, texture, spec["pigment_texel"])
         elif spec["recipe"] == "qem":
             positions, faces, uvs = md2.simplify(source, spec["target_triangles"], config["qem_parameters"])
         else:
             raise ValueError("unknown authored LOD recipe")
-        data = md2.encode_static(source, positions, faces, uvs, full.skins)
-        before, after = validate_pair(spec, canonical, data)
+        if spec["recipe"] not in AUTHORED_RECIPES:
+            data = md2.encode_static(source, positions, faces, uvs, full.skins)
+        entry = record(spec, canonical, data)
+        before, after = entry["before"], entry["after"]
         # Validate the original lattice as well as the canonical close model.
         result = md2.MD2.read(data)
         if not np.array_equal(result.scales, source.scales) or not np.array_equal(result.translations, source.translations):
@@ -257,14 +329,48 @@ def build(config, review):
         path = checked_path("baseq2/" + spec["lod"])
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
-        entry = dict(classname=spec["classname"], canonical=spec["canonical"], lod=spec["lod"],
-                     source_sha256=spec["source_sha256"], skin=spec["skin"], skin_sha256=spec["skin_sha256"],
-                     recipe=spec["recipe"], design=spec["design"], before=before, after=after)
         if review:
             entry["offline_review"] = review_pair(spec, full, result, texture,
                 checked_path("build/pi-four-player-20261112/pickup-lods-review/" + spec["classname"] + ".png"))
         manifest["assets"].append(entry)
         print(f"{spec['lod']}: {before['triangles']} -> {after['triangles']} triangles; {after['position_vertices']} positions", flush=True)
+    MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n")
+
+
+def refresh_authored(config):
+    """Register owned pickups while requiring unchanged legacy LOD bytes.
+
+    This audit-only operation needs no reduction tools. It cannot bless a new
+    legacy shape, skin, source or recipe; those need a full generation.
+    """
+    previous = json.loads(MANIFEST.read_text())
+    # The owner has already authenticated generator dependencies and every
+    # output. Adopt only authored hash pins, never legacy sources or budgets.
+    inventories = authored_inventories(config)
+    config = json.loads(json.dumps(config))
+    for spec in config["assets"]:
+        if spec["recipe"] in AUTHORED_RECIPES:
+            inventory = inventories[spec["recipe"]]
+            spec["canonical_sha256"] = inventory[spec["canonical"]]["sha256"]
+            spec["skin_sha256"] = inventory[spec["skin"]]["sha256"]
+    old = {entry["lod"]: entry for entry in previous["assets"]}
+    expected = {spec["lod"] for spec in config["assets"]}
+    if set(old) != expected or previous["source_archives"] != config["source_archives"]:
+        raise ValueError("authored refresh cannot change the legacy LOD inventory or sources")
+    records = []
+    for spec, _, canonical, _ in inputs(config):
+        lod = checked_path("baseq2/" + spec["lod"]).read_bytes()
+        entry = record(spec, canonical, lod)
+        if spec["recipe"] not in AUTHORED_RECIPES:
+            if any(old[spec["lod"]].get(key) != value for key, value in entry.items()):
+                raise ValueError("authored refresh cannot change legacy LOD: " + spec["lod"])
+            entry = old[spec["lod"]]
+        records.append(entry)
+    CONFIG.write_text(json.dumps(config, indent=2) + "\n")
+    tools = {name: version for name, version in previous["tools"].items()
+             if name != "pymeshlab" or any(spec["recipe"] == "qem" for spec in config["assets"])}
+    manifest = manifest_header(config, tools)
+    manifest["assets"] = records
     MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n")
 
 
@@ -279,22 +385,27 @@ def verify(config):
         raise ValueError("expected exactly the five configured pickup LODs")
     for spec, _, canonical, _ in inputs(config):
         lod = checked_path("baseq2/" + spec["lod"]).read_bytes()
-        before, after = validate_pair(spec, canonical, lod)
+        expected = record(spec, canonical, lod)
         entry = entries[spec["lod"]]
-        if before != entry["before"] or after != entry["after"] or entry["skin_sha256"] != spec["skin_sha256"]:
+        if any(entry.get(key) != value for key, value in expected.items()):
             raise ValueError("pickup LOD/canonical/skin output drift: " + spec["lod"])
         print("verified " + spec["lod"], flush=True)
-    print("Verified five additive pickup LODs, pinned sources, unchanged close models/skins, frame identities and GL topology.")
+    print("Verified five pickup LODs, authored ammo/health/armor identity, pinned sources, skins, frame identities and GL topology.")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--verify", action="store_true", help="audit existing outputs using only the Python standard library")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--verify", action="store_true", help="audit existing outputs using only the Python standard library")
+    mode.add_argument("--refresh-authored", action="store_true", help="register owner-verified authored outputs and preserve any legacy LODs")
     parser.add_argument("--review", action="store_true", help="generate fixed-camera near/far comparison PNGs while building")
     args = parser.parse_args()
     config = json.loads(CONFIG.read_text())
     if args.verify:
         verify(config)
+    elif args.refresh_authored:
+        refresh_authored(config)
+        verify(json.loads(CONFIG.read_text()))
     else:
         build(config, args.review)
         verify(config)

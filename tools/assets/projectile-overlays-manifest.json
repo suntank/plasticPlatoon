@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_projectile_overlays.py",
+  "config_sha256": "f17ecc64a971795eaa468df52f624e5a450415b04fcbdc5ab18f8e56454e22aa",
+  "projectile_manifest_sha256": "5ec14deca7d43c52f6e834e599fcc586918c699a543b604a535282b179dae823",
+  "archives": [
+    {
+      "path": "baseq2/operation-tank-test.pk3",
+      "bytes": 757239,
+      "sha256": "e240576640524201e5756604d287d23c7a7df6a2a79a0109fb9200128262ff3b",
+      "members": 34,
+      "untouched_members": 32,
+      "untouched_sha256": "f2263a289fc5075fa92ad8a4d5fa442a698d8635765b913df29eb7773de9ff3a",
+      "managed": {
+        "models/objects/rocket/skin.png": {
+          "bytes": 3456,
+          "sha256": "65ea8d4db6cc1be3fe61a11a748a9fc67dab40eccdecd3308ed9c758c94ab725"
+        },
+        "models/objects/rocket/tris.md2": {
+          "bytes": 5204,
+          "sha256": "5001e4af429fc74ce8b56d9ff6df16eb0eda49c0463a9258488d8c3214577979"
+        }
+      }
+    },
+    {
+      "path": "baseq2/operation-helicopter-test.pk3",
+      "bytes": 637051,
+      "sha256": "4f046a5e3c140a34a0fadf2c5b9e0f50cdd4bb102a4c64db1c622c8991bcabca",
+      "members": 31,
+      "untouched_members": 29,
+      "untouched_sha256": "e9c7fb8dca656ec41003088de2cb9c584ed724d7631e235d9b7009ea61580bc7",
+      "managed": {
+        "models/objects/rocket/skin.png": {
+          "bytes": 3456,
+          "sha256": "65ea8d4db6cc1be3fe61a11a748a9fc67dab40eccdecd3308ed9c758c94ab725"
+        },
+        "models/objects/rocket/tris.md2": {
+          "bytes": 5204,
+          "sha256": "5001e4af429fc74ce8b56d9ff6df16eb0eda49c0463a9258488d8c3214577979"
+        }
+      }
+    }
+  ],
+  "proof": "Every unmanaged member retains its pinned path, length and content hash."
+}

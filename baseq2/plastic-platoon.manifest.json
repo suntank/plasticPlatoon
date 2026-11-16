@@ -112,59 +112,84 @@
       "sha256": "c8a4da356e722d55cb06502bfc72d80a4d4309038241b5265b6ac239130fae8a"
     },
     {
+      "path": "models/experimental/soldier/enemy.md2",
+      "bytes": 1162064,
+      "sha256": "9e7aac1eea7acf22cd198d00602bab4776ea5e8626e9a3bafdae2f754b63bbe2"
+    },
+    {
+      "path": "models/experimental/soldier/enemy_tall.md2",
+      "bytes": 1162064,
+      "sha256": "f390255f885cc50228aeec5435abb85e1e576dafc4c6bb1ab6173ffa307f7bdc"
+    },
+    {
+      "path": "models/experimental/soldier/player.md2",
+      "bytes": 517616,
+      "sha256": "c8558c22757de0cf9714c1da0985112ad09fa84f17285aaab267eb337697f9fb"
+    },
+    {
+      "path": "models/experimental/soldier/player_pistol.md2",
+      "bytes": 523004,
+      "sha256": "1b55bfbff8641b3bca9e2988f2e48bd974a0b28c78f6d506e5266438f701ad9f"
+    },
+    {
+      "path": "models/items/adrenal/skin.png",
+      "bytes": 1764,
+      "sha256": "65e466ea45e8933bb33c554db2e047d47a564239ff2f45e6bc6079f17a6bc9b9"
+    },
+    {
       "path": "models/items/adrenal/tris.md2",
-      "bytes": 43104,
-      "sha256": "36f1f3dd667698b067216bbfc25237145ff68b16847a67731ffadc09b44047ed"
+      "bytes": 5832,
+      "sha256": "2dbc35ca6a2f5829541247f19c06eca68252edee631ce6d88c8e1248c57c2913"
     },
     {
       "path": "models/items/ammo/bullets/medium/lod1.md2",
-      "bytes": 4624,
-      "sha256": "60cbb31ac917fee62e523a2a5f03630980f3da94eb29c7978355552e6d654eed"
+      "bytes": 5464,
+      "sha256": "8efb3c7a9a341930c1048eb212cda49a6653497476172fe333e51f6210baf5cd"
     },
     {
       "path": "models/items/ammo/bullets/medium/skin.png",
-      "bytes": 51486,
-      "sha256": "0ab76a6128213c6c170976829bff39849971996c4578df94b7e429c51d481c56"
+      "bytes": 3337,
+      "sha256": "54c6c186eb5d8e6002e636593dc22e4ad01cbd9c297451cf6244a81b5c5d9865"
     },
     {
       "path": "models/items/ammo/bullets/medium/tris.md2",
-      "bytes": 49196,
-      "sha256": "fc45f24b2d2e83efb565889c27546a637355b2ddaa3776ba75e21a065820e4ab"
+      "bytes": 5464,
+      "sha256": "8efb3c7a9a341930c1048eb212cda49a6653497476172fe333e51f6210baf5cd"
     },
     {
       "path": "models/items/ammo/cells/medium/skin.png",
-      "bytes": 24671,
-      "sha256": "4b31a1b5c61db2c86533549fa0499b050f2608b5f2292b63e2a278765db25280"
+      "bytes": 3392,
+      "sha256": "2c18b4ee3ef72509bcafdc31ca3264af7ee671f8e5e094bb612a97dadf75d15d"
     },
     {
       "path": "models/items/ammo/cells/medium/tris.md2",
-      "bytes": 39812,
-      "sha256": "cbd54bc61ba59630c91653c63ff72e735234df7816843ad50c1d9d80d23a28e4"
+      "bytes": 6968,
+      "sha256": "2084f873769e829e66bc6fde8558fffd83c7e1084791de6b986917325af9b000"
     },
     {
       "path": "models/items/ammo/gl_ammo/medium/skin.png",
-      "bytes": 28437,
-      "sha256": "9f581c48f31784e19d2dc2b06b4abf371d6a403fb8781383420e688ebd5302be"
+      "bytes": 3343,
+      "sha256": "b0987d6e3128c88c98de63fb93ae70122379012c45b8640c5e39a84d1458780c"
     },
     {
       "path": "models/items/ammo/gl_ammo/medium/tris.md2",
-      "bytes": 40856,
-      "sha256": "2b625297d7c9415f76922f3c4dd9b7cf516b019f45f8acd358fd623731c29fd6"
+      "bytes": 2836,
+      "sha256": "9e972dad9fb7c8452027b7e7b85493590c02eb77ad91e17c7342fac3a9fb3dfd"
     },
     {
       "path": "models/items/ammo/grenades/medium/lod1.md2",
-      "bytes": 9000,
-      "sha256": "d6e89fd84e02533ee93ca98f6c02bd40e5910ec7cedf838887c0d1f101bcef01"
+      "bytes": 5880,
+      "sha256": "91b94d8e3f70b142d17accd6dc932176f5c1c69c5352899e13978f218ed5f427"
     },
     {
       "path": "models/items/ammo/grenades/medium/skin.png",
-      "bytes": 40229,
-      "sha256": "30c163ca8659dd7957b37022b95c066364f56f4093b66b90321bdd2e2a7601bb"
+      "bytes": 3560,
+      "sha256": "3ec2d6d6c6e191f44f64da1877c82d57ab728d64a3a2c47328c092bbe120c5bb"
     },
     {
       "path": "models/items/ammo/grenades/medium/tris.md2",
-      "bytes": 37256,
-      "sha256": "95e9b7a37f8c5ee6fb47009caf1cf3d08416acb2b927a66466fa028a34339871"
+      "bytes": 5880,
+      "sha256": "91b94d8e3f70b142d17accd6dc932176f5c1c69c5352899e13978f218ed5f427"
     },
     {
       "path": "models/items/ammo/rockets/medium/skin.png",
@@ -172,79 +197,84 @@
       "sha256": "9cc6122b646e70b0bfde420163bfaa8fed18b6671143da6721189593b9448b72"
     },
     {
+      "path": "models/items/ammo/rockets/medium/skin_ammo.png",
+      "bytes": 3456,
+      "sha256": "65ea8d4db6cc1be3fe61a11a748a9fc67dab40eccdecd3308ed9c758c94ab725"
+    },
+    {
       "path": "models/items/ammo/rockets/medium/tris.md2",
-      "bytes": 22188,
-      "sha256": "8c05d04ffd7fa05496312f44b6588d496601d63ee6407a9785d0fd4c337625c4"
+      "bytes": 5204,
+      "sha256": "04e518a6c165a10b9083d14d7f2558e21bc817ce2da503724344c8b36be64610"
     },
     {
       "path": "models/items/ammo/shells/medium/lod1.md2",
-      "bytes": 4688,
-      "sha256": "dc19ebad7e3cf34ca05b5a1c7e3c33ebb35285ca6c2f51b987c137fd818b44b1"
+      "bytes": 5464,
+      "sha256": "abe7ecdf9728604d50f7e5148b62526b83ccf8901bca9484c9a0b7fdb0a321a7"
     },
     {
       "path": "models/items/ammo/shells/medium/skin.png",
-      "bytes": 52639,
-      "sha256": "e631d95ed5e32d309709b2a0facee28f63c2ed93e531f57592ff2083ebe000e4"
+      "bytes": 3277,
+      "sha256": "bb6a5be52c054a9a93afa9d447a1a2ff28bc273dc7034045b02b3d0e32174418"
     },
     {
       "path": "models/items/ammo/shells/medium/tris.md2",
-      "bytes": 49776,
-      "sha256": "4a33719467649de417ba974321f6e26c7476d2f36b5c2ddee063b7ecaca09eda"
+      "bytes": 5464,
+      "sha256": "abe7ecdf9728604d50f7e5148b62526b83ccf8901bca9484c9a0b7fdb0a321a7"
     },
     {
       "path": "models/items/ammo/slugs/medium/skin.png",
-      "bytes": 34534,
-      "sha256": "61104e078830328ae746e01b9e6843dea92fd4c560ae50101ffc1e4a8e54e812"
+      "bytes": 3430,
+      "sha256": "5f2d83c5b934ab0c04f34bf44f78adbd4c35b7b921103da4a1852f761498554b"
     },
     {
       "path": "models/items/ammo/slugs/medium/tris.md2",
-      "bytes": 37512,
-      "sha256": "1f121f5e93fae3a8cec936a0a4565d74576b426734c6f844fa30e057347173ee"
+      "bytes": 7212,
+      "sha256": "c991d4d461ee1fb2680564b06125c3de7822d581bd8abc8fe705475ab2377af7"
     },
     {
       "path": "models/items/armor/body/skin.png",
-      "bytes": 44687,
-      "sha256": "7f24b9450a7b49a55e13b495948ad180e5e9974bfbc31ac625cfae94cc6eb397"
+      "bytes": 1432,
+      "sha256": "1670931a54465160c3324f20886b24ac465d4e2a7f6f1563ae9a721250ba435a"
     },
     {
       "path": "models/items/armor/body/tris.md2",
-      "bytes": 43608,
-      "sha256": "2b40a85c9c8bb88aacac154fa4937149ff31e3c8675de5e65faf2fc4f5b77eb4"
+      "bytes": 9608,
+      "sha256": "1bee2ce536908ecc09eea851487cfb397b77a54c3961d04b6e4691ac02508d69"
     },
     {
       "path": "models/items/armor/combat/skin.png",
-      "bytes": 31752,
-      "sha256": "ab3a5d6595d79d9f62ff4f50e9d55c0ccf2d27c5d00f0d0d3813a48de5d5fef3"
+      "bytes": 1435,
+      "sha256": "fae047343070bad46648265c3b02ac1a7089af1bb3a08492dec1623eff7e8c6e"
     },
     {
       "path": "models/items/armor/combat/tris.md2",
-      "bytes": 42984,
-      "sha256": "87845cbb9897221feccf2e3699e45ebaf391c6c159ec9dae687cf429a82b7602"
+      "bytes": 7872,
+      "sha256": "7a7dc0766be4dbebb34e261a48683e13a4e77579cd079758e2e04c3140a89eca"
     },
     {
       "path": "models/items/armor/jacket/skin.png",
-      "bytes": 54695,
-      "sha256": "67d90d24e01e38ef7fb10addf1e3bc1768ff03a85d97a57a3e9a52015ec8f0d3"
+      "bytes": 1428,
+      "sha256": "0a8be77b2175899ffa4d242b280d053c4598da88e859466b50768f568d5148e1"
     },
     {
       "path": "models/items/armor/jacket/tris.md2",
-      "bytes": 36180,
-      "sha256": "578b22e9350fe9f5beea0a97892defdd3d4540b8395b80cd1ac9861c9fc3c7d6"
+      "bytes": 10616,
+      "sha256": "e4ca0e64712f560e67bedb87ed6cb6ba3904b0927688f9c2d9f1eca1aea52300"
     },
     {
       "path": "models/items/armor/shard/lod1.md2",
-      "bytes": 10240,
-      "sha256": "6b38e80205c603106dc67bce3985753a3dd97ec669418194d4ab37a9972e7008"
+      "bytes": 3628,
+      "sha256": "07309f504966f73528a08d20c1252bb3ee3ad1a7d9e9120869fa1836ab929119"
     },
     {
       "path": "models/items/armor/shard/skin.png",
-      "bytes": 65758,
-      "sha256": "738605133c9109b110357fc84cc37373b5e93aa6f4deb98d93405e05d786b6fc"
+      "bytes": 1453,
+      "sha256": "e83188f424bd311345e6abfa41bf38d10ec932f9b463e32b6eb61eadb5133200"
     },
     {
       "path": "models/items/armor/shard/tris.md2",
-      "bytes": 35696,
-      "sha256": "e11f9b6037c8e979c81b76cd8cbccef9ba09a56b952baad8c3b1046412ce819e"
+      "bytes": 3628,
+      "sha256": "07309f504966f73528a08d20c1252bb3ee3ad1a7d9e9120869fa1836ab929119"
     },
     {
       "path": "models/items/healing/large/skin.png",
@@ -252,34 +282,39 @@
       "sha256": "1d3f5e3dc59ddad422f4b930adb1ff3cd8b3c7148b193f9092860142de389944"
     },
     {
+      "path": "models/items/healing/large/skin_health.png",
+      "bytes": 1750,
+      "sha256": "41f8c3816c6629c916be0d1e00521d39ee45a273b3cf8071568bf83da65f061f"
+    },
+    {
       "path": "models/items/healing/large/tris.md2",
-      "bytes": 43104,
-      "sha256": "36f1f3dd667698b067216bbfc25237145ff68b16847a67731ffadc09b44047ed"
+      "bytes": 5816,
+      "sha256": "e4de8b6a8d94129118e90be885f4970df88c85239b2dd0e1c9f260113c2a3c3b"
     },
     {
       "path": "models/items/healing/medium/skin.png",
-      "bytes": 51722,
-      "sha256": "db99c7b8e055a7d9d7bf9a2c6a18c03d34921519f7c6bca265922ff45ccb643d"
+      "bytes": 1738,
+      "sha256": "6231809f22082341edd0f345405bdb7a37bfeeb241d4765353d0cbc28f5b4a3b"
     },
     {
       "path": "models/items/healing/medium/tris.md2",
-      "bytes": 34492,
-      "sha256": "3e8e0e403034a3569492a5520be27e782744f990eec5b732572b7ae3b700378f"
+      "bytes": 3760,
+      "sha256": "00205eacfea7cfeac60304ef4fdf3d20a7b3e37828da26eb7ca1978c4f065af9"
     },
     {
       "path": "models/items/healing/stimpack/lod1.md2",
-      "bytes": 8592,
-      "sha256": "2bbb3ad9020d85b4c83b5b9f82708a0ff3ea7ff053023d9dd57e08f967a99349"
+      "bytes": 5616,
+      "sha256": "83780f2aa4baf09d048cd532353ee32f25760d7e6b02a7a2b43108cb14dbd632"
     },
     {
       "path": "models/items/healing/stimpack/skin.png",
-      "bytes": 44940,
-      "sha256": "e6d94324ad0028f0e8e427b8a5523223d7d64da66939eaf2263f744b200ea4d5"
+      "bytes": 1735,
+      "sha256": "3eb54d17fbc994289bc95f66f379ea4ea0ab7cbb94a613768eea3f12d8a8d8eb"
     },
     {
       "path": "models/items/healing/stimpack/tris.md2",
-      "bytes": 34480,
-      "sha256": "b732f8175f78e1e34e7ddf096ce6d3ef490a9218c13c07c76d79d6676f039abf"
+      "bytes": 5616,
+      "sha256": "83780f2aa4baf09d048cd532353ee32f25760d7e6b02a7a2b43108cb14dbd632"
     },
     {
       "path": "models/items/keys/power/tris.md2",
@@ -288,13 +323,13 @@
     },
     {
       "path": "models/items/mega_h/skin.png",
-      "bytes": 41372,
-      "sha256": "2d4935a2501a3f8932cf78579a3045703a969dc98dbad131838500b76fdd3a3f"
+      "bytes": 1747,
+      "sha256": "2338162d22438656f7cd0f9c05cfd649dce03860f9443381b2f868c5fcfebdf7"
     },
     {
       "path": "models/items/mega_h/tris.md2",
-      "bytes": 35704,
-      "sha256": "b9af48f7cca177af27e380a284ec88b48a932a274e23f96f22a22b290d343683"
+      "bytes": 5696,
+      "sha256": "a822841e30ad7f499a67c14ffc5f1d5214ad9632de05db80b183fdd1ae7127b1"
     },
     {
       "path": "models/monsters/ant/colors/tris_red.png",
@@ -345,6 +380,41 @@
       "path": "models/monsters/boss2/tris.md2",
       "bytes": 125648,
       "sha256": "3c2435e7252fecaf6e3035905319608e1193f5172ebec659fc082cc4a71615d9"
+    },
+    {
+      "path": "models/monsters/plastic_boss/body.md2",
+      "bytes": 40500,
+      "sha256": "5e31d52f198bf719cc4e1a86dcff9e9f1bd16a3bd44b3f59777c9e101ca1de5f"
+    },
+    {
+      "path": "models/monsters/plastic_boss/colors/body_red.png",
+      "bytes": 1255,
+      "sha256": "dc21c36077dd9ed97c2740f879a5f5d16f0258bc313756e7c77fcf38dd11ec63"
+    },
+    {
+      "path": "models/monsters/plastic_boss/colors/body_red_1.png",
+      "bytes": 1878,
+      "sha256": "ecbe2cb4b6c19b215aaa150715965acc6583f4874a49d3edabbdd560dafcea0b"
+    },
+    {
+      "path": "models/monsters/plastic_boss/colors/main_rotor_red.png",
+      "bytes": 1255,
+      "sha256": "dc21c36077dd9ed97c2740f879a5f5d16f0258bc313756e7c77fcf38dd11ec63"
+    },
+    {
+      "path": "models/monsters/plastic_boss/damaged.png",
+      "bytes": 1936,
+      "sha256": "292132882e8d3fffada57425e5738fe7e043b542cb7523ffc985d08618fb2e88"
+    },
+    {
+      "path": "models/monsters/plastic_boss/main_rotor.md2",
+      "bytes": 4776,
+      "sha256": "9c3b7790e4b41aded553dc89b3404edcd15d14bc778259789a177ef75b573681"
+    },
+    {
+      "path": "models/monsters/plastic_boss/red.png",
+      "bytes": 1173,
+      "sha256": "f5aba61fdec11bb344e6e101dfc38d17f1d576f137fcb9821ca03df1e830cfed"
     },
     {
       "path": "models/monsters/plastic_helicopter/body.md2",
@@ -418,8 +488,8 @@
     },
     {
       "path": "models/monsters/soldier/colors/weapon_heavy_red.png",
-      "bytes": 37362,
-      "sha256": "e000cc2ffb9f58320f00ff8ec5e3e12b94c0ed54ff4cbb329ca4a44b77f2af8e"
+      "bytes": 3728,
+      "sha256": "b73095190519b0c928038769b2536ae4b82c4d350c1528322942be159b1e347e"
     },
     {
       "path": "models/monsters/soldier/colors/weapon_machinegun_red.png",
@@ -428,13 +498,13 @@
     },
     {
       "path": "models/monsters/soldier/colors/weapon_rocket_red.png",
-      "bytes": 17995,
-      "sha256": "7e8caa837cbaf7b3aa7f41d76ab0b99877364eb7b28ea3eaee4477bc403ca5c7"
+      "bytes": 3728,
+      "sha256": "b73095190519b0c928038769b2536ae4b82c4d350c1528322942be159b1e347e"
     },
     {
       "path": "models/monsters/soldier/colors/weapon_shotgun_red.png",
-      "bytes": 24147,
-      "sha256": "48295b30ab39741dd23d4c329aa037993053bd31cc6ccf8e16cc67bf51404eb8"
+      "bytes": 3728,
+      "sha256": "b73095190519b0c928038769b2536ae4b82c4d350c1528322942be159b1e347e"
     },
     {
       "path": "models/monsters/soldier/skin.png",
@@ -453,8 +523,8 @@
     },
     {
       "path": "models/monsters/soldier/tall/weapon_heavy.md2",
-      "bytes": 1535032,
-      "sha256": "8faf9da46f264c89138535cb5a1df6d4533c2016703a23b5c480fdd652f8cdda"
+      "bytes": 913712,
+      "sha256": "3c731b7b6a7b56d554af93b35236684366784929d7b0c88b6415d178e42cfa11"
     },
     {
       "path": "models/monsters/soldier/tall/weapon_machinegun.md2",
@@ -463,13 +533,13 @@
     },
     {
       "path": "models/monsters/soldier/tall/weapon_rocket.md2",
-      "bytes": 1415072,
-      "sha256": "9bc7aeb2c5a4b47f125d7583073dfc472d6f5367e7a51dffc12182cfaf7acab1"
+      "bytes": 530144,
+      "sha256": "e47c24c926d1a3cdb7f7c09b5279b234f8cd5902c4920c2cbee707fc2d6e75f1"
     },
     {
       "path": "models/monsters/soldier/tall/weapon_shotgun.md2",
-      "bytes": 1401944,
-      "sha256": "4aafb85c3dd370bf055ecbba460a10ddfdc1fc21d320898591c0b19091b98e34"
+      "bytes": 748328,
+      "sha256": "e9589ddf09762cd5141fb38e62f1e7f28ed855be5c11a822e636b682f15084b7"
     },
     {
       "path": "models/monsters/soldier/tris.md2",
@@ -483,8 +553,8 @@
     },
     {
       "path": "models/monsters/soldier/weapon_heavy.md2",
-      "bytes": 1535032,
-      "sha256": "cc59137e12c7a94a16ad19d6b29a3f7bc96aee0a17967160f0d0b6e72e6e4ef6"
+      "bytes": 913712,
+      "sha256": "3bcd8e73da047410561484cf2ede15de9c9e7173b82652fb0074302d91534658"
     },
     {
       "path": "models/monsters/soldier/weapon_machinegun.md2",
@@ -493,13 +563,13 @@
     },
     {
       "path": "models/monsters/soldier/weapon_rocket.md2",
-      "bytes": 1415072,
-      "sha256": "6bdf833ee3cb7d8de945fb445d27c130dee600b0d74684414690893b04c26676"
+      "bytes": 530144,
+      "sha256": "72f7456b431ff94119fe6aad1b88200b00732b4604a6a6893b89b20360f2593d"
     },
     {
       "path": "models/monsters/soldier/weapon_shotgun.md2",
-      "bytes": 1401944,
-      "sha256": "41f39b1fc5cd08c3c1649420d206bc2f1acab1e92ba24f4bd4d565389991c93d"
+      "bytes": 748328,
+      "sha256": "f46ca01c2a568dec28884178ee73bd89d237b09bb8f3c3220797ace90eb6695f"
     },
     {
       "path": "models/monsters/spider/colors/tris_red.png",
@@ -518,13 +588,13 @@
     },
     {
       "path": "models/objects/barrels/skin.png",
-      "bytes": 28301,
-      "sha256": "1b106a9d61dcda486125170532c46242fb35a1192c2685377b27c0fd1da14dd5"
+      "bytes": 965,
+      "sha256": "73e091abfc9c8f1f2e71f60b77c339895d6d09b915fd733aac3742247edd3293"
     },
     {
       "path": "models/objects/barrels/tris.md2",
-      "bytes": 38728,
-      "sha256": "aa4c21d1e0303b3d8b8509c2c5e5c598280a499aadd2faa9c9a55817c9a7dfbc"
+      "bytes": 11832,
+      "sha256": "fdafa5cebf7c81e6955e0d8c7b29a0ff152d161bccec99b65fc4be3ae35e4d76"
     },
     {
       "path": "models/objects/debris1/colors/tris_red.png",
@@ -548,8 +618,8 @@
     },
     {
       "path": "models/objects/gibs/ant/chunk.md2",
-      "bytes": 5432,
-      "sha256": "1d3eb34e20330a18dc9aa557bfa29c747bb5879a3d2934d8d5c1164dbdeb0e48"
+      "bytes": 2316,
+      "sha256": "6ee615cd7424ee733fef381abebd33b23467f2f02f10ad593e01813ca2087038"
     },
     {
       "path": "models/objects/gibs/ant/colors/chunk_red.png",
@@ -563,8 +633,8 @@
     },
     {
       "path": "models/objects/gibs/ant/leg.md2",
-      "bytes": 4320,
-      "sha256": "2499990d564c5f82a146b7b9d5b88e31548d2d8e0818d2d9506b7e9d8035dc0d"
+      "bytes": 1744,
+      "sha256": "df95572333387a60c6cc54164969cea35b5589c4d81a992ebeffcb0be1e02c03"
     },
     {
       "path": "models/objects/gibs/ant/skin.png",
@@ -573,228 +643,228 @@
     },
     {
       "path": "models/objects/gibs/arm/colors/tris_red.png",
-      "bytes": 33497,
-      "sha256": "da3afa72ebb59232e7131929b46680dd191ff199cde42cab15171c6e32dec7c4"
+      "bytes": 740,
+      "sha256": "0c18868d3e45ea3cd6a482e88f2464a787e6a6b3a428283d132fc7c39a07a7eb"
     },
     {
       "path": "models/objects/gibs/arm/player.png",
-      "bytes": 26541,
-      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
     },
     {
       "path": "models/objects/gibs/arm/skin.png",
-      "bytes": 40793,
-      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
     },
     {
       "path": "models/objects/gibs/arm/tris.md2",
-      "bytes": 7952,
-      "sha256": "70ed73166a1db58ed3b29226f76603b5564146dec9dc3d8c69ddc9acee46f1fc"
+      "bytes": 4232,
+      "sha256": "de8bb23c7628689139a553e752503f815843c83440631a022cb6a2479ccd8ea7"
     },
     {
       "path": "models/objects/gibs/bone/colors/tris_red.png",
-      "bytes": 33497,
-      "sha256": "da3afa72ebb59232e7131929b46680dd191ff199cde42cab15171c6e32dec7c4"
+      "bytes": 740,
+      "sha256": "0c18868d3e45ea3cd6a482e88f2464a787e6a6b3a428283d132fc7c39a07a7eb"
     },
     {
       "path": "models/objects/gibs/bone/player.png",
-      "bytes": 26541,
-      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
     },
     {
       "path": "models/objects/gibs/bone/skin.png",
-      "bytes": 40793,
-      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
     },
     {
       "path": "models/objects/gibs/bone/tris.md2",
-      "bytes": 10440,
-      "sha256": "1c7ee39c89c0814a8525ec16837a33385dec8a70e18a42ddb489581234daa477"
+      "bytes": 2244,
+      "sha256": "c9af8707c5c96546cda1b5e68833ecf04328ec93209a48c6ea03b28a7425c529"
     },
     {
       "path": "models/objects/gibs/bone2/colors/tris_red.png",
-      "bytes": 33497,
-      "sha256": "da3afa72ebb59232e7131929b46680dd191ff199cde42cab15171c6e32dec7c4"
+      "bytes": 740,
+      "sha256": "0c18868d3e45ea3cd6a482e88f2464a787e6a6b3a428283d132fc7c39a07a7eb"
     },
     {
       "path": "models/objects/gibs/bone2/player.png",
-      "bytes": 26541,
-      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
     },
     {
       "path": "models/objects/gibs/bone2/skin.png",
-      "bytes": 40793,
-      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
     },
     {
       "path": "models/objects/gibs/bone2/tris.md2",
-      "bytes": 4324,
-      "sha256": "deec14db1afbe1acbda7e1c9961f7629bae00f8b0b10e8253a61ccee4c02187c"
+      "bytes": 1348,
+      "sha256": "ebedbd31f0a819da639a27c0af5f164314abfc153afcbd027fcb31f855ee5669"
     },
     {
       "path": "models/objects/gibs/chest/colors/tris_red.png",
-      "bytes": 33497,
-      "sha256": "da3afa72ebb59232e7131929b46680dd191ff199cde42cab15171c6e32dec7c4"
+      "bytes": 740,
+      "sha256": "0c18868d3e45ea3cd6a482e88f2464a787e6a6b3a428283d132fc7c39a07a7eb"
     },
     {
       "path": "models/objects/gibs/chest/player.png",
-      "bytes": 26541,
-      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
     },
     {
       "path": "models/objects/gibs/chest/skin.png",
-      "bytes": 40793,
-      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
     },
     {
       "path": "models/objects/gibs/chest/tris.md2",
-      "bytes": 27256,
-      "sha256": "e17a45708f562fb3b5a272adaac40917610001796277bde76f22cc982b0cb43a"
+      "bytes": 5472,
+      "sha256": "06059e84fd24cdaa0ff50ed9d2b031f9571f0eddac71894609d1dbe04eb64622"
     },
     {
       "path": "models/objects/gibs/gear/colors/tris_red.png",
-      "bytes": 33497,
-      "sha256": "da3afa72ebb59232e7131929b46680dd191ff199cde42cab15171c6e32dec7c4"
+      "bytes": 740,
+      "sha256": "0c18868d3e45ea3cd6a482e88f2464a787e6a6b3a428283d132fc7c39a07a7eb"
     },
     {
       "path": "models/objects/gibs/gear/player.png",
-      "bytes": 26541,
-      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
     },
     {
       "path": "models/objects/gibs/gear/skin.png",
-      "bytes": 40793,
-      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
     },
     {
       "path": "models/objects/gibs/gear/tris.md2",
-      "bytes": 4324,
-      "sha256": "deec14db1afbe1acbda7e1c9961f7629bae00f8b0b10e8253a61ccee4c02187c"
+      "bytes": 2240,
+      "sha256": "f1c8fd629170035575cebfa36ce83c8467ed5424f751eb308028ecf12d3cca23"
     },
     {
       "path": "models/objects/gibs/head/colors/tris_red.png",
-      "bytes": 33497,
-      "sha256": "da3afa72ebb59232e7131929b46680dd191ff199cde42cab15171c6e32dec7c4"
+      "bytes": 740,
+      "sha256": "0c18868d3e45ea3cd6a482e88f2464a787e6a6b3a428283d132fc7c39a07a7eb"
     },
     {
       "path": "models/objects/gibs/head/player.png",
-      "bytes": 26541,
-      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
     },
     {
       "path": "models/objects/gibs/head/skin.png",
-      "bytes": 40793,
-      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
     },
     {
       "path": "models/objects/gibs/head/tris.md2",
-      "bytes": 7844,
-      "sha256": "ac074798a44b313c698e49d7d414807b221b1f57cfee7dd6674cb924e0cde86c"
+      "bytes": 4992,
+      "sha256": "8d14e00e491f268f612b7df181aeee284fe8cb04c5539f4d6ae986e38eb49429"
     },
     {
       "path": "models/objects/gibs/head2/colors/tris_red.png",
-      "bytes": 33497,
-      "sha256": "da3afa72ebb59232e7131929b46680dd191ff199cde42cab15171c6e32dec7c4"
+      "bytes": 740,
+      "sha256": "0c18868d3e45ea3cd6a482e88f2464a787e6a6b3a428283d132fc7c39a07a7eb"
     },
     {
       "path": "models/objects/gibs/head2/player.png",
-      "bytes": 26541,
-      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
     },
     {
       "path": "models/objects/gibs/head2/skin.png",
-      "bytes": 40793,
-      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
     },
     {
       "path": "models/objects/gibs/head2/tris.md2",
-      "bytes": 7844,
-      "sha256": "ac074798a44b313c698e49d7d414807b221b1f57cfee7dd6674cb924e0cde86c"
+      "bytes": 4992,
+      "sha256": "5c707fd2da3d4e8ee03991030c49154b40d499670b2b994e394aa12790dcd598"
     },
     {
       "path": "models/objects/gibs/leg/colors/tris_red.png",
-      "bytes": 33497,
-      "sha256": "da3afa72ebb59232e7131929b46680dd191ff199cde42cab15171c6e32dec7c4"
+      "bytes": 740,
+      "sha256": "0c18868d3e45ea3cd6a482e88f2464a787e6a6b3a428283d132fc7c39a07a7eb"
     },
     {
       "path": "models/objects/gibs/leg/player.png",
-      "bytes": 26541,
-      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
     },
     {
       "path": "models/objects/gibs/leg/skin.png",
-      "bytes": 40793,
-      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
     },
     {
       "path": "models/objects/gibs/leg/tris.md2",
-      "bytes": 16256,
-      "sha256": "570fccc2a42c734e5815127b46dceddfe2bfc1b6ae4098bc49a8d26ff8d78256"
+      "bytes": 3564,
+      "sha256": "fdc467fbdda6f46199bf1013862ff22cc834bb24ce2bdb31f3e1da5ed99eabdb"
     },
     {
       "path": "models/objects/gibs/skull/colors/tris_red.png",
-      "bytes": 33497,
-      "sha256": "da3afa72ebb59232e7131929b46680dd191ff199cde42cab15171c6e32dec7c4"
+      "bytes": 740,
+      "sha256": "0c18868d3e45ea3cd6a482e88f2464a787e6a6b3a428283d132fc7c39a07a7eb"
     },
     {
       "path": "models/objects/gibs/skull/player.png",
-      "bytes": 26541,
-      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
     },
     {
       "path": "models/objects/gibs/skull/skin.png",
-      "bytes": 40793,
-      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
     },
     {
       "path": "models/objects/gibs/skull/tris.md2",
-      "bytes": 7844,
-      "sha256": "ac074798a44b313c698e49d7d414807b221b1f57cfee7dd6674cb924e0cde86c"
+      "bytes": 4992,
+      "sha256": "d5f38d61c0468951e50ce27ea8c0f7e0185cc93c6e91d940995d05b044dfb2fa"
     },
     {
       "path": "models/objects/gibs/sm_meat/colors/tris_red.png",
-      "bytes": 33497,
-      "sha256": "da3afa72ebb59232e7131929b46680dd191ff199cde42cab15171c6e32dec7c4"
+      "bytes": 740,
+      "sha256": "0c18868d3e45ea3cd6a482e88f2464a787e6a6b3a428283d132fc7c39a07a7eb"
     },
     {
       "path": "models/objects/gibs/sm_meat/player.png",
-      "bytes": 26541,
-      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
     },
     {
       "path": "models/objects/gibs/sm_meat/skin.png",
-      "bytes": 40793,
-      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
     },
     {
       "path": "models/objects/gibs/sm_meat/tris.md2",
-      "bytes": 4328,
-      "sha256": "38eaf2570faa50d1ac78fdb3db4e8700070050c7df25efab151b8113c0f511ee"
+      "bytes": 1348,
+      "sha256": "c33d43b7abbb13c56b50df4aa26309df1b425d1f967ec500a91b299361215aee"
     },
     {
       "path": "models/objects/gibs/sm_metal/colors/tris_red.png",
-      "bytes": 33497,
-      "sha256": "da3afa72ebb59232e7131929b46680dd191ff199cde42cab15171c6e32dec7c4"
+      "bytes": 740,
+      "sha256": "0c18868d3e45ea3cd6a482e88f2464a787e6a6b3a428283d132fc7c39a07a7eb"
     },
     {
       "path": "models/objects/gibs/sm_metal/player.png",
-      "bytes": 26541,
-      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
     },
     {
       "path": "models/objects/gibs/sm_metal/skin.png",
-      "bytes": 40793,
-      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
     },
     {
       "path": "models/objects/gibs/sm_metal/tris.md2",
-      "bytes": 10440,
-      "sha256": "1c7ee39c89c0814a8525ec16837a33385dec8a70e18a42ddb489581234daa477"
+      "bytes": 1468,
+      "sha256": "3f157ead915158fbc0d6eabd79b8637122224ed0621aac9ec0f43b9c49261756"
     },
     {
       "path": "models/objects/gibs/spider/chunk.md2",
-      "bytes": 5432,
-      "sha256": "76a2d0ddaa9664f44fbe298e6d0276f505e47c9682ba1fea5c40cb8d75fc0f4a"
+      "bytes": 2740,
+      "sha256": "46643f5b236cfe2c26cdf2da59c5204106f3269d355290b76812bef1302685b3"
     },
     {
       "path": "models/objects/gibs/spider/colors/chunk_red.png",
@@ -808,8 +878,8 @@
     },
     {
       "path": "models/objects/gibs/spider/leg.md2",
-      "bytes": 4320,
-      "sha256": "fd14d5f5c87ea68a4b7f4fc7d69ff8ee325a384ddb4211de2640c7205f46a6ac"
+      "bytes": 1744,
+      "sha256": "24d97e06ccd465ce7192e59b65ce1ba606d6b0c45ca55b4873b0bd746dabface"
     },
     {
       "path": "models/objects/gibs/spider/skin.png",
@@ -818,23 +888,23 @@
     },
     {
       "path": "models/objects/grenade/skin.png",
-      "bytes": 28437,
-      "sha256": "9f581c48f31784e19d2dc2b06b4abf371d6a403fb8781383420e688ebd5302be"
+      "bytes": 3343,
+      "sha256": "b0987d6e3128c88c98de63fb93ae70122379012c45b8640c5e39a84d1458780c"
     },
     {
       "path": "models/objects/grenade/tris.md2",
-      "bytes": 41024,
-      "sha256": "c911535d2fed50172bc0b062aa060c1f241f141fe1ffbcafbe1fdbcb354f4b3f"
+      "bytes": 2836,
+      "sha256": "7aa9366f310210e77c60bca233df796b440bdf871ce950e2ee105a76f5721d66"
     },
     {
       "path": "models/objects/grenade2/skin.png",
-      "bytes": 38533,
-      "sha256": "541a7fa4947f860a1fe100a477786dbc0b6285f12d2a48e316e9dfd23fddb672"
+      "bytes": 3560,
+      "sha256": "3ec2d6d6c6e191f44f64da1877c82d57ab728d64a3a2c47328c092bbe120c5bb"
     },
     {
       "path": "models/objects/grenade2/tris.md2",
-      "bytes": 35320,
-      "sha256": "004c97b0bc3b0785b1eafb36cb42fe71c58d886a57ea0c2b1111474af060f83b"
+      "bytes": 3332,
+      "sha256": "9872472915a4073b8e0b5ef625a234e4b3d9cc9136820d49cbb08aaad513bb98"
     },
     {
       "path": "models/objects/laser/tris.md2",
@@ -842,9 +912,14 @@
       "sha256": "02ec9413dc0648af7e5fa7fda3c6b716b74bc44885d6427c20b729470ed56918"
     },
     {
+      "path": "models/objects/rocket/skin.png",
+      "bytes": 3456,
+      "sha256": "65ea8d4db6cc1be3fe61a11a748a9fc67dab40eccdecd3308ed9c758c94ab725"
+    },
+    {
       "path": "models/objects/rocket/tris.md2",
-      "bytes": 22248,
-      "sha256": "6d12d994f25d4a72938262b8133a9a4e4ad1fea637cc3836cc0911ea059758e6"
+      "bytes": 5204,
+      "sha256": "5001e4af429fc74ce8b56d9ff6df16eb0eda49c0463a9258488d8c3214577979"
     },
     {
       "path": "models/support/plastic_atlas.tga",
@@ -852,14 +927,29 @@
       "sha256": "5e873d4eece764d3a88caf4ead56c4711b448189e5a92aebf1445aaa1cec2e90"
     },
     {
+      "path": "models/vehicles/platoon_dropship/body.md2",
+      "bytes": 29504,
+      "sha256": "769f45d7893835fd07c8a8de612efccbd1ec9d0b2bcc056328414bccfa13f6e1"
+    },
+    {
+      "path": "models/vehicles/platoon_dropship/green.png",
+      "bytes": 2154,
+      "sha256": "639008d133f12fe5ce271cad4d0f44bc58177d6bcccfda4d6ca7e19d2d582754"
+    },
+    {
+      "path": "models/vehicles/platoon_dropship/main_rotor.md2",
+      "bytes": 3672,
+      "sha256": "b30a7873411e97abf1920994e417661ce822d723931a66835fca5f27b887224a"
+    },
+    {
       "path": "models/weapons/g_bfg/skin.png",
-      "bytes": 35114,
-      "sha256": "eb62a14ff86cd88ce9e076aa8cfd41f6752faf868146f4cf1922ed01d27305d3"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/g_bfg/tris.md2",
-      "bytes": 40288,
-      "sha256": "335c0a1172dc9e7ee8fb3364b77eb8f405e03e9a8f86020484144a6004b55b7e"
+      "bytes": 13816,
+      "sha256": "fd5c825e5953069f58ad04fc46b391c02acaea2670295534307b48ff148e0a6a"
     },
     {
       "path": "models/weapons/g_blast/skin.png",
@@ -873,33 +963,33 @@
     },
     {
       "path": "models/weapons/g_chain/skin.png",
-      "bytes": 38236,
-      "sha256": "eb794e9f761b3e521063248068cbb604b16abe77ea11c3678c6742ce7073406c"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/g_chain/tris.md2",
-      "bytes": 35768,
-      "sha256": "a9ee78745082aa8ec1a2ea8ff85f29bd35fc80278a2478eef82118df302793ea"
+      "bytes": 15008,
+      "sha256": "abd63207eafe425c6ebac2e0c73ca2c2e5bd65fe4d47e4a1973d2f8892f8bf76"
     },
     {
       "path": "models/weapons/g_hyperb/skin.png",
-      "bytes": 48996,
-      "sha256": "276e45334dd87ce309270dc271878db852a5698e3330338623fbbff0521a073a"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/g_hyperb/tris.md2",
-      "bytes": 55020,
-      "sha256": "6156fc85bc3f4ee5cca571a625742d3649f29b8828c0129e39016ae98d3d062f"
+      "bytes": 25528,
+      "sha256": "aed082f0005b6660a9b75812fc113b5aea8749e9f63aee5c95ab4b4bde3a24ea"
     },
     {
       "path": "models/weapons/g_launch/skin.png",
-      "bytes": 43312,
-      "sha256": "a777a5a411ced792863e47982fbf2a2f149246d417ba118b06370380917933c1"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/g_launch/tris.md2",
-      "bytes": 36652,
-      "sha256": "3c2c8867aed2e9290e79292bd8dc997036cf841f3e91cf7f015a7c187dbb598e"
+      "bytes": 12296,
+      "sha256": "0b8ecb017bf0f6d1ef6d64649fb0cff6bce3102c305822e3a41d49a2d1b1bb2f"
     },
     {
       "path": "models/weapons/g_machn/skin.png",
@@ -918,103 +1008,103 @@
     },
     {
       "path": "models/weapons/g_rail/skin.png",
-      "bytes": 35086,
-      "sha256": "d2d547f426245e1ad5e403914b5d1c0bc5be79cee0eead90e5f75acb11affc5a"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/g_rail/tris.md2",
-      "bytes": 51944,
-      "sha256": "0587c0f2556bff12426ced676aaac9574463ce9250852598f4f325eddb72a6e9"
+      "bytes": 20856,
+      "sha256": "00e84487809bb8adaf5e49b0aee1f088ade68be86db8ba6cde1f9bda24e2fa46"
     },
     {
       "path": "models/weapons/g_rocket/skin.png",
-      "bytes": 18411,
-      "sha256": "4d17e7d569fde30ff2b882cf21f1f2ee2b20be85fc291870e20c2df5caa551ae"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/g_rocket/tris.md2",
-      "bytes": 34664,
-      "sha256": "b017286485161299b2dda300bcd809fdfb0079874c5048fbe2975a2b8a1fc9bb"
+      "bytes": 10640,
+      "sha256": "4516ba9d4a478d1391a0bda98ef56d251dfcb8d12113a186b2d85fa0475711b6"
     },
     {
       "path": "models/weapons/g_shotg/skin.png",
-      "bytes": 24541,
-      "sha256": "9acf93e0f9348dd7ce9810f8b5b8bd187cc978b8f73532ea00d6c948b889b062"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/g_shotg/tris.md2",
-      "bytes": 33004,
-      "sha256": "3c6d11b6e1374a1116079019a807b3f100b652eee8a89622ae7135d4f1db37a0"
+      "bytes": 12680,
+      "sha256": "5a0f1211e9099d7f10eb976bed42349d1cf31ed31ea93e6d58e1e8fb3f754dab"
     },
     {
       "path": "models/weapons/g_shotg2/skin.png",
-      "bytes": 25727,
-      "sha256": "ac41a6b70574245fd2b3e2187d646c8c8510b6332e8666662b2d7af6cea3f312"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/g_shotg2/tris.md2",
-      "bytes": 33968,
-      "sha256": "e4cd9e9ccdf05cf7197d8e9d5f982b1f647ed448cb390d7ba05f50a34d883e2d"
+      "bytes": 12284,
+      "sha256": "93216d9eba28b30964d97a1fa20147971c34497af04a8316aadddbc29da7943a"
     },
     {
       "path": "models/weapons/v_bfg/colors/tris_blue.png",
-      "bytes": 99623,
-      "sha256": "c870b5ebd207a1793716b30317dcc5b0a44eb7410a4e7137b322711b31fe0ad7"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "models/weapons/v_bfg/colors/tris_gray.png",
-      "bytes": 113934,
-      "sha256": "97fede4f31d2fe4801a7d0696ad6511f6db826206bdbf97fc175a10e826fa967"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "models/weapons/v_bfg/colors/tris_green.png",
-      "bytes": 92159,
-      "sha256": "387b2b52a7b43acada4e6a755b9fe86062f528b715472e6c795b407e872b1222"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "models/weapons/v_bfg/colors/tris_orange.png",
-      "bytes": 115633,
-      "sha256": "ba39e0c84fe84af35d9e48cbe24e9787c957473d9dad13e43c140b7f08c0f0ed"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "models/weapons/v_bfg/colors/tris_pink.png",
-      "bytes": 135241,
-      "sha256": "a0efc36eb68eccbf0a801d2ee0f1a25a259c4aaef14c9dfda9460da0f604b643"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "models/weapons/v_bfg/colors/tris_purple.png",
-      "bytes": 120218,
-      "sha256": "62de7ec325af3a208987788c4f0d4bd6c443ed5123f9d46c5c27eae563ed772d"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "models/weapons/v_bfg/colors/tris_red.png",
-      "bytes": 96253,
-      "sha256": "26379d33245cac8308b0d32833b22af31a39588a8f622b3a5355bf224296c40d"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "models/weapons/v_bfg/colors/tris_skin.png",
-      "bytes": 135285,
-      "sha256": "89bf616c069f21bc482cda24322025396492a2b1df5160e865c2c1a5d526abfd"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "models/weapons/v_bfg/colors/tris_tan.png",
-      "bytes": 137105,
-      "sha256": "f309f216753c28c40da7ff1ef16800f608ea9becf0d2e10ff8343a3a75252ed2"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "models/weapons/v_bfg/colors/tris_white.png",
-      "bytes": 117578,
-      "sha256": "e337d40636ad73ac255d87fbb469caa88763b8473c9de1a85431490219e17d9c"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "models/weapons/v_bfg/skin.png",
-      "bytes": 101307,
-      "sha256": "0b50cfb1433490ef6126b2f2f21e998b8572c60ccd0f14edeec2a83cbf6e98bb"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/v_bfg/tris.md2",
-      "bytes": 59336,
-      "sha256": "4b9346d2b9a3bb6a5e8a42df5ce8ff398868f54514084c4cfc8adc0da94ca35b"
+      "bytes": 28480,
+      "sha256": "c1e6b9dd6d21ba2469377c9ec6bae8241d35f941d7313caad2c3a600136c3565"
     },
     {
       "path": "models/weapons/v_blast/colors/tris_blue.png",
@@ -1078,63 +1168,63 @@
     },
     {
       "path": "models/weapons/v_chain/colors/tris_blue.png",
-      "bytes": 120345,
-      "sha256": "5b5723f113f16e31b7b10f2b26d7f0d3a8563132cd3738180eef494c00696fdc"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "models/weapons/v_chain/colors/tris_gray.png",
-      "bytes": 134257,
-      "sha256": "69054de83ebafb115a26fe8bc1872519a4aa59fee0170f4213f55b4a2ab62720"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "models/weapons/v_chain/colors/tris_green.png",
-      "bytes": 111686,
-      "sha256": "0a2ffe659f20e52bece56cf340de0ea3113b88afe3da60c4c93fd050ad1be9f9"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "models/weapons/v_chain/colors/tris_orange.png",
-      "bytes": 141332,
-      "sha256": "f16e7fd89adb30258b71823dd8218a85bd4a03a266b57d9b76335f48e24d4054"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "models/weapons/v_chain/colors/tris_pink.png",
-      "bytes": 165182,
-      "sha256": "02ae379c10f952da1dd4f2c2d430c82a853f9e2e027ac682b84cd6657e846aef"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "models/weapons/v_chain/colors/tris_purple.png",
-      "bytes": 146404,
-      "sha256": "9a94d279fbd13802f25e196f6c7dcf1ee4578aa3f7d93b615ffe8492b9ec9f08"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "models/weapons/v_chain/colors/tris_red.png",
-      "bytes": 116585,
-      "sha256": "7c59ae3255a85e57a6c668fd94853804d0c1ec89c62620419638c7ee044c98a5"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "models/weapons/v_chain/colors/tris_skin.png",
-      "bytes": 166493,
-      "sha256": "d5d9ebd0edb4acec88a0225a0acafd57633f51c13c086c13cd0b90cdf65fb7a5"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "models/weapons/v_chain/colors/tris_tan.png",
-      "bytes": 167526,
-      "sha256": "853e0e3e5f4bea76124893ec5ef3272e2ad7dcd9b45b372947e185b20a4ee6c5"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "models/weapons/v_chain/colors/tris_white.png",
-      "bytes": 138903,
-      "sha256": "eb2653a83c155b8df8fa929f56461a430530b86d778d4fc3c461529ae67449e4"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "models/weapons/v_chain/skin.png",
-      "bytes": 117646,
-      "sha256": "a98eeb873e7e5f4c7bae14fa97bbb1ed6dd9ad75f3a87beec3833072e186485d"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/v_chain/tris.md2",
-      "bytes": 58968,
-      "sha256": "7028f3d8e1f4f11a39e1dee436603dbd74e8d01faba5d964494a053821029338"
+      "bytes": 30400,
+      "sha256": "030722de86fd888df3ef3bc9cc3ef2663a44686c94c015ec07ad0ed4563910fc"
     },
     {
       "path": "models/weapons/v_handgr/colors/tris_blue.png",
@@ -1193,123 +1283,123 @@
     },
     {
       "path": "models/weapons/v_hyperb/colors/tris_blue.png",
-      "bytes": 133206,
-      "sha256": "bce3495070d3a4852a32fdf02cccfa680288fcf06e7f192880086a7f704b4068"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "models/weapons/v_hyperb/colors/tris_gray.png",
-      "bytes": 139785,
-      "sha256": "aadfae9ef3e4bc6418267a651abebfe570a91c17904175a42a28a19b2c27b75c"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "models/weapons/v_hyperb/colors/tris_green.png",
-      "bytes": 115258,
-      "sha256": "5718be9e9f9b2956e3d25a76c9a2bf3f8d6d8578f60a7d785bb5083de1192d75"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "models/weapons/v_hyperb/colors/tris_orange.png",
-      "bytes": 150227,
-      "sha256": "7a011886e5dd80a78662461de33edf3c7c66bde053877b303acc08410788571d"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "models/weapons/v_hyperb/colors/tris_pink.png",
-      "bytes": 184973,
-      "sha256": "c22f66e64ab02cccb346ae32e8c6a723070cbeb6d9ab9351abfe319cf818d929"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "models/weapons/v_hyperb/colors/tris_purple.png",
-      "bytes": 158492,
-      "sha256": "6783cc7151cc99e7a5501f7a389478189855752140e07defc8591ff51c5daa9f"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "models/weapons/v_hyperb/colors/tris_red.png",
-      "bytes": 123586,
-      "sha256": "e288e2c8efa9cc2d1795c89aaf50bfda7a7d0d8c134a85de72783eff4a2a938d"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "models/weapons/v_hyperb/colors/tris_skin.png",
-      "bytes": 184914,
-      "sha256": "10baf836fdab8347b3843b00d891f673b11a6ee5521b3f0e4ce80b1ca8543974"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "models/weapons/v_hyperb/colors/tris_tan.png",
-      "bytes": 177216,
-      "sha256": "1374a5e7ee9056fb9993bf5bf77b4d4cdc8a6b40d2f1778117b7d32a5bf2600b"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "models/weapons/v_hyperb/colors/tris_white.png",
-      "bytes": 158130,
-      "sha256": "38a311a3788486c8543732fac2c677afbf41d381c352adc317aafbe55dd53303"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "models/weapons/v_hyperb/skin.png",
-      "bytes": 122971,
-      "sha256": "e91f2babe9ac2fb2f0d6dc18b3e4b00e0b72fb75bed540227013389279fd6483"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/v_hyperb/tris.md2",
-      "bytes": 78144,
-      "sha256": "d1e4161a6ffe5be86194d70ca6311ad362b1af2abeb1b07df1856d9fd06327ea"
+      "bytes": 29892,
+      "sha256": "29629a5fa4642b5fff57ef80bf1517561641fd8cb5913bb50c088a43faadb957"
     },
     {
       "path": "models/weapons/v_launch/colors/tris_blue.png",
-      "bytes": 141107,
-      "sha256": "7f560de0ae758fe96466c352ba88f95d450b35c865e07fd644d6cc6161f10315"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "models/weapons/v_launch/colors/tris_gray.png",
-      "bytes": 150089,
-      "sha256": "4362555529b325a1ff3927b6da670765da528473f21dd648ec664e68516a17c2"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "models/weapons/v_launch/colors/tris_green.png",
-      "bytes": 124257,
-      "sha256": "3e54431f48f89f898a9d69d86da33fb6b3cb99545bcd3769732d32f41a88bb0c"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "models/weapons/v_launch/colors/tris_orange.png",
-      "bytes": 162944,
-      "sha256": "e2ca315ab8f5f62183399c1a301b538fc23a618afe37c8034bbd5eef14c60d81"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "models/weapons/v_launch/colors/tris_pink.png",
-      "bytes": 195327,
-      "sha256": "9cdbaa0beafa329bb3282c218946b5849240aa7dcec69f4c16e701cdd31e4d92"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "models/weapons/v_launch/colors/tris_purple.png",
-      "bytes": 170814,
-      "sha256": "1d5d35fa6c03c4f9d16d1c9a4e7b9905b2b70123fb2ecac94f1f890e943102b3"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "models/weapons/v_launch/colors/tris_red.png",
-      "bytes": 133707,
-      "sha256": "746e4d2bb6b8b13c06b7fa3b483a42914f785b481550aaf0d0472daeef12dd77"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "models/weapons/v_launch/colors/tris_skin.png",
-      "bytes": 199355,
-      "sha256": "c7ac577082e920c4ea91342a5a36f270b4742d88fd59509137f3202694338d12"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "models/weapons/v_launch/colors/tris_tan.png",
-      "bytes": 190995,
-      "sha256": "f4dce8e50a0da97d421732435b0f2e5a0a20f2b41fcd289d7e0a5a43a29eeaa8"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "models/weapons/v_launch/colors/tris_white.png",
-      "bytes": 165262,
-      "sha256": "a53713d3d3297dd0689ae7f99dad299e48a05d774f98a86bcc5849c8deae957a"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "models/weapons/v_launch/skin.png",
-      "bytes": 132422,
-      "sha256": "21b99b9c522ba60fa03663477cd08e9b362ed195daf5e86a31fe2ad83b57821b"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/v_launch/tris.md2",
-      "bytes": 61108,
-      "sha256": "e9b59f1a25a21099a741415a2c3de3f4ca7d8b2185606cbca34b184331447ae9"
+      "bytes": 27376,
+      "sha256": "55c306e5b667544de5f5b735a8bce4783069b72828c65ac09da8debf7649dfbb"
     },
     {
       "path": "models/weapons/v_machn/colors/tris_blue.png",
@@ -1373,243 +1463,243 @@
     },
     {
       "path": "models/weapons/v_rail/colors/tris_blue.png",
-      "bytes": 101875,
-      "sha256": "018338325c3891ba5f1b38a04a897db9296cca14ba3ceb8550acb634867f9767"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "models/weapons/v_rail/colors/tris_gray.png",
-      "bytes": 108375,
-      "sha256": "88c1bbbf519f31aa438387e0d516350198308a26c36081bbdfe727f7bd254612"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "models/weapons/v_rail/colors/tris_green.png",
-      "bytes": 94700,
-      "sha256": "6f5735d3ceb06f54f8a476e5dfff81eea4e62832c14b636717b93625266b9bbe"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "models/weapons/v_rail/colors/tris_orange.png",
-      "bytes": 114887,
-      "sha256": "4a8e0ebaceda23e867ce2414a3be67604ef42f384a1f4134aaa45a1a80fa7788"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "models/weapons/v_rail/colors/tris_pink.png",
-      "bytes": 130301,
-      "sha256": "f61fef638a8269b0c1f1cac027ed4e9964308d603be6e27f13c65f536a33165a"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "models/weapons/v_rail/colors/tris_purple.png",
-      "bytes": 116175,
-      "sha256": "98ea89b3df1937f19dd781158638c5a24760fb36955cf77aaf42365dbd50b1aa"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "models/weapons/v_rail/colors/tris_red.png",
-      "bytes": 97415,
-      "sha256": "663fbc6f716b27344abf7bc4a03d2d8619b08b4e97450535669422e5435c4fa6"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "models/weapons/v_rail/colors/tris_skin.png",
-      "bytes": 129489,
-      "sha256": "cb380c40d6f09c3e06b624f2e75b48acb9da7f5033e634540f73e15a8bbb682d"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "models/weapons/v_rail/colors/tris_tan.png",
-      "bytes": 127158,
-      "sha256": "7add443b919ed22c8971b1f053037c21423dddefc181dabf2bd1dc3019a6bf66"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "models/weapons/v_rail/colors/tris_white.png",
-      "bytes": 116520,
-      "sha256": "43c8922155f83d83b3219d939e798c867d5924a9b55ba3db611f1b96694abdb1"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "models/weapons/v_rail/skin.png",
-      "bytes": 100645,
-      "sha256": "7c7d3f69ffc6eb85c1a4f990a060bbb800b96dd96abe42588abb7161ce5f203c"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/v_rail/tris.md2",
-      "bytes": 82716,
-      "sha256": "b054dd4bcff037b1bffb93dad3d6118a07507856d4c3fe53302827c415a7d134"
+      "bytes": 35936,
+      "sha256": "455f0aac6e047f21cf243919cc4ece3279766bf36dab847f2b77dfa15bbe6f73"
     },
     {
       "path": "models/weapons/v_rocket/colors/tris_blue.png",
-      "bytes": 57679,
-      "sha256": "dbdfa8a788eaacd671743c2e5e5d9fd412d8c285735354d8214644d0a59a2f5c"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "models/weapons/v_rocket/colors/tris_gray.png",
-      "bytes": 62839,
-      "sha256": "822f8ae564d1310163f3ac515b89604664cfcf0264251de2b356785faf4b1302"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "models/weapons/v_rocket/colors/tris_green.png",
-      "bytes": 51839,
-      "sha256": "57e2572b8307267b470752134bf2e451dac803a1b03c144e062216d9164b633c"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "models/weapons/v_rocket/colors/tris_orange.png",
-      "bytes": 65147,
-      "sha256": "d40c7838e3d67b63a2f16341a585bb62bed6a8968fa37002bbb6970df42508ae"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "models/weapons/v_rocket/colors/tris_pink.png",
-      "bytes": 76471,
-      "sha256": "010de65fd15b72ca5a173609fa37a463fe70154b778b1f24eabea8659c93fb6e"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "models/weapons/v_rocket/colors/tris_purple.png",
-      "bytes": 67483,
-      "sha256": "3cb0700716a741cae01c6cdc680443131258f5b38b798b60ab4bdc30deea95c1"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "models/weapons/v_rocket/colors/tris_red.png",
-      "bytes": 54873,
-      "sha256": "132cea03685090a43f2f896cd1b144a859c15cab91851c0497c0d5121cd5b987"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "models/weapons/v_rocket/colors/tris_skin.png",
-      "bytes": 77625,
-      "sha256": "d6d18e949fb4502c4b04a2446e29f4c80f131b17a5c072262792a8d08d82d1e7"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "models/weapons/v_rocket/colors/tris_tan.png",
-      "bytes": 75814,
-      "sha256": "3a489a108c3be21e241ee21e28642171230f1d047837831c15c60f59af242659"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "models/weapons/v_rocket/colors/tris_white.png",
-      "bytes": 67999,
-      "sha256": "5b9ee7decf85121ce732bb1e113268165c1bdb776b41a54fb7cb5be9523b272c"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "models/weapons/v_rocket/skin.png",
-      "bytes": 54462,
-      "sha256": "d023c0dbe5681b8d7adb3e9acd4693a48f7c463b04fc9d4e37e6de8d09c609d1"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/v_rocket/tris.md2",
-      "bytes": 57140,
-      "sha256": "751a57ab2a39e381ac792b87dbf59172a3746ac40d46f6bf0444a0ee82e8d41e"
+      "bytes": 25720,
+      "sha256": "c49c43225c666cede19c7023d9f8269948ec00f63991305435e7c0e79b5cbf46"
     },
     {
       "path": "models/weapons/v_shotg/colors/tris_blue.png",
-      "bytes": 66460,
-      "sha256": "c57ef48c6f26979ff12d38bbbda28e83af197eb3a5250a6ee81de9bc0064a5a1"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "models/weapons/v_shotg/colors/tris_gray.png",
-      "bytes": 76179,
-      "sha256": "d6d6772eca1ed6669e15f2d4e492a59c6a008afc8364292ba8e3c989f8135ff6"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "models/weapons/v_shotg/colors/tris_green.png",
-      "bytes": 64348,
-      "sha256": "1aae0a8e334cf6f3afc6ea1d986fc3db62a20ab130eabe46d6948e68b084b37a"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "models/weapons/v_shotg/colors/tris_orange.png",
-      "bytes": 75426,
-      "sha256": "34c9e30e5ae5762c8565c9e53cd48c1751fa9ca4c5384869bcfcae1dbb1de3d7"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "models/weapons/v_shotg/colors/tris_pink.png",
-      "bytes": 82640,
-      "sha256": "c763333d3f6040604cbc45feabb4accb79bcb2309e32ec0987e4c9471d21e1b5"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "models/weapons/v_shotg/colors/tris_purple.png",
-      "bytes": 75529,
-      "sha256": "79bc01bf67dab75bc3d9387df43fb51bcbcaa1d9440fc435e6535b83e5ff05d9"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "models/weapons/v_shotg/colors/tris_red.png",
-      "bytes": 65497,
-      "sha256": "7a124bc03fba65f566842c961d43eef9bd0655b8c5013c6f30563c17c6ba9db5"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "models/weapons/v_shotg/colors/tris_skin.png",
-      "bytes": 83648,
-      "sha256": "ee9c0508abd0bbf7b28c6c74252aae830e7872a461d515c28683f9e3a1ea09cf"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "models/weapons/v_shotg/colors/tris_tan.png",
-      "bytes": 83929,
-      "sha256": "11385527153fb4a1eff8781d2f21970a4276dd61e9297c3e2c160fbd9ad60d82"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "models/weapons/v_shotg/colors/tris_white.png",
-      "bytes": 76851,
-      "sha256": "229cd54594c6145755379a8c984933bedebdda6eb08df4256ba00ec6c55b7131"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "models/weapons/v_shotg/skin.png",
-      "bytes": 65930,
-      "sha256": "0e616662b9f13f2ad94c4ec610861b361811961ec8e0aea2f3a2f0b01513333d"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/v_shotg/tris.md2",
-      "bytes": 55136,
-      "sha256": "d58b3bc8a1ca838e30e1a6afe281dbb4d8dbd5f8f90a55bdd86f8b52941a04a0"
+      "bytes": 139464,
+      "sha256": "942adc3d792e53dde4a55d4ed83c0cab43e3ef110d180424f422498d638afaa0"
     },
     {
       "path": "models/weapons/v_shotg2/colors/tris_blue.png",
-      "bytes": 86663,
-      "sha256": "a385806faef05bd9ba035fa225491abe1beafdb7b2cbf21cb1efcaf61df78e7f"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "models/weapons/v_shotg2/colors/tris_gray.png",
-      "bytes": 91188,
-      "sha256": "edd6b792c1d10bea617b97eead558d6f2bdc7c58af75757bf6c11140b70f2262"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "models/weapons/v_shotg2/colors/tris_green.png",
-      "bytes": 76083,
-      "sha256": "5625f73a6fe6fe95f60917a0e2f9066d95476b047c97879033d10ccb2db94a53"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "models/weapons/v_shotg2/colors/tris_orange.png",
-      "bytes": 97221,
-      "sha256": "27bb4cdb03376dd80fd387746e7121d68409268a2736e78fa8ff55a6739cff66"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "models/weapons/v_shotg2/colors/tris_pink.png",
-      "bytes": 116421,
-      "sha256": "4aeceda7a2806cf3fb41e0673ddb11b56ff2b44625c6ef264aace98764dadd24"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "models/weapons/v_shotg2/colors/tris_purple.png",
-      "bytes": 102084,
-      "sha256": "c5d57434c79dadbf1285e47a250b8dbd4492149e7b56eff5520f3a1012e21ebf"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "models/weapons/v_shotg2/colors/tris_red.png",
-      "bytes": 81725,
-      "sha256": "13fb471e18f0c29dc6ec087716ee35781837a3f4e1fc2921378ac9c06ec41026"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "models/weapons/v_shotg2/colors/tris_skin.png",
-      "bytes": 115642,
-      "sha256": "192b3f02ffbf861bb69dd800fc8eca2527c57e6fa0819e9f39a98f30f9399ac1"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "models/weapons/v_shotg2/colors/tris_tan.png",
-      "bytes": 112088,
-      "sha256": "ee4df4130121aea97929656043594465be6522bb849daac78135cd1f55555e93"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "models/weapons/v_shotg2/colors/tris_white.png",
-      "bytes": 102263,
-      "sha256": "171d27c8eac147f870425b6dd51f37817dbb04a01c6bde32a750d6e0672296e8"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "models/weapons/v_shotg2/skin.png",
-      "bytes": 81087,
-      "sha256": "c06355e3e1c411e1acf4f4864362f5706a70f17c0c0ce0c634a3dba6ab286217"
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
     },
     {
       "path": "models/weapons/v_shotg2/tris.md2",
-      "bytes": 56816,
-      "sha256": "6c3c2eab6535213bd72e6e65a4ae0ac6f4dcf3d0ab417a38bb3aa287e236648b"
+      "bytes": 28172,
+      "sha256": "2987b09c061ae225a6a31e9d034e4fc0654e01134a191bdd902a7531d18b9e15"
     },
     {
       "path": "performance/pi_zero2.cfg",
@@ -2793,53 +2883,53 @@
     },
     {
       "path": "players/soldier/colors/w_bfg_blue.png",
-      "bytes": 34807,
-      "sha256": "bce1e68e9980a55eb353ae2b8f854dbbdd96a1389bc66e69a21c689c07ff12d8"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "players/soldier/colors/w_bfg_gray.png",
-      "bytes": 40984,
-      "sha256": "34882b3ea6f510860bed4284215ba488dbb8c1d7c6fbcc6221a4adcd06d99ab3"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "players/soldier/colors/w_bfg_green.png",
-      "bytes": 31712,
-      "sha256": "58217b3361a12de80653db6df6a5aedc519dffecc593292f9866268ca7bb76b3"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "players/soldier/colors/w_bfg_orange.png",
-      "bytes": 40266,
-      "sha256": "3aa1cd0c366f20ddd1da1cae86e0e7d5c4cecc797daa5da71635b7f8470945c6"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "players/soldier/colors/w_bfg_pink.png",
-      "bytes": 48935,
-      "sha256": "a3be5deb86a52632cacaa4e12f1cef62a20dbaff859d2656f3c980e6c37ffb78"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "players/soldier/colors/w_bfg_purple.png",
-      "bytes": 42442,
-      "sha256": "8f4a03650dd87ffa977bf36df690a55fdfd11eb0c0efc716fe9c8fc90fe3afdd"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "players/soldier/colors/w_bfg_red.png",
-      "bytes": 33470,
-      "sha256": "1608d7777929e656f9a4bc47d28c3a02fc6963d6f75480ee84d08224058109e2"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "players/soldier/colors/w_bfg_skin.png",
-      "bytes": 48479,
-      "sha256": "fbcf0ab6e1a3240a76403988a986f5898148455f6eeabf391a9f56ac93612060"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "players/soldier/colors/w_bfg_tan.png",
-      "bytes": 48629,
-      "sha256": "6ae3d1e13adde10ee63e3bbe88339deea54070a48493c9a8746e805efa562488"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "players/soldier/colors/w_bfg_white.png",
-      "bytes": 42951,
-      "sha256": "5dca6cba130d8e97a48c34be0b6ebb42b0569ccec34de7a46a91ce1e929c60f2"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "players/soldier/colors/w_blaster_blue.png",
@@ -2893,153 +2983,153 @@
     },
     {
       "path": "players/soldier/colors/w_chaingun_blue.png",
-      "bytes": 39540,
-      "sha256": "5f96bed816eab1061c5e67e9af1e7b1292662be8a2a81db93bad88b726af13b9"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "players/soldier/colors/w_chaingun_gray.png",
-      "bytes": 45117,
-      "sha256": "86cc04d173b042c1304b10c6492021309fe255862368045816682aff0cce2b8d"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "players/soldier/colors/w_chaingun_green.png",
-      "bytes": 36073,
-      "sha256": "6f8df1008aca298d2d543e4eeb2bde9fdbe4f366b13c5d4cab6cc5de167b730f"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "players/soldier/colors/w_chaingun_orange.png",
-      "bytes": 45986,
-      "sha256": "fbfef3698b163c25f7579b2fa289e76530ea06c9d1ff1fd3858083cd231c12c9"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "players/soldier/colors/w_chaingun_pink.png",
-      "bytes": 55737,
-      "sha256": "a864a84da3e75fd02698f6fb8b66771279c411cd79d1d71e09b77481fe21a3f9"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "players/soldier/colors/w_chaingun_purple.png",
-      "bytes": 48053,
-      "sha256": "767b0c7504fb4439b30443ad175a2a7ad4d8cbf0fb855367cf8f59a5c31756e6"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "players/soldier/colors/w_chaingun_red.png",
-      "bytes": 38037,
-      "sha256": "b599577e7ed99b026e95a0f9fdc4a0009482ff8956eaf962603afaeb3617b195"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "players/soldier/colors/w_chaingun_skin.png",
-      "bytes": 55382,
-      "sha256": "38176f6e75e690a6d557395d01fdc17d4a7881f23860e853605545796d163936"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "players/soldier/colors/w_chaingun_tan.png",
-      "bytes": 55446,
-      "sha256": "063541618b258cbe70e1d84e5c4e472f16832b02a693364a59daf9266cfecc2b"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "players/soldier/colors/w_chaingun_white.png",
-      "bytes": 47606,
-      "sha256": "71db059d579b946e7a599b7b5887c7e51e7a23fd35d97f96bf15763e52ba2699"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "players/soldier/colors/w_glauncher_blue.png",
-      "bytes": 46273,
-      "sha256": "22fa78400140f3f03d5b968b5bf491c83cf229ed8e711f784a804e51d2c62050"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "players/soldier/colors/w_glauncher_gray.png",
-      "bytes": 51151,
-      "sha256": "545ff9d8006a428dda1e1c5ea4c4aefdecb848eb2835287991dee8bb4040eedd"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "players/soldier/colors/w_glauncher_green.png",
-      "bytes": 40363,
-      "sha256": "a084e07eb5965df17ebb1d239a4d4b221417d44b2a6d6ed08215cdf30574c358"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "players/soldier/colors/w_glauncher_orange.png",
-      "bytes": 52963,
-      "sha256": "fc0bf859663e30adf5603a17c64307a4ae8929c6ffdb638ead195deeec7a1903"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "players/soldier/colors/w_glauncher_pink.png",
-      "bytes": 65810,
-      "sha256": "fc7053974cd17c47d00abaddb6f30757c6036d3183085d0c60d2b7fa1d9eaade"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "players/soldier/colors/w_glauncher_purple.png",
-      "bytes": 56229,
-      "sha256": "76b470989b49420c2bba442f41912aab22f71e5d556c90d6b2049cdf6e735a09"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "players/soldier/colors/w_glauncher_red.png",
-      "bytes": 43603,
-      "sha256": "98fa0df6fa851be245e331f535f21fc61dec3c6e02d426fde41dcd14f9195de8"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "players/soldier/colors/w_glauncher_skin.png",
-      "bytes": 66528,
-      "sha256": "43b4c52512275f58c326ccbd7d65e561407589c745d6777f974b7316d0b6e407"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "players/soldier/colors/w_glauncher_tan.png",
-      "bytes": 63543,
-      "sha256": "befdbe3fd431889a33ed0e19d6083b8f4bf32a1202547f1a014ff53f5d8e60d1"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "players/soldier/colors/w_glauncher_white.png",
-      "bytes": 57003,
-      "sha256": "c8f721778d242940226ec0a27a9dd39f0152d849ab47d5ab64030879c32b93dd"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "players/soldier/colors/w_hyperblaster_blue.png",
-      "bytes": 53548,
-      "sha256": "afc911dd4a8b49966c179da9139e08da84ddcef55834e4b30ebfdef5916efd4f"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "players/soldier/colors/w_hyperblaster_gray.png",
-      "bytes": 55591,
-      "sha256": "ac86220feba304ac5422d9a163adfc49d9a1b831f262fc48602998a5f4a2a11a"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "players/soldier/colors/w_hyperblaster_green.png",
-      "bytes": 44132,
-      "sha256": "71094f2e949395b9cbb3c0e27eed712d430beed58aa5c016e630dd735bd2c0cd"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "players/soldier/colors/w_hyperblaster_orange.png",
-      "bytes": 59199,
-      "sha256": "27a2b2f9005cb764039b6cf092d0504001e4316267f31e3e7be9a2d20c439e1e"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "players/soldier/colors/w_hyperblaster_pink.png",
-      "bytes": 76215,
-      "sha256": "35600fcd5dadd978b8e7ca8d4840132260ae9910466a8ffa052194029dcea336"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "players/soldier/colors/w_hyperblaster_purple.png",
-      "bytes": 63834,
-      "sha256": "ec784b723c30a2fdb2284b33584a24287286bbafb825f49d7655ffeb42862217"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "players/soldier/colors/w_hyperblaster_red.png",
-      "bytes": 48719,
-      "sha256": "518ad4aa02409f9df23e314f50afc2bda0c4a8b7f78def3917ae091dbbbaa903"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "players/soldier/colors/w_hyperblaster_skin.png",
-      "bytes": 74858,
-      "sha256": "57559a5c1ea574b3f5f95256a0901f8241fd891f1d5157f253048ca8aa74bd61"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "players/soldier/colors/w_hyperblaster_tan.png",
-      "bytes": 71223,
-      "sha256": "7a8b93d4dab4a68a26272139c2d134520df4203d9cdb064fac287be5e185e7f8"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "players/soldier/colors/w_hyperblaster_white.png",
-      "bytes": 65130,
-      "sha256": "707d3d76513d7f31f71f384fd8696444d6e4491b6e4baf9d7ee329b11b1e29ab"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "players/soldier/colors/w_machinegun_blue.png",
@@ -3093,203 +3183,203 @@
     },
     {
       "path": "players/soldier/colors/w_railgun_blue.png",
-      "bytes": 35710,
-      "sha256": "7dcb796a880b68b693203b106391bac4c34c144f5bfff5fe243e79bbad5be37f"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "players/soldier/colors/w_railgun_gray.png",
-      "bytes": 39190,
-      "sha256": "f48a577759606197663a335abf9d8365fb01c78c55f888bc2d2430172b332a68"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "players/soldier/colors/w_railgun_green.png",
-      "bytes": 33497,
-      "sha256": "4036826aab501eef1c8e06ef2cb08ccdd647e95ce631e5ac058ead75fd71a823"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "players/soldier/colors/w_railgun_orange.png",
-      "bytes": 39743,
-      "sha256": "99bec83fcde2bb2ca7b7a354d0d788f2734e1bcd79e9df8d752e48782295386b"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "players/soldier/colors/w_railgun_pink.png",
-      "bytes": 45185,
-      "sha256": "d8d847c1a3b8ac03307a8332785cf2e1f92326de0eda9763bff34e18477e3241"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "players/soldier/colors/w_railgun_purple.png",
-      "bytes": 39988,
-      "sha256": "49f59d7e5ae69e8114e29d9e9619d732251812210d5c9f50ca3bdd5e35934e1f"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "players/soldier/colors/w_railgun_red.png",
-      "bytes": 34237,
-      "sha256": "e636c55a99ecd20d3aac94ffef896ac6866e57d0929fed057e200adbdb3947ff"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "players/soldier/colors/w_railgun_skin.png",
-      "bytes": 44969,
-      "sha256": "4252a90ad6617fb8e7e65595e97d4025d3925e23287bf2dff41a376adacaaba8"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "players/soldier/colors/w_railgun_tan.png",
-      "bytes": 44101,
-      "sha256": "e4d1c40d7094d8dbca690d175bb4c6abb58b9e07f4eaf0b5169dc2c7a0f0bac1"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "players/soldier/colors/w_railgun_white.png",
-      "bytes": 41771,
-      "sha256": "0c7df25c6d8dd98c7f29462a8e0146d1d2dd9f87f012198b10cc893eeed3dd32"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "players/soldier/colors/w_rlauncher_blue.png",
-      "bytes": 19536,
-      "sha256": "18b38d5aba4aa2d695e4feed2be304b543cb31cc03933eb6738a6e2733213736"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "players/soldier/colors/w_rlauncher_gray.png",
-      "bytes": 21830,
-      "sha256": "d795ed64a3663cc4f8ff0bbd91c47591391de8e83a0747e42b8988faea9fdb07"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "players/soldier/colors/w_rlauncher_green.png",
-      "bytes": 17395,
-      "sha256": "ac446496ba68539044c940d02f7f405af11a34e4956c344f6a61acfc16142545"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "players/soldier/colors/w_rlauncher_orange.png",
-      "bytes": 22013,
-      "sha256": "96230b2c88adf639ed21d59eb8ca456ec10a3deaa5df9f29e37dcc96fbc53f5c"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "players/soldier/colors/w_rlauncher_pink.png",
-      "bytes": 26506,
-      "sha256": "dd2f8146f0659d625c15b225da0e72d1a14d06cd8b8a12f32ac0bfb02d559169"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "players/soldier/colors/w_rlauncher_purple.png",
-      "bytes": 23078,
-      "sha256": "a3a58df459caa6b4d7bd0bde6f4516494e8af2244f219613561de49164c35bf1"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "players/soldier/colors/w_rlauncher_red.png",
-      "bytes": 18557,
-      "sha256": "c6ad5237615b51d3cd2b9d2065d34901ade31c9bc40ad9fb73a0cbafc81e85b0"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "players/soldier/colors/w_rlauncher_skin.png",
-      "bytes": 26716,
-      "sha256": "c1fca4d7eb759885489a54cf247221c025c817f81cb62c6159783c73c0d2dbe3"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "players/soldier/colors/w_rlauncher_tan.png",
-      "bytes": 26011,
-      "sha256": "27ddb144e0f1ea6e57be272b7d223906b0d03c838fb2e3bbdac5e16cf247b680"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "players/soldier/colors/w_rlauncher_white.png",
-      "bytes": 23736,
-      "sha256": "e907f9e08dda632d6cb2260e79bde2840822f7d6c898eb68dc77db7f5baa2f6f"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "players/soldier/colors/w_shotgun_blue.png",
-      "bytes": 24625,
-      "sha256": "5a15aa94fe4e8a411e8544242c0fb35a6533a69efa26f0b78a58775689e27225"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "players/soldier/colors/w_shotgun_gray.png",
-      "bytes": 28775,
-      "sha256": "1d41355cc99ddf2522293dfc8ec85c9160f3a66e67e82d5cc3cdb9d6c4445473"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "players/soldier/colors/w_shotgun_green.png",
-      "bytes": 24052,
-      "sha256": "4efe5819519567d44ba26ffa83ff06dd6ee608dcfbc318d6bd97225e00335c9e"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "players/soldier/colors/w_shotgun_orange.png",
-      "bytes": 27721,
-      "sha256": "a78535c8cd31692856a224b3bc7cca58f9db1c4e496be49437c98ab33e1e9c14"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "players/soldier/colors/w_shotgun_pink.png",
-      "bytes": 30278,
-      "sha256": "1d47d7a80a16ab24493d58f2185fb0bf00be422756f7c1abad16b8ae9aaf7534"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "players/soldier/colors/w_shotgun_purple.png",
-      "bytes": 27545,
-      "sha256": "5768ad8bcfb626ef353f18b9494982e1874780e9df8db6d2943f629650fe15ad"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "players/soldier/colors/w_shotgun_red.png",
-      "bytes": 24315,
-      "sha256": "afcf33d8c486eb7d82b0f2000c2dd12d79c79e7f364c5852db3ba4ab06f5d61b"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "players/soldier/colors/w_shotgun_skin.png",
-      "bytes": 30514,
-      "sha256": "1b4f57370011dffa8cabeb7eff4ced4afd84c8dc2f8bd5c90e3918f88f32fb28"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "players/soldier/colors/w_shotgun_tan.png",
-      "bytes": 30632,
-      "sha256": "8930f563024eb5a2c788c71b2af8f1df6185b5876afead748bc3352d6686a707"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "players/soldier/colors/w_shotgun_white.png",
-      "bytes": 28960,
-      "sha256": "9f7b80f3ecf997b2440fc8590544df52a6aeacc94071a2fa003d9a6d6aacc47b"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "players/soldier/colors/w_sshotgun_blue.png",
-      "bytes": 27859,
-      "sha256": "f524806206c8d270ad29668a51930b5b66bea4c8cca900f2f039972ce8b21a64"
+      "bytes": 3987,
+      "sha256": "989e2d9ddd7d460b0871f6a24eb3f3560dde736c5ed5b04bf43daa6ffed86f57"
     },
     {
       "path": "players/soldier/colors/w_sshotgun_gray.png",
-      "bytes": 30067,
-      "sha256": "407f88e8ec6b09e5a65bb65c1882e7e2379240de6e338c8d4854379bbaec06c2"
+      "bytes": 3995,
+      "sha256": "60c3a1ea9680e7189e9bafcaa828e42c2a808e4518bf2eb01e58cfe1b8cc0c1d"
     },
     {
       "path": "players/soldier/colors/w_sshotgun_green.png",
-      "bytes": 24041,
-      "sha256": "8c87a74d035cafa5d2ecc1cb2d8cfc780dc915473cb3a61d004a69c5cbd90700"
+      "bytes": 3731,
+      "sha256": "1be03118489c3f883dabc73cb70052805ea307cc4b0b02c79fcf01b9913f5e9a"
     },
     {
       "path": "players/soldier/colors/w_sshotgun_orange.png",
-      "bytes": 30979,
-      "sha256": "08db2ec58cfb504e7531e9f711d04c978490750a72e943bd8cddf5b6cbd8fe0b"
+      "bytes": 4545,
+      "sha256": "d722a3e63c755d67373ed66c11b381cbbe8d69c4b06cd75d4be6225979b8e288"
     },
     {
       "path": "players/soldier/colors/w_sshotgun_pink.png",
-      "bytes": 37987,
-      "sha256": "b0a4ba9c78b004854eef3b9ab78597dc4e81c2a71f7cf2e513f1a2d9c266831a"
+      "bytes": 4831,
+      "sha256": "df87664018732df2638c3d9107b924bc2fc626a3240f510a0f43453b00e3d3e4"
     },
     {
       "path": "players/soldier/colors/w_sshotgun_purple.png",
-      "bytes": 32940,
-      "sha256": "3dcb1bdab9f11d321090ee31dc16e2521ab10a7f10d1e6ddb3d9b03df5c7d48c"
+      "bytes": 4563,
+      "sha256": "84678b180b71478cbd10a0cabbbb74cb818ed0b44bcbe7dea9af064255e71b8e"
     },
     {
       "path": "players/soldier/colors/w_sshotgun_red.png",
-      "bytes": 26234,
-      "sha256": "7886c5921883b8d5f96b9408d447e2283526c95d36137fe320ab5fdfa32693af"
+      "bytes": 3873,
+      "sha256": "f83494c16823ba27db994c8fd6166023d769eebc9a362081cb1f5b1fc00c12d2"
     },
     {
       "path": "players/soldier/colors/w_sshotgun_skin.png",
-      "bytes": 37571,
-      "sha256": "a69618be3230a10d712fd3f8623b3f474fd38ea2f4593bc889e2986d631a942a"
+      "bytes": 4691,
+      "sha256": "0fa2437f40668d070e8a6984cf6bbf7d4e24fdfa959abb145a96efb0496e0abe"
     },
     {
       "path": "players/soldier/colors/w_sshotgun_tan.png",
-      "bytes": 36189,
-      "sha256": "32672b02d0c350d1c9f7a68d22ee97b26e339c8d30e644fcea109a94ffcc8a37"
+      "bytes": 4774,
+      "sha256": "a070fdea03a771785a463caaac5b53289568fa74aad0729508209951dbf83835"
     },
     {
       "path": "players/soldier/colors/w_sshotgun_white.png",
-      "bytes": 33934,
-      "sha256": "bec616c197c3375e447e91325770e170eb3c2d1b7f9d14fd0b187ae0b8657fe5"
+      "bytes": 4306,
+      "sha256": "85bd6597aec23cf6a04e1b68756e8b785fb7548d1172845e02c0b76eb69ed763"
     },
     {
       "path": "players/soldier/colors/weapon_blue.png",
@@ -3433,8 +3523,8 @@
     },
     {
       "path": "players/soldier/w_bfg.md2",
-      "bytes": 720908,
-      "sha256": "bd4b45055a3ba4d59baaae850816927cb53e9f5fd56b39b69cc84488842b32c4"
+      "bytes": 333328,
+      "sha256": "6c4d7e19bf3fc5b04b04ef9a9dfbac16e49e5d603354897cb14f4aa5238708d9"
     },
     {
       "path": "players/soldier/w_blaster.md2",
@@ -3443,18 +3533,18 @@
     },
     {
       "path": "players/soldier/w_chaingun.md2",
-      "bytes": 676332,
-      "sha256": "4e061cc055f001f86e4be9b348f7566778913ee50a7d5f7d66e90470316eeed8"
+      "bytes": 388520,
+      "sha256": "edff05a826395fb4a430f49d96c3d128763c04028eff4d0e2cd173789fbe0053"
     },
     {
       "path": "players/soldier/w_glauncher.md2",
-      "bytes": 762092,
-      "sha256": "464aef9819300433b656fd5a5d7db70032e1967689eaca26596a3551927175e1"
+      "bytes": 294400,
+      "sha256": "704da75084590f4ab2048e8eaba4c3fbe953524b847b3a9bd135cc38b6c41253"
     },
     {
       "path": "players/soldier/w_hyperblaster.md2",
-      "bytes": 1077852,
-      "sha256": "e40b6d06c18850dcf019d17a8bb48d2d1dca455a1114bfad97c4c75d6e4a1d34"
+      "bytes": 613376,
+      "sha256": "314d8b1b3d7a69bdcddc2acfa82185dd280fe899cbd4a3ad996a074b416119b3"
     },
     {
       "path": "players/soldier/w_machinegun.md2",
@@ -3463,23 +3553,23 @@
     },
     {
       "path": "players/soldier/w_railgun.md2",
-      "bytes": 1163736,
-      "sha256": "4240cc88896bfa0fc8a0501cc73c10f75ff683b31c1b515c3646d757c7801bfc"
+      "bytes": 451104,
+      "sha256": "fdfd9c62ba2f78204dc39d59ed59937c9e4e55044428fbe59e8ca12cacf96f48"
     },
     {
       "path": "players/soldier/w_rlauncher.md2",
-      "bytes": 622852,
-      "sha256": "ed73d6194eee3af276000032290ca2854262e800a90330ffbb5e871227f99f04"
+      "bytes": 226552,
+      "sha256": "8be372f1c3e8713f87b8e790f7c6c109a3df4fd550364ac775620b6ba232a412"
     },
     {
       "path": "players/soldier/w_shotgun.md2",
-      "bytes": 615336,
-      "sha256": "74b73f5eaa477c64737ce56243d6a54b95dd4d49315eec273216ebf3a4716125"
+      "bytes": 318424,
+      "sha256": "0da4adfbc81b02aad6b6a167fa0d1e4758b48a41ec48f304bdabfdc25efddfad"
     },
     {
       "path": "players/soldier/w_sshotgun.md2",
-      "bytes": 662144,
-      "sha256": "0e835341e2300376d88d51a6380d6f84ebfe2e9569cffec0b65a094bdfc9a55b"
+      "bytes": 300692,
+      "sha256": "2ff33fafdade0de61a1654ca50de694d58b788d6ce8c2ad7a54e070d5ee16608"
     },
     {
       "path": "players/soldier/weapon.md2",
@@ -4832,6 +4922,6 @@
       "sha256": "219e0f1ec97fa6b944336f263726564a3eb0a176351f5fd19f805913d24a22ea"
     }
   ],
-  "archive_sha256": "468aafd9781f3319b8dea6324d56792b2f136f20220d1be354d74587befb51be",
-  "archive_bytes": 77458657
+  "archive_sha256": "3985852fe1beb22fd922f588d834a9b0278363fb8fbe31a0df92538527c9036a",
+  "archive_bytes": 60098612
 }

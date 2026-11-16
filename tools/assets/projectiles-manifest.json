@@ -1,0 +1,297 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_projectiles.py",
+  "dependencies_sha256": {
+    "build_projectiles.py": "aa4f558d34392a34036b84e5c6583282c3e30b196585b8170b6bd937737bf555",
+    "projectile_geometry.py": "a95e7735a4d34838e91af7ea46390e8aa254f39418c9460abb48dafc46e14f27",
+    "build_ammo.py": "9d306cf17ebcf533d451a8c186bbb341297ce06402d312f3e1f70e2ff9e1386e",
+    "ammo_geometry.py": "38b02b31c2fde871cef7f52ee7e6632894122eaa5686ab2d2a9eb0a0e4fd4dd4",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+  },
+  "source_archive": {
+    "path": "tools/assets/sources/platoon-originals.pk3",
+    "sha256": "308e7b7e07f08ecbd0f7487e8a37440ab07c28bb83896b0f4c959a29fdcbf7e4",
+    "bytes": 47317833,
+    "origin": "Original owner-authored Plastic Platoon model, texture and sprite inputs recovered before public history cleanup",
+    "license": "GPL-2.0-or-later",
+    "excluded": [
+      "Legacy players/male assets",
+      "Inherited soldier portrait PCXs"
+    ]
+  },
+  "method": "authored ammo shapes, flight orientation and preserved projectile origins",
+  "gameplay": "Existing model paths, collision bounds, speeds, spin, fuses, damage, effects and sounds are unchanged",
+  "models": [
+    {
+      "path": "models/objects/rocket/tris.md2",
+      "kind": "rocket",
+      "ammo_source": "rockets",
+      "baseline": {
+        "triangles": 500,
+        "position_vertices": 252,
+        "file_bytes": 22248
+      },
+      "after": {
+        "triangles": 128,
+        "position_vertices": 108,
+        "render_vertices": 192,
+        "frames": 1,
+        "skin_references": [
+          "models/objects/rocket/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 42,
+        "gl_command_triangles": 128,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 5204,
+        "sha256": "5001e4af429fc74ce8b56d9ff6df16eb0eda49c0463a9258488d8c3214577979",
+        "bounds": [
+          [
+            0.0,
+            -2.6500000953674316,
+            -2.6500000953674316
+          ],
+          [
+            24.099999703466892,
+            2.6500001586973667,
+            2.6500001586973667
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0480364036509,
+        "minimum_quantized_double_triangle_area": 0.0272152275227,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "rocket_body",
+          "first_triangle": 0,
+          "triangle_count": 60
+        },
+        {
+          "name": "rocket_nozzle",
+          "first_triangle": 60,
+          "triangle_count": 20
+        },
+        {
+          "name": "rocket_fin_0",
+          "first_triangle": 80,
+          "triangle_count": 12
+        },
+        {
+          "name": "rocket_fin_1",
+          "first_triangle": 92,
+          "triangle_count": 12
+        },
+        {
+          "name": "rocket_fin_2",
+          "first_triangle": 104,
+          "triangle_count": 12
+        },
+        {
+          "name": "rocket_fin_3",
+          "first_triangle": 116,
+          "triangle_count": 12
+        }
+      ],
+      "anchors": {
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "forward": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "exhaust": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nose": [
+          24.1,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "path": "models/objects/grenade2/tris.md2",
+      "kind": "hand_grenade",
+      "ammo_source": "grenades",
+      "baseline": {
+        "triangles": 800,
+        "position_vertices": 396,
+        "file_bytes": 35320
+      },
+      "after": {
+        "triangles": 88,
+        "position_vertices": 64,
+        "render_vertices": 85,
+        "frames": 1,
+        "skin_references": [
+          "models/objects/grenade2/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 20,
+        "gl_command_triangles": 88,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 3332,
+        "sha256": "9872472915a4073b8e0b5ef625a234e4b3d9cc9136820d49cbb08aaad513bb98",
+        "bounds": [
+          [
+            -4.998000144958496,
+            -2.677402973175049,
+            -2.677402973175049
+          ],
+          [
+            4.997999973595142,
+            2.677402690052986,
+            2.677402690052986
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0202805528968,
+        "minimum_quantized_double_triangle_area": 0.498734799146,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "grenade_body",
+          "first_triangle": 0,
+          "triangle_count": 76
+        },
+        {
+          "name": "fuse",
+          "first_triangle": 76,
+          "triangle_count": 12
+        }
+      ],
+      "anchors": {
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "forward": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "path": "models/objects/grenade/tris.md2",
+      "kind": "gl_round",
+      "ammo_source": "gl_ammo",
+      "baseline": {
+        "triangles": 999,
+        "position_vertices": 500,
+        "file_bytes": 41024
+      },
+      "after": {
+        "triangles": 76,
+        "position_vertices": 40,
+        "render_vertices": 79,
+        "frames": 1,
+        "skin_references": [
+          "models/objects/grenade/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 14,
+        "gl_command_triangles": 76,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 2836,
+        "sha256": "7aa9366f310210e77c60bca233df796b440bdf871ce950e2ee105a76f5721d66",
+        "bounds": [
+          [
+            -5.0,
+            -2.7910401821136475,
+            -2.7910401821136475
+          ],
+          [
+            5.000000353902578,
+            2.7910398356616497,
+            2.7910398356616497
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0154810427451,
+        "minimum_quantized_double_triangle_area": 0.638766165229,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "launcher_round",
+          "first_triangle": 0,
+          "triangle_count": 76
+        }
+      ],
+      "anchors": {
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "forward": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "models/objects/grenade/skin.png",
+      "bytes": 3343,
+      "sha256": "b0987d6e3128c88c98de63fb93ae70122379012c45b8640c5e39a84d1458780c"
+    },
+    {
+      "path": "models/objects/grenade/tris.md2",
+      "bytes": 2836,
+      "sha256": "7aa9366f310210e77c60bca233df796b440bdf871ce950e2ee105a76f5721d66"
+    },
+    {
+      "path": "models/objects/grenade2/skin.png",
+      "bytes": 3560,
+      "sha256": "3ec2d6d6c6e191f44f64da1877c82d57ab728d64a3a2c47328c092bbe120c5bb"
+    },
+    {
+      "path": "models/objects/grenade2/tris.md2",
+      "bytes": 3332,
+      "sha256": "9872472915a4073b8e0b5ef625a234e4b3d9cc9136820d49cbb08aaad513bb98"
+    },
+    {
+      "path": "models/objects/rocket/skin.png",
+      "bytes": 3456,
+      "sha256": "65ea8d4db6cc1be3fe61a11a748a9fc67dab40eccdecd3308ed9c758c94ab725"
+    },
+    {
+      "path": "models/objects/rocket/tris.md2",
+      "bytes": 5204,
+      "sha256": "5001e4af429fc74ce8b56d9ff6df16eb0eda49c0463a9258488d8c3214577979"
+    }
+  ]
+}

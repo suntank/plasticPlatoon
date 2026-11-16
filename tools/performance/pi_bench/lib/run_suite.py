@@ -329,7 +329,7 @@ def main():
      assertions['inline_batching_enabled']=effective.get('r_gl1_batch_inline')=='1'
      assertions['world_batching_enabled']=effective.get('r_gl1_batch_world')=='1'
      assertions['lightmap_copies_disabled']=effective.get('gl1_lightmapcopies')=='0'
-     required_cvars={**session.get('require_cvars',{}),**variant.get('runtime_cvars',{})}
+     required_cvars={**session.get('require_cvars',{}),**variant.get('runtime_cvars',{}),**phase.get('require_cvars',{})}
      cvar_queries={name:cmd(name) for name in required_cvars}
      for name,expected in required_cvars.items():
       found=re.search(r'"'+re.escape(name)+r'" is "([^"\r\n]*)"',cvar_queries[name])

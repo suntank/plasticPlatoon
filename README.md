@@ -36,6 +36,8 @@ and tilde for the console. Test missions are available there:
 | `exec endline_solo.cfg` | Operation End of the Line / Toy railway |
 | `exec sandkeep_solo.cfg` | Sandkeep |
 | `exec sandwatch_solo.cfg` | Sandwatch |
+| `map pp_garden` | Garden |
+| `exec garden_infiltration_solo.cfg` | Operation Garden Ghost |
 | `exec heavy_test.cfg` | Heavy machine gunner range |
 | `exec rocket_test.cfg` | Rocket soldier range |
 | `exec tank_test.cfg` | Heavy tank range |
@@ -46,6 +48,10 @@ and tilde for the console. Test missions are available there:
 The Bedroom, Sandkeep and Sandwatch missions also have `_coop.cfg` launch
 configs. See each mission's guide under `maps/` for details. Weapons and muzzle
 flashes use [the versioned tuning profile](baseq2/tuning/README.md).
+
+Garden and its mission variant ship as separate operation packs. Garden Ghost
+also has `garden_infiltration_coop.cfg`; see [the Garden mission guide](maps/README-garden-infiltration.md)
+for editing, rebuilding and verification.
 
 The N64 GoldenEye **Temple** multiplayer recreation is available as `map pp_temple`
 or `exec temple_dm.cfg`, and in the split-screen map selector. It follows the

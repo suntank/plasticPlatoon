@@ -22,6 +22,14 @@ from md2_assets import HEADER, MD2
 from md2_animation import encode_vertex_subset
 from verify_m16_runtime import verify as verify_m16
 from verify_pistol_runtime import verify as verify_pistol
+from verify_shotgun_runtime import verify as verify_shotgun
+from verify_sshotgun_runtime import verify as verify_sshotgun
+from verify_m60_runtime import verify as verify_m60
+from verify_glauncher_runtime import verify as verify_glauncher
+from verify_rlauncher_runtime import verify as verify_rlauncher
+from verify_sniper_runtime import verify as verify_sniper
+from verify_flamethrower_runtime import verify as verify_flamethrower
+from verify_mortar_runtime import verify as verify_mortar
 
 ROOT = Path(__file__).resolve().parents[2]
 RECIPE = Path(__file__).with_name('pi-actor-models.json')
@@ -127,13 +135,37 @@ def remove_hidden_faces(source, removed):
 def build(recipe_path):
     # The old accepted topology is only valid for its original decimated
     # inputs. Authored replacements already have lower budgets and must come
-    # from the main package, including the height builder's tall M16 variant.
+    # from the main package, including the height builder's tall weapon variants.
     verify_m16()
     verify_pistol()
+    verify_shotgun()
+    verify_sshotgun()
+    verify_m60()
+    verify_glauncher()
+    verify_rlauncher()
+    verify_sniper()
+    verify_flamethrower()
+    verify_mortar()
     authored = json.loads((ROOT / 'tools/assets/m16-manifest.json').read_text())
     authored_models = {model['path'] for model in authored['models']}
     pistol = json.loads((ROOT / 'tools/assets/pistol-manifest.json').read_text())
     authored_models.update(model['path'] for model in pistol['models'])
+    shotgun = json.loads((ROOT / 'tools/assets/shotgun-manifest.json').read_text())
+    authored_models.update(model['path'] for model in shotgun['models'])
+    sshotgun = json.loads((ROOT / 'tools/assets/sshotgun-manifest.json').read_text())
+    authored_models.update(model['path'] for model in sshotgun['models'])
+    m60 = json.loads((ROOT / 'tools/assets/m60-manifest.json').read_text())
+    authored_models.update(model['path'] for model in m60['models'])
+    glauncher = json.loads((ROOT / 'tools/assets/glauncher-manifest.json').read_text())
+    authored_models.update(model['path'] for model in glauncher['models'])
+    rlauncher = json.loads((ROOT / 'tools/assets/rlauncher-manifest.json').read_text())
+    authored_models.update(model['path'] for model in rlauncher['models'])
+    sniper = json.loads((ROOT / 'tools/assets/sniper-manifest.json').read_text())
+    authored_models.update(model['path'] for model in sniper['models'])
+    flamethrower = json.loads((ROOT / 'tools/assets/flamethrower-manifest.json').read_text())
+    authored_models.update(model['path'] for model in flamethrower['models'])
+    mortar = json.loads((ROOT / 'tools/assets/mortar-manifest.json').read_text())
+    authored_models.update(model['path'] for model in mortar['models'])
     recipe_raw = recipe_path.read_bytes()
     recipe = json.loads(recipe_raw)
     if recipe.get('schema') != 1 or not recipe.get('models'):

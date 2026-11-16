@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "projectile_manifest": "tools/assets/projectiles-manifest.json",
+  "managed_members": [
+    "models/objects/rocket/tris.md2",
+    "models/objects/rocket/skin.png"
+  ],
+  "required_existing_members": [
+    "models/objects/rocket/tris.md2"
+  ],
+  "archives": [
+    {
+      "path": "baseq2/operation-tank-test.pk3",
+      "untouched_members": 32,
+      "untouched_sha256": "f2263a289fc5075fa92ad8a4d5fa442a698d8635765b913df29eb7773de9ff3a"
+    },
+    {
+      "path": "baseq2/operation-helicopter-test.pk3",
+      "untouched_members": 29,
+      "untouched_sha256": "e9c7fb8dca656ec41003088de2cb9c584ed724d7631e235d9b7009ea61580bc7"
+    }
+  ],
+  "proof": "SHA-256 of sorted path/size/content-hash records for every unmanaged archive member. The original shared rocket-ammo skin is included and must remain byte-identical."
+}

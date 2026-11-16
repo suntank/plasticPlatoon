@@ -1,0 +1,1828 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_body_parts.py",
+  "source": {
+    "schema": 1,
+    "source_archive": {
+      "path": "tools/assets/sources/body-parts-baseline.pk3",
+      "sha256": "22e709aef9ca189dd8afd90538a5d72fc69f4d4c8ab0c7203cbc5dccdeb083f3",
+      "bytes": 816941
+    },
+    "files": [
+      {
+        "path": "baseq2/models/objects/gibs/ant/chunk.md2",
+        "bytes": 5432,
+        "sha256": "1d3eb34e20330a18dc9aa557bfa29c747bb5879a3d2934d8d5c1164dbdeb0e48"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/ant/leg.md2",
+        "bytes": 4320,
+        "sha256": "2499990d564c5f82a146b7b9d5b88e31548d2d8e0818d2d9506b7e9d8035dc0d"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/ant/skin.png",
+        "bytes": 665,
+        "sha256": "310e9d0b9f4efb7a768b7f7d2b8b415e0fb04859c227e9ba35a9134a6ab7ccd0"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/arm/player.png",
+        "bytes": 26541,
+        "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/arm/skin.png",
+        "bytes": 40793,
+        "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/arm/tris.md2",
+        "bytes": 7952,
+        "sha256": "70ed73166a1db58ed3b29226f76603b5564146dec9dc3d8c69ddc9acee46f1fc"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/bone/player.png",
+        "bytes": 26541,
+        "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/bone/skin.png",
+        "bytes": 40793,
+        "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/bone/tris.md2",
+        "bytes": 10440,
+        "sha256": "1c7ee39c89c0814a8525ec16837a33385dec8a70e18a42ddb489581234daa477"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/bone2/player.png",
+        "bytes": 26541,
+        "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/bone2/skin.png",
+        "bytes": 40793,
+        "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/bone2/tris.md2",
+        "bytes": 4324,
+        "sha256": "deec14db1afbe1acbda7e1c9961f7629bae00f8b0b10e8253a61ccee4c02187c"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/chest/player.png",
+        "bytes": 26541,
+        "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/chest/skin.png",
+        "bytes": 40793,
+        "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/chest/tris.md2",
+        "bytes": 27256,
+        "sha256": "e17a45708f562fb3b5a272adaac40917610001796277bde76f22cc982b0cb43a"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/gear/player.png",
+        "bytes": 26541,
+        "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/gear/skin.png",
+        "bytes": 40793,
+        "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/gear/tris.md2",
+        "bytes": 4324,
+        "sha256": "deec14db1afbe1acbda7e1c9961f7629bae00f8b0b10e8253a61ccee4c02187c"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/head/player.png",
+        "bytes": 26541,
+        "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/head/skin.png",
+        "bytes": 40793,
+        "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/head/tris.md2",
+        "bytes": 7844,
+        "sha256": "ac074798a44b313c698e49d7d414807b221b1f57cfee7dd6674cb924e0cde86c"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/head2/player.png",
+        "bytes": 26541,
+        "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/head2/skin.png",
+        "bytes": 40793,
+        "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/head2/tris.md2",
+        "bytes": 7844,
+        "sha256": "ac074798a44b313c698e49d7d414807b221b1f57cfee7dd6674cb924e0cde86c"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/leg/player.png",
+        "bytes": 26541,
+        "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/leg/skin.png",
+        "bytes": 40793,
+        "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/leg/tris.md2",
+        "bytes": 16256,
+        "sha256": "570fccc2a42c734e5815127b46dceddfe2bfc1b6ae4098bc49a8d26ff8d78256"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/skull/player.png",
+        "bytes": 26541,
+        "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/skull/skin.png",
+        "bytes": 40793,
+        "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/skull/tris.md2",
+        "bytes": 7844,
+        "sha256": "ac074798a44b313c698e49d7d414807b221b1f57cfee7dd6674cb924e0cde86c"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/sm_meat/player.png",
+        "bytes": 26541,
+        "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/sm_meat/skin.png",
+        "bytes": 40793,
+        "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/sm_meat/tris.md2",
+        "bytes": 4328,
+        "sha256": "38eaf2570faa50d1ac78fdb3db4e8700070050c7df25efab151b8113c0f511ee"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/sm_metal/player.png",
+        "bytes": 26541,
+        "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/sm_metal/skin.png",
+        "bytes": 40793,
+        "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/sm_metal/tris.md2",
+        "bytes": 10440,
+        "sha256": "1c7ee39c89c0814a8525ec16837a33385dec8a70e18a42ddb489581234daa477"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/spider/chunk.md2",
+        "bytes": 5432,
+        "sha256": "76a2d0ddaa9664f44fbe298e6d0276f505e47c9682ba1fea5c40cb8d75fc0f4a"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/spider/leg.md2",
+        "bytes": 4320,
+        "sha256": "fd14d5f5c87ea68a4b7f4fc7d69ff8ee325a384ddb4211de2640c7205f46a6ac"
+      },
+      {
+        "path": "baseq2/models/objects/gibs/spider/skin.png",
+        "bytes": 666,
+        "sha256": "f7bf311bbb6b640292d1a606cf3d63baa87c2901c1747e51e84a08b1d82fada8"
+      }
+    ]
+  },
+  "dependencies_sha256": {
+    "build_body_parts.py": "f2194fc6cde5d401fdc886c2b25ac0a68ae3062ace91ccc2e125594928c5a1f3",
+    "body_parts_geometry.py": "756d6e0e14bf2348167c070f9d1d42b02062f7e44012a9c914b17aee5f2e8c97",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d",
+    "md2_assets.py": "894c26ea6d87858bfea877267657a97addad6b238cbb89f1f112a591d0062c2b",
+    "asset_sources.py": "56b5778c08d9625bbf9307bcc880ea33f0f012a318abbcefd9fcbcc4619bc264"
+  },
+  "method": "original closed primitives, smooth molded surfaces, source bounds/origins and frame identity retained",
+  "colors": "tan enemy pigment with existing red variants; dedicated green player atlases; species-specific insect shell/wound tiles",
+  "models": [
+    {
+      "path": "models/objects/gibs/arm/tris.md2",
+      "kind": "arm",
+      "before": {
+        "triangles": 200,
+        "position_vertices": 102,
+        "render_vertices": 187,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/arm/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 67,
+        "gl_command_triangles": 200,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 7952,
+        "sha256": "70ed73166a1db58ed3b29226f76603b5564146dec9dc3d8c69ddc9acee46f1fc",
+        "bounds": [
+          [
+            -7.725759506225586,
+            -4.957441329956055,
+            -0.14464330673217773
+          ],
+          [
+            13.589787609875202,
+            7.0272362269461155,
+            5.14676845818758
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 104,
+        "position_vertices": 84,
+        "render_vertices": 138,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/arm/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 36,
+        "gl_command_triangles": 104,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 4232,
+        "sha256": "de8bb23c7628689139a553e752503f815843c83440631a022cb6a2479ccd8ea7",
+        "bounds": [
+          [
+            -7.725759506225586,
+            -4.957441329956055,
+            -0.14464330673217773
+          ],
+          [
+            13.589787609875202,
+            7.0272362269461155,
+            5.14676845818758
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0426349245589,
+        "minimum_quantized_double_triangle_area": 0.330005944904,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "torn_sleeve",
+          "first_triangle": 0,
+          "triangle_count": 20
+        },
+        {
+          "name": "forearm",
+          "first_triangle": 20,
+          "triangle_count": 20
+        },
+        {
+          "name": "mitten",
+          "first_triangle": 40,
+          "triangle_count": 32
+        },
+        {
+          "name": "thumb",
+          "first_triangle": 72,
+          "triangle_count": 32
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/bone/tris.md2",
+      "kind": "bone",
+      "before": {
+        "triangles": 262,
+        "position_vertices": 133,
+        "render_vertices": 244,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/leg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 90,
+        "gl_command_triangles": 262,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 10440,
+        "sha256": "1c7ee39c89c0814a8525ec16837a33385dec8a70e18a42ddb489581234daa477",
+        "bounds": [
+          [
+            -5.320087909698486,
+            -8.37234878540039,
+            -0.2569098472595215
+          ],
+          [
+            4.976540677249432,
+            11.201620683073997,
+            5.433537505567074
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 52,
+        "position_vertices": 42,
+        "render_vertices": 69,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/bone/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 18,
+        "gl_command_triangles": 52,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 2244,
+        "sha256": "c9af8707c5c96546cda1b5e68833ecf04328ec93209a48c6ea03b28a7425c529",
+        "bounds": [
+          [
+            -5.320087909698486,
+            -8.37234878540039,
+            -0.2569098472595215
+          ],
+          [
+            4.976540677249432,
+            11.201620683073997,
+            5.433537505567074
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0363091630423,
+        "minimum_quantized_double_triangle_area": 3.15220567136,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "broken_limb",
+          "first_triangle": 0,
+          "triangle_count": 20
+        },
+        {
+          "name": "joint",
+          "first_triangle": 20,
+          "triangle_count": 32
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/bone2/tris.md2",
+      "kind": "bone2",
+      "before": {
+        "triangles": 104,
+        "position_vertices": 54,
+        "render_vertices": 103,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/bone2/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 38,
+        "gl_command_triangles": 104,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 4324,
+        "sha256": "deec14db1afbe1acbda7e1c9961f7629bae00f8b0b10e8253a61ccee4c02187c",
+        "bounds": [
+          [
+            -3.668010950088501,
+            -4.861958026885986,
+            0.11936306953430176
+          ],
+          [
+            3.4593444988131523,
+            3.948111478239298,
+            3.620874942280352
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 32,
+        "position_vertices": 18,
+        "render_vertices": 33,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/bone2/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 8,
+        "gl_command_triangles": 32,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 1348,
+        "sha256": "ebedbd31f0a819da639a27c0af5f164314abfc153afcbd027fcb31f855ee5669",
+        "bounds": [
+          [
+            -3.668010950088501,
+            -4.861958026885986,
+            0.11936306953430176
+          ],
+          [
+            3.4593444988131523,
+            3.948111478239298,
+            3.620874942280352
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0155706252842,
+        "minimum_quantized_double_triangle_area": 3.13745209387,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "broken_joint",
+          "first_triangle": 0,
+          "triangle_count": 32
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/chest/tris.md2",
+      "kind": "chest",
+      "before": {
+        "triangles": 684,
+        "position_vertices": 344,
+        "render_vertices": 713,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/chest/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 239,
+        "gl_command_triangles": 684,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 27256,
+        "sha256": "e17a45708f562fb3b5a272adaac40917610001796277bde76f22cc982b0cb43a",
+        "bounds": [
+          [
+            -13.022664070129395,
+            -7.382843971252441,
+            -6.598031997680664
+          ],
+          [
+            10.630967885255814,
+            8.634554341435432,
+            5.936829436570406
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 128,
+        "position_vertices": 168,
+        "render_vertices": 184,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/chest/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 46,
+        "gl_command_triangles": 128,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 5472,
+        "sha256": "06059e84fd24cdaa0ff50ed9d2b031f9571f0eddac71894609d1dbe04eb64622",
+        "bounds": [
+          [
+            -13.022664070129395,
+            -7.382843971252441,
+            -6.598031997680664
+          ],
+          [
+            10.630967885255814,
+            8.634554341435432,
+            5.936829436570406
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0605165026979,
+        "minimum_quantized_double_triangle_area": 6.41926997887,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "vest_torso",
+          "first_triangle": 0,
+          "triangle_count": 60
+        },
+        {
+          "name": "neck_stub",
+          "first_triangle": 60,
+          "triangle_count": 20
+        },
+        {
+          "name": "vest_pouch_0",
+          "first_triangle": 80,
+          "triangle_count": 12
+        },
+        {
+          "name": "vest_pouch_1",
+          "first_triangle": 92,
+          "triangle_count": 12
+        },
+        {
+          "name": "vest_pouch_2",
+          "first_triangle": 104,
+          "triangle_count": 12
+        },
+        {
+          "name": "belt",
+          "first_triangle": 116,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/gear/tris.md2",
+      "kind": "gear",
+      "before": {
+        "triangles": 104,
+        "position_vertices": 54,
+        "render_vertices": 103,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/bone2/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 38,
+        "gl_command_triangles": 104,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 4324,
+        "sha256": "deec14db1afbe1acbda7e1c9961f7629bae00f8b0b10e8253a61ccee4c02187c",
+        "bounds": [
+          [
+            -3.668010950088501,
+            -4.861958026885986,
+            0.11936306953430176
+          ],
+          [
+            3.4593444988131523,
+            3.948111478239298,
+            3.620874942280352
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 48,
+        "position_vertices": 48,
+        "render_vertices": 96,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/gear/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 24,
+        "gl_command_triangles": 48,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 2240,
+        "sha256": "f1c8fd629170035575cebfa36ce83c8467ed5424f751eb308028ecf12d3cca23",
+        "bounds": [
+          [
+            -3.668010950088501,
+            -4.861958026885986,
+            0.11936306953430176
+          ],
+          [
+            3.4593444988131523,
+            3.948111478239298,
+            3.620874942280352
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0121386165575,
+        "minimum_quantized_double_triangle_area": 1.50257246791,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "broken_hex_fastener",
+          "first_triangle": 0,
+          "triangle_count": 48
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/head/tris.md2",
+      "kind": "head",
+      "before": {
+        "triangles": 188,
+        "position_vertices": 96,
+        "render_vertices": 202,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/head/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 72,
+        "gl_command_triangles": 188,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 7844,
+        "sha256": "ac074798a44b313c698e49d7d414807b221b1f57cfee7dd6674cb924e0cde86c",
+        "bounds": [
+          [
+            -4.593313694000244,
+            -3.937370538711548,
+            -4.377309799194336
+          ],
+          [
+            4.798972919583321,
+            3.942531203851104,
+            6.0687229707837105
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 124,
+        "position_vertices": 120,
+        "render_vertices": 158,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/head/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 38,
+        "gl_command_triangles": 124,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 4992,
+        "sha256": "8d14e00e491f268f612b7df181aeee284fe8cb04c5539f4d6ae986e38eb49429",
+        "bounds": [
+          [
+            -4.593313694000244,
+            -3.937370538711548,
+            -4.377309799194336
+          ],
+          [
+            4.798972919583321,
+            3.942531203851104,
+            6.0687229707837105
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0268661748284,
+        "minimum_quantized_double_triangle_area": 0.196148825645,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "toy_head",
+          "first_triangle": 0,
+          "triangle_count": 44
+        },
+        {
+          "name": "molded_helmet",
+          "first_triangle": 44,
+          "triangle_count": 44
+        },
+        {
+          "name": "nose",
+          "first_triangle": 88,
+          "triangle_count": 12
+        },
+        {
+          "name": "eye_0",
+          "first_triangle": 100,
+          "triangle_count": 12
+        },
+        {
+          "name": "eye_1",
+          "first_triangle": 112,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/head2/tris.md2",
+      "kind": "head2",
+      "before": {
+        "triangles": 188,
+        "position_vertices": 96,
+        "render_vertices": 202,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/head/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 72,
+        "gl_command_triangles": 188,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 7844,
+        "sha256": "ac074798a44b313c698e49d7d414807b221b1f57cfee7dd6674cb924e0cde86c",
+        "bounds": [
+          [
+            -4.593313694000244,
+            -3.937370538711548,
+            -4.377309799194336
+          ],
+          [
+            4.798972919583321,
+            3.942531203851104,
+            6.0687229707837105
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 124,
+        "position_vertices": 120,
+        "render_vertices": 158,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/head2/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 38,
+        "gl_command_triangles": 124,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 4992,
+        "sha256": "5c707fd2da3d4e8ee03991030c49154b40d499670b2b994e394aa12790dcd598",
+        "bounds": [
+          [
+            -4.593313694000244,
+            -3.937370538711548,
+            -4.377309799194336
+          ],
+          [
+            4.798972919583321,
+            3.942531203851104,
+            6.0687229707837105
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0268661748284,
+        "minimum_quantized_double_triangle_area": 0.196148825645,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "toy_head",
+          "first_triangle": 0,
+          "triangle_count": 44
+        },
+        {
+          "name": "molded_helmet",
+          "first_triangle": 44,
+          "triangle_count": 44
+        },
+        {
+          "name": "nose",
+          "first_triangle": 88,
+          "triangle_count": 12
+        },
+        {
+          "name": "eye_0",
+          "first_triangle": 100,
+          "triangle_count": 12
+        },
+        {
+          "name": "eye_1",
+          "first_triangle": 112,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/leg/tris.md2",
+      "kind": "leg",
+      "before": {
+        "triangles": 416,
+        "position_vertices": 210,
+        "render_vertices": 375,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/leg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 137,
+        "gl_command_triangles": 416,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 16256,
+        "sha256": "570fccc2a42c734e5815127b46dceddfe2bfc1b6ae4098bc49a8d26ff8d78256",
+        "bounds": [
+          [
+            -6.176146507263184,
+            -5.8677077293396,
+            -15.605375289916992
+          ],
+          [
+            4.976540993899107,
+            5.129978489130735,
+            14.656613163650036
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 76,
+        "position_vertices": 92,
+        "render_vertices": 138,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/leg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 38,
+        "gl_command_triangles": 76,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 3564,
+        "sha256": "fdc467fbdda6f46199bf1013862ff22cc834bb24ce2bdb31f3e1da5ed99eabdb",
+        "bounds": [
+          [
+            -6.176146507263184,
+            -5.8677077293396,
+            -15.605375289916992
+          ],
+          [
+            4.976540993899107,
+            5.129978489130735,
+            14.656613163650036
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0506688030862,
+        "minimum_quantized_double_triangle_area": 9.59335592489,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "trouser_leg",
+          "first_triangle": 0,
+          "triangle_count": 20
+        },
+        {
+          "name": "boot_shaft",
+          "first_triangle": 20,
+          "triangle_count": 20
+        },
+        {
+          "name": "boot_foot",
+          "first_triangle": 40,
+          "triangle_count": 16
+        },
+        {
+          "name": "cuff",
+          "first_triangle": 56,
+          "triangle_count": 20
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/skull/tris.md2",
+      "kind": "skull",
+      "before": {
+        "triangles": 188,
+        "position_vertices": 96,
+        "render_vertices": 202,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/head/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 72,
+        "gl_command_triangles": 188,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 7844,
+        "sha256": "ac074798a44b313c698e49d7d414807b221b1f57cfee7dd6674cb924e0cde86c",
+        "bounds": [
+          [
+            -4.593313694000244,
+            -3.937370538711548,
+            -4.377309799194336
+          ],
+          [
+            4.798972919583321,
+            3.942531203851104,
+            6.0687229707837105
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 124,
+        "position_vertices": 120,
+        "render_vertices": 158,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/skull/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 38,
+        "gl_command_triangles": 124,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 4992,
+        "sha256": "d5f38d61c0468951e50ce27ea8c0f7e0185cc93c6e91d940995d05b044dfb2fa",
+        "bounds": [
+          [
+            -4.593313694000244,
+            -3.937370538711548,
+            -4.377309799194336
+          ],
+          [
+            4.798972919583321,
+            3.942531203851104,
+            6.0687229707837105
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0268661748284,
+        "minimum_quantized_double_triangle_area": 0.196148825645,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "toy_head",
+          "first_triangle": 0,
+          "triangle_count": 44
+        },
+        {
+          "name": "molded_helmet",
+          "first_triangle": 44,
+          "triangle_count": 44
+        },
+        {
+          "name": "nose",
+          "first_triangle": 88,
+          "triangle_count": 12
+        },
+        {
+          "name": "eye_0",
+          "first_triangle": 100,
+          "triangle_count": 12
+        },
+        {
+          "name": "eye_1",
+          "first_triangle": 112,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/sm_meat/tris.md2",
+      "kind": "sm_meat",
+      "before": {
+        "triangles": 104,
+        "position_vertices": 54,
+        "render_vertices": 104,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/sm_meat/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 38,
+        "gl_command_triangles": 104,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 4328,
+        "sha256": "38eaf2570faa50d1ac78fdb3db4e8700070050c7df25efab151b8113c0f511ee",
+        "bounds": [
+          [
+            -4.974422931671143,
+            -2.4923598766326904,
+            -3.242891550064087
+          ],
+          [
+            5.147106301039457,
+            2.579091666266322,
+            3.0533439964056015
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 32,
+        "position_vertices": 18,
+        "render_vertices": 33,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/sm_meat/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 8,
+        "gl_command_triangles": 32,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 1348,
+        "sha256": "c33d43b7abbb13c56b50df4aa26309df1b425d1f967ec500a91b299361215aee",
+        "bounds": [
+          [
+            -4.974422931671143,
+            -2.4923598766326904,
+            -3.242891550064087
+          ],
+          [
+            5.147106301039457,
+            2.579091666266322,
+            3.0533439964056015
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.023372675357,
+        "minimum_quantized_double_triangle_area": 2.56476609838,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "broken_plastic_piece",
+          "first_triangle": 0,
+          "triangle_count": 32
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/sm_metal/tris.md2",
+      "kind": "sm_metal",
+      "before": {
+        "triangles": 262,
+        "position_vertices": 133,
+        "render_vertices": 244,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/leg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 90,
+        "gl_command_triangles": 262,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 10440,
+        "sha256": "1c7ee39c89c0814a8525ec16837a33385dec8a70e18a42ddb489581234daa477",
+        "bounds": [
+          [
+            -5.320087909698486,
+            -8.37234878540039,
+            -0.2569098472595215
+          ],
+          [
+            4.976540677249432,
+            11.201620683073997,
+            5.433537505567074
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 28,
+        "position_vertices": 44,
+        "render_vertices": 54,
+        "frames": 1,
+        "frame_names": [
+          "frame_1"
+        ],
+        "skin_references": [
+          "models/objects/gibs/sm_metal/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 14,
+        "gl_command_triangles": 28,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 1468,
+        "sha256": "3f157ead915158fbc0d6eabd79b8637122224ed0621aac9ec0f43b9c49261756",
+        "bounds": [
+          [
+            -5.320087909698486,
+            -8.37234878540039,
+            -0.2569098472595215
+          ],
+          [
+            4.976540677249432,
+            11.201620683073997,
+            5.433537505567074
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0278545703153,
+        "minimum_quantized_double_triangle_area": 8.40973599064,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "bent_machine_plate",
+          "first_triangle": 0,
+          "triangle_count": 16
+        },
+        {
+          "name": "raised_rib",
+          "first_triangle": 16,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/ant/chunk.md2",
+      "kind": "ant_chunk",
+      "before": {
+        "triangles": 116,
+        "position_vertices": 176,
+        "render_vertices": 208,
+        "frames": 1,
+        "frame_names": [
+          "flight00"
+        ],
+        "skin_references": [
+          "models/objects/gibs/ant/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 58,
+        "gl_command_triangles": 116,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 5432,
+        "sha256": "1d3eb34e20330a18dc9aa557bfa29c747bb5879a3d2934d8d5c1164dbdeb0e48",
+        "bounds": [
+          [
+            -6.394818305969238,
+            -4.567727088928223,
+            -4.755282402038574
+          ],
+          [
+            7.99999962374568,
+            4.567727506160736,
+            4.755282364785671
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 52,
+        "position_vertices": 54,
+        "render_vertices": 69,
+        "frames": 1,
+        "frame_names": [
+          "flight00"
+        ],
+        "skin_references": [
+          "models/objects/gibs/ant/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 18,
+        "gl_command_triangles": 52,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 2316,
+        "sha256": "6ee615cd7424ee733fef381abebd33b23467f2f02f10ad593e01813ca2087038",
+        "bounds": [
+          [
+            -6.394818305969238,
+            -4.567727088928223,
+            -4.755282402038574
+          ],
+          [
+            7.99999962374568,
+            4.567727506160736,
+            4.755282364785671
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0256248621432,
+        "minimum_quantized_double_triangle_area": 2.98229293911,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "broken_carapace",
+          "first_triangle": 0,
+          "triangle_count": 32
+        },
+        {
+          "name": "exposed_end",
+          "first_triangle": 32,
+          "triangle_count": 20
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/ant/leg.md2",
+      "kind": "ant_leg",
+      "before": {
+        "triangles": 92,
+        "position_vertices": 132,
+        "render_vertices": 168,
+        "frames": 1,
+        "frame_names": [
+          "flight00"
+        ],
+        "skin_references": [
+          "models/objects/gibs/ant/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 46,
+        "gl_command_triangles": 92,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 4320,
+        "sha256": "2499990d564c5f82a146b7b9d5b88e31548d2d8e0818d2d9506b7e9d8035dc0d",
+        "bounds": [
+          [
+            -8.225576400756836,
+            -2.0999999046325684,
+            -5.553398609161377
+          ],
+          [
+            8.377883464097977,
+            4.6260989755392075,
+            3.0923240147531033
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 44,
+        "position_vertices": 24,
+        "render_vertices": 40,
+        "frames": 1,
+        "frame_names": [
+          "flight00"
+        ],
+        "skin_references": [
+          "models/objects/gibs/ant/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 10,
+        "gl_command_triangles": 44,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 1744,
+        "sha256": "df95572333387a60c6cc54164969cea35b5589c4d81a992ebeffcb0be1e02c03",
+        "bounds": [
+          [
+            -8.225576400756836,
+            -2.0999999046325684,
+            -5.553398609161377
+          ],
+          [
+            8.377883464097977,
+            4.6260989755392075,
+            3.0923240147531033
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.031564631976,
+        "minimum_quantized_double_triangle_area": 0.450986674848,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "continuous_bent_insect_leg",
+          "first_triangle": 0,
+          "triangle_count": 44
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/spider/chunk.md2",
+      "kind": "spider_chunk",
+      "before": {
+        "triangles": 116,
+        "position_vertices": 176,
+        "render_vertices": 208,
+        "frames": 1,
+        "frame_names": [
+          "flight00"
+        ],
+        "skin_references": [
+          "models/objects/gibs/spider/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 58,
+        "gl_command_triangles": 116,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 5432,
+        "sha256": "76a2d0ddaa9664f44fbe298e6d0276f505e47c9682ba1fea5c40cb8d75fc0f4a",
+        "bounds": [
+          [
+            -8.221909523010254,
+            -6.394818305969238,
+            -4.755282402038574
+          ],
+          [
+            9.999999396502972,
+            6.394818507134914,
+            4.755282364785671
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 64,
+        "position_vertices": 64,
+        "render_vertices": 79,
+        "frames": 1,
+        "frame_names": [
+          "flight00"
+        ],
+        "skin_references": [
+          "models/objects/gibs/spider/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 20,
+        "gl_command_triangles": 64,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 2740,
+        "sha256": "46643f5b236cfe2c26cdf2da59c5204106f3269d355290b76812bef1302685b3",
+        "bounds": [
+          [
+            -8.221909523010254,
+            -6.394818305969238,
+            -4.755282402038574
+          ],
+          [
+            9.999999396502972,
+            6.394818507134914,
+            4.755282364785671
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0345885914016,
+        "minimum_quantized_double_triangle_area": 1.91363802611,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "broken_carapace",
+          "first_triangle": 0,
+          "triangle_count": 44
+        },
+        {
+          "name": "exposed_end",
+          "first_triangle": 44,
+          "triangle_count": 20
+        }
+      ]
+    },
+    {
+      "path": "models/objects/gibs/spider/leg.md2",
+      "kind": "spider_leg",
+      "before": {
+        "triangles": 92,
+        "position_vertices": 132,
+        "render_vertices": 168,
+        "frames": 1,
+        "frame_names": [
+          "flight00"
+        ],
+        "skin_references": [
+          "models/objects/gibs/spider/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 46,
+        "gl_command_triangles": 92,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 4320,
+        "sha256": "fd14d5f5c87ea68a4b7f4fc7d69ff8ee325a384ddb4211de2640c7205f46a6ac",
+        "bounds": [
+          [
+            -8.193350791931152,
+            -1.905255913734436,
+            -5.578005790710449
+          ],
+          [
+            11.284081056714058,
+            4.664078103378415,
+            3.092324312776327
+          ]
+        ]
+      },
+      "after": {
+        "triangles": 44,
+        "position_vertices": 24,
+        "render_vertices": 40,
+        "frames": 1,
+        "frame_names": [
+          "flight00"
+        ],
+        "skin_references": [
+          "models/objects/gibs/spider/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 10,
+        "gl_command_triangles": 44,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 1744,
+        "sha256": "24d97e06ccd465ce7192e59b65ce1ba606d6b0c45ca55b4873b0bd746dabface",
+        "bounds": [
+          [
+            -8.193350791931152,
+            -1.905255913734436,
+            -5.578005790710449
+          ],
+          [
+            11.284081056714058,
+            4.664078103378415,
+            3.092324312776327
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0388804724949,
+        "minimum_quantized_double_triangle_area": 0.346571220143,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "continuous_bent_insect_leg",
+          "first_triangle": 0,
+          "triangle_count": 44
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "models/objects/gibs/ant/chunk.md2",
+      "bytes": 2316,
+      "sha256": "6ee615cd7424ee733fef381abebd33b23467f2f02f10ad593e01813ca2087038"
+    },
+    {
+      "path": "models/objects/gibs/ant/leg.md2",
+      "bytes": 1744,
+      "sha256": "df95572333387a60c6cc54164969cea35b5589c4d81a992ebeffcb0be1e02c03"
+    },
+    {
+      "path": "models/objects/gibs/ant/skin.png",
+      "bytes": 665,
+      "sha256": "310e9d0b9f4efb7a768b7f7d2b8b415e0fb04859c227e9ba35a9134a6ab7ccd0"
+    },
+    {
+      "path": "models/objects/gibs/arm/player.png",
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
+    },
+    {
+      "path": "models/objects/gibs/arm/skin.png",
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
+    },
+    {
+      "path": "models/objects/gibs/arm/tris.md2",
+      "bytes": 4232,
+      "sha256": "de8bb23c7628689139a553e752503f815843c83440631a022cb6a2479ccd8ea7"
+    },
+    {
+      "path": "models/objects/gibs/bone/player.png",
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
+    },
+    {
+      "path": "models/objects/gibs/bone/skin.png",
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
+    },
+    {
+      "path": "models/objects/gibs/bone/tris.md2",
+      "bytes": 2244,
+      "sha256": "c9af8707c5c96546cda1b5e68833ecf04328ec93209a48c6ea03b28a7425c529"
+    },
+    {
+      "path": "models/objects/gibs/bone2/player.png",
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
+    },
+    {
+      "path": "models/objects/gibs/bone2/skin.png",
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
+    },
+    {
+      "path": "models/objects/gibs/bone2/tris.md2",
+      "bytes": 1348,
+      "sha256": "ebedbd31f0a819da639a27c0af5f164314abfc153afcbd027fcb31f855ee5669"
+    },
+    {
+      "path": "models/objects/gibs/chest/player.png",
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
+    },
+    {
+      "path": "models/objects/gibs/chest/skin.png",
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
+    },
+    {
+      "path": "models/objects/gibs/chest/tris.md2",
+      "bytes": 5472,
+      "sha256": "06059e84fd24cdaa0ff50ed9d2b031f9571f0eddac71894609d1dbe04eb64622"
+    },
+    {
+      "path": "models/objects/gibs/gear/player.png",
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
+    },
+    {
+      "path": "models/objects/gibs/gear/skin.png",
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
+    },
+    {
+      "path": "models/objects/gibs/gear/tris.md2",
+      "bytes": 2240,
+      "sha256": "f1c8fd629170035575cebfa36ce83c8467ed5424f751eb308028ecf12d3cca23"
+    },
+    {
+      "path": "models/objects/gibs/head/player.png",
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
+    },
+    {
+      "path": "models/objects/gibs/head/skin.png",
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
+    },
+    {
+      "path": "models/objects/gibs/head/tris.md2",
+      "bytes": 4992,
+      "sha256": "8d14e00e491f268f612b7df181aeee284fe8cb04c5539f4d6ae986e38eb49429"
+    },
+    {
+      "path": "models/objects/gibs/head2/player.png",
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
+    },
+    {
+      "path": "models/objects/gibs/head2/skin.png",
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
+    },
+    {
+      "path": "models/objects/gibs/head2/tris.md2",
+      "bytes": 4992,
+      "sha256": "5c707fd2da3d4e8ee03991030c49154b40d499670b2b994e394aa12790dcd598"
+    },
+    {
+      "path": "models/objects/gibs/leg/player.png",
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
+    },
+    {
+      "path": "models/objects/gibs/leg/skin.png",
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
+    },
+    {
+      "path": "models/objects/gibs/leg/tris.md2",
+      "bytes": 3564,
+      "sha256": "fdc467fbdda6f46199bf1013862ff22cc834bb24ce2bdb31f3e1da5ed99eabdb"
+    },
+    {
+      "path": "models/objects/gibs/skull/player.png",
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
+    },
+    {
+      "path": "models/objects/gibs/skull/skin.png",
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
+    },
+    {
+      "path": "models/objects/gibs/skull/tris.md2",
+      "bytes": 4992,
+      "sha256": "d5f38d61c0468951e50ce27ea8c0f7e0185cc93c6e91d940995d05b044dfb2fa"
+    },
+    {
+      "path": "models/objects/gibs/sm_meat/player.png",
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
+    },
+    {
+      "path": "models/objects/gibs/sm_meat/skin.png",
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
+    },
+    {
+      "path": "models/objects/gibs/sm_meat/tris.md2",
+      "bytes": 1348,
+      "sha256": "c33d43b7abbb13c56b50df4aa26309df1b425d1f967ec500a91b299361215aee"
+    },
+    {
+      "path": "models/objects/gibs/sm_metal/player.png",
+      "bytes": 661,
+      "sha256": "6e5b7a10fce339087353cb406b25252641a79ca58f254b37dfbc99395ebf7df8"
+    },
+    {
+      "path": "models/objects/gibs/sm_metal/skin.png",
+      "bytes": 668,
+      "sha256": "70bbbe0be102197acc94f338a14e5affdb927127df726954e961c9e361a8c18c"
+    },
+    {
+      "path": "models/objects/gibs/sm_metal/tris.md2",
+      "bytes": 1468,
+      "sha256": "3f157ead915158fbc0d6eabd79b8637122224ed0621aac9ec0f43b9c49261756"
+    },
+    {
+      "path": "models/objects/gibs/spider/chunk.md2",
+      "bytes": 2740,
+      "sha256": "46643f5b236cfe2c26cdf2da59c5204106f3269d355290b76812bef1302685b3"
+    },
+    {
+      "path": "models/objects/gibs/spider/leg.md2",
+      "bytes": 1744,
+      "sha256": "24d97e06ccd465ce7192e59b65ce1ba606d6b0c45ca55b4873b0bd746dabface"
+    },
+    {
+      "path": "models/objects/gibs/spider/skin.png",
+      "bytes": 666,
+      "sha256": "f7bf311bbb6b640292d1a606cf3d63baa87c2901c1747e51e84a08b1d82fada8"
+    }
+  ]
+}

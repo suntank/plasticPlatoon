@@ -626,6 +626,8 @@
 {"SP_monster_boss2", (byte *)SP_monster_boss2},
 {"Boss2_CheckAttack", (byte *)Boss2_CheckAttack},
 {"boss2_die", (byte *)boss2_die},
+{"boss2_crash_fall_think", (byte *)boss2_crash_fall_think},
+{"boss2_crash_burst_think", (byte *)boss2_crash_burst_think},
 {"boss2_dead", (byte *)boss2_dead},
 {"boss2_pain", (byte *)boss2_pain},
 {"boss2_reattack_mg", (byte *)boss2_reattack_mg},

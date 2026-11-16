@@ -626,6 +626,7 @@ void Soldier_RefreshDimensions(edict_t *ent);
 /* g_cmds.c */
 void Cmd_Help_f(edict_t *ent);
 void ClientCommand(edict_t *ent);
+void Cmd_QuickGrenade_f(edict_t *ent);
 
 /* g_items.c */
 void PrecacheItem(gitem_t *it);

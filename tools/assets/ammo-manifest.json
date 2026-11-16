@@ -1,0 +1,671 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_ammo.py",
+  "dependencies_sha256": {
+    "build_ammo.py": "9d306cf17ebcf533d451a8c186bbb341297ce06402d312f3e1f70e2ff9e1386e",
+    "ammo_geometry.py": "38b02b31c2fde871cef7f52ee7e6632894122eaa5686ab2d2a9eb0a0e4fd4dd4",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+  },
+  "source_archive": {
+    "path": "tools/assets/sources/platoon-originals.pk3",
+    "sha256": "308e7b7e07f08ecbd0f7487e8a37440ab07c28bb83896b0f4c959a29fdcbf7e4",
+    "bytes": 47317833,
+    "origin": "Original owner-authored Plastic Platoon model, texture and sprite inputs recovered before public history cleanup",
+    "license": "GPL-2.0-or-later",
+    "excluded": [
+      "Legacy players/male assets",
+      "Inherited soldier portrait PCXs"
+    ]
+  },
+  "method": "original closed primitives; exact stencil labels; one static pose",
+  "labels": "SHELLS and BULLETS on both broad case faces and lid; cream stencil on green plastic",
+  "projectile_isolation": "Rocket pickup uses skin_ammo.png; original shared projectile skin.png is untouched",
+  "models": [
+    {
+      "path": "models/items/ammo/shells/medium/tris.md2",
+      "kind": "shells",
+      "baseline": {
+        "triangles": 1000,
+        "position_vertices": 456,
+        "file_bytes": 49776
+      },
+      "after": {
+        "triangles": 116,
+        "position_vertices": 200,
+        "render_vertices": 232,
+        "frames": 1,
+        "skin_references": [
+          "models/items/ammo/shells/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 58,
+        "gl_command_triangles": 116,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 5464,
+        "sha256": "abe7ecdf9728604d50f7e5148b62526b83ccf8901bca9484c9a0b7fdb0a321a7",
+        "bounds": [
+          [
+            -10.600000381469727,
+            -6.949999809265137,
+            -14.300000190734863
+          ],
+          [
+            10.600000634789467,
+            6.599999953061342,
+            3.3999991342425346
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0468305562373,
+        "minimum_quantized_double_triangle_area": 0.874701756691,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "case_body",
+          "first_triangle": 0,
+          "triangle_count": 12
+        },
+        {
+          "name": "lid_seam",
+          "first_triangle": 12,
+          "triangle_count": 12
+        },
+        {
+          "name": "case_lid",
+          "first_triangle": 24,
+          "triangle_count": 12
+        },
+        {
+          "name": "latch_left",
+          "first_triangle": 36,
+          "triangle_count": 12
+        },
+        {
+          "name": "latch_right",
+          "first_triangle": 48,
+          "triangle_count": 12
+        },
+        {
+          "name": "carry_handle",
+          "first_triangle": 60,
+          "triangle_count": 32
+        },
+        {
+          "name": "base_rail_front",
+          "first_triangle": 92,
+          "triangle_count": 12
+        },
+        {
+          "name": "base_rail_rear",
+          "first_triangle": 104,
+          "triangle_count": 12
+        }
+      ],
+      "label": "SHELLS",
+      "lod": {
+        "path": "models/items/ammo/shells/medium/lod1.md2",
+        "sha256": "abe7ecdf9728604d50f7e5148b62526b83ccf8901bca9484c9a0b7fdb0a321a7",
+        "method": "same authored low-budget model; no silhouette or label transition"
+      }
+    },
+    {
+      "path": "models/items/ammo/bullets/medium/tris.md2",
+      "kind": "bullets",
+      "baseline": {
+        "triangles": 999,
+        "position_vertices": 458,
+        "file_bytes": 49196
+      },
+      "after": {
+        "triangles": 116,
+        "position_vertices": 200,
+        "render_vertices": 232,
+        "frames": 1,
+        "skin_references": [
+          "models/items/ammo/bullets/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 58,
+        "gl_command_triangles": 116,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 5464,
+        "sha256": "8efb3c7a9a341930c1048eb212cda49a6653497476172fe333e51f6210baf5cd",
+        "bounds": [
+          [
+            -15.100000381469727,
+            -10.149999618530273,
+            -14.5
+          ],
+          [
+            15.100000098347664,
+            9.799999572336674,
+            12.399999156594276
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0796182439454,
+        "minimum_quantized_double_triangle_area": 0.889489251413,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "case_body",
+          "first_triangle": 0,
+          "triangle_count": 12
+        },
+        {
+          "name": "lid_seam",
+          "first_triangle": 12,
+          "triangle_count": 12
+        },
+        {
+          "name": "case_lid",
+          "first_triangle": 24,
+          "triangle_count": 12
+        },
+        {
+          "name": "latch_left",
+          "first_triangle": 36,
+          "triangle_count": 12
+        },
+        {
+          "name": "latch_right",
+          "first_triangle": 48,
+          "triangle_count": 12
+        },
+        {
+          "name": "carry_handle",
+          "first_triangle": 60,
+          "triangle_count": 32
+        },
+        {
+          "name": "base_rail_front",
+          "first_triangle": 92,
+          "triangle_count": 12
+        },
+        {
+          "name": "base_rail_rear",
+          "first_triangle": 104,
+          "triangle_count": 12
+        }
+      ],
+      "label": "BULLETS",
+      "lod": {
+        "path": "models/items/ammo/bullets/medium/lod1.md2",
+        "sha256": "8efb3c7a9a341930c1048eb212cda49a6653497476172fe333e51f6210baf5cd",
+        "method": "same authored low-budget model; no silhouette or label transition"
+      }
+    },
+    {
+      "path": "models/items/ammo/grenades/medium/tris.md2",
+      "kind": "grenades",
+      "baseline": {
+        "triangles": 800,
+        "position_vertices": 398,
+        "file_bytes": 37256
+      },
+      "after": {
+        "triangles": 148,
+        "position_vertices": 128,
+        "render_vertices": 197,
+        "frames": 1,
+        "skin_references": [
+          "models/items/ammo/grenades/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 49,
+        "gl_command_triangles": 148,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 5880,
+        "sha256": "91b94d8e3f70b142d17accd6dc932176f5c1c69c5352899e13978f218ed5f427",
+        "bounds": [
+          [
+            -3.1873843669891357,
+            -3.1873843669891357,
+            -12.0
+          ],
+          [
+            3.7000001836568117,
+            3.1873844154179096,
+            0.449999637901783
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0267477079613,
+        "minimum_quantized_double_triangle_area": 0.536707568024,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "grenade_body",
+          "first_triangle": 0,
+          "triangle_count": 76
+        },
+        {
+          "name": "fuse",
+          "first_triangle": 76,
+          "triangle_count": 12
+        },
+        {
+          "name": "safety_lever",
+          "first_triangle": 88,
+          "triangle_count": 28
+        },
+        {
+          "name": "pull_ring",
+          "first_triangle": 116,
+          "triangle_count": 32
+        }
+      ],
+      "label": "FRAG",
+      "lod": {
+        "path": "models/items/ammo/grenades/medium/lod1.md2",
+        "sha256": "91b94d8e3f70b142d17accd6dc932176f5c1c69c5352899e13978f218ed5f427",
+        "method": "same authored low-budget model; no silhouette or label transition"
+      }
+    },
+    {
+      "path": "models/items/ammo/gl_ammo/medium/tris.md2",
+      "kind": "gl_ammo",
+      "baseline": {
+        "triangles": 999,
+        "position_vertices": 500,
+        "file_bytes": 40856
+      },
+      "after": {
+        "triangles": 76,
+        "position_vertices": 40,
+        "render_vertices": 79,
+        "frames": 1,
+        "skin_references": [
+          "models/items/ammo/gl_ammo/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 14,
+        "gl_command_triangles": 76,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 2836,
+        "sha256": "9e972dad9fb7c8452027b7e7b85493590c02eb77ad91e17c7342fac3a9fb3dfd",
+        "bounds": [
+          [
+            -2.4482808113098145,
+            -2.4482808113098145,
+            -12.0
+          ],
+          [
+            2.448280841112137,
+            2.448280841112137,
+            -1.9999996460974216
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0143725050991,
+        "minimum_quantized_double_triangle_area": 0.49150986927,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "launcher_round",
+          "first_triangle": 0,
+          "triangle_count": 76
+        }
+      ],
+      "label": "GL ROUNDS"
+    },
+    {
+      "path": "models/items/ammo/rockets/medium/tris.md2",
+      "kind": "rockets",
+      "baseline": {
+        "triangles": 500,
+        "position_vertices": 252,
+        "file_bytes": 22188
+      },
+      "after": {
+        "triangles": 128,
+        "position_vertices": 108,
+        "render_vertices": 192,
+        "frames": 1,
+        "skin_references": [
+          "models/items/ammo/rockets/medium/skin_ammo.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 42,
+        "gl_command_triangles": 128,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 5204,
+        "sha256": "04e518a6c165a10b9083d14d7f2558e21bc817ce2da503724344c8b36be64610",
+        "bounds": [
+          [
+            -2.6500000953674316,
+            -2.6500000953674316,
+            -11.800000190734863
+          ],
+          [
+            2.6500001586973667,
+            2.6500001586973667,
+            12.299999512732029
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.048036219912,
+        "minimum_quantized_double_triangle_area": 0.0272152275227,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "rocket_body",
+          "first_triangle": 0,
+          "triangle_count": 60
+        },
+        {
+          "name": "rocket_nozzle",
+          "first_triangle": 60,
+          "triangle_count": 20
+        },
+        {
+          "name": "rocket_fin_0",
+          "first_triangle": 80,
+          "triangle_count": 12
+        },
+        {
+          "name": "rocket_fin_1",
+          "first_triangle": 92,
+          "triangle_count": 12
+        },
+        {
+          "name": "rocket_fin_2",
+          "first_triangle": 104,
+          "triangle_count": 12
+        },
+        {
+          "name": "rocket_fin_3",
+          "first_triangle": 116,
+          "triangle_count": 12
+        }
+      ],
+      "label": "ROCKETS"
+    },
+    {
+      "path": "models/items/ammo/cells/medium/tris.md2",
+      "kind": "cells",
+      "baseline": {
+        "triangles": 899,
+        "position_vertices": 453,
+        "file_bytes": 39812
+      },
+      "after": {
+        "triangles": 180,
+        "position_vertices": 184,
+        "render_vertices": 224,
+        "frames": 1,
+        "skin_references": [
+          "models/items/ammo/cells/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 54,
+        "gl_command_triangles": 180,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 6968,
+        "sha256": "2084f873769e829e66bc6fde8558fffd83c7e1084791de6b986917325af9b000",
+        "bounds": [
+          [
+            -3.049999952316284,
+            -5.900000095367432,
+            -14.199999809265137
+          ],
+          [
+            3.049999874085188,
+            5.899999771267176,
+            4.699999824166298
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.037116845432,
+        "minimum_quantized_double_triangle_area": 1.56024906028,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "tank_cradle",
+          "first_triangle": 0,
+          "triangle_count": 12
+        },
+        {
+          "name": "fuel_tank_right",
+          "first_triangle": 12,
+          "triangle_count": 60
+        },
+        {
+          "name": "tank_valve_right",
+          "first_triangle": 72,
+          "triangle_count": 12
+        },
+        {
+          "name": "fuel_tank_left",
+          "first_triangle": 84,
+          "triangle_count": 60
+        },
+        {
+          "name": "tank_valve_left",
+          "first_triangle": 144,
+          "triangle_count": 12
+        },
+        {
+          "name": "tank_manifold",
+          "first_triangle": 156,
+          "triangle_count": 12
+        },
+        {
+          "name": "tank_label_strap",
+          "first_triangle": 168,
+          "triangle_count": 12
+        }
+      ],
+      "label": "NAPALM"
+    },
+    {
+      "path": "models/items/ammo/slugs/medium/tris.md2",
+      "kind": "slugs",
+      "baseline": {
+        "triangles": 900,
+        "position_vertices": 452,
+        "file_bytes": 37512
+      },
+      "after": {
+        "triangles": 200,
+        "position_vertices": 144,
+        "render_vertices": 236,
+        "frames": 1,
+        "skin_references": [
+          "models/items/ammo/slugs/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 52,
+        "gl_command_triangles": 200,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 7212,
+        "sha256": "c991d4d461ee1fb2680564b06125c3de7822d581bd8abc8fe705475ab2377af7",
+        "bounds": [
+          [
+            -12.0,
+            -2.4000000953674316,
+            -14.0
+          ],
+          [
+            12.000000469386578,
+            2.499999897554517,
+            0.7000004537403584
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0478243893693,
+        "minimum_quantized_double_triangle_area": 0.0470219154999,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "rounds_clip",
+          "first_triangle": 0,
+          "triangle_count": 12
+        },
+        {
+          "name": "sniper_round_0",
+          "first_triangle": 12,
+          "triangle_count": 44
+        },
+        {
+          "name": "sniper_round_1",
+          "first_triangle": 56,
+          "triangle_count": 44
+        },
+        {
+          "name": "sniper_round_2",
+          "first_triangle": 100,
+          "triangle_count": 44
+        },
+        {
+          "name": "sniper_round_3",
+          "first_triangle": 144,
+          "triangle_count": 44
+        },
+        {
+          "name": "clip_back",
+          "first_triangle": 188,
+          "triangle_count": 12
+        }
+      ],
+      "label": "SNIPER"
+    }
+  ],
+  "files": [
+    {
+      "path": "models/items/ammo/bullets/medium/lod1.md2",
+      "bytes": 5464,
+      "sha256": "8efb3c7a9a341930c1048eb212cda49a6653497476172fe333e51f6210baf5cd"
+    },
+    {
+      "path": "models/items/ammo/bullets/medium/skin.png",
+      "bytes": 3337,
+      "sha256": "54c6c186eb5d8e6002e636593dc22e4ad01cbd9c297451cf6244a81b5c5d9865"
+    },
+    {
+      "path": "models/items/ammo/bullets/medium/tris.md2",
+      "bytes": 5464,
+      "sha256": "8efb3c7a9a341930c1048eb212cda49a6653497476172fe333e51f6210baf5cd"
+    },
+    {
+      "path": "models/items/ammo/cells/medium/skin.png",
+      "bytes": 3392,
+      "sha256": "2c18b4ee3ef72509bcafdc31ca3264af7ee671f8e5e094bb612a97dadf75d15d"
+    },
+    {
+      "path": "models/items/ammo/cells/medium/tris.md2",
+      "bytes": 6968,
+      "sha256": "2084f873769e829e66bc6fde8558fffd83c7e1084791de6b986917325af9b000"
+    },
+    {
+      "path": "models/items/ammo/gl_ammo/medium/skin.png",
+      "bytes": 3343,
+      "sha256": "b0987d6e3128c88c98de63fb93ae70122379012c45b8640c5e39a84d1458780c"
+    },
+    {
+      "path": "models/items/ammo/gl_ammo/medium/tris.md2",
+      "bytes": 2836,
+      "sha256": "9e972dad9fb7c8452027b7e7b85493590c02eb77ad91e17c7342fac3a9fb3dfd"
+    },
+    {
+      "path": "models/items/ammo/grenades/medium/lod1.md2",
+      "bytes": 5880,
+      "sha256": "91b94d8e3f70b142d17accd6dc932176f5c1c69c5352899e13978f218ed5f427"
+    },
+    {
+      "path": "models/items/ammo/grenades/medium/skin.png",
+      "bytes": 3560,
+      "sha256": "3ec2d6d6c6e191f44f64da1877c82d57ab728d64a3a2c47328c092bbe120c5bb"
+    },
+    {
+      "path": "models/items/ammo/grenades/medium/tris.md2",
+      "bytes": 5880,
+      "sha256": "91b94d8e3f70b142d17accd6dc932176f5c1c69c5352899e13978f218ed5f427"
+    },
+    {
+      "path": "models/items/ammo/rockets/medium/skin_ammo.png",
+      "bytes": 3456,
+      "sha256": "65ea8d4db6cc1be3fe61a11a748a9fc67dab40eccdecd3308ed9c758c94ab725"
+    },
+    {
+      "path": "models/items/ammo/rockets/medium/tris.md2",
+      "bytes": 5204,
+      "sha256": "04e518a6c165a10b9083d14d7f2558e21bc817ce2da503724344c8b36be64610"
+    },
+    {
+      "path": "models/items/ammo/shells/medium/lod1.md2",
+      "bytes": 5464,
+      "sha256": "abe7ecdf9728604d50f7e5148b62526b83ccf8901bca9484c9a0b7fdb0a321a7"
+    },
+    {
+      "path": "models/items/ammo/shells/medium/skin.png",
+      "bytes": 3277,
+      "sha256": "bb6a5be52c054a9a93afa9d447a1a2ff28bc273dc7034045b02b3d0e32174418"
+    },
+    {
+      "path": "models/items/ammo/shells/medium/tris.md2",
+      "bytes": 5464,
+      "sha256": "abe7ecdf9728604d50f7e5148b62526b83ccf8901bca9484c9a0b7fdb0a321a7"
+    },
+    {
+      "path": "models/items/ammo/slugs/medium/skin.png",
+      "bytes": 3430,
+      "sha256": "5f2d83c5b934ab0c04f34bf44f78adbd4c35b7b921103da4a1852f761498554b"
+    },
+    {
+      "path": "models/items/ammo/slugs/medium/tris.md2",
+      "bytes": 7212,
+      "sha256": "c991d4d461ee1fb2680564b06125c3de7822d581bd8abc8fe705475ab2377af7"
+    }
+  ]
+}

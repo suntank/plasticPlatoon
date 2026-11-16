@@ -29,7 +29,17 @@ class M16Tests(unittest.TestCase):
         for path, expected in self.assets.items():
             with self.subTest(path=path):
                 self.assertEqual((ROOT / "baseq2" / path).read_bytes(), expected)
-        self.assertEqual(json.loads(builder.MANIFEST.read_text()), self.report)
+        checked = json.loads(builder.MANIFEST.read_text())
+        # SVD diagnostics vary slightly between numeric-library builds. Keep
+        # generated media and all other manifest fields exact.
+        self.assertEqual(len(checked["models"]), len(self.report["models"]))
+        for stored, rebuilt in zip(checked["models"], self.report["models"]):
+            if stored.get("pose_transfer") is not None:
+                for key in ("rms_median", "rms_max"):
+                    self.assertAlmostEqual(stored["pose_transfer"][key],
+                                           rebuilt["pose_transfer"][key], delta=1e-12)
+                    stored["pose_transfer"][key] = rebuilt["pose_transfer"][key]
+        self.assertEqual(checked, self.report)
         inventory = {entry["path"]: entry for entry in self.report["files"]}
         self.assertEqual(set(inventory), set(self.assets))
         for path, data in self.assets.items():

@@ -1,0 +1,327 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_dropship.py",
+  "dependencies_sha256": {
+    "build_dropship.py": "7539a218d25e57fbecb510c6186423f5942462ce775d97d1ab348909dbad13c4",
+    "dropship_geometry.py": "2a53c644719d55c18134eec6201a70c791469c46f297fcd72de060f6c6f3a6a6",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+  },
+  "method": "original closed molded-plastic primitives; green transport adapted from original silhouette and authored enemy helicopter language",
+  "coordinate_contract": {
+    "forward": "+X",
+    "body_socket": [
+      -3.9,
+      0.5,
+      81.3
+    ],
+    "rotor_axle": [
+      0.0,
+      0.25,
+      81.3
+    ],
+    "mission_bounds": [
+      [
+        -114,
+        -68,
+        36
+      ],
+      [
+        68,
+        68,
+        96
+      ]
+    ],
+    "body_frames": 1,
+    "rotor_frames": 1
+  },
+  "gameplay": "Dedicated friendly paths; existing rotor attachment, spin, hover, path speeds, waits and triggers retained; enemy models untouched",
+  "models": [
+    {
+      "path": "models/vehicles/platoon_dropship/body.md2",
+      "kind": "body",
+      "baseline": {
+        "path": "models/monsters/boss2/tris.md2",
+        "triangles": 2580,
+        "position_vertices": 1292,
+        "file_bytes": 125648,
+        "sha256": "3c2435e7252fecaf6e3035905319608e1193f5172ebec659fc082cc4a71615d9"
+      },
+      "after": {
+        "triangles": 656,
+        "position_vertices": 1024,
+        "render_vertices": 1204,
+        "frames": 1,
+        "skin_references": [
+          "models/vehicles/platoon_dropship/green.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 328,
+        "gl_command_triangles": 656,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 29504,
+        "sha256": "769f45d7893835fd07c8a8de612efccbd1ec9d0b2bcc056328414bccfa13f6e1",
+        "bounds": [
+          [
+            -112.0,
+            -43.79999923706055,
+            36.599998474121094
+          ],
+          [
+            65.00000464916229,
+            43.799998581409454,
+            91.49999976158142
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.383339000491,
+        "minimum_quantized_double_triangle_area": 0.369799307421,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "transport_fuselage",
+          "first_triangle": 0,
+          "triangle_count": 76
+        },
+        {
+          "name": "canopy_roof_spar",
+          "first_triangle": 76,
+          "triangle_count": 20
+        },
+        {
+          "name": "windshield_spar",
+          "first_triangle": 96,
+          "triangle_count": 20
+        },
+        {
+          "name": "engine_port",
+          "first_triangle": 116,
+          "triangle_count": 44
+        },
+        {
+          "name": "exhaust_port",
+          "first_triangle": 160,
+          "triangle_count": 20
+        },
+        {
+          "name": "engine_starboard",
+          "first_triangle": 180,
+          "triangle_count": 44
+        },
+        {
+          "name": "exhaust_starboard",
+          "first_triangle": 224,
+          "triangle_count": 20
+        },
+        {
+          "name": "mast_socket",
+          "first_triangle": 244,
+          "triangle_count": 28
+        },
+        {
+          "name": "rising_tail_boom",
+          "first_triangle": 272,
+          "triangle_count": 44
+        },
+        {
+          "name": "vertical_tail_fin",
+          "first_triangle": 316,
+          "triangle_count": 12
+        },
+        {
+          "name": "horizontal_tailplane",
+          "first_triangle": 328,
+          "triangle_count": 12
+        },
+        {
+          "name": "stub_wing_port",
+          "first_triangle": 340,
+          "triangle_count": 12
+        },
+        {
+          "name": "wing_pod_port",
+          "first_triangle": 352,
+          "triangle_count": 44
+        },
+        {
+          "name": "skid_rail_port",
+          "first_triangle": 396,
+          "triangle_count": 20
+        },
+        {
+          "name": "skid_toe_port",
+          "first_triangle": 416,
+          "triangle_count": 20
+        },
+        {
+          "name": "skid_support_port_rear",
+          "first_triangle": 436,
+          "triangle_count": 20
+        },
+        {
+          "name": "skid_support_port_front",
+          "first_triangle": 456,
+          "triangle_count": 20
+        },
+        {
+          "name": "stub_wing_starboard",
+          "first_triangle": 476,
+          "triangle_count": 12
+        },
+        {
+          "name": "wing_pod_starboard",
+          "first_triangle": 488,
+          "triangle_count": 44
+        },
+        {
+          "name": "skid_rail_starboard",
+          "first_triangle": 532,
+          "triangle_count": 20
+        },
+        {
+          "name": "skid_toe_starboard",
+          "first_triangle": 552,
+          "triangle_count": 20
+        },
+        {
+          "name": "skid_support_starboard_rear",
+          "first_triangle": 572,
+          "triangle_count": 20
+        },
+        {
+          "name": "skid_support_starboard_front",
+          "first_triangle": 592,
+          "triangle_count": 20
+        },
+        {
+          "name": "chin_mount",
+          "first_triangle": 612,
+          "triangle_count": 12
+        },
+        {
+          "name": "chin_barrel",
+          "first_triangle": 624,
+          "triangle_count": 20
+        },
+        {
+          "name": "nose_lamp",
+          "first_triangle": 644,
+          "triangle_count": 12
+        }
+      ],
+      "anchors": {
+        "socket": [
+          -3.9,
+          0.5,
+          81.3
+        ]
+      }
+    },
+    {
+      "path": "models/vehicles/platoon_dropship/main_rotor.md2",
+      "kind": "main_rotor",
+      "baseline": {
+        "path": "models/monsters/boss2/propeller.md2",
+        "triangles": 411,
+        "position_vertices": 212,
+        "file_bytes": 18468,
+        "sha256": "dd41fa090a6ec3d9cf1dbb83fb4d928bd25a08de5d432243e92cee4569b06cf1"
+      },
+      "after": {
+        "triangles": 76,
+        "position_vertices": 128,
+        "render_vertices": 144,
+        "frames": 1,
+        "skin_references": [
+          "models/vehicles/platoon_dropship/green.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 38,
+        "gl_command_triangles": 76,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 3672,
+        "sha256": "b30a7873411e97abf1920994e417661ce822d723931a66835fca5f27b887224a",
+        "bounds": [
+          [
+            -66.0,
+            -65.75,
+            81.30000305175781
+          ],
+          [
+            66.00000733137131,
+            66.25000733137131,
+            94.59999997913837
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.252001615021,
+        "minimum_quantized_double_triangle_area": 5.35917014548,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "rotor_hub",
+          "first_triangle": 0,
+          "triangle_count": 28
+        },
+        {
+          "name": "rotor_blade_0",
+          "first_triangle": 28,
+          "triangle_count": 12
+        },
+        {
+          "name": "rotor_blade_1",
+          "first_triangle": 40,
+          "triangle_count": 12
+        },
+        {
+          "name": "rotor_blade_2",
+          "first_triangle": 52,
+          "triangle_count": 12
+        },
+        {
+          "name": "rotor_blade_3",
+          "first_triangle": 64,
+          "triangle_count": 12
+        }
+      ],
+      "anchors": {
+        "axle": [
+          0.0,
+          0.25,
+          81.3
+        ]
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "models/vehicles/platoon_dropship/body.md2",
+      "bytes": 29504,
+      "sha256": "769f45d7893835fd07c8a8de612efccbd1ec9d0b2bcc056328414bccfa13f6e1"
+    },
+    {
+      "path": "models/vehicles/platoon_dropship/green.png",
+      "bytes": 2154,
+      "sha256": "639008d133f12fe5ce271cad4d0f44bc58177d6bcccfda4d6ca7e19d2d582754"
+    },
+    {
+      "path": "models/vehicles/platoon_dropship/main_rotor.md2",
+      "bytes": 3672,
+      "sha256": "b30a7873411e97abf1920994e417661ce822d723931a66835fca5f27b887224a"
+    }
+  ]
+}

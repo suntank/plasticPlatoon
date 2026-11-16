@@ -1,0 +1,469 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_health.py",
+  "dependencies_sha256": {
+    "build_health.py": "21a741200fa124c46b8420cf2d8c0afc64b0bb72d25b79d5b99000d5cfe1ed60",
+    "health_geometry.py": "a4df0569df91d667fafed97a7ca0a1d18fa73c2ca3bef83929775e5e4e7d68b9",
+    "pickup_normals.py": "9a573f8fac16d815c3ec8e28f8fd9f27183c016335e05642e5507905d2f48e3d",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+  },
+  "source_archive": {
+    "path": "tools/assets/sources/pickups-local.pk3",
+    "sha256": "6c6dcc1d9a9a44aa666285a9add3ff439fc5561791e46529ef91b7ee5866bf37",
+    "origin": "Original owner-authored Plastic Platoon pickup models and textures"
+  },
+  "method": "original closed solids, medical markings on solid faces, static original frame identity",
+  "shading": "smooth curved walls with flat caps; beveled corners blend into unchanged flat medical panels",
+  "gameplay": "Existing paths, pickup sounds, counts, caps, respawn and mega-health decay are unchanged",
+  "texture_isolation": "Large medkit uses skin_health.png; legacy shared skin.png stays intact for mission compatibility",
+  "models": [
+    {
+      "path": "models/items/healing/stimpack/tris.md2",
+      "kind": "stimpack",
+      "label": "+2",
+      "baseline": {
+        "triangles": 800,
+        "position_vertices": 402,
+        "file_bytes": 34480
+      },
+      "after": {
+        "triangles": 128,
+        "position_vertices": 176,
+        "render_vertices": 184,
+        "frames": 1,
+        "skin_references": [
+          "models/items/healing/stimpack/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 46,
+        "gl_command_triangles": 128,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 5616,
+        "sha256": "83780f2aa4baf09d048cd532353ee32f25760d7e6b02a7a2b43108cb14dbd632",
+        "bounds": [
+          [
+            -3.0999999046325684,
+            -1.7999999523162842,
+            0.0
+          ],
+          [
+            3.1000001057982445,
+            1.8000000230967999,
+            14.899999871850014
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0316002614965,
+        "minimum_quantized_double_triangle_area": 0.0525176467885,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "needle",
+          "first_triangle": 0,
+          "triangle_count": 20
+        },
+        {
+          "name": "nozzle",
+          "first_triangle": 20,
+          "triangle_count": 20
+        },
+        {
+          "name": "injector_barrel",
+          "first_triangle": 40,
+          "triangle_count": 28
+        },
+        {
+          "name": "finger_flange",
+          "first_triangle": 68,
+          "triangle_count": 12
+        },
+        {
+          "name": "plunger_stem",
+          "first_triangle": 80,
+          "triangle_count": 20
+        },
+        {
+          "name": "thumb_pad",
+          "first_triangle": 100,
+          "triangle_count": 28
+        }
+      ],
+      "source_frame_from": "models/items/healing/stimpack/tris.md2",
+      "lod": {
+        "path": "models/items/healing/stimpack/lod1.md2",
+        "sha256": "83780f2aa4baf09d048cd532353ee32f25760d7e6b02a7a2b43108cb14dbd632",
+        "method": "same authored low-budget injector at every distance"
+      }
+    },
+    {
+      "path": "models/items/healing/medium/tris.md2",
+      "kind": "medium",
+      "label": "+10",
+      "baseline": {
+        "triangles": 800,
+        "position_vertices": 394,
+        "file_bytes": 34492
+      },
+      "after": {
+        "triangles": 80,
+        "position_vertices": 112,
+        "render_vertices": 144,
+        "frames": 1,
+        "skin_references": [
+          "models/items/healing/medium/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 40,
+        "gl_command_triangles": 80,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 3760,
+        "sha256": "00205eacfea7cfeac60304ef4fdf3d20a7b3e37828da26eb7ca1978c4f065af9",
+        "bounds": [
+          [
+            -7.5,
+            -5.300000190734863,
+            -14.25
+          ],
+          [
+            7.5000000558793545,
+            5.300000317394733,
+            -7.4000002183020115
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0230754504038,
+        "minimum_quantized_double_triangle_area": 2.78715206324,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "bandage_roll_front",
+          "first_triangle": 0,
+          "triangle_count": 28
+        },
+        {
+          "name": "bandage_roll_rear",
+          "first_triangle": 28,
+          "triangle_count": 28
+        },
+        {
+          "name": "bundle_strap",
+          "first_triangle": 56,
+          "triangle_count": 12
+        },
+        {
+          "name": "medical_patch",
+          "first_triangle": 68,
+          "triangle_count": 12
+        }
+      ],
+      "source_frame_from": "models/items/healing/medium/tris.md2"
+    },
+    {
+      "path": "models/items/healing/large/tris.md2",
+      "kind": "large",
+      "label": "+25",
+      "baseline": {
+        "triangles": 998,
+        "position_vertices": 500,
+        "file_bytes": 43104
+      },
+      "after": {
+        "triangles": 124,
+        "position_vertices": 200,
+        "render_vertices": 232,
+        "frames": 1,
+        "skin_references": [
+          "models/items/healing/large/skin_health.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 62,
+        "gl_command_triangles": 124,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 5816,
+        "sha256": "e4de8b6a8d94129118e90be885f4970df88c85239b2dd0e1c9f260113c2a3c3b",
+        "bounds": [
+          [
+            -10.0,
+            -4.949999809265137,
+            -15.100000381469727
+          ],
+          [
+            10.000000707805157,
+            4.600000191479921,
+            0.1000000424683094
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0495949661279,
+        "minimum_quantized_double_triangle_area": 0.841522544602,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "case_body",
+          "first_triangle": 0,
+          "triangle_count": 28
+        },
+        {
+          "name": "lid_seam",
+          "first_triangle": 28,
+          "triangle_count": 12
+        },
+        {
+          "name": "case_lid",
+          "first_triangle": 40,
+          "triangle_count": 28
+        },
+        {
+          "name": "carry_handle",
+          "first_triangle": 68,
+          "triangle_count": 32
+        },
+        {
+          "name": "latch_left",
+          "first_triangle": 100,
+          "triangle_count": 12
+        },
+        {
+          "name": "latch_right",
+          "first_triangle": 112,
+          "triangle_count": 12
+        }
+      ],
+      "source_frame_from": "models/items/healing/large/tris.md2"
+    },
+    {
+      "path": "models/items/mega_h/tris.md2",
+      "kind": "mega",
+      "label": "+100",
+      "baseline": {
+        "triangles": 800,
+        "position_vertices": 402,
+        "file_bytes": 35704
+      },
+      "after": {
+        "triangles": 128,
+        "position_vertices": 168,
+        "render_vertices": 204,
+        "frames": 1,
+        "skin_references": [
+          "models/items/mega_h/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 52,
+        "gl_command_triangles": 128,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 5696,
+        "sha256": "a822841e30ad7f499a67c14ffc5f1d5214ad9632de05db80b183fdd1ae7127b1",
+        "bounds": [
+          [
+            -6.800000190734863,
+            -6.800000190734863,
+            -12.0
+          ],
+          [
+            6.800000138580799,
+            6.800000138580799,
+            8.099999941885471
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0470883687956,
+        "minimum_quantized_double_triangle_area": 0.681035308639,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "medical_canister",
+          "first_triangle": 0,
+          "triangle_count": 28
+        },
+        {
+          "name": "base_rim",
+          "first_triangle": 28,
+          "triangle_count": 28
+        },
+        {
+          "name": "sealed_lid",
+          "first_triangle": 56,
+          "triangle_count": 28
+        },
+        {
+          "name": "lid_marking",
+          "first_triangle": 84,
+          "triangle_count": 12
+        },
+        {
+          "name": "carry_handle",
+          "first_triangle": 96,
+          "triangle_count": 32
+        }
+      ],
+      "source_frame_from": "models/items/mega_h/tris.md2"
+    },
+    {
+      "path": "models/items/adrenal/tris.md2",
+      "kind": "adrenaline",
+      "label": "BOOST",
+      "baseline": {
+        "triangles": 998,
+        "position_vertices": 500,
+        "file_bytes": 43104
+      },
+      "after": {
+        "triangles": 124,
+        "position_vertices": 200,
+        "render_vertices": 232,
+        "frames": 1,
+        "skin_references": [
+          "models/items/adrenal/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 62,
+        "gl_command_triangles": 124,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 5832,
+        "sha256": "2dbc35ca6a2f5829541247f19c06eca68252edee631ce6d88c8e1248c57c2913",
+        "bounds": [
+          [
+            -10.0,
+            -4.949999809265137,
+            -15.100000381469727
+          ],
+          [
+            10.000000707805157,
+            4.600000191479921,
+            0.1000000424683094
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0495949661279,
+        "minimum_quantized_double_triangle_area": 0.841522544602,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "case_body",
+          "first_triangle": 0,
+          "triangle_count": 28
+        },
+        {
+          "name": "lid_seam",
+          "first_triangle": 28,
+          "triangle_count": 12
+        },
+        {
+          "name": "case_lid",
+          "first_triangle": 40,
+          "triangle_count": 28
+        },
+        {
+          "name": "carry_handle",
+          "first_triangle": 68,
+          "triangle_count": 32
+        },
+        {
+          "name": "latch_left",
+          "first_triangle": 100,
+          "triangle_count": 12
+        },
+        {
+          "name": "latch_right",
+          "first_triangle": 112,
+          "triangle_count": 12
+        }
+      ],
+      "source_frame_from": "models/items/healing/large/tris.md2"
+    }
+  ],
+  "files": [
+    {
+      "path": "models/items/adrenal/skin.png",
+      "bytes": 1764,
+      "sha256": "65e466ea45e8933bb33c554db2e047d47a564239ff2f45e6bc6079f17a6bc9b9"
+    },
+    {
+      "path": "models/items/adrenal/tris.md2",
+      "bytes": 5832,
+      "sha256": "2dbc35ca6a2f5829541247f19c06eca68252edee631ce6d88c8e1248c57c2913"
+    },
+    {
+      "path": "models/items/healing/large/skin_health.png",
+      "bytes": 1750,
+      "sha256": "41f8c3816c6629c916be0d1e00521d39ee45a273b3cf8071568bf83da65f061f"
+    },
+    {
+      "path": "models/items/healing/large/tris.md2",
+      "bytes": 5816,
+      "sha256": "e4de8b6a8d94129118e90be885f4970df88c85239b2dd0e1c9f260113c2a3c3b"
+    },
+    {
+      "path": "models/items/healing/medium/skin.png",
+      "bytes": 1738,
+      "sha256": "6231809f22082341edd0f345405bdb7a37bfeeb241d4765353d0cbc28f5b4a3b"
+    },
+    {
+      "path": "models/items/healing/medium/tris.md2",
+      "bytes": 3760,
+      "sha256": "00205eacfea7cfeac60304ef4fdf3d20a7b3e37828da26eb7ca1978c4f065af9"
+    },
+    {
+      "path": "models/items/healing/stimpack/lod1.md2",
+      "bytes": 5616,
+      "sha256": "83780f2aa4baf09d048cd532353ee32f25760d7e6b02a7a2b43108cb14dbd632"
+    },
+    {
+      "path": "models/items/healing/stimpack/skin.png",
+      "bytes": 1735,
+      "sha256": "3eb54d17fbc994289bc95f66f379ea4ea0ab7cbb94a613768eea3f12d8a8d8eb"
+    },
+    {
+      "path": "models/items/healing/stimpack/tris.md2",
+      "bytes": 5616,
+      "sha256": "83780f2aa4baf09d048cd532353ee32f25760d7e6b02a7a2b43108cb14dbd632"
+    },
+    {
+      "path": "models/items/mega_h/skin.png",
+      "bytes": 1747,
+      "sha256": "2338162d22438656f7cd0f9c05cfd649dce03860f9443381b2f868c5fcfebdf7"
+    },
+    {
+      "path": "models/items/mega_h/tris.md2",
+      "bytes": 5696,
+      "sha256": "a822841e30ad7f499a67c14ffc5f1d5214ad9632de05db80b183fdd1ae7127b1"
+    }
+  ]
+}

@@ -13,6 +13,10 @@ extern void SP_target_platoon_intermission(edict_t *self);
 static cvar_t clients, zero, cooperative;
 static int center_calls[3];
 static char center_text[3][128];
+static char model_names[64][MAX_QPATH];
+static int model_count;
+static int capture_media_rebind, capture_ship_index, media_rebind_calls;
+static edict_t before_media_rebind;
 static void link_entity(edict_t *ent)
 {
     VectorAdd(ent->s.origin, ent->mins, ent->absmin);
@@ -25,7 +29,17 @@ static void set_model(edict_t *ent, char *model)
     VectorSet(ent->mins, -128, -128, 0);
     VectorSet(ent->maxs, 128, 128, 128);
 }
-static int model_index(char *name) { (void)name; return 1; }
+static int model_index(char *name)
+{
+    if(!name)return 0;
+    if(capture_media_rebind&&(!strcmp(name,"models/vehicles/platoon_dropship/body.md2")||
+            !strcmp(name,"models/vehicles/platoon_dropship/main_rotor.md2"))) {
+        if(!media_rebind_calls)memcpy(&before_media_rebind,&g_edicts[capture_ship_index],sizeof(before_media_rebind));
+        ++media_rebind_calls;
+    }
+    for (int i=1;i<=model_count;++i) if (!strcmp(model_names[i],name)) return i;
+    assert(model_count<63);snprintf(model_names[++model_count],MAX_QPATH,"%s",name);return model_count;
+}
 static void no_free(int tag) { (void)tag; }
 static void *allocate(int size, int tag) { (void)tag; return calloc(1, size); }
 static void unlink_entity(edict_t *self) { (void)self; }
@@ -57,6 +71,8 @@ static void reset(void)
     memset(&level, 0, sizeof(level));
     memset(center_calls, 0, sizeof(center_calls));
     memset(center_text, 0, sizeof(center_text));
+    memset(model_names,0,sizeof(model_names));model_count=0;
+    capture_media_rebind=capture_ship_index=media_rebind_calls=0;
     globals.num_edicts = game.maxclients + 1;
     level.time = 10;
     g_edicts[0].inuse = true;
@@ -171,6 +187,33 @@ static edict_t *dropship(int flags)
     assert(!(self->s.renderfx & RF_PP_ENEMY_COLOR));
     return self;
 }
+static void test_dropship_spawn_contract(void)
+{
+    for(int hidden=0;hidden<2;++hidden) {
+        reset();edict_t *self=G_Spawn();self->classname="misc_platoon_dropship";self->spawnflags=hidden;
+        SP_misc_platoon_dropship(self);
+        assert(!strcmp(model_names[self->s.modelindex],"models/vehicles/platoon_dropship/body.md2"));
+        assert(!strcmp(model_names[self->s.modelindex2],"models/vehicles/platoon_dropship/main_rotor.md2"));
+        assert(!strcmp(model_names[self->noise_index],"bosshovr/bhvengn1.wav"));
+        assert(self->movetype==MOVETYPE_NONE&&self->solid==SOLID_NOT&&self->speed==240);
+        assert((self->s.renderfx&(RF_FRAMELERP|RF_PP_FRIENDLY_COLOR))==(RF_FRAMELERP|RF_PP_FRIENDLY_COLOR));
+        assert(!(self->s.renderfx&RF_PP_ENEMY_COLOR)&&!(self->svflags&SVF_MONSTER));
+        assert(self->mins[0]==-114&&self->mins[1]==-68&&self->mins[2]==36);
+        assert(self->maxs[0]==68&&self->maxs[1]==68&&self->maxs[2]==96);
+        assert(!!(self->svflags&SVF_NOCLIENT)==hidden);
+        assert(self->s.sound==(hidden?0:self->noise_index));
+    }
+}
+static void test_flight_vector_speed(void)
+{
+    reset();corner("takeoff",NULL,30,40,30);edict_t *self=dropship(0);
+    self->use(self,NULL,&g_edicts[1]);tick(self);
+    vec3_t expected={30,40,30};VectorNormalize(expected);VectorScale(expected,10,expected);
+    for(int axis=0;axis<3;++axis)assert(fabsf(self->s.origin[axis]-expected[axis])<.001f);
+    assert(self->s.angles[YAW]==53); /* Native vectoyaw truncates degrees. */
+    assert(fabsf(self->s.angles[PITCH]+30/sqrtf(3400)*12)<.001f);
+    assert(VectorLength(self->velocity)==0&&self->nextthink>level.time);
+}
 static void test_flight(void)
 {
     edict_t *first, *last, *self, *event;
@@ -213,6 +256,40 @@ static void restore(const char *path)
     int i;
     WriteLevel(path); ReadLevel(path);
     for (i = 0; i < game.maxclients; i++) game.clients[i].pers.connected = true;
+}
+static void test_legacy_dropship_media_restore(const char *path)
+{
+    for(int state=0;state<=4;++state) {
+        reset();edict_t *inbound=corner("takeoff",NULL,30,40,30);
+        edict_t *outbound=corner("outbound",NULL,80,20,90);
+        edict_t *ship=dropship(state==0);ship->deathtarget="outbound";
+        ship->count=state;ship->activator=&g_edicts[2];ship->speed=117;
+        ship->timestamp=level.time+.35f;
+        if(state==1||state==3) {
+            ship->movetarget=state==1?inbound:outbound;
+            ship->think=platoon_dropship_think;ship->nextthink=level.time+FRAMETIME;
+        }
+        VectorSet(ship->s.origin,15,23,42);VectorSet(ship->s.angles,-7,213,3);
+        int old_body=gi.modelindex("models/monsters/boss2/tris.md2");
+        int old_rotor=gi.modelindex("models/monsters/boss2/propeller.md2");
+        ship->s.modelindex=old_body;ship->s.modelindex2=old_rotor;
+        edict_t *enemy=G_Spawn();enemy->classname="monster_boss2";enemy->svflags=SVF_MONSTER;
+        enemy->s.modelindex=old_body;enemy->s.modelindex2=old_rotor;
+        int enemy_index=enemy-g_edicts;
+        capture_ship_index=ship-g_edicts;capture_media_rebind=true;
+        restore(path);capture_media_rebind=false;
+        ship=&g_edicts[capture_ship_index];enemy=&g_edicts[enemy_index];
+        assert(media_rebind_calls==2);
+        assert(before_media_rebind.s.modelindex==old_body&&before_media_rebind.s.modelindex2==old_rotor);
+        assert(!strcmp(model_names[ship->s.modelindex],"models/vehicles/platoon_dropship/body.md2"));
+        assert(!strcmp(model_names[ship->s.modelindex2],"models/vehicles/platoon_dropship/main_rotor.md2"));
+        edict_t expected;memcpy(&expected,&before_media_rebind,sizeof(expected));
+        expected.s.modelindex=ship->s.modelindex;expected.s.modelindex2=ship->s.modelindex2;
+        assert(!memcmp(&expected,ship,sizeof(expected))); /* Exactly two integers change. */
+        assert(!strcmp(model_names[enemy->s.modelindex],"models/monsters/plastic_boss/body.md2"));
+        assert(!strcmp(model_names[enemy->s.modelindex2],"models/monsters/plastic_boss/main_rotor.md2"));
+    }
+    unlink(path);
 }
 static void test_outbound_flight_and_camera(const char *path)
 {
@@ -348,7 +425,8 @@ int main(int argc, char **argv)
     deathmatch = &zero; coop = &cooperative;
     game.clients = calloc(game.maxclients, sizeof(*game.clients));
     g_edicts = calloc(game.maxentities, sizeof(*g_edicts));
-    test_extraction(); test_flight(); test_savegame(argv[1]);
+    test_extraction(); test_dropship_spawn_contract(); test_flight_vector_speed(); test_flight(); test_savegame(argv[1]);
+    test_legacy_dropship_media_restore(argv[1]);
     test_outbound_flight_and_camera(argv[1]);
     puts("Sandstorm extraction, dropship round trip, cinematic camera and save/load passed");
     return 0;

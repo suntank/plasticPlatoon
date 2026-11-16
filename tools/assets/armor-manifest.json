@@ -1,0 +1,385 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_armor.py",
+  "dependencies_sha256": {
+    "build_armor.py": "c9f63feaf1e97d0aba6b1cdb9fc5cec24ac3a77f15dc6daa424753bf023c7a7e",
+    "armor_geometry.py": "9848d87860843af5b59072f431cc6ac8581f51e3e7162f2ddc95a7457b42e8d9",
+    "pickup_normals.py": "9a573f8fac16d815c3ec8e28f8fd9f27183c016335e05642e5507905d2f48e3d",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+  },
+  "source_archive": {
+    "path": "tools/assets/sources/pickups-local.pk3",
+    "sha256": "6c6dcc1d9a9a44aa666285a9add3ff439fc5561791e46529ef91b7ee5866bf37",
+    "origin": "Original owner-authored Plastic Platoon pickup models and textures"
+  },
+  "method": "original closed primitives with real cuff, helmet, neck and arm openings; one static pose",
+  "shading": "smooth outer/inner helmet dome, cuffs and boot uppers; flat rims, soles, plates and straps retain creases",
+  "gameplay": "Existing paths, armor amounts, protection, salvage, caps, rotation and respawn are unchanged",
+  "models": [
+    {
+      "path": "models/items/armor/shard/tris.md2",
+      "kind": "shard",
+      "baseline": {
+        "triangles": 800,
+        "position_vertices": 382,
+        "file_bytes": 35696
+      },
+      "after": {
+        "triangles": 76,
+        "position_vertices": 128,
+        "render_vertices": 144,
+        "frames": 1,
+        "skin_references": [
+          "models/items/armor/shard/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 37,
+        "gl_command_triangles": 76,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 3628,
+        "sha256": "07309f504966f73528a08d20c1252bb3ee3ad1a7d9e9120869fa1836ab929119",
+        "bounds": [
+          [
+            -4.599999904632568,
+            -3.1500000953674316,
+            -5.099999904632568
+          ],
+          [
+            4.59999992698431,
+            2.7712810710072517,
+            5.099999867379665
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.022499745226,
+        "minimum_quantized_double_triangle_area": 1.64034738126,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "open_wrist_guard",
+          "first_triangle": 0,
+          "triangle_count": 48
+        },
+        {
+          "name": "guard_plate",
+          "first_triangle": 48,
+          "triangle_count": 28
+        }
+      ],
+      "lod": {
+        "path": "models/items/armor/shard/lod1.md2",
+        "sha256": "07309f504966f73528a08d20c1252bb3ee3ad1a7d9e9120869fa1836ab929119",
+        "method": "same authored low-budget wrist guard at every distance"
+      }
+    },
+    {
+      "path": "models/items/armor/jacket/tris.md2",
+      "kind": "jacket",
+      "baseline": {
+        "triangles": 799,
+        "position_vertices": 404,
+        "file_bytes": 36180
+      },
+      "after": {
+        "triangles": 248,
+        "position_vertices": 352,
+        "render_vertices": 400,
+        "frames": 1,
+        "skin_references": [
+          "models/items/armor/jacket/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 100,
+        "gl_command_triangles": 248,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 10616,
+        "sha256": "e4ca0e64712f560e67bedb87ed6cb6ba3904b0927688f9c2d9f1eca1aea52300",
+        "bounds": [
+          [
+            -11.600000381469727,
+            -8.800000190734863,
+            -11.800000190734863
+          ],
+          [
+            11.600000515580177,
+            8.500000298023224,
+            10.599999234080315
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0587947715641,
+        "minimum_quantized_double_triangle_area": 1.91344265015,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "sole_left",
+          "first_triangle": 0,
+          "triangle_count": 28
+        },
+        {
+          "name": "foot_left",
+          "first_triangle": 28,
+          "triangle_count": 28
+        },
+        {
+          "name": "open_boot_shaft_left",
+          "first_triangle": 56,
+          "triangle_count": 48
+        },
+        {
+          "name": "shin_plate_left",
+          "first_triangle": 104,
+          "triangle_count": 20
+        },
+        {
+          "name": "sole_right",
+          "first_triangle": 124,
+          "triangle_count": 28
+        },
+        {
+          "name": "foot_right",
+          "first_triangle": 152,
+          "triangle_count": 28
+        },
+        {
+          "name": "open_boot_shaft_right",
+          "first_triangle": 180,
+          "triangle_count": 48
+        },
+        {
+          "name": "shin_plate_right",
+          "first_triangle": 228,
+          "triangle_count": 20
+        }
+      ]
+    },
+    {
+      "path": "models/items/armor/combat/tris.md2",
+      "kind": "combat",
+      "baseline": {
+        "triangles": 1000,
+        "position_vertices": 500,
+        "file_bytes": 42984
+      },
+      "after": {
+        "triangles": 168,
+        "position_vertices": 288,
+        "render_vertices": 328,
+        "frames": 1,
+        "skin_references": [
+          "models/items/armor/combat/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 84,
+        "gl_command_triangles": 168,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 7872,
+        "sha256": "7a7dc0766be4dbebb34e261a48683e13a4e77579cd079758e2e04c3140a89eca",
+        "bounds": [
+          [
+            -8.449999809265137,
+            -9.399999618530273,
+            -8.550000190734863
+          ],
+          [
+            8.449999943375587,
+            9.400000780820847,
+            8.549999929964542
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0524256466939,
+        "minimum_quantized_double_triangle_area": 0.410434143426,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "hollow_helmet_shell",
+          "first_triangle": 0,
+          "triangle_count": 124
+        },
+        {
+          "name": "chin_strap",
+          "first_triangle": 124,
+          "triangle_count": 32
+        },
+        {
+          "name": "helmet_badge",
+          "first_triangle": 156,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/items/armor/body/tris.md2",
+      "kind": "body",
+      "baseline": {
+        "triangles": 1000,
+        "position_vertices": 502,
+        "file_bytes": 43608
+      },
+      "after": {
+        "triangles": 212,
+        "position_vertices": 328,
+        "render_vertices": 384,
+        "frames": 1,
+        "skin_references": [
+          "models/items/armor/body/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 104,
+        "gl_command_triangles": 212,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 9608,
+        "sha256": "1bee2ce536908ecc09eea851487cfb397b77a54c3961d04b6e4691ac02508d69",
+        "bounds": [
+          [
+            -10.0,
+            -8.949999809265137,
+            -11.800000190734863
+          ],
+          [
+            10.000000707805157,
+            6.99999962002039,
+            11.799999542534351
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.055716908331,
+        "minimum_quantized_double_triangle_area": 4.63108013566,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "chest_armor_panel",
+          "first_triangle": 0,
+          "triangle_count": 52
+        },
+        {
+          "name": "waist_band_chest",
+          "first_triangle": 52,
+          "triangle_count": 12
+        },
+        {
+          "name": "back_armor_panel",
+          "first_triangle": 64,
+          "triangle_count": 52
+        },
+        {
+          "name": "waist_band_back",
+          "first_triangle": 116,
+          "triangle_count": 12
+        },
+        {
+          "name": "shoulder_bridge_left",
+          "first_triangle": 128,
+          "triangle_count": 12
+        },
+        {
+          "name": "shoulder_bridge_right",
+          "first_triangle": 140,
+          "triangle_count": 12
+        },
+        {
+          "name": "side_bridge_left",
+          "first_triangle": 152,
+          "triangle_count": 12
+        },
+        {
+          "name": "side_bridge_right",
+          "first_triangle": 164,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_pouch_left",
+          "first_triangle": 176,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_pouch_center",
+          "first_triangle": 188,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_pouch_right",
+          "first_triangle": 200,
+          "triangle_count": 12
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "models/items/armor/body/skin.png",
+      "bytes": 1432,
+      "sha256": "1670931a54465160c3324f20886b24ac465d4e2a7f6f1563ae9a721250ba435a"
+    },
+    {
+      "path": "models/items/armor/body/tris.md2",
+      "bytes": 9608,
+      "sha256": "1bee2ce536908ecc09eea851487cfb397b77a54c3961d04b6e4691ac02508d69"
+    },
+    {
+      "path": "models/items/armor/combat/skin.png",
+      "bytes": 1435,
+      "sha256": "fae047343070bad46648265c3b02ac1a7089af1bb3a08492dec1623eff7e8c6e"
+    },
+    {
+      "path": "models/items/armor/combat/tris.md2",
+      "bytes": 7872,
+      "sha256": "7a7dc0766be4dbebb34e261a48683e13a4e77579cd079758e2e04c3140a89eca"
+    },
+    {
+      "path": "models/items/armor/jacket/skin.png",
+      "bytes": 1428,
+      "sha256": "0a8be77b2175899ffa4d242b280d053c4598da88e859466b50768f568d5148e1"
+    },
+    {
+      "path": "models/items/armor/jacket/tris.md2",
+      "bytes": 10616,
+      "sha256": "e4ca0e64712f560e67bedb87ed6cb6ba3904b0927688f9c2d9f1eca1aea52300"
+    },
+    {
+      "path": "models/items/armor/shard/lod1.md2",
+      "bytes": 3628,
+      "sha256": "07309f504966f73528a08d20c1252bb3ee3ad1a7d9e9120869fa1836ab929119"
+    },
+    {
+      "path": "models/items/armor/shard/skin.png",
+      "bytes": 1453,
+      "sha256": "e83188f424bd311345e6abfa41bf38d10ec932f9b463e32b6eb61eadb5133200"
+    },
+    {
+      "path": "models/items/armor/shard/tris.md2",
+      "bytes": 3628,
+      "sha256": "07309f504966f73528a08d20c1252bb3ee3ad1a7d9e9120869fa1836ab929119"
+    }
+  ]
+}

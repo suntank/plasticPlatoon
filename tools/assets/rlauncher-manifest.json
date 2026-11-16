@@ -1,0 +1,717 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_rlauncher.py",
+  "dependencies_sha256": {
+    "build_rlauncher.py": "dd20c975bf4003394687c491879b7b335fd29f4d66bd7a5e5575e49e157799c7",
+    "rlauncher_geometry.py": "1de7b5a6d3343c8c5ce5edfbacd3b07d73d42cd851f3a841f6c9655896fd5d4a",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+  },
+  "source_archive": {
+    "path": "tools/assets/sources/platoon-originals.pk3",
+    "sha256": "308e7b7e07f08ecbd0f7487e8a37440ab07c28bb83896b0f4c959a29fdcbf7e4",
+    "bytes": 47317833,
+    "origin": "Original owner-authored Plastic Platoon model, texture and sprite inputs recovered before public history cleanup",
+    "license": "GPL-2.0-or-later",
+    "excluded": [
+      "Legacy players/male assets",
+      "Inherited soldier portrait PCXs"
+    ]
+  },
+  "method": "authored closed primitives; archived rigid poses",
+  "hand": "m16_geometry.add_hands; existing closed molded mittens and forearms",
+  "palette": "Shared M16 army-man plastic and mitten atlas",
+  "models": [
+    {
+      "path": "models/weapons/g_rocket/tris.md2",
+      "role": "pickup",
+      "baseline": {
+        "triangles": 799,
+        "position_vertices": 391,
+        "frames": 1,
+        "file_bytes": 34664
+      },
+      "after": {
+        "triangles": 256,
+        "position_vertices": 264,
+        "render_vertices": 422,
+        "frames": 1,
+        "skin_references": [
+          "models/weapons/g_rocket/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 104,
+        "gl_command_triangles": 256,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 10640,
+        "sha256": "4516ba9d4a478d1391a0bda98ef56d251dfcb8d12113a186b2d85fa0475711b6",
+        "bounds": [
+          [
+            -39.0,
+            -4.323756217956543,
+            6.065999984741211
+          ],
+          [
+            39.000002950429916,
+            4.323756109923124,
+            26.89200036972761
+          ]
+        ]
+      },
+      "pose_transfer": null,
+      "validation": {
+        "max_vertex_quantization_error": 0.150577470016,
+        "minimum_quantized_double_triangle_area": 0.591262456963,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          -39.0,
+          0.0,
+          20.808
+        ],
+        "rear_sight": [
+          14.04,
+          0.0,
+          26.424
+        ],
+        "front_sight": [
+          -30.42,
+          0.0,
+          26.424
+        ],
+        "grip": [
+          12.48,
+          0.0,
+          11.76
+        ],
+        "support": [
+          -9.36,
+          0.0,
+          16.44
+        ],
+        "rear_opening": [
+          39.0,
+          0.0,
+          20.808
+        ]
+      },
+      "parts": [
+        {
+          "name": "launch_tube",
+          "first_triangle": 0,
+          "triangle_count": 96
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 96,
+          "triangle_count": 20
+        },
+        {
+          "name": "shoulder_rest",
+          "first_triangle": 116,
+          "triangle_count": 12
+        },
+        {
+          "name": "grip",
+          "first_triangle": 128,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 148,
+          "triangle_count": 32
+        },
+        {
+          "name": "fore_end",
+          "first_triangle": 180,
+          "triangle_count": 28
+        },
+        {
+          "name": "fore_grip",
+          "first_triangle": 208,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 220,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 232,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 244,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/weapons/v_rocket/tris.md2",
+      "role": "view",
+      "baseline": {
+        "triangles": 1399,
+        "position_vertices": 691,
+        "frames": 1,
+        "file_bytes": 57140
+      },
+      "after": {
+        "triangles": 684,
+        "position_vertices": 560,
+        "render_vertices": 874,
+        "frames": 1,
+        "skin_references": [
+          "models/weapons/v_rocket/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 212,
+        "gl_command_triangles": 684,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 25720,
+        "sha256": "c49c43225c666cede19c7023d9f8269948ec00f63991305435e7c0e79b5cbf46",
+        "bounds": [
+          [
+            -13.5,
+            -18.844497680664062,
+            -28.084228515625
+          ],
+          [
+            52.05958449840546,
+            0.5923466458916664,
+            -0.32620690017938614
+          ]
+        ]
+      },
+      "pose_transfer": null,
+      "validation": {
+        "max_vertex_quantization_error": 0.135309083502,
+        "minimum_quantized_double_triangle_area": 0.19271329742,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          52.059580862522125,
+          -10.0,
+          -5.439855088949203
+        ],
+        "rear_sight": [
+          7.4790658760070805,
+          -10.0,
+          -0.71956526684761
+        ],
+        "front_sight": [
+          44.84802696764469,
+          -10.0,
+          -0.71956526684761
+        ],
+        "grip": [
+          8.790257493257524,
+          -10.0,
+          -13.04476646900177
+        ],
+        "support": [
+          27.146940134763717,
+          -10.0,
+          -9.111191617250443
+        ],
+        "rear_opening": [
+          -13.5,
+          -10.0,
+          -5.439855088949203
+        ]
+      },
+      "parts": [
+        {
+          "name": "launch_tube",
+          "first_triangle": 0,
+          "triangle_count": 96
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 96,
+          "triangle_count": 20
+        },
+        {
+          "name": "shoulder_rest",
+          "first_triangle": 116,
+          "triangle_count": 12
+        },
+        {
+          "name": "grip",
+          "first_triangle": 128,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 148,
+          "triangle_count": 32
+        },
+        {
+          "name": "fore_end",
+          "first_triangle": 180,
+          "triangle_count": 28
+        },
+        {
+          "name": "fore_grip",
+          "first_triangle": 208,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 220,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 232,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 244,
+          "triangle_count": 12
+        },
+        {
+          "name": "arm_right",
+          "first_triangle": 256,
+          "triangle_count": 20
+        },
+        {
+          "name": "cuff_right",
+          "first_triangle": 276,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_right_wrist",
+          "first_triangle": 296,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_right_palm",
+          "first_triangle": 316,
+          "triangle_count": 76
+        },
+        {
+          "name": "hand_right_thumb",
+          "first_triangle": 392,
+          "triangle_count": 44
+        },
+        {
+          "name": "hand_right_fingers",
+          "first_triangle": 436,
+          "triangle_count": 60
+        },
+        {
+          "name": "arm_left",
+          "first_triangle": 496,
+          "triangle_count": 20
+        },
+        {
+          "name": "cuff_left",
+          "first_triangle": 516,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_left_palm",
+          "first_triangle": 536,
+          "triangle_count": 60
+        },
+        {
+          "name": "hand_left_fingers",
+          "first_triangle": 596,
+          "triangle_count": 44
+        },
+        {
+          "name": "hand_left_thumb",
+          "first_triangle": 640,
+          "triangle_count": 44
+        }
+      ]
+    },
+    {
+      "path": "players/soldier/w_rlauncher.md2",
+      "role": "player",
+      "baseline": {
+        "triangles": 1427,
+        "position_vertices": 705,
+        "frames": 198,
+        "file_bytes": 622852
+      },
+      "after": {
+        "triangles": 256,
+        "position_vertices": 264,
+        "render_vertices": 422,
+        "frames": 198,
+        "skin_references": [
+          "models/weapons/v_rocket/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 104,
+        "gl_command_triangles": 256,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 226552,
+        "sha256": "8be372f1c3e8713f87b8e790f7c6c109a3df4fd550364ac775620b6ba232a412",
+        "bounds": [
+          [
+            -56.303382873535156,
+            -34.90782165527344,
+            -25.805768966674805
+          ],
+          [
+            59.07476509362459,
+            42.439403757452965,
+            41.235605984926224
+          ]
+        ]
+      },
+      "pose_transfer": {
+        "rms_max": 0.0494413346423,
+        "frames": 198
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0629697644592,
+        "minimum_quantized_double_triangle_area": 0.0515862696283,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          29.009999999999998,
+          -4.75,
+          16.106
+        ],
+        "rear_sight": [
+          9.629999999999999,
+          -4.75,
+          18.158
+        ],
+        "front_sight": [
+          25.875,
+          -4.75,
+          18.158
+        ],
+        "grip": [
+          10.2,
+          -4.75,
+          12.8
+        ],
+        "support": [
+          18.18,
+          -4.75,
+          14.51
+        ],
+        "rear_opening": [
+          0.5099999999999998,
+          -4.75,
+          16.106
+        ]
+      },
+      "parts": [
+        {
+          "name": "launch_tube",
+          "first_triangle": 0,
+          "triangle_count": 96
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 96,
+          "triangle_count": 20
+        },
+        {
+          "name": "shoulder_rest",
+          "first_triangle": 116,
+          "triangle_count": 12
+        },
+        {
+          "name": "grip",
+          "first_triangle": 128,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 148,
+          "triangle_count": 32
+        },
+        {
+          "name": "fore_end",
+          "first_triangle": 180,
+          "triangle_count": 28
+        },
+        {
+          "name": "fore_grip",
+          "first_triangle": 208,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 220,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 232,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 244,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/monsters/soldier/weapon_rocket.md2",
+      "role": "enemy",
+      "baseline": {
+        "triangles": 1427,
+        "position_vertices": 705,
+        "frames": 475,
+        "file_bytes": 1415072
+      },
+      "after": {
+        "triangles": 256,
+        "position_vertices": 264,
+        "render_vertices": 422,
+        "frames": 475,
+        "skin_references": [
+          "models/weapons/v_rocket/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 104,
+        "gl_command_triangles": 256,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 530144,
+        "sha256": "72f7456b431ff94119fe6aad1b88200b00732b4604a6a6893b89b20360f2593d",
+        "bounds": [
+          [
+            -44.1095085144043,
+            -43.22319030761719,
+            -25.59905242919922
+          ],
+          [
+            64.32163618505001,
+            42.46418869495392,
+            46.22519688308239
+          ]
+        ]
+      },
+      "pose_transfer": {
+        "rms_max": 0.0557198661117,
+        "frames": 475
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0620099047754,
+        "minimum_quantized_double_triangle_area": 0.0397596505713,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          29.009999999999998,
+          -4.75,
+          16.106
+        ],
+        "rear_sight": [
+          9.629999999999999,
+          -4.75,
+          18.158
+        ],
+        "front_sight": [
+          25.875,
+          -4.75,
+          18.158
+        ],
+        "grip": [
+          10.2,
+          -4.75,
+          12.8
+        ],
+        "support": [
+          18.18,
+          -4.75,
+          14.51
+        ],
+        "rear_opening": [
+          0.5099999999999998,
+          -4.75,
+          16.106
+        ]
+      },
+      "parts": [
+        {
+          "name": "launch_tube",
+          "first_triangle": 0,
+          "triangle_count": 96
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 96,
+          "triangle_count": 20
+        },
+        {
+          "name": "shoulder_rest",
+          "first_triangle": 116,
+          "triangle_count": 12
+        },
+        {
+          "name": "grip",
+          "first_triangle": 128,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 148,
+          "triangle_count": 32
+        },
+        {
+          "name": "fore_end",
+          "first_triangle": 180,
+          "triangle_count": 28
+        },
+        {
+          "name": "fore_grip",
+          "first_triangle": 208,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 220,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 232,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 244,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/monsters/soldier/tall/weapon_rocket.md2",
+      "role": "enemy_tall",
+      "baseline": {
+        "triangles": 1427,
+        "position_vertices": 705,
+        "frames": 475,
+        "file_bytes": 1415072
+      },
+      "after": {
+        "triangles": 256,
+        "position_vertices": 264,
+        "render_vertices": 422,
+        "frames": 475,
+        "skin_references": [
+          "models/weapons/v_rocket/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 104,
+        "gl_command_triangles": 256,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 530144,
+        "sha256": "e47c24c926d1a3cdb7f7c09b5279b234f8cd5902c4920c2cbee707fc2d6e75f1",
+        "bounds": [
+          [
+            -52.93141174316406,
+            -51.867828369140625,
+            -25.91886329650879
+          ],
+          [
+            77.18596342206001,
+            50.957027196884155,
+            60.27023397386074
+          ]
+        ]
+      }
+    }
+  ],
+  "enemy_retarget": {
+    "schema": 1,
+    "model": "models/monsters/soldier/weapon_rocket.md2",
+    "sources": {
+      "archived:models/monsters/soldier/weapon_machinegun.md2": "a80c9f9d49ff31e733b7ff49e9678fbeec2980a60c2253562a30eff369a77b08",
+      "players/soldier/w_rlauncher.md2": "8be372f1c3e8713f87b8e790f7c6c109a3df4fd550364ac775620b6ba232a412",
+      "models/monsters/soldier/tris.md2": "9363f8d2fcb22c0d738ddf12f33a7e873ecb30f7badc8d704ecc565c812a2f05"
+    },
+    "method": "Original primitive rocket launcher exported directly through archived enemy rigid attachment poses",
+    "frames": 475,
+    "position_vertices": 264,
+    "triangles": 256,
+    "skin_references": [
+      "models/weapons/v_rocket/skin.png"
+    ],
+    "max_source_rigid_fit_error_units": 0.0557198661117,
+    "max_output_quantization_error_units": 0.0620099047754,
+    "sha256": "72f7456b431ff94119fe6aad1b88200b00732b4604a6a6893b89b20360f2593d",
+    "bytes": 530144
+  },
+  "ads_header": {
+    "path": "src/client/header/rlauncher_model_ads.h",
+    "sha256": "c91fc8d4c1d6e000d4fddc28e8c6ec8acf1feb76bae1920f722d535358be552b"
+  },
+  "files": [
+    {
+      "path": "models/monsters/soldier/tall/weapon_rocket.md2",
+      "bytes": 530144,
+      "sha256": "e47c24c926d1a3cdb7f7c09b5279b234f8cd5902c4920c2cbee707fc2d6e75f1"
+    },
+    {
+      "path": "models/monsters/soldier/weapon_rocket.md2",
+      "bytes": 530144,
+      "sha256": "72f7456b431ff94119fe6aad1b88200b00732b4604a6a6893b89b20360f2593d"
+    },
+    {
+      "path": "models/weapons/g_rocket/skin.png",
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
+    },
+    {
+      "path": "models/weapons/g_rocket/tris.md2",
+      "bytes": 10640,
+      "sha256": "4516ba9d4a478d1391a0bda98ef56d251dfcb8d12113a186b2d85fa0475711b6"
+    },
+    {
+      "path": "models/weapons/v_rocket/skin.png",
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
+    },
+    {
+      "path": "models/weapons/v_rocket/tris.md2",
+      "bytes": 25720,
+      "sha256": "c49c43225c666cede19c7023d9f8269948ec00f63991305435e7c0e79b5cbf46"
+    },
+    {
+      "path": "players/soldier/w_rlauncher.md2",
+      "bytes": 226552,
+      "sha256": "8be372f1c3e8713f87b8e790f7c6c109a3df4fd550364ac775620b6ba232a412"
+    }
+  ]
+}

@@ -1,0 +1,378 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_boss_helicopter.py",
+  "dependencies_sha256": {
+    "build_boss_helicopter.py": "e216b2d00d5589a2beaa8451020a4cd1af812c73b3444f42b6afdf3a33ac0fb7",
+    "boss_helicopter_geometry.py": "109e6bf6fad50376198e54e0354af0091be14968f41c60d9266554617fa63605",
+    "dropship_geometry.py": "2a53c644719d55c18134eec6201a70c791469c46f297fcd72de060f6c6f3a6a6",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+  },
+  "models": [
+    {
+      "path": "models/monsters/plastic_boss/body.md2",
+      "kind": "body",
+      "after": {
+        "triangles": 892,
+        "position_vertices": 1504,
+        "render_vertices": 1672,
+        "frames": 1,
+        "frame_names": [
+          "stand02"
+        ],
+        "skin_references": [
+          "models/monsters/plastic_boss/red.png",
+          "models/monsters/plastic_boss/damaged.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 446,
+        "gl_command_triangles": 892,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 40500,
+        "sha256": "5e31d52f198bf719cc4e1a86dcff9e9f1bd16a3bd44b3f59777c9e101ca1de5f",
+        "bounds": [
+          [
+            -112.0,
+            -49.20000076293945,
+            36.599998474121094
+          ],
+          [
+            65.00000464916229,
+            49.199997931718826,
+            92.99999967217445
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.382561212944,
+        "minimum_quantized_double_triangle_area": 0.853480975666,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "armored_fuselage",
+          "first_triangle": 0,
+          "triangle_count": 76
+        },
+        {
+          "name": "cockpit_spine",
+          "first_triangle": 76,
+          "triangle_count": 20
+        },
+        {
+          "name": "windshield_spine",
+          "first_triangle": 96,
+          "triangle_count": 20
+        },
+        {
+          "name": "armored_engine_left",
+          "first_triangle": 116,
+          "triangle_count": 60
+        },
+        {
+          "name": "engine_exhaust_left",
+          "first_triangle": 176,
+          "triangle_count": 20
+        },
+        {
+          "name": "armored_wing_left",
+          "first_triangle": 196,
+          "triangle_count": 12
+        },
+        {
+          "name": "rocket_housing_left",
+          "first_triangle": 208,
+          "triangle_count": 12
+        },
+        {
+          "name": "rocket_tube_left0",
+          "first_triangle": 220,
+          "triangle_count": 44
+        },
+        {
+          "name": "rocket_tube_left1",
+          "first_triangle": 264,
+          "triangle_count": 44
+        },
+        {
+          "name": "cannon_fairing_left",
+          "first_triangle": 308,
+          "triangle_count": 12
+        },
+        {
+          "name": "heavy_cannon_left",
+          "first_triangle": 320,
+          "triangle_count": 44
+        },
+        {
+          "name": "landing_strut_left",
+          "first_triangle": 364,
+          "triangle_count": 20
+        },
+        {
+          "name": "front_strut_left",
+          "first_triangle": 384,
+          "triangle_count": 20
+        },
+        {
+          "name": "short_skid_left",
+          "first_triangle": 404,
+          "triangle_count": 20
+        },
+        {
+          "name": "skid_toe_left",
+          "first_triangle": 424,
+          "triangle_count": 20
+        },
+        {
+          "name": "armored_engine_right",
+          "first_triangle": 444,
+          "triangle_count": 60
+        },
+        {
+          "name": "engine_exhaust_right",
+          "first_triangle": 504,
+          "triangle_count": 20
+        },
+        {
+          "name": "armored_wing_right",
+          "first_triangle": 524,
+          "triangle_count": 12
+        },
+        {
+          "name": "rocket_housing_right",
+          "first_triangle": 536,
+          "triangle_count": 12
+        },
+        {
+          "name": "rocket_tube_right0",
+          "first_triangle": 548,
+          "triangle_count": 44
+        },
+        {
+          "name": "rocket_tube_right1",
+          "first_triangle": 592,
+          "triangle_count": 44
+        },
+        {
+          "name": "cannon_fairing_right",
+          "first_triangle": 636,
+          "triangle_count": 12
+        },
+        {
+          "name": "heavy_cannon_right",
+          "first_triangle": 648,
+          "triangle_count": 44
+        },
+        {
+          "name": "landing_strut_right",
+          "first_triangle": 692,
+          "triangle_count": 20
+        },
+        {
+          "name": "front_strut_right",
+          "first_triangle": 712,
+          "triangle_count": 20
+        },
+        {
+          "name": "short_skid_right",
+          "first_triangle": 732,
+          "triangle_count": 20
+        },
+        {
+          "name": "skid_toe_right",
+          "first_triangle": 752,
+          "triangle_count": 20
+        },
+        {
+          "name": "armored_tail",
+          "first_triangle": 772,
+          "triangle_count": 44
+        },
+        {
+          "name": "tail_fin",
+          "first_triangle": 816,
+          "triangle_count": 12
+        },
+        {
+          "name": "tailplane",
+          "first_triangle": 828,
+          "triangle_count": 12
+        },
+        {
+          "name": "mast",
+          "first_triangle": 840,
+          "triangle_count": 28
+        },
+        {
+          "name": "armored_chin",
+          "first_triangle": 868,
+          "triangle_count": 12
+        },
+        {
+          "name": "nose_sensor",
+          "first_triangle": 880,
+          "triangle_count": 12
+        }
+      ],
+      "anchors": {
+        "socket": [
+          -3.9,
+          0.5,
+          81.3
+        ],
+        "guns": [
+          [
+            60,
+            -15,
+            50
+          ],
+          [
+            60,
+            15,
+            50
+          ]
+        ],
+        "rockets": [
+          [
+            0,
+            45,
+            45
+          ],
+          [
+            0,
+            40,
+            45
+          ],
+          [
+            0,
+            -40,
+            45
+          ],
+          [
+            0,
+            -45,
+            45
+          ]
+        ]
+      }
+    },
+    {
+      "path": "models/monsters/plastic_boss/main_rotor.md2",
+      "kind": "main_rotor",
+      "after": {
+        "triangles": 100,
+        "position_vertices": 176,
+        "render_vertices": 192,
+        "frames": 1,
+        "frame_names": [
+          "stand02"
+        ],
+        "skin_references": [
+          "models/monsters/plastic_boss/red.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 50,
+        "gl_command_triangles": 100,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 4776,
+        "sha256": "9c3b7790e4b41aded553dc89b3404edcd15d14bc778259789a177ef75b573681",
+        "bounds": [
+          [
+            -66.0,
+            -57.6076774597168,
+            81.30000305175781
+          ],
+          [
+            66.00000733137131,
+            58.10767289996147,
+            94.59999997913837
+          ]
+        ]
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.303655606185,
+        "minimum_quantized_double_triangle_area": 4.69801679226,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "parts": [
+        {
+          "name": "heavy_rotor_hub",
+          "first_triangle": 0,
+          "triangle_count": 28
+        },
+        {
+          "name": "six_blade_rotor_0",
+          "first_triangle": 28,
+          "triangle_count": 12
+        },
+        {
+          "name": "six_blade_rotor_1",
+          "first_triangle": 40,
+          "triangle_count": 12
+        },
+        {
+          "name": "six_blade_rotor_2",
+          "first_triangle": 52,
+          "triangle_count": 12
+        },
+        {
+          "name": "six_blade_rotor_3",
+          "first_triangle": 64,
+          "triangle_count": 12
+        },
+        {
+          "name": "six_blade_rotor_4",
+          "first_triangle": 76,
+          "triangle_count": 12
+        },
+        {
+          "name": "six_blade_rotor_5",
+          "first_triangle": 88,
+          "triangle_count": 12
+        }
+      ],
+      "anchors": {
+        "axle": [
+          0.0,
+          0.25,
+          81.3
+        ]
+      }
+    }
+  ],
+  "baseline_triangles": 2991,
+  "method": "original red armored gunship, recessed cannon/rocket bores, six-blade linked rotor",
+  "files": [
+    {
+      "path": "models/monsters/plastic_boss/body.md2",
+      "bytes": 40500,
+      "sha256": "5e31d52f198bf719cc4e1a86dcff9e9f1bd16a3bd44b3f59777c9e101ca1de5f"
+    },
+    {
+      "path": "models/monsters/plastic_boss/damaged.png",
+      "bytes": 1936,
+      "sha256": "292132882e8d3fffada57425e5738fe7e043b542cb7523ffc985d08618fb2e88"
+    },
+    {
+      "path": "models/monsters/plastic_boss/main_rotor.md2",
+      "bytes": 4776,
+      "sha256": "9c3b7790e4b41aded553dc89b3404edcd15d14bc778259789a177ef75b573681"
+    },
+    {
+      "path": "models/monsters/plastic_boss/red.png",
+      "bytes": 1173,
+      "sha256": "f5aba61fdec11bb344e6e101dfc38d17f1d576f137fcb9821ca03df1e830cfed"
+    }
+  ]
+}

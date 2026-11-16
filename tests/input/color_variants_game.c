@@ -2,9 +2,15 @@
  * Keep it separate: the engine deliberately sees abbreviated game structs. */
 #include "../../src/game/header/local.h"
 #include <stdint.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef PP_SOLDIER_QA
+/* Photography only: freeze an observed native actor at an original pose. */
+int PP_SoldierBodyPose(void *raw,int stride,int count,uintptr_t base,const char *kind,int frame);
+#endif
 
 static void *game_symbol(uintptr_t base, const char *name)
 {
@@ -33,6 +39,48 @@ int PP_ColorGameEquip(void *raw_entity, uintptr_t game_base, const char *name)
 	return 1;
 }
 
+int PP_ColorGameAmmoState(void *raw_entity, uintptr_t game_base, int counts[7])
+{
+	static const char *const names[]={"Shells", "Bullets", "Grenades", "GL Ammo",
+		"Rockets", "Napalm", "Sniper Rounds"};
+	edict_t *entity=raw_entity;
+	gitem_t *(*find_item)(const char *)=game_symbol(game_base,"FindItem");
+	gitem_t *items=game_symbol(game_base,"itemlist");
+	if (!entity || !entity->client || !find_item || !items || !counts) return 0;
+	for (int i=0; i<7; ++i) {
+		gitem_t *item=find_item(names[i]);
+		ptrdiff_t index=item ? item-items : -1;
+		if (index<0 || index>=MAX_ITEMS) return 0;
+		counts[i]=entity->client->pers.inventory[index];
+	}
+	return 1;
+}
+
+int PP_ColorGameHealthState(void *raw_entity, int out[2])
+{
+	edict_t *entity=raw_entity;
+	if (!entity || !entity->inuse || !entity->client || !out) return 0;
+	out[0]=entity->health;
+	out[1]=entity->max_health;
+	return 1;
+}
+
+int PP_ColorGameArmorState(void *raw_entity, uintptr_t game_base, int counts[3])
+{
+	static const char *const names[]={"Jacket Armor", "Combat Armor", "Body Armor"};
+	edict_t *entity=raw_entity;
+	gitem_t *(*find_item)(const char *)=game_symbol(game_base,"FindItem");
+	gitem_t *items=game_symbol(game_base,"itemlist");
+	if (!entity || !entity->inuse || !entity->client || !find_item || !items || !counts) return 0;
+	for (int i=0; i<3; ++i) {
+		gitem_t *item=find_item(names[i]);
+		ptrdiff_t index=item ? item-items : -1;
+		if (index<0 || index>=MAX_ITEMS) return 0;
+		counts[i]=entity->client->pers.inventory[index];
+	}
+	return 1;
+}
+
 int PP_ColorGameGib(void *raw_edicts, int stride, int count, void *raw_attacker, const char *classname)
 {
 	edict_t *attacker = raw_attacker;
@@ -41,6 +89,14 @@ int PP_ColorGameGib(void *raw_edicts, int stride, int count, void *raw_attacker,
 	float nearest_distance = 1e30f;
 	int nearest_index = -1;
 	int i;
+#ifdef PP_BODY_PARTS_QA
+	/* Private fragment inspection: exercise the unchanged player death path. */
+	if (!strcmp(classname, "player") && attacker && attacker->client && attacker->die) {
+		attacker->health = -10000;
+		attacker->die(attacker, attacker, attacker, 10000, point);
+		return attacker->s.number;
+	}
+#endif
 	if (strncmp(classname, "monster_", 8)) return -1;
 	for (i = 1; i < count; ++i) {
 		edict_t *entity = (edict_t *)((byte *)raw_edicts + stride * i);
@@ -63,3 +119,34 @@ int PP_ColorGameGib(void *raw_edicts, int stride, int count, void *raw_attacker,
 	nearest->die(nearest, attacker, attacker, 10000, point);
 	return nearest_index;
 }
+
+#ifdef PP_SOLDIER_QA
+int PP_SoldierLegacyCook(void *raw,uintptr_t base)
+{
+    edict_t *e=raw;level_locals_t *clock=game_symbol(base,"level");
+    if(!clock || !e || !e->client || !PP_ColorGameEquip(e,base,"Grenades"))return 0;
+    e->client->grenade_time=clock->time+2;
+    e->client->weaponstate=WEAPON_FIRING;e->client->ps.gunframe=12;
+    e->client->buttons &= ~BUTTON_ATTACK;
+    return 1;
+}
+
+int PP_SoldierBodyPose(void *raw,int stride,int count,uintptr_t base,const char *kind,int frame)
+{
+    game_import_t *api=game_symbol(base,"gi");int changed=0;
+    for(int i=1;i<count;i++) {
+        edict_t *e=(edict_t *)((byte *)raw+stride*i);
+        if(!e->inuse)continue;
+        if(!strcmp(kind,"player")) {
+            if(!e->client)continue;
+            e->s.frame=frame;e->client->anim_end=frame;e->client->anim_priority=ANIM_DEATH;changed++;
+        } else {
+            if(!e->classname||strncmp(e->classname,"monster_soldier",15))continue;
+            e->nextthink=0;e->s.frame=frame;VectorClear(e->velocity);
+            e->s.modelindex=api->modelindex(!strcmp(kind,"enemy")?"models/monsters/soldier/tris.md2":"models/monsters/soldier/tall/tris.md2");
+            e->s.modelindex2=0;changed++;
+        }
+    }
+    return changed;
+}
+#endif

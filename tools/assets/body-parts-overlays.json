@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "archives": [
+    {
+      "path": "baseq2/operation-ant-test.pk3",
+      "managed_members": [
+        "models/objects/gibs/ant/chunk.md2",
+        "models/objects/gibs/ant/leg.md2",
+        "models/objects/gibs/ant/skin.png"
+      ],
+      "untouched_members": 30,
+      "untouched_sha256": "4b909f1e9d5af0e66b53cb3de607145f260959baab5438856211506d4a0c323e"
+    },
+    {
+      "path": "baseq2/operation-spider-test.pk3",
+      "managed_members": [
+        "models/objects/gibs/spider/chunk.md2",
+        "models/objects/gibs/spider/leg.md2",
+        "models/objects/gibs/spider/skin.png"
+      ],
+      "untouched_members": 30,
+      "untouched_sha256": "4552294a474168abd9e969208ecb36dc24ef557cc62b7421f3bc0c9e7f28598d"
+    }
+  ]
+}

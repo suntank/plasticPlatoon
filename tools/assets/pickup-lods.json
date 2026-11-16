@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "purpose": "Distance-only LODs; canonical close models and all textures are preserved.",
+  "purpose": "Authored ammo, health and armor keep identical close/distant low-poly meshes.",
   "source_archives": {
     "pickups": {
       "path": "tools/assets/sources/pickups-local.pk3",
@@ -33,74 +33,68 @@
       "classname": "ammo_bullets",
       "canonical": "models/items/ammo/bullets/medium/tris.md2",
       "lod": "models/items/ammo/bullets/medium/lod1.md2",
-      "canonical_sha256": "fc45f24b2d2e83efb565889c27546a637355b2ddaa3776ba75e21a065820e4ab",
-      "source_archive": "platoon",
-      "source_sha256": "acec81547616988f017a3494777702b2846c36e74167f103da58d8cee3ada6d2",
+      "canonical_sha256": "8efb3c7a9a341930c1048eb212cda49a6653497476172fe333e51f6210baf5cd",
       "skin": "models/items/ammo/bullets/medium/skin.png",
-      "skin_sha256": "0ab76a6128213c6c170976829bff39849971996c4578df94b7e429c51d481c56",
-      "recipe": "ammo_box",
-      "target_triangles": 132,
-      "pigment_texel": [
-        80,
-        136
-      ],
-      "design": "Five solid tray panels, a raised hinged lid, and five broad cartridge blocks; omit subpixel ribs, bevels and tiny rounds."
+      "skin_sha256": "54c6c186eb5d8e6002e636593dc22e4ad01cbd9c297451cf6244a81b5c5d9865",
+      "recipe": "authored_ammo",
+      "target_triangles": 160,
+      "design": "Use the exact low-poly ammo pickup owned by build_ammo.py at every distance; preserve its full authored silhouette, atlas, lattice and frame identity."
     },
     {
       "classname": "ammo_shells",
       "canonical": "models/items/ammo/shells/medium/tris.md2",
       "lod": "models/items/ammo/shells/medium/lod1.md2",
-      "canonical_sha256": "4a33719467649de417ba974321f6e26c7476d2f36b5c2ddee063b7ecaca09eda",
-      "source_archive": "platoon",
-      "source_sha256": "93367d01fe4ddde3e6ef0fd48f023656b4b2652d153cd5a9853d8a8924295045",
+      "canonical_sha256": "abe7ecdf9728604d50f7e5148b62526b83ccf8901bca9484c9a0b7fdb0a321a7",
       "skin": "models/items/ammo/shells/medium/skin.png",
-      "skin_sha256": "e631d95ed5e32d309709b2a0facee28f63c2ed93e531f57592ff2083ebe000e4",
-      "recipe": "ammo_box",
-      "target_triangles": 132,
-      "pigment_texel": [
-        148,
-        220
-      ],
-      "design": "Five solid tray panels, a raised hinged lid, and five broad cartridge blocks; omit subpixel ribs, bevels and tiny rounds."
+      "skin_sha256": "bb6a5be52c054a9a93afa9d447a1a2ff28bc273dc7034045b02b3d0e32174418",
+      "recipe": "authored_ammo",
+      "target_triangles": 160,
+      "design": "Use the exact low-poly ammo pickup owned by build_ammo.py at every distance; preserve its full authored silhouette, atlas, lattice and frame identity."
     },
     {
       "classname": "ammo_grenades",
       "canonical": "models/items/ammo/grenades/medium/tris.md2",
       "lod": "models/items/ammo/grenades/medium/lod1.md2",
-      "canonical_sha256": "95e9b7a37f8c5ee6fb47009caf1cf3d08416acb2b927a66466fa028a34339871",
-      "source_archive": "pickups",
-      "source_sha256": "c6b775f241d37166a535bf522cd1691bfa9a24590b1f3bd2de0dbdf058e2ffde",
+      "canonical_sha256": "91b94d8e3f70b142d17accd6dc932176f5c1c69c5352899e13978f218ed5f427",
       "skin": "models/items/ammo/grenades/medium/skin.png",
-      "skin_sha256": "30c163ca8659dd7957b37022b95c066364f56f4093b66b90321bdd2e2a7601bb",
-      "recipe": "qem",
-      "target_triangles": 180,
-      "design": "Source UV-aware reduction with smooth source-surface normal transfer; rounded silhouette and original pigment retained."
+      "skin_sha256": "3ec2d6d6c6e191f44f64da1877c82d57ab728d64a3a2c47328c092bbe120c5bb",
+      "recipe": "authored_ammo",
+      "target_triangles": 160,
+      "design": "Use the exact low-poly ammo pickup owned by build_ammo.py at every distance; preserve its full authored silhouette, atlas, lattice and frame identity."
     },
     {
       "classname": "item_armor_shard",
       "canonical": "models/items/armor/shard/tris.md2",
       "lod": "models/items/armor/shard/lod1.md2",
-      "canonical_sha256": "e11f9b6037c8e979c81b76cd8cbccef9ba09a56b952baad8c3b1046412ce819e",
-      "source_archive": "pickups",
-      "source_sha256": "b3a8eceadaef73e7725ab0131b30b2d2f54fae491a5c0ca71b09947c22889a65",
+      "canonical_sha256": "07309f504966f73528a08d20c1252bb3ee3ad1a7d9e9120869fa1836ab929119",
       "skin": "models/items/armor/shard/skin.png",
-      "skin_sha256": "738605133c9109b110357fc84cc37373b5e93aa6f4deb98d93405e05d786b6fc",
-      "recipe": "qem",
+      "skin_sha256": "e83188f424bd311345e6abfa41bf38d10ec932f9b463e32b6eb61eadb5133200",
+      "recipe": "authored_armor",
       "target_triangles": 200,
-      "design": "Source UV-aware reduction with smooth source-surface normal transfer; rounded silhouette and original pigment retained."
+      "design": "Use the exact low-poly armor shard owned by build_armor.py at every distance; preserve its full silhouette, markings, atlas, lattice and frame identity."
     },
     {
       "classname": "item_health_small",
       "canonical": "models/items/healing/stimpack/tris.md2",
       "lod": "models/items/healing/stimpack/lod1.md2",
-      "canonical_sha256": "b732f8175f78e1e34e7ddf096ce6d3ef490a9218c13c07c76d79d6676f039abf",
-      "source_archive": "pickups",
-      "source_sha256": "bbfd4015f6d4e5e011f2f0614b805f3ea8ff3f3d71c29e1d4623b03241c5dbff",
+      "canonical_sha256": "83780f2aa4baf09d048cd532353ee32f25760d7e6b02a7a2b43108cb14dbd632",
       "skin": "models/items/healing/stimpack/skin.png",
-      "skin_sha256": "e6d94324ad0028f0e8e427b8a5523223d7d64da66939eaf2263f744b200ea4d5",
-      "recipe": "qem",
+      "skin_sha256": "3eb54d17fbc994289bc95f66f379ea4ea0ab7cbb94a613768eea3f12d8a8d8eb",
+      "recipe": "authored_health",
       "target_triangles": 180,
-      "design": "Source UV-aware reduction with smooth source-surface normal transfer; rounded silhouette and original pigment retained."
+      "design": "Use the exact low-poly health pickup owned by build_health.py at every distance; preserve its silhouette, medical markings, atlas, lattice and frame identity."
     }
-  ]
+  ],
+  "authored_ammo": {
+    "generator": "tools/assets/build_ammo.py",
+    "manifest": "tools/assets/ammo-manifest.json"
+  },
+  "authored_health": {
+    "generator": "tools/assets/build_health.py",
+    "manifest": "tools/assets/health-manifest.json"
+  },
+  "authored_armor": {
+    "generator": "tools/assets/build_armor.py",
+    "manifest": "tools/assets/armor-manifest.json"
+  }
 }

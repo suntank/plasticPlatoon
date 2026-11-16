@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_health_overlays.py",
+  "config_sha256": "8e8a0634867fdf30b3059d4b2b187abf777c0406eaef0b8dbbf21e29b0edee78",
+  "health_manifest_sha256": "5f8013d75b8316c9a2e6b2e89b9398ea0f22009cec9f5ee7d90c0cb0e4087bc0",
+  "archives": [
+    {
+      "path": "baseq2/operation-sandstorm-preview.pk3",
+      "untouched_members": 55,
+      "untouched_sha256": "6aa9f9a5846943c51fdb19efc1c4de4ab7c07fd1aed2fb1d4e271f283c9d4712",
+      "managed": {
+        "models/items/adrenal/skin.png": {
+          "bytes": 1764,
+          "sha256": "65e466ea45e8933bb33c554db2e047d47a564239ff2f45e6bc6079f17a6bc9b9"
+        },
+        "models/items/adrenal/tris.md2": {
+          "bytes": 5832,
+          "sha256": "2dbc35ca6a2f5829541247f19c06eca68252edee631ce6d88c8e1248c57c2913"
+        }
+      },
+      "separately_owned": {
+        "dropship": [
+          "models/vehicles/platoon_dropship/body.md2",
+          "models/vehicles/platoon_dropship/main_rotor.md2",
+          "models/vehicles/platoon_dropship/green.png"
+        ]
+      }
+    }
+  ],
+  "proof": "All immutable Sandstorm member contents retain their pinned hashes; separately owned dropship media require their own archive gate."
+}

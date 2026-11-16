@@ -1,0 +1,215 @@
+{
+  "map": "pp_garden_infiltration",
+  "published": {
+    "archive": "baseq2/operation-garden-infiltration.pk3",
+    "archive_sha256": "e203d4288fff4532fe0207b9ddd71c0a84803079a8d7d2688546b748b8f840ab",
+    "source_inside_archive": "maps/pp_garden_infiltration.map",
+    "source_sha256": "813297c8d6febd391df311cfd9ec6dc8d3c3437417514a37e52e1d30de9a1294",
+    "bsp_sha256": "4b9dbcbf3807facf37d5280f5d776134dce89470b7992ffd2631fcf0cfbd902a",
+    "runtime_source_sha256": "eda1abae82dcfed8fad01e05b3f02dbde7087642a22ed89c651f50ea06939d51",
+    "original_verification_receipt_sha256": "e3c6bad592c56a27a515f31f5e0ee4a43dea58bfef70b2b875e46a15751aeb42",
+    "validation": "Previously passed independent full-release preservation, route and collision audit; package entries and loose BSP rechecked byte-for-byte before publication."
+  },
+  "editable_work_in_progress": {
+    "source": "maps/source/pp_garden_infiltration.map",
+    "source_sha256": "85723591c59f84923b0ecefd51d57958bae38e43a2b49156f4b21d3dcf4960a2",
+    "candidate_bsp_sha256": "91b0287de7c75e9fdada7f35a2c91471772068291489bed7c170e07dea91d81c",
+    "published": false,
+    "full_bsp_vis_rad_passed": true,
+    "audit_passed": false,
+    "failed_placement_count": 10,
+    "failed_placements": [
+      {
+        "entity": 13,
+        "classname": "monster_soldier_light",
+        "origin": [
+          1120.0,
+          -1600.0,
+          56.0
+        ],
+        "authored_runtime_origin": [
+          1120.0,
+          -1600.0,
+          56.0
+        ],
+        "blocker": "world solid/void at origin",
+        "grounded_origin": null,
+        "drop_blocker": null
+      },
+      {
+        "entity": 14,
+        "classname": "monster_soldier_light",
+        "origin": [
+          1220.0,
+          -1460.0,
+          56.0
+        ],
+        "authored_runtime_origin": [
+          1220.0,
+          -1460.0,
+          56.0
+        ],
+        "blocker": "world solid/void at origin",
+        "grounded_origin": null,
+        "drop_blocker": null
+      },
+      {
+        "entity": 17,
+        "classname": "monster_soldier_light",
+        "origin": [
+          -760.0,
+          -920.0,
+          36.0
+        ],
+        "authored_runtime_origin": [
+          -760.0,
+          -920.0,
+          36.0
+        ],
+        "blocker": "world brush 216",
+        "grounded_origin": null,
+        "drop_blocker": null
+      },
+      {
+        "entity": 19,
+        "classname": "item_health",
+        "origin": [
+          400.0,
+          -1000.0,
+          64.0
+        ],
+        "authored_runtime_origin": [
+          400.0,
+          -1000.0,
+          64.0
+        ],
+        "blocker": "world solid/void at origin",
+        "grounded_origin": null,
+        "drop_blocker": null
+      },
+      {
+        "entity": 22,
+        "classname": "monster_soldier",
+        "origin": [
+          -1050.0,
+          -330.0,
+          56.0
+        ],
+        "authored_runtime_origin": [
+          -1050.0,
+          -330.0,
+          56.0
+        ],
+        "blocker": "world brush 205",
+        "grounded_origin": null,
+        "drop_blocker": null
+      },
+      {
+        "entity": 29,
+        "classname": "monster_soldier_light",
+        "origin": [
+          -480.0,
+          370.0,
+          56.0
+        ],
+        "authored_runtime_origin": [
+          -480.0,
+          370.0,
+          56.0
+        ],
+        "blocker": "world brush 141",
+        "grounded_origin": null,
+        "drop_blocker": null
+      },
+      {
+        "entity": 39,
+        "classname": "item_health",
+        "origin": [
+          1180.0,
+          700.0,
+          64.0
+        ],
+        "authored_runtime_origin": [
+          1180.0,
+          700.0,
+          64.0
+        ],
+        "blocker": "world solid/void at origin",
+        "grounded_origin": null,
+        "drop_blocker": null
+      },
+      {
+        "entity": 40,
+        "classname": "item_armor_jacket",
+        "origin": [
+          1230.0,
+          780.0,
+          64.0
+        ],
+        "authored_runtime_origin": [
+          1230.0,
+          780.0,
+          64.0
+        ],
+        "blocker": "world solid/void at origin",
+        "grounded_origin": null,
+        "drop_blocker": null
+      },
+      {
+        "entity": 43,
+        "classname": "monster_soldier_light",
+        "origin": [
+          20.0,
+          1730.0,
+          56.0
+        ],
+        "authored_runtime_origin": [
+          20.0,
+          1730.0,
+          56.0
+        ],
+        "blocker": "world brush 166",
+        "grounded_origin": null,
+        "drop_blocker": null
+      },
+      {
+        "entity": 50,
+        "classname": "monster_soldier_light",
+        "origin": [
+          -760.0,
+          2430.0,
+          56.0
+        ],
+        "authored_runtime_origin": [
+          -760.0,
+          2430.0,
+          56.0
+        ],
+        "blocker": "world solid/void at origin",
+        "grounded_origin": null,
+        "drop_blocker": null
+      }
+    ],
+    "failed_route_segment_count": 13,
+    "failed_route_segments": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6,
+      10,
+      12,
+      13,
+      21,
+      22,
+      28,
+      29
+    ],
+    "warnings": [
+      "Original world brushes changed, removed or reordered; only 0/86 preserved in sequence",
+      "Original entities changed, removed or reordered; only 4/38 preserved in sequence"
+    ],
+    "note": "Preserved manual edits without moving geometry, actors or supplies. Resolve collision and route failures before replacing the playable build."
+  }
+}

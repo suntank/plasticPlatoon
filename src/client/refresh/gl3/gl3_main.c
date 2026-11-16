@@ -31,6 +31,7 @@
 #include "../perf_impl.h"
 #include "../gpu_timer_impl.h"
 #include "../files/pickup_lod.h"
+#include "../view_weapon_clip.h"
 
 static cvar_t *r_pickup_lod;
 
@@ -1424,10 +1425,10 @@ static hmm_mat4 rotAroundAxisXYZ(float aroundXdeg, float aroundYdeg, float aroun
 
 // equivalent to R_SetPerspective() but returning a matrix instead of setting internal OpenGL state
 hmm_mat4
-GL3_SetPerspective(GLdouble fovy)
+GL3_SetPerspective(GLdouble fovy, qboolean weapon_model)
 {
 	// gluPerspective() / R_MYgluPerspective() style parameters
-	const GLdouble zNear = Q_max(gl_znear->value, 0.1f);
+	const GLdouble zNear = PP_RenderNearClip(gl_znear->value, weapon_model);
 	GLdouble zFar = (r_farsee->value) ? 8192.0f : 4096.0f;
 	const GLdouble aspect = (GLdouble)r_newrefdef.width / r_newrefdef.height;
 
@@ -1566,7 +1567,7 @@ SetupGL(void)
 	}
 
 	/* set up projection matrix (eye coordinates -> clip coordinates) */
-	gl3state.projMat3D = GL3_SetPerspective(r_newrefdef.fov_y);
+	gl3state.projMat3D = GL3_SetPerspective(r_newrefdef.fov_y, false);
 
 	glCullFace(GL_FRONT);
 

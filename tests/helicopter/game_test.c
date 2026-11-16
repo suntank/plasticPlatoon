@@ -577,6 +577,8 @@ static void test_savegame(const char *filename)
     assert(!self->inuse);
     unlink(filename);
 }
+#include "boss_test.h"
+
 int main(int argc, char **argv)
 {
     assert(argc == 2);
@@ -603,6 +605,7 @@ int main(int argc, char **argv)
     test_crash_and_cleanup();
     test_death_objective_after_attack();
     test_savegame(argv[1]);
+    test_boss_helicopter(argv[1]);
     puts("helicopter flight, rotating attachments, guns, rockets, attack safety, crash physics and save/load passed");
     return 0;
 }

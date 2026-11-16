@@ -1,0 +1,22 @@
+{
+  "archive": "tools/assets/sources/soldier-body-baseline.pk3",
+  "sha256": "44b56fab0f541caf8bad6f6dbbaedd1e4edd42c63e9cb9c749a113a3278b316b",
+  "files": [
+    {
+      "path": "models/monsters/soldier/tris.md2",
+      "sha256": "9363f8d2fcb22c0d738ddf12f33a7e873ecb30f7badc8d704ecc565c812a2f05"
+    },
+    {
+      "path": "models/monsters/soldier/tall/tris.md2",
+      "sha256": "122c0f291a075757137125747574c30b13bc82c53765fbdf87454e29eedb7adf"
+    },
+    {
+      "path": "players/soldier/tris.md2",
+      "sha256": "e0679b4bfa8099fc207abcfa4cc3ed0839c085c5c41d378131469f8395bedbd7"
+    },
+    {
+      "path": "players/soldier/tris_pistol.md2",
+      "sha256": "247dc0c2d99e7b2345eb5aaf20ca11b13312df1f6faaad614e41b0f6fc140963"
+    }
+  ]
+}

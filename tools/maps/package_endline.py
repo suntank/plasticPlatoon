@@ -10,6 +10,7 @@ import struct
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from verify_sandkeep import parse_entities
+from dropship_dependencies import dropship_files
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -36,6 +37,7 @@ def main():
              "maps/endline-audio.json": ROOT / "tools/maps/endline-audio.json"}
     for p in base.glob("endline_*.cfg"):
         files[p.name] = p
+    files.update(dropship_files(base))
     # Include exact existing material dependencies and complete button animation
     # chains. Never package another mission or an unrelated texture directory.
     pending = list({t for e in parse_entities(source.read_text()) for t in e["textures"]})

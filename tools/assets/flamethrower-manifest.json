@@ -1,0 +1,766 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_flamethrower.py",
+  "dependencies_sha256": {
+    "build_flamethrower.py": "c689d4cfbdc0755e6e5ceeea8bb6532b2dac39a75115eb452d399bd7a49ba962",
+    "flamethrower_geometry.py": "9d576b6e1646b1774c951586c564f99dbf29b95cfabd286bf42dabddd836db99",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d",
+    "md2_animation.py": "ded6af2787240ac7f2fd5b26edc7a33228699725c22e515f4187ec6485aaec90"
+  },
+  "source_archive": {
+    "path": "tools/assets/sources/platoon-originals.pk3",
+    "sha256": "308e7b7e07f08ecbd0f7487e8a37440ab07c28bb83896b0f4c959a29fdcbf7e4",
+    "bytes": 47317833,
+    "origin": "Original owner-authored Plastic Platoon model, texture and sprite inputs recovered before public history cleanup",
+    "license": "GPL-2.0-or-later",
+    "excluded": [
+      "Legacy players/male assets",
+      "Inherited soldier portrait PCXs"
+    ]
+  },
+  "source_repair": {
+    "policy": "hash-pinned GL-command-authoritative triangle/ST table repair",
+    "source_sha256": "7742a95495ed3db8699798671bf42b635f97cbb0a74df6472fd4964479bf3e9a",
+    "output_sha256": "f82a103f5bac34f7d9ebbaaed116d692f2d3c28524ebdab6faf8fc57fc5692bf",
+    "invalid_xyz_triangles": 2208,
+    "invalid_st_triangles": 872,
+    "preserved_gl_triangles": 2783,
+    "preserved_frames": 198
+  },
+  "method": "authored closed shapes; independent archived gun/backpack motion; endpoint-attached cubic hose",
+  "hand": "m16_geometry.add_hands; exact existing molded mittens and forearms",
+  "palette": "Shared M16 army-man plastic and mitten atlas",
+  "models": [
+    {
+      "path": "models/weapons/g_hyperb/tris.md2",
+      "role": "pickup",
+      "baseline": {
+        "triangles": 1199,
+        "position_vertices": 572,
+        "frames": 1,
+        "file_bytes": 55020
+      },
+      "after": {
+        "triangles": 648,
+        "position_vertices": 736,
+        "render_vertices": 914,
+        "frames": 1,
+        "skin_references": [
+          "models/weapons/g_hyperb/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 216,
+        "gl_command_triangles": 648,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 25528,
+        "sha256": "aed082f0005b6660a9b75812fc113b5aea8749e9f63aee5c95ab4b4bde3a24ea",
+        "bounds": [
+          [
+            -38.84000015258789,
+            -12.350000381469727,
+            5.653900146484375
+          ],
+          [
+            39.24999716877937,
+            20.39305543899536,
+            37.07999983429909
+          ]
+        ]
+      },
+      "pose_transfer": null,
+      "validation": {
+        "max_vertex_quantization_error": 0.163800030191,
+        "minimum_quantized_double_triangle_area": 0.226441895312,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          -38.83999999999999,
+          9.025,
+          21.88
+        ],
+        "rear_sight": [
+          -4.639999999999999,
+          9.025,
+          26.782000000000004
+        ],
+        "front_sight": [
+          -33.13999999999999,
+          9.025,
+          26.782000000000004
+        ],
+        "grip": [
+          -5.779999999999999,
+          9.025,
+          17.32
+        ],
+        "inlet": [
+          -2.3599999999999994,
+          10.507,
+          20.455000000000002
+        ],
+        "support": [
+          -21.739999999999995,
+          9.025,
+          20.740000000000002
+        ],
+        "outlet": [
+          32.6,
+          14.06,
+          12.0
+        ],
+        "pack_end": [
+          32.6,
+          14.06,
+          12.0
+        ],
+        "gun_end": [
+          -2.3599999999999994,
+          10.507,
+          20.455
+        ]
+      },
+      "parts": [
+        {
+          "name": "receiver",
+          "first_triangle": 0,
+          "triangle_count": 20
+        },
+        {
+          "name": "grip",
+          "first_triangle": 20,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 40,
+          "triangle_count": 32
+        },
+        {
+          "name": "fuel_inlet",
+          "first_triangle": 72,
+          "triangle_count": 20
+        },
+        {
+          "name": "handguard",
+          "first_triangle": 92,
+          "triangle_count": 44
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 136,
+          "triangle_count": 28
+        },
+        {
+          "name": "nozzle",
+          "first_triangle": 164,
+          "triangle_count": 60
+        },
+        {
+          "name": "igniter_pipe",
+          "first_triangle": 224,
+          "triangle_count": 12
+        },
+        {
+          "name": "igniter_tip",
+          "first_triangle": 236,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 248,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 260,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 272,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_backplate",
+          "first_triangle": 284,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_tank_right",
+          "first_triangle": 296,
+          "triangle_count": 60
+        },
+        {
+          "name": "pack_valve_right",
+          "first_triangle": 356,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_band_right_lower",
+          "first_triangle": 368,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_band_right_upper",
+          "first_triangle": 380,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_shoulder_right",
+          "first_triangle": 392,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_tank_left",
+          "first_triangle": 404,
+          "triangle_count": 60
+        },
+        {
+          "name": "pack_valve_left",
+          "first_triangle": 464,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_band_left_lower",
+          "first_triangle": 476,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_band_left_upper",
+          "first_triangle": 488,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_shoulder_left",
+          "first_triangle": 500,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_pressure_bottle",
+          "first_triangle": 512,
+          "triangle_count": 20
+        },
+        {
+          "name": "pack_manifold",
+          "first_triangle": 532,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_outlet",
+          "first_triangle": 544,
+          "triangle_count": 12
+        },
+        {
+          "name": "fuel_hose",
+          "first_triangle": 556,
+          "triangle_count": 92
+        }
+      ]
+    },
+    {
+      "path": "models/weapons/v_hyperb/tris.md2",
+      "role": "view",
+      "baseline": {
+        "triangles": 1799,
+        "position_vertices": 901,
+        "frames": 1,
+        "file_bytes": 78144
+      },
+      "after": {
+        "triangles": 804,
+        "position_vertices": 680,
+        "render_vertices": 970,
+        "frames": 1,
+        "skin_references": [
+          "models/weapons/v_hyperb/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 230,
+        "gl_command_triangles": 804,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 29892,
+        "sha256": "29629a5fa4642b5fff57ef80bf1517561641fd8cb5913bb50c088a43faadb957",
+        "bounds": [
+          [
+            -9.071540832519531,
+            -17.344497680664062,
+            -28.084228515625
+          ],
+          [
+            51.31481505930424,
+            2.0923466458916664,
+            -1.899637870490551
+          ]
+        ]
+      },
+      "pose_transfer": null,
+      "validation": {
+        "max_vertex_quantization_error": 0.124870556598,
+        "minimum_quantized_double_triangle_area": 0.187798745854,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          51.31481439352036,
+          -8.5,
+          -7.8
+        ],
+        "rear_sight": [
+          11.97906587600708,
+          -8.5,
+          -2.161876045823097
+        ],
+        "front_sight": [
+          44.75885630726815,
+          -8.5,
+          -2.161876045823097
+        ],
+        "grip": [
+          13.290257493257524,
+          -8.5,
+          -13.04476646900177
+        ],
+        "inlet": [
+          9.356682641506197,
+          -10.204549102425576,
+          -9.438989521563053
+        ],
+        "support": [
+          31.646940134763717,
+          -8.5,
+          -9.111191617250443
+        ],
+        "pack_end": [
+          -8.344404191374778,
+          -15.711553894877433,
+          -27.467874258756638
+        ],
+        "gun_end": [
+          9.356682641506197,
+          -10.204549102425576,
+          -9.438989521563053
+        ]
+      },
+      "parts": [
+        {
+          "name": "receiver",
+          "first_triangle": 0,
+          "triangle_count": 20
+        },
+        {
+          "name": "grip",
+          "first_triangle": 20,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 40,
+          "triangle_count": 32
+        },
+        {
+          "name": "fuel_inlet",
+          "first_triangle": 72,
+          "triangle_count": 20
+        },
+        {
+          "name": "handguard",
+          "first_triangle": 92,
+          "triangle_count": 44
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 136,
+          "triangle_count": 28
+        },
+        {
+          "name": "nozzle",
+          "first_triangle": 164,
+          "triangle_count": 60
+        },
+        {
+          "name": "igniter_pipe",
+          "first_triangle": 224,
+          "triangle_count": 12
+        },
+        {
+          "name": "igniter_tip",
+          "first_triangle": 236,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 248,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 260,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 272,
+          "triangle_count": 12
+        },
+        {
+          "name": "arm_right",
+          "first_triangle": 284,
+          "triangle_count": 20
+        },
+        {
+          "name": "cuff_right",
+          "first_triangle": 304,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_right_wrist",
+          "first_triangle": 324,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_right_palm",
+          "first_triangle": 344,
+          "triangle_count": 76
+        },
+        {
+          "name": "hand_right_thumb",
+          "first_triangle": 420,
+          "triangle_count": 44
+        },
+        {
+          "name": "hand_right_fingers",
+          "first_triangle": 464,
+          "triangle_count": 60
+        },
+        {
+          "name": "arm_left",
+          "first_triangle": 524,
+          "triangle_count": 20
+        },
+        {
+          "name": "cuff_left",
+          "first_triangle": 544,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_left_palm",
+          "first_triangle": 564,
+          "triangle_count": 60
+        },
+        {
+          "name": "hand_left_fingers",
+          "first_triangle": 624,
+          "triangle_count": 44
+        },
+        {
+          "name": "hand_left_thumb",
+          "first_triangle": 668,
+          "triangle_count": 44
+        },
+        {
+          "name": "fuel_hose",
+          "first_triangle": 712,
+          "triangle_count": 92
+        }
+      ]
+    },
+    {
+      "path": "players/soldier/w_hyperblaster.md2",
+      "role": "player",
+      "baseline": {
+        "triangles": 2493,
+        "position_vertices": 1221,
+        "frames": 198,
+        "file_bytes": 1077852
+      },
+      "after": {
+        "triangles": 648,
+        "position_vertices": 736,
+        "render_vertices": 914,
+        "frames": 198,
+        "skin_references": [
+          "models/weapons/v_hyperb/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 216,
+        "gl_command_triangles": 648,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 613376,
+        "sha256": "314d8b1b3d7a69bdcddc2acfa82185dd280fe899cbd4a3ad996a074b416119b3",
+        "bounds": [
+          [
+            -54.253902435302734,
+            -34.12985610961914,
+            -33.82312774658203
+          ],
+          [
+            57.36354734003544,
+            40.889890775084496,
+            42.148075476288795
+          ]
+        ]
+      },
+      "pose_transfer": {
+        "gun": {
+          "vertices": [
+            0,
+            284
+          ],
+          "frames": 198,
+          "rms_max": 0.087617502866
+        },
+        "backpack": {
+          "vertices": [
+            284,
+            1366
+          ],
+          "frames": 198,
+          "rms_max": 0.0873188021906
+        },
+        "hose": {
+          "rings": 8,
+          "sides": 6,
+          "radius": 0.65,
+          "method": "pack controls follow backpack; gun controls follow wand; transported rings"
+        }
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.116085440684,
+        "minimum_quantized_double_triangle_area": 0.0285919328861,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          27.599999999999998,
+          -4.75,
+          15.200000000000001
+        ],
+        "rear_sight": [
+          9.6,
+          -4.75,
+          17.78
+        ],
+        "front_sight": [
+          24.599999999999998,
+          -4.75,
+          17.78
+        ],
+        "grip": [
+          10.2,
+          -4.75,
+          12.8
+        ],
+        "inlet": [
+          8.4,
+          -5.53,
+          14.450000000000001
+        ],
+        "support": [
+          18.599999999999998,
+          -4.75,
+          14.600000000000001
+        ],
+        "outlet": [
+          -10.0,
+          -7.4,
+          10.0
+        ],
+        "pack_end": [
+          -10.0,
+          -7.4,
+          10.0
+        ],
+        "gun_end": [
+          8.4,
+          -5.53,
+          14.45
+        ]
+      },
+      "parts": [
+        {
+          "name": "receiver",
+          "first_triangle": 0,
+          "triangle_count": 20
+        },
+        {
+          "name": "grip",
+          "first_triangle": 20,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 40,
+          "triangle_count": 32
+        },
+        {
+          "name": "fuel_inlet",
+          "first_triangle": 72,
+          "triangle_count": 20
+        },
+        {
+          "name": "handguard",
+          "first_triangle": 92,
+          "triangle_count": 44
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 136,
+          "triangle_count": 28
+        },
+        {
+          "name": "nozzle",
+          "first_triangle": 164,
+          "triangle_count": 60
+        },
+        {
+          "name": "igniter_pipe",
+          "first_triangle": 224,
+          "triangle_count": 12
+        },
+        {
+          "name": "igniter_tip",
+          "first_triangle": 236,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 248,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 260,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 272,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_backplate",
+          "first_triangle": 284,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_tank_right",
+          "first_triangle": 296,
+          "triangle_count": 60
+        },
+        {
+          "name": "pack_valve_right",
+          "first_triangle": 356,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_band_right_lower",
+          "first_triangle": 368,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_band_right_upper",
+          "first_triangle": 380,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_shoulder_right",
+          "first_triangle": 392,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_tank_left",
+          "first_triangle": 404,
+          "triangle_count": 60
+        },
+        {
+          "name": "pack_valve_left",
+          "first_triangle": 464,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_band_left_lower",
+          "first_triangle": 476,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_band_left_upper",
+          "first_triangle": 488,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_shoulder_left",
+          "first_triangle": 500,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_pressure_bottle",
+          "first_triangle": 512,
+          "triangle_count": 20
+        },
+        {
+          "name": "pack_manifold",
+          "first_triangle": 532,
+          "triangle_count": 12
+        },
+        {
+          "name": "pack_outlet",
+          "first_triangle": 544,
+          "triangle_count": 12
+        },
+        {
+          "name": "fuel_hose",
+          "first_triangle": 556,
+          "triangle_count": 92
+        }
+      ]
+    }
+  ],
+  "ads_header": {
+    "path": "src/client/header/flamethrower_model_ads.h",
+    "sha256": "58e1c3cb2360b3e8e7be97ddad6d22a479b08be47cdf1a772ead35901559fd15"
+  },
+  "files": [
+    {
+      "path": "models/weapons/g_hyperb/skin.png",
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
+    },
+    {
+      "path": "models/weapons/g_hyperb/tris.md2",
+      "bytes": 25528,
+      "sha256": "aed082f0005b6660a9b75812fc113b5aea8749e9f63aee5c95ab4b4bde3a24ea"
+    },
+    {
+      "path": "models/weapons/v_hyperb/skin.png",
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
+    },
+    {
+      "path": "models/weapons/v_hyperb/tris.md2",
+      "bytes": 29892,
+      "sha256": "29629a5fa4642b5fff57ef80bf1517561641fd8cb5913bb50c088a43faadb957"
+    },
+    {
+      "path": "players/soldier/w_hyperblaster.md2",
+      "bytes": 613376,
+      "sha256": "314d8b1b3d7a69bdcddc2acfa82185dd280fe899cbd4a3ad996a074b416119b3"
+    }
+  ]
+}

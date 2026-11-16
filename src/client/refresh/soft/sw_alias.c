@@ -61,7 +61,7 @@ static const float	r_avertexnormals[NUMVERTEXNORMALS][3] = {
 static void R_AliasTransformVector(const vec3_t in, vec3_t out, const float xf[3][4]);
 static void R_AliasTransformFinalVerts(const entity_t *currententity, int numpoints, finalvert_t *fv, dtrivertx_t *oldv, dtrivertx_t *newv );
 
-void R_AliasProjectAndClipTestFinalVert(finalvert_t *fv);
+void R_AliasProjectAndClipTestFinalVert(const entity_t *currententity, finalvert_t *fv);
 
 
 /*
@@ -81,7 +81,7 @@ R_AliasCheckBBox
 ** Checks a specific alias frame bounding box
 */
 static unsigned long
-R_AliasCheckFrameBBox( daliasframe_t *frame, float worldxf[3][4] )
+R_AliasCheckFrameBBox( const entity_t *currententity, daliasframe_t *frame, float worldxf[3][4] )
 {
 	// FIXME: should this really be using long and not int32_t or sth?
 	unsigned long aggregate_and_clipcode = ~0U,
@@ -90,6 +90,7 @@ R_AliasCheckFrameBBox( daliasframe_t *frame, float worldxf[3][4] )
 	vec3_t        mins, maxs;
 	vec3_t        transformed_min, transformed_max;
 	qboolean      zfullyclipped = true;
+	const float near_clip = PP_RenderNearClip(ALIAS_Z_CLIP_PLANE, currententity->flags & RF_WEAPONMODEL);
 
 	/*
 	** get the exact frame bounding box
@@ -106,12 +107,12 @@ R_AliasCheckFrameBBox( daliasframe_t *frame, float worldxf[3][4] )
 	R_AliasTransformVector( mins, transformed_min, aliastransform );
 	R_AliasTransformVector( maxs, transformed_max, aliastransform );
 
-	if ( transformed_min[2] >= ALIAS_Z_CLIP_PLANE )
+	if ( transformed_min[2] >= near_clip )
 	{
 		zfullyclipped = false;
 	}
 
-	if ( transformed_max[2] >= ALIAS_Z_CLIP_PLANE )
+	if ( transformed_max[2] >= near_clip )
 	{
 		zfullyclipped = false;
 	}
@@ -190,7 +191,7 @@ R_AliasCheckBBox (const entity_t *currententity)
 {
 	unsigned long ccodes[2] = { 0, 0 };
 
-	ccodes[0] = R_AliasCheckFrameBBox( r_thisframe, aliasworldtransform );
+	ccodes[0] = R_AliasCheckFrameBBox( currententity, r_thisframe, aliasworldtransform );
 
 	/*
 	** non-lerping model
@@ -205,7 +206,7 @@ R_AliasCheckBBox (const entity_t *currententity)
 			return ( ccodes[0] & ~BBOX_TRIVIAL_REJECT );
 	}
 
-	ccodes[1] = R_AliasCheckFrameBBox( r_lastframe, aliasoldworldtransform );
+	ccodes[1] = R_AliasCheckFrameBBox( currententity, r_lastframe, aliasoldworldtransform );
 
 	if ( ( ccodes[0] | ccodes[1] ) == BBOX_TRIVIAL_ACCEPT )
 		return BBOX_TRIVIAL_ACCEPT;
@@ -468,13 +469,13 @@ R_AliasTransformFinalVerts(const entity_t *currententity, int numpoints, finalve
 		else
 			memcpy(fv->cv.l, r_ambientlight, sizeof(light3_t));
 
-		if ( fv->xyz[2] < ALIAS_Z_CLIP_PLANE )
+		if ( fv->xyz[2] < PP_RenderNearClip(ALIAS_Z_CLIP_PLANE, currententity->flags & RF_WEAPONMODEL) )
 		{
 			fv->flags |= ALIAS_Z_CLIP;
 		}
 		else
 		{
-			R_AliasProjectAndClipTestFinalVert( fv );
+			R_AliasProjectAndClipTestFinalVert( currententity, fv );
 		}
 	}
 
@@ -486,7 +487,7 @@ R_AliasProjectAndClipTestFinalVert
 ================
 */
 void
-R_AliasProjectAndClipTestFinalVert( finalvert_t *fv )
+R_AliasProjectAndClipTestFinalVert( const entity_t *currententity, finalvert_t *fv )
 {
 	float	zi;
 	float	x, y, z;
@@ -497,7 +498,7 @@ R_AliasProjectAndClipTestFinalVert( finalvert_t *fv )
 	z = fv->xyz[2];
 	zi = 1.0 / z;
 
-	fv->cv.zi = zi * s_ziscale;
+	fv->cv.zi = PP_AliasDepthKey(zi, s_ziscale, currententity->flags & RF_WEAPONMODEL);
 
 	fv->cv.u = (x * aliasxscale * zi) + aliasxcenter;
 	fv->cv.v = (y * aliasyscale * zi) + aliasycenter;

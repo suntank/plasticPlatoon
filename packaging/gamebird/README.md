@@ -640,3 +640,35 @@ files remain byte-identical. The shell is restored and PCM remains 0%/off.
 Native receipts and independent verification are under
 `/data/build-sources/plastic-platoon-actors-20261113T053941Z/`; local receipts
 are in `build/pi-actor-models-20261113/native-results/deployment/`.
+
+## November 14 authored-model update
+
+The current authored weapons, pickups, projectiles, bodies, helicopters and
+other model replacements were built and deployed natively from
+`/data/build-sources/plastic-platoon-lowpoly-20261114/source/`. The previous
+complete game remains as `.plastic-platoon.backup-lowpoly-20261114` beside the
+installed package. Its optional actor overlay stays in that backup; the new
+installation uses the current authored assets. Real saves/settings are
+byte-identical and the shell is restored. The standard `/data/pp-bench` helper
+is rebuilt and validated against the installed ARM binaries.
+
+[The four-player before/after report](../../doc/performance/pi-lowpoly-20261114.md)
+records all four maps at normal/low quality, invalid player-death attempts,
+protected co-op pairs and memory qualifications. Model triangles are greatly
+reduced, while FPS is largely unchanged; the dense maps still miss steady 30 FPS.
+
+## November 15 CPU visibility optimization
+
+The Pi was profiled on its actual four-player display. A renderer-only
+hierarchical-frustum change is installed in GL1, with a retained original
+renderer under `/data/build-sources/plastic-platoon-profile-20261115/installed-backup/`.
+Dense Sandbox improves 12.68 → 13.44 FPS in repeated same-binary off/on tests;
+turning/firing improves 18.30 → 18.85 FPS. Assets, game/engine modules and real
+saves/settings remain byte-identical. The standard benchmark helper matches
+the installed renderer.
+
+[The profiling and validation report](../../doc/performance/pi-profile-20261115.md)
+includes CPU attribution, all A/B captures, native correctness tests and the
+preserved camera-audit correction. The alternate GLES1 context check fails
+with both old and candidate versions; that installed library is untouched.
+The GL1 legacy path remains available with `r_gl1_hierarchical_cull 0`.

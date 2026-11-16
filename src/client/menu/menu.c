@@ -1671,7 +1671,7 @@ char *controller_bindnames[][2] =
 	{"cycleweap weapon_supershotgun weapon_shotgun weapon_chainfist",
 	 "close range: quickswitch 2"},
 	{"cycleweap weapon_phalanx weapon_rocketlauncher weapon_proxlauncher"
-	 " weapon_grenadelauncher ammo_grenades", "explosives: quickswitch 3"},
+	 " weapon_grenadelauncher", "explosives: quickswitch 3"},
 	{"cycleweap weapon_bfg weapon_disintegrator weapon_railgun weapon_hyperblaster"
 	 " ammo_tesla ammo_trap", "special: quickswitch 4"},
 	{"prefweap weapon_railgun weapon_plasmabeam weapon_boomer weapon_hyperblaster weapon_chaingun"
@@ -1851,7 +1851,7 @@ char *controller_alt_bindnames[][2] =
 	{"cycleweap weapon_supershotgun weapon_shotgun weapon_chainfist",
 	 "close range: quickswitch 2"},
 	{"cycleweap weapon_phalanx weapon_rocketlauncher weapon_proxlauncher"
-	 " weapon_grenadelauncher ammo_grenades", "explosives: quickswitch 3"},
+	 " weapon_grenadelauncher", "explosives: quickswitch 3"},
 	{"cycleweap weapon_bfg weapon_disintegrator weapon_railgun weapon_hyperblaster"
 	 " ammo_tesla ammo_trap", "special: quickswitch 4"},
 	{"prefweap weapon_railgun weapon_plasmabeam weapon_boomer weapon_hyperblaster weapon_chaingun"

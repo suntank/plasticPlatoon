@@ -114,7 +114,47 @@ PP_IsBoss2Helicopter(const entity_state_t *state)
 
 	model_path = cl.configstrings[CS_MODELS + state->modelindex];
 
-	return model_path && !Q_stricmp(model_path, "models/monsters/boss2/tris.md2");
+	return model_path && (!Q_stricmp(model_path, "models/monsters/boss2/tris.md2") ||
+		!Q_stricmp(model_path, "models/monsters/plastic_boss/body.md2") ||
+		!Q_stricmp(model_path, "models/vehicles/platoon_dropship/body.md2"));
+}
+
+/* Official lower-poly bodies. The retained compatibility toggle restores the
+ * original models, whose textures and animation-frame indices are shared. */
+static void
+PP_ApplySoldierBodyTrial(const entity_state_t *state, entity_t *ent)
+{
+	static cvar_t *enabled;
+	static int available[4], map_id = -1;
+	const char *candidate = NULL;
+	struct model_s *model;
+	int kind = -1;
+	if (!enabled) enabled = Cvar_Get("cl_soldier_body_test", "1", CVAR_ARCHIVE);
+	if (!enabled->value || !state || !ent || !ent->model) return;
+	if (map_id != cl.servercount)
+	{
+		memset(available, 0, sizeof(available));
+		map_id = cl.servercount;
+	}
+	if (state->modelindex == 255)
+	{
+		if (ent->model == R_RegisterModel("players/soldier/tris.md2"))
+			kind = 2, candidate = "models/experimental/soldier/player.md2";
+		else if (ent->model == R_RegisterModel("players/soldier/tris_pistol.md2"))
+			kind = 3, candidate = "models/experimental/soldier/player_pistol.md2";
+	}
+	else if (state->modelindex > 0 && state->modelindex < MAX_MODELS)
+	{
+		const char *path = cl.configstrings[CS_MODELS + state->modelindex];
+		if (!Q_stricmp(path, "models/monsters/soldier/tris.md2"))
+			kind = 0, candidate = "models/experimental/soldier/enemy.md2";
+		else if (!Q_stricmp(path, "models/monsters/soldier/tall/tris.md2"))
+			kind = 1, candidate = "models/experimental/soldier/enemy_tall.md2";
+	}
+	if (kind < 0) return;
+	if (!available[kind]) available[kind] = FS_LoadFile(candidate, NULL) > 0 ? 1 : -1;
+	if (available[kind] > 0 &&
+		(model = R_RegisterModel(candidate)) != NULL) ent->model = model;
 }
 
 static float
@@ -206,7 +246,9 @@ PP_IsBoss2PropellerModel(int modelindex)
 
 	model_path = cl.configstrings[CS_MODELS + modelindex];
 
-	return model_path && !Q_stricmp(model_path, "models/monsters/boss2/propeller.md2");
+	return model_path && (!Q_stricmp(model_path, "models/monsters/boss2/propeller.md2") ||
+		!Q_stricmp(model_path, "models/monsters/plastic_boss/main_rotor.md2") ||
+		!Q_stricmp(model_path, "models/vehicles/platoon_dropship/main_rotor.md2"));
 }
 
 static void
@@ -221,6 +263,11 @@ PP_ApplyBoss2HelicopterTransform(const entity_state_t *state,
 	{
 		return;
 	}
+
+	/* These helicopter bodies have one rigid pose. Network frame numbers
+	 * drive the monster's attack/pain state, not geometry animation. */
+	ent->frame = ent->oldframe = 0;
+	ent->backlerp = 0;
 
 	VectorSubtract(cent->current.origin, cent->prev.origin, move_delta);
 	speed_scale = Q_clamp(VectorLength(move_delta) * 0.08f, 0.0f, 1.0f);
@@ -268,16 +315,16 @@ PP_ADSOverlayPicForWeapon(pp_weapon_type_t weapon)
 	switch (weapon)
 	{
 		case PP_WEAPON_M9_PISTOL: return NULL; /* aligned 3D viewmodel */
-		case PP_WEAPON_SHOTGUN: return "ads_shotgun.png";
-		case PP_WEAPON_SUPER_SHOTGUN: return "ads_supershotgun.png";
+		case PP_WEAPON_SHOTGUN: return NULL; /* aligned 3D viewmodel */
+		case PP_WEAPON_SUPER_SHOTGUN: return NULL; /* aligned 3D viewmodel */
 		case PP_WEAPON_M16: return NULL; /* aligned 3D viewmodel */
-		case PP_WEAPON_M60: return "ads_chaingun.png";
+		case PP_WEAPON_M60: return NULL; /* aligned 3D viewmodel */
 		case PP_WEAPON_HAND_GRENADE: return "ads_handgrenade.png";
-		case PP_WEAPON_GRENADE_LAUNCHER: return "ads_grenadelauncher.png";
-		case PP_WEAPON_ROCKET_LAUNCHER: return "ads_rocketlauncher.png";
-		case PP_WEAPON_FLAMETHROWER: return "ads_hyperblaster.png";
-		case PP_WEAPON_SNIPER: return "ads_railgun.png";
-		case PP_WEAPON_MORTAR: return "ads_mortar.png";
+		case PP_WEAPON_GRENADE_LAUNCHER: return NULL; /* aligned 3D viewmodel */
+		case PP_WEAPON_ROCKET_LAUNCHER: return NULL; /* aligned 3D viewmodel */
+		case PP_WEAPON_FLAMETHROWER: return NULL; /* aligned 3D viewmodel */
+		case PP_WEAPON_SNIPER: return NULL; /* aligned 3D scope/viewmodel */
+		case PP_WEAPON_MORTAR: return NULL; /* aligned 3D viewmodel */
 		default: return NULL;
 	}
 }
@@ -295,13 +342,25 @@ qboolean
 CL_UsesModelADS(const player_state_t *ps)
 {
 	pp_weapon_type_t weapon = PP_DetectWeaponType(ps);
-	return weapon == PP_WEAPON_M16 || weapon == PP_WEAPON_M9_PISTOL;
+	return weapon == PP_WEAPON_M16 || weapon == PP_WEAPON_M9_PISTOL ||
+		weapon == PP_WEAPON_SHOTGUN || weapon == PP_WEAPON_SUPER_SHOTGUN || weapon == PP_WEAPON_M60 ||
+		weapon == PP_WEAPON_GRENADE_LAUNCHER || weapon == PP_WEAPON_ROCKET_LAUNCHER ||
+		weapon == PP_WEAPON_SNIPER || weapon == PP_WEAPON_FLAMETHROWER || weapon == PP_WEAPON_MORTAR;
 }
 
 pp_model_ads_config_t
 CL_GetModelADSConfig(const player_state_t *ps)
 {
-	return PP_ModelADSConfig(PP_DetectWeaponType(ps) == PP_WEAPON_M9_PISTOL);
+	pp_weapon_type_t weapon = PP_DetectWeaponType(ps);
+	return PP_ModelADSConfig(weapon == PP_WEAPON_MORTAR ? PP_MODEL_ADS_MORTAR :
+		weapon == PP_WEAPON_FLAMETHROWER ? PP_MODEL_ADS_FLAMETHROWER :
+		weapon == PP_WEAPON_SNIPER ? PP_MODEL_ADS_SNIPER :
+		weapon == PP_WEAPON_ROCKET_LAUNCHER ? PP_MODEL_ADS_RLAUNCHER :
+		weapon == PP_WEAPON_GRENADE_LAUNCHER ? PP_MODEL_ADS_GLAUNCHER :
+		weapon == PP_WEAPON_M60 ? PP_MODEL_ADS_M60 :
+		weapon == PP_WEAPON_SUPER_SHOTGUN ? PP_MODEL_ADS_SSHOTGUN :
+		weapon == PP_WEAPON_SHOTGUN ? PP_MODEL_ADS_SHOTGUN :
+		weapon == PP_WEAPON_M9_PISTOL ? PP_MODEL_ADS_PISTOL : PP_MODEL_ADS_RIFLE);
 }
 
 float
@@ -1315,6 +1374,7 @@ CL_AddPacketEntities(frame_t *frame)
 			}
 		}
 
+		PP_ApplySoldierBodyTrial(s1, &ent);
 		/* add to refresh list */
 		V_AddEntity(&ent);
 
@@ -1568,9 +1628,11 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 	VectorCopy(gun.origin, base_origin);
 	VectorCopy(gun.angles, base_angles);
 
-	/* Force static frame 0 for all weapons - we do procedural animation */
-	gun.frame = 0;
-	gun.oldframe = 0;
+	/* Preserve the shotgun's articulated pump/hand frames in both hip and
+	 * aimed views. Whole-weapon recoil and raising remain procedural. */
+	gun.frame = PP_ModelADSFrame(ads_config, ps->gunframe);
+	gun.oldframe = ps->gunindex == ops->gunindex ?
+		PP_ModelADSFrame(ads_config, ops->gunframe) : gun.frame;
 
 	/* Procedural viewmodel animation for all weapons */
 	{
@@ -1754,6 +1816,10 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 			gun.angles[i] = base_angles[i] + pp_viewmodel_smoothed_angles[i];
 		}
 	}
+
+	PP_ModelADSConstrainMotion(ads_config, ads_blend,
+		pp_recoil_configs[pp_current_weapon].push_back, cl.v_forward, cl.v_right, cl.v_up,
+		base_origin, base_angles, gun.origin, gun.angles);
 
 	gun.flags = RF_MINLIGHT | RF_DEPTHHACK | RF_WEAPONMODEL;
 	gun.backlerp = 1.0f - cl.lerpfrac;

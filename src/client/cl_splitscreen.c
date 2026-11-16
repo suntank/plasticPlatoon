@@ -2326,16 +2326,16 @@ SS_GetADSOverlayPicName(const player_state_t *ps)
 	}
 
 	if (strstr(gun_model, "v_blast")) return NULL; /* aligned 3D viewmodel */
-	if (strstr(gun_model, "v_shotg2")) return "ads_supershotgun.png";
-	if (strstr(gun_model, "v_shotg")) return "ads_shotgun.png";
+	if (strstr(gun_model, "v_shotg2")) return NULL; /* aligned 3D viewmodel */
+	if (strstr(gun_model, "v_shotg")) return NULL; /* aligned 3D viewmodel */
 	if (strstr(gun_model, "v_machn")) return NULL; /* aligned 3D viewmodel */
-	if (strstr(gun_model, "v_chain")) return "ads_chaingun.png";
+	if (strstr(gun_model, "v_chain")) return NULL; /* aligned 3D viewmodel */
 	if (strstr(gun_model, "v_handgr")) return "ads_handgrenade.png";
-	if (strstr(gun_model, "v_launch")) return "ads_grenadelauncher.png";
-	if (strstr(gun_model, "v_rocket")) return "ads_rocketlauncher.png";
-	if (strstr(gun_model, "v_hyperb")) return "ads_hyperblaster.png";
-	if (strstr(gun_model, "v_rail")) return "ads_railgun.png";
-	if (strstr(gun_model, "v_bfg")) return "ads_mortar.png";
+	if (strstr(gun_model, "v_launch")) return NULL; /* aligned 3D viewmodel */
+	if (strstr(gun_model, "v_rocket")) return NULL; /* aligned 3D viewmodel */
+	if (strstr(gun_model, "v_hyperb")) return NULL; /* aligned 3D viewmodel */
+	if (strstr(gun_model, "v_rail")) return NULL; /* aligned 3D scope/viewmodel */
+	if (strstr(gun_model, "v_bfg")) return NULL; /* aligned 3D viewmodel */
 
 	return NULL;
 }
@@ -2794,15 +2794,23 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 		}
 	}
 
-	/* Authored weapon recoil/raise is procedural. A single MD2 frame enables
-	 * the renderer's static geometry cache in every split viewport. */
-	gun.frame = CL_UsesModelADS(ps) ? 0 : ps->gunframe;
+	PP_ModelADSConstrainMotion(ads_config, ads_blend, recoil_cfg->recoil_push_back,
+		forward, right, up, base_origin, base_angles, gun.origin, gun.angles);
+
+	/* The shotgun's pump and support hand follow the server animation in
+	 * every viewport; rigid authored weapons retain their static MD2 pose. */
+	gun.frame = CL_UsesModelADS(ps) ? PP_ModelADSFrame(ads_config, ps->gunframe) : ps->gunframe;
 	gun.oldframe = gun.frame;
 	gun.backlerp = 0.0f;
+	if (ads_config.animated && ps->gunindex == ops->gunindex)
+	{
+		gun.oldframe = PP_ModelADSFrame(ads_config, ops->gunframe);
+		gun.backlerp = 1.0f - lerp;
+	}
 	if (CL_UsesModelADS(ps))
 	{
-		/* The complete procedural pose is already resolved. Matching the
-		 * final origins also satisfies the one-frame alias-cache predicate. */
+		/* Pump interpolation stays in the resolved weapon's local space.
+		 * Matching origins also enables the rigid weapons' static cache. */
 		VectorCopy(gun.origin, gun.oldorigin);
 	}
 	gun.flags = RF_MINLIGHT | RF_DEPTHHACK | RF_WEAPONMODEL;

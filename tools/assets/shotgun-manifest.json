@@ -1,0 +1,1531 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_shotgun.py",
+  "dependencies_sha256": {
+    "build_shotgun.py": "2127f583c3541611cf2f019cb2eeb72b00214d4986eb33a1a75a2c57d4fa0e23",
+    "shotgun_geometry.py": "5e8cad547fb1de4b267277a41dcbf6781f23c303e1f83b54ee59cdc4ce574105",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+  },
+  "source_archive": {
+    "path": "tools/assets/sources/platoon-originals.pk3",
+    "sha256": "308e7b7e07f08ecbd0f7487e8a37440ab07c28bb83896b0f4c959a29fdcbf7e4",
+    "bytes": 47317833,
+    "origin": "Original owner-authored Plastic Platoon model, texture and sprite inputs recovered before public history cleanup",
+    "license": "GPL-2.0-or-later",
+    "excluded": [
+      "Legacy players/male assets",
+      "Inherited soldier portrait PCXs"
+    ]
+  },
+  "method": "authored closed primitives; archived rigid poses",
+  "hand": "M16 molded mittens; support hand and wrist follow the pump; elbow stays anchored",
+  "palette": "M16 molded-plastic atlas; painted pump grooves and mitten creases",
+  "models": [
+    {
+      "path": "models/weapons/g_shotg/tris.md2",
+      "role": "pickup",
+      "baseline": {
+        "triangles": 799,
+        "position_vertices": 400,
+        "frames": 1,
+        "file_bytes": 33004
+      },
+      "after": {
+        "triangles": 300,
+        "position_vertices": 378,
+        "render_vertices": 469,
+        "frames": 1,
+        "skin_references": [
+          "models/weapons/g_shotg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 118,
+        "gl_command_triangles": 300,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 12680,
+        "sha256": "5a0f1211e9099d7f10eb976bed42349d1cf31ed31ea93e6d58e1e8fb3f754dab",
+        "bounds": [
+          [
+            -29.0,
+            -1.7415128946304321,
+            8.026000022888184
+          ],
+          [
+            29.000000342726707,
+            1.7415129700675607,
+            22.120000444352627
+          ]
+        ]
+      },
+      "pose_transfer": null,
+      "validation": {
+        "max_vertex_quantization_error": 0.114126352973,
+        "minimum_quantized_double_triangle_area": 0.176655220503,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          -28.999999999999993,
+          0.0,
+          19.683999999999997
+        ],
+        "rear_sight": [
+          10.440000000000001,
+          0.0,
+          21.887999999999998
+        ],
+        "front_sight": [
+          -26.099999999999994,
+          0.0,
+          21.887999999999998
+        ],
+        "grip": [
+          9.280000000000001,
+          0.0,
+          12.259999999999998
+        ],
+        "support": [
+          -6.960000000000001,
+          0.0,
+          15.739999999999998
+        ]
+      },
+      "pump_fractions": [
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "stock",
+          "first_triangle": 0,
+          "triangle_count": 28
+        },
+        {
+          "name": "butt_plate",
+          "first_triangle": 28,
+          "triangle_count": 12
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 40,
+          "triangle_count": 24
+        },
+        {
+          "name": "pistol_grip",
+          "first_triangle": 64,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 84,
+          "triangle_count": 32
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 116,
+          "triangle_count": 32
+        },
+        {
+          "name": "magazine_tube",
+          "first_triangle": 148,
+          "triangle_count": 20
+        },
+        {
+          "name": "barrel_band",
+          "first_triangle": 168,
+          "triangle_count": 12
+        },
+        {
+          "name": "pump",
+          "first_triangle": 180,
+          "triangle_count": 60
+        },
+        {
+          "name": "action_bar_-1",
+          "first_triangle": 240,
+          "triangle_count": 12
+        },
+        {
+          "name": "action_bar_1",
+          "first_triangle": 252,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 264,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 276,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 288,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/weapons/v_shotg/tris.md2",
+      "role": "view",
+      "baseline": {
+        "triangles": 1399,
+        "position_vertices": 700,
+        "frames": 1,
+        "file_bytes": 55136
+      },
+      "after": {
+        "triangles": 752,
+        "position_vertices": 700,
+        "render_vertices": 955,
+        "frames": 40,
+        "skin_references": [
+          "models/weapons/v_shotg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 234,
+        "gl_command_triangles": 752,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 139464,
+        "sha256": "942adc3d792e53dde4a55d4ed83c0cab43e3ef110d180424f422498d638afaa0",
+        "bounds": [
+          [
+            -13.5,
+            -17.344497680664062,
+            -28.884227752685547
+          ],
+          [
+            52.05958449840546,
+            2.0923466458916664,
+            -2.699637107551098
+          ]
+        ]
+      },
+      "pose_transfer": null,
+      "validation": {
+        "max_vertex_quantization_error": 0.139707718085,
+        "minimum_quantized_double_triangle_area": 0.184675416982,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          52.059580862522125,
+          -8.5,
+          -5.453140118598938
+        ],
+        "rear_sight": [
+          7.4790658760070805,
+          -8.5,
+          -2.9618760458230966
+        ],
+        "front_sight": [
+          48.78160181939602,
+          -8.5,
+          -2.9618760458230966
+        ],
+        "grip": [
+          8.790257493257524,
+          -8.5,
+          -13.844766469001769
+        ],
+        "support": [
+          27.146940134763717,
+          -8.5,
+          -9.911191617250442
+        ]
+      },
+      "pump_fractions": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.35,
+        0.75,
+        1.0,
+        1.0,
+        0.65,
+        0.25,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "stock",
+          "first_triangle": 0,
+          "triangle_count": 28
+        },
+        {
+          "name": "butt_plate",
+          "first_triangle": 28,
+          "triangle_count": 12
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 40,
+          "triangle_count": 24
+        },
+        {
+          "name": "pistol_grip",
+          "first_triangle": 64,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 84,
+          "triangle_count": 32
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 116,
+          "triangle_count": 44
+        },
+        {
+          "name": "magazine_tube",
+          "first_triangle": 160,
+          "triangle_count": 20
+        },
+        {
+          "name": "barrel_band",
+          "first_triangle": 180,
+          "triangle_count": 12
+        },
+        {
+          "name": "pump",
+          "first_triangle": 192,
+          "triangle_count": 60
+        },
+        {
+          "name": "action_bar_-1",
+          "first_triangle": 252,
+          "triangle_count": 12
+        },
+        {
+          "name": "action_bar_1",
+          "first_triangle": 264,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 276,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 288,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 300,
+          "triangle_count": 12
+        },
+        {
+          "name": "ejection_port",
+          "first_triangle": 312,
+          "triangle_count": 12
+        },
+        {
+          "name": "arm_right",
+          "first_triangle": 324,
+          "triangle_count": 20
+        },
+        {
+          "name": "cuff_right",
+          "first_triangle": 344,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_right_wrist",
+          "first_triangle": 364,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_right_palm",
+          "first_triangle": 384,
+          "triangle_count": 76
+        },
+        {
+          "name": "hand_right_thumb",
+          "first_triangle": 460,
+          "triangle_count": 44
+        },
+        {
+          "name": "hand_right_fingers",
+          "first_triangle": 504,
+          "triangle_count": 60
+        },
+        {
+          "name": "arm_left",
+          "first_triangle": 564,
+          "triangle_count": 20
+        },
+        {
+          "name": "cuff_left",
+          "first_triangle": 584,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_left_palm",
+          "first_triangle": 604,
+          "triangle_count": 60
+        },
+        {
+          "name": "hand_left_fingers",
+          "first_triangle": 664,
+          "triangle_count": 44
+        },
+        {
+          "name": "hand_left_thumb",
+          "first_triangle": 708,
+          "triangle_count": 44
+        }
+      ]
+    },
+    {
+      "path": "players/soldier/w_shotgun.md2",
+      "role": "player",
+      "baseline": {
+        "triangles": 1399,
+        "position_vertices": 700,
+        "frames": 198,
+        "file_bytes": 615336
+      },
+      "after": {
+        "triangles": 300,
+        "position_vertices": 378,
+        "render_vertices": 469,
+        "frames": 198,
+        "skin_references": [
+          "models/weapons/v_shotg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 118,
+        "gl_command_triangles": 300,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 318424,
+        "sha256": "0da4adfbc81b02aad6b6a167fa0d1e4758b48a41ec48f304bdabfdc25efddfad",
+        "bounds": [
+          [
+            -53.31586837768555,
+            -32.425777435302734,
+            -24.632774353027344
+          ],
+          [
+            56.21037269383669,
+            39.605385929346085,
+            38.317069828510284
+          ]
+        ]
+      },
+      "pose_transfer": {
+        "rms_max": 0.0321520873949,
+        "frames": 198
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0520005491583,
+        "minimum_quantized_double_triangle_area": 0.0219688995097,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          26.369999999999997,
+          -4.75,
+          15.936000000000002
+        ],
+        "rear_sight": [
+          9.709999999999999,
+          -4.75,
+          16.867
+        ],
+        "front_sight": [
+          25.144999999999996,
+          -4.75,
+          16.867
+        ],
+        "grip": [
+          10.2,
+          -4.75,
+          12.8
+        ],
+        "support": [
+          17.06,
+          -4.75,
+          14.270000000000001
+        ]
+      },
+      "pump_fractions": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.45,
+        1.0,
+        1.0,
+        0.6,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.45,
+        1.0,
+        1.0,
+        0.6,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "stock",
+          "first_triangle": 0,
+          "triangle_count": 28
+        },
+        {
+          "name": "butt_plate",
+          "first_triangle": 28,
+          "triangle_count": 12
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 40,
+          "triangle_count": 24
+        },
+        {
+          "name": "pistol_grip",
+          "first_triangle": 64,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 84,
+          "triangle_count": 32
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 116,
+          "triangle_count": 32
+        },
+        {
+          "name": "magazine_tube",
+          "first_triangle": 148,
+          "triangle_count": 20
+        },
+        {
+          "name": "barrel_band",
+          "first_triangle": 168,
+          "triangle_count": 12
+        },
+        {
+          "name": "pump",
+          "first_triangle": 180,
+          "triangle_count": 60
+        },
+        {
+          "name": "action_bar_-1",
+          "first_triangle": 240,
+          "triangle_count": 12
+        },
+        {
+          "name": "action_bar_1",
+          "first_triangle": 252,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 264,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 276,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 288,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/monsters/soldier/weapon_shotgun.md2",
+      "role": "enemy",
+      "baseline": {
+        "triangles": 1399,
+        "position_vertices": 700,
+        "frames": 475,
+        "file_bytes": 1401944
+      },
+      "after": {
+        "triangles": 300,
+        "position_vertices": 378,
+        "render_vertices": 469,
+        "frames": 475,
+        "skin_references": [
+          "models/weapons/v_shotg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 118,
+        "gl_command_triangles": 300,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 748328,
+        "sha256": "f46ca01c2a568dec28884178ee73bd89d237b09bb8f3c3220797ace90eb6695f",
+        "bounds": [
+          [
+            -41.19520950317383,
+            -40.26542282104492,
+            -24.654340744018555
+          ],
+          [
+            61.61189728975296,
+            39.64715298265219,
+            43.60185670107603
+          ]
+        ]
+      },
+      "pose_transfer": {
+        "rms_max": 0.0325797685838,
+        "frames": 475
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0519428460651,
+        "minimum_quantized_double_triangle_area": 0.0169140666668,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          26.369999999999997,
+          -4.75,
+          15.936000000000002
+        ],
+        "rear_sight": [
+          9.709999999999999,
+          -4.75,
+          16.867
+        ],
+        "front_sight": [
+          25.144999999999996,
+          -4.75,
+          16.867
+        ],
+        "grip": [
+          10.2,
+          -4.75,
+          12.8
+        ],
+        "support": [
+          17.06,
+          -4.75,
+          14.270000000000001
+        ]
+      },
+      "pump_fractions": [
+        0.0,
+        0.0,
+        0.0,
+        0.3,
+        0.7,
+        1.0,
+        1.0,
+        0.6,
+        0.2,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0,
+        1.0,
+        0.65,
+        0.3,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.5,
+        1.0,
+        0.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.3,
+        0.7,
+        1.0,
+        1.0,
+        0.6,
+        0.2,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "stock",
+          "first_triangle": 0,
+          "triangle_count": 28
+        },
+        {
+          "name": "butt_plate",
+          "first_triangle": 28,
+          "triangle_count": 12
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 40,
+          "triangle_count": 24
+        },
+        {
+          "name": "pistol_grip",
+          "first_triangle": 64,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 84,
+          "triangle_count": 32
+        },
+        {
+          "name": "barrel",
+          "first_triangle": 116,
+          "triangle_count": 32
+        },
+        {
+          "name": "magazine_tube",
+          "first_triangle": 148,
+          "triangle_count": 20
+        },
+        {
+          "name": "barrel_band",
+          "first_triangle": 168,
+          "triangle_count": 12
+        },
+        {
+          "name": "pump",
+          "first_triangle": 180,
+          "triangle_count": 60
+        },
+        {
+          "name": "action_bar_-1",
+          "first_triangle": 240,
+          "triangle_count": 12
+        },
+        {
+          "name": "action_bar_1",
+          "first_triangle": 252,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 264,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 276,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 288,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/monsters/soldier/tall/weapon_shotgun.md2",
+      "role": "enemy_tall",
+      "baseline": {
+        "triangles": 1399,
+        "position_vertices": 700,
+        "frames": 475,
+        "file_bytes": 1401944
+      },
+      "after": {
+        "triangles": 300,
+        "position_vertices": 378,
+        "render_vertices": 469,
+        "frames": 475,
+        "skin_references": [
+          "models/weapons/v_shotg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 118,
+        "gl_command_triangles": 300,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 748328,
+        "sha256": "e9589ddf09762cd5141fb38e62f1e7f28ed855be5c11a822e636b682f15084b7",
+        "bounds": [
+          [
+            -49.43424987792969,
+            -48.31850814819336,
+            -24.78520965576172
+          ],
+          [
+            73.93427636474371,
+            47.576583959162235,
+            57.12222880125046
+          ]
+        ]
+      }
+    }
+  ],
+  "view_animation": {
+    "fire_frame": 8,
+    "pump_fractions": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.35,
+      0.75,
+      1.0,
+      1.0,
+      0.65,
+      0.25,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "pump_travel": 7.0,
+    "cock_sound_delay": 0.2
+  },
+  "ads_header": {
+    "path": "src/client/header/shotgun_model_ads.h",
+    "sha256": "28376616016fbd5744bed391ecdaad8c4f5675edff302faab272251346a7875f"
+  },
+  "files": [
+    {
+      "path": "models/monsters/soldier/tall/weapon_shotgun.md2",
+      "bytes": 748328,
+      "sha256": "e9589ddf09762cd5141fb38e62f1e7f28ed855be5c11a822e636b682f15084b7"
+    },
+    {
+      "path": "models/monsters/soldier/weapon_shotgun.md2",
+      "bytes": 748328,
+      "sha256": "f46ca01c2a568dec28884178ee73bd89d237b09bb8f3c3220797ace90eb6695f"
+    },
+    {
+      "path": "models/weapons/g_shotg/skin.png",
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
+    },
+    {
+      "path": "models/weapons/g_shotg/tris.md2",
+      "bytes": 12680,
+      "sha256": "5a0f1211e9099d7f10eb976bed42349d1cf31ed31ea93e6d58e1e8fb3f754dab"
+    },
+    {
+      "path": "models/weapons/v_shotg/skin.png",
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
+    },
+    {
+      "path": "models/weapons/v_shotg/tris.md2",
+      "bytes": 139464,
+      "sha256": "942adc3d792e53dde4a55d4ed83c0cab43e3ef110d180424f422498d638afaa0"
+    },
+    {
+      "path": "players/soldier/w_shotgun.md2",
+      "bytes": 318424,
+      "sha256": "0da4adfbc81b02aad6b6a167fa0d1e4758b48a41ec48f304bdabfdc25efddfad"
+    }
+  ]
+}

@@ -46,6 +46,78 @@ mitten grip and tapered wrist, and 200 for each world/held version. It shares
 the M16's molded-plastic palette and hand style. It uses actual
 model sights in single-player and split-screen. See [the pistol notes](../../doc/performance/pistol-simple-shapes.md).
 
+The pump shotgun uses 752 first-person triangles including the M16-style
+molded hands, and 300 triangles in each world/held version, with actual model
+sights. Its support hand follows the sliding fore-end through a complete pump
+cycle after each shot. First-person, pickup, player-held and
+enemy-held versions share the new design. See [the shotgun notes](../../doc/performance/shotgun-simple-shapes.md).
+
+The double-barrel shotgun uses 748 first-person triangles with M16-style
+hands, and 296 triangles for its pickup and all player-held poses. Its original
+twin-barrel design uses actual model sights in single-player and split-screen. See
+[the double-barrel shotgun notes](../../doc/performance/sshotgun-simple-shapes.md).
+
+The M60 uses 816 first-person triangles including M16-style molded mittens,
+and 380 triangles for each world/held version, with actual model sights in
+single-player and split-screen. Its first-person,
+pickup, player-held and normal/tall enemy-held versions share the authored
+design. See [the M60 notes](../../doc/performance/m60-simple-shapes.md).
+
+The grenade launcher uses 712 first-person triangles including molded hands,
+and 284 triangles for its pickup and player-held versions, with actual model
+sights. See [the grenade-launcher notes](../../doc/performance/glauncher-simple-shapes.md).
+
+The rocket launcher uses 684 first-person triangles with molded mittens,
+and 256 triangles in each world/held version, with actual model sights.
+First-person, world pickup, player-held and normal/tall enemy attachments
+share the full tube and rear flare. GL1, GL3 and software alias rendering use
+a close near clipping plane only for weapon models, keeping the complete tube
+visible through aiming and recoil. See
+[the rocket-launcher notes](../../doc/performance/rlauncher-simple-shapes.md).
+
+The sniper rifle uses 920 first-person triangles including molded mitten
+hands, and 492 triangles for pickup/player-held versions, with an open modeled
+scope. First-person, pickup and all player-held versions share
+the design, and aiming raises the actual scope into view. See
+[the sniper notes](../../doc/performance/sniper-simple-shapes.md).
+
+The M1 Flamethrower uses 804 first-person triangles with mitten hands and a
+hose, and 648 triangles for the complete pickup/player-held assembly. Twin
+tanks follow the soldier's back independently from the wand, and an authored
+hose bends between them. Aiming raises the actual model. See
+[the flamethrower notes](../../doc/performance/flamethrower-simple-shapes.md).
+
+The Mortar Cannon uses 740 first-person triangles including mitten hands,
+328 for the deployed pickup and 312 for the carried player version. Its wide
+tube, round baseplate and two-leg bipod remain visible across these roles;
+aiming raises the actual model. See
+[the mortar notes](../../doc/performance/mortar-simple-shapes.md).
+
+Seven ammunition pickups are authored as simple green labeled boxes, compact
+grenades, launcher rounds, rockets, flame-fuel tanks and sniper rounds. Their
+models, atlases and three existing ammo LOD siblings are owned by the dedicated
+ammo generator. See [the ammo notes](../../doc/performance/ammo-simple-shapes.md).
+
+The flying rocket, armed hand grenade and shared grenade-launcher/mortar round
+also use the authored ammo style. Dedicated projectile atlases and narrowly
+synchronized mission copies keep the same models visible in every operation.
+See [the projectile notes](../../doc/performance/projectiles-simple-shapes.md).
+
+Five health pickups use authored medical shapes: an injector, bandage bundle,
+medkit, mega-health canister and adrenaline booster. Their quantity/BOOST marks
+are painted on the modeled surfaces. See
+[the health notes](../../doc/performance/health-simple-shapes.md).
+
+The armor pickups are an open wrist guard, paired boots, hollow helmet and
+plate-carrier vest, using 76, 248, 168 and 212 triangles respectively. The
+existing shard/jacket/combat/body classes keep their gameplay rules. See
+[the armor notes](../../doc/performance/armor-simple-shapes.md).
+
+The friendly green dropship uses a dedicated 656-triangle transport body and
+76-triangle main rotor, retaining the original large mission silhouette and
+existing rotor attachment. The shared legacy enemy helicopter stays intact.
+See [the dropship notes](../../doc/performance/dropship-simple-shapes.md).
+
 Install the tested conversion dependencies separately from the game build:
 
 ```sh
@@ -68,22 +140,35 @@ reader falls back to Git history or an installed game.
 python3 tests/assets/test_source_archives.py
 ```
 
-To rebuild the 15 decimated pickup pairs, then the complete optimized
-model/texture set (including the authored M16 and pistol):
+All original decimated pickup pairs now have dedicated authored owners. The
+retired pickup inventory has no active conversion outputs; its pinned archive
+and historical records remain available for provenance and compatibility
+atlases. Rebuild the remaining legacy assets and all authored families with:
 
 ```sh
-.venv/bin/python tools/assets/md2_assets.py build --write --review
 .venv/bin/python tools/assets/build_platoon.py build --write --review
 ```
 
-The legacy model manifest covers 58 custom MD2s and 73 PNGs; authored weapons
-have separate `m16-manifest.json` and `pistol-manifest.json` inventories. Independent procedural
-vehicle builders reproduce the tan tank and attack helicopter; the attachment
-builder retargets existing project weapon models to the soldier animation:
+The legacy model manifest covers 15 custom MD2s and 42 PNGs; authored weapons
+have separate `m16-manifest.json`, `pistol-manifest.json`,
+`shotgun-manifest.json`, `sshotgun-manifest.json`, `m60-manifest.json`,
+`glauncher-manifest.json`, `rlauncher-manifest.json`, `sniper-manifest.json`,
+`flamethrower-manifest.json` and `mortar-manifest.json` inventories.
+Authored ammo, health, armor and flying projectiles have separate
+`ammo-manifest.json`, `health-manifest.json`, `armor-manifest.json` and
+`projectiles-manifest.json` inventories. The original shared rocket atlas
+remains a legacy compatibility output in mission archives; the rocket pickup
+uses `skin_ammo.png`, and the flying rocket has its own object atlas.
+Independent procedural vehicle builders reproduce the tan tank and attack
+helicopter and the green friendly dropship (`dropship-manifest.json`); enemy
+M60 and rocket attachments come from the respective authored weapon generators:
 
 ```sh
 .venv/bin/python tools/assets/build_heavy_tank.py --verify
 .venv/bin/python tools/assets/build_helicopter.py --verify
+.venv/bin/python tools/assets/build_dropship.py --verify
+python3 -S tools/assets/verify_dropship_runtime.py
+python3 -S tools/assets/build_dropship_overlays.py --verify
 .venv/bin/python tools/assets/build_heavy_gunner.py --verify
 .venv/bin/python tools/assets/build_heavy_gunner.py --weapon rocket --verify
 .venv/bin/python tools/assets/build_ant.py --verify
@@ -95,6 +180,17 @@ The ant and spider models, animation frames, skins and species-specific gib
 models are original procedural assets generated by those scripts. Run the
 scripts without `--verify` to regenerate them; the ant and spider builders also
 accept `--review` for a decoded animation review sheet.
+
+The dedicated friendly dropship media are also appended to the existing
+Endline and Sandstorm preview archives by `build_dropship_overlays.py`.
+It preserves all 91 existing Endline members and the same 55 immutable
+Sandstorm map/material/compatibility members. The booster and dropship have
+explicit, registered peer exclusions in Sandstorm: each archive gate checks
+its own exact payload, and both gates together check every authored payload.
+Neither sync invokes a map packager. Future mission packagers collect the
+new transport's model/skin dependencies without changing their map selection
+rules. Continue to avoid old Sandstorm packaging defaults when preserving the
+newer edited loose map.
 
 Original recordings are retained in `sources/player-sounds.zip`. Soldier sound
 conversion has an independent hash manifest and verifier. The support-sound
@@ -108,16 +204,17 @@ checks them during both build systems without needing an MP3 decoder.
 
 ## Distant pickup models
 
-Five common pickups have additive `lod1.md2` siblings. The existing `tris.md2`
-models and their skins remain the close-up versions:
+Five common pickups have additive `lod1.md2` siblings. All five are now
+byte-identical to their authored close-up models, retaining the same shapes
+and markings at a distance. Current budgets are:
 
 | Pickup | Close triangles | Distant triangles |
 | --- | ---: | ---: |
-| Bullet ammo | 999 | 132 |
-| Shell ammo | 1,000 | 132 |
-| Grenade ammo | 800 | 180 |
-| Armor shard | 800 | 200 |
-| Small health | 800 | 180 |
+| Bullet ammo | 116 | 116 |
+| Shell ammo | 116 | 116 |
+| Grenade ammo | 148 | 148 |
+| Armor shard | 76 | 76 |
+| Small health | 128 | 128 |
 
 `r_pickup_lod 1` enables these models by default in GL1/GLES1, GL3/GLES3 and the
 software renderer. Each camera selects independently: the pickup must be at
@@ -129,20 +226,30 @@ fall back to the original.
 `r_pickup_lod 0` disables substitution for comparisons.
 
 The configuration and output hashes are in `pickup-lods.json` and
-`pickup-lods-manifest.json`. The ammo trays use authored simple geometry; the
-other three models use reductions of pinned original source geometry. All five
-reuse their original skin files and coordinate systems. Generation and checks:
+`pickup-lods-manifest.json`. The three ammo siblings, injector and wrist guard
+come from `build_ammo.py`, `build_health.py` and `build_armor.py`, including
+identical markings and quantization. After intentional pickup reauthoring,
+`--refresh-authored` adopts only independently verified owner hash pins and
+metadata. The full asset builder performs that refresh after generating all
+three owners. The original source archives remain hash-pinned; no active QEM
+LOD recipe remains, so full LOD generation no longer needs PyMeshLab.
+Generation and checks:
 
 ```sh
-.venv/bin/python tools/assets/build_pickup_lods.py --review
+python3 tools/assets/build_ammo.py
+python3 tools/assets/build_health.py
+python3 tools/assets/build_armor.py
+python3 -S tools/assets/build_pickup_lods.py --refresh-authored
 python3 -S tools/assets/build_pickup_lods.py --verify
+# Optional combined regeneration/review uses NumPy and Pillow:
+.venv/bin/python tools/assets/build_pickup_lods.py --review
 sh tests/renderers/run_pickup_lod_tests.sh
 python3 tools/performance/capture_pickup_lod.py
 ```
 
 Normal Make/CMake asset builds verify the checked-in LODs before packaging;
 they do not require conversion dependencies. The runtime capture checks mixed
-near/far cameras, exact triangle reductions, renderer restart, map reload,
+near/far cameras, expected triangle counts, renderer restart, map reload,
 toggle restoration and absent-LOD fallback. Host captures verify behavior and
 appearance; Pi performance must be measured on the device.
 
@@ -253,10 +360,9 @@ both build systems verify them before packaging. Spider sight remains silent.
 
 ## Optional Pi actor models
 
-The Pi profile uses a separate model-only overlay. Canonical player, enemy,
-carried-gun and first-person assets remain the high-detail source inputs for
-desktop builds. Rebuild the accepted Pi topology with the pinned asset virtual
-environment:
+The Pi profile uses a separate model-only overlay for remaining legacy actor
+and view models. Authored weapon replacements come from the main package.
+Rebuild the accepted Pi topology with the pinned asset virtual environment:
 
 ```sh
 .venv/bin/python tools/assets/build_pi_actor_models.py
@@ -265,16 +371,16 @@ environment:
 
 The output is `build/assets/pi-actor-models.pkz`; install it explicitly in the
 Pi package's `baseq2/`. It is deliberately outside the normal asset build.
-The current pack replaces four body models, ten carried guns and eight
-static first-person guns. Five M16 and three pistol entries from the original
-recipe are omitted: the main package supplies those authored weapons,
-including hands and model ADS. Rebuild the Pi pack after integrating either
-replacement; an older installed PKZ can override the main PK3.
+The current pack replaces only four body models. All twenty-six weapon entries
+from the original recipe are omitted; the main package supplies the ten authored
+guns, including hands and model ADS.
+Rebuild the Pi pack after integrating replacements; an older installed PKZ can
+override the main PK3.
 Player bodies use 1,012/994 triangles instead of
 1,766/1,768; normal and taller soldier bodies use 1,028 instead of 1,784.
 The M16 uses 256 triangles when carried and 800 in first person, including
-hands. Four carried-gun sources with nonmanifold UV topology retain
-their original bytes and are omitted from the overlay.
+hands. The authored sniper rifle also comes from the main package, including
+its held model, which the legacy Pi recipe did not cover.
 Yamagi loads PKZ archives after PK3 archives, placing them earlier in the search
 path. A `zz` prefix alone does not guarantee precedence among this engine's
 unsorted PK3 files. Remove the PKZ to restore the original models.
@@ -286,11 +392,11 @@ and normal byte. The builder replays the accepted topology on the original
 frames and requires byte-exact reproduction. It does not rerun an unconstrained
 decimator. The embedded manifest records triangle counts and quality evidence.
 
-First-person cleanup retains all original vertex/frame/skin/ST bytes and the
-draw order of surviving triangles. The certificate in
-`pi-firstperson-proof.json` covers default zero `gun_x/y/z` with `r_cull 1`,
-including normal recoil, bob, lowering, mirrored hands and FOV changes. Removed
-faces remain back-facing throughout a conservative 29-unit translation bound.
-Nonzero development gun offsets and disabled back-face culling are outside
-this optional asset profile. The animated grenade and uncertified faces remain
-unchanged. No texture, renderer, game logic, level or map source is in the pack.
+The original recipe's first-person cleanup retained vertex/frame/skin/ST
+bytes and surviving triangle order. Its historical `pi-firstperson-proof.json`
+certificate covers default zero `gun_x/y/z` with `r_cull 1`, normal recoil,
+bob, lowering, mirrored hands and FOV changes within a 29-unit bound. Those
+legacy gun entries are now omitted in favor of the authored main-package
+models and their dedicated validation. The animated hand grenade remains
+outside the overlay. No texture, renderer, game logic, level or map source is
+in the pack.

@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <math.h>
 
 #include "../../ref_shared.h"
+#include "../../view_weapon_clip.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -176,7 +177,7 @@ extern oldrefdef_t	r_refdef;
 
 #define NEAR_CLIP	0.01
 
-#define ALIAS_Z_CLIP_PLANE	4
+#define ALIAS_Z_CLIP_PLANE	PP_ALIAS_NEAR_CLIP
 
 // turbulence stuff
 #define AMP	8*0x10000

@@ -31,8 +31,8 @@ static void Boss2CrashExplode(edict_t *self);
 static void Boss2SpawnCrashExplosion(edict_t *self, float forward_bias,
 		float right_bias, float up_bias, float spread);
 static void boss2_begin_crash_burst(edict_t *self);
-static void boss2_crash_burst_think(edict_t *self);
-static void boss2_crash_fall_think(edict_t *self);
+void boss2_crash_burst_think(edict_t *self);
+void boss2_crash_fall_think(edict_t *self);
 static void boss2_ai_run(edict_t *self, float dist);
 static qboolean boss2_has_visible_enemy(edict_t *self);
 static float boss2_horizontal_range(edict_t *self, edict_t *other);
@@ -227,7 +227,7 @@ boss2_begin_crash_burst(edict_t *self)
 	gi.linkentity(self);
 }
 
-static void
+void
 boss2_crash_burst_think(edict_t *self)
 {
 	if (!self)
@@ -254,7 +254,7 @@ boss2_crash_burst_think(edict_t *self)
 	self->nextthink = level.time + FRAMETIME;
 }
 
-static void
+void
 boss2_crash_fall_think(edict_t *self)
 {
 	if (!self)
@@ -306,103 +306,67 @@ void boss2_reattack_mg(edict_t *self);
 void boss2_die(edict_t *self, edict_t *inflictor, edict_t *attacker,
 		int damage, vec3_t point);
 
+/* Recheck the target at each shot, including a target lost during wind-up.
+ * Tracing from each visible bore prevents firing through nearby cover. */
+static qboolean
+boss2_shot(edict_t *self, int flash, qboolean rocket, vec3_t start, vec3_t dir)
+{
+	vec3_t forward, right, target;
+	trace_t tr;
+	if (!boss2_has_visible_enemy(self) || self->deadflag == DEAD_DEAD) return false;
+	if (rocket && boss2_horizontal_range(self, self->enemy) < 280.0f) return false;
+	AngleVectors(self->s.angles, forward, right, NULL);
+	G_ProjectSource(self->s.origin, monster_flash_offset[flash], forward, right, start);
+	VectorCopy(self->enemy->s.origin, target);
+	target[2] += self->enemy->viewheight;
+	tr = gi.trace(start, NULL, NULL, target, self, MASK_SHOT);
+	if (tr.startsolid || tr.allsolid || (tr.fraction < 1.0f && tr.ent != self->enemy)) return false;
+	VectorSubtract(target, start, dir);
+	VectorNormalize(dir);
+	return true;
+}
+
 void
 Boss2Rocket(edict_t *self)
 {
-	vec3_t forward, right;
-	vec3_t start;
-	vec3_t dir;
-	vec3_t vec;
+	vec3_t start, dir;
+	int flash;
+	for (flash = MZ2_BOSS2_ROCKET_1; flash <= MZ2_BOSS2_ROCKET_4; flash++)
+		if (boss2_shot(self, flash, true, start, dir))
+			monster_fire_rocket(self, start, dir, 65, 650, flash);
+}
 
-	if (!self)
-	{
-		return;
-	}
+static void
+boss2_followup_rocket(edict_t *self)
+{
+	/* Phase two repeats the salvo six ticks after the first, then recovers. */
+	if (self && self->health <= self->max_health / 2) Boss2Rocket(self);
+}
 
-	AngleVectors(self->s.angles, forward, right, NULL);
-
-	G_ProjectSource(self->s.origin, monster_flash_offset[MZ2_BOSS2_ROCKET_1],
-			forward, right, start);
-	VectorCopy(self->enemy->s.origin, vec);
-	vec[2] += self->enemy->viewheight;
-	VectorSubtract(vec, start, dir);
-	VectorNormalize(dir);
-	monster_fire_rocket(self, start, dir, 50, 500, MZ2_BOSS2_ROCKET_1);
-
-	G_ProjectSource(self->s.origin, monster_flash_offset[MZ2_BOSS2_ROCKET_2],
-			forward, right, start);
-	VectorCopy(self->enemy->s.origin, vec);
-	vec[2] += self->enemy->viewheight;
-	VectorSubtract(vec, start, dir);
-	VectorNormalize(dir);
-	monster_fire_rocket(self, start, dir, 50, 500, MZ2_BOSS2_ROCKET_2);
-
-	G_ProjectSource(self->s.origin, monster_flash_offset[MZ2_BOSS2_ROCKET_3],
-			forward, right, start);
-	VectorCopy(self->enemy->s.origin, vec);
-	vec[2] += self->enemy->viewheight;
-	VectorSubtract(vec, start, dir);
-	VectorNormalize(dir);
-	monster_fire_rocket(self, start, dir, 50, 500, MZ2_BOSS2_ROCKET_3);
-
-	G_ProjectSource(self->s.origin, monster_flash_offset[MZ2_BOSS2_ROCKET_4],
-			forward, right, start);
-	VectorCopy(self->enemy->s.origin, vec);
-	vec[2] += self->enemy->viewheight;
-	VectorSubtract(vec, start, dir);
-	VectorNormalize(dir);
-	monster_fire_rocket(self, start, dir, 50, 500, MZ2_BOSS2_ROCKET_4);
+static void
+boss2_finish_rockets(edict_t *self)
+{
+	if (!self) return;
+	self->monsterinfo.attack_finished = level.time + 1.2f;
+	boss2_run(self);
 }
 
 void
 boss2_firebullet_right(edict_t *self)
 {
-	vec3_t forward, right, target;
-	vec3_t start;
-
-	if (!self)
-	{
-		return;
-	}
-
-	AngleVectors(self->s.angles, forward, right, NULL);
-	G_ProjectSource(self->s.origin, monster_flash_offset[MZ2_BOSS2_MACHINEGUN_R1],
-			forward, right, start);
-
-	VectorMA(self->enemy->s.origin, -0.2, self->enemy->velocity, target);
-	target[2] += self->enemy->viewheight;
-	VectorSubtract(target, start, forward);
-	VectorNormalize(forward);
-
-	monster_fire_bullet(self, start, forward,
-			6, 4, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD,
-			MZ2_BOSS2_MACHINEGUN_R1);
+	vec3_t start, dir;
+	if (boss2_shot(self, MZ2_BOSS2_MACHINEGUN_R1, false, start, dir))
+		monster_fire_bullet(self, start, dir, 8, 4, DEFAULT_BULLET_HSPREAD,
+			DEFAULT_BULLET_VSPREAD, MZ2_BOSS2_MACHINEGUN_R1);
 }
 
 void
 boss2_firebullet_left(edict_t *self)
 {
-	vec3_t forward, right, target;
-	vec3_t start;
-
-	if (!self)
-	{
-		return;
-	}
-
-	AngleVectors(self->s.angles, forward, right, NULL);
-	G_ProjectSource(self->s.origin, monster_flash_offset[MZ2_BOSS2_MACHINEGUN_L1],
-			forward, right, start);
-
-	VectorMA(self->enemy->s.origin, -0.2, self->enemy->velocity, target);
-
-	target[2] += self->enemy->viewheight;
-	VectorSubtract(target, start, forward);
-	VectorNormalize(forward);
-
-	monster_fire_bullet(self, start, forward, 6, 4,
-			DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD,
-			MZ2_BOSS2_MACHINEGUN_L1);
+	vec3_t start, dir;
+	if (boss2_shot(self, MZ2_BOSS2_MACHINEGUN_L1, false, start, dir))
+		monster_fire_bullet(self, start, dir, 8, 4, DEFAULT_BULLET_HSPREAD,
+			DEFAULT_BULLET_VSPREAD, MZ2_BOSS2_MACHINEGUN_L1);
 }
 
 void
@@ -619,7 +583,7 @@ static mframe_t boss2_frames_attack_rocket[] = {
 	{ai_charge, 1, NULL},
 	{ai_charge, 1, NULL},
 	{ai_charge, 1, NULL},
-	{ai_charge, 1, NULL},
+	{ai_charge, 1, boss2_followup_rocket},
 	{ai_charge, 1, NULL},
 	{ai_charge, 1, NULL}
 };
@@ -629,7 +593,7 @@ mmove_t boss2_move_attack_rocket =
 	FRAME_attack20,
    	FRAME_attack40,
 	boss2_frames_attack_rocket,
-	boss2_run
+	boss2_finish_rockets
 };
 
 static mframe_t boss2_frames_pain_heavy[] = {
@@ -793,7 +757,7 @@ boss2_attack(edict_t *self)
 	vec3_t vec;
 	float range;
 
-	if (!self)
+	if (!boss2_has_visible_enemy(self))
 	{
 		return;
 	}
@@ -801,13 +765,15 @@ boss2_attack(edict_t *self)
 	VectorSubtract(self->enemy->s.origin, self->s.origin, vec);
 	range = VectorLength(vec);
 
-	if (range <= 125)
+	self->count = 0;
+
+	if (range <= 280)
 	{
 		self->monsterinfo.currentmove = &boss2_move_attack_pre_mg;
 	}
 	else
 	{
-		if (random() <= 0.6)
+		if (random() <= (self->health <= self->max_health / 2 ? 0.4f : 0.6f))
 		{
 			self->monsterinfo.currentmove = &boss2_move_attack_pre_mg;
 		}
@@ -837,7 +803,7 @@ boss2_reattack_mg(edict_t *self)
 		return;
 	}
 
-	if (infront(self, self->enemy))
+	if (boss2_has_visible_enemy(self) && infront(self, self->enemy) && self->count++ < 2)
 	{
 		if (random() <= 0.7)
 		{
@@ -846,11 +812,13 @@ boss2_reattack_mg(edict_t *self)
 		else
 		{
 			self->monsterinfo.currentmove = &boss2_move_attack_post_mg;
+			self->monsterinfo.attack_finished = level.time + 1.0f;
 		}
 	}
 	else
 	{
 		self->monsterinfo.currentmove = &boss2_move_attack_post_mg;
+		self->monsterinfo.attack_finished = level.time + 1.0f;
 	}
 }
 
@@ -868,7 +836,7 @@ boss2_pain(edict_t *self, edict_t *other /* unused */,
 		self->s.skinnum = 1;
 	}
 
-	if (level.time < self->pain_debounce_time)
+	if (damage < 25 || level.time < self->pain_debounce_time)
 	{
 		return;
 	}
@@ -924,6 +892,7 @@ boss2_die(edict_t *self, edict_t *inflictor /* unused */, edict_t *attacker /* u
 	self->s.sound = 0;
 	self->s.frame = FRAME_death10;
 	self->movetype = MOVETYPE_TOSS;
+	self->flags &= ~(FL_FLY | FL_SWIM);
 	self->svflags |= SVF_DEADMONSTER;
 	self->delay = level.time + 0.05f;
 	self->wait = level.time + 1.5f;
@@ -944,7 +913,7 @@ Boss2_CheckAttack(edict_t *self)
 	int enemy_range;
 	float enemy_yaw;
 
-	if (!self)
+	if (!self || !self->enemy || !self->enemy->inuse)
 	{
 		return false;
 	}
@@ -1071,8 +1040,8 @@ SP_monster_boss2(edict_t *self)
 
 	self->movetype = MOVETYPE_STEP;
 	self->solid = SOLID_BBOX;
-	self->s.modelindex = gi.modelindex("models/monsters/boss2/tris.md2");
-	self->s.modelindex2 = gi.modelindex("models/monsters/boss2/propeller.md2");
+	self->s.modelindex = gi.modelindex("models/monsters/plastic_boss/body.md2");
+	self->s.modelindex2 = gi.modelindex("models/monsters/plastic_boss/main_rotor.md2");
 	VectorSet(self->mins, -56, -56, 0);
 	VectorSet(self->maxs, 56, 56, 80);
 	VectorCopy(self->s.origin, self->pos1);
@@ -1080,9 +1049,9 @@ SP_monster_boss2(edict_t *self)
 	self->wait = level.time;
 	self->monsterinfo.lefty = randk() & 1;
 
-	self->health = 2000;
+	if (!self->health) self->health = 4000;
 	self->gib_health = -200;
-	self->mass = 1000;
+	self->mass = 1800;
 
 	self->flags |= FL_IMMUNE_LASER;
 

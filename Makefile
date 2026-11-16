@@ -499,8 +499,33 @@ assets:
 	python3 tools/assets/build_support_models.py
 	python3 tools/assets/verify_m16_runtime.py
 	python3 tools/assets/verify_pistol_runtime.py
+	python3 tools/assets/verify_shotgun_runtime.py
+	python3 tools/assets/verify_sshotgun_runtime.py
+	python3 tools/assets/verify_m60_runtime.py
+	python3 tools/assets/verify_glauncher_runtime.py
+	python3 tools/assets/verify_rlauncher_runtime.py
+	python3 tools/assets/verify_sniper_runtime.py
+	python3 tools/assets/verify_flamethrower_runtime.py
+	python3 tools/assets/verify_mortar_runtime.py
+	python3 tools/assets/verify_ammo_runtime.py
+	python3 tools/assets/verify_health_runtime.py
+	python3 tools/assets/verify_armor_runtime.py
+	python3 tools/assets/verify_barrels_runtime.py
+	python3 tools/assets/verify_boss_helicopter_runtime.py
+	python3 tools/assets/verify_body_parts_runtime.py
+	python3 tools/assets/build_body_parts_overlays.py
+	python3 tools/assets/build_body_parts_overlays.py --verify
+	python3 tools/assets/verify_projectiles_runtime.py
+	python3 tools/assets/verify_dropship_runtime.py
+	python3 tools/assets/verify_soldier_body_test.py
 	python3 tools/assets/build_color_variants.py
 	python3 tools/assets/build_pickup_lods.py --verify
+	python3 tools/assets/build_projectile_overlays.py
+	python3 tools/assets/build_projectile_overlays.py --verify
+	python3 tools/assets/build_health_overlays.py
+	python3 tools/assets/build_health_overlays.py --verify
+	python3 tools/assets/build_dropship_overlays.py
+	python3 tools/assets/build_dropship_overlays.py --verify
 	python3 tools/assets/build_overlay.py --output "$(BINDIR)/baseq2/plastic-platoon.pk3"
 	cp baseq2/operation-heavy-test.pk3 baseq2/operation-rocket-test.pk3 baseq2/operation-tank-test.pk3 baseq2/operation-helicopter-test.pk3 "$(BINDIR)/baseq2/"
 
@@ -1317,6 +1342,7 @@ SERVER_DEPS= $(SERVER_OBJS:.o=.d)
 -include $(REFGLES1_DEPS)
 -include $(REFGL3_DEPS)
 -include $(REFGLES3_DEPS)
+-include $(REFSOFT_DEPS)
 -include $(SERVER_DEPS)
 
 # ----------

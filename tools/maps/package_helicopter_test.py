@@ -73,6 +73,10 @@ def main():
             files[rel] = path
             for skin in model_skins(path):
                 files[skin] = ROOT / "baseq2" / skin
+        # Retain the compatibility atlas already shipped by these missions.
+        # The authored rocket's dedicated atlas is collected from its MD2 above.
+        legacy_rocket_skin = "models/items/ammo/rockets/medium/skin.png"
+        files[legacy_rocket_skin] = ROOT / "baseq2" / legacy_rocket_skin
         files.update((f"sound/weapons/{name}",ROOT / "baseq2/sound/weapons" / name)
                      for name in SOUNDS)
         missing = [str(path) for path in files.values() if not path.is_file()]

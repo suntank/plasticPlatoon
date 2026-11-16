@@ -14,7 +14,7 @@ def audit(phase,plan,session,views):
  hard={k:v for k,v in raw['checks'].items()if not k.endswith('_fixed_xy_with_recoil')};spans={k:v for k,v in raw['checks'].items()if k.endswith('_fixed_xy_with_recoil')};positions=[]
  hard['all_six_view_coordinates_finite']=bool(views)and all(math.isfinite(float(row[key]))for row in views for key in ('x','y','z','pitch','yaw','roll'))
  if not phase['label'].startswith('functional-'):
-  if phase['label']=='bridge-four-guns':
+  if intended.get('motion_reference')=='boarding-clear-floor':
    boarded=next((p for p in session.get('phases',[])if p['label']=='boarding-clear-floor'),{});a=boarded.get('train_after');b=phase.get('train_after')
    if a and b:absolute={slot:[pose[i]+(b[i]-a[i])if i<3 else pose[i]for i in range(5)]for slot,pose in absolute.items()}
   for slot,pose in absolute.items():

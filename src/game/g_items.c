@@ -1969,7 +1969,7 @@ static const gitem_t gameitemlist[] = {
 		3,
 		2,
 		"grenades",
-		IT_AMMO | IT_WEAPON,
+		IT_AMMO,
 		WEAP_GRENADES,
 		NULL,
 		AMMO_GRENADES,

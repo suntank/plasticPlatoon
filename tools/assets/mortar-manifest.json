@@ -1,0 +1,586 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_mortar.py",
+  "dependencies_sha256": {
+    "build_mortar.py": "2da37a56dfd7474d60ceeb33eed3152b84e6307f5a0edb0cca6a745fc6dcab83",
+    "mortar_geometry.py": "81efad93a087a1407d9934e7558a77758e96866c4bf1d80a2e6ba081627edcee",
+    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
+    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+  },
+  "source_archive": {
+    "path": "tools/assets/sources/platoon-originals.pk3",
+    "sha256": "308e7b7e07f08ecbd0f7487e8a37440ab07c28bb83896b0f4c959a29fdcbf7e4",
+    "bytes": 47317833,
+    "origin": "Original owner-authored Plastic Platoon model, texture and sprite inputs recovered before public history cleanup",
+    "license": "GPL-2.0-or-later",
+    "excluded": [
+      "Legacy players/male assets",
+      "Inherited soldier portrait PCXs"
+    ]
+  },
+  "method": "authored closed primitives; archived rigid poses",
+  "hand": "m16_geometry.add_hands; existing closed molded mittens and forearms around trigger and forward grips",
+  "palette": "Shared M16 army-man plastic and mitten atlas",
+  "models": [
+    {
+      "path": "models/weapons/g_bfg/tris.md2",
+      "role": "pickup",
+      "baseline": {
+        "triangles": 900,
+        "position_vertices": 452,
+        "frames": 1,
+        "file_bytes": 40288
+      },
+      "after": {
+        "triangles": 328,
+        "position_vertices": 388,
+        "render_vertices": 553,
+        "frames": 1,
+        "skin_references": [
+          "models/weapons/g_bfg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 138,
+        "gl_command_triangles": 328,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 13816,
+        "sha256": "fd5c825e5953069f58ad04fc46b391c02acaea2670295534307b48ff148e0a6a",
+        "bounds": [
+          [
+            -21.899999618530273,
+            -13.0,
+            -14.5
+          ],
+          [
+            22.560954824090004,
+            13.000000350177288,
+            26.132078498601913
+          ]
+        ]
+      },
+      "pose_transfer": null,
+      "validation": {
+        "max_vertex_quantization_error": 0.107953692164,
+        "minimum_quantized_double_triangle_area": 0.555645056835,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          -15.402078486716245,
+          0.0,
+          24.30652035757344
+        ],
+        "rear_sight": [
+          8.67057576223553,
+          0.0,
+          -1.6868137381216428
+        ],
+        "front_sight": [
+          -9.225009051917109,
+          0.0,
+          23.8707300436949
+        ],
+        "grip": [
+          -1.7656422889596044,
+          0.0,
+          -7.40732532257883
+        ],
+        "support": [
+          -9.010040457821574,
+          0.0,
+          9.738189985249903
+        ]
+      },
+      "parts": [
+        {
+          "name": "mortar_tube",
+          "first_triangle": 0,
+          "triangle_count": 76
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 76,
+          "triangle_count": 16
+        },
+        {
+          "name": "grip",
+          "first_triangle": 92,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 112,
+          "triangle_count": 32
+        },
+        {
+          "name": "fore_grip",
+          "first_triangle": 144,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_mount",
+          "first_triangle": 156,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 168,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 180,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 192,
+          "triangle_count": 12
+        },
+        {
+          "name": "baseplate",
+          "first_triangle": 204,
+          "triangle_count": 44
+        },
+        {
+          "name": "baseplate_socket",
+          "first_triangle": 248,
+          "triangle_count": 20
+        },
+        {
+          "name": "bipod_right",
+          "first_triangle": 268,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_foot_right",
+          "first_triangle": 280,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_left",
+          "first_triangle": 292,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_foot_left",
+          "first_triangle": 304,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_crossbrace",
+          "first_triangle": 316,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "models/weapons/v_bfg/tris.md2",
+      "role": "view",
+      "baseline": {
+        "triangles": 1400,
+        "position_vertices": 702,
+        "frames": 1,
+        "file_bytes": 59336
+      },
+      "after": {
+        "triangles": 740,
+        "position_vertices": 692,
+        "render_vertices": 999,
+        "frames": 1,
+        "skin_references": [
+          "models/weapons/v_bfg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 246,
+        "gl_command_triangles": 740,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 28480,
+        "sha256": "c1e6b9dd6d21ba2469377c9ec6bae8241d35f941d7313caad2c3a600136c3565",
+        "bounds": [
+          [
+            -5.27910041809082,
+            -19.489532470703125,
+            -28.28422737121582
+          ],
+          [
+            47.381240248680115,
+            1.5923480838537216,
+            -0.9195644482970238
+          ]
+        ]
+      },
+      "pose_transfer": null,
+      "validation": {
+        "max_vertex_quantization_error": 0.114833768235,
+        "minimum_quantized_double_triangle_area": 0.201267158814,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          47.38123954176903,
+          -9.0,
+          -6.16433173584938
+        ],
+        "rear_sight": [
+          11.97906587600708,
+          -9.0,
+          -1.3129227520227431
+        ],
+        "front_sight": [
+          43.4476646900177,
+          -9.0,
+          -1.3129227520227431
+        ],
+        "grip": [
+          13.290257493257524,
+          -9.0,
+          -13.244766469001771
+        ],
+        "support": [
+          31.646940134763717,
+          -9.0,
+          -9.311191617250442
+        ]
+      },
+      "parts": [
+        {
+          "name": "mortar_tube",
+          "first_triangle": 0,
+          "triangle_count": 76
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 76,
+          "triangle_count": 16
+        },
+        {
+          "name": "grip",
+          "first_triangle": 92,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 112,
+          "triangle_count": 32
+        },
+        {
+          "name": "fore_grip",
+          "first_triangle": 144,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_mount",
+          "first_triangle": 156,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 168,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 180,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 192,
+          "triangle_count": 12
+        },
+        {
+          "name": "arm_right",
+          "first_triangle": 204,
+          "triangle_count": 20
+        },
+        {
+          "name": "cuff_right",
+          "first_triangle": 224,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_right_wrist",
+          "first_triangle": 244,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_right_palm",
+          "first_triangle": 264,
+          "triangle_count": 76
+        },
+        {
+          "name": "hand_right_thumb",
+          "first_triangle": 340,
+          "triangle_count": 44
+        },
+        {
+          "name": "hand_right_fingers",
+          "first_triangle": 384,
+          "triangle_count": 60
+        },
+        {
+          "name": "arm_left",
+          "first_triangle": 444,
+          "triangle_count": 20
+        },
+        {
+          "name": "cuff_left",
+          "first_triangle": 464,
+          "triangle_count": 20
+        },
+        {
+          "name": "hand_left_palm",
+          "first_triangle": 484,
+          "triangle_count": 60
+        },
+        {
+          "name": "hand_left_fingers",
+          "first_triangle": 544,
+          "triangle_count": 44
+        },
+        {
+          "name": "hand_left_thumb",
+          "first_triangle": 588,
+          "triangle_count": 44
+        },
+        {
+          "name": "baseplate",
+          "first_triangle": 632,
+          "triangle_count": 28
+        },
+        {
+          "name": "baseplate_hinge",
+          "first_triangle": 660,
+          "triangle_count": 20
+        },
+        {
+          "name": "bipod_right",
+          "first_triangle": 680,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_foot_right",
+          "first_triangle": 692,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_left",
+          "first_triangle": 704,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_foot_left",
+          "first_triangle": 716,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_crossbrace",
+          "first_triangle": 728,
+          "triangle_count": 12
+        }
+      ]
+    },
+    {
+      "path": "players/soldier/w_bfg.md2",
+      "role": "player",
+      "baseline": {
+        "triangles": 1632,
+        "position_vertices": 818,
+        "frames": 198,
+        "file_bytes": 720908
+      },
+      "after": {
+        "triangles": 312,
+        "position_vertices": 396,
+        "render_vertices": 547,
+        "frames": 198,
+        "skin_references": [
+          "models/weapons/v_bfg/skin.png"
+        ],
+        "skin_coordinate_dimensions": [
+          256,
+          256
+        ],
+        "gl_command_primitives": 138,
+        "gl_command_triangles": 312,
+        "duplicate_gl_triangles": 0,
+        "unused_bytes_per_frame": 0,
+        "file_bytes": 333328,
+        "sha256": "6c4d7e19bf3fc5b04b04ef9a9dfbac16e49e5d603354897cb14f4aa5238708d9",
+        "bounds": [
+          [
+            -51.995452880859375,
+            -35.18454360961914,
+            -28.064104080200195
+          ],
+          [
+            54.27342624217272,
+            37.684186816215515,
+            37.41950713098049
+          ]
+        ]
+      },
+      "pose_transfer": {
+        "rms_max": 0.0463934042024,
+        "frames": 198
+      },
+      "validation": {
+        "max_vertex_quantization_error": 0.0544084738892,
+        "minimum_quantized_double_triangle_area": 0.0569450530761,
+        "all_frames_nondegenerate": true,
+        "outward_normals_clockwise_triangles": true
+      },
+      "anchors_frame0": {
+        "muzzle": [
+          24.240000000000002,
+          -4.75,
+          15.716000000000001
+        ],
+        "rear_sight": [
+          9.66,
+          -4.75,
+          17.714000000000002
+        ],
+        "front_sight": [
+          22.62,
+          -4.75,
+          17.714000000000002
+        ],
+        "grip": [
+          10.2,
+          -4.75,
+          12.8
+        ],
+        "support": [
+          17.76,
+          -4.75,
+          14.420000000000002
+        ]
+      },
+      "parts": [
+        {
+          "name": "mortar_tube",
+          "first_triangle": 0,
+          "triangle_count": 76
+        },
+        {
+          "name": "receiver",
+          "first_triangle": 76,
+          "triangle_count": 16
+        },
+        {
+          "name": "grip",
+          "first_triangle": 92,
+          "triangle_count": 20
+        },
+        {
+          "name": "trigger_guard",
+          "first_triangle": 112,
+          "triangle_count": 32
+        },
+        {
+          "name": "fore_grip",
+          "first_triangle": 144,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_mount",
+          "first_triangle": 156,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_right",
+          "first_triangle": 168,
+          "triangle_count": 12
+        },
+        {
+          "name": "rear_sight_left",
+          "first_triangle": 180,
+          "triangle_count": 12
+        },
+        {
+          "name": "front_sight",
+          "first_triangle": 192,
+          "triangle_count": 12
+        },
+        {
+          "name": "baseplate",
+          "first_triangle": 204,
+          "triangle_count": 28
+        },
+        {
+          "name": "baseplate_hinge",
+          "first_triangle": 232,
+          "triangle_count": 20
+        },
+        {
+          "name": "bipod_right",
+          "first_triangle": 252,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_foot_right",
+          "first_triangle": 264,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_left",
+          "first_triangle": 276,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_foot_left",
+          "first_triangle": 288,
+          "triangle_count": 12
+        },
+        {
+          "name": "bipod_crossbrace",
+          "first_triangle": 300,
+          "triangle_count": 12
+        }
+      ]
+    }
+  ],
+  "ads_header": {
+    "path": "src/client/header/mortar_model_ads.h",
+    "sha256": "847cb34b78d2853edf5dc3646689ddba1bb580f60f43e5e03b9b37fc3ab0e2c0"
+  },
+  "files": [
+    {
+      "path": "models/weapons/g_bfg/skin.png",
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
+    },
+    {
+      "path": "models/weapons/g_bfg/tris.md2",
+      "bytes": 13816,
+      "sha256": "fd5c825e5953069f58ad04fc46b391c02acaea2670295534307b48ff148e0a6a"
+    },
+    {
+      "path": "models/weapons/v_bfg/skin.png",
+      "bytes": 6001,
+      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
+    },
+    {
+      "path": "models/weapons/v_bfg/tris.md2",
+      "bytes": 28480,
+      "sha256": "c1e6b9dd6d21ba2469377c9ec6bae8241d35f941d7313caad2c3a600136c3565"
+    },
+    {
+      "path": "players/soldier/w_bfg.md2",
+      "bytes": 333328,
+      "sha256": "6c4d7e19bf3fc5b04b04ef9a9dfbac16e49e5d603354897cb14f4aa5238708d9"
+    }
+  ]
+}

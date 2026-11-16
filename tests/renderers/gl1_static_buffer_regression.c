@@ -40,7 +40,7 @@ void R_MBind(GLenum target, int n) { (void)target; (void)n; }
 void R_SelectTexture(GLenum target) { (void)target; }
 void R_EnableMultitexture(qboolean value) { (void)value; }
 void R_TexEnv(GLenum value) { (void)value; }
-void R_SetPerspective(GLdouble value) { (void)value; }
+void R_SetPerspective(GLdouble value, qboolean weapon_model) { (void)value; (void)weapon_model; }
 double PP_PerfNow(void) { return 0; }
 void PP_DPDraw(void) { }
 void PP_DPFlush(void) { }

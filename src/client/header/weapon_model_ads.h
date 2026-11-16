@@ -3,6 +3,14 @@
 #define PP_WEAPON_MODEL_ADS_H
 #include "m16_model_ads.h"
 #include "pistol_model_ads.h"
+#include "shotgun_model_ads.h"
+#include "sshotgun_model_ads.h"
+#include "m60_model_ads.h"
+#include "glauncher_model_ads.h"
+#include "rlauncher_model_ads.h"
+#include "sniper_model_ads.h"
+#include "flamethrower_model_ads.h"
+#include "mortar_model_ads.h"
 
 typedef pp_m16_ads_state_t pp_model_ads_state_t;
 #define PP_ModelADSAmount PP_M16ADSAmount
@@ -12,14 +20,107 @@ typedef pp_m16_ads_state_t pp_model_ads_state_t;
 typedef struct {
     float forward, right, up;
     float muzzle_forward, muzzle_right, muzzle_up;
+    int animated;
+    float recoil_back; /* ADS travel limit; zero preserves the M16's motion. */
 } pp_model_ads_config_t;
 
-static inline pp_model_ads_config_t PP_ModelADSConfig(int pistol)
+enum {
+    PP_MODEL_ADS_RIFLE,
+    PP_MODEL_ADS_PISTOL,
+    PP_MODEL_ADS_SHOTGUN,
+    PP_MODEL_ADS_SSHOTGUN,
+    PP_MODEL_ADS_M60,
+    PP_MODEL_ADS_GLAUNCHER,
+    PP_MODEL_ADS_RLAUNCHER,
+    PP_MODEL_ADS_SNIPER,
+    PP_MODEL_ADS_FLAMETHROWER,
+    PP_MODEL_ADS_MORTAR
+};
+
+static inline pp_model_ads_config_t PP_ModelADSConfig(int weapon)
 {
     const pp_model_ads_config_t rifle = {PP_M16_ADS_FORWARD, PP_M16_ADS_RIGHT,
-        PP_M16_ADS_UP, PP_M16_MUZZLE_FORWARD, PP_M16_MUZZLE_RIGHT, PP_M16_MUZZLE_UP};
+        PP_M16_ADS_UP, PP_M16_MUZZLE_FORWARD, PP_M16_MUZZLE_RIGHT, PP_M16_MUZZLE_UP, 0, 0};
     const pp_model_ads_config_t sidearm = {PP_PISTOL_ADS_FORWARD, PP_PISTOL_ADS_RIGHT,
-        PP_PISTOL_ADS_UP, PP_PISTOL_MUZZLE_FORWARD, PP_PISTOL_MUZZLE_RIGHT, PP_PISTOL_MUZZLE_UP};
-    return pistol ? sidearm : rifle;
+        PP_PISTOL_ADS_UP, PP_PISTOL_MUZZLE_FORWARD, PP_PISTOL_MUZZLE_RIGHT, PP_PISTOL_MUZZLE_UP, 0, .35f};
+    const pp_model_ads_config_t shotgun = {PP_SHOTGUN_ADS_FORWARD, PP_SHOTGUN_ADS_RIGHT,
+        PP_SHOTGUN_ADS_UP, PP_SHOTGUN_MUZZLE_FORWARD, PP_SHOTGUN_MUZZLE_RIGHT,
+        PP_SHOTGUN_MUZZLE_UP, 1, .60f};
+    const pp_model_ads_config_t double_barrel = {PP_SSHOTGUN_ADS_FORWARD, PP_SSHOTGUN_ADS_RIGHT,
+        PP_SSHOTGUN_ADS_UP, PP_SSHOTGUN_MUZZLE_FORWARD, PP_SSHOTGUN_MUZZLE_RIGHT,
+        PP_SSHOTGUN_MUZZLE_UP, 0, .70f};
+    const pp_model_ads_config_t m60 = {PP_M60_ADS_FORWARD, PP_M60_ADS_RIGHT,
+        PP_M60_ADS_UP, PP_M60_MUZZLE_FORWARD, PP_M60_MUZZLE_RIGHT, PP_M60_MUZZLE_UP, 0, .25f};
+    const pp_model_ads_config_t launcher = {PP_GLAUNCHER_ADS_FORWARD, PP_GLAUNCHER_ADS_RIGHT,
+        PP_GLAUNCHER_ADS_UP, PP_GLAUNCHER_MUZZLE_FORWARD, PP_GLAUNCHER_MUZZLE_RIGHT,
+        PP_GLAUNCHER_MUZZLE_UP, 0, .55f};
+    const pp_model_ads_config_t rocket = {PP_RLAUNCHER_ADS_FORWARD, PP_RLAUNCHER_ADS_RIGHT,
+        PP_RLAUNCHER_ADS_UP, PP_RLAUNCHER_MUZZLE_FORWARD, PP_RLAUNCHER_MUZZLE_RIGHT,
+        PP_RLAUNCHER_MUZZLE_UP, 0, .50f};
+    const pp_model_ads_config_t sniper = {PP_SNIPER_ADS_FORWARD, PP_SNIPER_ADS_RIGHT,
+        PP_SNIPER_ADS_UP, PP_SNIPER_MUZZLE_FORWARD, PP_SNIPER_MUZZLE_RIGHT,
+        PP_SNIPER_MUZZLE_UP, 0, .30f};
+    const pp_model_ads_config_t flamethrower = {PP_FLAMETHROWER_ADS_FORWARD, PP_FLAMETHROWER_ADS_RIGHT,
+        PP_FLAMETHROWER_ADS_UP, PP_FLAMETHROWER_MUZZLE_FORWARD, PP_FLAMETHROWER_MUZZLE_RIGHT,
+        PP_FLAMETHROWER_MUZZLE_UP, 0, .08f};
+    const pp_model_ads_config_t mortar = {PP_MORTAR_ADS_FORWARD, PP_MORTAR_ADS_RIGHT,
+        PP_MORTAR_ADS_UP, PP_MORTAR_MUZZLE_FORWARD, PP_MORTAR_MUZZLE_RIGHT,
+        PP_MORTAR_MUZZLE_UP, 0, .65f};
+    if (weapon == PP_MODEL_ADS_SHOTGUN) return shotgun;
+    if (weapon == PP_MODEL_ADS_SSHOTGUN) return double_barrel;
+    if (weapon == PP_MODEL_ADS_M60) return m60;
+    if (weapon == PP_MODEL_ADS_GLAUNCHER) return launcher;
+    if (weapon == PP_MODEL_ADS_RLAUNCHER) return rocket;
+    if (weapon == PP_MODEL_ADS_SNIPER) return sniper;
+    if (weapon == PP_MODEL_ADS_FLAMETHROWER) return flamethrower;
+    if (weapon == PP_MODEL_ADS_MORTAR) return mortar;
+    return weapon == PP_MODEL_ADS_PISTOL ? sidearm : rifle;
+}
+
+/* Apply after procedural smoothing so an old hip-fire kick cannot linger in
+ * the aimed pose. Full ADS stays on the sight axis with a small rearward
+ * translation; partial ADS blends continuously into the original motion.
+ * Camera recoil, server weapon behavior and articulated pump frames are
+ * independent. Zero blend and the M16 return without touching any values. */
+static inline void
+PP_ModelADSConstrainMotion(pp_model_ads_config_t config, float blend, float hip_back,
+    const float forward[3], const float right[3], const float up[3],
+    const float base_origin[3], const float base_angles[3], float origin[3], float angles[3])
+{
+    float delta[3], local_forward=0, local_right=0, local_up=0;
+    float scale, limit;
+    int i;
+    if (config.recoil_back <= 0 || blend <= 0 || hip_back <= 0) return;
+    if (blend > 1) blend=1;
+    for (i=0;i<3;i++) {
+        delta[i]=origin[i]-base_origin[i];
+        local_forward+=delta[i]*forward[i];
+        local_right+=delta[i]*right[i];
+        local_up+=delta[i]*up[i];
+    }
+    scale=1-blend+blend*config.recoil_back/hip_back;
+    /* A raising weapon can start farther back than a recoil impulse. Fade
+     * that existing tail continuously instead of snapping at ADS entry. */
+    limit=-local_forward > hip_back ? -local_forward : hip_back;
+    limit=(1-blend)*limit+blend*config.recoil_back;
+    local_forward*=scale;
+    if (local_forward < -limit) local_forward=-limit;
+    local_right*=1-blend;
+    local_up*=1-blend;
+    for (i=0;i<3;i++) {
+        float angle=angles[i]-base_angles[i];
+        while (angle > 180) angle-=360;
+        while (angle < -180) angle+=360;
+        origin[i]=base_origin[i]+local_forward*forward[i]+local_right*right[i]+local_up*up[i];
+        angles[i]=base_angles[i]+angle*(1-blend);
+    }
+}
+
+/* Only the pump shotgun animates inside its model. Keep the exact server
+ * schedule (raise 0–7, shot/pump 8–18, idle 19–36, lower 37–39), while the
+ * rigid authored weapons still use the renderer's static geometry cache. */
+static inline int PP_ModelADSFrame(pp_model_ads_config_t config, int gunframe)
+{
+    return config.animated && gunframe >= 0 && gunframe < 40 ? gunframe : 0;
 }
 #endif

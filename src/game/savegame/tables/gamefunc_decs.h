@@ -627,6 +627,8 @@ extern void Use_Boss3 ( edict_t * ent , edict_t * other , edict_t * activator ) 
 extern void SP_monster_boss2 ( edict_t * self ) ;
 extern qboolean Boss2_CheckAttack ( edict_t * self ) ;
 extern void boss2_die ( edict_t * self , edict_t * inflictor , edict_t * attacker , int damage , vec3_t point ) ;
+extern void boss2_crash_fall_think ( edict_t * self ) ;
+extern void boss2_crash_burst_think ( edict_t * self ) ;
 extern void boss2_dead ( edict_t * self ) ;
 extern void boss2_pain ( edict_t * self , edict_t * other , float kick , int damage ) ;
 extern void boss2_reattack_mg ( edict_t * self ) ;

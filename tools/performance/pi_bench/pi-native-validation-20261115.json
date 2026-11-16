@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "source": "/data/build-sources/plastic-platoon-profile-20261115/candidate-source",
+  "renderer": "7527296ddbec121894dc54a7517314e4f5a3ca96e8b0d3eb3066df26d6f76fcb",
+  "driver": "10a723267cc505d885584fe4343446f4ed003eb20681249463135cd6157a5e76",
+  "native_regression": "/data/build-sources/plastic-platoon-profile-20261115/native-unit.log",
+  "tests": [
+    "/data/build-sources/plastic-platoon-profile-20261115/ab-sandbox/report.json",
+    "/data/build-sources/plastic-platoon-profile-20261115/ab-endline/report.json",
+    "/data/build-sources/plastic-platoon-profile-20261115/ab-temple/report.json"
+  ]
+}

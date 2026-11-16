@@ -23,8 +23,8 @@ seconds. The model remains visible instead of being replaced with an image.
 Its rear sight is 9.5 model units from the eye at full aim. Idle bob fades
 out as the sights align. Existing recoil, raising and ADS input/sensitivity
 behavior remain in use. Each split-screen player owns a separate aim blend.
-The pistol now shares this model-ADS path with its own offsets; the remaining
-weapons continue using their existing image overlays.
+All other authored guns, including the Mortar Cannon, share this model-ADS
+path with their own offsets. The hand grenade retains its image overlay.
 
 ## Measured asset budgets
 
@@ -133,8 +133,8 @@ named primitive parts. These are studio renders of the real geometry.
 `tools/performance/capture_m16.py` captures actual GL1/GL3 first-person, ADS,
 pickup, held and four-player views in an isolated runtime. Its opt-in QA
 controller equips and positions real local players. It asserts independent
-ADS blends, release-to-hip behavior, and preservation of the Shotgun's image
-overlay path. Capture manifests pin the package, executable and renderer.
+ADS blends and release-to-hip behavior. It also captures both shotguns'
+actual-model sights and the pump shotgun's cycling fore-end. Capture manifests pin the package, executable and renderer.
 
 ## Performance interpretation
 

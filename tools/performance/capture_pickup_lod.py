@@ -26,6 +26,7 @@ import time
 import zipfile
 
 from make_fixture import box, entity
+from qa_controls import FileControls, compile_controls
 
 ROOT = Path(__file__).resolve().parents[2]
 TARGETS = {
@@ -69,11 +70,11 @@ def fixture(classname):
     return text + entity(dict(classname=classname, origin='0 0 32'))
 
 
-def compile_fixtures(output, tool, basedir):
+def compile_fixtures(output, tool, basedir, targets=TARGETS):
     maps = output/'maps'
     maps.mkdir(parents=True, exist_ok=True)
     result = {}
-    for index, classname in enumerate(TARGETS):
+    for index, classname in enumerate(targets):
         name = f'pp_pickup_lod_{index}'
         source = maps/(name+'.map')
         source.write_text(fixture(classname))
@@ -151,12 +152,14 @@ int SDL_Init(Uint32 flags) {
 
 
 def exercise(runtime, mapname, output, renderer, backend, missing=False,
-             shadows=0, virtual_pads=None):
+             shadows=0, virtual_pads=None, file_controller=None):
     output.mkdir(exist_ok=False)
     base = runtime/'baseq2'
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as reservation:
-        reservation.bind(('127.0.0.1', 0))
-        port = reservation.getsockname()[1]
+    port = 0
+    if not file_controller:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as reservation:
+            reservation.bind(('127.0.0.1', 0))
+            port = reservation.getsockname()[1]
     token = secrets.token_hex(16)
     settings = dict(vid_renderer=renderer, r_mode=-1, r_customwidth=240,
                     r_customheight=240, vid_fullscreen=0, r_vsync=0, vid_maxfps=30,
@@ -176,11 +179,18 @@ def exercise(runtime, mapname, output, renderer, backend, missing=False,
     env = dict(os.environ, XDG_CACHE_HOME=str(runtime/'cache'))
     if virtual_pads:
         env['LD_PRELOAD']=str(virtual_pads)
+    control_path = output/'controls.txt'
+    if file_controller:
+        library, symbols = file_controller
+        control_path.write_text('')
+        env.update(symbols, PP_COLOR_CONTROLS=str(control_path))
+        env['LD_PRELOAD'] = ':'.join(str(p) for p in (virtual_pads, library) if p)
     if backend == 'offscreen':
         env.update(SDL_VIDEODRIVER='offscreen', LIBGL_ALWAYS_SOFTWARE='1', LP_NUM_THREADS='2')
     log = (output/'console.log').open('w')
     process = subprocess.Popen(command, cwd=runtime, env=env, stdout=log,
                                stderr=subprocess.STDOUT, start_new_session=True)
+    controller = FileControls(control_path, output/'console.log', process) if file_controller else None
     actions, phases = [], {}
 
     def wait(seconds):
@@ -191,6 +201,10 @@ def exercise(runtime, mapname, output, renderer, backend, missing=False,
             time.sleep(min(.1, max(.001, deadline-time.monotonic())))
 
     def cmd(command):
+        if controller:
+            controller.console(command)
+            actions.append(dict(command=command, transport='QA control file'))
+            return ''
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as request:
             request.settimeout(.8)
             request.sendto(b'\xff'*4+b'rcon '+token.encode()+b' '+command.encode()+b'\n', ('127.0.0.1',port))
@@ -242,9 +256,14 @@ def exercise(runtime, mapname, output, renderer, backend, missing=False,
     try:
         deadline = time.monotonic()+60
         while True:
-            status = cmd('status')
-            clients = [l for l in status.splitlines() if '[loopback-client' in l]
-            if len(clients)==2 and all('CNCT' not in l and 'ZMBI' not in l for l in clients):
+            if controller:
+                state = controller.state()
+                ready = state['connection'] == 4 and all(c['spawned'] for c in state['clients'][:2])
+            else:
+                status = cmd('status')
+                clients = [l for l in status.splitlines() if '[loopback-client' in l]
+                ready = len(clients)==2 and all('CNCT' not in l and 'ZMBI' not in l for l in clients)
+            if ready:
                 break
             if time.monotonic()>deadline:
                 raise RuntimeError('Local clients did not connect')
@@ -280,22 +299,25 @@ def exercise(runtime, mapname, output, renderer, backend, missing=False,
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source',type=Path,default=ROOT/'release')
-    parser.add_argument('--q2tool',type=Path,default=Path('/home/austin-morgan/q2tools-220/build/q2tool'))
+    parser.add_argument('--q2tool',type=Path,default=ROOT.parent/'q2tools-220/build/q2tool')
     parser.add_argument('--compile-assets',type=Path,default=ROOT/'baseq2')
     parser.add_argument('--output',type=Path,default=ROOT/'build/pi-pickup-lod-20261112/pickup-lod-visual-qa')
-    parser.add_argument('--renderer',choices=('gl1','gl3'),default='gl1')
+    parser.add_argument('--renderer',choices=('gl1','gl3','soft'),default='gl1')
     parser.add_argument('--backend',choices=('offscreen','xvfb','current'),default='offscreen')
     parser.add_argument('--original-hashes',type=Path)
     parser.add_argument('--prepare-only',action='store_true')
+    parser.add_argument('--file-controls', action='store_true', help='Use the opt-in QA controller instead of UDP')
+    parser.add_argument('--targets', nargs='+', choices=list(TARGETS), default=list(TARGETS))
     args = parser.parse_args()
     args.output = args.output.resolve()
     args.source = args.source.resolve()
     args.output.mkdir(parents=True,exist_ok=True)
-    maps = compile_fixtures(args.output,args.q2tool,args.compile_assets)
+    targets = {name:TARGETS[name] for name in args.targets}
+    maps = compile_fixtures(args.output,args.q2tool,args.compile_assets,targets)
     with zipfile.ZipFile(args.source/'baseq2/plastic-platoon.pk3') as archive:
-        originals = {path:digest(archive.read(path)) for path in TARGETS.values()}
+        originals = {path:digest(archive.read(path)) for path in targets.values()}
         sizes = {}
-        for classname,path in TARGETS.items():
+        for classname,path in targets.items():
             lowpath = str(Path(path).with_name('lod1.md2'))
             sizes[classname] = dict(high=command_triangles(archive.read(path)),
                                    low=command_triangles(archive.read(lowpath)) if lowpath in archive.namelist() else None)
@@ -317,19 +339,33 @@ def main():
                   fixture_sha256={name:digest(path.read_bytes()) for name,path in maps.items()})
     try:
         pad_driver=virtual_pad_driver(args.output)
+        file_controller = compile_controls(args.source,args.output) if args.file_controls else None
         normal = stage_runtime(args.source,args.output,maps)
         absent = stage_runtime(args.source,args.output,maps,True)
         for classname,bsp in maps.items():
             expected = sizes[classname]['high']-sizes[classname]['low']
-            result = exercise(normal,bsp.stem,args.output/classname,args.renderer,args.backend,virtual_pads=pad_driver)
-            missing = exercise(absent,bsp.stem,args.output/(classname+'-missing'),args.renderer,args.backend,True,virtual_pads=pad_driver)
+            result = exercise(normal,bsp.stem,args.output/classname,args.renderer,args.backend,virtual_pads=pad_driver,file_controller=file_controller)
+            missing = exercise(absent,bsp.stem,args.output/(classname+'-missing'),args.renderer,args.backend,True,virtual_pads=pad_driver,file_controller=file_controller)
             checks = dict(near_unchanged=result['off']['0']['model_triangles']==result['on']['0']['model_triangles'],
                           far_reduction_exact=result['off']['1']['model_triangles']-result['on']['1']['model_triangles']==expected,
                           restart_preserved=result['restarted']==result['on'],
                           map_reload_preserved=result['reloaded']==result['on'],
                           off_restored=result['off_again']==result['off'],
                           missing_falls_back=missing['off']==missing['on'] and missing['off']==result['off'])
-            report['scenes'][classname] = dict(result=result,missing=missing,expected_far_triangle_reduction=expected,checks=checks)
+            counters = result['off']['1']['model_triangles'] >= 0 and result['on']['1']['model_triangles'] >= 0
+            if not counters:
+                # Software does not expose model-triangle counters. Retain its
+                # rendered off/on/restart/reload/missing-sibling evidence, but
+                # do not mislabel -1 == -1 as geometry verification.
+                checks = dict(visual_phases_captured=all((args.output/classname/(phase+'.png')).exists()
+                              for phase in ('off','on','restarted','reloaded','off-again')),
+                              missing_phases_captured=all((args.output/(classname+'-missing')/(phase+'.png')).exists()
+                              for phase in ('off','on')),
+                              camera_positions_preserved=all(result['off'][str(slot)]['origin']==result['on'][str(slot)]['origin']
+                              for slot in range(2)))
+            report['scenes'][classname] = dict(result=result,missing=missing,expected_far_triangle_reduction=expected,
+                                              triangle_counters_available=counters,
+                                              validation='exact triangle deltas' if counters else 'software visual smoke only',checks=checks)
             log_text=(args.output/classname/'console.log').read_text(errors='replace')
             report['scenes'][classname]['context']={key:re.findall(r'^'+key+r': (.+)$',log_text,re.M)[0]
                                                  for key in ('GL_VENDOR','GL_RENDERER','GL_VERSION')

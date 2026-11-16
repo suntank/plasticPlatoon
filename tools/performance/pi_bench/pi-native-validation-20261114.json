@@ -1,0 +1,98 @@
+{
+  "passed": true,
+  "matching_source": "/data/build-sources/plastic-platoon-lowpoly-20261114/source",
+  "compatibility": {
+    "engine": "4ce95bf6c626878ca85c6cd87505e8fb3ec58ddcd237eca45b1d9564326a5e15",
+    "renderer": "29a59891ef22c559de72eb7191498379d7fc018f4ad0ab2f0eb472d2f51b892f",
+    "driver": "10a723267cc505d885584fe4343446f4ed003eb20681249463135cd6157a5e76"
+  },
+  "smoke": {
+    "map": "pp_sandbox2",
+    "returncode": 0,
+    "valid": true,
+    "output": "/data/build-sources/plastic-platoon-lowpoly-20261114/smoke"
+  },
+  "default_runs": [
+    {
+      "map": "pp_sandbox2",
+      "returncode": 0,
+      "valid": true,
+      "output": "/data/build-sources/plastic-platoon-lowpoly-20261114/current-pp_sandbox2"
+    },
+    {
+      "map": "pp_sandstorm",
+      "returncode": 0,
+      "valid": true,
+      "output": "/data/build-sources/plastic-platoon-lowpoly-20261114/current-pp_sandstorm"
+    },
+    {
+      "map": "pp_endline",
+      "returncode": 1,
+      "valid": false,
+      "output": "/data/build-sources/plastic-platoon-lowpoly-20261114/current-pp_endline"
+    },
+    {
+      "map": "pp_temple",
+      "returncode": 0,
+      "valid": true,
+      "output": "/data/build-sources/plastic-platoon-lowpoly-20261114/current-pp_temple"
+    }
+  ],
+  "qualified_followups": [
+    {
+      "version": "baseline",
+      "map": "pp_sandbox2",
+      "god": false,
+      "quality": "normal",
+      "label": "baseline-pp_sandbox2-repeat",
+      "returncode": 0,
+      "valid": true
+    },
+    {
+      "version": "current",
+      "map": "pp_sandbox2",
+      "god": false,
+      "quality": "normal",
+      "label": "current-pp_sandbox2-repeat",
+      "returncode": 0,
+      "valid": true
+    },
+    {
+      "version": "baseline",
+      "map": "pp_sandstorm",
+      "god": true,
+      "quality": "both",
+      "label": "baseline-pp_sandstorm-god",
+      "returncode": 0,
+      "valid": true
+    },
+    {
+      "version": "current",
+      "map": "pp_sandstorm",
+      "god": true,
+      "quality": "both",
+      "label": "current-pp_sandstorm-god",
+      "returncode": 0,
+      "valid": true
+    },
+    {
+      "version": "baseline",
+      "map": "pp_endline",
+      "god": true,
+      "quality": "both",
+      "label": "baseline-pp_endline-god",
+      "returncode": 0,
+      "valid": true
+    },
+    {
+      "version": "current",
+      "map": "pp_endline",
+      "god": true,
+      "quality": "both",
+      "label": "current-pp_endline-god",
+      "returncode": 0,
+      "valid": true
+    }
+  ],
+  "all_four_map_checks_passed": true
+}

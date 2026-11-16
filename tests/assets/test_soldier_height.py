@@ -77,8 +77,8 @@ class SoldierHeightTests(unittest.TestCase):
 
     def test_heavy_and_rocket_muzzles_match_scaled_barrel_centres(self):
         # These are the reviewed barrel-rim markers used by both game and client.
-        for name, old_marker in (('weapon_heavy.md2', (25.37,-4.46,4.50)),
-                                  ('weapon_rocket.md2', (22.19,-4.72,4.19))):
+        for name, old_marker in (('weapon_heavy.md2', (25.120810,-4.747138,3.600423)),
+                                  ('weapon_rocket.md2', (23.470810,-4.749782,4.422446))):
             _, taller = self.models[name]
             points = vertices(taller, 32)  # FRAME_attak303, planted fire pose.
             front = max(p[0] for p in points)

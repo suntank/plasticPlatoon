@@ -500,6 +500,28 @@ Think_Weapon(edict_t *ent)
 		ChangeWeapon(ent);
 	}
 
+	/* Older saves may have hand grenades equipped or queued. Resume the
+	 * last firearm without requiring the player to switch out manually. */
+	if (ent->health > 0)
+	{
+		gclient_t *client = ent->client;
+		if (client->newweapon && client->newweapon->weapmodel == WEAP_GRENADES)
+			client->newweapon = NULL;
+		if (client->pers.weapon && client->pers.weapon->weapmodel == WEAP_GRENADES &&
+			!client->grenade_time)
+		{
+			gitem_t *previous = client->pers.lastweapon;
+			if (!previous || !(previous->flags & IT_WEAPON) ||
+				previous->weapmodel == WEAP_GRENADES ||
+				client->pers.inventory[ITEM_INDEX(previous)] <= 0)
+				previous = FindItem("blaster");
+			client->newweapon = previous;
+			ChangeWeapon(ent);
+		}
+		if (client->pers.lastweapon && client->pers.lastweapon->weapmodel == WEAP_GRENADES)
+			client->pers.lastweapon = NULL;
+	}
+
 	/* call active weapon think routine */
 	if (ent->client->pers.weapon && ent->client->pers.weapon->weaponthink)
 	{
@@ -533,6 +555,13 @@ Use_Weapon(edict_t *ent, gitem_t *item)
 
 	if (!ent || !item)
 	{
+		return;
+	}
+
+	/* Hand grenades are thrown with quickgrenade, keeping the gun equipped. */
+	if (item->weapmodel == WEAP_GRENADES)
+	{
+		Cmd_QuickGrenade_f(ent);
 		return;
 	}
 

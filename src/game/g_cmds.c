@@ -1852,7 +1852,7 @@ Cmd_PrefWeap_f(edict_t *ent)
  * Quick grenade throw - Modern Warfare style
  * Instantly throws a grenade without switching weapons
  */
-static void
+void
 Cmd_QuickGrenade_f(edict_t *ent)
 {
 	gitem_t *grenade_item;

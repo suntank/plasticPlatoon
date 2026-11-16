@@ -7,11 +7,28 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 import shutil
+import struct
 import tempfile
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 from verify_sandkeep import parse_entities
 from verify_sandstorm import ROOT, sha
+from dropship_dependencies import dropship_files
+
+
+
+def model_skins(path):
+    raw = path.read_bytes()
+    if len(raw) < 68:
+        raise ValueError('Short model header: ' + str(path))
+    header = struct.unpack_from('<17i', raw)
+    if header[:2] != (844121161, 8) or header[5] <= 0 or header[11] < 68 or header[11] + 64 * header[5] > len(raw):
+        raise ValueError('Invalid model skin table: ' + str(path))
+    for index in range(header[5]):
+        name = raw[header[11] + 64 * index:header[11] + 64 * (index + 1)].split(b'\0')[0].decode('ascii')
+        if not name or Path(name).is_absolute() or '..' in Path(name).parts or '\\' in name:
+            raise ValueError('Unsafe model skin path: ' + name)
+        yield name
 
 
 def main():
@@ -31,6 +48,7 @@ def main():
     files = {Path('maps/pp_sandstorm.bsp'): args.bsp,
              Path('maps/pp_sandstorm.map'): source,
              Path('sandstorm-readme.txt'): ROOT / 'maps/README-sandstorm.md'}
+    files.update({Path(name): path for name, path in dropship_files(ROOT / 'baseq2').items()})
     for name in ('sandstorm_solo.cfg', 'sandstorm_coop.cfg'):
         files[Path(name)] = ROOT / 'baseq2' / name
     textures = {t for e in parse_entities(source.read_text()) for t in e['textures']}
@@ -42,6 +60,11 @@ def main():
                 files[relative] = path
     for rel in ('models/items/adrenal/tris.md2', 'sound/world/explod1.wav'):
         files[Path(rel)] = ROOT / 'baseq2' / rel
+    for skin in model_skins(ROOT / 'baseq2/models/items/adrenal/tris.md2'):
+        files[Path(skin)] = ROOT / 'baseq2' / skin
+    # Preserve the compatibility atlas already embedded in the preview mission.
+    old_health_skin = Path('models/items/healing/large/skin.png')
+    files[old_health_skin] = ROOT / 'baseq2' / old_health_skin
     for path in (ROOT / 'baseq2/env').glob('sandkeep*.tga'):
         files[path.relative_to(ROOT / 'baseq2')] = path
     missing = [str(path) for path in files.values() if not path.is_file()]

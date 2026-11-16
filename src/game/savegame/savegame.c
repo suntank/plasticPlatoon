@@ -1272,6 +1272,22 @@ ReadLevel(const char *filename)
 			continue;
 		}
 
+		/* Old saves retain the shared boss2 model indices. Refresh only
+		 * friendly media; route state, timing and callbacks stay restored. */
+		if (ent->classname && !strcmp(ent->classname, "misc_platoon_dropship"))
+		{
+			ent->s.modelindex = gi.modelindex("models/vehicles/platoon_dropship/body.md2");
+			ent->s.modelindex2 = gi.modelindex("models/vehicles/platoon_dropship/main_rotor.md2");
+		}
+		else if (ent->classname && !strcmp(ent->classname, "monster_boss2"))
+		{
+			/* Refresh visuals without healing or restarting an existing fight.
+			 * Preserve the detached rotor during the final crash burst. */
+			ent->s.modelindex = gi.modelindex("models/monsters/plastic_boss/body.md2");
+			if (ent->s.modelindex2)
+				ent->s.modelindex2 = gi.modelindex("models/monsters/plastic_boss/main_rotor.md2");
+		}
+
 		/* Older saves predate the insects' idle and alert callbacks. Keep
 		 * their entity layout and combat state intact; only fill missing
 		 * audio hooks. Spider sight deliberately stays silent. */

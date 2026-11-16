@@ -57,7 +57,7 @@ void R_EnableMultitexture(qboolean value)
 	mtex_enabled=value;R_SelectTexture(GL_TEXTURE1);R_SelectTexture(GL_TEXTURE0);
 }
 void R_TexEnv(GLenum value) { (void)value; }
-void R_SetPerspective(GLdouble value) { (void)value; }
+void R_SetPerspective(GLdouble value, qboolean weapon_model) { (void)value; (void)weapon_model; }
 double PP_PerfNow(void) { return 0; }
 void PP_DPDraw(void) { }
 void PP_DPFlush(void) { }

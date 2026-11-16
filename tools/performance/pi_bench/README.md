@@ -207,3 +207,34 @@ The driver remains a tool asset outside the installed game; it is preloaded only
 into the isolated test session. Vendored `lib/` helpers retain the earlier input,
 camera, per-view counter and preservation checks. The worker is adapted to fresh
 user experiments rather than immutable historical package snapshots.
+
+## November 14 native deployment
+
+The Pi engine, GL1 renderer and input-driver compatibility pins now match the
+validated native low-poly build in
+`/data/build-sources/plastic-platoon-lowpoly-20261114/source/`. The installed
+`/data/pp-bench` launcher is updated too. Its exact file inventory is retained
+in `pi-installed-source-manifest.json`; the new native receipt is
+`pi-native-validation-20261114.json`. The earlier `validation.json` remains a
+historical receipt for the original tool validation. PC compatibility pins
+are unchanged.
+
+See [the four-player results](../../../doc/performance/pi-lowpoly-20261114.md)
+for normal/low measurements, protected co-op comparisons, paging caveats and
+the retained raw evidence.
+
+## November 15 visibility optimization
+
+The Pi GL1 compatibility pin now matches the measured hierarchical-frustum
+renderer. Engine and input-driver pins are unchanged. The renderer-only native
+source is under `/data/build-sources/plastic-platoon-profile-20261115/`; the
+previous renderer is retained in its `installed-backup/`. The standard Pi
+launcher is updated. Exact installed files and the new receipt are recorded
+in `pi-installed-source-manifest.json` and `pi-native-validation-20261115.json`.
+
+Custom plans may now assert `require_cvars` per phase, allowing strict off/on
+checks within one session. Train-relative camera checks use the intended
+plan phase's `motion_reference`, so differently named comparison phases keep
+the same original bounds.
+
+See [profiling and measured gains](../../../doc/performance/pi-profile-20261115.md).

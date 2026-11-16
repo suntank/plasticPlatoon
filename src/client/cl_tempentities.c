@@ -560,6 +560,17 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 	struct model_s *billboard_model = NULL;
 	qboolean local_split_firstperson = false;
 	qboolean attached_muzzle = false;
+	qboolean launcher_flash = false;
+
+	/* MZ_GRENADE is also used by hand-grenade tuning/review. The local
+	 * split parser installs the shooter's playerstate before reaching here;
+	 * only the launcher model may select its authored muzzle alignment. */
+	if (!thirdperson && weapon == MZ_GRENADE && cl.frame.playerstate.gunindex > 0 &&
+		cl.frame.playerstate.gunindex < MAX_MODELS)
+	{
+		launcher_flash = strstr(cl.configstrings[CS_MODELS + cl.frame.playerstate.gunindex],
+			"v_launch") != NULL;
+	}
 
 	/* Get weapon-specific config */
 	cfg = CL_GetMuzzleFlashConfig(weapon, thirdperson);
@@ -625,7 +636,10 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 		up_offset += local_split_up_nudge;
 		flash2_up_offset += local_split_up_nudge;
 	}
-	if (!thirdperson && (weapon == MZ_MACHINEGUN || weapon == MZ_BLASTER))
+	if (!thirdperson && (weapon == MZ_MACHINEGUN || weapon == MZ_BLASTER ||
+		weapon == MZ_SHOTGUN || weapon == MZ_SSHOTGUN || weapon == MZ_ROCKET || weapon == MZ_RAILGUN ||
+		weapon == MZ_HYPERBLASTER || weapon == MZ_BFG ||
+		weapon == MZ_CHAINGUN1 || weapon == MZ_CHAINGUN2 || weapon == MZ_CHAINGUN3 || launcher_flash))
 	{
 		/* This model now supplies its own sights. Use the same continuously
 		 * blended model-space muzzle for hip fire and ADS in every viewport,
@@ -633,7 +647,14 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 		/* Effect scope is one-based (zero means unscoped), slot indices are
 		 * zero-based. Decode before reading independent player ADS state. */
 		float blend = CL_GetModelADSBlend(PP_ModelADSSlotForEffectScope(cl_effect_only_slot));
-		pp_model_ads_config_t pose = PP_ModelADSConfig(weapon == MZ_BLASTER);
+		pp_model_ads_config_t pose = PP_ModelADSConfig(launcher_flash ? PP_MODEL_ADS_GLAUNCHER :
+			weapon == MZ_BFG ? PP_MODEL_ADS_MORTAR :
+			weapon == MZ_HYPERBLASTER ? PP_MODEL_ADS_FLAMETHROWER :
+			weapon == MZ_RAILGUN ? PP_MODEL_ADS_SNIPER : weapon == MZ_ROCKET ? PP_MODEL_ADS_RLAUNCHER :
+			(weapon == MZ_CHAINGUN1 ||
+			weapon == MZ_CHAINGUN2 || weapon == MZ_CHAINGUN3) ? PP_MODEL_ADS_M60 : weapon == MZ_SSHOTGUN ?
+			PP_MODEL_ADS_SSHOTGUN : weapon == MZ_SHOTGUN ? PP_MODEL_ADS_SHOTGUN :
+			weapon == MZ_BLASTER ? PP_MODEL_ADS_PISTOL : PP_MODEL_ADS_RIFLE);
 		fwd_offset = pose.muzzle_forward + blend * pose.forward;
 		right_offset = pose.muzzle_right + blend * pose.right;
 		up_offset = pose.muzzle_up + blend * pose.up;

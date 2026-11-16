@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "generator": "tools/assets/build_dropship_overlays.py",
+  "config_sha256": "2458e0c57e4e7aae8d0413c897d052091b1715163ee5723397f6d434c25dd0f3",
+  "dropship_manifest_sha256": "754e823b534f7f99a318c3cf432c59732fc876e18186f29df8ee98b2ea26d26e",
+  "archives": [
+    {
+      "path": "baseq2/operation-endline.pk3",
+      "untouched_members": 91,
+      "untouched_sha256": "a3d2153924027c27fa3f932bfb24eefc4ce79b289a53b60026df49d8923d0cc5",
+      "managed": {
+        "models/vehicles/platoon_dropship/body.md2": {
+          "bytes": 29504,
+          "sha256": "769f45d7893835fd07c8a8de612efccbd1ec9d0b2bcc056328414bccfa13f6e1"
+        },
+        "models/vehicles/platoon_dropship/green.png": {
+          "bytes": 2154,
+          "sha256": "639008d133f12fe5ce271cad4d0f44bc58177d6bcccfda4d6ca7e19d2d582754"
+        },
+        "models/vehicles/platoon_dropship/main_rotor.md2": {
+          "bytes": 3672,
+          "sha256": "b30a7873411e97abf1920994e417661ce822d723931a66835fca5f27b887224a"
+        }
+      },
+      "separately_owned": {},
+      "bytes": 3265102,
+      "sha256": "07b3b2080f1c9274875f4defbb2906978fa50998820694b7878b84ea2f6ec42b",
+      "members": 94
+    },
+    {
+      "path": "baseq2/operation-sandstorm-preview.pk3",
+      "untouched_members": 55,
+      "untouched_sha256": "6aa9f9a5846943c51fdb19efc1c4de4ab7c07fd1aed2fb1d4e271f283c9d4712",
+      "managed": {
+        "models/vehicles/platoon_dropship/body.md2": {
+          "bytes": 29504,
+          "sha256": "769f45d7893835fd07c8a8de612efccbd1ec9d0b2bcc056328414bccfa13f6e1"
+        },
+        "models/vehicles/platoon_dropship/green.png": {
+          "bytes": 2154,
+          "sha256": "639008d133f12fe5ce271cad4d0f44bc58177d6bcccfda4d6ca7e19d2d582754"
+        },
+        "models/vehicles/platoon_dropship/main_rotor.md2": {
+          "bytes": 3672,
+          "sha256": "b30a7873411e97abf1920994e417661ce822d723931a66835fca5f27b887224a"
+        }
+      },
+      "separately_owned": {
+        "health": [
+          "models/items/adrenal/tris.md2",
+          "models/items/adrenal/skin.png"
+        ]
+      }
+    }
+  ],
+  "proof": "All immutable mission member contents retain their pinned hashes; separately owned health media require their own archive gate."
+}

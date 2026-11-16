@@ -1,0 +1,205 @@
+{
+  "schema": 1,
+  "source_archive": {
+    "path": "tools/assets/sources/body-parts-baseline.pk3",
+    "sha256": "22e709aef9ca189dd8afd90538a5d72fc69f4d4c8ab0c7203cbc5dccdeb083f3",
+    "bytes": 816941
+  },
+  "files": [
+    {
+      "path": "baseq2/models/objects/gibs/ant/chunk.md2",
+      "bytes": 5432,
+      "sha256": "1d3eb34e20330a18dc9aa557bfa29c747bb5879a3d2934d8d5c1164dbdeb0e48"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/ant/leg.md2",
+      "bytes": 4320,
+      "sha256": "2499990d564c5f82a146b7b9d5b88e31548d2d8e0818d2d9506b7e9d8035dc0d"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/ant/skin.png",
+      "bytes": 665,
+      "sha256": "310e9d0b9f4efb7a768b7f7d2b8b415e0fb04859c227e9ba35a9134a6ab7ccd0"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/arm/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/arm/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/arm/tris.md2",
+      "bytes": 7952,
+      "sha256": "70ed73166a1db58ed3b29226f76603b5564146dec9dc3d8c69ddc9acee46f1fc"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/bone/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/bone/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/bone/tris.md2",
+      "bytes": 10440,
+      "sha256": "1c7ee39c89c0814a8525ec16837a33385dec8a70e18a42ddb489581234daa477"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/bone2/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/bone2/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/bone2/tris.md2",
+      "bytes": 4324,
+      "sha256": "deec14db1afbe1acbda7e1c9961f7629bae00f8b0b10e8253a61ccee4c02187c"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/chest/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/chest/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/chest/tris.md2",
+      "bytes": 27256,
+      "sha256": "e17a45708f562fb3b5a272adaac40917610001796277bde76f22cc982b0cb43a"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/gear/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/gear/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/gear/tris.md2",
+      "bytes": 4324,
+      "sha256": "deec14db1afbe1acbda7e1c9961f7629bae00f8b0b10e8253a61ccee4c02187c"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/head/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/head/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/head/tris.md2",
+      "bytes": 7844,
+      "sha256": "ac074798a44b313c698e49d7d414807b221b1f57cfee7dd6674cb924e0cde86c"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/head2/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/head2/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/head2/tris.md2",
+      "bytes": 7844,
+      "sha256": "ac074798a44b313c698e49d7d414807b221b1f57cfee7dd6674cb924e0cde86c"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/leg/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/leg/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/leg/tris.md2",
+      "bytes": 16256,
+      "sha256": "570fccc2a42c734e5815127b46dceddfe2bfc1b6ae4098bc49a8d26ff8d78256"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/skull/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/skull/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/skull/tris.md2",
+      "bytes": 7844,
+      "sha256": "ac074798a44b313c698e49d7d414807b221b1f57cfee7dd6674cb924e0cde86c"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/sm_meat/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/sm_meat/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/sm_meat/tris.md2",
+      "bytes": 4328,
+      "sha256": "38eaf2570faa50d1ac78fdb3db4e8700070050c7df25efab151b8113c0f511ee"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/sm_metal/player.png",
+      "bytes": 26541,
+      "sha256": "5a3c09c282f8e705aba5cc9722b20c6ab48e8c20f2978e400432509af831b158"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/sm_metal/skin.png",
+      "bytes": 40793,
+      "sha256": "9dc4fc91d27490e9553868740d02811d2313d72551ea91929954182a74617def"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/sm_metal/tris.md2",
+      "bytes": 10440,
+      "sha256": "1c7ee39c89c0814a8525ec16837a33385dec8a70e18a42ddb489581234daa477"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/spider/chunk.md2",
+      "bytes": 5432,
+      "sha256": "76a2d0ddaa9664f44fbe298e6d0276f505e47c9682ba1fea5c40cb8d75fc0f4a"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/spider/leg.md2",
+      "bytes": 4320,
+      "sha256": "fd14d5f5c87ea68a4b7f4fc7d69ff8ee325a384ddb4211de2640c7205f46a6ac"
+    },
+    {
+      "path": "baseq2/models/objects/gibs/spider/skin.png",
+      "bytes": 666,
+      "sha256": "f7bf311bbb6b640292d1a606cf3d63baa87c2901c1747e51e84a08b1d82fada8"
+    }
+  ]
+}

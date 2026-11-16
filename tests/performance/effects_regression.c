@@ -37,6 +37,8 @@ cvar_t *cl_limitsparksounds = &zero, *cl_laseralpha = &one;
 cvar_t *maxclients = &three, *hand = &zero, *cl_vwep = &one;
 static unsigned int random_state = 1, random_calls;
 static unsigned int sound_calls, submitted_particles, submitted_entities, submitted_lights;
+static vec3_t last_light_color;
+static float last_light_intensity;
 static char last_sound_name[MAX_QPATH];
 static char last_model_name[MAX_QPATH];
 static particle_t submissions[MAX_PARTICLES];
@@ -59,7 +61,7 @@ void Com_Printf(const char *fmt, ...) { (void)fmt; }
 void Com_DPrintf(const char *fmt, ...) { (void)fmt; }
 void V_AddParticle(vec3_t origin, unsigned int color, float alpha) { particle_t *p = &submissions[submitted_particles++]; assert(submitted_particles <= MAX_PARTICLES); VectorCopy(origin,p->origin); p->color=color; p->alpha=alpha; }
 void V_AddEntity(entity_t *ent) { assert(submitted_entities < MAX_ENTITIES); entity_submissions[submitted_entities++]=*ent; }
-void V_AddLight(vec3_t org, float intensity, float r, float g, float b) { (void)org;(void)intensity;(void)r;(void)g;(void)b; ++submitted_lights; }
+void V_AddLight(vec3_t org, float intensity, float r, float g, float b) { (void)org;last_light_intensity=intensity;VectorSet(last_light_color,r,g,b);++submitted_lights; }
 struct model_s *R_RegisterModel(const char *name) { snprintf(last_model_name,sizeof(last_model_name),"%s",name); return (struct model_s *)(uintptr_t)1; }
 struct image_s *R_RegisterSkin(const char *name) { (void)name; return (struct image_s *)(uintptr_t)1; }
 struct image_s *Draw_FindPic(const char *name) { (void)name; return (struct image_s *)(uintptr_t)1; }
@@ -268,7 +270,39 @@ static void TestParticleFrame(void)
     puts("PASS particles: identical instant output in both orders, read-only draw, pause/resume, irregular cadence");
 }
 
-static centity_t test_entities[2][16];
+static centity_t test_entities[4][16];
+
+static void TestAuthoredWeaponADS(void)
+{
+    const char *models[] = {"v_machn", "v_blast", "v_shotg", "v_shotg2", "v_chain", "v_launch", "v_rocket", "v_rail", "v_hyperb", "v_bfg"};
+    const int configs[] = {PP_MODEL_ADS_RIFLE, PP_MODEL_ADS_PISTOL,
+        PP_MODEL_ADS_SHOTGUN, PP_MODEL_ADS_SSHOTGUN, PP_MODEL_ADS_M60, PP_MODEL_ADS_GLAUNCHER,
+        PP_MODEL_ADS_RLAUNCHER, PP_MODEL_ADS_SNIPER, PP_MODEL_ADS_FLAMETHROWER, PP_MODEL_ADS_MORTAR};
+    ResetEffects();
+    cl.frame.playerstate.gunindex=1;
+    for (unsigned weapon=0; weapon<sizeof(models)/sizeof(*models); ++weapon) {
+        pp_model_ads_config_t expected=PP_ModelADSConfig(configs[weapon]);
+        pp_model_ads_config_t actual;
+        snprintf(cl.configstrings[CS_MODELS+1],MAX_QPATH,
+            "models/weapons/%s/tris.md2",models[weapon]);
+        cl.frame.playerstate.fov=configs[weapon]==PP_MODEL_ADS_SNIPER ? 90.f/8.f : 45.f;
+        assert(CL_UsesModelADS(&cl.frame.playerstate));
+        assert(!CL_GetADSOverlayPicName());
+        assert(!SS_GetADSOverlayPicName(&cl.frame.playerstate));
+        actual=CL_GetModelADSConfig(&cl.frame.playerstate);
+        assert(actual.forward==expected.forward && actual.right==expected.right && actual.up==expected.up);
+        assert(actual.muzzle_forward==expected.muzzle_forward &&
+            actual.muzzle_right==expected.muzzle_right && actual.muzzle_up==expected.muzzle_up);
+        assert(actual.animated==expected.animated);
+        assert(actual.recoil_back==expected.recoil_back);
+        assert(cl.frame.playerstate.fov==(configs[weapon]==PP_MODEL_ADS_SNIPER ? 90.f/8.f : 45.f));
+    }
+    strcpy(cl.configstrings[CS_MODELS+1],"models/weapons/v_handgr/tris.md2");
+    assert(!CL_UsesModelADS(&cl.frame.playerstate));
+    assert(!strcmp(CL_GetADSOverlayPicName(),"ads_handgrenade.png"));
+    assert(!strcmp(SS_GetADSOverlayPicName(&cl.frame.playerstate),"ads_handgrenade.png"));
+    puts("PASS authored weapon ADS: all ten guns select model sights/offsets in single/split views; sniper zoom and hand-grenade overlay remain");
+}
 
 static void TestPlayerMuzzleFlashes(void)
 {
@@ -309,7 +343,30 @@ static void TestPlayerMuzzleFlashes(void)
             MSG_BeginReading(&net_message); CL_AddMuzzleFlash();
             assert(net_message.readcount == 3);
             assert(cl_explosions[0].type == (thirdperson ? ex_mflash_billboard : ex_mflash_cone_h));
-            assert(fabsf(cl_explosions[0].ent.origin[0] - (thirdperson ? 20 : 10)) < 0.001f);
+            if (!thirdperson && (weapons[i]==MZ_BLASTER || weapons[i]==MZ_MACHINEGUN ||
+                weapons[i]==MZ_SHOTGUN || weapons[i]==MZ_SSHOTGUN || weapons[i]==MZ_ROCKET || weapons[i]==MZ_RAILGUN ||
+                weapons[i]==MZ_HYPERBLASTER || weapons[i]==MZ_BFG ||
+                weapons[i]==MZ_CHAINGUN1 || weapons[i]==MZ_CHAINGUN2 || weapons[i]==MZ_CHAINGUN3)) {
+                /* Authored weapons share their actual model muzzle with the
+                 * renderer, overriding the legacy tuning-only eye offset. */
+                pp_model_ads_config_t pose=PP_ModelADSConfig(weapons[i]==MZ_BFG ? PP_MODEL_ADS_MORTAR :
+                    weapons[i]==MZ_HYPERBLASTER ? PP_MODEL_ADS_FLAMETHROWER :
+                    weapons[i]==MZ_RAILGUN ? PP_MODEL_ADS_SNIPER : weapons[i]==MZ_ROCKET ?
+                    PP_MODEL_ADS_RLAUNCHER : (weapons[i]==MZ_CHAINGUN1 ||
+                    weapons[i]==MZ_CHAINGUN2 || weapons[i]==MZ_CHAINGUN3) ? PP_MODEL_ADS_M60 : weapons[i]==MZ_SSHOTGUN ?
+                    PP_MODEL_ADS_SSHOTGUN : weapons[i]==MZ_SHOTGUN ?
+                    PP_MODEL_ADS_SHOTGUN : weapons[i]==MZ_BLASTER ?
+                    PP_MODEL_ADS_PISTOL : PP_MODEL_ADS_RIFLE);
+                float blend=CL_GetModelADSBlend(-1);
+                assert(fabsf(cl_explosions[0].ent.origin[0] -
+                    (pose.muzzle_forward+blend*pose.forward)) < .001f);
+                assert(fabsf(cl_explosions[0].ent.origin[1] +
+                    (pose.muzzle_right+blend*pose.right)) < .001f);
+                assert(fabsf(cl_explosions[0].ent.origin[2] -
+                    (pose.muzzle_up+blend*pose.up)) < .001f);
+            } else {
+                assert(fabsf(cl_explosions[0].ent.origin[0] - (thirdperson ? 20 : 10)) < 0.001f);
+            }
             if (!thirdperson) assert(cl_explosions[1].type == ex_mflash_cone_v);
         }
     }
@@ -338,6 +395,153 @@ static void SetupSplitMuzzleObservers(int players, int entnum)
         slot->entities=test_entities[view?1:0]; slot->entity_count=16;
     }
     cl_entities=test_entities[0]; cl_numentities=16; cl.playernum=0;
+}
+
+static void TestScopedModelMuzzleFlashes(void)
+{
+    const int events[] = {MZ_CHAINGUN1, MZ_CHAINGUN2, MZ_CHAINGUN3, MZ_ROCKET, MZ_RAILGUN, MZ_HYPERBLASTER, MZ_BFG};
+    vec3_t origin={0,0,0}, forward={1,0,0}, right={0,-1,0}, up={0,0,1}, velocity={0,0,0};
+    for (unsigned event=0; event<sizeof(events)/sizeof(*events); ++event) {
+        pp_model_ads_config_t pose=PP_ModelADSConfig(events[event]==MZ_BFG ? PP_MODEL_ADS_MORTAR :
+            events[event]==MZ_HYPERBLASTER ? PP_MODEL_ADS_FLAMETHROWER :
+            events[event]==MZ_RAILGUN ? PP_MODEL_ADS_SNIPER : events[event]==MZ_ROCKET ?
+            PP_MODEL_ADS_RLAUNCHER : PP_MODEL_ADS_M60);
+        for (int slot=0; slot<4; ++slot) {
+            muzzle_flash_config_t *cfg;
+            float blend;
+            SetupSplitMuzzleObservers(4,slot+1);
+            cl.frame.playerstate.fov=events[event]==MZ_RAILGUN ? 90.f/8.f : 45.f;
+            /* Distinct aim amounts expose accidental one-based scope indexing. */
+            for (int player=0; player<4; ++player)
+                ss_state.slots[player].model_ads.progress=player/3.f;
+            blend=PP_ModelADSAmount(&ss_state.slots[slot].model_ads);
+            cfg=CL_GetMuzzleFlashConfig(events[event],false);
+            memset(cfg,0,sizeof(*cfg));
+            cfg->enabled=true; cfg->scale=2; cfg->duration_ms=50;
+            strcpy(cfg->image,"sprites/muzzleFlashSmall.png");
+            CL_SetEffectScope(slot,-1,false);
+            CL_SpawnMuzzleFlashSprite(origin,forward,right,up,velocity,
+                events[event],false,blend>0.f,slot+1);
+            assert(cl_explosions[0].type==ex_mflash_cone_h);
+            assert(fabsf(cl_explosions[0].ent.origin[0]-(pose.muzzle_forward+blend*pose.forward))<.001f);
+            assert(fabsf(cl_explosions[0].ent.origin[1]+(pose.muzzle_right+blend*pose.right))<.001f);
+            assert(fabsf(cl_explosions[0].ent.origin[2]-(pose.muzzle_up+blend*pose.up))<.001f);
+            assert(cl.frame.playerstate.fov==(events[event]==MZ_RAILGUN ? 90.f/8.f : 45.f));
+        }
+    }
+    puts("PASS M60/rocket/sniper/flame/mortar muzzle ADS: all seven fire events follow four independent scoped aim blends with sniper zoom intact");
+}
+
+static void TestFlamethrowerAndMortarPresentation(void)
+{
+    const int events[]={MZ_HYPERBLASTER,MZ_BFG};
+    for (int weapon=0; weapon<2; ++weapon) {
+        pp_model_ads_config_t pose=PP_ModelADSConfig(weapon ? PP_MODEL_ADS_MORTAR : PP_MODEL_ADS_FLAMETHROWER);
+        for (int players=1; players<=4; players+=3) {
+            for (int player=0; player<players; ++player) {
+                for (int aimed=0; aimed<2; ++aimed) {
+                    muzzle_flash_config_t *cfg;
+                    SetupSplitMuzzleObservers(players,player+1);
+                    strcpy(cl.configstrings[CS_MODELS+1],weapon ? "models/weapons/v_bfg/tris.md2" : "models/weapons/v_hyperb/tris.md2");
+                    ss_local_player_t *slot=&ss_state.slots[player];
+                    slot->frame.playerstate.gunindex=1;
+                    slot->ads_down=aimed;
+                    slot->model_ads.progress=aimed;
+                    cfg=CL_GetMuzzleFlashConfig(events[weapon],false);
+                    memset(cfg,0,sizeof(*cfg));
+                    cfg->enabled=true; cfg->scale=2; cfg->duration_ms=50;
+                    strcpy(cfg->image,"sprites/muzzleFlashSmall.png");
+                    SS_ParseLocalSlotMuzzleFlash(slot,player+1,events[weapon],false);
+                    assert(sound_calls==1 && !strcmp(last_sound_name,weapon ? "weapons/bfg__f1y.wav" : "weapons/hyprbf1a.wav"));
+                    assert(cl_dlights[0].color[0]==1.f && cl_dlights[0].color[1]==.5f && cl_dlights[0].color[2]==(weapon ? .2f : .1f));
+                    assert(cl_dlights[0].radius>=(weapon ? 200.f : 150.f) && cl_dlights[0].radius<=(weapon ? 231.f : 181.f));
+                    assert(cl_explosions[0].type==ex_mflash_cone_h && cl_explosions[1].type==ex_mflash_cone_v);
+                    assert(fabsf(cl_explosions[0].ent.origin[0]-(pose.muzzle_forward+aimed*pose.forward))<.001f);
+                    assert(fabsf(cl_explosions[0].ent.origin[1]+(pose.muzzle_right+aimed*pose.right))<.001f);
+                    assert(fabsf(cl_explosions[0].ent.origin[2]-(pose.muzzle_up+aimed*pose.up))<.001f);
+                }
+            }
+        }
+    }
+    ResetEffects();
+    vec3_t start={0,0,0}, end={32,0,0};
+    CL_FlameTrail(start,end);
+    assert(cl_effect_stats.particles_created==4);
+    CL_PrepareParticles();
+    CL_AddParticles();
+    assert(submitted_particles==4);
+    puts("PASS flamethrower/mortar effects: actual single/four-player hip/ADS muzzle positions, orange lights, fire reports and flame trail remain");
+}
+
+static void TestSniperSplitZoom(void)
+{
+    SetupSplitMuzzleObservers(4,1);
+    strcpy(cl.configstrings[CS_MODELS+1],"models/weapons/v_rail/tris.md2");
+    strcpy(cl.configstrings[CS_MODELS+2],"models/weapons/v_blast/tris.md2");
+    for (int released=0; released<2; ++released) {
+        for (int player=0; player<4; ++player) {
+            ss_local_player_t *slot=&ss_state.slots[player];
+            ss_viewport_t viewport={.x=(player%2)*640,.y=(player/2)*360,.w=640,.h=360};
+            player_state_t *ps=&slot->frame.playerstate;
+            refdef_t view={0};
+            ps->gunindex=player%2 ? 2 : 1;
+            ps->fov=released ? 90.f : player%2 ? 45.f : 90.f/8.f;
+            /* Slot zero starts from the main view's already calculated FOV;
+             * secondary views derive theirs from their own playerstate. */
+            view.fov_x=player ? 90.f : ps->fov;
+            SS_ApplyPlayerView(&view,slot,ps,NULL,&viewport);
+            assert(view.fov_x==ps->fov);
+            assert(view.fov_y==CalcFov(ps->fov,640.f,360.f));
+            assert(CL_UsesModelADS(ps));
+            assert(!SS_GetADSOverlayPicName(ps));
+        }
+    }
+    puts("PASS sniper zoom: actual four-player view setup preserves independent 8x/2x aim and release FOV with model scopes");
+}
+
+static void TestGrenadeLauncherAndHandGrenadeFlashes(void)
+{
+    pp_model_ads_config_t pose=PP_ModelADSConfig(PP_MODEL_ADS_GLAUNCHER);
+    for (int hand=0; hand<2; ++hand) {
+        for (int slot=0; slot<4; ++slot) {
+            for (int aimed=0; aimed<2; ++aimed) {
+                muzzle_flash_config_t *cfg;
+                float blend;
+                SetupSplitMuzzleObservers(4,slot+1);
+                strcpy(cl.configstrings[CS_MODELS+1],"models/weapons/v_launch/tris.md2");
+                strcpy(cl.configstrings[CS_MODELS+2],"models/weapons/v_handgr/tris.md2");
+                for (int player=0; player<4; ++player) {
+                    ss_state.slots[player].frame.playerstate.gunindex=player%2+1;
+                    ss_state.slots[player].model_ads.progress=aimed ? player/3.f : 0.f;
+                    ss_state.slots[player].ads_down=aimed;
+                }
+                ss_state.slots[slot].frame.playerstate.gunindex=hand ? 2 : 1;
+                /* The primary state deliberately differs from the shooter.
+                 * The actual local parser must use the shooter's model. */
+                cl.frame.playerstate.gunindex=hand ? 1 : 2;
+                blend=PP_ModelADSAmount(&ss_state.slots[slot].model_ads);
+                cfg=CL_GetMuzzleFlashConfig(MZ_GRENADE,false);
+                memset(cfg,0,sizeof(*cfg));
+                cfg->enabled=true; cfg->scale=2; cfg->duration_ms=50;
+                cfg->forward=10; cfg->right=4; cfg->up=-3; cfg->ads_up=-1;
+                strcpy(cfg->image,"sprites/muzzleFlashSmall.png");
+                SS_ParseLocalSlotMuzzleFlash(&ss_state.slots[slot],slot+1,MZ_GRENADE,true);
+                assert(cl_explosions[0].type==ex_mflash_cone_h);
+                if (hand) {
+                    /* Legacy split-screen offsets and image-ADS centering. */
+                    assert(fabsf(cl_explosions[0].ent.origin[0]-20.f)<.001f);
+                    assert(fabsf(cl_explosions[0].ent.origin[1]-(aimed ? 1.6f : -2.4f))<.001f);
+                    assert(fabsf(cl_explosions[0].ent.origin[2]-(aimed ? 1.08f : -.76f))<.001f);
+                } else {
+                    assert(fabsf(cl_explosions[0].ent.origin[0]-(pose.muzzle_forward+blend*pose.forward))<.001f);
+                    assert(fabsf(cl_explosions[0].ent.origin[1]+(pose.muzzle_right+blend*pose.right))<.001f);
+                    assert(fabsf(cl_explosions[0].ent.origin[2]-(pose.muzzle_up+blend*pose.up))<.001f);
+                }
+                assert(cl.frame.playerstate.gunindex==(hand ? 1 : 2));
+            }
+        }
+    }
+    puts("PASS grenade muzzle selection: scoped launcher model ADS and unchanged hand-grenade legacy hip/ADS in all four slots");
 }
 
 static void TestSplitMuzzleScopes(void)
@@ -568,7 +772,7 @@ static void TestAttachedPlayerMuzzleFlashes(void)
     puts("PASS attached player muzzle flashes: all weapon events, live model pose, observer histories, no legacy lift/lag/drift, expiration and removed/switched shooters");
 }
 
-static entity_state_t test_streams[2][MAX_PARSE_ENTITIES];
+static entity_state_t test_streams[4][MAX_PARSE_ENTITIES];
 
 static void TestSoldierPlayerReports(void)
 {
@@ -695,11 +899,11 @@ static void TestHelicopterMuzzleFlash(void)
     puts("PASS helicopter muzzle flashes: both guns and rocket pods match rotated model endpoints and play reports");
 }
 
-static void SetupTrail(int view, int number, float lerp)
+static void SetupProjectileTrail(int view, int number, float lerp, unsigned effects)
 {
     centity_t *c=&test_entities[view][number];
     memset(c,0,sizeof(*c)); c->current.number=number; c->current.modelindex=1;
-    c->current.effects=EF_ROCKET; c->current.origin[0]=100;
+    c->current.effects=effects; c->current.origin[0]=100;
     c->prev=c->current; c->prev.origin[0]=80;
     c->serverframe=10; c->trailcount=1024; c->lerp_origin[0]=80;
     test_streams[view][0]=c->current;
@@ -707,6 +911,86 @@ static void SetupTrail(int view, int number, float lerp)
     cl_entity_parse_stream=test_streams[view]; cl.playernum=view; cl.lerpfrac=lerp;
     cl.frame.num_entities=1; cl.frame.parse_entities=0;
     CL_QueueEntityEffects(&cl.frame,view);
+}
+
+static void SetupTrail(int view, int number, float lerp)
+{ SetupProjectileTrail(view,number,lerp,EF_ROCKET); }
+
+static void TestFriendlyDropshipPresentation(void)
+{
+    const char *backends[]={"gl1","gl3","soft"};
+    const char *bodies[]={"models/monsters/boss2/tris.md2","models/vehicles/platoon_dropship/body.md2","models/monsters/plastic_boss/body.md2"};
+    const char *rotors[]={"models/monsters/boss2/propeller.md2","models/vehicles/platoon_dropship/main_rotor.md2","models/monsters/plastic_boss/main_rotor.md2"};
+    for(int backend=0;backend<3;++backend) for(int view=0;view<4;++view) for(int moving=0;moving<2;++moving) {
+        entity_t legacy[2];
+        for(int family=0;family<3;++family) {
+            ResetEffects();ss_state.session_active=false;renderer.string=(char *)backends[backend];
+            strcpy(cl.configstrings[CS_MODELS+1],bodies[family]);
+            strcpy(cl.configstrings[CS_MODELS+2],rotors[family]);
+            cl.model_draw[1]=(struct model_s *)(uintptr_t)1;cl.model_draw[2]=(struct model_s *)(uintptr_t)2;
+            centity_t *cent=&test_entities[view][10];memset(cent,0,sizeof(*cent));
+            cent->current.number=10;cent->current.modelindex=1;cent->current.modelindex2=2;
+            cent->current.frame=62;
+            cent->current.renderfx=RF_FRAMELERP|RF_PP_FRIENDLY_COLOR;
+            VectorSet(cent->current.origin,140,36,56);VectorSet(cent->current.old_origin,900,800,700);
+            VectorSet(cent->current.angles,10,10,14);cent->prev=cent->current;
+            if(moving)VectorSet(cent->prev.origin,100,20,40);
+            VectorSet(cent->prev.angles,-8,350,-12);cent->serverframe=10;
+            test_streams[view][0]=cent->current;
+            cl_entities=test_entities[view];cl_numentities=16;cl_entity_parse_stream=test_streams[view];
+            cl.playernum=view;cl.lerpfrac=.5f;cl.frame.num_entities=1;cl.frame.parse_entities=0;
+            CL_AddPacketEntities(&cl.frame);
+            assert(submitted_entities==2&&entity_submissions[0].model==cl.model_draw[1]&&entity_submissions[1].model==cl.model_draw[2]);
+            entity_t *body=&entity_submissions[0],*rotor=&entity_submissions[1];
+            assert(body->frame==0&&body->oldframe==0&&body->backlerp==0);
+            float bob=moving?0.f:sinf(cl.time*.0125f+10*.37f)*2.f;
+            assert(fabsf(body->origin[0]-(moving?120.f:140.f))<.001f);
+            assert(fabsf(body->origin[1]-(moving?28.f:36.f))<.001f);
+            assert(fabsf(body->origin[2]-(moving?48.f:56.f)-bob)<.001f);
+            assert(rotor->frame==0&&rotor->oldframe==0&&rotor->backlerp==0);
+            if(!family)memcpy(legacy,entity_submissions,sizeof(legacy));
+            else for(int part=0;part<2;++part) {
+                for(int axis=0;axis<3;++axis) {
+                    assert(fabsf(entity_submissions[part].origin[axis]-legacy[part].origin[axis])<.001f);
+                    assert(fabsf(entity_submissions[part].angles[axis]-legacy[part].angles[axis])<.001f);
+                    assert(fabsf(entity_submissions[part].oldorigin[axis]-legacy[part].oldorigin[axis])<.001f);
+                }
+                assert(entity_submissions[part].flags==legacy[part].flags);
+            }
+        }
+    }
+    renderer.string="gl1";
+    puts("PASS friendly dropship presentation: dedicated body/rotor retain legacy snapshot interpolation, bob, local spin and GL1/GL3/software attachment in four views");
+}
+
+static void TestProjectilePresentation(void)
+{
+    const char *paths[]={"models/objects/rocket/tris.md2","models/objects/grenade/tris.md2",
+        "models/objects/grenade2/tris.md2","models/objects/grenade/tris.md2"};
+    for(int kind=0;kind<4;++kind) for(int views=1;views<=4;views+=3) {
+        ResetEffects();ss_state.session_active=false;
+        strcpy(cl.configstrings[CS_MODELS+1],paths[kind]);
+        cl.model_draw[1]=(struct model_s *)(uintptr_t)1;
+        assert(CL_BeginSharedEffects());
+        for(int view=0;view<views;++view)
+            SetupProjectileTrail(view,10,.5f,kind?EF_GRENADE:EF_ROCKET);
+        CL_EmitQueuedEntityEffects();CL_PrepareParticles();
+        assert(cl_effect_stats.particles_created>0&&cl_effect_stats.entity_effect_evaluations==1);
+        assert(cl_effect_stats.entity_effect_reuses==(unsigned)(views-1));
+        for(int view=0;view<views;++view) {
+            ResetOutput();cl_effect_render_slot=view;
+            cl_entities=test_entities[view];cl_entity_parse_stream=test_streams[view];cl.playernum=view;
+            CL_AddPacketEntities(&cl.frame);CL_AddParticles();
+            assert(submitted_entities==1&&submitted_particles>0);
+            assert(entity_submissions[0].model==cl.model_draw[1]&&entity_submissions[0].frame==0);
+            assert(submitted_lights==(kind?0u:1u));
+            if(!kind) {
+                assert(last_light_intensity==200.f&&last_light_color[0]==1.f&&
+                    last_light_color[1]==1.f&&last_light_color[2]==0.f);
+            }
+        }
+    }
+    puts("PASS flying projectile presentation: static rocket/GL/hand-grenade/mortar models, smoke, rocket light, shared single/four-view trails");
 }
 
 static void TestTrailInputs(void)
@@ -900,7 +1184,7 @@ static void TestMapTransition(void)
 int main(void)
 {
     Swap_Init();
-    TestOccurrences(); TestParticleFrame(); TestPlayerMuzzleFlashes(); TestSplitMuzzleScopes(); TestMuzzleModelMatrix(); TestAttachedPlayerMuzzleFlashes(); TestSoldierPlayerReports(); TestHeavyMuzzleFlash(); TestHelicopterMuzzleFlash(); TestTrailInputs(); TestSpritePreparation(); TestBulletImpacts(); TestBeamViews(); TestMapTransition();
+    TestOccurrences(); TestParticleFrame(); TestAuthoredWeaponADS(); TestPlayerMuzzleFlashes(); TestScopedModelMuzzleFlashes(); TestFlamethrowerAndMortarPresentation(); TestSniperSplitZoom(); TestGrenadeLauncherAndHandGrenadeFlashes(); TestSplitMuzzleScopes(); TestMuzzleModelMatrix(); TestAttachedPlayerMuzzleFlashes(); TestSoldierPlayerReports(); TestHeavyMuzzleFlash(); TestHelicopterMuzzleFlash(); TestFriendlyDropshipPresentation(); TestProjectilePresentation(); TestTrailInputs(); TestSpritePreparation(); TestBulletImpacts(); TestBeamViews(); TestMapTransition();
     puts("All shared-effect production regressions passed.");
     return 0;
 }
