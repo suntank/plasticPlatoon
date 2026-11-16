@@ -19,15 +19,18 @@ soldiers, with shotgun soldiers guarding the narrow passes and final bunker.
 Supplies are limited to hand grenades, the shotgun, shells, small/regular health,
 armor shards and 25-point jacket armor. Ammunition and health are shared.
 
-The shipped `operation-garden-infiltration.pk3` and loose BSP retain the earlier
-verified playable mission. Its complete matching editable and runtime MAPs,
-design metadata and translation receipt are inside that archive. The newer
-`maps/source/pp_garden_infiltration.map` is work in progress: a full release
-compile succeeded, but seven soldier starts and three supplies intersected
-solids or void, and the recorded walking route failed on 13 segments. This
-candidate is not shipped. Exact source/BSP/package hashes and failed placements
-are recorded in `maps/garden-infiltration-status.json`. Previous Pi performance
-measurements apply to the shipped BSP, not the newer manual edits.
+The shipped `operation-garden-infiltration.pk3` and loose BSP contain the latest
+manually saved mission published on November 16, 2026. Its matching editable
+and runtime MAPs, design metadata, translation receipt and full BSP/VIS/RAD
+build receipt are inside the archive. Exact source/BSP/package hashes are
+recorded in `maps/garden-infiltration-status.json`.
+
+The preceding map revision averaged 33.78 FPS on normal and 32.50 FPS on hard
+in native four-player Pi combat tests with players in separate regions.
+The user accepted the average FPS result and requested this subsequent map
+publication without rerunning tests. Those measurements apply to the prior
+map hash; this publication has not repeated gameplay, stress or mission audits.
+See `doc/performance/pi-profile-20261116.md` for measurement identities and limits.
 
 Load `map pp_garden_infiltration` after local squad setup, or use
 `exec garden_infiltration_solo.cfg` / `exec garden_infiltration_coop.cfg`.
@@ -43,7 +46,8 @@ clumps use sparse opaque brushes. Earth banks are world geometry to improve
 occlusion and avoid a separate renderer model for each prop. Static baked
 lighting keeps covered sentries readable without adding dynamic lamps.
 
-Build and verification records live in `build/maps/pp_garden_infiltration`.
+The November 16 publication records live in `build/garden-publish-20261116`;
+the preceding profiling records live in `build/garden-combat-opt-20261116`.
 The separate archive is `operation-garden-infiltration.pk3`; it never replaces
 the base Garden map or its package. Performance evidence records the native
 Pi framebuffer, exact map hash, capture positions, quality and protection mode.
@@ -61,6 +65,9 @@ full BSP, full VIS, baked lighting, and independent mission/route/collision
 verification. The edited-source audit reports original-preservation drift;
 the default audit still requires the generator's strict additive contract.
 Failed audits retain the previous playable BSP and cannot be packaged.
+The November 16 publication was assembled directly from the full compiled
+output with matching source and asset dependencies, without rerunning those
+audits at the user's request; its build receipt records that distinction.
 Detached extra `worldspawn` brush containers are treated as compiler-only
 `func_group` geometry in the private compile copy, without changing their
 brushes or the editable source.

@@ -185,7 +185,8 @@ R_DrawAliasFrameLerp(entity_t *currententity, const model_t *model, dmdl_t *pali
 		 * of times. Keep the small-mesh path to avoid extra work for effects. */
 		byte normal_colors[256][4];
 		qboolean cached_colors = mesh->num_vertices >= 256;
-		if (cached_colors)
+		alias_normal_entry_t *normal_palette = R_AliasNormalPalette(alpha, color_only);
+		if (cached_colors && !normal_palette)
 		{
 			for (unsigned normal = 0; normal < 256; ++normal)
 			{
@@ -204,7 +205,12 @@ R_DrawAliasFrameLerp(entity_t *currententity, const model_t *model, dmdl_t *pali
 			int source = mesh->source[k];
 			if (!static_pose) VectorCopy(s_lerped[source], (gl_buf.vtx + k*3));
 			else if (gl_shadows->value) VectorCopy((cache->static_xyz+k*3), s_lerped[source]);
-			if (cached_colors)
+			if (normal_palette)
+			{
+				memcpy(gl_buf.clr + k*4, R_AliasNormalColor(normal_palette,
+					verts[source].lightnormalindex, alpha, color_only), 4);
+			}
+			else if (cached_colors)
 			{
 				memcpy(gl_buf.clr + k*4, normal_colors[verts[source].lightnormalindex], 4);
 			}
@@ -405,6 +411,38 @@ R_DrawAliasShadow(entity_t *currententity, const model_t *model, dmdl_t *paliash
 }
 
 static qboolean
+R_AliasBoxOutsideFrustum(vec3_t bbox[8])
+{
+	if (r_gl1_fast_alias_cull && r_gl1_fast_alias_cull->value)
+	{
+		/* This is the same separating-plane test as the original masks. A
+		 * corner that is not outside proves this plane cannot reject the box.
+		 * Negating the original comparison preserves its NaN behaviour too. */
+		for (int f = 0; f < 4; ++f)
+		{
+			int p;
+			for (p = 0; p < 8; ++p)
+			{
+				float dp = DotProduct(frustum[f].normal, bbox[p]);
+				if (!((dp - frustum[f].dist) < 0)) break;
+			}
+			if (p == 8) return true;
+		}
+		return false;
+	}
+	int mask = ~0;
+	for (int p = 0; p < 8; ++p)
+	{
+		int outside = 0;
+		for (int f = 0; f < 4; ++f)
+			if ((DotProduct(frustum[f].normal, bbox[p]) - frustum[f].dist) < 0)
+				outside |= 1 << f;
+		mask &= outside;
+	}
+	return mask != 0;
+}
+
+static qboolean
 R_CullAliasModel(const model_t *currentmodel, vec3_t bbox[8], entity_t *e)
 {
 	int i;
@@ -529,31 +567,7 @@ R_CullAliasModel(const model_t *currentmodel, vec3_t bbox[8], entity_t *e)
 		VectorAdd(e->origin, bbox[i], bbox[i]);
 	}
 
-	int p, f, aggregatemask = ~0;
-
-	for (p = 0; p < 8; p++)
-	{
-		int mask = 0;
-
-		for (f = 0; f < 4; f++)
-		{
-			float dp = DotProduct(frustum[f].normal, bbox[p]);
-
-			if ((dp - frustum[f].dist) < 0)
-			{
-				mask |= (1 << f);
-			}
-		}
-
-		aggregatemask &= mask;
-	}
-
-	if (aggregatemask)
-	{
-		return true;
-	}
-
-	return false;
+	return R_AliasBoxOutsideFrustum(bbox);
 }
 
 void

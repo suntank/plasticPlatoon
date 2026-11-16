@@ -1,0 +1,75 @@
+{
+  "passed": true,
+  "scope": "ABI and equivalent-output renderer validation; gameplay FPS verdict is separate",
+  "source": "/data/build-sources/plastic-platoon-garden-combat-20261116/candidate-source",
+  "engine": "3295e814d4bc6ab293a6f1464833bdf7fc123259ad9edd206036d2cffb76b523",
+  "renderer": "e6977ff8fcc10165f0eab73cede073fb4ad37deec1e6dceac17af3ec70dd8e0b",
+  "driver": "10a723267cc505d885584fe4343446f4ed003eb20681249463135cd6157a5e76",
+  "layout_headers_sha256": {
+    "src/client/cl_splitscreen.h": "98287db309d2e9a9cbd3ab26649ec602fb79ad0e565c460fc23f8620db4ecae3",
+    "src/client/header/client.h": "f69975913f687e14fc7f16464cb179e0f222713666278b6a949e86351f996bcf",
+    "src/client/refresh/gl1/header/model.h": "77ded440f48f41f73708fc5b707fff7adf954f95121f3714ead0ad84461e45d3",
+    "src/client/refresh/ref_shared.h": "c6861754467a2091608558a3c418ceb9fee03d32fc38fdaa581e826c148fad57",
+    "src/common/header/shared.h": "30d75374748fe226d9f6d58ab274385e97cc4fc0b862191c2e1f304fb1ec4684"
+  },
+  "map": {
+    "source_sha256": "d4f39d62732841ece6e6180861055bc0790670b3bd5dfd9c1b37f1c37bdf65fa",
+    "bsp_sha256": "083c3cd2789f3fea68972b5f97c31e1d68cbabff16741ff40ed454404017c866",
+    "package_sha256": "a14f75fcac0287500f8d22c2c094785caacc8d3587ba48c48d6ffbfda7a4f114",
+    "positions": [
+      [
+        1070,
+        -1240,
+        32.25,
+        0,
+        180
+      ],
+      [
+        -900,
+        -450,
+        32.25,
+        0,
+        90
+      ],
+      [
+        956,
+        850,
+        32.25,
+        0,
+        90
+      ],
+      [
+        -200,
+        2800,
+        34.307413,
+        0,
+        0
+      ]
+    ],
+    "note": "Later save detected during profiling; frozen for final paired fresh-map validation. Earlier comparisons use their original map identity."
+  },
+  "native_regression": "/data/build-sources/plastic-platoon-garden-combat-20261116/candidate-v3-build.log",
+  "tests": [
+    "/data/build-sources/plastic-platoon-garden-combat-20261116/latest-validation/report.json",
+    "/data/build-sources/plastic-platoon-garden-combat-20261116/latest-validation/metadata.json"
+  ],
+  "visual_checks": "1024 byte-exact normal palettes, 3072 expanded-colour cases, 100000 identical alias-frustum classifications; native ARM and host checks passed",
+  "timing": "Counter-disabled complete-display SDL swap timestamps. Detailed/counter-on timings are not used as gameplay FPS claims.",
+  "gameplay_results": {
+    "normal": {
+      "fps": 33.77933561925175,
+      "p95_ms": 33.1366686,
+      "resource_passed": true,
+      "target_passed": true
+    },
+    "hard": {
+      "fps": 32.49853939768777,
+      "p95_ms": 35.92225635,
+      "resource_passed": true,
+      "target_passed": false
+    }
+  },
+  "performance_target_met": false,
+  "installed_smoke": "/data/build-sources/plastic-platoon-garden-combat-20261116/installed-smoke/report.json",
+  "installed_smoke_passed": true
+}

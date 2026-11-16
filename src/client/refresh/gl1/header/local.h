@@ -245,6 +245,8 @@ extern cvar_t *gl1_stencilshadow;
 extern cvar_t *gl1_dynamic;
 extern cvar_t *r_gl1_lightmap_opt;
 extern cvar_t *r_gl1_alias_colors;
+extern cvar_t *r_gl1_normal_colors;
+extern cvar_t *r_gl1_fast_alias_cull;
 extern cvar_t *r_gl1_world_arrays;
 extern cvar_t *gl_nobind;
 extern cvar_t *gl1_round_down;

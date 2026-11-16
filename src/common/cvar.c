@@ -28,6 +28,21 @@
 
 cvar_t *cvar_vars;
 
+/* Cvar objects/names live until Cvar_Fini. Cache only successful, canonical
+ * lookups; aliases must still take the original path and print their warning.
+ * A collision merely falls back to the sorted list. No public ABI changes. */
+#define CVAR_LOOKUP_SLOTS 512u
+static cvar_t *cvar_lookup_slots[CVAR_LOOKUP_SLOTS];
+static cvar_t *cvar_lookup_cache;
+
+static unsigned
+Cvar_LookupHash(const char *name)
+{
+	unsigned hash = 2166136261u;
+	while (*name) hash = (hash ^ (unsigned char)*name++) * 16777619u;
+	return hash & (CVAR_LOOKUP_SLOTS - 1u);
+}
+
 
 typedef struct
 {
@@ -121,6 +136,14 @@ Cvar_FindVar(const char *var_name)
 {
 	cvar_t *var;
 	int i;
+	const char *original_name = var_name;
+	qboolean cached = !cvar_lookup_cache || cvar_lookup_cache->value != 0;
+	unsigned slot = cached ? Cvar_LookupHash(var_name) : 0;
+	if (cached && cvar_lookup_slots[slot] &&
+		!strcmp(var_name, cvar_lookup_slots[slot]->name))
+	{
+		return cvar_lookup_slots[slot];
+	}
 
 	/* An ugly hack to rewrite changed CVARs */
 	for (i = 0; i < ARRLEN(replacements); i++)
@@ -137,6 +160,7 @@ Cvar_FindVar(const char *var_name)
 	{
 		if (!strcmp(var_name, var->name))
 		{
+			if (cached && var_name == original_name) cvar_lookup_slots[slot] = var;
 			return var;
 		}
 	}
@@ -867,6 +891,7 @@ Cvar_Toggle_f(void)
 void
 Cvar_Init(void)
 {
+	cvar_lookup_cache = Cvar_Get("cvar_lookup_cache", "1", 0);
 	Cmd_AddCommand("cvarlist", Cvar_List_f);
 	Cmd_AddCommand("dec", Cvar_Inc_f);
 	Cmd_AddCommand("inc", Cvar_Inc_f);
@@ -883,6 +908,8 @@ void
 Cvar_Fini(void)
 {
 	cvar_t *var;
+	memset(cvar_lookup_slots, 0, sizeof(cvar_lookup_slots));
+	cvar_lookup_cache = NULL;
 
 	for (var = cvar_vars; var;)
 	{
@@ -893,6 +920,7 @@ Cvar_Fini(void)
 		Z_Free(var);
 		var = c;
 	}
+	cvar_vars = NULL;
 
 	Cmd_RemoveCommand("cvarlist");
 	Cmd_RemoveCommand("dec");

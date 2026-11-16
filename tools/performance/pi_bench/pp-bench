@@ -28,8 +28,8 @@ from platform_support import is_pi
 
 PACKAGE = Path('/home/gamebird/gamebird-shell/data/nest/games/plastic-platoon')
 SAVES = Path('/home/gamebird/gamebird-shell/data/nest/saves/plastic-platoon')
-ENGINE = '4ce95bf6c626878ca85c6cd87505e8fb3ec58ddcd237eca45b1d9564326a5e15'
-RENDERER = '7527296ddbec121894dc54a7517314e4f5a3ca96e8b0d3eb3066df26d6f76fcb'
+ENGINE = '3295e814d4bc6ab293a6f1464833bdf7fc123259ad9edd206036d2cffb76b523'
+RENDERER = 'e6977ff8fcc10165f0eab73cede073fb4ad37deec1e6dceac17af3ec70dd8e0b'
 DRIVER = '10a723267cc505d885584fe4343446f4ed003eb20681249463135cd6157a5e76'
 PC_ENGINE = 'a0604bd40aef42d2d8dab274b8219c17808f232b0e7c117634d58525c9240577'
 PC_RENDERER = 'a48a49cc00aa77ac203a957f65e7282381007c48d8ea4e01903748c3b556be6e'

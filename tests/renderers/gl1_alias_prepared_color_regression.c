@@ -8,7 +8,7 @@ glstate_t gl_state;
 pp_refperf_t pp_refperf;
 cvar_t *r_perf;
 static cvar_t enabled = {.value = 1}, shadows;
-cvar_t *r_gl1_alias_colors = &enabled, *gl_shadows = &shadows;
+cvar_t *r_gl1_alias_colors = &enabled, *r_gl1_normal_colors = &enabled, *gl_shadows = &shadows;
 unsigned char minlight[256], gammatable[256];
 
 static void reference(byte *out, const pp_alias_topology_t *mesh,

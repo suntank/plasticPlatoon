@@ -120,6 +120,8 @@ cvar_t *r_videos_unfiltered;
 cvar_t *gl1_dynamic;
 cvar_t *r_gl1_lightmap_opt;
 cvar_t *r_gl1_alias_colors;
+cvar_t *r_gl1_normal_colors;
+cvar_t *r_gl1_fast_alias_cull;
 cvar_t *r_gl1_world_arrays;
 cvar_t *r_modulate;
 cvar_t *gl_nobind;
@@ -1364,6 +1366,8 @@ R_Register(void)
 	gl1_dynamic = ri.Cvar_Get("gl1_dynamic", "1", 0);
 	r_gl1_lightmap_opt = ri.Cvar_Get("r_gl1_lightmap_opt", "1", 0);
 	r_gl1_alias_colors = ri.Cvar_Get("r_gl1_alias_colors", "1", 0);
+	r_gl1_normal_colors = ri.Cvar_Get("r_gl1_normal_colors", "1", 0);
+	r_gl1_fast_alias_cull = ri.Cvar_Get("r_gl1_fast_alias_cull", "1", 0);
 	r_gl1_world_arrays = ri.Cvar_Get("r_gl1_world_arrays", "1", 0);
 	gl_nobind = ri.Cvar_Get("gl_nobind", "0", 0);
 	gl1_round_down = ri.Cvar_Get("gl1_round_down", "1", 0);

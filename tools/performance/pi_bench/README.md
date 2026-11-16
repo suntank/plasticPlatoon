@@ -238,3 +238,45 @@ plan phase's `motion_reference`, so differently named comparison phases keep
 the same original bounds.
 
 See [profiling and measured gains](../../../doc/performance/pi-profile-20261115.md).
+
+## November 16 Garden combat validation
+
+The native engine and GL1 pins now match the validated configuration-lookup,
+exact normal-colour reuse, and alias-frustum early-out changes. Public helper
+layouts are unchanged; the existing ARM input driver was revalidated with four
+real clients and fresh per-view counters. The legacy paths remain available with
+`cvar_lookup_cache 0`, `r_gl1_normal_colors 0`, and
+`r_gl1_fast_alias_cull 0`. These switches do not change assets or quality.
+
+Ordinary counter collection has measurable CPU overhead on the Pi, especially
+its cvar publication and lookup work. Instrumented FPS gains must therefore be
+checked independently. `swap_observer.c` is a test-only SDL2 helper that records
+one monotonic completion timestamp per full display swap while `r_perf 0` and
+`r_drawprofile 0` are asserted. It is never installed in the game package.
+SIGUSR1 starts a window and SIGUSR2 stops it; CSV writing happens afterward.
+Its fixed buffer holds 16,384 timestamps; the validated windows are 90 seconds.
+
+Native experiment scripts, exact sources/binaries, plans, captures and receipts
+remain under `/data/build-sources/plastic-platoon-garden-combat-20261116/`.
+The latest-map paired tests freeze authored source
+`d4f39d62732841ece6e6180861055bc0790670b3bd5dfd9c1b37f1c37bdf65fa`
+and BSP `083c3cd2789f3fea68972b5f97c31e1d68cbabff16741ff40ed454404017c866`.
+Earlier captures retain their different map identity. No result is selected by
+FPS; resource-failed windows and the single resource-driven repeat are retained.
+
+At normal graphics quality with live AI and four separated clients, the latest
+fresh 90-second optimized captures measured 33.78 FPS / 33.14 ms P95 on normal
+difficulty and 32.50 FPS / 35.92 ms P95 on hard. Both optimized windows passed the
+resource checks. The normal legacy window had one major fault and is unqualified
+for a clean speedup claim. The hard legacy window was qualified at 37.29 ms P95;
+live AI/knockback still limits causal comparisons. Normal narrowly meets the
+33.333 ms P95 criterion; hard does not. These are complete-display measurements,
+not a guarantee that every individual frame holds 30 FPS.
+
+The user accepted the 32.50 average FPS result against the intended 30 FPS
+average target and requested publication of the subsequent map save without
+rerunning tests. The performance receipt above retains its original measured
+map and P95 criterion. Current published map identities are recorded in
+`maps/garden-infiltration-status.json`; the new map does not inherit a test
+result from the earlier revision. See
+[Garden combat profiling and publication](../../../doc/performance/pi-profile-20261116.md).
