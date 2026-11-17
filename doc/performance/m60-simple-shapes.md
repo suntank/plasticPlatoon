@@ -1,20 +1,14 @@
 # Authored M60
 
-The M60 uses original simple geometry with a side feed box, long barrel and
-gas tube and paired folded bipod legs. Its established
-army-man plastic palette and molded mitten hands match the other replacements. The first-person model, world pickup,
-player-held model and normal/tall enemy attachments share the same design.
-The first-person hands and arms remain in the gun's model and atlas, keeping
-one weapon draw per camera.
+The M60 has a contoured stock and receiver, a crowned feed cover and a
+beveled side ammo box with molded ribs. Its long barrel, gas tube and paired
+folded bipod legs give it a distinct silhouette. The lower hip pose opens up
+the view of the feed cover and support grip.
 
-The top carrying handle has been removed from every version, including both
-enemy attachments. The existing sights, feed cover, hands and gun placement
-are retained. This removes 32 triangles from each model.
-The updated GL3 capture in `build/m60-no-handle-qa-gl3/manifest.json`
-completed eight views with a clean exit, including hip, ADS, firing, pickup,
-player-held and enemy-held models. First-person and ADS screenshots were
-visually checked. The ten M60 asset tests, ADS alignment, enemy muzzle,
-four player muzzle checks, heavy-gunner verification and normal build passed.
+The first-person model, world pickup, player-held model and normal and tall
+enemy attachments share the design. The entire gun takes the selected player
+color with molded-plastic shading. The first-person arms and hands share the
+gun's model and atlas, keeping one weapon draw per camera.
 
 Aiming moves the actual sights onto the camera's center ray through the shared
 0.18-second transition. Each local split-screen player owns its aiming state.
@@ -36,7 +30,7 @@ atlases. The third-person muzzle table follows the reviewed barrel rim in
 every held pose.
 
 The heavy gunner fires from the planted `attak303` pose (MD2 frame 32).
-Its reviewed flash-hider cap center is `(25.120810, -4.747138, 3.594972)`
+Its reviewed flash-hider cap center is (25.120809, -4.749609, 3.597991)
 before the soldier height transform. The shared `MZ2_SOLDIER_HEAVY` table
 negates model Y to right and applies that height transform once, aligning
 both the pellet source and client flash with the taller enemy barrel.
@@ -47,10 +41,10 @@ the exported tall MD2 at this exact firing frame.
 
 | Version | Previous triangles | Current triangles | Reduction | Frames |
 | --- | ---: | ---: | ---: | ---: |
-| First person, including hands and arms | 1,399 | 784 | 44.0% | 1 |
-| Pickup | 799 | 348 | 56.4% | 1 |
-| Player held | 1,545 | 348 | 77.5% | 198 |
-| Enemy held, including taller variant | 1,545 | 348 | 77.5% | 475 |
+| First person, including hands and arms | 1,399 | 948 | 32.2% | 1 |
+| Pickup | 799 | 440 | 44.9% | 1 |
+| Player held | 1,545 | 440 | 71.5% | 198 |
+| Enemy held, including taller variant | 1,545 | 440 | 71.5% | 475 |
 
 `tools/assets/m60-manifest.json` records exact counts, hashes, bounds, sight
 anchors and all-pose validation.

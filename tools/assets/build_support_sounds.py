@@ -54,12 +54,38 @@ SOUNDS = {
     'weapons/hyprbd1a.wav': ('tone_down', .30, 980, 'Toy energy weapon spin down'),
     'weapons/hyprbl1a.wav': ('energy', 1.0, 300, 'Toy energy weapon operating loop'),
     'weapons/hyprbu1a.wav': ('tone', .28, 420, 'Toy energy weapon spin up'),
+    'weapons/pp_shotgun_pump.wav': ('pump', .78, 255, 'Player pump shotgun rear stroke and forward latch'),
     'weapons/tesla.wav': ('energy', 1.0, 180, 'Toy electrical beam loop'),
 }
 
 
 def sha(data):
     return hashlib.sha256(data).hexdigest()
+
+
+def pump_sample(t, noise, filtered, previous_noise, frequency):
+    """Dry sliding friction and two short impacts for the toy pump cycle."""
+    scrape = .64*filtered + .21*noise + .15*previous_noise
+    signal = 0.
+    # The fore-end reaches the rear stop after 0.2 seconds, pauses,
+    # then closes 0.6 seconds after the beginning of the stroke.
+    for start, length, gain in ((.006,.196,.34),(.398,.200,.41)):
+        travel = (t-start)/length
+        if 0. < travel < 1.:
+            envelope = math.sin(math.pi*travel)**1.5
+            chatter = .80+.20*math.cos(math.tau*(38*t+64*t*t))
+            signal += gain*scrape*envelope*chatter
+    for start, gain, pitch in ((.022,.20,1.4),(.199,.72,1.),(.598,.94,1.16)):
+        dt = t-start
+        if 0. <= dt < .068:
+            attack = min(dt/.001,1.)
+            decay = math.exp(-dt*83)
+            body = (.31*math.sin(math.tau*frequency*pitch*dt)
+                    +.15*math.sin(math.tau*frequency*2.17*pitch*dt)
+                    +.08*math.sin(math.tau*frequency*4.31*pitch*dt))
+            click = (.38*noise + .12*(noise-previous_noise))*math.exp(-dt*265)
+            signal += gain*attack*(body*decay + click)
+    return signal
 
 
 def synthesize(name, spec):
@@ -94,6 +120,8 @@ def synthesize(name, spec):
         elif kind == 'impact':
             signal = (.55 * filtered + .30 * tone) * math.exp(-12*u)
             signal += .16 * noise * math.exp(-90*t)
+        elif kind == 'pump':
+            signal = pump_sample(t-.1, noise, filtered, previous_noise, frequency)
         elif kind == 'ricochet':
             phase = 2*math.pi*(frequency*t - .42*frequency*t*t/duration)
             signal = .33 * math.sin(phase) * math.exp(-5*u) + .12*noise*math.exp(-70*t)

@@ -118,15 +118,11 @@ def material_mask(image, source, role):
         dark_vent = ImageChops.multiply(tile_mask(image.size, {6}), value.point(lambda v: 255 if v < 115 else 0))
         mask = ImageChops.subtract(mask, dark_vent)
         rule = 'painted vehicle plastic; glass, lamps, rubber, tracks, dark mechanics and pale stencils preserved'
-    elif source.startswith('models/monsters/ant/'):
-        mask = tile_mask(image.size, set(range(16)) - {3})
-        rule = 'ant carapace and legs; compound-eye material 3 preserved'
-    elif source.startswith('models/monsters/spider/'):
-        mask = tile_mask(image.size, set(range(16)) - {2, 3})
-        rule = 'spider carapace and legs; fang and eye materials 2/3 preserved'
-    elif source.startswith(('models/objects/gibs/ant/', 'models/objects/gibs/spider/')):
-        mask = tile_mask(image.size, {i for i in range(16) if i % 6 < 3})
-        rule = 'insect shell pigment; exposed wound/flesh shades preserved'
+    elif source.startswith(('models/monsters/ant/', 'models/objects/gibs/ant/',
+                            'models/monsters/spider/', 'models/objects/gibs/spider/')):
+        # The client still looks up the standard enemy override for these paths.
+        mask = Image.new('L', image.size)
+        rule = 'preserve the original black shell, eyes and fragment wound colors'
     elif source.startswith('models/objects/gibs/') or source.startswith('models/monsters/soldier/'):
         mask = ImageChops.multiply(warm, ImageChops.multiply(colored, visible))
         rule = 'tan molded plastic; neutral/dark details and contrasting non-plastic hues preserved'

@@ -20,11 +20,11 @@ soldiers, with shotgun soldiers guarding the narrow passes and final bunker.
 Supplies are limited to hand grenades, the shotgun, shells, small/regular health,
 armor shards and 25-point jacket armor. Ammunition and health are shared.
 
-The shipped `operation-garden-infiltration.pk3` and loose BSP contain the latest
-manually saved mission published on November 16, 2026. Its matching editable
-and runtime MAPs, design metadata, translation receipt and full BSP/VIS/RAD
-build receipt are inside the archive. Exact source/BSP/package hashes are
-recorded in `maps/garden-infiltration-status.json`.
+The current local build uses the `pp_backyard` skybox. The
+`operation-garden-infiltration.pk3` archive includes the editable and runtime
+MAPs, design metadata, translation receipt and BSP/VIS/RAD build receipt.
+Exact source, BSP and package hashes are recorded in
+`maps/garden-infiltration-status.json`.
 
 The preceding map revision averaged 33.78 FPS on normal and 32.50 FPS on hard
 in native four-player Pi combat tests with players in separate regions.

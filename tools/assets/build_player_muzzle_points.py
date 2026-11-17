@@ -23,17 +23,17 @@ REVIEW = ROOT / 'tools/assets/review/player-muzzle-points.png'
 SELECTORS = {'w_bfg.md2': {'sha256': '6c4d7e19bf3fc5b04b04ef9a9dfbac16e49e5d603354897cb14f4aa5238708d9', 'vertices': [16, 17, 18, 19, 20, 21, 22, 23, 32, 33, 36, 38, 40, 42, 44, 46]},
  'w_blaster.md2': {'sha256': '91fe5079d1c38aba9552d01886d8f7ba4ac3ada04b8d1dc28b8c8f4cb0af4675',
                    'vertices': [108, 109, 111, 113, 115, 117, 124, 125, 126, 127, 128, 129]},
- 'w_chaingun.md2': {'sha256': 'edff05a826395fb4a430f49d96c3d128763c04028eff4d0e2cd173789fbe0053', 'vertices': [266, 267, 269, 271, 273, 275, 282, 283, 284, 285, 286, 287]},
+ 'w_chaingun.md2': {'sha256': '401eee1cef39c2bdbffe36dfff61c27dcd68652487a59fa04a54e4ee235b43df', 'vertices': [228, 229, 231, 233, 235, 237, 244, 245, 246, 247, 248, 249]},
  'w_glauncher.md2': {'sha256': '704da75084590f4ab2048e8eaba4c3fbe953524b847b3a9bd135cc38b6c41253', 'vertices': [182, 183, 185, 187, 189, 191, 193, 195, 204, 205, 208, 210, 212, 214, 216, 218]},
  'w_hyperblaster.md2': {'sha256': '314d8b1b3d7a69bdcddc2acfa82185dd280fe899cbd4a3ad996a074b416119b3', 'vertices': [178, 179, 181, 183, 185, 187, 189, 191, 200, 201, 204, 206, 208, 210, 212, 214]},
- 'w_machinegun.md2': {'sha256': '5bfdcf6a5bc64005d9f6e27622f9c7dce0f38a820afc354e7c73b281d6875c52',
-                      'vertices': [210, 211, 213, 215, 217, 219, 226, 227, 228, 229, 230, 231]},
+ 'w_machinegun.md2': {'sha256': 'f75554cf4ec5bd68be7662845f2a01406cf5cde581a976a05c46664efcde1e99',
+                      'vertices': [254, 255, 257, 259, 261, 263, 270, 271, 272, 273, 274, 275]},
  'w_railgun.md2': {'sha256': 'fdfd9c62ba2f78204dc39d59ed59937c9e4e55044428fbe59e8ca12cacf96f48', 'vertices': [218, 219, 221, 223, 225, 227, 229, 231, 240, 241, 244, 246, 248, 250, 252, 254]},
  'w_rlauncher.md2': {'sha256': '8be372f1c3e8713f87b8e790f7c6c109a3df4fd550364ac775620b6ba232a412', 'vertices': [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 36, 38, 40, 42, 44, 46]},
- 'w_shotgun.md2': {'sha256': '0da4adfbc81b02aad6b6a167fa0d1e4758b48a41ec48f304bdabfdc25efddfad', 'vertices': [144, 145, 146, 147, 148, 149, 156, 157, 158, 159, 160, 161]},
- 'w_sshotgun.md2': {'sha256': '2ff33fafdade0de61a1654ca50de694d58b788d6ce8c2ad7a54e070d5ee16608', 'vertices': [140, 141, 142, 143, 144, 145, 152, 153, 154, 155, 156, 157, 170, 171, 172, 173, 174, 175, 182, 183, 184, 185, 186, 187]},
- 'weapon.md2': {'sha256': '5bfdcf6a5bc64005d9f6e27622f9c7dce0f38a820afc354e7c73b281d6875c52',
-                      'vertices': [210, 211, 213, 215, 217, 219, 226, 227, 228, 229, 230, 231]}}
+ 'w_shotgun.md2': {'sha256': '1424a627371431e7e1a8d96d5c3e8514b1b71a9c59b454d3f1fecca93eee8503', 'vertices': [144, 145, 146, 147, 148, 149, 156, 157, 158, 159, 160, 161]},
+ 'w_sshotgun.md2': {'sha256': 'd990276a9254ca58c5b907e929fce7c1b7bfff5367751b506114043d08035fbb', 'vertices': [144, 145, 146, 147, 148, 149, 156, 157, 158, 159, 160, 161, 174, 175, 176, 177, 178, 179, 186, 187, 188, 189, 190, 191]},
+ 'weapon.md2': {'sha256': 'f75554cf4ec5bd68be7662845f2a01406cf5cde581a976a05c46664efcde1e99',
+                      'vertices': [254, 255, 257, 259, 261, 263, 270, 271, 272, 273, 274, 275]}}
 
 
 def load_model(path: Path, expected_hash: str):

@@ -14,7 +14,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools/assets'))
 import build_shotgun as builder
 from asset_sources import source_bytes
+from build_color_variants import material_mask
 from build_m16 import rigid_transforms
+from m16_geometry import MATERIALS
 from md2_assets import MD2, normal_table
 from shotgun_geometry import build_shotgun
 
@@ -196,6 +198,18 @@ class ShotgunTests(unittest.TestCase):
                 self.assertTrue({'arm_left', 'arm_right', 'hand_left_palm', 'hand_right_palm'} <= hands)
             else:
                 self.assertFalse(hands)
+
+    def test_visible_materials_follow_the_selected_player_color(self):
+        source = builder.TEXTURES[1]
+        used_materials = set(self.meshes['view']['materials'])
+        with Image.open(io.BytesIO(self.assets[source])) as image:
+            mask, _ = material_mask(image, source, 'player')
+        for material in sorted(used_materials):
+            row, column = divmod(MATERIALS.index(material), 4)
+            left, top = column * 64, row * 64
+            with self.subTest(material=material):
+                self.assertEqual(mask.crop((left, top, left + 64, top + 64)).getextrema(),
+                                 (255, 255))
 
     def test_legacy_rebuild_cannot_restore_the_replaced_shotgun(self):
         import build_platoon

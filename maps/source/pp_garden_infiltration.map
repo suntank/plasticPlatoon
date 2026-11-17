@@ -5,7 +5,7 @@
 {
 "classname" "worldspawn"
 "message" "Operation Garden Ghost"
-"sky" "sandkeep"
+"sky" "pp_backyard"
 "sounds" "0"
 "_sun" "garden_sun_direction"
 "_sun_light" "70"

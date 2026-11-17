@@ -107,6 +107,7 @@ static mframe_t ant_frames_pain[] = {
 };
 mmove_t ant_move_pain = {40, 43, ant_frames_pain, ant_run};
 
+/* Older saves can still refer to this move. ant_die now goes straight to gibs. */
 static mframe_t ant_frames_death[] = {
 	{ai_move, 0, NULL}, {ai_move, 0, NULL}, {ai_move, 0, NULL},
 	{ai_move, 0, NULL}, {ai_move, 0, NULL}, {ai_move, 0, NULL}

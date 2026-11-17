@@ -1,8 +1,9 @@
 # Long beveled pistol
 
-The pistol uses a long, eight-corner beveled slide with a narrowed rear,
-shallow frame with a tapered rear, sloped grip and compact sights. Its upper body carries the
-silhouette; the frame no longer forms a second tall block under the slide.
+The first-person pistol has a crowned slide with a tapered nose, a sloped
+rear face with a molded star, and a rounded guard. The closer hip pose frames
+the grip and thumb near the lower edge of the screen. The pickup and held
+models use a simpler eight-corner bevel on the slide.
 All solids are closed, authored profiles and lofts. The established green
 army-man palette and single 256 by 256 atlas remain. Four fine rear serrations
 leave the long slide planes clean. Soft finger creases stay on the fused
@@ -10,7 +11,7 @@ finger bank, leaving the rounded palm and thumb unstriped.
 
 | Version | Previous triangles | Current triangles | Reduction |
 | --- | ---: | ---: | ---: |
-| First person, now with right hand and arm | 1,400 | 598 | 57.3% |
+| First person with right hand and arm | 1,400 | 648 | 53.7% |
 | Player-held | 1,580 | 200 | 87.3% |
 | Enemy-held, including taller variant | 1,616 | 200 | 87.6% |
 | New world/pickup mesh | No prior mesh | 200 | — |

@@ -252,27 +252,41 @@ def build_m16(detail='world'):
         raise ValueError('detail must be world or view')
     close=detail=='view'
     m=Mesh()
-    # Big uninterrupted planes replace the decimator's many noisy facets.
-    m.profile('stock',[(0,-9.2),(0,1.2),(5,1.4),(27,.6),(30,-1.2),(27,-2.7)],
-              2.7,'plastic','edge')
-    m.profile('receiver',[(28,-4.5),(28,2.0),(31,3.0),(49,2.5),(53,1.3),
-                          (53,-4.0),(43,-5.2)],2.35,'receiver','plastic')
+    # Round the stock all the way into the wrist and taper the receiver's heel.
+    stock = [(0,2.56,-4.02,5.20),(5,2.62,-3.58,5.10),
+             (21,2.0,-1.12,2.30),(30,1.50,-.90,1.63)]
+    angles = [i*math.tau/6 for i in range(6)]
+    m.loft('stock', [[(x,w*math.cos(a),mid+h*math.sin(a)) for a in angles]
+                     for x,w,mid,h in stock], 'plastic', uv_axes=(0,2))
+    section = [(-.58,-1),(.58,-1),(1,-.62),(1,.45),
+               (.64,1),(-.64,1),(-1,.45),(-1,-.62)]
+    stations = [(27.45,1.62,-1.09,3.21),(32.15,2.26,-1.,4.05),
+                (46.8,2.38,-1.09,3.94),(52.35,1.95,-.89,3.01)]
+    rings = [[(x+.12*h*z,y*w,mid+h*z) for y,z in section] for x,w,mid,h in stations]
+    first = len(m.faces)
+    m.loft('receiver', rings, 'plastic', uv_axes=(0,2))
+    for band in range(len(rings)-1):
+        for side in (2,6):
+            start = first+2*(band*len(section)+side)
+            m.materials[start:start+2] = ['receiver']*2
     m.profile('pistol_grip',[(29,-15.1),(25.8,-13.8),(31,-4.3),(36,-4.7),
                             (34,-7.2),(32.8,-15.3)],1.85,'grip','edge')
     # Six-sided magazine profile retains the familiar forward curve.
     m.profile('magazine',[(42.2,-4.2),(49,-4),(49.5,-10.6),(52,-17.0),
                           (45.8,-18.5),(43.3,-11.4)],1.9,'magazine','edge')
-    m.ring_profile('trigger_guard',[(33.9,-4.2),(43.3,-4.2),(43,-8.5),(33.3,-8.2)],
-                   [(35.4,-5.3),(42,-5.3),(41.8,-7.2),(34.7,-7.1)],.72)
+    m.ring_profile('trigger_guard',[(33.9,-4.2),(43.3,-4.2),(43,-6.9),(41.4,-8.5),(33.3,-8.2)],
+                   [(35.4,-5.3),(42,-5.3),(41.8,-6.35),(40.75,-7.2),(34.7,-7.1)],.72)
     # The handle's real hole remains visible from oblique pickup/held views.
-    m.ring_profile('carry_handle',[(29.6,2.1),(49.7,2.1),(48.5,6.4),(31.1,7.2)],
-                   [(32,3.2),(47.2,3.2),(46.7,5.0),(32.7,5.7)],1.35)
-    # Eight sides read rounded at game resolution; one taper carries the shape.
-    handguard=[(52,0,0,3.6,3.6),(78.8,0,0,2.45,2.55)]
-    if close: handguard.insert(1,(55,0,0,3.6,3.6))
+    m.ring_profile('carry_handle',[(29.8,1.77),(49.7,2.1),(49.4,4.2),(47.8,6.22),
+                                   (34.1,6.84),(31.4,7.04),(29.9,5.41)],
+                   [(32.6,3.18),(46.8,3.18),(47.4,4.03),(46.49,5.07),
+                    (34.4,5.6),(33.25,5.67),(32.6,4.78)],1.27)
+    # The tapered fore-end keeps the existing palm contact around the middle.
+    handguard=[(51.7,0,0,2.88,2.92),(55.9,0,0,3.60,3.6),(78.8,0,0,2.45,2.55)]
     # The receiver does not cover the wider handguard's whole rear opening.
-    m.tube('handguard',handguard,8,'handguard',caps=(True,True),phase=math.pi/8)
-    m.tube('barrel',[(78,0,0,.92,.92),(97,0,0,.92,.92)],6,'dark')
+    m.tube('handguard', handguard, 10 if close else 8, 'handguard',
+           caps=(True,True), phase=math.pi/8)
+    m.tube('barrel',[(78,0,0,.92,.92),(97,0,0,.92,.92)],8 if close else 6,'dark')
     m.tube('flash_hider',[(96.5,0,0,1.35,1.35),(100,0,0,1.35,1.35)],
            8 if close else 6,'edge',caps=(True,True),end_material='bore')
     m.ring_profile('front_sight_frame',[(78.6,-.8),(85,-.8),(82,6.6)],
@@ -291,10 +305,10 @@ def build_m16(detail='world'):
                       [(30.9,7.3),(33.2,7.3),(33.2,9.0),(31.5,9.25),(30.9,9.0)],
                       .29,'plastic','edge',y=side*1.01)
         # Small clean shapes only where they help the first-person read.
-        m.profile('butt_plate',[(0,-9.2),(0,1.2),(1.2,1.3),(1.2,-8.8)],2.85,'dark','edge')
-        m.profile('ejection_cover',[(35,-.7),(47,-.7),(47,1.1),(35,1.5)],.25,
-                  'receiver','edge',y=-2.5)
-        m.box('charging_latch',(27.5,-3,2.0),(31.2,3,2.9),'dark','edge')
+        # A low, tapered latch hugs the receiver without a square ledge.
+        latch = [(27.3,1.48,1.68,.41),(31.4,1.96,2.14,.53)]
+        m.loft('charging_latch', [[(x,w*math.cos(a),mid+h*math.sin(a)) for a in angles]
+                                  for x,w,mid,h in latch], 'dark')
         add_hands(m)
     else:
         # A single rear block is sufficient for a few on-screen pixels.

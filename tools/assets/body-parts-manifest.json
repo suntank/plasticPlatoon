@@ -207,10 +207,10 @@
     ]
   },
   "dependencies_sha256": {
-    "build_body_parts.py": "f2194fc6cde5d401fdc886c2b25ac0a68ae3062ace91ccc2e125594928c5a1f3",
+    "build_body_parts.py": "742d30c6283c424267a9dd00b660e55a3bcca52c8ad87f7c0ac21a48f3891d26",
     "body_parts_geometry.py": "756d6e0e14bf2348167c070f9d1d42b02062f7e44012a9c914b17aee5f2e8c97",
-    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
-    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d",
+    "build_m16.py": "3f90819146186a316a6eb11cdf387923158b34bea43cc41eae211d2ef4a69717",
+    "m16_geometry.py": "730286d3b6e18f99727689d9b0f9107524d0930cba2b43a45483d051641d578d",
     "md2_assets.py": "894c26ea6d87858bfea877267657a97addad6b238cbb89f1f112a591d0062c2b",
     "asset_sources.py": "56b5778c08d9625bbf9307bcc880ea33f0f012a318abbcefd9fcbcc4619bc264"
   },
@@ -1641,8 +1641,8 @@
     },
     {
       "path": "models/objects/gibs/ant/skin.png",
-      "bytes": 665,
-      "sha256": "310e9d0b9f4efb7a768b7f7d2b8b415e0fb04859c227e9ba35a9134a6ab7ccd0"
+      "bytes": 657,
+      "sha256": "ab7e20e25f53033d2ad2e68040205ed47918120e6992917c0a6839887cc3e795"
     },
     {
       "path": "models/objects/gibs/arm/player.png",
@@ -1821,8 +1821,8 @@
     },
     {
       "path": "models/objects/gibs/spider/skin.png",
-      "bytes": 666,
-      "sha256": "f7bf311bbb6b640292d1a606cf3d63baa87c2901c1747e51e84a08b1d82fada8"
+      "bytes": 658,
+      "sha256": "54bf49ab91e0e1f1a2ac3132ab75a07baa39a2a2d9624722f0ab8dd03ec5286b"
     }
   ]
 }

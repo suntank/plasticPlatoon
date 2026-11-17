@@ -2,10 +2,10 @@
   "schema": 1,
   "generator": "tools/assets/build_pistol.py",
   "dependencies_sha256": {
-    "build_pistol.py": "8dde869036abd5cd7121b6e4f53b8fff13dd351ff54a01538ae6bc7cd4379c57",
-    "pistol_geometry.py": "3d8a048b2172570feef4f120f7ff9e95aa42b128c0a4c058138da6ea89da7a42",
-    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
-    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+    "build_pistol.py": "c86ef8b9a242c3434a53e86b2cbe9cb47ff2cb72b1001b134fe7e94346045b0f",
+    "pistol_geometry.py": "20127cea082bff6b9e7d2fb46f9b63b680439cc48ecd320349f332e61c56521b",
+    "build_m16.py": "3f90819146186a316a6eb11cdf387923158b34bea43cc41eae211d2ef4a69717",
+    "m16_geometry.py": "730286d3b6e18f99727689d9b0f9107524d0930cba2b43a45483d051641d578d"
   },
   "source_archive": {
     "path": "tools/assets/sources/platoon-originals.pk3",
@@ -20,7 +20,7 @@
   },
   "method": "authored closed primitives; archived rigid poses",
   "hand": "pistol_geometry.add_pistol_hand; exterior grip wrap, curled finger bank and continuous wrist",
-  "palette": "M16 plastic values; pistol-local rear serrations and finger creases",
+  "palette": "M16 plastic values; molded slide stamp, rear serrations and finger creases",
   "models": [
     {
       "path": "models/weapons/g_blast/tris.md2",
@@ -139,9 +139,9 @@
         "file_bytes": 56768
       },
       "after": {
-        "triangles": 598,
-        "position_vertices": 429,
-        "render_vertices": 625,
+        "triangles": 648,
+        "position_vertices": 420,
+        "render_vertices": 801,
         "frames": 1,
         "skin_references": [
           "models/weapons/v_blast/skin.png"
@@ -150,52 +150,52 @@
           256,
           256
         ],
-        "gl_command_primitives": 138,
-        "gl_command_triangles": 598,
+        "gl_command_primitives": 188,
+        "gl_command_triangles": 648,
         "duplicate_gl_triangles": 0,
         "unused_bytes_per_frame": 0,
-        "file_bytes": 21144,
-        "sha256": "f6e3d459ca6ebd8afa64829ac2fc93a9a28a9190d1990fde85e38533af0fcc51",
+        "file_bytes": 23824,
+        "sha256": "e0f8faf8dd75f7eafae234a71b3b13a79705599788798428f7a8b2b55bc9a8be",
         "bounds": [
           [
-            10.700249671936035,
-            -17.460800170898438,
-            -23.75400733947754
+            1.959805965423584,
+            -14.727667808532715,
+            -24.398757934570312
           ],
           [
-            44.58570659160614,
-            -5.9809568747878075,
-            -1.2000002786517143
+            33.78570879995823,
+            -4.196268819272518,
+            -2.600000247359276
           ]
         ]
       },
       "pose_transfer": null,
       "validation": {
-        "max_vertex_quantization_error": 0.0797750223314,
-        "minimum_quantized_double_triangle_area": 0.0231293270993,
+        "max_vertex_quantization_error": 0.075730508086,
+        "minimum_quantized_double_triangle_area": 0.0211830601776,
         "all_frames_nondegenerate": true,
         "outward_normals_clockwise_triangles": true
       },
       "anchors_frame0": {
         "muzzle": [
-          44.585708390831954,
-          -8.8,
-          -3.3306863780319698
+          33.78570839083195,
+          -7.4,
+          -4.730686378031969
         ],
         "rear_sight": [
-          24.983393712937833,
-          -8.8,
-          -1.396678742587567
+          14.183393712937832,
+          -7.4,
+          -2.7966787425875665
         ],
         "front_sight": [
-          43.01227845013142,
-          -8.8,
-          -1.396678742587567
+          32.21227845013142,
+          -7.4,
+          -2.7966787425875665
         ],
         "grip": [
-          28.130253594338896,
-          -8.8,
-          -9.394947607815267
+          17.330253594338895,
+          -7.4,
+          -10.794947607815265
         ]
       },
       "parts": [
@@ -212,52 +212,47 @@
         {
           "name": "trigger_guard",
           "first_triangle": 52,
-          "triangle_count": 32
+          "triangle_count": 48
         },
         {
           "name": "slide",
-          "first_triangle": 84,
-          "triangle_count": 60
+          "first_triangle": 100,
+          "triangle_count": 84
         },
         {
           "name": "barrel",
-          "first_triangle": 144,
+          "first_triangle": 184,
           "triangle_count": 28
         },
         {
           "name": "rear_sight_left",
-          "first_triangle": 172,
+          "first_triangle": 212,
           "triangle_count": 12
         },
         {
           "name": "rear_sight_right",
-          "first_triangle": 184,
+          "first_triangle": 224,
           "triangle_count": 12
         },
         {
           "name": "front_sight",
-          "first_triangle": 196,
-          "triangle_count": 12
-        },
-        {
-          "name": "slide_stop",
-          "first_triangle": 208,
+          "first_triangle": 236,
           "triangle_count": 12
         },
         {
           "name": "arm_right",
-          "first_triangle": 220,
-          "triangle_count": 56
+          "first_triangle": 248,
+          "triangle_count": 76
         },
         {
           "name": "hand_right_palm",
-          "first_triangle": 276,
-          "triangle_count": 266
+          "first_triangle": 324,
+          "triangle_count": 248
         },
         {
           "name": "hand_right_thumb",
-          "first_triangle": 542,
-          "triangle_count": 56
+          "first_triangle": 572,
+          "triangle_count": 76
         }
       ]
     },
@@ -535,7 +530,7 @@
   ],
   "ads_header": {
     "path": "src/client/header/pistol_model_ads.h",
-    "sha256": "f3d266090cc5418755512901eec507afc09205924836f373f6a150a6e4f508bb"
+    "sha256": "1789d97a3136bb526436e0d1b751125b52396431c188f9f62728b4a33ae16ab0"
   },
   "files": [
     {
@@ -550,8 +545,8 @@
     },
     {
       "path": "models/weapons/g_blast/skin.png",
-      "bytes": 6096,
-      "sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9"
+      "bytes": 7699,
+      "sha256": "7f8a652af4e353636c908efbf38a93e18ab8ed6b6399f16af859e175ebf0179d"
     },
     {
       "path": "models/weapons/g_blast/tris.md2",
@@ -560,13 +555,13 @@
     },
     {
       "path": "models/weapons/v_blast/skin.png",
-      "bytes": 6096,
-      "sha256": "151b0f79feec4caee575d51823f8e51e3c60856387266a16e244b20a92871db9"
+      "bytes": 7699,
+      "sha256": "7f8a652af4e353636c908efbf38a93e18ab8ed6b6399f16af859e175ebf0179d"
     },
     {
       "path": "models/weapons/v_blast/tris.md2",
-      "bytes": 21144,
-      "sha256": "f6e3d459ca6ebd8afa64829ac2fc93a9a28a9190d1990fde85e38533af0fcc51"
+      "bytes": 23824,
+      "sha256": "e0f8faf8dd75f7eafae234a71b3b13a79705599788798428f7a8b2b55bc9a8be"
     },
     {
       "path": "players/soldier/w_blaster.md2",

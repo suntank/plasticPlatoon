@@ -9,7 +9,7 @@
         "models/objects/gibs/ant/skin.png"
       ],
       "untouched_members": 30,
-      "untouched_sha256": "4b909f1e9d5af0e66b53cb3de607145f260959baab5438856211506d4a0c323e"
+      "untouched_sha256": "475869b15c1901fdba34fed90fe18cb15722b3cf6876fe689b62c34b640d15e9"
     },
     {
       "path": "baseq2/operation-spider-test.pk3",
@@ -19,7 +19,7 @@
         "models/objects/gibs/spider/skin.png"
       ],
       "untouched_members": 30,
-      "untouched_sha256": "4552294a474168abd9e969208ecb36dc24ef557cc62b7421f3bc0c9e7f28598d"
+      "untouched_sha256": "6f396afac8abb4ac36cd4ce896b43158f6454be5c690ef0b45e4a1e808fe35d9"
     }
   ]
 }

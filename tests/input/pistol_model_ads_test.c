@@ -6,8 +6,8 @@ int main(void)
 {
     pp_model_ads_config_t pistol=PP_ModelADSConfig(1), rifle=PP_ModelADSConfig(0);
     /* Both sight pairs lie on the forward center ray after the translation. */
-    const float rear[]={24.98339371f,-8.8f,-1.39667874f};
-    const float front[]={43.01227845f,-8.8f,-1.39667874f};
+    const float rear[]={14.18339371f,-7.4f,-2.79667874f};
+    const float front[]={32.21227845f,-7.4f,-2.79667874f};
     assert(fabsf(rear[0]+pistol.forward-9.5f)<.001f);
     assert(front[0]>rear[0]);
     assert(fabsf(-rear[1]+pistol.right)<.001f);

@@ -5,8 +5,8 @@
     "build_health.py": "21a741200fa124c46b8420cf2d8c0afc64b0bb72d25b79d5b99000d5cfe1ed60",
     "health_geometry.py": "a4df0569df91d667fafed97a7ca0a1d18fa73c2ca3bef83929775e5e4e7d68b9",
     "pickup_normals.py": "9a573f8fac16d815c3ec8e28f8fd9f27183c016335e05642e5507905d2f48e3d",
-    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
-    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+    "build_m16.py": "3f90819146186a316a6eb11cdf387923158b34bea43cc41eae211d2ef4a69717",
+    "m16_geometry.py": "730286d3b6e18f99727689d9b0f9107524d0930cba2b43a45483d051641d578d"
   },
   "source_archive": {
     "path": "tools/assets/sources/pickups-local.pk3",

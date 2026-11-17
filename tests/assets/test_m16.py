@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/assets"))
 import build_m16 as builder
 from asset_sources import source_bytes
+from build_color_variants import material_mask
 from md2_assets import MD2, normal_table
 from m16_geometry import build_m16
 
@@ -171,6 +172,16 @@ class M16Tests(unittest.TestCase):
                 medians.append(float(np.median(hsv[:, :, 2][mask])))
         self.assertLessEqual(abs(medians[0] - medians[1]), 3,
                              "M16 plastic would be much brighter than the selected soldier body")
+
+    def test_every_visible_material_accepts_player_color(self):
+        path = builder.TEXTURES[2]
+        with Image.open(io.BytesIO(self.assets[path])) as image:
+            mask, _ = material_mask(image, path, "player")
+        for name in sorted(set(self.meshes["view"]["materials"])):
+            row, column = divmod(builder.MATERIALS.index(name), 4)
+            x, y = column * 64, row * 64
+            with self.subTest(material=name):
+                self.assertEqual(mask.crop((x, y, x+64, y+64)).getextrema(), (255, 255))
 
 
 if __name__ == "__main__":

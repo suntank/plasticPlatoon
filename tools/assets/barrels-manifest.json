@@ -3,8 +3,8 @@
   "generator": "tools/assets/build_barrels.py",
   "dependencies_sha256": {
     "build_barrels.py": "7e5b1bfd0a9e6f13b5a1d3f513a1dcdfe1f34c32179d7cc78286d3ef8e6b2963",
-    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
-    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d",
+    "build_m16.py": "3f90819146186a316a6eb11cdf387923158b34bea43cc41eae211d2ef4a69717",
+    "m16_geometry.py": "730286d3b6e18f99727689d9b0f9107524d0930cba2b43a45483d051641d578d",
     "md2_assets.py": "894c26ea6d87858bfea877267657a97addad6b238cbb89f1f112a591d0062c2b",
     "asset_sources.py": "56b5778c08d9625bbf9307bcc880ea33f0f012a318abbcefd9fcbcc4619bc264"
   },

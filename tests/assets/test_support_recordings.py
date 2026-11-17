@@ -19,8 +19,9 @@ class SupportRecordingTests(unittest.TestCase):
             with wave.open(str(ROOT/'baseq2'/f['target']),'rb') as w:
                 self.assertEqual((w.getnchannels(),w.getsampwidth(),w.getframerate()),(1,2,48000))
                 self.assertGreater(w.getnframes(),0)
-        self.assertEqual(len(SOUNDS),31)
+        self.assertEqual(len(SOUNDS),32)
         self.assertIn('weapons/bfg__x1b.wav',SOUNDS)
+        self.assertIn('weapons/pp_shotgun_pump.wav',SOUNDS)
     def test_one_shots_exact_and_loops_continuous(self):
         for f in json.loads((SOURCE/'selection.json').read_text()):
             data=(SOURCE/f['source']).read_bytes()

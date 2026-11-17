@@ -103,6 +103,31 @@ def texture_bytes():
     return out.getvalue()
 
 
+def rifle_texture_bytes():
+    """Refine the rifle's receiver and muzzle within the shared green palette."""
+    atlas = Image.open(io.BytesIO(texture_bytes())).convert("RGB")
+    receiver = atlas.crop((128, 64, 192, 128))
+    draw = ImageDraw.Draw(receiver)
+    for y in range(64):
+        value = round(51 - 13*y/63)
+        draw.line((0, y, 63, y), fill=(round(.72*value), value, round(.36*value)))
+    outline = [(7, 42), (14, 23), (43, 21), (55, 28), (51, 40), (13, 47), (7, 42)]
+    draw.line(outline, fill=(19, 28, 11), width=2)
+    draw.line([(x, y+1) for x, y in outline[:4]], fill=(43, 59, 23))
+    for x in (43, 47):
+        draw.line((x, 34, x+3, 29), fill=(44, 61, 24), width=2)
+    draw.ellipse((14, 32, 18, 36), fill=(20, 29, 12))
+    draw.point((15, 33), fill=(46, 64, 25))
+    atlas.paste(receiver, (128, 64))
+    # Keep even the dark recess inside the muzzle in the recolorable range.
+    muzzle = Image.new("RGB", (64, 64), (18, 26, 10))
+    ImageDraw.Draw(muzzle).ellipse((11, 11, 52, 52), fill=(8, 12, 5))
+    atlas.paste(muzzle, (192, 64))
+    output = io.BytesIO()
+    atlas.save(output, format="PNG", compress_level=9)
+    return output.getvalue()
+
+
 def atlas_uvs(mesh):
     local = np.asarray(mesh["uvs"], dtype=np.float64)
     if local.shape != (len(mesh["faces"]), 3, 2) or not np.isfinite(local).all():
@@ -237,7 +262,8 @@ def build_assets():
 
     originals = json.loads(ORIGINALS.read_text())
     meshes = {detail: build_m16(detail=detail) for detail in ("world", "view")}
-    outputs = {path: texture_bytes() for path in TEXTURES}
+    atlas = rifle_texture_bytes()
+    outputs = {path: atlas for path in TEXTURES}
     manifest = {"schema": 1, "generator": "tools/assets/build_m16.py",
                 "generator_sha256": sha(Path(__file__).read_bytes()),
                 "geometry_sha256": sha((ROOT / "tools/assets/m16_geometry.py").read_bytes()),

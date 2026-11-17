@@ -58,7 +58,7 @@ def material_closure(source):
         name = pending.pop()
         if name in seen:
             continue
-        if not re.fullmatch(r'(endline|sandbox|sandkeep|bedroom)/[A-Za-z0-9_+\-]+', name):
+        if not re.fullmatch(r'(endline|sandbox|sandkeep|bedroom|notions|bathroom)/[A-Za-z0-9_+\-]+', name):
             raise ValueError('Unexpected material name: ' + name)
         seen.add(name)
         path = BASE / 'textures' / (name+'.wal')

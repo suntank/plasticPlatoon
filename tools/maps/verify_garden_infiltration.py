@@ -368,7 +368,9 @@ def verify(args):
                for key in old_world.keys() | new_world.keys() if old_world.get(key) != new_world.get(key)}
     for key in changes:
         lighting_key = key.lstrip('_').startswith(('sun', 'ambient', 'minlight', 'light', 'color'))
-        require(key == 'message' or lighting_key, f'Original non-lighting world property changed: {key}')
+        edited_sky = args.edited_source and key == 'sky'
+        require(key == 'message' or lighting_key or edited_sky,
+                f'Original non-lighting world property changed: {key}')
     report['preservation'] = {'original_world_brushes': len(original[0]['brushes']),
                               'strict_additive_contract_passed': world_preserved and ok,
                               'mode': 'edited-source' if args.edited_source else 'strict-additive',

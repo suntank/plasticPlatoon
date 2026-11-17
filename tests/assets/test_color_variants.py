@@ -102,7 +102,7 @@ class MaterialColorTest(unittest.TestCase):
     def test_enemy_bodies_parts_and_weapons_share_rich_red_pigment(self):
         for source in ('models/monsters/soldier/skin.png',
                        'models/monsters/plastic_helicopter/tan.png',
-                       'models/objects/gibs/ant/skin.png',
+                       'models/objects/gibs/chest/skin.png',
                        'models/weapons/v_machn/skin.png'):
             with Image.open(ROOT / 'baseq2' / source) as image:
                 original = image.convert('RGBA')
@@ -117,17 +117,15 @@ class MaterialColorTest(unittest.TestCase):
                 self.assertEqual(before[3], after[3])
             self.assertGreater(selected, 0, source)
 
-    def test_insect_eyes_fangs_and_exposed_gib_flesh_remain_distinct(self):
-        for source, preserved in (
-                ('models/monsters/ant/skin.png', (3,)),
-                ('models/monsters/spider/skin.png', (2, 3)),
-                ('models/objects/gibs/ant/skin.png', (3, 4, 5, 9, 10, 11, 15))):
-            with Image.open(ROOT / 'baseq2' / source) as image:
-                original = image.convert('RGBA')
-                painted, _, _ = colors.recolor(original, source, 'enemy', 'red', self.palette)
-            for tile in preserved:
-                box = (tile % 4 * 64, tile // 4 * 64, tile % 4 * 64 + 64, tile // 4 * 64 + 64)
-                self.assertIsNone(ImageChops.difference(original.crop(box).convert('RGB'), painted.crop(box).convert('RGB')).getbbox(), (source, tile))
+    def test_insect_enemy_overrides_keep_the_black_skins_and_gibs(self):
+        for base, names in (('models/monsters/ant', ('tris',)),
+                            ('models/objects/gibs/ant', ('chunk', 'leg')),
+                            ('models/monsters/spider', ('tris',)),
+                            ('models/objects/gibs/spider', ('chunk', 'leg'))):
+            with Image.open(ROOT / 'baseq2' / base / 'skin.png') as skin:
+                for name in names:
+                    with Image.open(ROOT / 'baseq2' / base / 'colors' / f'{name}_red.png') as variant:
+                        self.assertEqual(skin.convert('RGBA').tobytes(), variant.convert('RGBA').tobytes(), base)
 
     def test_manifest_contract_model_geometry_and_pickup_separation(self):
         manifest = json.loads(colors.MANIFEST.read_text())

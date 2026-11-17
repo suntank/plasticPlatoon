@@ -38,12 +38,19 @@ def sha(data):
 def texture_bytes():
     """M16 plastic palette, with local rear serrations and soft finger creases."""
     atlas = Image.open(io.BytesIO(shared_texture_bytes())).convert('RGB')
-    for index in (4,10):
+    for index in (4,5,10,11):
         rgb = COLORS[index]
         tile = Image.new('RGB',(64,64))
         for y in range(64):
             for x in range(64):
                 shading = .93+.10*(1-y/63)+.025*math.sin(x*math.pi/63)
+                if index == 11:
+                    # A broad waxy highlight rolls around the heel. The crease
+                    # at the thumb web curves away before it reaches the wrist.
+                    u,v = x/63,y/63
+                    bulge = math.exp(-((u-.40)/.31)**2-((v-.53)/.39)**2)
+                    crease = math.exp(-((v-.20-.45*(u-.35)**2)/.036)**2)
+                    shading = .86+.54*bulge-.21*crease
                 tile.putpixel((x,y),tuple(round(round(c*shading)*ALBEDO_SCALE) for c in rgb))
         draw = ImageDraw.Draw(tile)
         base = tuple(round(c*ALBEDO_SCALE) for c in rgb)
@@ -51,10 +58,24 @@ def texture_bytes():
         highlight = tuple(round(c*1.06) for c in base)
         if index == 4:
             # Four fine molded serrations at the rear, leaving the long slide clean.
-            for x in (9,13,17,21):
-                draw.line((x,14,x,49),fill=shadow,width=1)
-                draw.line((x+1,15,x+1,48),fill=highlight,width=1)
-        else:
+            for x in (10,14,18,22):
+                draw.line((x+2,18,x-1,43),fill=shadow,width=2)
+                draw.line((x+3,18,x,43),fill=highlight,width=1)
+            draw.line((26,34,49,34,54,29),fill=shadow,width=2)
+            draw.line((26,35,49,35,54,30),fill=highlight)
+        elif index == 5:
+            # A stamped five-point star on the player's side of the casting.
+            # Paired light/dark edges keep it legible in the team colors.
+            draw.rounded_rectangle((8,7,55,56),radius=10,fill=shadow)
+            draw.rounded_rectangle((10,9,53,54),radius=8,fill=base)
+            star = []
+            for i in range(10):
+                angle = i*math.pi/5 - math.pi/2
+                radius = 16 if i%2 == 0 else 7
+                star.append((round(32+radius*math.cos(angle)),round(31+radius*math.sin(angle))))
+            draw.polygon([(x,y+2) for x,y in star],fill=shadow)
+            draw.polygon(star,fill=tuple(round(c*1.38) for c in base))
+        elif index == 10:
             # Creases live on the fused fingers, not as rings around the palm.
             for y in (20,32,44):
                 draw.line((16,y,30,y+2,46,y),fill=shadow,width=1)
@@ -70,7 +91,7 @@ def placement(role):
         # Keep the established army-man scale. The pistol's hand is posed
         # high around its own grip instead of inheriting the rifle's pose.
         scale = (56.49812462925911 + 9.061456233263016) / 100
-        offset = np.array([24 - 25.7 * scale, -8.8, -1.2 - 7.0 * scale])
+        offset = np.array([13.2 - 25.7 * scale, -7.4, -2.6 - 7.0 * scale])
     elif role == 'pickup':
         scale = .55
         rotation = np.diag([-1.,-1.,1.])
@@ -111,7 +132,7 @@ def build_assets():
         dependencies_sha256={p:sha((ROOT/'tools/assets'/p).read_bytes()) for p in DEPENDENCIES},
         source_archive=originals['source_archive'], method='authored closed primitives; archived rigid poses',
         hand='pistol_geometry.add_pistol_hand; exterior grip wrap, curled finger bank and continuous wrist',
-        palette='M16 plastic values; pistol-local rear serrations and finger creases', models=[])
+        palette='M16 plastic values; molded slide stamp, rear serrations and finger creases', models=[])
     for path, role in MODELS.items():
         source = None if role == 'pickup' else MD2.read(source_bytes(originals,'baseq2/'+path),source_compat=True)
         mesh = meshes['view' if role == 'view' else 'world']

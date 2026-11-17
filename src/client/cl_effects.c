@@ -973,10 +973,10 @@ CL_AddMuzzleFlash(void)
 			dl->color[2] = 0;
 			CL_StartMuzzleSound(NULL, i, CHAN_WEAPON,
 				S_RegisterSound("weapons/shotgf1b.wav"), volume, ATTN_NORM, 0);
+			/* Start both samples together. The pump WAV includes one
+			 * tick of silence before the motion starts at frame 10. */
 			CL_StartMuzzleSound(NULL, i, CHAN_AUTO,
-				/* The authored pump starts pulling at frame 9 and is underway
-				 * at frame 10, two server ticks after the shot. */
-				S_RegisterSound("weapons/shotgr1b.wav"), volume, ATTN_NORM, 0.2f);
+				S_RegisterSound("weapons/pp_shotgun_pump.wav"), volume, ATTN_NORM, 0);
 			break;
 		case MZ_SSHOTGUN:
 			dl->color[0] = 1;

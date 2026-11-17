@@ -309,6 +309,16 @@
       "license": "GPL-2.0-or-later"
     },
     {
+      "path": "sound/weapons/pp_shotgun_pump.wav",
+      "role": "Player pump shotgun rear stroke and forward latch",
+      "synthesis": "pump",
+      "duration_seconds": 0.78,
+      "loop": false,
+      "bytes": 34442,
+      "sha256": "2b1601a1a0b4b6e5370a1f429d0e9edc15b2614c7020442a64dccbf93333cb5c",
+      "license": "GPL-2.0-or-later"
+    },
+    {
       "path": "sound/weapons/tesla.wav",
       "role": "Toy electrical beam loop",
       "synthesis": "energy",

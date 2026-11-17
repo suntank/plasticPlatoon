@@ -24,7 +24,7 @@ int main(void)
     assert(fabsf(shotgun.muzzle_right + shotgun.right) < .001f);
     assert(shotgun.muzzle_forward + shotgun.forward > 9.5f);
     assert(shotgun.muzzle_up + shotgun.up < 0.f);
-    assert(fabsf(shotgun.forward - pistol.forward) > .1f);
+    assert(fabsf(shotgun.up - pistol.up) > .1f);
 
     pp_model_ads_state_t slots[4] = {{0}};
     for (int frame = 0; frame < 30; ++frame)

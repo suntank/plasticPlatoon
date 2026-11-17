@@ -33,9 +33,37 @@ and is excluded from both the source tree and its conversion inputs.
 
 ## Reproduce models and textures
 
+### Skyboxes
+
+Each skybox uses six 256×256 faces baked from a toy soldier's eye height.
+
+- `pp_garage` frames a workshop with the garage door toward +X and the
+  workbench toward −Y. A concrete floor complements the slab near the horizon.
+- `pp_kids_bedroom` frames a child's room with the patchwork bed toward +X,
+  the curtained window toward −Y, and a moon-and-stars mobile overhead.
+  An oatmeal carpet complements the floor near the horizon.
+- `pp_backyard` frames a grassy yard with the house toward +X, the oak
+  and tire swing toward +Y, and a cedar fence around the perimeter.
+
+On a map with sky surfaces, run `sky pp_backyard` in the console to preview
+the yard, or substitute another name. For the map default, set the `sky`
+key to the chosen name and `skyrotate` to `0` on `worldspawn`. The map
+supplies the walkable floor, cover, and lighting.
+
+The normal asset build includes the images in `baseq2/env/`. To edit the
+original scenes and render their faces again, use Blender with Cycles.
+
+```sh
+blender -b -t 8 --python-exit-code 1 --python tools/assets/render_garage_skybox.py
+blender -b -t 8 --python-exit-code 1 --python tools/assets/render_bedroom_skybox.py
+blender -b -t 8 --python-exit-code 1 --python tools/assets/render_backyard_skybox.py
+```
+
+### Models and other textures
+
 The M16 is an original simple-shape replacement, with first-person mitten
-hands and model-based ADS. Its current budgets are 800 first-person triangles
-including arms/hands, and 256 triangles for pickup/player/enemy versions.
+hands and model-based ADS. It uses 892 first-person triangles including both
+arms and hands, and 364 triangles for pickup and held versions.
 See [the M16 experiment](../../doc/performance/m16-simple-shapes.md) for
 rebuilding, visual review, validation and performance limits. Its dedicated
 generator and manifest own these paths; the old decimation records remain

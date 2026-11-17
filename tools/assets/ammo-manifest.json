@@ -4,8 +4,8 @@
   "dependencies_sha256": {
     "build_ammo.py": "9d306cf17ebcf533d451a8c186bbb341297ce06402d312f3e1f70e2ff9e1386e",
     "ammo_geometry.py": "38b02b31c2fde871cef7f52ee7e6632894122eaa5686ab2d2a9eb0a0e4fd4dd4",
-    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
-    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+    "build_m16.py": "3f90819146186a316a6eb11cdf387923158b34bea43cc41eae211d2ef4a69717",
+    "m16_geometry.py": "730286d3b6e18f99727689d9b0f9107524d0930cba2b43a45483d051641d578d"
   },
   "source_archive": {
     "path": "tools/assets/sources/platoon-originals.pk3",

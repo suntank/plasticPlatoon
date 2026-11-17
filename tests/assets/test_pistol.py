@@ -206,16 +206,17 @@ class PistolTests(unittest.TestCase):
         expected=a.positions*1.2;expected[:,:,2]+=4.8
         np.testing.assert_allclose(b.positions,expected,atol=8e-6)
         pistol=np.asarray(Image.open(io.BytesIO(self.assets[builder.TEXTURES[1]])).convert('RGB'))
-        rifle=np.asarray(Image.open(ROOT/'baseq2/models/weapons/v_machn/skin.png').convert('RGB'))
+        from build_m16 import texture_bytes as shared_texture_bytes
+        rifle=np.asarray(Image.open(io.BytesIO(shared_texture_bytes())).convert('RGB'))
         self.assertEqual(pistol.shape,rifle.shape)
-        # Local serrations/creases may change. All other plastic, hand and
+        # Local serrations, rear stamp and creases may change. Other hand and
         # cuff tiles retain the existing soldier's material values exactly.
         for index in range(16):
             row,col=divmod(index,4)
             a=pistol[row*64:(row+1)*64,col*64:(col+1)*64]
             b=rifle[row*64:(row+1)*64,col*64:(col+1)*64]
             with self.subTest(atlas_tile=index):
-                if index not in (4,10):np.testing.assert_array_equal(a,b)
+                if index not in (4,5,10,11):np.testing.assert_array_equal(a,b)
                 else:
                     np.testing.assert_allclose(np.median(a,axis=(0,1)),
                                                np.median(b,axis=(0,1)),atol=1)

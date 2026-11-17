@@ -3,9 +3,12 @@
 from __future__ import annotations
 import argparse
 import hashlib
+import io
 import json
+import math
 from pathlib import Path
 import numpy as np
+from PIL import Image, ImageDraw
 from asset_sources import source_bytes
 from md2_assets import MD2
 from build_m16 import (atlas_uvs, encode_md2, rigid_transforms,
@@ -23,7 +26,7 @@ TEXTURES = ('models/weapons/g_shotg2/skin.png','models/weapons/v_shotg2/skin.png
 BASELINES = {'view':{'triangles':1400,'position_vertices':697,'frames':1,'file_bytes':56816},
              'pickup':{'triangles':800,'position_vertices':397,'frames':1,'file_bytes':33968},
              'player':{'triangles':1510,'position_vertices':752,'frames':198,'file_bytes':662144}}
-DEPENDENCIES = ('build_sshotgun.py','sshotgun_geometry.py','build_m16.py','m16_geometry.py')
+DEPENDENCIES = ('build_sshotgun.py','sshotgun_geometry.py','build_m16.py','m16_geometry.py','shotgun_parts.py')
 
 
 def sha(data):
@@ -31,16 +34,60 @@ def sha(data):
 
 
 def texture_bytes():
-    """Use the existing army-man plastic and painted mitten atlas unchanged."""
-    return shared_texture_bytes()
+    """Paint the twin tubes, molded side panels, checkering and sight bead."""
+    atlas = Image.open(io.BytesIO(shared_texture_bytes())).convert('RGB')
+    for tile_id in (4,5,6,11):
+        tile = Image.new('RGB',(64,64))
+        draw = ImageDraw.Draw(tile)
+        for y in range(64):
+            v = (y-4.5)/55
+            if tile_id == 5:
+                # A soft reflection on each cylindrical crown. The center
+                # valley stays dark at small split-screen resolutions.
+                light = (1+math.sin(math.tau*v))/2
+                value = round(21+14*light+15*light**12)
+                color = (round(.73*value),value,round(.36*value))
+            elif tile_id == 11:
+                color = (136-y//4,122-y//4,77-y//5)
+            else:
+                value = round((50 if tile_id == 6 else 40) - 9*y/63)
+                color = (round(.73*value),value,round(.36*value))
+            draw.line((0,y,63,y),fill=color)
+        if tile_id == 5:
+            # The tube UV midpoint is the junction between the rounded breech
+            # and the long barrels. A narrow band accents each shoulder.
+            for y in range(64):
+                r,g,b = tile.getpixel((32,y))
+                draw.point((32,y),fill=(r-7,g-7,b-7))
+                draw.point((33,y),fill=(r+5,g+5,b+5))
+        elif tile_id == 4:
+            # A bounded checkered panel sits on either face of the fore-end.
+            for y in range(19,47):
+                margin = 11+abs(y-33)//2
+                for x in range(margin,64-margin):
+                    if (x+y)%8 == 0 or (x-y)%8 == 0:
+                        tile.putpixel((x,y),(20,29,12))
+        elif tile_id == 6:
+            outline = [(9,38),(17,19),(44,19),(55,28),(51,43),(22,48),(9,38)]
+            draw.line(outline,fill=(21,31,13),width=2)
+            draw.line([(x,y+1) for x,y in outline[:4]],fill=(43,60,23))
+            for x in (28,35):
+                draw.line((x-5,36,x,28,x+6,32),fill=(54,69,31),width=2)
+            for x,y in ((17,35),(48,30)):
+                draw.ellipse((x-2,y-2,x+2,y+2),fill=(22,32,15))
+                draw.point((x-1,y-1),fill=(54,67,31))
+        atlas.paste(tile,(tile_id%4*64,tile_id//4*64))
+    output = io.BytesIO()
+    atlas.save(output,format='PNG',compress_level=9)
+    return output.getvalue()
 
 
 def placement(role):
     rotation = np.eye(3)
     if role=='view':
-        # Keep the existing two-handed rifle scale and comfortable hip pose.
+        # Lower the stock into the shoulder, exposing both barrel crowns.
         scale=(56.49812462925911+9.061456233263016)/100
-        offset=np.array([-9.061456233263016,-8.0,-7.2])
+        offset=np.array([-7.6,-7.2,-10.5])
     elif role=='pickup':
         scale=.44
         rotation=np.diag([-1.,-1.,1.])
@@ -75,8 +122,8 @@ def build_assets():
     manifest = dict(schema=1, generator='tools/assets/build_sshotgun.py',
         dependencies_sha256={p:sha((ROOT/'tools/assets'/p).read_bytes()) for p in DEPENDENCIES},
         source_archive=originals['source_archive'], method='authored closed primitives; archived rigid poses',
-        hand='m16_geometry.add_hands; closed molded mittens and forearms around grip and fixed fore-end',
-        palette='Shared M16 army-man plastic and mitten atlas', models=[])
+        hand='Shared right grip hand and a cupped support mitten fitted to the fore-end',
+        palette='Army-man plastic with player-colored barrels, checkered fore-end and brass-colored bead', models=[])
     for path, role in MODELS.items():
         source = None if role == 'pickup' else MD2.read(source_bytes(originals,'baseq2/'+path),source_compat=True)
         mesh = meshes['view' if role == 'view' else 'world']

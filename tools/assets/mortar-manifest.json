@@ -4,8 +4,8 @@
   "dependencies_sha256": {
     "build_mortar.py": "2da37a56dfd7474d60ceeb33eed3152b84e6307f5a0edb0cca6a745fc6dcab83",
     "mortar_geometry.py": "81efad93a087a1407d9934e7558a77758e96866c4bf1d80a2e6ba081627edcee",
-    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
-    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+    "build_m16.py": "3f90819146186a316a6eb11cdf387923158b34bea43cc41eae211d2ef4a69717",
+    "m16_geometry.py": "730286d3b6e18f99727689d9b0f9107524d0930cba2b43a45483d051641d578d"
   },
   "source_archive": {
     "path": "tools/assets/sources/platoon-originals.pk3",

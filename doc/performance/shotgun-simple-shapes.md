@@ -1,12 +1,10 @@
 # Authored pump shotgun
 
-The single-barrel shotgun is an original simple-shape model with a beveled
-receiver, shoulder stock, barrel, magazine tube, ribbed sliding fore-end,
-trigger guard and aligned sights. The first-person version reuses the M16's
-molded mitten style and arm geometry. The support hand and fore-end move
-together through the pump cycle; the trigger hand stays on the grip and the
-support elbow stays anchored. The moving forearm bends between that elbow and
-the pump hand.
+The pump shotgun has a rounded stock, swept receiver and ribbed sliding
+fore-end. The support forearm reaches diagonally in from the player's left.
+The barrel, sights and molded details pick up the selected player color.
+The support hand and fore-end move together through the pump cycle, with the
+wrist following the hand around an anchored elbow.
 
 The replacement covers the first-person model, world pickup, all 198 player
 attachment poses, all 475 enemy attachment poses and the taller enemy variant.
@@ -21,18 +19,18 @@ Aiming moves the actual sights into the center of the screen through the
 shared model-ADS transition. Hip fire, aiming, firing and release work in
 single-player and independently for each split-screen player. The shotgun's
 first-person animation retains the firing frame schedule so that the fore-end
-and support hand can visibly cycle after a shot. The existing pump sound is
-synchronized with that action. The generated `shotgun_model_ads.h` supplies the
-sight and muzzle offsets from the authored geometry.
+and support hand cycle after a shot. The player pump sound starts on frame 10
+and includes the rear stop and forward latch. The generated
+`shotgun_model_ads.h` supplies the sight and muzzle offsets.
 
 ## Asset budgets
 
 | Version | Previous triangles | Current triangles | Reduction | Frames |
 | --- | ---: | ---: | ---: | ---: |
-| First person, including hands and arms | 1,399 | 752 | 46.2% | 40 |
-| Pickup | 799 | 300 | 62.5% | 1 |
-| Player held | 1,399 | 300 | 78.6% | 198 |
-| Enemy held, including taller variant | 1,399 | 300 | 78.6% | 475 |
+| First person, including hands and arms | 1,399 | 844 | 39.7% | 40 |
+| Pickup | 799 | 388 | 51.4% | 1 |
+| Player held | 1,399 | 388 | 72.3% | 198 |
+| Enemy held, including taller variant | 1,399 | 388 | 72.3% | 475 |
 
 `tools/assets/shotgun-manifest.json` records exact counts, hashes, bounds,
 sight anchors and animation validation. The previous first-person model had
@@ -80,13 +78,13 @@ height transform once. Model Y is negated to obtain right.
 
 | Shotgun flash | Soldier firing pose | MD2 frame | Forward | Right | Up |
 | --- | --- | ---: | ---: | ---: | ---: |
-| 1 | attak103 | 2 | 27.529101 | 4.749997 | 16.419995 |
-| 2 | attak205 | 16 | 23.873203 | 4.749883 | 16.419992 |
-| 3 | attak303 | 32 | 20.830810 | 4.749783 | 4.250450 |
-| 4 | attak403 | 41 | 18.936078 | 4.749795 | 12.866359 |
-| 6 | death122 | 293 | 26.390353 | 4.442650 | -5.493738 |
-| 7 | death125 | 296 | 26.390353 | 4.442650 | -5.493738 |
-| 8 | runs04 | 112 | 22.157626 | 4.749845 | 14.681726 |
+| 1 | attak103 | 2 | 27.529100 | 4.749997 | 16.421632 |
+| 2 | attak205 | 16 | 23.873202 | 4.749883 | 16.421628 |
+| 3 | attak303 | 32 | 20.830809 | 4.749783 | 4.252086 |
+| 4 | attak403 | 41 | 18.936077 | 4.749795 | 12.867996 |
+| 6 | death122 | 293 | 26.388606 | 4.444333 | -5.497181 |
+| 7 | death125 | 296 | 26.388606 | 4.444333 | -5.497181 |
+| 8 | runs04 | 112 | 22.157625 | 4.749844 | 14.683362 |
 
 Flash 5 has no firing callback and keeps its previous value. Run
 `python3 tests/assets/test_enemy_shotgun_muzzle.py` to compare the compiled

@@ -40,6 +40,8 @@ static unsigned int sound_calls, submitted_particles, submitted_entities, submit
 static vec3_t last_light_color;
 static float last_light_intensity;
 static char last_sound_name[MAX_QPATH];
+static float last_sound_offset;
+static int last_sound_channel;
 static char last_model_name[MAX_QPATH];
 static particle_t submissions[MAX_PARTICLES];
 static entity_t entity_submissions[MAX_ENTITIES];
@@ -72,7 +74,13 @@ struct image_s *CL_EnemyModelSkin(const char *path, int skin, int flags) { (void
 struct image_s *CL_PlayerWeaponSkin(const clientinfo_t *ci, const char *path) { (void)ci; (void)path; return NULL; }
 struct image_s *CL_PlayerLinkedWeaponSkin(const clientinfo_t *owner, const clientinfo_t *source, int weapon) { (void)owner; (void)source; (void)weapon; return NULL; }
 struct sfx_s *S_RegisterSound(const char *name) { snprintf(last_sound_name,sizeof(last_sound_name),"%s",name); return (struct sfx_s *)(uintptr_t)1; }
-void S_StartSound(vec3_t org, int entnum, int channel, struct sfx_s *sfx, float volume, float attenuation, float offset) { (void)org;(void)entnum;(void)channel;(void)sfx;(void)volume;(void)attenuation;(void)offset; ++sound_calls; }
+void S_StartSound(vec3_t org, int entnum, int channel, struct sfx_s *sfx, float volume, float attenuation, float offset)
+{
+    (void)org; (void)entnum; (void)sfx; (void)volume; (void)attenuation;
+    last_sound_offset = offset;
+    last_sound_channel = channel;
+    ++sound_calls;
+}
 int CM_PointLeafnum(vec3_t p) { return (int)p[0]; }
 int CM_LeafCluster(int leaf) { return leaf; }
 int CM_LeafArea(int leaf) { return leaf; }
@@ -342,6 +350,11 @@ static void TestPlayerMuzzleFlashes(void)
             MSG_WriteShort(&net_message, 2); MSG_WriteByte(&net_message, weapons[i]);
             MSG_BeginReading(&net_message); CL_AddMuzzleFlash();
             assert(net_message.readcount == 3);
+            if (weapons[i] == MZ_SHOTGUN) {
+                assert(sound_calls == 2 && last_sound_channel == CHAN_AUTO);
+                assert(!strcmp(last_sound_name, "weapons/pp_shotgun_pump.wav"));
+                assert(last_sound_offset == 0.f);
+            }
             assert(cl_explosions[0].type == (thirdperson ? ex_mflash_billboard : ex_mflash_cone_h));
             if (!thirdperson && (weapons[i]==MZ_BLASTER || weapons[i]==MZ_MACHINEGUN ||
                 weapons[i]==MZ_SHOTGUN || weapons[i]==MZ_SSHOTGUN || weapons[i]==MZ_ROCKET || weapons[i]==MZ_RAILGUN ||

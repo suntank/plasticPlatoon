@@ -1,29 +1,29 @@
 {
   "schema": 1,
-  "config_sha256": "a994dbc9d59c3284306371d72cab507a21b04c37fba6dd1833d4acedf0386204",
+  "config_sha256": "ad2ae128f994b4365bac2b3032184b3a18370f2e4140b35c6c008c5210d690ee",
   "archives": [
     {
       "path": "baseq2/operation-ant-test.pk3",
-      "sha256": "a9e2a4d293132eb80bc62336c3bd37f171f41d70ef19e6faa5b8575bd3232c42",
-      "bytes": 932218,
+      "sha256": "09abe5e8bb4dd9943a75a43d66ce88fa9694baa9082c96f4de6d85d251780dec",
+      "bytes": 941840,
       "untouched_members": 30,
-      "untouched_sha256": "4b909f1e9d5af0e66b53cb3de607145f260959baab5438856211506d4a0c323e",
+      "untouched_sha256": "475869b15c1901fdba34fed90fe18cb15722b3cf6876fe689b62c34b640d15e9",
       "managed": {
         "models/objects/gibs/ant/chunk.md2": "6ee615cd7424ee733fef381abebd33b23467f2f02f10ad593e01813ca2087038",
         "models/objects/gibs/ant/leg.md2": "df95572333387a60c6cc54164969cea35b5589c4d81a992ebeffcb0be1e02c03",
-        "models/objects/gibs/ant/skin.png": "310e9d0b9f4efb7a768b7f7d2b8b415e0fb04859c227e9ba35a9134a6ab7ccd0"
+        "models/objects/gibs/ant/skin.png": "ab7e20e25f53033d2ad2e68040205ed47918120e6992917c0a6839887cc3e795"
       }
     },
     {
       "path": "baseq2/operation-spider-test.pk3",
-      "sha256": "a469a89683fc24590c4dcec3cc3e5904e7122ef79f0d0676a044ae2e57f2951d",
-      "bytes": 858089,
+      "sha256": "ffbe2e983bd3a36f0171af289c3471c78dfcb26fd82fdcfde8eccb026b9690db",
+      "bytes": 937559,
       "untouched_members": 30,
-      "untouched_sha256": "4552294a474168abd9e969208ecb36dc24ef557cc62b7421f3bc0c9e7f28598d",
+      "untouched_sha256": "6f396afac8abb4ac36cd4ce896b43158f6454be5c690ef0b45e4a1e808fe35d9",
       "managed": {
         "models/objects/gibs/spider/chunk.md2": "46643f5b236cfe2c26cdf2da59c5204106f3269d355290b76812bef1302685b3",
         "models/objects/gibs/spider/leg.md2": "24d97e06ccd465ce7192e59b65ce1ba606d6b0c45ca55b4873b0bd746dabface",
-        "models/objects/gibs/spider/skin.png": "f7bf311bbb6b640292d1a606cf3d63baa87c2901c1747e51e84a08b1d82fada8"
+        "models/objects/gibs/spider/skin.png": "54bf49ab91e0e1f1a2ac3132ab75a07baa39a2a2d9624722f0ab8dd03ec5286b"
       }
     }
   ],

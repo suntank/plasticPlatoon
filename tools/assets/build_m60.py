@@ -3,9 +3,11 @@
 from __future__ import annotations
 import argparse
 import hashlib
+import io
 import json
 from pathlib import Path
 import numpy as np
+from PIL import Image, ImageDraw
 from asset_sources import source_bytes
 from md2_assets import MD2
 from build_m16 import (atlas_uvs, encode_md2, rigid_transforms,
@@ -27,7 +29,7 @@ BASELINES = {'view':{'triangles':1399,'position_vertices':692,'frames':1,'file_b
              'pickup':{'triangles':799,'position_vertices':392,'frames':1,'file_bytes':35768},
              'player':{'triangles':1545,'position_vertices':765,'frames':198,'file_bytes':676332},
              'enemy':{'triangles':1545,'position_vertices':765,'frames':475,'file_bytes':1535032}}
-DEPENDENCIES = ('build_m60.py','m60_geometry.py','build_m16.py','m16_geometry.py')
+DEPENDENCIES = ('build_m60.py','m60_geometry.py','build_m16.py','m16_geometry.py','shotgun_parts.py')
 
 
 def sha(data):
@@ -35,16 +37,41 @@ def sha(data):
 
 
 def texture_bytes():
-    """Use the existing army-man plastic and painted mitten atlas unchanged."""
-    return shared_texture_bytes()
+    """Paint the feed box and lid in shades that follow the player color."""
+    atlas = Image.open(io.BytesIO(shared_texture_bytes())).convert('RGB')
+    for tile_id in (5,7,11):
+        tile = Image.new('RGB',(64,64))
+        draw = ImageDraw.Draw(tile)
+        for y in range(64):
+            value = round(43-9*y/63) if tile_id == 5 else round(39+9*(1-abs(y-31.5)/31.5))
+            if tile_id == 7:
+                value = 24
+            draw.line((0,y,63,y),fill=(round(.72*value),value,round(.36*value)))
+        if tile_id == 5:
+            draw.rounded_rectangle((8,10,55,54),radius=7,outline=(19,28,10),width=2)
+            draw.line((13,12,48,12),fill=(41,57,21))
+            for x in (21,31,41):
+                draw.rounded_rectangle((x,22,x+3,47),radius=2,fill=(20,29,11))
+                draw.line((x+3,24,x+3,44),fill=(41,55,21))
+        elif tile_id == 7:
+            draw.ellipse((11,11,52,52),fill=(8,12,5))
+        else:
+            for y in (20,42):
+                draw.line((10,y,49,y,53,y+3),fill=(21,30,11),width=2)
+                draw.line((11,y+2,48,y+2),fill=(43,60,24))
+            draw.rounded_rectangle((26,27,40,36),radius=2,outline=(25,34,12))
+        atlas.paste(tile,(tile_id%4*64,tile_id//4*64))
+    result = io.BytesIO()
+    atlas.save(result,format='PNG',compress_level=9)
+    return result.getvalue()
 
 
 def placement(role):
     rotation = np.eye(3)
     if role=='view':
-        # Keep the existing two-handed rifle scale and comfortable hip pose.
+        # Lower the hip pose enough to show the feed cover and supporting hand.
         scale=(56.49812462925911+9.061456233263016)/100
-        offset=np.array([-13.5,-9.,-7.2])
+        offset=np.array([-7.6,-7.35,-9.3])
     elif role=='pickup':
         scale=.78
         rotation=np.diag([-1.,-1.,1.])
@@ -80,7 +107,7 @@ def build_assets():
         dependencies_sha256={p:sha((ROOT/'tools/assets'/p).read_bytes()) for p in DEPENDENCIES},
         source_archive=originals['source_archive'], method='authored closed primitives; archived rigid poses',
         hand='m16_geometry.add_hands; existing closed molded mittens and forearms',
-        palette='Shared M16 army-man plastic and mitten atlas', models=[])
+        palette='Player-colored molded plastic with relief on the feed box and cover', models=[])
     for path, role in MODELS.items():
         motion_path = 'models/monsters/soldier/weapon_machinegun.md2' if role=='enemy' else path
         source = None if role=='pickup' else MD2.read(source_bytes(originals,'baseq2/'+motion_path),source_compat=True)

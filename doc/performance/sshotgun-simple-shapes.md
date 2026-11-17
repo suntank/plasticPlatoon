@@ -7,16 +7,12 @@ atlas, preserving a single weapon draw per camera. The world pickup and all
 198 player-held poses use the same gun silhouette without first-person hands.
 This weapon has no enemy attachment model.
 
-The rear receiver tapers from its full twin-barrel width to a 40% narrower
-rear face. The stock is 31% narrower, with a matching slimmer butt plate.
-This reduces the large close-up rear silhouette in hip and aimed views while
-retaining the sight anchors, barrels, grip, hands and triangle counts. The
-same taper is used by the pickup and all player-held poses.
-The slimming review is recorded in `build/sshotgun-slim-qa-gl3/manifest.json`
-(seven views, clean exit) and `build/sshotgun-slim-qa-four/report.json`
-(aimed firing in all four views, passed). Hip, ADS, held and pickup screenshots
-were visually inspected. All nine asset tests, sight alignment tests, muzzle
-attachment verification and the normal game build passed.
+The oval stock flows into a beveled receiver. Two barrels in the player's
+selected color rise from rounded shoulders above a checkered fore-end. The
+support mitten cups the fore-end farther back, and the lower hip pose
+exposes both barrels.
+When aiming, a brass-colored bead sits between two swept rear sight ears.
+The pickup and player-held models use simpler versions of the same contours.
 
 Aiming pulls the real model into a centered sight picture over the shared
 0.18-second transition. Each local split-screen player has independent aiming
@@ -33,9 +29,9 @@ through every pose.
 
 | Version | Previous triangles | Current triangles | Reduction | Frames |
 | --- | ---: | ---: | ---: | ---: |
-| First person, including hands and arms | 1,400 | 748 | 46.6% | 1 |
-| Pickup | 800 | 296 | 63.0% | 1 |
-| Player held | 1,510 | 296 | 80.4% | 198 |
+| First person, including hands and arms | 1,400 | 896 | 36.0% | 1 |
+| Pickup | 800 | 352 | 56.0% | 1 |
+| Player held | 1,510 | 352 | 76.7% | 198 |
 
 `tools/assets/sshotgun-manifest.json` records exact counts, hashes, bounds,
 sight anchors and all-pose validation.

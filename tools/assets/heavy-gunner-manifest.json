@@ -3,18 +3,18 @@
   "model": "models/monsters/soldier/weapon_heavy.md2",
   "sources": {
     "archived:models/monsters/soldier/weapon_machinegun.md2": "a80c9f9d49ff31e733b7ff49e9678fbeec2980a60c2253562a30eff369a77b08",
-    "players/soldier/w_chaingun.md2": "edff05a826395fb4a430f49d96c3d128763c04028eff4d0e2cd173789fbe0053",
+    "players/soldier/w_chaingun.md2": "401eee1cef39c2bdbffe36dfff61c27dcd68652487a59fa04a54e4ee235b43df",
     "models/monsters/soldier/tris.md2": "9363f8d2fcb22c0d738ddf12f33a7e873ecb30f7badc8d704ecc565c812a2f05"
   },
   "method": "Original primitive M60 exported directly through archived enemy rigid attachment poses",
   "frames": 475,
-  "position_vertices": 464,
-  "triangles": 348,
+  "position_vertices": 394,
+  "triangles": 440,
   "skin_references": [
     "models/weapons/v_chain/skin.png"
   ],
   "max_source_rigid_fit_error_units": 0.0557198661117,
-  "max_output_quantization_error_units": 0.0656266790903,
-  "sha256": "3bcd8e73da047410561484cf2ede15de9c9e7173b82652fb0074302d91534658",
-  "bytes": 913712
+  "max_output_quantization_error_units": 0.0650999347861,
+  "sha256": "3d8cecc110508b7d80b0694aa5c79a30f8a448d5996230c0b7c73b0f268d203a",
+  "bytes": 783268
 }

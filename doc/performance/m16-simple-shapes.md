@@ -2,19 +2,17 @@
 
 ## What changed
 
-The M16 has been rebuilt from original polygonal prisms, open profile rings,
-and six/eight-sided tubes. The new mesh does not reuse decimated topology.
-The stock, receiver, curved magazine, pistol grip, open carry handle, front
-sight and muzzle retain the previous rifle's overall proportions.
+The M16 uses a rounded stock, tapered receiver, chamfered open carry handle
+and low charging latch. The curved magazine, pistol grip and sight line
+follow the original rifle's proportions.
 
 The first-person version includes two forearms and two molded mitten hands.
 Rounded palms, fused finger masses and distinct wrapping thumbs follow the
 army-man reference. Painted grooves suggest fingers without separate digits.
-The right hand encloses the grip; the support hand cups the handguard.
-The hands use
-the rifle's existing MD2 entity and the same 256 by 256 diffuse atlas, so they
-do not introduce another model submission or material pass. The rifle itself
-uses 372 triangles; the hands, forearms, thumbs and cuffs add 428.
+The right hand encloses the grip and the left arm reaches forward to cup the
+handguard. The hands share the rifle's MD2 entity and 256 by 256 diffuse
+atlas. The rifle uses 464 triangles, and the hands, forearms, thumbs and cuffs
+use 428.
 Rear caps close the handguard and flash hider so neither exposes the background
 from the player's viewpoint or behind a held/pickup rifle.
 
@@ -35,13 +33,13 @@ transfer measurements are in `tools/assets/m16-manifest.json`.
 
 | Representation | Before triangles | After triangles | Reduction | Position vertices, before / after | Render vertices, before / after |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| First person, now including hands | 1,400 | 800 | 42.9% | 696 / 744 | 1,480 / 1,097 |
-| Pickup | 800 | 256 | 68.0% | 396 / 304 | 974 / 448 |
-| Player held | 1,398 | 256 | 81.7% | 695 / 304 | 1,584 / 448 |
-| Enemy held | 1,444 | 256 | 82.3% | 718 / 304 | 1,607 / 448 |
+| First person, including hands | 1,400 | 892 | 36.3% | 696 / 750 | 1,480 / 1,151 |
+| Pickup | 800 | 364 | 54.5% | 396 / 348 | 974 / 543 |
+| Player held | 1,398 | 364 | 74.0% | 695 / 348 | 1,584 / 543 |
+| Enemy held | 1,444 | 364 | 74.8% | 718 / 348 | 1,607 / 543 |
 
 The player fallback `weapon.md2` matches `w_machinegun.md2`. The taller enemy
-variant uses the same 256-triangle topology with the existing foot-anchored
+variant uses the same 364-triangle topology with the existing foot-anchored
 1.2 scale. Position vertices matter for CPU animation work; render vertices
 also include normal/UV boundaries. Triangle reductions alone do not measure
 whole-frame performance.
@@ -60,11 +58,10 @@ exported pose is checked for collapsed or inverted triangles after MD2 byte
 quantization. The source animation archive is hash-pinned and does not require
 Git history or a user's local installation.
 
-The atlas uses the soldier's established brightness range, including the
-existing player colors and red enemy material. Its painted finger details,
-handguard grooves and magazine ribs remain texture details. Updating the
-M16's original atlas and then rebuilding color variants preserves the existing
-global recoloring rules.
+The atlas uses the soldier's established brightness range. The entire rifle,
+including the sights and muzzle recess, picks up the selected player color.
+The atlas also supplies the molded receiver panel, finger details, handguard
+grooves and magazine ribs.
 
 The third-person muzzle-point table was regenerated from the replacement's
 reviewed front rim through every player frame. M16 first-person muzzle offsets

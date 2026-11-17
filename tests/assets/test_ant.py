@@ -18,10 +18,10 @@ class AntAssetTests(unittest.TestCase):
 
     def test_frames_skin_and_engine_limits(self):
         m = self.model
-        self.assertEqual(len(m.positions), 54)
+        self.assertEqual(len(m.positions), 50)
         self.assertEqual([n.decode().rstrip('\0') for n in m.names],
                          [f'{name}{i:02}' for name, count in
-                          [('idle',8),('walk',12),('run',12),('attack',8),('pain',4),('death',10)]
+                          [('idle',8),('walk',12),('run',12),('attack',8),('pain',4),('death',6)]
                           for i in range(count)])
         self.assertLessEqual(m.header[6], 2048)
         self.assertLessEqual(m.header[8], 4096)
@@ -41,24 +41,36 @@ class AntAssetTests(unittest.TestCase):
         self.assertLess(m.positions[0,:,2].max() - m.positions[0,:,2].min(), 56)
         self.assertGreater(np.ptp(m.positions[0,:,0]), 56)
 
-    def test_motion_and_bite_are_distinct(self):
+    def test_run_uses_higher_steps_and_longer_strides_than_walk(self):
         p = self.model.positions
-        for first, second in ((8,11), (20,23), (32,36), (40,42), (44,53)):
-            self.assertGreater(np.max(np.linalg.norm(p[first]-p[second], axis=1)), 1)
-        self.assertGreater(p[36,:,0].max(), p[32,:,0].max() + 1)
+        feet = p[:, p[0, :, 2] < -22.7]
+        walk = np.ptp(feet[8:20], axis=0).max(axis=0)
+        run = np.ptp(feet[20:32], axis=0).max(axis=0)
+        self.assertGreater(walk[0], 20)
+        self.assertGreater(run[0], walk[0] + 4)
+        self.assertGreater(run[2], walk[2] + 3)
+        self.assertTrue(np.all(feet[8:32, :, 2].min(axis=1) < -23))
 
-    def test_gaster_normals_are_smooth_across_face_seams(self):
-        # The first 180 vertices form the gaster, including duplicated face
-        # corners. They should shade consistently throughout the animation.
-        for frame in (0, 14, 25, 36, 42, 53):
+    def test_windup_opens_jaws_and_hit_frame_reaches_farthest(self):
+        m = self.model
+        tile = (m.uvs * 4).astype(int)
+        mandibles = np.all(tile == [1, 1], axis=(1, 2))
+        jaws = m.positions[32:40, np.unique(m.faces[mandibles])]
+        widths = np.ptp(jaws[:, :, 1], axis=1)
+        reach = jaws[:, :, 0].max(axis=1)
+        self.assertGreater(widths[3], widths[4] + 6)
+        self.assertGreater(reach[4], reach[3] + 10)
+        self.assertEqual(reach.argmax(), 4)
+
+    def test_gaster_normals_follow_the_rounded_shell(self):
+        # Adjacent vertices on each of the seven 12-sided shell rings should
+        # shade smoothly. Caps have their own flat normals.
+        for frame in (0, 14, 25, 36, 42, 49):
             with self.subTest(frame=frame):
-                positions = self.model.positions[frame, :180]
-                normals = self.model.normals[frame, :180]
-                seam_normals = {}
-                for position, normal in zip(positions, normals):
-                    seam_normals.setdefault(tuple(position), set()).add(int(normal))
-                self.assertTrue(all(len(indices) == 1 for indices in seam_normals.values()))
-                self.assertGreater(len(set(int(n) for n in normals)), 12)
+                normals = normal_table()[self.model.normals[frame, :84]].reshape(7, 12, 3)
+                nearby = np.sum(normals * np.roll(normals, 1, axis=1), axis=2)
+                self.assertGreater(nearby.min(), .55)
+                self.assertGreater(len(np.unique(normals.reshape(-1, 3), axis=0)), 12)
 
 
 if __name__ == '__main__':

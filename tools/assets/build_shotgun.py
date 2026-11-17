@@ -3,9 +3,12 @@
 from __future__ import annotations
 import argparse
 import hashlib
+import io
 import json
+import math
 from pathlib import Path
 import numpy as np
+from PIL import Image, ImageDraw
 from asset_sources import source_bytes
 from md2_assets import MD2
 from build_m16 import (atlas_uvs, encode_md2, rigid_transforms,
@@ -26,7 +29,7 @@ BASELINES = {'view':{'triangles':1399,'position_vertices':700,'frames':1,'file_b
              'pickup':{'triangles':799,'position_vertices':400,'frames':1,'file_bytes':33004},
              'player':{'triangles':1399,'position_vertices':700,'frames':198,'file_bytes':615336},
              'enemy':{'triangles':1399,'position_vertices':700,'frames':475,'file_bytes':1401944}}
-DEPENDENCIES = ('build_shotgun.py','shotgun_geometry.py','build_m16.py','m16_geometry.py')
+DEPENDENCIES = ('build_shotgun.py','shotgun_geometry.py','build_m16.py','m16_geometry.py','shotgun_parts.py')
 
 
 def sha(data):
@@ -34,16 +37,43 @@ def sha(data):
 
 
 def texture_bytes():
-    """Shared molded plastic, with painted pump grooves and mitten fingers."""
-    return shared_texture_bytes()
+    """Bake soft highlights and molded details into the player-colored atlas."""
+    atlas = Image.open(io.BytesIO(shared_texture_bytes())).convert('RGB')
+    for tile_id in (4,5,6,7):
+        tile = Image.new('RGB',(64,64))
+        draw = ImageDraw.Draw(tile)
+        for y in range(64):
+            if tile_id in (4,5):
+                light = (1+math.sin(math.tau*(y-4.5)/55))/2
+                value = round(30+15*light+10*light**9)
+            else:
+                value = round(49-11*y/63) if tile_id == 6 else 11
+            draw.line((0,y,63,y),fill=(round(.73*value),value,round(.36*value)))
+        if tile_id == 4:
+            for y in range(64):
+                _,value,_ = tile.getpixel((0,y))
+                for x in range(15,52,5):
+                    shadow, rim = value-12, value+7
+                    draw.line((x,y,x+1,y),fill=(round(.73*shadow),shadow,round(.36*shadow)))
+                    draw.point((x+2,y),fill=(round(.73*rim),rim,round(.36*rim)))
+        elif tile_id == 6:
+            outline = [(9,35),(22,20),(51,20),(55,27),(49,37),(23,42),(9,35)]
+            draw.line(outline,fill=(21,31,13),width=2)
+            draw.line([(x,y+1) for x,y in outline[:4]],fill=(43,59,24))
+            draw.rounded_rectangle((27,27,48,33),radius=3,fill=(17,25,10),outline=(28,39,16))
+            draw.ellipse((16,29,20,33),fill=(20,28,11))
+        atlas.paste(tile,(tile_id%4*64,tile_id//4*64))
+    output = io.BytesIO()
+    atlas.save(output,format='PNG',compress_level=9)
+    return output.getvalue()
 
 
 def placement(role):
     rotation = np.eye(3)
     if role == 'view':
-        # Same arm scale as the rifle, with the receiver slightly further back.
+        # The lower hip pose shows the pump without crowding the rear sight.
         scale = (56.49812462925911 + 9.061456233263016) / 100
-        offset = np.array([-13.5, -8.5, -8.6])
+        offset = np.array([-6.8, -7.4, -11.1])
     elif role == 'pickup':
         scale = .58
         rotation = np.diag([-1.,-1.,1.])
@@ -83,10 +113,10 @@ def build_assets():
     manifest = dict(schema=1, generator='tools/assets/build_shotgun.py',
         dependencies_sha256={p:sha((ROOT/'tools/assets'/p).read_bytes()) for p in DEPENDENCIES},
         source_archive=originals['source_archive'], method='authored closed primitives; archived rigid poses',
-        hand='M16 molded mittens; support hand and wrist follow the pump; elbow stays anchored',
-        palette='M16 molded-plastic atlas; painted pump grooves and mitten creases', models=[],
+        hand='Molded grip hand and cupped support hand; the wrist follows the pump around an anchored elbow',
+        palette='Player-colored molded plastic with soft barrel highlights, pump grooves and molded receiver details', models=[],
         view_animation=dict(fire_frame=8, pump_fractions=pump_fractions('view',40),
-                            pump_travel=PUMP_TRAVEL, cock_sound_delay=.2))
+                            pump_travel=PUMP_TRAVEL, cock_sound_delay=.1))
     for path, role in MODELS.items():
         source = None if role == 'pickup' else MD2.read(source_bytes(originals,'baseq2/'+path),source_compat=True)
         mesh = meshes['view' if role == 'view' else 'world']

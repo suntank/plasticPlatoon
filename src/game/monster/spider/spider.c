@@ -56,7 +56,7 @@ spider_bite(edict_t *self)
 {
 	vec3_t aim;
 
-	/* Damage is applied at the closing mandibles, once per attack. */
+	/* Damage is applied as the fangs lunge, once per attack. */
 	VectorSet(aim, MELEE_DISTANCE, 0, 0);
 	fire_hit(self, aim, 32, 55);
 }
@@ -99,6 +99,7 @@ static mframe_t spider_frames_pain[] = {
 };
 mmove_t spider_move_pain = {40, 43, spider_frames_pain, spider_run};
 
+/* Older saves can still refer to this move. spider_die now goes straight to gibs. */
 static mframe_t spider_frames_death[] = {
 	{ai_move, 0, NULL}, {ai_move, 0, NULL}, {ai_move, 0, NULL},
 	{ai_move, 0, NULL}, {ai_move, 0, NULL}, {ai_move, 0, NULL}

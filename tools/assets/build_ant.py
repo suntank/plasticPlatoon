@@ -5,189 +5,170 @@ Coordinates are Quake units, +X forward. Run with --review to inspect decoded
 frames; --verify checks that the checked-in assets match this generator.
 """
 import argparse
-from dataclasses import replace
 import io
 import math
-import struct
 
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image
 
 from build_heavy_tank import Mesh
-from md2_assets import HEADER, IDENT, MD2, ROOT, gl_strips, normal_table, raster
+from insect_mesh import encode_animation, loft, plate, review_animation, rotation, stride, transform
+from md2_assets import MD2, ROOT
 
 DIRECTORY = 'models/monsters/ant'
 SKIN = DIRECTORY + '/skin.png'
-FRAMES = [('idle', 8), ('walk', 12), ('run', 12), ('attack', 8), ('pain', 4), ('death', 10)]
+# The last six indices are reserved for saves from before instant gibbing.
+FRAMES = [('idle', 8), ('walk', 12), ('run', 12), ('attack', 8), ('pain', 4), ('death', 6)]
+GASTER, THORAX, JOINT, EYE, HEAD, MANDIBLE, LEG, FEELER = range(8)
 
 
 def skin():
-    image = Image.new('RGB', (256, 256))
-    draw = ImageDraw.Draw(image)
-    colors = [(91, 38, 25), (128, 53, 31), (62, 25, 21), (34, 19, 17),
-              (157, 72, 42), (202, 124, 72), (45, 24, 21), (110, 43, 25),
-              (87, 35, 24), (115, 47, 28), (79, 31, 23), (142, 60, 34),
-              (68, 28, 21), (102, 40, 25), (123, 50, 29), (51, 25, 21)]
+    image = Image.new('RGB', (256, 256), (27, 28, 30))
+    colors = [(39, 41, 44), (43, 44, 47), (25, 26, 27), (24, 25, 28),
+              (46, 48, 51), (36, 37, 39), (38, 40, 42), (33, 34, 36)]
     for i, color in enumerate(colors):
         x, y = i % 4 * 64, i // 4 * 64
-        draw.rectangle((x, y, x + 63, y + 63), fill=color)
-        for py in range(4, 60, 8):
-            for px in range(4, 60, 8):
-                v = ((px * 13 + py * 7 + i) % 5) - 2
-                draw.point((x + px, y + py), fill=tuple(max(0, min(255, c + v)) for c in color))
+        for py in range(64):
+            for px in range(64):
+                u, v = (px - 6) / 52, (py - 6) / 52
+                grain = ((px * 13 + py * 7 + px * py * 3) % 11 - 5) * .5
+                # A broad satin highlight follows the upper curve of each plate.
+                shine = math.exp(-((v - .23) / .17) ** 2)
+                value = grain + (24 if i in (GASTER, THORAX, HEAD) else 13) * shine
+                if i == GASTER:
+                    # Subtle shading along the abdominal sutures.
+                    for seam in (.25, .42, .60):
+                        value += (7 * math.exp(-((u - seam + .018) / .014) ** 2)
+                                  - 10 * math.exp(-((u - seam) / .013) ** 2))
+                if i == EYE:
+                    lens = math.exp(-((u - .46) / .22) ** 2 - ((v - .24) / .12) ** 2)
+                    value = 41 * lens + (4 if (px + py // 3) % 5 < 2 else 0)
+                image.putpixel((x + px, y + py), tuple(round(c + value) for c in color))
     out = io.BytesIO()
     image.save(out, format='PNG', compress_level=9)
     return out.getvalue()
 
 
-def ellipsoid(m, center, radii, material, rings=5, sides=10):
-    c, r = np.array(center), np.array(radii)
-    start = len(m.vertices)
-    loops = []
-    for j in range(rings):
-        lat = -math.pi * .4 + j * math.pi * .8 / (rings - 1)
-        loops.append([c + r * [math.cos(lat)*math.cos(i*math.tau/sides),
-                                math.cos(lat)*math.sin(i*math.tau/sides), math.sin(lat)]
-                      for i in range(sides)])
-    for a, b in zip(loops, loops[1:]):
-        for i in range(sides):
-            pts = [a[i], a[(i+1)%sides], b[(i+1)%sides], b[i]]
-            m.poly(pts, material, np.mean(pts, axis=0) - c)
-    m.poly(loops[0], material, [0, 0, -1])
-    m.poly(loops[-1], material, [0, 0, 1])
-    # Use the ellipsoid's surface gradient at every vertex. Mesh.poly makes
-    # separate vertices for each face, so assigning its face normals directly
-    # would leave visible hard seams even at identical positions.
-    normals = (np.asarray(m.vertices[start:]) - c) / (r * r)
-    normals /= np.linalg.norm(normals, axis=1)[:, None]
-    m.normals[start:] = normals.tolist()
-
-
 def make_frame(kind, index, count):
     m = Mesh()
-    phase = math.tau * index / count
+    phase = 0 if kind == 'death' else math.tau * index / count
     moving = kind in ('walk', 'run')
-    gait = (1.25 if kind == 'walk' else 1.9) if moving else 0
-    bob = (1.5 * math.sin(2 * phase)) if moving else (.8 * math.sin(phase) if kind == 'idle' else 0)
-    # Wind back and open, then snap forward on the gameplay hit frame (36).
-    bite = (0, -.25, -.65, -.35, 1, .55, .2, 0)[index] if kind == 'attack' else 0
-    jaw_open = (0, .5, 1, 1, .05, .15, .1, 0)[index] if kind == 'attack' else 0
-    recoil = math.sin(math.pi * index / (count - 1)) if kind == 'pain' else 0
-    bob -= 1.5 * recoil
-    head_shift = 7*bite - 5*recoil
-    # Large gaster, narrow waist, thorax and a distinct head.
-    ellipsoid(m, (-20, 0, -3+bob), (14, 11, 12), 0)
-    ellipsoid(m, (-6, 0, -4+bob), (5, 4.5, 5), 2, 4, 8)
-    ellipsoid(m, (2, 0, -3+bob), (10, 8, 8), 1, 5, 10)
-    ellipsoid(m, (17+head_shift, 0, -2+bob), (10, 9, 9), 0, 5, 10)
-    # Narrow raised petiole and dark compound eyes.
-    ellipsoid(m, (-8, 0, 1+bob), (3.7, 4, 5), 1, 4, 8)
+    running = kind == 'run'
+    cycle = (2 if running else 1) * phase
+    sway = math.sin(cycle)
+    bob = 1.15 * math.sin(phase)
+    roll = lateral = pitch = 0
+    if moving:
+        bob = -(2.5 if running else 1.45) * math.cos(2 * cycle)
+        roll = (9 if running else 5) * sway
+        lateral = (2.7 if running else 1.45) * sway
+        pitch = (-3 if running else 0) + (5 if running else 3) * math.sin(2 * cycle)
+
+    # The mandibles lock shut on attack04, the game's single damage frame.
+    lunge = (0, -2, -5, -6, 7, 3.5, 1, 0)[index] if kind == 'attack' else 0
+    gape = (0, .45, .9, 1, 0, .16, .12, 0)[index] if kind == 'attack' else 0
+    flinch = (0, 1, -.48, 0)[index] if kind == 'pain' else 0
+    if kind == 'attack':
+        bob = (0, -.7, -2.5, -3, 2.4, .7, -.6, 0)[index]
+        pitch = (0, -4, -9, -12, 13, 7, -1, 0)[index]
+    if kind == 'pain':
+        bob, roll, lateral, pitch = -3 * abs(flinch), 14 * flinch, 3.2 * flinch, -9 * flinch
+
+    # Taper the gaster into a raised petiole. Its weight trails the thorax.
+    plate(m, [(-38,-4,1.8,1.9), (-36,-3,6.4,5.6), (-32,-2,10.6,9.8),
+              (-25,-1,12.6,12.3), (-18,-1,11.1,10.6), (-12,-2,7.3,7.3),
+              (-8,-3,3.4,3.6)], GASTER, sides=12)
+    transform(m, 0, (-9, 0, -3),
+              (-roll * .5, 9 * sway + 1.2 * lunge, -10 * sway + 17 * flinch))
+    plate(m, [(-12,-3,3.4,3.2), (-8,-1,4.1,5.4), (-5,-2,3.3,3.4),
+              (-1,-3,4.4,3.8)], JOINT, sides=8)
+    plate(m, [(-6,-2,4.3,4.3), (-3,-1,6.4,6.2), (2,0,7.9,8.0),
+              (7,0,8.5,7.4), (12,-1,6.1,5.5), (14,-1,4.2,3.9)], THORAX)
+
+    # Stretch the neck into the bite. The rest of the head moves as one piece.
+    scan = 11 * math.sin(phase) if kind == 'idle' else -4 * sway
+    head_angles = (-roll * .45, -2.0 * lunge + 8 * abs(flinch), scan - 22 * flinch)
+    head_offset = (lunge + (1.5 if running else 0) - 4.5 * abs(flinch), 0, 0)
+    head_start = len(m.vertices)
+    plate(m, [(10,-1,3.8,3.8), (13,-.5,5.3,4.7), (16,-.2,7.8,7.2),
+              (20,0,9.0,8.3), (24,-.6,8.1,7.0), (27,-2,5.1,4.5),
+              (28,-2.5,3.8,3.5)], HEAD, sides=12)
     for side in (-1, 1):
-        ellipsoid(m, (20+head_shift, side*7.4, 1+bob), (3.4, 2.4, 3.1), 3, 4, 8)
-        # Elbowed antennae and paired inward-curving pincers.
-        feeler_phase = 0 if kind == 'death' else phase
-        feeler = 2.7 * math.sin(feeler_phase + side*.6)
-        # Fold the feelers against the shell during the roll so they do not
-        # prop the upside-down body above the floor.
-        fold = min(index / 3, 1) if kind == 'death' else 0
-        base = np.array([22+head_shift, side*4.5, 5+bob])
-        elbow = np.array([27+head_shift, side*(9+feeler), 12+bob-6*fold])
-        tip = np.array([34+head_shift, side*(12+feeler*1.5), 14+bob+1.8*math.cos(feeler_phase)-8.8*fold])
-        m.cylinder(base, elbow, .75, 2, 2, 6)
-        m.cylinder(elbow, tip, .6, 2, 2, 6)
-        jaw = np.array([24+head_shift, side*6, -6+bob])
-        mid = np.array([30+head_shift, side*(7+3*jaw_open), -8+bob])
-        end = np.array([34+head_shift+2*bite, side*(2+4*jaw_open), -7+bob])
-        m.cylinder(jaw, mid, 1.7, 2, 2, 6)
-        m.cylinder(mid, end, 1.15, 2, 2, 6)
-        # Alternating tripod gait: opposite sides have opposite phases.
-        for leg, x in enumerate((9, 1, -7)):
-            swing = math.sin(phase + (leg % 2)*math.pi + (side == 1)*math.pi) * gait
-            lift = max(0, math.cos(phase + (leg % 2)*math.pi + (side == 1)*math.pi)) * gait
-            hip = np.array([x, side*6, -5+bob])
-            knee = np.array([x + (4-leg*4) + swing*4, side*17, -4+bob + lift*2])
-            foot = np.array([x + (7-leg*7) + swing*6, side*25, -23 + lift*4])
-            toe = foot + np.array([3, side*2, 0])
-            m.cylinder(hip, knee, 1.9, 1, 2, 6)
-            ellipsoid(m, knee, (2.2, 2.2, 2.2), 2, 3, 6)
-            m.cylinder(knee, foot, 1.25, 0, 2, 6)
-            m.cylinder(foot, toe, .85, 2, 2, 6)
+        loft(m, [((17,side*7.2,1.8),1.25,1.4), ((19.2,side*8.2,2.25),2.05,2.75),
+                 ((22.3,side*8.05,2.0),1.7,2.25), ((23.6,side*7.5,1.6),.65,.85)], EYE)
+        jaw_start = len(m.vertices)
+        loft(m, [((24,side*5.3,-4.2),2.3,1.85), ((28.5,side*7.7,-5.2),2.65,1.7),
+                 ((33,side*7.0,-5.8),1.85,1.32), ((36.3,side*4.4,-5.5),1.15,.85),
+                 ((37,side*1.15,-5),.62,.58)], MANDIBLE, sides=6)
+        transform(m, jaw_start, (24, side*5.3, -4.2), (0, -4*gape, side*38*gape))
+
+        # The long flagellum sweeps with a slight lag behind the shorter scape.
+        twitch = math.sin(cycle + side * 1.15)
+        flick = math.sin(phase * 2 - .8 + side * 1.4)
+        elbow = (27.9, side*(8.5 + 2.8*twitch + 2*gape), 11 + 2*flick)
+        loft(m, [((22,side*4.6,5.6),1.15,1.05), ((25.5,side*6.3,8.6),.9,.88),
+                 (elbow,.86,.82)], FEELER, sides=6)
+        loft(m, [(elbow,.87,.84),
+                 ((32,side*(11+4*twitch+2.5*gape),14+2.5*flick),.75,.74),
+                 ((37.5-2.5*gape,side*(13+5*twitch+3*gape),15+3.4*flick-2.8*lunge/7),.66,.65),
+                 ((42-3*gape,side*(14+5*twitch+4*gape),13.5+4*flick-3.5*lunge/7),.57,.57)],
+             FEELER, sides=6)
+    transform(m, head_start, (12, 0, -1), head_angles, head_offset)
+    # A flexible neck spans the full windup/reach without exposing a mesh gap.
+    neck = rotation(*head_angles) @ np.array([4, 0, 2]) + np.array([12, 0, -1]) + head_offset
+    loft(m, [((7,0,-1),4.6,4.5), (neck,4.4,4.2)], JOINT)
+
+    offset = np.array([0, lateral, bob])
+    body_rotation = rotation(roll, pitch)
+    transform(m, 0, (0, 0, 0), (roll, pitch, 0), offset)
+    for side in (-1, 1):
+        for leg, (x, knee_x, foot_x, spread) in enumerate(((8,17,23,23), (1,0,1,29), (-5,-17,-24,24))):
+            swing, rise = stride(cycle/math.tau + .5*((leg + (side == 1)) % 2),
+                                 31 if running else 22, 11 if running else 6.5) if moving else (0, 0)
+            if leg == 0:
+                swing += .7*lunge
+                rise += 5*gape
+            hip = body_rotation @ np.array([x, side*6.4, -3]) + offset
+            knee = np.array([knee_x + .57*swing, side*(.65*spread + 1.9*abs(flinch)) + lateral*.65,
+                             1 + .65*bob + .48*rise - 3*abs(flinch)])
+            foot = np.array([foot_x+swing, side*(spread + 2.1*abs(flinch)), -23+rise])
+            # Broad femur, narrow tibia, and a low, hooked tarsus.
+            upper = (hip+knee)*.5 + np.array([0, 0, 1.5])
+            loft(m, [(hip,2.15,1.9), (upper,2.35,1.9), (knee,1.4,1.35)],
+                 LEG, sides=7, reference=(1,0,0))
+            shin = .55*knee + .45*foot + np.array([0, side*.8, 0])
+            loft(m, [(knee,1.56,1.6), (shin,1.24,1.09), (foot,.59,.65)],
+                 LEG, sides=7, reference=(1,0,0))
+            toe = foot + np.array([2.8, side*2.05, -.42])
+            loft(m, [(foot,.74,.68), ((foot+toe)*.5,.68,.62), (toe,.55,.52)], JOINT, sides=6)
     if kind == 'death':
-        # A quick half-turn finishes by frame 49, then holds on its back.
-        t = min(index / 5, 1.0)
-        angle = math.pi * t * t * (3 - 2*t)
-        cs, sn = math.cos(angle), math.sin(angle)
-        rot = np.array([[1,0,0],[0,cs,-sn],[0,sn,cs]])
-        p = np.asarray(m.vertices); pivot = np.array([0.,0.,-15.])
-        p = (p-pivot) @ rot.T + pivot
-        p[:, 2] += -24 - p[:, 2].min()
-        m.vertices = p.tolist()
-        m.normals = (np.asarray(m.normals) @ rot.T).tolist()
+        # Legacy corpse roll for older saves. Live deaths switch straight to gibs.
+        progress = index / (count - 1)
+        transform(m, 0, (0, 0, 0), (180 * progress**2 * (3 - 2*progress), 0, 0))
+        points = np.asarray(m.vertices)
+        points[:, 2] += -24 - points[:, 2].min()
+        m.vertices = points.tolist()
     return m
-
-
-def build():
-    meshes = [(f'{kind}{i:02}', make_frame(kind, i, count)) for kind, count in FRAMES for i in range(count)]
-    first = meshes[0][1]
-    faces = np.asarray(first.faces, dtype=np.int32)[:, ::-1]
-    uvs = np.asarray(first.uvs)[:, ::-1, :]
-    st, indices, keys = [], [], {}
-    for coords in uvs:
-        ids = []
-        for uv in coords:
-            key = tuple(np.rint(uv * 256 - .5).astype(int))
-            if key not in keys:
-                keys[key] = len(st); st.append(key)
-            ids.append(keys[key])
-        indices.append(ids)
-    timeline = []
-    for name, mesh in meshes:
-        assert len(mesh.vertices) == len(first.vertices) and mesh.faces == first.faces
-        p = np.asarray(mesh.vertices)
-        scale = (np.maximum(np.ptp(p, axis=0), .001) / 255).astype('<f4')
-        trans = p.min(axis=0).astype('<f4')
-        q = np.clip(np.rint((p-trans)/scale), 0, 255).astype(np.uint8)
-        normals = np.argmax(np.asarray(mesh.normals) @ normal_table().T, axis=1).astype(np.uint8)
-        timeline.append(struct.pack('<6f16s', *scale, *trans, name.encode()) + np.column_stack((q,normals)).astype(np.uint8).tobytes())
-    parts = (SKIN.encode().ljust(64,b'\0'), np.asarray(st,dtype='<i2').tobytes(),
-             np.column_stack((faces,indices)).astype('<u2').tobytes(), b''.join(timeline), gl_strips(faces,uvs))
-    offsets, cursor = [], HEADER.size
-    for part in parts:
-        offsets.append(cursor); cursor += len(part)
-    data = HEADER.pack(IDENT,8,256,256,40+len(first.vertices)*4,1,len(first.vertices),len(st),len(faces),len(parts[-1])//4,len(meshes),*offsets,cursor) + b''.join(parts)
-    model = MD2.read(data)
-    for frame, (p, normals) in enumerate(zip(model.positions, model.normals)):
-        tris = p[model.faces]
-        cross = np.cross(tris[:,1]-tris[:,0], tris[:,2]-tris[:,0])
-        light = normal_table()[normals][model.faces].mean(axis=1)
-        if (np.einsum('ij,ij->i',cross,light) >= 0).any():
-            raise ValueError(f'Degenerate or inverted MD2 triangle: frame {frame}, faces {np.flatnonzero(np.einsum("ij,ij->i",cross,light) >= 0)[:10].tolist()}')
-    return data
-
-
-def review(model, png, output='ant.png', extent=48):
-    decoded = MD2.read(model); image = Image.open(io.BytesIO(png))
-    sheet = Image.new('RGB',(1200, 880),(23,26,30)); draw = ImageDraw.Draw(sheet)
-    for row, (frame, title) in enumerate(((0,'Idle'), (14,'Walk'), (36,'Bite'), (53,'Death'))):
-        one = replace(decoded, positions=decoded.positions[frame:frame+1], normals=decoded.normals[frame:frame+1])
-        for col, angle in enumerate((25, 115, 205)):
-            pic, _ = raster(one, image, angle, 400, (np.array([0.,0.,-3.]), extent), elevation=25, cull_front=True)
-            sheet.paste(pic.resize((300,200)), (col*400,row*220+20))
-            draw.text((col*400+10,row*220+5), f'{title} | {angle} degrees', fill='white')
-    path = ROOT/'tools/assets/review'/output; path.parent.mkdir(parents=True, exist_ok=True); sheet.save(path)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--verify', action='store_true'); parser.add_argument('--review', action='store_true')
+    parser.add_argument('--verify', action='store_true')
+    parser.add_argument('--review', action='store_true')
     args = parser.parse_args()
-    model, png = build(), skin()
+    model, png = encode_animation(FRAMES, make_frame, SKIN), skin()
     for path, data in ((ROOT/'baseq2'/DIRECTORY/'tris.md2', model), (ROOT/'baseq2'/SKIN, png)):
         if args.verify:
-            if path.read_bytes() != data: raise ValueError(f'Asset differs: {path}')
+            if path.read_bytes() != data:
+                raise ValueError(f'Asset differs: {path}')
         else:
-            path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes(data)
-    if args.review: review(model,png)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+    if args.review:
+        poses = ((0, 'Idle'), (11, 'Walk'), (22, 'Run'), (35, 'Windup'), (36, 'Bite'), (41, 'Flinch'))
+        review_animation(model, png, 'ant.png', poses, extent=47)
     print('Ant:', MD2.read(model).stats())
 
-if __name__ == '__main__': main()
+
+if __name__ == '__main__':
+    main()

@@ -1885,7 +1885,7 @@ static const gitem_t gameitemlist[] = {
 		WEAP_SHOTGUN,
 		NULL,
 		0,
-		"weapons/shotgf1b.wav weapons/shotgr1b.wav"
+		"weapons/shotgf1b.wav weapons/pp_shotgun_pump.wav"
 	},
 
 	/* QUAKED weapon_supershotgun (.3 .3 1) (-16 -16 -16) (16 16 16) */

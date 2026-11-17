@@ -10,7 +10,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 # Reviewed forward cap of the authored flash_hider, including cap/side UV seams.
-RIM = (266, 267, 269, 271, 273, 275, 282, 283, 284, 285, 286, 287)
+RIM = (228, 229, 231, 233, 235, 237, 244, 245, 246, 247, 248, 249)
 
 
 def rim_center(raw, frame):

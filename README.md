@@ -39,6 +39,7 @@ and tilde for the console. Test missions are available there:
 | `exec sandwatch_solo.cfg` | Sandwatch |
 | `map pp_garden` | Garden |
 | `exec garden_infiltration_solo.cfg` | Operation Garden Ghost |
+| `map pp_loose_thread` | [Operation Loose Thread / Sewing box](maps/README-loose-thread.md) |
 | `exec heavy_test.cfg` | Heavy machine gunner range |
 | `exec rocket_test.cfg` | Rocket soldier range |
 | `exec tank_test.cfg` | Heavy tank range |
@@ -63,6 +64,11 @@ original room coordinates with existing Plastic Platoon materials; see
 walking elevations and open loading floors for custom blocks and cover.
 Use `map pp_switchyard` or `exec switchyard_dm.cfg`; see
 [the Switchyard guide](maps/README-switchyard.md) for layout, editing and checks.
+
+**Tile Tide** is an oversized bathroom deathmatch arena with a walk-in tub and
+open space below the high fixtures for future toy stairs. Pick `pp_tile_tide`
+in the multiplayer map selector or run `exec tile_tide_dm.cfg`.
+See [the Tile Tide guide](maps/README-tile-tide.md) for routes and source.
 
 End of the Line also has `endline_easy.cfg`, `endline_hard.cfg`, and
 `endline_coop.cfg`. Its shared objectives, double-barrel introduction, alternate

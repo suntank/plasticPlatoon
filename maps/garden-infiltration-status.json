@@ -2,13 +2,13 @@
   "map": "pp_garden_infiltration",
   "published": {
     "archive": "baseq2/operation-garden-infiltration.pk3",
-    "archive_sha256": "8bec59692ccfee7c783789f85d47563420e4df9cf3a732eb6c725408d181ecf4",
+    "archive_sha256": "cf740f147fd2a27cc4b4b314bf31396d5998aece910c52c275be5d88eac74028",
     "source": "maps/source/pp_garden_infiltration.map",
     "source_inside_archive": "maps/pp_garden_infiltration.map",
-    "source_sha256": "c4e8320185514d7b626cde63c85a5bb965eff5e0ad2c387177a7838cd0648ae7",
+    "source_sha256": "2a2d2df35473bc13117c18a1c160dd826d5c5e80e15c32ef27c1048c76f092dc",
     "bsp": "baseq2/maps/pp_garden_infiltration.bsp",
-    "bsp_sha256": "9e47bd163057813a135604549736927fbdd676008f1e942f600e068a1fd5fad3",
-    "runtime_source_sha256": "3f3eef039a448be6049fd033b175c97f37875214323629a37b73b4a5182ba518",
+    "bsp_sha256": "b156533dc2f9f35bee84ffbd554fdf02b2dc4d963933d5123e744bde10dfaf4e",
+    "runtime_source_sha256": "d5727caa6ce2fc04d2793b3344e249c3589b251c50b8f6e9f57df90b77ffecea",
     "full_bsp_vis_rad_passed": true,
     "build_receipt_inside_archive": "maps/garden-infiltration-build.json",
     "compile": {
@@ -17,7 +17,8 @@
       "rad_ambient": 16,
       "tool_sha256": "b144f37c50cf41079a851ab872000db65928e983a156a296daf389db6e3ead18"
     },
-    "validation": "Full release compilation completed. Gameplay, stress tests and mission audits were not rerun, at user request."
+    "validation": "Full BSP/VIS/RAD build with the authored sky key and compiled lumps compared against the preceding local mission.",
+    "sky": "pp_backyard"
   },
   "pi_deployment": {
     "deployed": true,
@@ -27,7 +28,10 @@
     "saves_and_settings_unchanged": true,
     "shell_state": "active",
     "optimized_engine_unchanged": true,
-    "tests_rerun": false
+    "tests_rerun": false,
+    "archive_sha256": "8bec59692ccfee7c783789f85d47563420e4df9cf3a732eb6c725408d181ecf4",
+    "source_sha256": "c4e8320185514d7b626cde63c85a5bb965eff5e0ad2c387177a7838cd0648ae7",
+    "bsp_sha256": "9e47bd163057813a135604549736927fbdd676008f1e942f600e068a1fd5fad3"
   },
   "previous_performance": {
     "source_sha256": "d4f39d62732841ece6e6180861055bc0790670b3bd5dfd9c1b37f1c37bdf65fa",

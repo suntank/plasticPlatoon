@@ -5,8 +5,8 @@
     "build_armor.py": "c9f63feaf1e97d0aba6b1cdb9fc5cec24ac3a77f15dc6daa424753bf023c7a7e",
     "armor_geometry.py": "9848d87860843af5b59072f431cc6ac8581f51e3e7162f2ddc95a7457b42e8d9",
     "pickup_normals.py": "9a573f8fac16d815c3ec8e28f8fd9f27183c016335e05642e5507905d2f48e3d",
-    "build_m16.py": "b8c6d25f19537849d2422b110d13bb996a1400569e153357913aa7a7a097f784",
-    "m16_geometry.py": "8af8a1879a4cee0cb9149480481160f12e0312edd8db41c4b8a09220061b790d"
+    "build_m16.py": "3f90819146186a316a6eb11cdf387923158b34bea43cc41eae211d2ef4a69717",
+    "m16_geometry.py": "730286d3b6e18f99727689d9b0f9107524d0930cba2b43a45483d051641d578d"
   },
   "source_archive": {
     "path": "tools/assets/sources/pickups-local.pk3",
