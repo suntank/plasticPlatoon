@@ -8,6 +8,129 @@ static void setup(player_state_t *ps)
 	ps->stats[STAT_AIMASSIST_FLAGS] = AIMASSIST_ACTIVE | AIMASSIST_TARGET;
 }
 
+static void test_close_low_targets(void)
+{
+	const int pitches[] = {1900, 2900, 4500, 4700};
+	player_state_t ps;
+	vec3_t angles;
+	int i;
+	for (i = 0; i < sizeof(pitches) / sizeof(pitches[0]); ++i)
+	{
+		setup(&ps);
+		VectorClear(angles);
+		ps.stats[STAT_AIMASSIST_PITCH] = pitches[i];
+		PP_AimAssistADS(angles, &ps, 0.016f, 8, 30, true);
+		assert(!angles[PITCH]); /* Extra pitch requires a server-selected close target. */
+		ps.stats[STAT_AIMASSIST_FLAGS] |= AIMASSIST_CLOSE_TARGET;
+		PP_AimAssistADS(angles, &ps, 0.016f, 8, 30, true);
+		assert(angles[PITCH] > 0 && angles[PITCH] <= 0.4801f);
+		assert(!angles[YAW]);
+	}
+
+	/* Refresh snapshots as the camera settles all the way down onto an ant. */
+	setup(&ps);
+	ps.stats[STAT_AIMASSIST_FLAGS] |= AIMASSIST_CLOSE_TARGET;
+	VectorClear(angles);
+	for (i = 0; i < 120; ++i)
+	{
+		ps.viewangles[PITCH] = angles[PITCH];
+		ps.stats[STAT_AIMASSIST_PITCH] = (short)lroundf((29 - angles[PITCH]) * 100);
+		PP_AimAssistADS(angles, &ps, 1.0f / 60, 8, 30, true);
+	}
+	assert(fabsf(angles[PITCH] - 29) < 0.01f);
+	ps.viewangles[PITCH] = 29;
+	ps.stats[STAT_AIMASSIST_PITCH] = 0;
+	angles[PITCH] = 30; /* A small overshoot can settle upward again. */
+	PP_AimAssistADS(angles, &ps, 0.016f, 8, 30, true);
+	assert(angles[PITCH] < 30 && angles[PITCH] > 29);
+
+	setup(&ps);
+	ps.stats[STAT_AIMASSIST_FLAGS] |= AIMASSIST_CLOSE_TARGET;
+	ps.stats[STAT_AIMASSIST_PITCH] = 2900;
+	VectorSet(angles, 10, -1, 0);
+	ps.pmove.delta_angles[PITCH] = ANGLE2SHORT(15);
+	VectorSet(ps.viewangles, 25, 359, 0);
+	PP_AimAssistADS(angles, &ps, 0.016f, 8, 30, true);
+	assert(angles[PITCH] > 10 && angles[PITCH] <= 10.4801f);
+	assert(fabsf(angles[YAW] + 1) < 0.001f);
+
+	/* Manual look input still outruns the assist on both axes. */
+	setup(&ps);
+	ps.stats[STAT_AIMASSIST_FLAGS] |= AIMASSIST_CLOSE_TARGET;
+	ps.stats[STAT_AIMASSIST_PITCH] = 2900;
+	VectorClear(angles);
+	for (i = 0; i < 12; ++i)
+	{
+		angles[PITCH] -= 55.0f / 60;
+		angles[YAW] -= 55.0f / 60;
+		PP_AimAssistADS(angles, &ps, 1.0f / 60, 8, 30, true);
+	}
+	assert(angles[PITCH] < -4.9f && angles[YAW] < -4.9f);
+}
+
+static void test_close_snapshot_guards(void)
+{
+	player_state_t ps;
+	vec3_t angles, before;
+	int i;
+	for (i = 0; i < 10; ++i)
+	{
+		setup(&ps);
+		ps.stats[STAT_AIMASSIST_FLAGS] |= AIMASSIST_CLOSE_TARGET;
+		ps.stats[STAT_AIMASSIST_PITCH] = 2900;
+		VectorClear(angles);
+		switch (i)
+		{
+			case 0: angles[PITCH] = -15; break; /* Stale after looking up. */
+			case 1: angles[PITCH] = 15; break;  /* Stale after looking down. */
+			case 2: angles[YAW] = 15; break;
+			case 3: ps.stats[STAT_AIMASSIST_YAW] = 1500; break;
+			case 4: ps.stats[STAT_AIMASSIST_PITCH] = 4800; break;
+			case 5: ps.stats[STAT_AIMASSIST_PITCH] = -1500; break;
+			case 6: ps.stats[STAT_AIMASSIST_FLAGS] &= ~AIMASSIST_TARGET; break;
+			case 7: ps.stats[STAT_AIMASSIST_FLAGS] &= ~AIMASSIST_ACTIVE; break;
+			case 8: ps.pmove.pm_type = PM_DEAD; break;
+			case 9: ps.viewangles[PITCH] = NAN; break;
+		}
+		VectorCopy(angles, before);
+		PP_AimAssistADS(angles, &ps, 0.016f, 8, 30, true);
+		assert(VectorCompare(angles, before));
+	}
+	setup(&ps);
+	ps.stats[STAT_AIMASSIST_FLAGS] |= AIMASSIST_CLOSE_TARGET;
+	ps.stats[STAT_AIMASSIST_PITCH] = 2900;
+	VectorClear(angles);
+	PP_AimAssistADS(angles, &ps, 0.016f, 8, 30, false);
+	PP_AimAssistADS(angles, &ps, NAN, 8, 30, true);
+	PP_AimAssistADS(angles, &ps, 0.016f, NAN, 30, true);
+	PP_AimAssistADS(angles, &ps, 0.016f, 8, NAN, true);
+	assert(!angles[PITCH] && !angles[YAW]);
+}
+
+static void test_close_hip_reticle(void)
+{
+	player_state_t ps;
+	float x, y;
+	setup(&ps);
+	ps.stats[STAT_AIMASSIST_HIP_PITCH] = 2900;
+	PP_AimAssistReticle(&ps, 240, 240, 90, 90, true, &x, &y);
+	assert(fabsf(x) < 0.001f);
+	assert(fabsf(y - 120 * tanf(29 * (float)(M_PI / 180.0))) < 0.001f);
+	ps.stats[STAT_AIMASSIST_HIP_PITCH] = 4500;
+	PP_AimAssistReticle(&ps, 240, 240, 90, 90, true, &x, &y);
+	assert(fabsf(x) < 0.001f && fabsf(y - 120) < 0.001f);
+	ps.stats[STAT_AIMASSIST_HIP_PITCH] = 6000; /* Below the visible view. */
+	PP_AimAssistReticle(&ps, 320, 180, 90, 90, true, &x, &y);
+	assert(fabsf(x) < 0.001f && y == 90);
+	ps.stats[STAT_AIMASSIST_HIP_PITCH] = 0;
+	ps.stats[STAT_AIMASSIST_HIP_YAW] = 6000;
+	PP_AimAssistReticle(&ps, 320, 180, 90, 90, true, &x, &y);
+	assert(x == -160 && fabsf(y) < 0.001f);
+	ps.stats[STAT_AIMASSIST_HIP_YAW] = 18000; /* An old/invalid behind-view offset. */
+	PP_AimAssistReticle(&ps, 320, 180, 90, 90, true, &x, &y);
+	assert(!x && !y);
+}
+
 int main(void)
 {
 	player_state_t ps;
@@ -76,6 +199,9 @@ int main(void)
 	assert(!x && !y);
 	PP_AimAssistReticle(&ps, 240, 240, 0, 0, true, &x, &y);
 	assert(!x && !y);
-	puts("Client aim assistance: smooth timing, manual escape, delta angles, gating and shot-aligned reticle passed");
+	test_close_low_targets();
+	test_close_snapshot_guards();
+	test_close_hip_reticle();
+	puts("Client aim assistance: low close targets, stale snapshot guards, smooth timing, manual escape, delta angles, gating and shot-aligned reticle passed");
 	return 0;
 }

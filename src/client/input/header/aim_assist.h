@@ -16,7 +16,7 @@ static inline void
 PP_AimAssistADS(vec3_t angles, const player_state_t *ps, float seconds,
 	float strength, float max_speed, qboolean enabled)
 {
-	float error[2], length, fraction;
+	float error[2], drift[2], length, fraction;
 	int axis;
 	if (!enabled || !ps || ps->pmove.pm_type >= PM_DEAD ||
 		!(ps->stats[STAT_AIMASSIST_FLAGS] & AIMASSIST_ACTIVE) ||
@@ -33,10 +33,28 @@ PP_AimAssistADS(vec3_t angles, const player_state_t *ps, float seconds,
 		float target = ps->viewangles[axis] + ps->stats[stat] * 0.01f;
 		float view = angles[axis] + SHORT2ANGLE(ps->pmove.delta_angles[axis]);
 		error[axis] = PP_AimAngleDelta(target - view);
+		drift[axis] = PP_AimAngleDelta(view - ps->viewangles[axis]);
 	}
-	/* Reject stale snapshots after a deliberate turn or a teleport. */
 	length = sqrtf(error[PITCH] * error[PITCH] + error[YAW] * error[YAW]);
-	if (!isfinite(length) || length > 14.0f) return;
+	if (!isfinite(length)) return;
+	if (ps->stats[STAT_AIMASSIST_FLAGS] & AIMASSIST_CLOSE_TARGET)
+	{
+		float snapshot_pitch = ps->stats[STAT_AIMASSIST_PITCH] * 0.01f;
+		/* A nearby low enemy can be well below the crosshair. Keep its yaw
+		 * narrow and reject stale views independently of that extra pitch. */
+		if (hypotf(drift[PITCH], drift[YAW]) > 14.0f ||
+			fabsf(error[YAW]) > 14.0f || error[PITCH] < -14.0f ||
+			error[PITCH] > AIMASSIST_CLOSE_PITCH + 2.01f ||
+			snapshot_pitch < -14.0f || snapshot_pitch > AIMASSIST_CLOSE_PITCH + 2.01f)
+		{
+			return;
+		}
+	}
+	else if (length > 14.0f)
+	{
+		/* Reject stale snapshots after a deliberate turn or a teleport. */
+		return;
+	}
 	fraction = 1.0f - expf(-Q_min(strength, 30.0f) * seconds);
 	if (length * fraction > max_speed * seconds && length > 0)
 	{
@@ -72,9 +90,10 @@ PP_AimAssistReticle(const player_state_t *ps, int width, int height,
 		width / (2 * tanf(fov_x * (float)(M_PI / 360.0)));
 	*y = -DotProduct(direction, up) / depth *
 		height / (2 * tanf(fov_y * (float)(M_PI / 360.0)));
-	/* A malformed/old stat cannot place the reticle outside the viewport. */
-	*x = Q_clamp(*x, -width * 0.2f, width * 0.2f);
-	*y = Q_clamp(*y, -height * 0.2f, height * 0.2f);
+	/* Preserve shot alignment for low enemies throughout the visible view;
+	 * offscreen or malformed offsets stop at its edges. */
+	*x = Q_clamp(*x, -width * 0.5f, width * 0.5f);
+	*y = Q_clamp(*y, -height * 0.5f, height * 0.5f);
 }
 
 #endif

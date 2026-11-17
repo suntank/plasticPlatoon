@@ -46,6 +46,14 @@ static void enemy(int index, float x, float y)
 	VectorSet(ent->s.origin, x, y, 0);
 }
 
+static void ant(int index, float x, float y)
+{
+	enemy(index, x, y);
+	/* Match the actual ant collision bounds, whose 60% body point is z=0. */
+	VectorSet(entities[index].mins, -24, -24, -24);
+	VectorSet(entities[index].maxs, 24, 24, 16);
+}
+
 static void reset(void)
 {
 	memset(entities, 0, sizeof(entities));
@@ -65,7 +73,13 @@ static void reset(void)
 	blocked = trace_calls = 0;
 	trace_target = NULL;
 	PP_AimAssist_ResetClient(&entities[1]);
-	if (assist_enabled) assist_enabled->value = 1;
+	if (assist_enabled)
+	{
+		assist_enabled->value = 1;
+		assist_range->value = 1024;
+		assist_ads_cone->value = 8;
+		assist_hip_cone->value = 6;
+	}
 }
 
 static void update(int buttons, int msec)
@@ -190,12 +204,111 @@ static void test_stability_and_time(void)
 	assert(aim_states[0].target == 0 && !aim_states[0].active);
 }
 
+static void test_nearby_body_aim(void)
+{
+	const float distances[] = {40, 64, 150};
+	int mode, sample;
+	for (mode = 0; mode < 2; ++mode)
+	{
+		int buttons = BUTTON_GAMEPAD | (mode ? BUTTON_ADS : 0);
+		for (sample = 0; sample < 3; ++sample)
+		{
+			float expected = atan2f(22, distances[sample]) * (180.0f / M_PI);
+			vec3_t saved;
+			int frame;
+			reset();
+			ant(2, distances[sample], 0);
+			update(buttons, 100);
+			assert(targeted());
+			assert(clients[0].ps.stats[STAT_AIMASSIST_FLAGS] & AIMASSIST_CLOSE_TARGET);
+			assert(fabsf(clients[0].ps.stats[STAT_AIMASSIST_PITCH] * 0.01f - expected) < 0.01f);
+			assert(clients[0].ps.stats[STAT_AIMASSIST_YAW] == 0);
+			assert(clients[0].v_angle[PITCH] == 0);
+			if (mode)
+			{
+				assert(clients[0].ps.stats[STAT_AIMASSIST_HIP_PITCH] == 0);
+				assert(!PP_AimAssist_BeginShot(&entities[1], saved));
+			}
+			else
+			{
+				/* The actual hip shot must eventually reach the ant's body too. */
+				for (frame = 0; frame < 12; ++frame) update(buttons, 100);
+				assert(PP_AimAssist_BeginShot(&entities[1], saved));
+				assert(fabsf(clients[0].v_angle[PITCH] - expected) < 0.01f);
+				PP_AimAssist_EndShot(&entities[1], saved);
+			}
+		}
+	}
+}
+
+static void test_nearby_priority(void)
+{
+	int mode;
+	for (mode = 0; mode < 2; ++mode)
+	{
+		int buttons = BUTTON_GAMEPAD | (mode ? BUTTON_ADS : 0);
+		reset();
+		enemy(2, 768, 0);
+		enemy(3, 256, 20);
+		update(buttons, 100);
+		assert(aim_states[0].target == 3); /* A nearby enemy can beat exact alignment. */
+
+		reset();
+		enemy(2, 768, 0);
+		update(buttons, 100);
+		assert(aim_states[0].target == 2);
+		ant(3, 64, 0);
+		update(buttons, 100);
+		assert(aim_states[0].target == 3); /* A close ant can replace a distant lock. */
+		assert(clients[0].ps.stats[STAT_AIMASSIST_PITCH] > 1800);
+		assert(clients[0].ps.stats[STAT_AIMASSIST_FLAGS] & AIMASSIST_CLOSE_TARGET);
+		entities[3].health = 0;
+		update(buttons, 100);
+		assert(aim_states[0].target == 2);
+		assert(!(clients[0].ps.stats[STAT_AIMASSIST_FLAGS] & AIMASSIST_CLOSE_TARGET));
+	}
+}
+
+static void test_nearby_limits(void)
+{
+	int buttons = BUTTON_GAMEPAD | BUTTON_ADS;
+	reset(); ant(2, 64, 32); update(buttons, 100); assert(!targeted()); /* Off to the side. */
+	reset(); ant(2, -64, 0); update(buttons, 100); assert(!targeted()); /* Behind the player. */
+	reset(); ant(2, 193, 0); entities[2].s.origin[2] = -30;
+	update(buttons, 100); assert(!targeted()); /* Outside close reach and normal cone. */
+	reset(); ant(2, 64, 0); entities[2].s.origin[2] = 50;
+	update(buttons, 100); assert(!targeted()); /* No extra upward acquisition. */
+	reset(); enemy(2, 64, 0); update(buttons, 100); assert(!targeted()); /* Tall target. */
+	reset(); ant(2, 40, 0); entities[2].s.origin[2] = -40;
+	update(buttons, 100); assert(!targeted()); /* Beyond the downward angle limit. */
+	reset(); ant(2, 64, 0); blocked = 1; update(buttons, 100); assert(!targeted());
+	reset(); ant(2, 64, 0); entities[2].monsterinfo.aiflags |= AI_GOOD_GUY;
+	update(buttons, 100); assert(!targeted());
+
+	reset(); ant(2, 64, 0); assist_range->value = 64;
+	update(buttons, 100); assert(!targeted()); /* Actual eye/body distance still obeys range. */
+	ant(2, 60, 0); update(buttons, 100); assert(targeted());
+
+	/* Setting either mode's cone to zero disables both acquisition and retention. */
+	for (int mode = 0; mode < 2; ++mode)
+	{
+		buttons = BUTTON_GAMEPAD | (mode ? BUTTON_ADS : 0);
+		reset(); ant(2, 64, 0); update(buttons, 100); assert(targeted());
+		(mode ? assist_ads_cone : assist_hip_cone)->value = 0;
+		update(buttons, 100); assert(!targeted());
+		update(buttons, 100); assert(!targeted());
+	}
+}
+
 int main(void)
 {
 	test_controller_and_real_shot();
 	test_chest_target_for_both_modes();
 	test_filtering();
 	test_stability_and_time();
-	puts("Server aim assist: chest preference in both modes, controller gating, hostility/LOS, shot alignment, hysteresis and timing passed");
+	test_nearby_body_aim();
+	test_nearby_priority();
+	test_nearby_limits();
+	puts("Server aim assist: nearby priority, downward ant/body aim, bounded acquisition, controller gating, hostility/LOS, shot alignment, hysteresis and timing passed");
 	return 0;
 }

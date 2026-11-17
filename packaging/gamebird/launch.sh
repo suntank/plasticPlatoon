@@ -53,6 +53,7 @@ fi
 # Keep renderer selection/resolution early: SDL creates its context before
 # executing config files. Extra arguments replace the default map command.
 exec "$game_dir/quake2" -datadir "$game_dir" -cfgdir "$config_dir" \
+    +set s_initsound 1 +set s_openal 0 +set s_sdldriver alsa \
     +set vid_renderer "${PLASTIC_PLATOON_RENDERER:-gl1}" \
     +set vid_fullscreen 1 +set r_mode -1 \
     +set r_customwidth 240 +set r_customheight 240 \

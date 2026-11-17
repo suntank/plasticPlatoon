@@ -151,6 +151,31 @@ def main():
             time.sleep(.45)
             keyboard = snapshot('keyboard_disabled')
             check(not keyboard['buttons'] & 8 and keyboard['stats'][0] == 0, 'keyboard_switch_disables_assistance')
+
+            # Reproduce aiming over a nearby ant while looking straight ahead.
+            # Keep the earlier, distant ant alive to exercise target priority.
+            restore_pose()
+            rcon('spawnentity monster_ant 0 -1424 24 0 270 0 1')
+            time.sleep(.3)
+            pulse(4)
+            time.sleep(.35)
+            close_hip = snapshot('close_ant_hip')
+            check(close_hip['stats'][0] & 7 == 7 and close_hip['stats'][1] > 1400,
+                  'close_ant_takes_priority_below_normal_aim_cone')
+            check(abs(close_hip['angles'][0]) < .2, 'close_ant_hip_camera_stays_level')
+            action('button 2 1')
+            time.sleep(.12)
+            close_start = snapshot('close_ant_ads_start')
+            time.sleep(1.1)
+            close_end = snapshot('close_ant_ads_end')
+            check(close_end['stats'][0] & 7 == 7 and close_end['angles'][0] > 17,
+                  'ads_aims_down_to_close_ant_body')
+            check(abs(close_end['stats'][1]) < 100 and
+                  abs(close_end['stats'][1]) < abs(close_start['stats'][1]) * .1,
+                  'close_ant_ads_converges_without_manual_pitch')
+            check(close_end['stats'][3] == close_end['stats'][4] == 0,
+                  'close_ant_ads_has_no_duplicate_hip_correction')
+            action('button 2 0')
             rcon('screenshot png')
             time.sleep(.3)
             rcon('quit')

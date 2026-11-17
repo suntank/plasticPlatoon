@@ -1170,6 +1170,8 @@ typedef enum
 #define STAT_AIMASSIST_HIP_YAW 24
 #define AIMASSIST_ACTIVE 1
 #define AIMASSIST_TARGET 2
+#define AIMASSIST_CLOSE_TARGET 4
+#define AIMASSIST_CLOSE_PITCH 45.0f  /* Maximum downward acquisition, degrees. */
 
 #define MAX_STATS 32
 
