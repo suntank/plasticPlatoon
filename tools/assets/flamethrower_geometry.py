@@ -8,10 +8,11 @@ independent torso animation never inherits the gun's aiming motion.
 import math
 import numpy as np
 from m16_geometry import Mesh, add_hands
+from flamethrower_tanks import add_tank
 
 MUZZLE = (92., 0., 0.)
-REAR_SIGHT = (32., 0., 8.6)
-FRONT_SIGHT = (82., 0., 8.6)
+REAR_SIGHT = (32., 0., 7.65)
+FRONT_SIGHT = (82., 0., 7.65)
 GRIP = (34., 0., -8.)
 INLET = (28., -2.6, -2.5)
 PACK_OUTLET = (-10., -7.4, 10.)
@@ -52,39 +53,60 @@ def hose_mesh(controls, radius=.65, name='fuel_hose', detail='world', seed=None)
 def build_flamethrower(detail='world'):
     if detail not in ('world', 'view'):
         raise ValueError('Expected world or view')
+    close = detail == 'view'
     m = Mesh()
-    m.profile('receiver', [(24., -3.8), (24., 2.8), (29., 4.1), (48., 4.1),
-                           (52., 1.5), (50., -3.8)], 2.5, 'receiver', 'edge')
+    section = [(-.66,-1),(.66,-1),(1,-.55),(1,.45),
+               (.65,1),(-.65,1),(-1,.45),(-1,-.55)]
+    stations = [(24.6,1.79,-.30,2.62),(30.75,2.43,.03,3.99),
+                (44.5,2.57,.14,3.92),(51.5,1.89,-.07,2.47)]
+    rings = [[(x+.21*h*z,w*y,mid+h*z) for y,z in section] for x,w,mid,h in stations]
+    start = len(m.faces)
+    m.loft('receiver', rings, 'plastic', uv_axes=(0,2))
+    for band in range(len(rings)-1):
+        for side in (2,6):
+            face = start+2*(band*len(section)+side)
+            m.materials[face:face+2] = ['receiver']*2
     m.profile('grip', [(29., -15.1), (25.8, -13.8), (31., -4.3), (36., -4.7),
                        (34., -7.2), (32.8, -15.3)], 1.85, 'grip', 'edge')
-    m.ring_profile('trigger_guard', [(33.9, -4.2), (43.3, -4.2), (43., -8.5), (33.3, -8.2)],
-                   [(35.4, -5.3), (42., -5.3), (41.8, -7.2), (34.7, -7.1)], .8)
+    outer = [(33.9,-4.2),(43.3,-4.2),(43.,-8.5),(33.3,-8.2)]
+    inner = [(35.4,-5.3),(42.,-5.3),(41.8,-7.2),(34.7,-7.1)]
+    if close:
+        outer[2:3] = [(43.,-6.9),(41.4,-8.5)]
+        inner[2:3] = [(41.8,-6.35),(40.75,-7.2)]
+    m.ring_profile('trigger_guard', outer, inner, .8)
     m.tube('fuel_inlet', [(26., -2.6, -2.5, 1.4, 1.4), (30., -2.6, -2.5, 1.4, 1.4)],
            6, 'dark', caps=(True, True))
-    m.tube('handguard', [(49., 0., 0., 3.6, 3.6), (55., 0., 0., 3.6, 3.6),
-                         (73., 0., 0., 2.8, 2.8)], 8, 'handguard', caps=(True, True))
+    m.tube('handguard', [(49.,0.,0.,2.46,2.54),(55.,0.,0.,3.6,3.6),
+                         (73.,0.,0.,2.8,2.73)], 8,'handguard', caps=(True,True))
     m.tube('barrel', [(70., 0., 0., 1.55, 1.55), (86., 0., 0., 1.55, 1.55)],
            8, 'dark', caps=(True, True))
-    m.tube('nozzle', [(83., 0., 0., 2.6, 2.6), (92., 0., 0., 3.2, 3.2)],
-           8, 'edge', caps=(True, False))
+    # A rounded collar expands into a flared lip and a recessed bell.
+    sides = 10 if close else 8
+    phase = math.pi/sides
+    m.tube('nozzle', [(82.,0.,0.,2.27,2.27),(88.9,0.,0.,3.89,3.89),
+                     (92.,0.,0.,3.65,3.65)], sides,'palm',
+           caps=(True,False), phase=phase)
     def rim(x, radius):
-        return [(x, radius * math.cos(math.pi/8 + i*math.tau/8),
-                 radius * math.sin(math.pi/8 + i*math.tau/8)) for i in range(8)]
-    outer, inner, floor = rim(92., 3.2), rim(92., 2.25), rim(87.5, 2.25)
-    for i in range(8):
-        j = (i+1) % 8
-        m.poly([outer[i], outer[j], inner[j], inner[i]], 'edge', (1, 0, 0))
-        m.poly([inner[i], inner[j], floor[j], floor[i]], 'dark',
-               (0, -inner[i][1]-inner[j][1], -inner[i][2]-inner[j][2]))
+        return [(x, radius*math.cos(phase+i*math.tau/sides),
+                 radius*math.sin(phase+i*math.tau/sides)) for i in range(sides)]
+    outer, inner, floor = rim(92.,3.65),rim(92.,2.48),rim(87.5,2.18)
+    for i in range(sides):
+        j = (i+1) % sides
+        m.poly([outer[i],outer[j],inner[j],inner[i]], 'edge',(1,0,0),group='rim')
+        m.poly([inner[i],inner[j],floor[j],floor[i]], 'bore',
+               (0,-inner[i][1]-inner[j][1],-inner[i][2]-inner[j][2]),group='inner_wall')
     m.poly(floor, 'bore', (1, 0, 0), group='bore_floor')
     m.tube('igniter_pipe', [(55., -2., -3.4, .85, .85), (89., -2., -3.4, .85, .85)],
            4, 'dark', caps=(True, True))
-    m.box('igniter_tip', (87.5, -2.9, -4.3), (90., -.9, -1.8), 'edge')
+    m.profile('igniter_tip',[(87.3,-4.3),(89.65,-4.3),(90.15,-2.53),(88.4,-1.95)],
+              1.,'edge','dark',y=-2.)
     for side, name in ((-1, 'right'), (1, 'left')):
         y = side * 1.05
-        m.box('rear_sight_' + name, (31., y-.4, 3.8), (33., y+.4, 9.), 'dark')
-    m.box('front_sight', (81.3, -.5, 2.0), (82.7, .5, 8.6), 'edge')
-    if detail == 'view':
+        m.profile('rear_sight_'+name,[(30.6,3.45),(34.1,3.57),(33.31,7.67),(31.95,7.88)],
+                  .32,'dark','dark',y=y)
+    m.profile('front_sight',[(80.72,1.25),(83.55,1.31),(82.45,7.65),(81.72,7.65)],
+              .38,'edge','edge')
+    if close:
         add_hands(m)
     result = m.finish(detail)
     result.pop('rifle_bounds')
@@ -96,19 +118,15 @@ def build_flamethrower(detail='world'):
 
 def build_backpack():
     m = Mesh()
-    m.box('pack_backplate', (-7.2, -6.5, 7.5), (-4.6, 6.5, 20.8), 'grip', 'edge')
+    section = [(-5.2,7.5),(5.2,7.5),(6.5,9.4),(6.5,18.6),
+               (4.8,20.8),(-4.8,20.8),(-6.5,18.6),(-6.5,9.4)]
+    m.loft('pack_backplate', [[(x,y*scale,14.15+(z-14.15)*scale) for y,z in section]
+                              for x,scale in ((-7.2,1.),(-4.6,.90))], 'grip')
     for side, name in ((-1, 'right'), (1, 'left')):
         y = side * 3.45
-        loops = []
-        for z, radius in ((7.8, 2.55), (9., 3.25), (20.6, 3.25), (22., 2.55)):
-            loops.append([(-10. + radius * math.cos(math.pi/8 + i*math.tau/8),
-                           y + radius * math.sin(math.pi/8 + i*math.tau/8), z) for i in range(8)])
-        m.loft('pack_tank_' + name, loops, 'plastic', uv_axes=(1, 2))
-        m.box('pack_valve_' + name, (-11.1, y-1.1, 21.7), (-8.9, y+1.1, 23.2), 'dark', 'edge')
-        # Broad closed retaining rails read clearly from a rear camera.
-        for z, band in ((10., 'lower'), (18., 'upper')):
-            m.box('pack_band_' + name + '_' + band,
-                  (-13.5, y-2.9, z), (-12.7, y+2.9, z+1.0), 'dark')
+        add_tank(m,'pack_tank_'+name,(-10.,y),'magazine')
+        m.profile('pack_valve_'+name,[(-11.2,21.57),(-8.82,21.65),(-9.15,23.16),(-10.71,23.19)],
+                  1.07,'dark','edge',y=y)
         m.box('pack_shoulder_' + name, (-6.6, y-.65, 19.4), (-3.8, y+.65, 21.4), 'dark')
     m.limb('pack_pressure_bottle', (-10.5, 0., 9.), (-10.5, 0., 20.8),
            1.45, 1.45, 'receiver', 6)

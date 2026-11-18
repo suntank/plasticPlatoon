@@ -7,7 +7,7 @@ import random
 import sys
 
 import bpy
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bake_room_skybox import bake, beam, box, current_object, linear_rgb, material, new_scene, parse_args, rod
@@ -129,13 +129,17 @@ def summer_sky(scene):
             lobe.rotation_euler.z = yaw
 
 
-def fencing(m):
+def fencing(m, *, front_open_at=None):
     west, east, south, north = YARD
+    if front_open_at is not None:
+        east = front_open_at
     rng = random.Random(221)
     # Each edge is wound so its left-hand normal faces into the yard.
     runs = (((west, south), (east, south)), ((east, south), (east, north)),
             ((east, north), (west, north)), ((west, north), (west, south)))
     for run_index, (first, last) in enumerate(runs):
+        if front_open_at is not None and run_index == 1:
+            continue
         start, end = Vector((*first, 0)), Vector((*last, 0))
         along = (end - start).normalized()
         inward = Vector((-along.y, along.x, 0))
@@ -170,7 +174,8 @@ def fencing(m):
             beam("Fence cross rail", start + offset, end + offset, .115, .135, m["rail"], .01)
         posts = math.ceil(distance / 2.46)
         # The starting post anchors this corner and the adjoining end.
-        for index in range(posts):
+        end_post = 1 if front_open_at is not None and run_index == 0 else 0
+        for index in range(posts + end_post):
             point = start + along * (index * distance / posts) + inward * .103
             box("Square fence post", (*point.xy, .994), (.161, .161, 2.034), m["rail"], .017)
             box("Fence post cap", (*point.xy, 2.015), (.214, .214, .088), m["fence_light"], .021)
@@ -254,7 +259,7 @@ def tapered_limb(name, start, end, radius, tip, surface):
     obj.rotation_euler = vector.to_track_quat("Z", "Y").to_euler()
 
 
-def tree_and_swing(m):
+def tree_and_swing(m, *, swing_yaw=0):
     # Continuous tapered trunk and a long exposed limb toward the middle of the yard.
     base = ((.95, 3.43, -.08), (.91, 3.48, .57), (1.01, 3.42, 1.77),
             (.94, 3.50, 2.68), (1.12, 3.59, 3.72), (.89, 3.60, 4.87))
@@ -305,21 +310,24 @@ def tree_and_swing(m):
                                   major_radius=.315, minor_radius=.115)
     tire = current_object("Tire swing", m["rubber"])
     tire.rotation_euler.x = math.pi / 2
+    tire.rotation_euler.z = swing_yaw
     for polygon in tire.data.polygons:
         polygon.use_smooth = True
+    swing_turn = Matrix.Rotation(swing_yaw, 3, "Z")
     for index in range(26):
         angle = math.tau * index / 26
-        tread = box("Short tire tread", (center[0] + .397 * math.cos(angle),
-                    center[1] - .065, center[2] + .397 * math.sin(angle)),
+        offset = swing_turn @ Vector((.397 * math.cos(angle), -.065, .397 * math.sin(angle)))
+        tread = box("Short tire tread", Vector(center) + offset,
                     (.054, .071, .044), m["metal"], .008)
         tread.rotation_euler.y = -angle
+        tread.rotation_euler.z = swing_yaw
     rod("Tire swing rope", (center[0], center[1], 1.306),
         (center[0] + .04, center[1] + .035, 3.616), .031, m["rope"], 12)
     rod("Rope knot above tire", (center[0], center[1], 1.369),
         (center[0], center[1], 1.472), .061, m["rope"])
 
 
-def grass(m):
+def grass(m, *, paving=None):
     box("Grassy yard", (0.0, 0.0, -.102), (200, 200, .2), m["ground"])
     visible = [m[c] for c in ("grass_dark", "grass", "grass_lit", "grass_young")]
     rng = random.Random(421)
@@ -335,6 +343,8 @@ def grass(m):
         if math.hypot(x - EYE[0], y - EYE[1]) > 2.6:
             tufts.append((x, y, rng.uniform(.072, .23)))
     for x, y, height in tufts:
+        if paving is not None and paving[0] <= x <= paving[1] and paving[2] <= y <= paving[3]:
+            continue
         for index in range(rng.randint(3, 6)):
             angle = rng.uniform(0, math.tau)
             dx, dy = math.cos(angle), math.sin(angle)
@@ -366,10 +376,7 @@ def grass(m):
         puff("Distant blurred hedge shape", (x, y, z), (radius, radius*.59, radius*.60), m["distant"])
 
 
-def build_scene(samples):
-    scene = new_scene(samples, bounces=3, exposure=-.14)
-    scene.view_settings.view_transform = "Standard"
-    scene.cycles.adaptive_threshold = .045
+def yard_materials():
     coatings = {
         "ground": ("627d3b", "759646", 2.1),
         "grass_dark": ("576d32",),
@@ -400,6 +407,14 @@ def build_scene(samples):
     }
     m = {name: material(name, *params) for name, params in coatings.items()}
     m["glass"] = material("Pale reflected sky in glass", "97b3bf", glow=.17)
+    return m
+
+
+def build_scene(samples):
+    scene = new_scene(samples, bounces=3, exposure=-.14)
+    scene.view_settings.view_transform = "Standard"
+    scene.cycles.adaptive_threshold = .045
+    m = yard_materials()
     summer_sky(scene)
     fencing(m)
     house(m)

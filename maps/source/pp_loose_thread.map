@@ -2004,6 +2004,14 @@
 "origin" "-744 1956 26"
 }
 {
+"classname" "weapon_smg"
+"origin" "-695 1956 26"
+}
+{
+"classname" "ammo_light_bullets"
+"origin" "-640 1900 26"
+}
+{
 "classname" "monster_soldier"
 "origin" "-360 1708 26"
 "angle" "180"
@@ -2062,6 +2070,10 @@
 {
 "classname" "ammo_shells"
 "origin" "1100 2474 26"
+}
+{
+"classname" "weapon_thunderhead"
+"origin" "1030 2474 26"
 }
 {
 "classname" "item_health"

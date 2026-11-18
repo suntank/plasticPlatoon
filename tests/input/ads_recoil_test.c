@@ -14,8 +14,8 @@ int main(void)
         {{0,1,0},{1,0,0},{0,0,1}},{{0,0,1},{0,-1,0},{-1,0,0}},
         {{.6f,.8f,0},{.8f,-.6f,0},{0,0,1}}};
     const float base[3]={140,-250,72},angles[3]={350,5,-179};
-    const float hip[]={3.2f,5,7,9,3,8,6,7,1.2f,12};
-    for(int weapon=PP_MODEL_ADS_RIFLE;weapon<=PP_MODEL_ADS_MORTAR;weapon++) {
+    const float hip[]={3.2f,5,7,9,3,8,6,7,1.2f,12,2.6f,5.8f};
+    for(int weapon=PP_MODEL_ADS_RIFLE;weapon<=PP_MODEL_ADS_THUNDERHEAD;weapon++) {
         pp_model_ads_config_t cfg=PP_ModelADSConfig(weapon);
         assert(weapon==PP_MODEL_ADS_RIFLE ? cfg.recoil_back==0 : cfg.recoil_back>0 && cfg.recoil_back<=.7f);
         for(int view=0;view<4;view++)for(int recoil=0;recoil<3;recoil++) {
@@ -48,6 +48,6 @@ int main(void)
             for(int i=0;i<3;i++)assert(fabsf(origin[i]-original[i])<.001f);
         }
     }
-    puts("ADS recoil: nine bounded straight-back weapons, camera bases, smoothing tails, hip fire and M16 exclusions passed");
+    puts("ADS recoil: eleven bounded straight-back weapons, camera bases, smoothing tails, hip fire and M16 exclusions passed");
     return 0;
 }

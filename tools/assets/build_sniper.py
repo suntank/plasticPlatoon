@@ -3,9 +3,12 @@
 from __future__ import annotations
 import argparse
 import hashlib
+import io
 import json
+import math
 from pathlib import Path
 import numpy as np
+from PIL import Image, ImageDraw
 from asset_sources import source_bytes
 from md2_assets import MD2
 from build_m16 import (atlas_uvs, encode_md2, rigid_transforms,
@@ -31,8 +34,39 @@ def sha(data):
 
 
 def texture_bytes():
-    """Use the existing army-man plastic and painted mitten atlas unchanged."""
-    return shared_texture_bytes()
+    """Shade the molded scope and receiver while keeping the shared hand tiles."""
+    atlas = Image.open(io.BytesIO(shared_texture_bytes())).convert('RGB')
+    scope = Image.new('RGB', (64, 64))
+    draw = ImageDraw.Draw(scope)
+    for y in range(64):
+        angle = math.tau * (y - 4.5) / 55
+        crown = .5 + .5 * math.sin(angle)
+        value = round(29 + 17 * crown + 8 * crown**6)
+        draw.line((0, y, 63, y), fill=(round(.72 * value), value, round(.36 * value)))
+        for x in (8, 20, 51, 56):
+            shadow, edge = value - 9, value + 4
+            draw.line((x, y, x + 1, y), fill=(round(.72 * shadow), shadow, round(.36 * shadow)))
+            draw.point((x + 2, y), fill=(round(.72 * edge), edge, round(.36 * edge)))
+    atlas.paste(scope, (64, 64))
+
+    receiver = atlas.crop((128, 64, 192, 128))
+    draw = ImageDraw.Draw(receiver)
+    for y in range(64):
+        value = round(48 - 13 * y / 63)
+        draw.line((0, y, 63, y), fill=(round(.72 * value), value, round(.36 * value)))
+    seam = [(12, 37), (17, 22), (46, 22), (52, 29), (48, 40), (19, 42), (12, 37)]
+    draw.line(seam, fill=(20, 28, 11), width=2)
+    draw.line((18, 24, 45, 24), fill=(38, 53, 21))
+    for x in (20, 44):
+        draw.ellipse((x - 2, 31, x + 2, 35), fill=(18, 26, 10))
+        draw.point((x, 32), fill=(39, 54, 21))
+    atlas.paste(receiver, (128, 64))
+
+    # Deep shadows still carry pigment, including the reticle and muzzle cup.
+    atlas.paste((10, 16, 6), (192, 64, 256, 128))
+    output = io.BytesIO()
+    atlas.save(output, format='PNG', compress_level=9)
+    return output.getvalue()
 
 
 def placement(role):
@@ -76,7 +110,7 @@ def build_assets():
         dependencies_sha256={p:sha((ROOT/'tools/assets'/p).read_bytes()) for p in DEPENDENCIES},
         source_archive=originals['source_archive'], method='authored closed primitives; archived rigid poses',
         hand='m16_geometry.add_hands; existing closed molded mittens and forearms around trigger and forward grips',
-        palette='Shared M16 army-man plastic and mitten atlas', models=[])
+        palette='Player-colored molded plastic, including the scope, reticle and muzzle recess', models=[])
     for path, role in MODELS.items():
         source = None if role == 'pickup' else MD2.read(source_bytes(originals,'baseq2/'+path),source_compat=True)
         mesh = meshes['view' if role == 'view' else 'world']

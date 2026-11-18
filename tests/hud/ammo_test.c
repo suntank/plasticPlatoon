@@ -10,42 +10,48 @@ int main(void)
 {
     edict_t player = {0};
     gclient_t client = {0};
-    gitem_t *pistol, *rifle, *bullets;
-    int ammo_index;
-
     deathmatch = coop = dmflags = &zero;
     gi.imageindex = image_index;
     gi.configstring = config_string;
     InitItems();
     SetItemNames();
-    pistol = FindItem("Pistol");
-    rifle = FindItem("Rifle");
-    bullets = FindItem("Bullets");
-    assert(pistol && rifle && bullets);
-    ammo_index = ITEM_INDEX(bullets);
+    gitem_t *pistol = FindItem("Pistol");
+    gitem_t *smg = FindItem("SMG");
+    gitem_t *rifle = FindItem("Rifle");
+    gitem_t *knife = FindItem("Knife");
+    gitem_t *light = FindItem("Light Bullets");
+    gitem_t *heavy = FindItem("Heavy Bullets");
+    assert(pistol && smg && rifle && knife && light && heavy);
+    assert(FindItem("Bullets") == heavy);
+    assert(FindItem(pistol->ammo) == light && FindItem(smg->ammo) == light);
+    assert(FindItem(rifle->ammo) == heavy);
     player.client = &client;
     player.health = 100;
     client.pers.health = 100;
     client.pers.selected_item = -1;
+    client.pers.max_bullets = 999;
     client.pers.weapon = pistol;
+    client.ammo_index = ITEM_INDEX(light);
+    assert(light->quantity == 50 && Add_Ammo(&player, light, light->quantity));
+    G_SetStats(&player);
+    assert(client.ps.stats[STAT_AMMO] == 50 && client.ps.stats[STAT_AMMO_ICON]);
+    assert(client.pers.inventory[ITEM_INDEX(heavy)] == 0);
 
+    client.pers.weapon = smg;
+    assert(Add_Ammo(&player, light, 975));
+    assert(!Add_Ammo(&player, light, light->quantity));
     G_SetStats(&player);
-    assert(client.ps.stats[STAT_AMMO] == -1 && !client.ps.stats[STAT_AMMO_ICON]);
-    /* A previous weapon's ammo index cannot revive a pistol ammo readout. */
-    client.ammo_index = ammo_index;
-    client.pers.inventory[ammo_index] = 34;
-    G_SetStats(&player);
-    assert(client.ps.stats[STAT_AMMO] == -1 && !client.ps.stats[STAT_AMMO_ICON]);
+    assert(client.ps.stats[STAT_AMMO] == 999 && client.ps.stats[STAT_AMMO_ICON]);
 
     client.pers.weapon = rifle;
-    G_SetStats(&player);
-    assert(client.ps.stats[STAT_AMMO] == 34 && client.ps.stats[STAT_AMMO_ICON]);
-    client.pers.inventory[ammo_index] = 0;
+    client.ammo_index = ITEM_INDEX(heavy);
     G_SetStats(&player);
     assert(client.ps.stats[STAT_AMMO] == 0 && client.ps.stats[STAT_AMMO_ICON]);
-    client.pers.weapon = pistol;
+
+    client.pers.weapon = knife;
+    client.ammo_index = 0;
     G_SetStats(&player);
     assert(client.ps.stats[STAT_AMMO] == -1 && !client.ps.stats[STAT_AMMO_ICON]);
-    puts("Pistol ammo hidden and finite weapon/empty ammo status passed");
+    puts("Shared Light Bullets HUD and pickup cap, separate Heavy Bullets, and knife HUD passed");
     return 0;
 }

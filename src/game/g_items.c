@@ -44,6 +44,9 @@ void Weapon_Grenade(edict_t *ent);
 void Weapon_GrenadeLauncher(edict_t *ent);
 void Weapon_Railgun(edict_t *ent);
 void Weapon_BFG(edict_t *ent);
+void Weapon_Knife(edict_t *ent);
+void Weapon_SMG(edict_t *ent);
+void Weapon_Thunderhead(edict_t *ent);
 
 static gitem_armor_t jacketarmor_info = {25, 50, .30, .00, ARMOR_JACKET};
 static gitem_armor_t combatarmor_info = {50, 100, .60, .30, ARMOR_COMBAT};
@@ -130,6 +133,10 @@ FindItem(const char *pickup_name)
 	else if (!Q_stricmp(name, "Chaingun") || !Q_stricmp(name, "chaingun"))
 	{
 		name = "Heavy Machinegun";
+	}
+	else if (!Q_stricmp(name, "Bullets"))
+	{
+		name = "Heavy Bullets";
 	}
 	else if (!Q_stricmp(name, "Railgun") || !Q_stricmp(name, "railgun"))
 	{
@@ -352,7 +359,7 @@ Pickup_Bandolier(edict_t *ent, edict_t *other)
 		other->client->pers.max_slugs = 999;
 	}
 
-	item = FindItem("Bullets");
+	item = FindItem("Heavy Bullets");
 
 	if (item)
 	{
@@ -431,7 +438,7 @@ Pickup_Pack(edict_t *ent, edict_t *other)
 		other->client->pers.max_slugs = 999;
 	}
 
-	item = FindItem("Bullets");
+	item = FindItem("Heavy Bullets");
 
 	if (item)
 	{
@@ -709,6 +716,10 @@ Add_Ammo(edict_t *ent, gitem_t *item, int count)
 	if (item->tag == AMMO_BULLETS)
 	{
 		max = ent->client->pers.max_bullets;
+	}
+	else if (item->tag == AMMO_LIGHT_BULLETS)
+	{
+		max = AMMO_CAP_LIGHT_ROUNDS;
 	}
 	else if (item->tag == AMMO_SHELLS)
 	{
@@ -1606,6 +1617,30 @@ PrecacheItem(gitem_t *it)
 	}
 }
 
+void
+PrecacheAddedWeapons(void)
+{
+	gitem_t *knife = FindItem("Knife");
+	gitem_t *smg = FindItem("SMG");
+	gitem_t *thunderhead = FindItem("Thunderhead");
+	gitem_t *light_bullets = FindItem("Light Bullets");
+
+	gi.configstring(CS_ITEMS + ITEM_INDEX(knife), knife->pickup_name);
+	PrecacheItem(knife);
+	gi.configstring(CS_ITEMS + ITEM_INDEX(smg), smg->pickup_name);
+	PrecacheItem(smg);
+	gi.configstring(CS_ITEMS + ITEM_INDEX(thunderhead), thunderhead->pickup_name);
+	PrecacheItem(thunderhead);
+	gi.configstring(CS_ITEMS + ITEM_INDEX(light_bullets), light_bullets->pickup_name);
+
+	if (coop->value || deathmatch->value)
+	{
+		gi.modelindex("#w_knife.md2");
+		gi.modelindex("#w_smg.md2");
+		gi.modelindex("#w_thunderhead.md2");
+	}
+}
+
 /*
  * ============
  * Sets the clipping size and
@@ -1858,7 +1893,7 @@ static const gitem_t gameitemlist[] = {
 		"Pistol",
 		0,
 		1,
-		NULL,
+		"Light Bullets",
 		IT_WEAPON | IT_STAY_COOP,
 		WEAP_BLASTER,
 		NULL,
@@ -1924,7 +1959,7 @@ static const gitem_t gameitemlist[] = {
 		"Rifle",
 		0,
 		1,
-		"Bullets",
+		"Heavy Bullets",
 		IT_WEAPON | IT_STAY_COOP,
 		WEAP_MACHINEGUN,
 		NULL,
@@ -1946,7 +1981,7 @@ static const gitem_t gameitemlist[] = {
 		"Heavy Machinegun",
 		0,
 		1,
-		"Bullets",
+		"Heavy Bullets",
 		IT_WEAPON | IT_STAY_COOP,
 		WEAP_CHAINGUN,
 		NULL,
@@ -2143,7 +2178,7 @@ static const gitem_t gameitemlist[] = {
 		"models/items/ammo/bullets/medium/tris.md2", 0,
 		NULL,
 		"a_bullets",
-		"Bullets",
+		"Heavy Bullets",
 		3,
 		50,
 		NULL,
@@ -2667,6 +2702,95 @@ static const gitem_t gameitemlist[] = {
 		NULL,
 		0,
 		"items/s_health.wav items/n_health.wav items/l_health.wav items/m_health.wav"
+	},
+
+	/* Append new items here to preserve the inventory indices in savegames. */
+	/* QUAKED weapon_knife (.3 .3 1) (-16 -16 -16) (16 16 16) */
+	{
+		"weapon_knife",
+		Pickup_Weapon,
+		Use_Weapon,
+		Drop_Weapon,
+		Weapon_Knife,
+		"misc/w_pkup.wav",
+		"models/weapons/g_knife/tris.md2", EF_ROTATE,
+		"models/weapons/v_knife/tris.md2",
+		"w_knife",
+		"Knife",
+		0,
+		0,
+		NULL,
+		IT_WEAPON | IT_STAY_COOP,
+		WEAP_KNIFE,
+		NULL,
+		0,
+		"weapons/knife_swing.wav weapons/knife_hit.wav"
+	},
+
+	/* QUAKED weapon_smg (.3 .3 1) (-16 -16 -16) (16 16 16) */
+	{
+		"weapon_smg",
+		Pickup_Weapon,
+		Use_Weapon,
+		Drop_Weapon,
+		Weapon_SMG,
+		"misc/w_pkup.wav",
+		"models/weapons/g_smg/tris.md2", EF_ROTATE,
+		"models/weapons/v_smg/tris.md2",
+		"w_smg",
+		"SMG",
+		0,
+		1,
+		"Light Bullets",
+		IT_WEAPON | IT_STAY_COOP,
+		WEAP_SMG,
+		NULL,
+		0,
+		"weapons/machgf1b.wav weapons/machgf2b.wav weapons/machgf3b.wav weapons/machgf4b.wav weapons/machgf5b.wav"
+	},
+
+	/* QUAKED ammo_light_bullets (.3 .3 1) (-16 -16 -16) (16 16 16) */
+	{
+		"ammo_light_bullets",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		"models/items/ammo/light_bullets/tris.md2", EF_ROTATE,
+		NULL,
+		"a_light_bullets",
+		"Light Bullets",
+		3,
+		50,
+		NULL,
+		IT_AMMO,
+		0,
+		NULL,
+		AMMO_LIGHT_BULLETS,
+		""
+	},
+
+	/* QUAKED weapon_thunderhead (.3 .3 1) (-16 -16 -16) (16 16 16) */
+	{
+		"weapon_thunderhead",
+		Pickup_Weapon,
+		Use_Weapon,
+		Drop_Weapon,
+		Weapon_Thunderhead,
+		"misc/w_pkup.wav",
+		"models/weapons/g_thunderhead/tris.md2", EF_ROTATE,
+		"models/weapons/v_thunderhead/tris.md2",
+		"w_thunderhead",
+		"Thunderhead",
+		0,
+		1,
+		"Shells",
+		IT_WEAPON | IT_STAY_COOP,
+		WEAP_THUNDERHEAD,
+		NULL,
+		0,
+		"weapons/shotgf1b.wav"
 	},
 
 	/* end of list marker */

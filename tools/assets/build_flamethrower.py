@@ -4,15 +4,19 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import io
 import json
+import math
 from pathlib import Path
 import numpy as np
+from PIL import Image, ImageDraw
 from asset_sources import source_bytes
 from md2_assets import MD2
 from md2_animation import repair_stale_triangle_table
-from build_m16 import atlas_uvs, encode_md2, rigid_transforms, texture_bytes
+from build_m16 import atlas_uvs, encode_md2, rigid_transforms, texture_bytes as shared_texture_bytes
 from flamethrower_geometry import (build_flamethrower, build_backpack, hose_mesh,
                                   combine_meshes, GRIP, INLET, HOSE_CONTROLS)
+from flamethrower_tanks import tank_texture
 
 ROOT = Path(__file__).resolve().parents[2]
 BASE = ROOT / 'baseq2'
@@ -26,7 +30,7 @@ BASELINES = {'view': {'triangles':1799, 'position_vertices':901, 'frames':1, 'fi
              'pickup': {'triangles':1199, 'position_vertices':572, 'frames':1, 'file_bytes':55020},
              'player': {'triangles':2493, 'position_vertices':1221, 'frames':198, 'file_bytes':1077852}}
 DEPENDENCIES = ('build_flamethrower.py', 'flamethrower_geometry.py', 'build_m16.py',
-                'm16_geometry.py', 'md2_animation.py')
+                'm16_geometry.py', 'md2_animation.py', 'flamethrower_tanks.py')
 SOURCE_HASH = '7742a95495ed3db8699798671bf42b635f97cbb0a74df6472fd4964479bf3e9a'
 # These two complete, disjoint topological components were reviewed in the
 # pinned original. Its GL commands, not its stale triangle table, are valid.
@@ -37,11 +41,45 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def texture_bytes():
+    """Molded tank bands and nozzle trim in shades of the player color."""
+    atlas = Image.open(io.BytesIO(shared_texture_bytes())).convert('RGB')
+    atlas.paste(tank_texture(),(64,64))
+    for tile_id in (6,7,11):
+        tile = Image.new('RGB',(64,64))
+        draw = ImageDraw.Draw(tile)
+        for y in range(64):
+            angle = math.tau*(y-4.5)/55
+            if tile_id == 11:
+                curve = .5+.5*math.sin(angle)
+                value = round(32+13*curve+8*curve**7)
+            elif tile_id == 6:
+                value = round(51-12*y/63)
+            else:
+                value = round(12+10*abs(2*y/63-1)**3)
+            draw.line((0,y,63,y),fill=(round(.72*value),value,round(.36*value)))
+            bands = ((11,14),(47,50)) if tile_id == 11 else ()
+            for start,end in bands:
+                shade = value-12
+                draw.line((start,y,end,y),fill=(round(.72*shade),shade,round(.36*shade)))
+                rim = value+5
+                draw.point((end+1,y),fill=(round(.72*rim),rim,round(.36*rim)))
+        if tile_id == 6:
+            outline = [(10,38),(18,24),(45,22),(53,27),(47,38),(17,42),(10,38)]
+            draw.line(outline,fill=(20,30,11),width=2)
+            draw.line([(x,y+2) for x,y in outline[:4]],fill=(43,59,23))
+            draw.ellipse((16,31,20,35),fill=(19,28,11))
+        atlas.paste(tile,(tile_id%4*64,tile_id//4*64))
+    output = io.BytesIO()
+    atlas.save(output,format='PNG',compress_level=9)
+    return output.getvalue()
+
+
 def placement(role):
     rotation = np.eye(3)
     if role == 'view':
         scale = (56.49812462925911 + 9.061456233263016) / 100
-        offset = np.array([-9., -8.5, -7.8])
+        offset = np.array([-7.4, -7.85, -9.6])
     elif role == 'pickup':
         # The assembled body-space equipment is displayed as one pickup.
         scale = 1.9
@@ -106,13 +144,14 @@ def build_assets():
     view_hose = hose_mesh(((1., -11., -30.), (9., -10., -18.),
                            (22., -7., -12.), INLET), radius=1.4, detail='view')
     view = combine_meshes((build_flamethrower('view'), view_hose), 'view')
-    assets = {path: texture_bytes() for path in TEXTURES}
+    atlas = texture_bytes()
+    assets = {path: atlas for path in TEXTURES}
     manifest = dict(schema=1, generator='tools/assets/build_flamethrower.py',
         dependencies_sha256={name:sha((ROOT/'tools/assets'/name).read_bytes()) for name in DEPENDENCIES},
         source_archive=originals['source_archive'], source_repair=repair,
         method='authored closed shapes; independent archived gun/backpack motion; endpoint-attached cubic hose',
         hand='m16_geometry.add_hands; exact existing molded mittens and forearms',
-        palette='Shared M16 army-man plastic and mitten atlas', models=[])
+        palette='Player-colored plastic with molded nozzle trim and wrapped tank bands', models=[])
     for path, role in MODELS.items():
         if role == 'view':
             mesh = placed(view, *placement('view'))

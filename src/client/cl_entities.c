@@ -38,7 +38,9 @@ typedef enum {
 	PP_WEAPON_M9_PISTOL,      /* Blaster */
 	PP_WEAPON_SHOTGUN,        /* Shotgun */
 	PP_WEAPON_SUPER_SHOTGUN,  /* Super Shotgun */
+	PP_WEAPON_THUNDERHEAD,
 	PP_WEAPON_M16,            /* Machinegun */
+	PP_WEAPON_SMG,
 	PP_WEAPON_M60,            /* Chaingun */
 	PP_WEAPON_HAND_GRENADE,   /* Hand Grenades */
 	PP_WEAPON_GRENADE_LAUNCHER,
@@ -62,7 +64,9 @@ static const pp_recoil_config_t pp_recoil_configs[] = {
 	/* PP_WEAPON_M9_PISTOL */      { 0.85f, 10.0f, 0.18f, 5.0f, 5.0f },
 	/* PP_WEAPON_SHOTGUN */        { 1.0f, 6.0f, 0.45f, 6.0f, 7.0f },
 	/* PP_WEAPON_SUPER_SHOTGUN */  { 1.0f, 5.0f, 0.55f, 8.0f, 9.0f },
+	/* PP_WEAPON_THUNDERHEAD */    { 0.88f, 12.0f, 0.12f, 5.2f, 5.8f },
 	/* PP_WEAPON_M16 */            { 0.75f, 28.0f, 0.06f, 2.8f, 3.2f },
+	/* PP_WEAPON_SMG */            { 0.58f, 26.0f, 0.05f, 2.0f, 2.6f },
 	/* PP_WEAPON_M60 */            { 0.65f, 26.0f, 0.06f, 2.4f, 3.0f },
 	/* PP_WEAPON_HAND_GRENADE */   { 0.2f, 6.0f, 0.50f, 1.0f, 2.0f },
 	/* PP_WEAPON_GRENADE_LAUNCHER */ { 1.0f, 5.0f, 0.55f, 7.0f, 8.0f },
@@ -278,6 +282,13 @@ PP_ApplyBoss2HelicopterTransform(const entity_state_t *state,
 	ent->oldorigin[2] += bob;
 }
 
+qboolean
+CL_IsKnifeEquipped(const player_state_t *ps)
+{
+	return ps && ps->gunindex > 0 && ps->gunindex < MAX_MODELS &&
+		!Q_stricmp(cl.configstrings[CS_MODELS + ps->gunindex], "models/weapons/v_knife/tris.md2");
+}
+
 static pp_weapon_type_t
 PP_DetectWeaponType(const player_state_t *ps)
 {
@@ -297,7 +308,9 @@ PP_DetectWeaponType(const player_state_t *ps)
 	if (strstr(model, "v_blast")) return PP_WEAPON_M9_PISTOL;
 	if (strstr(model, "v_shotg2")) return PP_WEAPON_SUPER_SHOTGUN;
 	if (strstr(model, "v_shotg")) return PP_WEAPON_SHOTGUN;
+	if (strstr(model, "v_thunderhead")) return PP_WEAPON_THUNDERHEAD;
 	if (strstr(model, "v_machn")) return PP_WEAPON_M16;
+	if (strstr(model, "v_smg")) return PP_WEAPON_SMG;
 	if (strstr(model, "v_chain")) return PP_WEAPON_M60;
 	if (strstr(model, "v_handgr")) return PP_WEAPON_HAND_GRENADE;
 	if (strstr(model, "v_launch")) return PP_WEAPON_GRENADE_LAUNCHER;
@@ -342,8 +355,9 @@ qboolean
 CL_UsesModelADS(const player_state_t *ps)
 {
 	pp_weapon_type_t weapon = PP_DetectWeaponType(ps);
-	return weapon == PP_WEAPON_M16 || weapon == PP_WEAPON_M9_PISTOL ||
-		weapon == PP_WEAPON_SHOTGUN || weapon == PP_WEAPON_SUPER_SHOTGUN || weapon == PP_WEAPON_M60 ||
+	return weapon == PP_WEAPON_M16 || weapon == PP_WEAPON_SMG || weapon == PP_WEAPON_M9_PISTOL ||
+		weapon == PP_WEAPON_SHOTGUN || weapon == PP_WEAPON_SUPER_SHOTGUN ||
+		weapon == PP_WEAPON_THUNDERHEAD || weapon == PP_WEAPON_M60 ||
 		weapon == PP_WEAPON_GRENADE_LAUNCHER || weapon == PP_WEAPON_ROCKET_LAUNCHER ||
 		weapon == PP_WEAPON_SNIPER || weapon == PP_WEAPON_FLAMETHROWER || weapon == PP_WEAPON_MORTAR;
 }
@@ -353,6 +367,8 @@ CL_GetModelADSConfig(const player_state_t *ps)
 {
 	pp_weapon_type_t weapon = PP_DetectWeaponType(ps);
 	return PP_ModelADSConfig(weapon == PP_WEAPON_MORTAR ? PP_MODEL_ADS_MORTAR :
+		weapon == PP_WEAPON_SMG ? PP_MODEL_ADS_SMG :
+		weapon == PP_WEAPON_THUNDERHEAD ? PP_MODEL_ADS_THUNDERHEAD :
 		weapon == PP_WEAPON_FLAMETHROWER ? PP_MODEL_ADS_FLAMETHROWER :
 		weapon == PP_WEAPON_SNIPER ? PP_MODEL_ADS_SNIPER :
 		weapon == PP_WEAPON_ROCKET_LAUNCHER ? PP_MODEL_ADS_RLAUNCHER :
@@ -435,7 +451,9 @@ CL_MFlashTuneWeaponFileForGun(void)
 	if (strstr(gun_model, "v_blast")) return "w_blaster.md2";
 	if (strstr(gun_model, "v_shotg2")) return "w_sshotgun.md2";
 	if (strstr(gun_model, "v_shotg")) return "w_shotgun.md2";
+	if (strstr(gun_model, "v_thunderhead")) return "w_thunderhead.md2";
 	if (strstr(gun_model, "v_machn")) return "w_machinegun.md2";
+	if (strstr(gun_model, "v_smg")) return "w_smg.md2";
 	if (strstr(gun_model, "v_chain")) return "w_chaingun.md2";
 	if (strstr(gun_model, "v_handgr")) return "w_glauncher.md2";
 	if (strstr(gun_model, "v_launch")) return "w_glauncher.md2";
@@ -444,6 +462,7 @@ CL_MFlashTuneWeaponFileForGun(void)
 	if (strstr(gun_model, "v_rail")) return "w_railgun.md2";
 	if (strstr(gun_model, "v_bfg")) return "w_bfg.md2";
 	if (strstr(gun_model, "v_etf")) return "w_machinegun.md2";
+	if (CL_IsKnifeEquipped(ps)) return "w_knife.md2";
 
 	return "weapon.md2";
 }
@@ -572,7 +591,9 @@ CL_GetThirdPersonMuzzle(int entnum, int weapon, vec3_t origin,
 		case MZ_BLASTER: expected = "w_blaster.md2"; break;
 		case MZ_SHOTGUN: case MZ_SHOTGUN2: expected = "w_shotgun.md2"; break;
 		case MZ_SSHOTGUN: expected = "w_sshotgun.md2"; break;
+		case MZ_THUNDERHEAD: expected = "w_thunderhead.md2"; break;
 		case MZ_MACHINEGUN: case MZ_ETF_RIFLE: expected = "w_machinegun.md2"; break;
+		case MZ_SMG: expected = "w_smg.md2"; break;
 		case MZ_CHAINGUN1: case MZ_CHAINGUN2: case MZ_CHAINGUN3: expected = "w_chaingun.md2"; break;
 		case MZ_GRENADE: expected = "w_glauncher.md2"; break;
 		case MZ_ROCKET: expected = "w_rlauncher.md2"; break;
@@ -1556,6 +1577,7 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 	vec3_t base_origin;
 	vec3_t base_angles;
 	float ads_blend;
+	qboolean knife = CL_IsKnifeEquipped(ps);
 	qboolean model_ads = CL_UsesModelADS(ps);
 	pp_model_ads_config_t ads_config = CL_GetModelADSConfig(ps);
 	int i;
@@ -1628,11 +1650,13 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 	VectorCopy(gun.origin, base_origin);
 	VectorCopy(gun.angles, base_angles);
 
-	/* Preserve the shotgun's articulated pump/hand frames in both hip and
-	 * aimed views. Whole-weapon recoil and raising remain procedural. */
-	gun.frame = PP_ModelADSFrame(ads_config, ps->gunframe);
-	gun.oldframe = ps->gunindex == ops->gunindex ?
-		PP_ModelADSFrame(ads_config, ops->gunframe) : gun.frame;
+	/* Use server frames for weapons with authored poses. */
+	gun.frame = knife ? ps->gunframe : PP_ModelADSFrame(ads_config, ps->gunframe);
+	gun.oldframe = gun.frame;
+	if (ps->gunindex == ops->gunindex)
+	{
+		gun.oldframe = knife ? ops->gunframe : PP_ModelADSFrame(ads_config, ops->gunframe);
+	}
 
 	/* Procedural viewmodel animation for all weapons */
 	{
@@ -1680,7 +1704,11 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 
 		/* Detect firing via local-player muzzleflash events */
 		muzzle_seq = pp_viewmodel_muzzle_seq;
-		if ((muzzle_seq != pp_viewmodel_last_muzzle_seq) &&
+		if (knife)
+		{
+			pp_viewmodel_recoil = 0.0f;
+		}
+		else if ((muzzle_seq != pp_viewmodel_last_muzzle_seq) &&
 			((current_time - pp_viewmodel_last_fire_time) >= recoil_cfg->interval))
 		{
 			pp_viewmodel_recoil = recoil_cfg->strength;

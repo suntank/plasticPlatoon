@@ -1,11 +1,11 @@
 # Authored rocket launcher
 
-The rocket launcher uses an original tube with flared ends, a physically
-open bore and closed wall surfaces, plus the established army-man plastic
-palette, molded mitten hands and forearms. The first-person
-model, world pickup, player-held model and normal/tall enemy attachments share
-the authored design. Hands and arms stay in the first-person gun model and
-atlas, keeping one weapon draw per camera.
+The rocket launcher has rounded flares around an open bore, molded bands
+along the tube, and a contoured housing and shoulder pad. The lower hip pose
+leaves more space around the launcher and shows the support grip. The entire
+launcher, including the recessed bore and sights, follows the player color.
+The pickup, player-held, and normal and tall enemy models share the design.
+The arms and hands share the first-person model and atlas.
 
 The first-person model retains the complete tube and rear flare. GL1, GL3
 and software alias rendering use a 0.1-unit near clipping plane only for
@@ -39,7 +39,7 @@ Rocket ammunition, the fired projectile and weapon tuning retain their
 existing behavior and geometry.
 
 The rocket soldier fires from planted `attak303` (MD2 frame 32). Its front
-tube rim center is `(23.470810, -4.749782, 4.422446)` before the soldier height
+tube rim center is `(23.470810, -4.749782, 4.426525)` before the soldier height
 transform. The shared `MZ2_SOLDIER_ROCKET` entry negates model Y to right and
 applies the foot-anchored height once, aligning the projectile source and
 client flash with the taller attachment. The compiled-table comparison in
@@ -50,10 +50,10 @@ exact firing pose.
 
 | Version | Previous triangles | Current triangles | Reduction | Frames |
 | --- | ---: | ---: | ---: | ---: |
-| First person, including hands and arms | 1,399 | 684 | 51.1% | 1 |
-| Pickup | 799 | 256 | 68.0% | 1 |
-| Player held | 1,427 | 256 | 82.1% | 198 |
-| Enemy held, including taller variant | 1,427 | 256 | 82.1% | 475 |
+| First person, including hands and arms | 1,399 | 936 | 33.1% | 1 |
+| Pickup | 799 | 428 | 46.4% | 1 |
+| Player held | 1,427 | 428 | 70.0% | 198 |
+| Enemy held, including taller variant | 1,427 | 428 | 70.0% | 475 |
 
 `tools/assets/rlauncher-manifest.json` records exact counts, hashes, bounds,
 sight anchors and all-pose validation. Geometry counts describe asset work;

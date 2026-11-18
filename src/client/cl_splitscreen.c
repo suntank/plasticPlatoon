@@ -57,6 +57,13 @@ static void SS_TriggerSlotViewmodelKick(ss_local_player_t *slot,
 	const ss_viewmodel_recoil_t *recoil_cfg, qboolean ads_active, float current_time);
 static void SS_ClearSlotDeviceInput(ss_local_player_t *slot);
 
+static qboolean
+SS_SlotADSHeld(const ss_local_player_t *slot)
+{
+	return slot->ads_down &&
+		(!slot->snapshot_valid || !CL_IsKnifeEquipped(&slot->frame.playerstate));
+}
+
 static float
 SS_GetDeltaAngle(const player_state_t *ps, int axis)
 {
@@ -2148,7 +2155,8 @@ SS_DrawViewportCrosshair(const ss_viewport_t *viewport, const player_state_t *ps
 	fov_x = isfinite(ps->fov) && ps->fov > 1 && ps->fov < 179 ? ps->fov : 90;
 	PP_AimAssistReticle(ps, viewport->w, viewport->h, fov_x,
 		CalcFov(fov_x, (float)viewport->w, (float)viewport->h),
-		Cvar_VariableValue("cl_aimassist") > 0, &assist_x, &assist_y);
+		!CL_IsKnifeEquipped(ps) && Cvar_VariableValue("cl_aimassist") > 0,
+		&assist_x, &assist_y);
 	Draw_PicScaled(viewport->x + (viewport->w - crosshair_width * scale) / 2 + (int)assist_x,
 		viewport->y + (viewport->h - crosshair_height * scale) / 2 + (int)assist_y,
 		crosshair_pic, scale);
@@ -2328,7 +2336,9 @@ SS_GetADSOverlayPicName(const player_state_t *ps)
 	if (strstr(gun_model, "v_blast")) return NULL; /* aligned 3D viewmodel */
 	if (strstr(gun_model, "v_shotg2")) return NULL; /* aligned 3D viewmodel */
 	if (strstr(gun_model, "v_shotg")) return NULL; /* aligned 3D viewmodel */
+	if (strstr(gun_model, "v_thunderhead")) return NULL; /* aligned 3D viewmodel */
 	if (strstr(gun_model, "v_machn")) return NULL; /* aligned 3D viewmodel */
+	if (strstr(gun_model, "v_smg")) return NULL; /* aligned 3D viewmodel */
 	if (strstr(gun_model, "v_chain")) return NULL; /* aligned 3D viewmodel */
 	if (strstr(gun_model, "v_handgr")) return "ads_handgrenade.png";
 	if (strstr(gun_model, "v_launch")) return NULL; /* aligned 3D viewmodel */
@@ -2432,6 +2442,18 @@ SS_GetViewmodelRecoil(const player_state_t *ps)
 		return &recoil;
 	}
 
+	if (strstr(gun_model, "v_smg"))
+	{
+		static const ss_viewmodel_recoil_t recoil = { 0.58f, 26.0f, 2.6f, 2.0f };
+		return &recoil;
+	}
+
+	if (strstr(gun_model, "v_thunderhead"))
+	{
+		static const ss_viewmodel_recoil_t recoil = { 0.88f, 12.0f, 5.8f, 5.2f };
+		return &recoil;
+	}
+
 	if (strstr(gun_model, "v_chain"))
 	{
 		static const ss_viewmodel_recoil_t recoil = { 0.5f, 22.0f, 3.0f, 2.0f };
@@ -2523,11 +2545,8 @@ SS_UpdateSlotCombatVisualState(int slot_index, const player_state_t *ps,
 		slot->last_gunindex = ps->gunindex;
 	}
 
-	if (muzzle_seq != slot->last_muzzle_flash_seq)
-	{
-		SS_TriggerSlotViewmodelKick(slot, recoil_cfg, ads_active, current_time);
-	}
-	else if (attack_active && !slot->previous_attack_down)
+	if (!CL_IsKnifeEquipped(ps) && (muzzle_seq != slot->last_muzzle_flash_seq ||
+		(attack_active && !slot->previous_attack_down)))
 	{
 		SS_TriggerSlotViewmodelKick(slot, recoil_cfg, ads_active, current_time);
 	}
@@ -2652,10 +2671,12 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 	float lerp;
 	float ads_blend;
 	pp_model_ads_config_t ads_config;
+	qboolean knife = CL_IsKnifeEquipped(ps);
+	qboolean model_ads = CL_UsesModelADS(ps);
 	int i;
 
 	if (!refdef || !ps || !cl_gun->value ||
-		(SS_IsSlotADSActive(slot_index, ps) && !CL_UsesModelADS(ps)))
+		(SS_IsSlotADSActive(slot_index, ps) && !model_ads))
 	{
 		return;
 	}
@@ -2688,7 +2709,7 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 
 	ops = SS_GetPreviousPlayerState(slot, ps);
 	lerp = SS_GetSlotViewLerp(slot);
-	ads_blend = slot && CL_UsesModelADS(ps) ? PP_ModelADSAmount(&slot->model_ads) : 0.0f;
+	ads_blend = slot && model_ads ? PP_ModelADSAmount(&slot->model_ads) : 0.0f;
 	ads_config = CL_GetModelADSConfig(ps);
 	AngleVectors(refdef->viewangles, forward, right, up);
 
@@ -2797,19 +2818,18 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 	PP_ModelADSConstrainMotion(ads_config, ads_blend, recoil_cfg->recoil_push_back,
 		forward, right, up, base_origin, base_angles, gun.origin, gun.angles);
 
-	/* The shotgun's pump and support hand follow the server animation in
-	 * every viewport; rigid authored weapons retain their static MD2 pose. */
-	gun.frame = CL_UsesModelADS(ps) ? PP_ModelADSFrame(ads_config, ps->gunframe) : ps->gunframe;
+	/* Interpolate authored weapon poses in each viewport. */
+	gun.frame = model_ads ? PP_ModelADSFrame(ads_config, ps->gunframe) : ps->gunframe;
 	gun.oldframe = gun.frame;
 	gun.backlerp = 0.0f;
-	if (ads_config.animated && ps->gunindex == ops->gunindex)
+	if ((knife || ads_config.animated) && ps->gunindex == ops->gunindex)
 	{
-		gun.oldframe = PP_ModelADSFrame(ads_config, ops->gunframe);
+		gun.oldframe = knife ? ops->gunframe : PP_ModelADSFrame(ads_config, ops->gunframe);
 		gun.backlerp = 1.0f - lerp;
 	}
-	if (CL_UsesModelADS(ps))
+	if (knife || model_ads)
 	{
-		/* Pump interpolation stays in the resolved weapon's local space.
+		/* Interpolation stays in the resolved weapon's local space.
 		 * Matching origins also enables the rigid weapons' static cache. */
 		VectorCopy(gun.origin, gun.oldorigin);
 	}
@@ -3018,6 +3038,7 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	float move_y;
 	float look_x;
 	float look_y;
+	qboolean ads_held;
 	float left_deadzone = Cvar_VariableValue("joy_left_deadzone");
 	float right_deadzone = Cvar_VariableValue("joy_right_deadzone");
 	usercmd_t *cmd;
@@ -3054,7 +3075,8 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	look_x = SS_NormalizeAxis(slot->axis_right_x, right_deadzone);
 	look_y = SS_NormalizeAxis(slot->axis_right_y, right_deadzone);
 	VectorCopy(slot->viewangles, before_look);
-	look_scale = PP_ADSLookScale(slot->ads_down, Cvar_VariableValue("cl_ads_sensitivity"));
+	ads_held = SS_SlotADSHeld(slot);
+	look_scale = PP_ADSLookScale(ads_held, Cvar_VariableValue("cl_ads_sensitivity"));
 
 	slot->viewangles[YAW] -= look_x * Cvar_VariableValue("joy_yawspeed") * cls.nframetime;
 	slot->viewangles[PITCH] += look_y * Cvar_VariableValue("joy_pitchspeed") * cls.nframetime;
@@ -3083,7 +3105,7 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	PP_AimAssistADS(slot->viewangles, slot->snapshot_valid ? &slot->frame.playerstate : NULL,
 		cls.nframetime, Cvar_VariableValue("cl_aimassist_strength"),
 		Cvar_VariableValue("cl_aimassist_speed"), slot->device_index >= 2 &&
-		slot->ads_down && !slot->menu_open && cls.key_dest == key_game &&
+		ads_held && !slot->menu_open && cls.key_dest == key_game &&
 		Cvar_VariableValue("cl_aimassist") > 0);
 	SS_ClampSlotPitch(slot, slot->snapshot_valid ? &slot->frame.playerstate : NULL);
 
@@ -4812,7 +4834,7 @@ SS_AddDeviceMouseMotion(int device_index, float yaw, float pitch)
 
 	if (!slot->menu_open && slot->state != SS_SLOT_DROPPED && cls.key_dest == key_game)
 	{
-		float look_scale = PP_ADSLookScale(slot->ads_down,
+		float look_scale = PP_ADSLookScale(SS_SlotADSHeld(slot),
 			Cvar_VariableValue("cl_ads_sensitivity"));
 		slot->viewangles[YAW] += yaw * look_scale;
 		slot->viewangles[PITCH] += pitch * look_scale;

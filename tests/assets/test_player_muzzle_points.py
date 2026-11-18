@@ -28,9 +28,10 @@ class PlayerMuzzlePointsTests(unittest.TestCase):
         subprocess.run([sys.executable, str(ROOT/'tools/assets/build_player_muzzle_points.py'), '--check'], check=True)
 
     def test_complete_inventory_and_package_provenance(self):
-        expected = {p.name for p in (ROOT/'baseq2/players/soldier').glob('w_*.md2')} | {'weapon.md2'}
+        expected = {p.name for p in (ROOT/'baseq2/players/soldier').glob('w_*.md2')
+                    if p.name != 'w_knife.md2'} | {'weapon.md2'}
         self.assertEqual(expected, {m['filename'] for m in self.report['models']})
-        self.assertEqual(len(expected), 11)
+        self.assertEqual(len(expected), 13)
         with zipfile.ZipFile(ROOT/'baseq2/plastic-platoon.pk3') as package:
             for entry in self.report['models']:
                 with self.subTest(model=entry['filename']):

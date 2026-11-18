@@ -35,7 +35,7 @@ and is excluded from both the source tree and its conversion inputs.
 
 ### Skyboxes
 
-Each skybox uses six 256×256 faces baked from a toy soldier's eye height.
+Each skybox uses six 256×256 faces rendered from one fixed viewpoint.
 
 - `pp_garage` frames a workshop with the garage door toward +X and the
   workbench toward −Y. A concrete floor complements the slab near the horizon.
@@ -44,6 +44,13 @@ Each skybox uses six 256×256 faces baked from a toy soldier's eye height.
   An oatmeal carpet complements the floor near the horizon.
 - `pp_backyard` frames a grassy yard with the house toward +X, the oak
   and tire swing toward +Y, and a cedar fence around the perimeter.
+- `pp_kitchen` frames a retro kitchen from the checker-tile floor, with
+  the range toward +X, the sink window toward +Y, and the breakfast nook
+  toward −Y.
+- `pp_window_yard` looks out across the same property from 1.62 m above
+  the lawn. The oak, vegetable beds, and sandcastle are toward −X. The
+  driveway, sidewalks, and houses across the street are toward +X. Build
+  the foreground house and window frames in the map.
 
 On a map with sky surfaces, run `sky pp_backyard` in the console to preview
 the yard, or substitute another name. For the map default, set the `sky`
@@ -57,6 +64,8 @@ original scenes and render their faces again, use Blender with Cycles.
 blender -b -t 8 --python-exit-code 1 --python tools/assets/render_garage_skybox.py
 blender -b -t 8 --python-exit-code 1 --python tools/assets/render_bedroom_skybox.py
 blender -b -t 8 --python-exit-code 1 --python tools/assets/render_backyard_skybox.py
+blender -b -t 8 --python-exit-code 1 --python tools/assets/render_kitchen_skybox.py
+blender -b -t 8 --python-exit-code 1 --python tools/assets/render_window_yard_skybox.py
 ```
 
 ### Models and other textures
@@ -103,14 +112,14 @@ a close near clipping plane only for weapon models, keeping the complete tube
 visible through aiming and recoil. See
 [the rocket-launcher notes](../../doc/performance/rlauncher-simple-shapes.md).
 
-The sniper rifle uses 920 first-person triangles including molded mitten
-hands, and 492 triangles for pickup/player-held versions, with an open modeled
-scope. First-person, pickup and all player-held versions share
-the design, and aiming raises the actual scope into view. See
+The sniper rifle uses 996 first-person triangles including molded mitten
+hands, and 520 triangles for pickup and player-held versions. The rounded
+stock, beveled receiver and flared open scope share the molded plastic
+finish. Aiming raises the actual scope into view. See
 [the sniper notes](../../doc/performance/sniper-simple-shapes.md).
 
-The M1 Flamethrower uses 804 first-person triangles with mitten hands and a
-hose, and 648 triangles for the complete pickup/player-held assembly. Twin
+The M1 Flamethrower uses 888 first-person triangles with mitten hands and a
+hose, and 736 triangles for the complete pickup and held assembly. Twin
 tanks follow the soldier's back independently from the wand, and an authored
 hose bends between them. Aiming raises the actual model. See
 [the flamethrower notes](../../doc/performance/flamethrower-simple-shapes.md).

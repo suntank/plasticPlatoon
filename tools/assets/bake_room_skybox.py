@@ -1,6 +1,7 @@
 """Shared Blender primitives and cubemap baking for Plastic Platoon environments."""
 
 import argparse
+from array import array
 import math
 from pathlib import Path
 import sys
@@ -158,6 +159,43 @@ def bake(scene, basename, eye, output):
             scene.render.filepath = str(rendered)
             bpy.ops.render.render(write_still=True)
             save_face(rendered, output / filename)
+
+
+def match_edge_texels(output, basename):
+    """Give the faces the same color along each shared edge and corner."""
+    n = FACE_SIZE
+    edges = {}
+    images = {}
+    coordinates = [-n, *(2 * index + 1 - n for index in range(1, n - 1)), n]
+    perimeter = {(x, y) for index in range(n)
+                 for x, y in ((index, 0), (index, n - 1), (0, index), (n - 1, index))}
+    try:
+        for face, (direction, top) in FACES.items():
+            path = output / f"{basename}{face}.png"
+            image = bpy.data.images.load(str(path.resolve()))
+            count = len(image.pixels)
+            channels = count // (n * n)
+            pixels = array("f", [0]) * count
+            image.pixels.foreach_get(pixels)
+            images[face] = image, path, pixels
+            forward, up = Vector(direction), Vector(top)
+            right = forward.cross(up)
+            for x, y in perimeter:
+                s, t = coordinates[x], coordinates[y]
+                direction_on_cube = tuple(n * forward + s * right + t * up)
+                edges.setdefault(direction_on_cube, []).append((pixels, channels * (y * n + x)))
+        for texels in edges.values():
+            for channel in range(3):
+                value = sum(pixels[offset + channel] for pixels, offset in texels) / len(texels)
+                for pixels, offset in texels:
+                    pixels[offset + channel] = value
+        for image, path, pixels in images.values():
+            image.pixels.foreach_set(pixels)
+            image.update()
+            image.save(filepath=str(path.resolve()))
+    finally:
+        for image, _, _ in images.values():
+            bpy.data.images.remove(image)
 
 
 def parse_args(description, samples):

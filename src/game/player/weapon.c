@@ -52,6 +52,22 @@ static byte is_silenced;
 #define PP_BLASTER_GF_DROP_BASE 20
 #define PP_BLASTER_GF_DROP_LAST 22
 
+enum knife_swing
+{
+	KNIFE_SWING_DOWN,
+	KNIFE_SWING_LEFT,
+	KNIFE_SWING_RIGHT,
+	KNIFE_SWING_COUNT
+};
+
+/* The view model has an idle pose followed by three six-pose blocks. */
+#define KNIFE_SWING_FRAMES 6
+#define KNIFE_IMPACT_POSE 3
+#define KNIFE_DOWN_WINDUP_POSE 2
+#define KNIFE_DOWN_FOLLOW_THROUGH_POSE 4
+#define KNIFE_DAMAGE 40
+#define KNIFE_REACH 56.0f
+
 void weapon_grenade_fire(edict_t *ent, qboolean held);
 
 void
@@ -309,13 +325,10 @@ Pickup_Weapon(edict_t *ent, edict_t *other)
 		/* give them some ammo with it */
 		ammo = FindItem(ent->item->ammo);
 
-		if ((int)dmflags->value & DF_INFINITE_AMMO)
+		if (ammo)
 		{
-			Add_Ammo(other, ammo, 1000);
-		}
-		else
-		{
-			Add_Ammo(other, ammo, ammo->quantity);
+			int count = ((int)dmflags->value & DF_INFINITE_AMMO) ? 1000 : ammo->quantity;
+			Add_Ammo(other, ammo, count);
 		}
 
 		if (!(ent->spawnflags & DROPPED_PLAYER_ITEM))
@@ -376,6 +389,11 @@ ChangeWeapon(edict_t *ent)
 	ent->client->pers.weapon = ent->client->newweapon;
 	ent->client->newweapon = NULL;
 	ent->client->machinegun_shots = 0;
+	if ((ent->client->pers.weapon && ent->client->pers.weapon->weapmodel == WEAP_THUNDERHEAD) ||
+		(ent->client->pers.lastweapon && ent->client->pers.lastweapon->weapmodel == WEAP_THUNDERHEAD))
+	{
+		ent->client->weapon_state.current_bloom = 0.0f;
+	}
 
 	/* set visible model */
 	if (ent->s.modelindex == 255)
@@ -385,7 +403,8 @@ ChangeWeapon(edict_t *ent)
 			i = ((ent->client->pers.weapon->weapmodel & PP_PLAYER_SKINNUM_WEAPON_MASK)
 				 << PP_PLAYER_SKINNUM_WEAPON_SHIFT);
 
-			if (ent->client->pers.weapon->weapmodel == WEAP_BLASTER)
+			if (ent->client->pers.weapon->weapmodel == WEAP_BLASTER ||
+				ent->client->pers.weapon->weapmodel == WEAP_KNIFE)
 			{
 				i |= PP_PLAYER_SKINNUM_PISTOL_FLAG;
 			}
@@ -420,6 +439,13 @@ ChangeWeapon(edict_t *ent)
 	ent->client->ps.gunindex = gi.modelindex(
 			ent->client->pers.weapon->view_model);
 
+	/* Switch the view and the equipped model in the same snapshot. */
+	if (ent->client->pers.weapon->weapmodel == WEAP_KNIFE ||
+		(ent->client->pers.lastweapon && ent->client->pers.lastweapon->weapmodel == WEAP_KNIFE))
+	{
+		ClientUpdateWeaponFov(ent->client);
+	}
+
 	ent->client->anim_priority = ANIM_PAIN;
 
 	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
@@ -437,6 +463,9 @@ ChangeWeapon(edict_t *ent)
 void
 NoAmmoWeaponChange(edict_t *ent)
 {
+	const qboolean has_light_bullets =
+		ent->client->pers.inventory[ITEM_INDEX(FindItem("Light Bullets"))] > 0;
+
 	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("slugs"))] &&
 		ent->client->pers.inventory[ITEM_INDEX(FindItem("railgun"))])
 	{
@@ -451,17 +480,24 @@ NoAmmoWeaponChange(edict_t *ent)
 		return;
 	}
 
-	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("bullets"))] &&
+	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("Heavy Bullets"))] &&
 		ent->client->pers.inventory[ITEM_INDEX(FindItem("chaingun"))])
 	{
 		ent->client->newweapon = FindItem("chaingun");
 		return;
 	}
 
-	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("bullets"))] &&
+	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("Heavy Bullets"))] &&
 		ent->client->pers.inventory[ITEM_INDEX(FindItem("machinegun"))])
 	{
 		ent->client->newweapon = FindItem("machinegun");
+		return;
+	}
+
+	if (has_light_bullets &&
+		ent->client->pers.inventory[ITEM_INDEX(FindItem("SMG"))])
+	{
+		ent->client->newweapon = FindItem("SMG");
 		return;
 	}
 
@@ -472,6 +508,13 @@ NoAmmoWeaponChange(edict_t *ent)
 		return;
 	}
 
+	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("Shells"))] &&
+		ent->client->pers.inventory[ITEM_INDEX(FindItem("Thunderhead"))])
+	{
+		ent->client->newweapon = FindItem("Thunderhead");
+		return;
+	}
+
 	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))] &&
 		ent->client->pers.inventory[ITEM_INDEX(FindItem("shotgun"))])
 	{
@@ -479,7 +522,17 @@ NoAmmoWeaponChange(edict_t *ent)
 		return;
 	}
 
-	ent->client->newweapon = FindItem("blaster");
+	if (has_light_bullets)
+	{
+		ent->client->newweapon = FindItem("Pistol");
+		return;
+	}
+
+	gitem_t *knife = FindItem("Knife");
+	if (ent->client->pers.inventory[ITEM_INDEX(knife)])
+	{
+		ent->client->newweapon = knife;
+	}
 }
 
 /*
@@ -650,6 +703,23 @@ Change_Weap_Animation(edict_t *ent)
 	}
 }
 
+static void
+Weapon_AttackAnimation(edict_t *ent)
+{
+	ent->client->anim_priority = ANIM_ATTACK;
+
+	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
+	{
+		ent->s.frame = FRAME_crattak1 - 1;
+		ent->client->anim_end = FRAME_crattak9;
+	}
+	else
+	{
+		ent->s.frame = FRAME_attack1 - 1;
+		ent->client->anim_end = FRAME_attack8;
+	}
+}
+
 /*
  * A generic function to handle
  * the basics of weapon thinking
@@ -736,19 +806,7 @@ Weapon_Generic(edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 				ent->client->ps.gunframe = FRAME_FIRE_FIRST;
 				ent->client->weaponstate = WEAPON_FIRING;
 
-				/* start the animation */
-				ent->client->anim_priority = ANIM_ATTACK;
-
-				if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
-				{
-					ent->s.frame = FRAME_crattak1 - 1;
-					ent->client->anim_end = FRAME_crattak9;
-				}
-				else
-				{
-					ent->s.frame = FRAME_attack1 - 1;
-					ent->client->anim_end = FRAME_attack8;
-				}
+				Weapon_AttackAnimation(ent);
 			}
 			else
 			{
@@ -1201,6 +1259,107 @@ Blaster_Fire(edict_t *ent, vec3_t g_offset, int damage,
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 }
 
+static void
+Knife_Hit(edict_t *ent, enum knife_swing swing)
+{
+	vec3_t start, forward, right, up;
+	int damage = KNIFE_DAMAGE;
+	const float side = swing == KNIFE_SWING_RIGHT ? 0.32f : -0.32f;
+	const float offsets[] = {0, side, -side};
+	const float *axis = swing == KNIFE_SWING_DOWN ? up : right;
+
+	VectorCopy(ent->s.origin, start);
+	start[2] += ent->viewheight;
+	AngleVectors(ent->client->v_angle, forward, right, up);
+
+	if (is_quad)
+	{
+		damage *= 4;
+		gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage3.wav"), 1, ATTN_NORM, 0);
+	}
+
+	/* Check the center first, then the sides of this swing's arc. Each
+	 * ray stops at cover and each swing can damage at most one target. */
+	for (int i = 0; i < ARRLEN(offsets); i++)
+	{
+		vec3_t direction, end;
+		VectorMA(forward, offsets[i], axis, direction);
+		VectorNormalize(direction);
+		VectorMA(start, KNIFE_REACH, direction, end);
+
+		trace_t tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT);
+		if (tr.startsolid || tr.fraction >= 1.0f || !tr.ent || !tr.ent->takedamage)
+		{
+			continue;
+		}
+
+		gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/knife_hit.wav"), 1, ATTN_NORM, 0);
+		T_Damage(tr.ent, ent, ent, direction, tr.endpos, tr.plane.normal,
+				damage, 10, 0, MOD_KNIFE);
+		return;
+	}
+}
+
+void
+Weapon_Knife(edict_t *ent)
+{
+	if (!ent || ent->deadflag || ent->s.modelindex != 255)
+	{
+		return;
+	}
+
+	gclient_t *client = ent->client;
+	if (client->weaponstate == WEAPON_ACTIVATING)
+	{
+		client->weaponstate = WEAPON_READY;
+		return;
+	}
+
+	if (client->weaponstate == WEAPON_READY)
+	{
+		if (client->newweapon)
+		{
+			ChangeWeapon(ent);
+		}
+		else if ((client->buttons | client->latched_buttons) & BUTTON_ATTACK)
+		{
+			unsigned int swing = (unsigned int)randk() % KNIFE_SWING_COUNT;
+			client->latched_buttons &= ~BUTTON_ATTACK;
+			client->weaponstate = WEAPON_FIRING;
+			client->ps.gunframe = 1 + swing * KNIFE_SWING_FRAMES;
+			if (swing == KNIFE_SWING_DOWN)
+			{
+				client->ps.gunframe = KNIFE_DOWN_WINDUP_POSE;
+			}
+			Weapon_AttackAnimation(ent);
+			gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/knife_swing.wav"), 1, ATTN_NORM, 0);
+		}
+		return;
+	}
+
+	if (client->weaponstate == WEAPON_FIRING)
+	{
+		int swing_frame = client->ps.gunframe - 1;
+		enum knife_swing swing = swing_frame / KNIFE_SWING_FRAMES;
+		int pose = 1 + swing_frame % KNIFE_SWING_FRAMES;
+
+		if (pose == KNIFE_SWING_FRAMES)
+		{
+			client->weaponstate = WEAPON_READY;
+			client->ps.gunframe = 0;
+			return;
+		}
+
+		/* The overhead cut skips the extra off-screen recovery pose. */
+		int step = swing == KNIFE_SWING_DOWN && pose == KNIFE_DOWN_FOLLOW_THROUGH_POSE ? 2 : 1;
+		client->ps.gunframe += step;
+		if (pose + step == KNIFE_IMPACT_POSE)
+		{
+			Knife_Hit(ent, swing);
+		}
+	}
+}
+
 void
 Weapon_Blaster_Fire(edict_t *ent)
 {
@@ -1221,7 +1380,17 @@ Weapon_Blaster_Fire(edict_t *ent)
 		return;
 	}
 
-	
+	if (ent->client->pers.inventory[ent->client->ammo_index] <= 0)
+	{
+		NoAmmoWeaponChange(ent);
+		return;
+	}
+
+	if (!((int)dmflags->value & DF_INFINITE_AMMO))
+	{
+		ent->client->pers.inventory[ent->client->ammo_index]--;
+	}
+
 	if (is_quad)
 	{
 		damage *= 4;
@@ -1334,19 +1503,7 @@ Weapon_Blaster(edict_t *ent)
 				ent->client->ps.gunframe = PP_BLASTER_GF_FIRE_BASE;
 				ent->client->weaponstate = WEAPON_FIRING;
 
-				/* start the animation */
-				ent->client->anim_priority = ANIM_ATTACK;
-
-				if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
-				{
-					ent->s.frame = FRAME_crattak1 - 1;
-					ent->client->anim_end = FRAME_crattak9;
-				}
-				else
-				{
-					ent->s.frame = FRAME_attack1 - 1;
-					ent->client->anim_end = FRAME_attack8;
-				}
+				Weapon_AttackAnimation(ent);
 			}
 			else
 			{
@@ -1500,6 +1657,21 @@ Weapon_HyperBlaster(edict_t *ent)
 
 /* MACHINEGUN / CHAINGUN */
 
+#define AUTOMATIC_SHOT_UNITS 1000
+
+static int
+AutomaticShotCount(edict_t *ent, float rate_rps)
+{
+	int shots;
+
+	/* Carry fractional rounds across the 10 Hz game ticks. */
+	ent->client->machinegun_shots += (int)(rate_rps * (FRAMETIME * AUTOMATIC_SHOT_UNITS));
+	shots = ent->client->machinegun_shots / AUTOMATIC_SHOT_UNITS;
+	ent->client->machinegun_shots -= shots * AUTOMATIC_SHOT_UNITS;
+
+	return Q_min(Q_min(shots, 64), ent->client->pers.inventory[ent->client->ammo_index]);
+}
+
 void
 Machinegun_Fire(edict_t *ent)
 {
@@ -1513,7 +1685,10 @@ Machinegun_Fire(edict_t *ent)
 	int kick = 2;
 	vec3_t offset;
 	int hspread, vspread;
+	int shots;
 	float spread_mult;
+	qboolean smg;
+	pp_weapon_id_t weapon_id;
 	const pp_weapon_params_t *params;
 
 	if (!ent)
@@ -1521,10 +1696,13 @@ Machinegun_Fire(edict_t *ent)
 		return;
 	}
 
-	if (!(ent->client->buttons & BUTTON_ATTACK))
+	smg = ent->client->pers.weapon->weapmodel == WEAP_SMG;
+	weapon_id = smg ? WEAP_PP_SMG : WEAP_PP_M16;
+
+	if (!(ent->client->buttons & BUTTON_ATTACK) || (smg && ent->client->newweapon))
 	{
 		ent->client->machinegun_shots = 0;
-		ent->client->ps.gunframe++;
+		ent->client->ps.gunframe = smg ? 6 : ent->client->ps.gunframe + 1;
 		return;
 	}
 
@@ -1539,7 +1717,8 @@ Machinegun_Fire(edict_t *ent)
 
 	if (ent->client->pers.inventory[ent->client->ammo_index] < 1)
 	{
-		ent->client->ps.gunframe = 6;
+		ent->client->ps.gunframe = smg ? 7 : 6;
+		ent->client->machinegun_shots = 0;
 
 		if (level.time >= ent->pain_debounce_time)
 		{
@@ -1552,9 +1731,13 @@ Machinegun_Fire(edict_t *ent)
 		return;
 	}
 
-	/* PP: Get tuned damage from SMG params */
-	params = PP_Weapon_GetParams(WEAP_PP_SMG);
-	damage = params ? params->hitscan.damage : 8;
+	params = PP_Weapon_GetParams(weapon_id);
+	shots = AutomaticShotCount(ent, params->hitscan.rate_rps);
+	if (shots <= 0)
+	{
+		return;
+	}
+	damage = params->hitscan.damage;
 
 	if (is_quad)
 	{
@@ -1569,11 +1752,6 @@ Machinegun_Fire(edict_t *ent)
 	ent->client->kick_angles[0] = crandom() * 0.5;
 	ent->client->kick_angles[1] = crandom() * 0.5;
 	ent->client->kick_angles[2] = crandom() * 0.5;
-
-	/* PP: Calculate spread with ADS and bloom modifiers */
-	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_SMG);
-	hspread = (int)(DEFAULT_BULLET_HSPREAD * spread_mult);
-	vspread = (int)(DEFAULT_BULLET_VSPREAD * spread_mult);
 
 	/* get start / end positions */
 	VectorAdd(ent->client->v_angle, ent->client->kick_angles, angles);
@@ -1591,21 +1769,25 @@ Machinegun_Fire(edict_t *ent)
 	}
 	VectorSubtract(end, start, aimdir);
 	VectorNormalize(aimdir);
-	fire_bullet(ent, start, aimdir, damage, kick, hspread, vspread, MOD_MACHINEGUN);
-
-	/* PP: Add bloom after firing */
-	PP_Weapon_AddBloom(ent, WEAP_PP_SMG);
+	for (int i = 0; i < shots; i++)
+	{
+		spread_mult = PP_Weapon_GetSpreadMultiplier(ent, weapon_id);
+		hspread = (int)(DEFAULT_BULLET_HSPREAD * spread_mult);
+		vspread = (int)(DEFAULT_BULLET_VSPREAD * spread_mult);
+		fire_bullet(ent, start, aimdir, damage, kick, hspread, vspread, MOD_MACHINEGUN);
+		PP_Weapon_AddBloom(ent, weapon_id);
+	}
 
 	gi.WriteByte(svc_muzzleflash);
 	gi.WriteShort(ent - g_edicts);
-	gi.WriteByte(MZ_MACHINEGUN | is_silenced);
+	gi.WriteByte((smg ? (shots > 1 ? MZ_SMG2 : MZ_SMG) : MZ_MACHINEGUN) | is_silenced);
 	gi.multicast(ent->s.origin, MULTICAST_PVS);
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	if (!((int)dmflags->value & DF_INFINITE_AMMO))
 	{
-		ent->client->pers.inventory[ent->client->ammo_index]--;
+		ent->client->pers.inventory[ent->client->ammo_index] -= shots;
 	}
 
 	ent->client->anim_priority = ANIM_ATTACK;
@@ -1638,6 +1820,14 @@ Weapon_Machinegun(edict_t *ent)
 }
 
 void
+Weapon_SMG(edict_t *ent)
+{
+	static int fire_frames[] = {4, 5, 0};
+
+	Weapon_Generic(ent, 3, 6, 14, 18, NULL, fire_frames, Machinegun_Fire);
+}
+
+void
 Chaingun_Fire(edict_t *ent)
 {
 	int i;
@@ -1654,7 +1844,6 @@ Chaingun_Fire(edict_t *ent)
 	int kick = 2;
 	int hspread, vspread;
 	float rate_rps;
-	int shot_units;
 	int flash_shots;
 	float spread_mult;
 	const pp_weapon_params_t *params;
@@ -1719,25 +1908,7 @@ Chaingun_Fire(edict_t *ent)
 	}
 
 	rate_rps = (params && params->hitscan.rate_rps > 0.0f) ? params->hitscan.rate_rps : 9.0f;
-	shot_units = (int)(rate_rps * (FRAMETIME * 1000.0f));
-	ent->client->machinegun_shots += shot_units;
-	shots = ent->client->machinegun_shots / 1000;
-	ent->client->machinegun_shots -= shots * 1000;
-
-	if (shots <= 0)
-	{
-		return;
-	}
-
-	if (shots > 64)
-	{
-		shots = 64;
-	}
-
-	if (shots > ent->client->pers.inventory[ent->client->ammo_index])
-	{
-		shots = ent->client->pers.inventory[ent->client->ammo_index];
-	}
+	shots = AutomaticShotCount(ent, rate_rps);
 
 	if (shots <= 0)
 	{
@@ -1827,8 +1998,8 @@ Weapon_Chaingun(edict_t *ent)
 
 /* SHOTGUN / SUPERSHOTGUN */
 
-void
-weapon_shotgun_fire(edict_t *ent)
+static void
+FireShotgunShell(edict_t *ent, pp_weapon_id_t weapon, int pellets, int kick, int mod, int flash)
 {
 	vec3_t start;
 	vec3_t forward, right;
@@ -1838,25 +2009,11 @@ weapon_shotgun_fire(edict_t *ent)
 	trace_t tr;
 	vec3_t offset;
 	int damage;
-	int kick = 8;
 	int hspread, vspread;
 	float spread_mult;
-	const pp_weapon_params_t *params;
+	const pp_hitscan_params_t *params = &PP_Weapon_GetParams(weapon)->hitscan;
 
-	if (!ent)
-	{
-		return;
-	}
-
-	if (ent->client->ps.gunframe == 9)
-	{
-		ent->client->ps.gunframe++;
-		return;
-	}
-
-	/* PP: Get tuned damage from Shotgun params */
-	params = PP_Weapon_GetParams(WEAP_PP_SHOTGUN);
-	damage = params ? params->hitscan.damage : 4;
+	damage = params->damage;
 
 	ent->client->kick_angles[0] = -2;
 	VectorAdd(ent->client->v_angle, ent->client->kick_angles, angles);
@@ -1883,37 +2040,38 @@ weapon_shotgun_fire(edict_t *ent)
 		kick *= 4;
 	}
 
-	/* PP: Calculate spread with ADS modifier */
-	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, WEAP_PP_SHOTGUN);
-	hspread = (int)(500 * spread_mult);
-	vspread = (int)(500 * spread_mult);
-
-	if (deathmatch->value)
-	{
-		fire_shotgun(ent, start, aimdir, damage, kick,
-				hspread, vspread, DEFAULT_DEATHMATCH_SHOTGUN_COUNT,
-				MOD_SHOTGUN);
-	}
-	else
-	{
-		fire_shotgun(ent, start, aimdir, damage, kick,
-				hspread, vspread, DEFAULT_SHOTGUN_COUNT,
-				MOD_SHOTGUN);
-	}
+	spread_mult = PP_Weapon_GetSpreadMultiplier(ent, weapon);
+	hspread = (int)(params->hspread * spread_mult);
+	vspread = (int)(params->vspread * spread_mult);
+	fire_shotgun(ent, start, aimdir, damage, kick, hspread, vspread, pellets, mod);
 
 	/* send muzzle flash */
 	gi.WriteByte(svc_muzzleflash);
 	gi.WriteShort(ent - g_edicts);
-	gi.WriteByte(MZ_SHOTGUN | is_silenced);
+	gi.WriteByte(flash | is_silenced);
 	gi.multicast(ent->s.origin, MULTICAST_PVS);
 
-	ent->client->ps.gunframe++;
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	if (!((int)dmflags->value & DF_INFINITE_AMMO))
 	{
 		ent->client->pers.inventory[ent->client->ammo_index]--;
 	}
+}
+
+void
+weapon_shotgun_fire(edict_t *ent)
+{
+	if (!ent)
+	{
+		return;
+	}
+	if (ent->client->ps.gunframe != 9)
+	{
+		int pellets = deathmatch->value ? DEFAULT_DEATHMATCH_SHOTGUN_COUNT : DEFAULT_SHOTGUN_COUNT;
+		FireShotgunShell(ent, WEAP_PP_SHOTGUN, pellets, 8, MOD_SHOTGUN, MZ_SHOTGUN);
+	}
+	ent->client->ps.gunframe++;
 }
 
 void
@@ -1929,6 +2087,67 @@ Weapon_Shotgun(edict_t *ent)
 
 	Weapon_Generic(ent, 7, 18, 36, 39, pause_frames,
 			fire_frames, weapon_shotgun_fire);
+}
+
+static void
+ThunderheadFire(edict_t *ent)
+{
+	gclient_t *client = ent->client;
+	const pp_hitscan_params_t *params = &PP_Weapon_GetParams(WEAP_PP_THUNDERHEAD)->hitscan;
+	qboolean first_shot = client->machinegun_shots < 0;
+
+	if (client->newweapon || (!first_shot && !(client->buttons & BUTTON_ATTACK)))
+	{
+		client->machinegun_shots = 0;
+		client->ps.gunframe = 6;
+		return;
+	}
+	if (client->pers.inventory[client->ammo_index] <= 0)
+	{
+		client->machinegun_shots = 0;
+		client->ps.gunframe = 7;
+		if (level.time >= ent->pain_debounce_time)
+		{
+			gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
+			ent->pain_debounce_time = level.time + 1;
+		}
+		NoAmmoWeaponChange(ent);
+		return;
+	}
+
+	/* Fire immediately on a new press, then pace the burst on server ticks. */
+	if (first_shot)
+	{
+		client->machinegun_shots = AUTOMATIC_SHOT_UNITS - 1;
+	}
+	if (!AutomaticShotCount(ent, Q_min(params->rate_rps, 10.0f)))
+	{
+		client->ps.gunframe = 4;
+		return;
+	}
+
+	client->ps.gunframe = 5;
+	FireShotgunShell(ent, WEAP_PP_THUNDERHEAD, params->pellet_count, 5,
+		MOD_THUNDERHEAD, MZ_THUNDERHEAD);
+	PP_Weapon_AddBloom(ent, WEAP_PP_THUNDERHEAD);
+	Weapon_AttackAnimation(ent);
+}
+
+void
+Weapon_Thunderhead(edict_t *ent)
+{
+	static int fire_frames[] = {4, 5, 0};
+
+	if (!ent)
+	{
+		return;
+	}
+	if (ent->client->weaponstate == WEAPON_READY)
+	{
+		ent->client->machinegun_shots = -1;
+	}
+	PP_Weapon_UpdateBloom(ent, WEAP_PP_THUNDERHEAD, FRAMETIME);
+	Weapon_Generic(ent, 3, 6, 14, 18, NULL, fire_frames, ThunderheadFire);
 }
 
 void

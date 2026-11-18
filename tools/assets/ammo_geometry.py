@@ -2,17 +2,19 @@
 """Original low-poly ammunition pickups made from closed molded-plastic parts."""
 import math
 import numpy as np
+from flamethrower_tanks import TANK_PROFILE, add_tank
 from m16_geometry import Mesh
 
 KINDS = ('shells', 'bullets', 'grenades', 'gl_ammo', 'rockets', 'cells', 'slugs')
-LABELS = {'shells':'SHELLS', 'bullets':'BULLETS', 'grenades':'FRAG',
+LABELS = {'shells':'SHELLS', 'bullets':'HEAVY BULLETS', 'grenades':'FRAG',
           'gl_ammo':'GL ROUNDS', 'rockets':'ROCKETS', 'cells':'NAPALM', 'slugs':'SNIPER'}
 # Pixel rectangles in the shared 256-square atlas layout. Each ammo type has
 # its own label but the same UV convention and molded-plastic palette.
 REGIONS = {'plastic':(4,4,60,60), 'dark':(68,4,124,60),
            'edge':(132,4,188,60), 'brass':(196,4,252,60),
            'label':(8,72,248,140), 'lid_label':(8,152,248,224),
-           'band':(8,232,64,252)}
+           'band':(8,232,64,252),
+           'tank_surface':(196,4,252,60)}  # Uses the brass tile on the fuel-only atlas.
 
 
 def labeled_box(m, name, low, high, side_labels=False, lid_label=False):
@@ -98,16 +100,22 @@ def add_rocket(m):
 
 
 def add_fuel_tanks(m):
-    m.box('tank_cradle', (-3.,-5.9,-14.2), (3.,5.9,-12.7), 'dark')
+    # Retain the pickup height and the backpack's profile with one fewer
+    # ring at the bottom shoulder to fit the static ammo budget.
+    profile = [(-14.2+1.19*(z-TANK_PROFILE[0][0]),radius)
+               for z,radius in (TANK_PROFILE[0],*TANK_PROFILE[2:])]
     for side,name in ((-1,'right'),(1,'left')):
-        y = side*3.
-        turned(m, 'fuel_tank_'+name, [(-13.9,2.2),(-12.7,2.8),(.8,2.8),(2.6,2.)],
-               8, 'plastic', center=(0.,y))
-        m.box('tank_valve_'+name, (-.9,y-.9,2.3), (.9,y+.9,4.2), 'dark')
-    m.box('tank_manifold', (-.65,-4.,3.5), (.65,4.,4.7), 'edge')
-    # The small closed front strap carries an identifying stencil; its rear
-    # face stays inside the cylindrical tanks instead of exposing a decal.
-    labeled_box(m, 'tank_label_strap', (-3.05,-5.7,-7.8), (3.05,5.7,-4.8), side_labels=True)
+        y = side*3.45
+        add_tank(m, 'fuel_tank_'+name, (0.,y), 'tank_surface',profile)
+        m.profile('tank_valve_'+name,
+                  [(-1.2,2.2),(1.18,2.3),(.85,4.08),(-.71,4.12)],
+                  1.07, 'dark', 'edge', y=y)
+    m.box('tank_manifold', (-1.,-4.9,3.15), (1.,4.9,4.20), 'edge')
+    # Set the label just proud of the tanks so both faces are legible.
+    start = len(m.vertices)
+    labeled_box(m, 'tank_label_strap', (-2.65,-3.12,-6.25), (2.65,3.12,-4.0), side_labels=True)
+    for point in m.vertices[start:]:
+        point[0],point[1] = -point[1],point[0]
 
 
 def add_sniper_rounds(m):

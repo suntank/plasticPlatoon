@@ -3,18 +3,18 @@
   "model": "models/monsters/soldier/weapon_rocket.md2",
   "sources": {
     "archived:models/monsters/soldier/weapon_machinegun.md2": "a80c9f9d49ff31e733b7ff49e9678fbeec2980a60c2253562a30eff369a77b08",
-    "players/soldier/w_rlauncher.md2": "8be372f1c3e8713f87b8e790f7c6c109a3df4fd550364ac775620b6ba232a412",
+    "players/soldier/w_rlauncher.md2": "b1e65e3cfeae5c1be0562406493df5c4343f23031d9d9c0ce8d133d187ecbfe2",
     "models/monsters/soldier/tris.md2": "9363f8d2fcb22c0d738ddf12f33a7e873ecb30f7badc8d704ecc565c812a2f05"
   },
   "method": "Original primitive rocket launcher exported directly through archived enemy rigid attachment poses",
   "frames": 475,
-  "position_vertices": 264,
-  "triangles": 256,
+  "position_vertices": 346,
+  "triangles": 428,
   "skin_references": [
     "models/weapons/v_rocket/skin.png"
   ],
   "max_source_rigid_fit_error_units": 0.0557198661117,
-  "max_output_quantization_error_units": 0.0620099047754,
-  "sha256": "72f7456b431ff94119fe6aad1b88200b00732b4604a6a6893b89b20360f2593d",
-  "bytes": 530144
+  "max_output_quantization_error_units": 0.062522419905,
+  "sha256": "a72d2fc13acb75860749c6f818b2c28fd70f97ae88404074b54c5566d404b461",
+  "bytes": 691152
 }

@@ -15,7 +15,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools/assets'))
 import build_sniper as builder
 from asset_sources import source_bytes
-from build_m16 import rigid_transforms, texture_bytes as rifle_texture_bytes
+from build_color_variants import material_mask
+from build_m16 import MATERIALS, rigid_transforms, texture_bytes as rifle_texture_bytes
 from m16_geometry import build_m16
 from md2_assets import MD2, normal_table
 from sniper_geometry import build_sniper
@@ -86,7 +87,7 @@ class SniperTests(unittest.TestCase):
             with self.subTest(role=entry['role']):
                 self.assertEqual(entry['baseline']['triangles'], baselines[entry['role']])
                 self.assertLess(len(model.faces), 1000 if entry['role'] == 'view' else 550)
-                self.assertEqual(len(model.faces), 920 if entry['role'] == 'view' else 492)
+                self.assertEqual(len(model.faces), 996 if entry['role'] == 'view' else 520)
                 self.assertEqual(model.header[10], frames[entry['role']])
                 self.assertEqual(model.command_triangles, len(model.faces))
                 self.assertEqual(model.header[4], 40 + 4 * model.header[6])
@@ -108,7 +109,10 @@ class SniperTests(unittest.TestCase):
             with self.subTest(part=name):
                 np.testing.assert_array_equal(self.part_vertices(mesh, name), self.part_vertices(rifle, name))
         self.assertFalse(any(part['name'].startswith(prefixes) for part in self.meshes['world']['parts']))
-        self.assertEqual(builder.texture_bytes(), rifle_texture_bytes())
+        with Image.open(io.BytesIO(builder.texture_bytes())) as sniper, \
+                Image.open(io.BytesIO(rifle_texture_bytes())) as rifle:
+            self.assertEqual(sniper.crop((0, 128, 256, 192)).tobytes(),
+                             rifle.crop((0, 128, 256, 192)).tobytes())
 
     def test_every_gun_scope_reticle_hand_and_arm_part_is_closed(self):
         for kind, mesh in self.meshes.items():
@@ -155,10 +159,13 @@ class SniperTests(unittest.TestCase):
                 with self.subTest(role=role, y=y, z=z):
                     hits, _ = ray_hits(triangles, (27., y, z), maximum=22.)
                     self.assertEqual(len(hits), 0, 'exported casing, mount or reticle blocks the optical channel')
-            for name in ('scope_mount_rear', 'scope_mount_front'):
+            for name, ceiling in (('scope_mount_rear', 7.70), ('scope_mount_front', 7.38)):
                 part = self.part(mesh, name)
                 a = part['first_triangle']; b = a + part['triangle_count']
-                self.assertLess(triangles[a:b, :, 2].max(), 8.05)
+                self.assertLess(triangles[a:b, :, 2].max(), ceiling)
+            turret = self.part(mesh, 'scope_turret')
+            a = turret['first_triangle']; b = a + turret['triangle_count']
+            self.assertGreater(triangles[a:b, :, 2].min(), 16.48)
             scope = self.part(mesh, 'scope')
             a = scope['first_triangle']; b = a + scope['triangle_count']
             for y, z in ((0., 12.), (.8, 8.35), (-.8, 8.35)):
@@ -205,11 +212,18 @@ class SniperTests(unittest.TestCase):
         limit = np.linalg.norm(model.scales, axis=1) / 2 + 1e-5
         self.assertTrue(np.all(error <= limit[:, None]))
 
-    def test_exported_winding_normals_and_original_plastic_atlas(self):
+    def test_exported_winding_normals_and_colorable_plastic_atlas(self):
+        gun_materials = set(self.meshes['world']['materials'])
         for path in builder.TEXTURES:
             with Image.open(io.BytesIO(self.assets[path])) as image:
                 self.assertEqual(image.size, (256, 256))
                 self.assertEqual(image.mode, 'RGB')
+                mask, _ = material_mask(image, path, 'player')
+                for material in gun_materials:
+                    index = MATERIALS.index(material)
+                    x, y = (index % 4) * 64, (index // 4) * 64
+                    with self.subTest(material=material):
+                        self.assertEqual(mask.crop((x, y, x + 64, y + 64)).getextrema(), (255, 255))
         model = MD2.read(self.assets['models/weapons/g_rail/tris.md2'])
         points = model.positions[0, model.faces]
         normals = np.cross(points[:, 1] - points[:, 0], points[:, 2] - points[:, 0])

@@ -4,6 +4,8 @@ The seven ammo pickups follow the weapon replacement style and existing pickup
 paths, in this order: shotgun shells, bullets, hand grenades, grenade-launcher
 rounds, rockets, flamethrower fuel and sniper rounds. Shells and bullets use
 green labeled boxes; the other items use simple recognizable geometry.
+The Napalm refill shares the flamethrower backpack's domed tank profile and
+molded bands, with a labeled connector between the tanks.
 All models are static, with one atlas per item. Gameplay classes, quantities
 and weapon ammunition rules retain their existing behavior.
 
@@ -48,7 +50,7 @@ relying on installed fonts. Shell and bullet labels cover both broad faces and t
 | Hand grenades | 800 | 148 | 81.5% |
 | Grenade-launcher rounds | 999 | 76 | 92.4% |
 | Rockets | 500 | 128 | 74.4% |
-| Flamethrower fuel | 899 | 180 | 80.0% |
+| Flamethrower fuel | 899 | 200 | 77.8% |
 | Sniper rounds | 900 | 200 | 77.8% |
 
 The seven close-up models total 964 triangles, down from 6,097 (84.2% fewer).

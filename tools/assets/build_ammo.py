@@ -10,7 +10,8 @@ import numpy as np
 from PIL import Image, ImageDraw
 from asset_sources import source_bytes
 from md2_assets import MD2
-from build_m16 import encode_md2
+from build_m16 import encode_md2, texture_bytes as shared_texture_bytes
+from flamethrower_tanks import tank_texture
 from ammo_geometry import build_ammo, atlas_uvs, KINDS, LABELS, REGIONS
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -27,7 +28,7 @@ BASELINES = {'shells':dict(triangles=1000,position_vertices=456,file_bytes=49776
              'rockets':dict(triangles=500,position_vertices=252,file_bytes=22188),
              'cells':dict(triangles=899,position_vertices=453,file_bytes=39812),
              'slugs':dict(triangles=900,position_vertices=452,file_bytes=37512)}
-DEPENDENCIES = ('build_ammo.py','ammo_geometry.py','build_m16.py','m16_geometry.py')
+DEPENDENCIES = ('build_ammo.py','ammo_geometry.py','build_m16.py','m16_geometry.py','flamethrower_tanks.py')
 COLORS = {'plastic':(42,64,29), 'dark':(24,36,18), 'edge':(59,82,39),
           'brass':(112,101,47), 'band':(85,88,36)}
 LETTER_COLOR = (198,203,160)
@@ -53,6 +54,8 @@ GLYPHS = {
  'S':('01111','10000','10000','01110','00001','00001','11110'),
  'T':('11111','00100','00100','00100','00100','00100','00100'),
  'U':('10001','10001','10001','10001','10001','10001','01110'),
+ 'V':('10001','10001','10001','10001','10001','01010','00100'),
+ 'Y':('10001','10001','01010','00100','00100','00100','00100'),
  ' ':('00000',)*7}
 
 
@@ -77,6 +80,8 @@ def texture_bytes(kind):
     image = Image.new('RGB',(256,256),COLORS['plastic'])
     pixels = image.load()
     for material,(x,y,X,Y) in REGIONS.items():
+        if material == 'tank_surface':
+            continue
         color = COLORS.get(material,COLORS['plastic'])
         for v in range(y,Y):
             for u in range(x,X):
@@ -91,6 +96,11 @@ def texture_bytes(kind):
             draw.line((u,y+2,u,Y-3),fill=COLORS['dark'],width=2)
         for v in (y+14,y+28,y+42):
             draw.line((x+2,v,X-3,v),fill=COLORS['dark'],width=2)
+    elif kind=='cells':
+        # Match the backpack's base plastic, valve colors and molded tank bands.
+        with Image.open(io.BytesIO(shared_texture_bytes())) as atlas:
+            image.paste(atlas.crop((0,0,192,64)),(0,0))
+        image.paste(tank_texture(),(192,0))
     out = io.BytesIO(); image.save(out,format='PNG',compress_level=9)
     return out.getvalue()
 
@@ -101,7 +111,7 @@ def build_assets():
     manifest = dict(schema=1,generator='tools/assets/build_ammo.py',
         dependencies_sha256={name:sha((ROOT/'tools/assets'/name).read_bytes()) for name in DEPENDENCIES},
         source_archive=originals['source_archive'],method='original closed primitives; exact stencil labels; one static pose',
-        labels='SHELLS and BULLETS on both broad case faces and lid; cream stencil on green plastic',
+        labels='SHELLS and HEAVY BULLETS on both broad case faces and lid; cream stencil on green plastic',
         projectile_isolation='Rocket pickup uses skin_ammo.png; original shared projectile skin.png is untouched',
         models=[])
     for path,kind in MODELS.items():

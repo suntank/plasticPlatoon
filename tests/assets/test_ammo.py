@@ -55,7 +55,7 @@ class AmmoTests(unittest.TestCase):
 
     def test_seven_static_models_reduce_original_budgets_and_preserve_frame_names(self):
         counts = {'shells': 116, 'bullets': 116, 'grenades': 148, 'gl_ammo': 76,
-                  'rockets': 128, 'cells': 180, 'slugs': 200}
+                  'rockets': 128, 'cells': 200, 'slugs': 200}
         self.assertEqual(set(builder.MODELS.values()), set(KINDS))
         for path, kind in builder.MODELS.items():
             model = self.models[kind]
@@ -181,6 +181,12 @@ class AmmoTests(unittest.TestCase):
             self.assertGreater(np.ptp(points[:, 2]), 4.)
         self.assertGreater(self.part_points(self.meshes['cells'], 'fuel_tank_left')[:, 1].mean(), 2.)
         self.assertLess(self.part_points(self.meshes['cells'], 'fuel_tank_right')[:, 1].mean(), -2.)
+
+    def test_fuel_pickup_matches_the_backpack_tank_finish(self):
+        with Image.open(io.BytesIO(self.assets[builder.TEXTURES['cells']])) as pickup:
+            with Image.open(ROOT/'baseq2/models/weapons/v_hyperb/skin.png') as backpack:
+                self.assertEqual(pickup.crop((192,0,256,64)).tobytes(),
+                                 backpack.crop((64,64,128,128)).tobytes())
 
     def test_near_and_far_ammo_identity_and_registered_ownership(self):
         import build_platoon

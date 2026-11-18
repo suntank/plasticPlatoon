@@ -8,6 +8,11 @@ four player starts remain intact. The generator's initial additive version
 preserved all original brushes and entities, but regenerating would discard the
 later manual edits.
 
+See the [Garden Infiltration level design](garden-infiltration-level-design.md)
+for the current authored route, enemy roles, breach into Sandbox Assault, and
+guidance for future levels. The mission summary below describes the earlier
+exterior-rally version.
+
 The friendly helicopter has just dropped off the squad and departs after five
 seconds. Follow the winding gardens, use the earth banks and bunkers to break
 sight lines, and avoid waking every ambush guard at once. Reach the closed

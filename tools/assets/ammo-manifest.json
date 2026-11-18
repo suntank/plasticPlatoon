@@ -2,10 +2,11 @@
   "schema": 1,
   "generator": "tools/assets/build_ammo.py",
   "dependencies_sha256": {
-    "build_ammo.py": "9d306cf17ebcf533d451a8c186bbb341297ce06402d312f3e1f70e2ff9e1386e",
-    "ammo_geometry.py": "38b02b31c2fde871cef7f52ee7e6632894122eaa5686ab2d2a9eb0a0e4fd4dd4",
+    "build_ammo.py": "9d22573918eef819375f6be7925ebf405172242bdeb9244c6c67042cd81caea2",
+    "ammo_geometry.py": "0ab466fd3bc824be131d4166e5cb207b9cd61f1c13074e88db6d67b4b2ddf695",
     "build_m16.py": "3f90819146186a316a6eb11cdf387923158b34bea43cc41eae211d2ef4a69717",
-    "m16_geometry.py": "730286d3b6e18f99727689d9b0f9107524d0930cba2b43a45483d051641d578d"
+    "m16_geometry.py": "730286d3b6e18f99727689d9b0f9107524d0930cba2b43a45483d051641d578d",
+    "flamethrower_tanks.py": "8ccee6c0556f9a81fc2f7c58f5c88f18bf8942a322120ef6e30793feb980c5c8"
   },
   "source_archive": {
     "path": "tools/assets/sources/platoon-originals.pk3",
@@ -19,7 +20,7 @@
     ]
   },
   "method": "original closed primitives; exact stencil labels; one static pose",
-  "labels": "SHELLS and BULLETS on both broad case faces and lid; cream stencil on green plastic",
+  "labels": "SHELLS and HEAVY BULLETS on both broad case faces and lid; cream stencil on green plastic",
   "projectile_isolation": "Rocket pickup uses skin_ammo.png; original shared projectile skin.png is untouched",
   "models": [
     {
@@ -203,7 +204,7 @@
           "triangle_count": 12
         }
       ],
-      "label": "BULLETS",
+      "label": "HEAVY BULLETS",
       "lod": {
         "path": "models/items/ammo/bullets/medium/lod1.md2",
         "sha256": "8efb3c7a9a341930c1048eb212cda49a6653497476172fe333e51f6210baf5cd",
@@ -426,9 +427,9 @@
         "file_bytes": 39812
       },
       "after": {
-        "triangles": 180,
-        "position_vertices": 184,
-        "render_vertices": 224,
+        "triangles": 200,
+        "position_vertices": 160,
+        "render_vertices": 218,
         "frames": 1,
         "skin_references": [
           "models/items/ammo/cells/medium/skin.png"
@@ -437,65 +438,60 @@
           256,
           256
         ],
-        "gl_command_primitives": 54,
-        "gl_command_triangles": 180,
+        "gl_command_primitives": 52,
+        "gl_command_triangles": 200,
         "duplicate_gl_triangles": 0,
         "unused_bytes_per_frame": 0,
-        "file_bytes": 6968,
-        "sha256": "2084f873769e829e66bc6fde8558fffd83c7e1084791de6b986917325af9b000",
+        "file_bytes": 7348,
+        "sha256": "4ed8aecc91a9cbea419cd8bcea63f33965f243f54c25a700e2a137e092220dcf",
         "bounds": [
           [
-            -3.049999952316284,
-            -5.900000095367432,
+            -3.119999885559082,
+            -6.452608585357666,
             -14.199999809265137
           ],
           [
-            3.049999874085188,
-            5.899999771267176,
-            4.699999824166298
+            3.1200001034885645,
+            6.452608525753021,
+            4.19999985396862
           ]
         ]
       },
       "validation": {
-        "max_vertex_quantization_error": 0.037116845432,
-        "minimum_quantized_double_triangle_area": 1.56024906028,
+        "max_vertex_quantization_error": 0.0372972905595,
+        "minimum_quantized_double_triangle_area": 1.22604027813,
         "all_frames_nondegenerate": true,
         "outward_normals_clockwise_triangles": true
       },
       "parts": [
         {
-          "name": "tank_cradle",
-          "first_triangle": 0,
-          "triangle_count": 12
-        },
-        {
           "name": "fuel_tank_right",
-          "first_triangle": 12,
-          "triangle_count": 60
+          "first_triangle": 0,
+          "triangle_count": 76
         },
         {
           "name": "tank_valve_right",
-          "first_triangle": 72,
+          "first_triangle": 76,
           "triangle_count": 12
         },
         {
           "name": "fuel_tank_left",
-          "first_triangle": 84,
-          "triangle_count": 60
+          "first_triangle": 88,
+          "triangle_count": 76
         },
         {
           "name": "tank_valve_left",
-          "first_triangle": 144,
+          "first_triangle": 164,
           "triangle_count": 12
         },
         {
           "name": "tank_manifold",
-          "first_triangle": 156,
+          "first_triangle": 176,
           "triangle_count": 12
         },
         {
           "name": "tank_label_strap",
-          "first_triangle": 168,
+          "first_triangle": 188,
           "triangle_count": 12
         }
       ],
@@ -589,8 +585,8 @@
     },
     {
       "path": "models/items/ammo/bullets/medium/skin.png",
-      "bytes": 3337,
-      "sha256": "54c6c186eb5d8e6002e636593dc22e4ad01cbd9c297451cf6244a81b5c5d9865"
+      "bytes": 3270,
+      "sha256": "04fe1cb7dfbb7066823bc91511a79a9aea9c64a31d4db40bb9eae50666c6fc33"
     },
     {
       "path": "models/items/ammo/bullets/medium/tris.md2",
@@ -599,13 +595,13 @@
     },
     {
       "path": "models/items/ammo/cells/medium/skin.png",
-      "bytes": 3392,
-      "sha256": "2c18b4ee3ef72509bcafdc31ca3264af7ee671f8e5e094bb612a97dadf75d15d"
+      "bytes": 4566,
+      "sha256": "55480029f081afc3108f956c8a6f5d8f4a0b9010c0827a5483c835ee46be6c16"
     },
     {
       "path": "models/items/ammo/cells/medium/tris.md2",
-      "bytes": 6968,
-      "sha256": "2084f873769e829e66bc6fde8558fffd83c7e1084791de6b986917325af9b000"
+      "bytes": 7348,
+      "sha256": "4ed8aecc91a9cbea419cd8bcea63f33965f243f54c25a700e2a137e092220dcf"
     },
     {
       "path": "models/items/ammo/gl_ammo/medium/skin.png",

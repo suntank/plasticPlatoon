@@ -718,12 +718,16 @@ Cmd_InvUse_f(edict_t *ent)
 }
 
 static void
-Cmd_WeapPrev_f(edict_t *ent)
+Cmd_WeapCycle_f(edict_t *ent, int direction)
 {
 	gclient_t *cl;
-	int i, index;
+	gitem_t *cycle[MAX_ITEMS];
+	gitem_t *selected;
+	gitem_t *smg, *thunderhead;
 	gitem_t *it;
-	int selected_weapon;
+	int count = 0;
+	int selected_slot = -1;
+	int i, slot;
 
 	if (!ent)
 	{
@@ -732,94 +736,49 @@ Cmd_WeapPrev_f(edict_t *ent)
 
 	cl = ent->client;
 
-	if (g_quick_weap->value && cl->newweapon)
-	{
-		it = cl->newweapon;
-	}
-	else if (cl->pers.weapon)
-	{
-		it = cl->pers.weapon;
-	}
-	else
+	selected = (g_quick_weap->value && cl->newweapon) ? cl->newweapon : cl->pers.weapon;
+	if (!selected)
 	{
 		return;
 	}
 
-	selected_weapon = ITEM_INDEX(it);
-
-	/* scan for the next valid one */
-	for (i = 1; i <= MAX_ITEMS; i++)
+	/* Keep saved item indices while placing the two new weapons ahead of the rifle. */
+	smg = FindItem("SMG");
+	thunderhead = FindItem("Thunderhead");
+	for (i = 1; i < game.num_items; i++)
 	{
-		index = (selected_weapon + MAX_ITEMS - i) % MAX_ITEMS;
-
-		if (!cl->pers.inventory[index])
+		it = &itemlist[i];
+		if (it->weapmodel == WEAP_MACHINEGUN)
 		{
-			continue;
+			cycle[count++] = thunderhead;
+			cycle[count++] = smg;
 		}
-
-		it = &itemlist[index];
-
-		if (!it->use || !(it->flags & IT_WEAPON))
+		if (it != smg && it != thunderhead)
 		{
-			continue;
-		}
-
-		it->use(ent, it);
-
-		if (cl->newweapon == it)
-		{
-			if (g_quick_weap->value)
-			{
-				cl->ps.stats[STAT_PICKUP_ICON] = gi.imageindex(cl->newweapon->icon);
-				cl->ps.stats[STAT_PICKUP_STRING] = CS_ITEMS + ITEM_INDEX(cl->newweapon);
-				cl->pickup_msg_time = level.time + 0.9f;
-			}
-			return; /* successful */
+			cycle[count++] = it;
 		}
 	}
-}
-
-static void
-Cmd_WeapNext_f(edict_t *ent)
-{
-	gclient_t *cl;
-	int i, index;
-	gitem_t *it;
-	int selected_weapon;
-
-	if (!ent)
+	for (i = 0; i < count; i++)
+	{
+		if (cycle[i] == selected)
+		{
+			selected_slot = i;
+			break;
+		}
+	}
+	if (selected_slot < 0)
 	{
 		return;
 	}
 
-	cl = ent->client;
-
-	if (g_quick_weap->value && cl->newweapon)
+	for (i = 1; i <= count; i++)
 	{
-		it = cl->newweapon;
-	}
-	else if (cl->pers.weapon)
-	{
-		it = cl->pers.weapon;
-	}
-	else
-	{
-		return;
-	}
-
-	selected_weapon = ITEM_INDEX(it);
-
-	/* scan for the next valid one */
-	for (i = 1; i <= MAX_ITEMS; i++)
-	{
-		index = (selected_weapon + i) % MAX_ITEMS;
-
-		if (!cl->pers.inventory[index])
+		slot = (selected_slot + count + direction * i) % count;
+		it = cycle[slot];
+		if (!cl->pers.inventory[ITEM_INDEX(it)])
 		{
 			continue;
 		}
-
-		it = &itemlist[index];
 
 		if (!it->use || !(it->flags & IT_WEAPON))
 		{
@@ -2051,11 +2010,11 @@ ClientCommand(edict_t *ent)
 	}
 	else if (Q_stricmp(cmd, "weapprev") == 0)
 	{
-		Cmd_WeapPrev_f(ent);
+		Cmd_WeapCycle_f(ent, -1);
 	}
 	else if (Q_stricmp(cmd, "weapnext") == 0)
 	{
-		Cmd_WeapNext_f(ent);
+		Cmd_WeapCycle_f(ent, 1);
 	}
 	else if (Q_stricmp(cmd, "weaplast") == 0)
 	{

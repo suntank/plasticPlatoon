@@ -482,7 +482,7 @@ vec3_t monster_flash_offset[] = {
 	/* MZ2_SOLDIER_HEAVY: crouched M60 barrel centre, frame attak303 */
 	{PP_SOLDIER_XY(25.120809f), PP_SOLDIER_XY(4.749609f), PP_SOLDIER_Z(3.597991f)},
 	/* MZ2_SOLDIER_ROCKET: crouched launcher barrel, frame attak303 */
-	{PP_SOLDIER_XY(23.470810f), PP_SOLDIER_XY(4.749782f), PP_SOLDIER_Z(4.422446f)},
+	{PP_SOLDIER_XY(23.470810f), PP_SOLDIER_XY(4.749782f), PP_SOLDIER_Z(4.426525f)},
 	/* Helicopter offsets use engine right, the inverse of model-local Y. */
 	/* MZ2_HELICOPTER_MACHINEGUN_L */
 	{64.0, -24.0, -10.0},

@@ -1,11 +1,12 @@
 # Authored M1 Flamethrower
 
-The M1 Flamethrower uses original low-poly geometry, the established army-man
-plastic palette and molded mitten hands. The first-person model, world pickup
-and player-held model share the authored design. The gun, hands and forearms
-share a first-person model and atlas, keeping one weapon draw per camera.
+The M1 Flamethrower has a contoured wand, a flared nozzle with a recessed
+opening, and swept sights. The lower hip pose shows the ribbed foregrip and
+support hand. The whole assembly takes the selected player color, including its
+nozzle, twin tanks and hose. Hands and forearms share the first-person model
+and atlas with the wand.
 
-The player-held version includes paired fuel tanks, retaining bands, a
+The player-held version includes rounded fuel tanks, molded retaining bands, a
 central pressure bottle and a flexible hose attached to the soldier's back.
 The repaired original supplies independent gun and backpack motion through all
 198 player poses; the backpack follows the torso instead of inheriting the
@@ -31,9 +32,9 @@ retain their existing behavior.
 
 | Version | Previous triangles | Current triangles | Reduction | Frames |
 | --- | ---: | ---: | ---: | ---: |
-| First person, including hands, arms and hose | 1,799 | 804 | 55.3% | 1 |
-| Pickup, including tanks and hose | 1,199 | 648 | 46.0% | 1 |
-| Player held, including tanks and hose | 2,493 | 648 | 74.0% | 198 |
+| First person, including hands, arms and hose | 1,799 | 888 | 50.6% | 1 |
+| Pickup, including tanks and hose | 1,199 | 736 | 38.6% | 1 |
+| Player held, including tanks and hose | 2,493 | 736 | 70.5% | 198 |
 
 `tools/assets/flamethrower-manifest.json` records exact counts, hashes, bounds,
 sight/muzzle anchors and all-pose validation. Geometry reductions describe

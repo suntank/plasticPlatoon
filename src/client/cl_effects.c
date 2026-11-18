@@ -115,7 +115,7 @@ extern struct model_s *cl_mod_flash;
 
 extern cparticle_t *active_particles, *free_particles;
 
-#define MFLASH_CONFIG_COUNT (MZ_NUKE8 + 1)
+#define MFLASH_CONFIG_COUNT (MZ_THUNDERHEAD + 1)
 static muzzle_flash_config_t weapon_mflash_configs_firstperson[MFLASH_CONFIG_COUNT];
 static muzzle_flash_config_t weapon_mflash_configs_thirdperson[MFLASH_CONFIG_COUNT];
 static char mflash_config_source[MAX_OSPATH];
@@ -183,7 +183,9 @@ CL_MFlashTune_GetCurrentWeapon(void)
 	if (strstr(gun_model, "v_blast")) return MZ_BLASTER;
 	if (strstr(gun_model, "v_shotg2")) return MZ_SSHOTGUN;
 	if (strstr(gun_model, "v_shotg")) return MZ_SHOTGUN;
+	if (strstr(gun_model, "v_thunderhead")) return MZ_THUNDERHEAD;
 	if (strstr(gun_model, "v_machn")) return MZ_MACHINEGUN;
+	if (strstr(gun_model, "v_smg")) return MZ_SMG;
 	if (strstr(gun_model, "v_chain")) return MZ_CHAINGUN1;
 	if (strstr(gun_model, "v_handgr")) return MZ_GRENADE;
 	if (strstr(gun_model, "v_launch")) return MZ_GRENADE;
@@ -438,12 +440,14 @@ CL_GetWeaponNameFromID(int weapon)
 	switch (weapon)
 	{
 		case MZ_MACHINEGUN: return "M16";
+		case MZ_SMG: return "SMG";
 		case MZ_CHAINGUN1:
 		case MZ_CHAINGUN2:
 		case MZ_CHAINGUN3: return "M60";
 		case MZ_SHOTGUN:
 		case MZ_SHOTGUN2: return "SHOTGUN";
 		case MZ_SSHOTGUN: return "DOUBLE_BARREL_SHOTGUN";
+		case MZ_THUNDERHEAD: return "THUNDERHEAD";
 		case MZ_ROCKET: return "BAZOOKA";
 		case MZ_GRENADE: return "GRENADE_LAUNCHER";
 		case MZ_BLASTER: return "PISTOL";
@@ -842,6 +846,7 @@ CL_AddMuzzleFlash(void)
 	float volume;
 	char soundname[64];
 	qboolean local_player;
+	qboolean smg_double;
 	qboolean tune_local_as_thirdperson;
 	qboolean split_primary_scope;
 	int saved_effect_only_slot;
@@ -864,6 +869,11 @@ CL_AddMuzzleFlash(void)
 	weapon = MSG_ReadByte(&net_message);
 	silenced = weapon & MZ_SILENCED;
 	weapon &= ~MZ_SILENCED;
+	smg_double = weapon == MZ_SMG2;
+	if (smg_double)
+	{
+		weapon = MZ_SMG;
+	}
 	local_player = (i == cl.playernum + 1);
 	tune_local_as_thirdperson = local_player && cl_mflash_tune_mode &&
 		(cl_mflash_tune_mode->value > 0.0f);
@@ -959,6 +969,7 @@ CL_AddMuzzleFlash(void)
 				S_RegisterSound("weapons/hyprbf1a.wav"), volume, ATTN_NORM, 0);
 			break;
 		case MZ_MACHINEGUN:
+		case MZ_SMG:
 			dl->color[0] = 1;
 			dl->color[1] = 1;
 			dl->color[2] = 0;
@@ -966,17 +977,25 @@ CL_AddMuzzleFlash(void)
 				(randk() % 5) + 1);
 			CL_StartMuzzleSound(NULL, i, CHAN_WEAPON, S_RegisterSound(
 						soundname), volume, ATTN_NORM, 0);
+			if (smg_double)
+			{
+				CL_StartMuzzleSound(NULL, i, CHAN_AUTO, S_RegisterSound(
+					soundname), volume, ATTN_NORM, 0.05f);
+			}
 			break;
 		case MZ_SHOTGUN:
+		case MZ_THUNDERHEAD:
 			dl->color[0] = 1;
 			dl->color[1] = 1;
 			dl->color[2] = 0;
 			CL_StartMuzzleSound(NULL, i, CHAN_WEAPON,
 				S_RegisterSound("weapons/shotgf1b.wav"), volume, ATTN_NORM, 0);
-			/* Start both samples together. The pump WAV includes one
-			 * tick of silence before the motion starts at frame 10. */
-			CL_StartMuzzleSound(NULL, i, CHAN_AUTO,
-				S_RegisterSound("weapons/pp_shotgun_pump.wav"), volume, ATTN_NORM, 0);
+			if (weapon == MZ_SHOTGUN)
+			{
+				/* The pump WAV includes one tick of silence before frame 10. */
+				CL_StartMuzzleSound(NULL, i, CHAN_AUTO,
+					S_RegisterSound("weapons/pp_shotgun_pump.wav"), volume, ATTN_NORM, 0);
+			}
 			break;
 		case MZ_SSHOTGUN:
 			dl->color[0] = 1;
@@ -1165,9 +1184,9 @@ CL_AddMuzzleFlash(void)
 	}
 
 	/* Spawn muzzle flash sprite for applicable weapons */
-	if (weapon == MZ_MACHINEGUN || weapon == MZ_CHAINGUN1 ||
+	if (weapon == MZ_MACHINEGUN || weapon == MZ_SMG || weapon == MZ_CHAINGUN1 ||
 		weapon == MZ_CHAINGUN2 || weapon == MZ_CHAINGUN3 ||
-		weapon == MZ_SHOTGUN || weapon == MZ_SSHOTGUN ||
+		weapon == MZ_SHOTGUN || weapon == MZ_SSHOTGUN || weapon == MZ_THUNDERHEAD ||
 		weapon == MZ_BLASTER || weapon == MZ_HYPERBLASTER || weapon == MZ_RAILGUN ||
 		weapon == MZ_ETF_RIFLE || weapon == MZ_SHOTGUN2 ||
 		weapon == MZ_ROCKET || weapon == MZ_GRENADE || weapon == MZ_BFG)

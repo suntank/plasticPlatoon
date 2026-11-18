@@ -58,7 +58,7 @@ typedef enum {
 	WEAP_PP_PISTOL = 0,          /* Replaces Blaster */
 	WEAP_PP_SHOTGUN,             /* Replaces Shotgun */
 	WEAP_PP_DOUBLE_BARREL,       /* Replaces Super Shotgun */
-	WEAP_PP_SMG,                 /* Replaces Machinegun */
+	WEAP_PP_SMG,                 /* Compact automatic */
 	WEAP_PP_M16,                 /* M16 profile */
 	WEAP_PP_M60,                 /* Replaces Chaingun */
 	WEAP_PP_FLAMETHROWER,        /* Replaces Hyperblaster */
@@ -67,6 +67,7 @@ typedef enum {
 	WEAP_PP_SNIPER_RIFLE,        /* Replaces Railgun */
 	WEAP_PP_MORTAR_CANNON,       /* Replaces BFG */
 	WEAP_PP_AIRSTRIKE_MARKER,    /* New ultimate */
+	WEAP_PP_THUNDERHEAD,
 	WEAP_PP_MAX
 } pp_weapon_id_t;
 

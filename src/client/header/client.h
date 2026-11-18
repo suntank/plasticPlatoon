@@ -521,6 +521,7 @@ extern qboolean cl_skip_view_weapon;
 void CL_AddDLights (void);
 void CL_AddTEnts (void);
 void CL_AddLightStyles (void);
+qboolean CL_IsKnifeEquipped(const player_state_t *ps);
 qboolean CL_IsADSActive(void);
 qboolean CL_UsesModelADS(const player_state_t *ps);
 pp_model_ads_config_t CL_GetModelADSConfig(const player_state_t *ps);

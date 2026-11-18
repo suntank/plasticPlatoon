@@ -2218,7 +2218,8 @@ SCR_DrawCrosshair(void)
 
 	PP_AimAssistReticle(&cl.frame.playerstate, scr_vrect.width, scr_vrect.height,
 		cl.refdef.fov_x, cl.refdef.fov_y, Key_UsingGamepad() &&
-		!CL_IsADSActive() && Cvar_VariableValue("cl_aimassist") > 0, &assist_x, &assist_y);
+		!CL_IsKnifeEquipped(&cl.frame.playerstate) && !CL_IsADSActive() &&
+		Cvar_VariableValue("cl_aimassist") > 0, &assist_x, &assist_y);
 	Draw_PicScaled(scr_vrect.x + (scr_vrect.width - crosshair_width * scale) / 2 + (int)assist_x,
 			scr_vrect.y + (scr_vrect.height - crosshair_height * scale) / 2 + (int)assist_y,
 			crosshair_pic, scale);

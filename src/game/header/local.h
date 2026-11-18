@@ -109,7 +109,8 @@ typedef enum
 	AMMO_GRENADES,
 	AMMO_CELLS,
 	AMMO_SLUGS,
-	AMMO_GL_ROUNDS
+	AMMO_GL_ROUNDS,
+	AMMO_LIGHT_BULLETS
 } ammo_t;
 
 /* Plastic Platoon ammo types are defined in pp_weapon_tuning.h */
@@ -236,6 +237,9 @@ typedef struct
 #define WEAP_HYPERBLASTER 9
 #define WEAP_RAILGUN 10
 #define WEAP_BFG 11
+#define WEAP_KNIFE 12
+#define WEAP_SMG 13
+#define WEAP_THUNDERHEAD 14
 
 typedef struct gitem_s
 {
@@ -496,6 +500,8 @@ extern int gibsthisframe;
 #define MOD_FLAME 34
 #define MOD_FLAME_SPLASH 35
 #define MOD_BURNING 36
+#define MOD_KNIFE 37
+#define MOD_THUNDERHEAD 38
 #define MOD_FRIENDLY_FIRE 0x8000000
 
 /* Easier handling of AI skill levels */
@@ -615,6 +621,7 @@ void ClientDisconnect(edict_t *ent);
 void ClientUserinfoChanged(edict_t *ent, char *userinfo);
 qboolean ClientConnect(edict_t *ent, char *userinfo);
 void ClientThink(edict_t *ent, usercmd_t *cmd);
+void ClientUpdateWeaponFov(gclient_t *client);
 void PP_AimAssist_ResetClient(edict_t *ent);
 void PP_AimAssist_Update(edict_t *ent, const usercmd_t *cmd);
 qboolean PP_AimAssist_BeginShot(edict_t *ent, vec3_t saved_angles);
@@ -630,6 +637,7 @@ void Cmd_QuickGrenade_f(edict_t *ent);
 
 /* g_items.c */
 void PrecacheItem(gitem_t *it);
+void PrecacheAddedWeapons(void);
 void InitItems(void);
 void SetItemNames(void);
 gitem_t *FindItem(const char *pickup_name);

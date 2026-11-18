@@ -515,12 +515,19 @@ ClientObituary(edict_t *self, edict_t *inflictor /* unused */,
 				case MOD_BLASTER:
 					message = "was blasted by";
 					break;
+				case MOD_KNIFE:
+					message = "was slashed by";
+					break;
 				case MOD_SHOTGUN:
 					message = "was gunned down by";
 					break;
 				case MOD_SSHOTGUN:
 					message = "was blown away by";
 					message2 = "'s super shotgun";
+					break;
+				case MOD_THUNDERHEAD:
+					message = "was blasted by";
+					message2 = "'s Thunderhead";
 					break;
 				case MOD_MACHINEGUN:
 					message = "was machinegunned by";
@@ -645,7 +652,8 @@ TossClientWeapon(edict_t *self)
 
 	item = self->client->pers.weapon;
 
-	if (!self->client->pers.inventory[self->client->ammo_index])
+	if (self->client->ammo_index &&
+		!self->client->pers.inventory[self->client->ammo_index])
 	{
 		item = NULL;
 	}
@@ -896,9 +904,11 @@ InitClientPersistant(gclient_t *client)
 
 	client->pers.weapon = item;
 
-	/* Give starting bullets for the blaster pistol */
-	item = FindItem("Bullets");
-	client->pers.inventory[ITEM_INDEX(item)] = 50;
+	item = FindItem("Knife");
+	client->pers.inventory[ITEM_INDEX(item)] = 1;
+
+	item = FindItem("Light Bullets");
+	client->pers.inventory[ITEM_INDEX(item)] = item->quantity;
 
 	client->pers.health = 100;
 	client->pers.max_health = 100;
@@ -1805,6 +1815,8 @@ ClientBegin(edict_t *ent)
 		/* a spawn point will completely reinitialize the entity
 		   except for the persistant data that was initialized at
 		   ClientConnect() time */
+		gitem_t *light_bullets = FindItem("Light Bullets");
+		ent->client->pers.inventory[ITEM_INDEX(light_bullets)] = light_bullets->quantity;
 		G_InitEdict(ent);
 		ent->classname = "player";
 		InitClientResp(ent->client);
@@ -2103,6 +2115,29 @@ PrintPmove(pmove_t *pm)
 	gi.dprintf("sv %3i:%i %i\n", pm->cmd.impulse, c1, c2);
 }
 
+void
+ClientUpdateWeaponFov(gclient_t *client)
+{
+	int weapon = client->pers.weapon ? client->pers.weapon->weapmodel : 0;
+	float base_fov = 90.0f;
+
+	if (!deathmatch->value || !((int)dmflags->value & DF_FIXED_FOV))
+	{
+		float fov = (float)strtol(Info_ValueForKey(client->pers.userinfo, "fov"), NULL, 10);
+		if (fov >= 1.0f)
+		{
+			base_fov = Q_min(fov, 160.0f);
+		}
+	}
+
+	client->weapon_state.ads_active = (client->buttons & BUTTON_ADS) && weapon != WEAP_KNIFE;
+	client->ps.fov = base_fov;
+	if (client->weapon_state.ads_active)
+	{
+		client->ps.fov = Q_max(5.0f, base_fov / (weapon == WEAP_RAILGUN ? 8.0f : 2.0f));
+	}
+}
+
 /*
  * This will be called once for each client frame, which will
  * usually be a couple times for each server frame.
@@ -2186,7 +2221,8 @@ ClientThink(edict_t *ent, usercmd_t *ucmd)
 		pm.cmd = *ucmd;
 
 		/* Plastic Platoon: Apply ADS movement speed reduction */
-		if ((ucmd->buttons & BUTTON_ADS) && client->pers.weapon)
+		if ((ucmd->buttons & BUTTON_ADS) && client->pers.weapon &&
+			client->pers.weapon->weapmodel != WEAP_KNIFE)
 		{
 			pp_weapon_id_t weap_id = PP_Weapon_FromQ2Weapon(client->pers.weapon->weapmodel);
 			float speed_scale = ADS_MOVE_SPEED_DEFAULT;
@@ -2300,61 +2336,15 @@ ClientThink(edict_t *ent, usercmd_t *ucmd)
 	client->latched_buttons |= client->buttons & ~client->oldbuttons;
 	PP_AimAssist_Update(ent, ucmd);
 
-	/* Plastic Platoon: Update ADS state */
+	ClientUpdateWeaponFov(client);
+	if (client->pers.weapon)
 	{
-		pp_client_weapon_state_t *ws = &client->weapon_state;
-		qboolean ads_button = (client->buttons & BUTTON_ADS) != 0;
-		pp_weapon_id_t weap_id = WEAP_PP_NONE;
-		float base_fov;
-
-		/* Get current weapon ID */
-		if (client->pers.weapon)
-		{
-			weap_id = PP_Weapon_FromQ2Weapon(client->pers.weapon->weapmodel);
-		}
-
-		ws->ads_active = ads_button;
-
-		if (weap_id != WEAP_PP_NONE)
+		pp_weapon_id_t weap_id = PP_Weapon_FromQ2Weapon(client->pers.weapon->weapmodel);
+		/* Thunderhead bloom decays during weapon ticks so usercmd rate
+		 * does not change how quickly a burst spreads. */
+		if (weap_id != WEAP_PP_NONE && weap_id != WEAP_PP_THUNDERHEAD)
 		{
 			PP_Weapon_UpdateBloom(ent, weap_id, FRAMETIME);
-		}
-
-		if (deathmatch->value && ((int)dmflags->value & DF_FIXED_FOV))
-		{
-			base_fov = 90.0f;
-		}
-		else
-		{
-			base_fov = (float)strtol(Info_ValueForKey(client->pers.userinfo, "fov"), (char **)NULL, 10);
-
-			if (base_fov < 1.0f)
-			{
-				base_fov = 90.0f;
-			}
-			else if (base_fov > 160.0f)
-			{
-				base_fov = 160.0f;
-			}
-		}
-
-		client->ps.fov = base_fov;
-
-		if (ws->ads_active)
-		{
-			if (weap_id == WEAP_PP_SNIPER_RIFLE)
-			{
-				client->ps.fov = base_fov / 8.0f;
-			}
-			else
-			{
-				client->ps.fov = base_fov / 2.0f;
-			}
-
-			if (client->ps.fov < 5.0f)
-			{
-				client->ps.fov = 5.0f;
-			}
 		}
 	}
 

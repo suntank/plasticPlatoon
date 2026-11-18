@@ -379,7 +379,7 @@ IN_ADSUp(void)
 qboolean
 CL_IsADSHeld(void)
 {
-	return (in_ads.state & 1) != 0;
+	return (in_ads.state & 1) && !CL_IsKnifeEquipped(&cl.frame.playerstate);
 }
 
 float
@@ -620,7 +620,8 @@ CL_GameBirdMove(usercmd_t *cmd)
 static void
 CL_UpdateGameBirdLevel(const vec3_t before)
 {
-	PP_UpdateADSLevel(&gb_autolevel, cl.viewangles, CL_IsADSHeld(),
+	/* The button still enables manual pitch on the GameBird D-pad. */
+	PP_UpdateADSLevel(&gb_autolevel, cl.viewangles, (in_ads.state & 1) != 0,
 		cl_gamebird_autolevel && cl_gamebird_autolevel->value > 0 &&
 		cls.state == ca_active && cls.key_dest == key_game &&
 		cl.frame.playerstate.pmove.pm_type < PM_DEAD,

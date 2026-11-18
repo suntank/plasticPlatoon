@@ -144,6 +144,7 @@ PP_AimAssist_Update(edict_t *ent, const usercmd_t *cmd)
 	client = ent->client;
 	if (!assist_enabled->value || deathmatch->value || !(cmd->buttons & BUTTON_GAMEPAD) ||
 		ent->health <= 0 || ent->deadflag || client->resp.spectator || client->chase_target ||
+		(client->pers.weapon && client->pers.weapon->weapmodel == WEAP_KNIFE) ||
 		client->ps.pmove.pm_type != PM_NORMAL || level.intermissiontime ||
 		client->showhelp || client->showinventory || client->showscores)
 	{

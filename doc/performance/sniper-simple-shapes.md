@@ -1,12 +1,12 @@
 # Authored sniper rifle
 
 The sniper rifle uses original low-poly geometry with the established
-army-man plastic palette and molded mitten hands. Its long barrel, magazine,
-bolt handle and modeled open scope appear in the first-person model, world
-pickup and all player-held poses. The scope has a hollow optical channel and
-four solid reticle posts around a small clear center. The muzzle brake has a recessed closed cup. Hands and forearms share the first-person gun's model and
-atlas, keeping one weapon draw per camera. The world and held versions omit
-first-person hands.
+army-man plastic palette and molded mitten hands. Its rounded stock, beveled
+receiver, tapered fore-end and flared scope appear in first person, in the
+world pickup and in all player-held poses. The first-person scope has twelve
+sides and a hollow optical channel with four reticle posts around a clear
+center. The muzzle brake has a recessed cup. Hands and forearms share the
+first-person gun's model and atlas, keeping one weapon draw per camera.
 
 Aiming moves the actual modeled scope onto the camera's center ray through
 the shared 0.18-second transition. Each local split-screen player owns its
@@ -16,17 +16,17 @@ The first-person and pickup models each use one static pose; the player-held
 model follows all 198 original rigid attachment poses. There is no enemy
 sniper attachment model.
 
-Selectable player colors are rebuilt from the new atlases. The player muzzle
-table follows the reviewed barrel rim through every held pose. The sniper
-retains its existing ammunition and gameplay tuning.
+Selectable player colors tint the entire held rifle, including the barrel,
+scope housing, reticle and muzzle recess. The player muzzle table follows the
+reviewed barrel rim through every held pose.
 
 ## Asset budgets
 
 | Version | Previous triangles | Current triangles | Reduction | Frames |
 | --- | ---: | ---: | ---: | ---: |
-| First person, including hands and arms | 2,000 | 920 | 54.0% | 1 |
-| Pickup | 1,200 | 492 | 59.0% | 1 |
-| Player held | 2,664 | 492 | 81.5% | 198 |
+| First person, including hands and arms | 2,000 | 996 | 50.2% | 1 |
+| Pickup | 1,200 | 520 | 56.7% | 1 |
+| Player held | 2,664 | 520 | 80.5% | 198 |
 
 `tools/assets/sniper-manifest.json` records exact counts, hashes, bounds,
 scope/muzzle anchors and all-pose validation. Geometry reductions describe
@@ -88,7 +88,9 @@ Host visual checks establish appearance and behavior; target-device frame
 rates require measurement.
 
 
-Final single-view evidence is recorded in `build/sniper-qa-gl3-final`,
+## Original model ADS rollout
+
+Single-view evidence for the initial scope implementation was recorded in `build/sniper-qa-gl3-final`,
 `build/sniper-qa-gl1-final` and `build/sniper-qa-soft-final` (eight views each).
 All completed with return code zero. The GL3 run includes a downrange soldier:
 the target remains visible through the shortened optical channel and the

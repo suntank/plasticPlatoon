@@ -3,9 +3,12 @@
 from __future__ import annotations
 import argparse
 import hashlib
+import io
 import json
+import math
 from pathlib import Path
 import numpy as np
+from PIL import Image, ImageDraw
 from asset_sources import source_bytes
 from md2_assets import MD2
 from build_m16 import (atlas_uvs, encode_md2, rigid_transforms,
@@ -27,7 +30,7 @@ BASELINES = {'view':{'triangles':1399,'position_vertices':691,'frames':1,'file_b
              'pickup':{'triangles':799,'position_vertices':391,'frames':1,'file_bytes':34664},
              'player':{'triangles':1427,'position_vertices':705,'frames':198,'file_bytes':622852},
              'enemy':{'triangles':1427,'position_vertices':705,'frames':475,'file_bytes':1415072}}
-DEPENDENCIES = ('build_rlauncher.py','rlauncher_geometry.py','build_m16.py','m16_geometry.py')
+DEPENDENCIES = ('build_rlauncher.py','rlauncher_geometry.py','build_m16.py','m16_geometry.py','shotgun_parts.py')
 
 
 def sha(data):
@@ -35,16 +38,42 @@ def sha(data):
 
 
 def texture_bytes():
-    """Use the existing army-man plastic and painted mitten atlas unchanged."""
-    return shared_texture_bytes()
+    """Shade the molded launcher tube and dark bore inside the player palette."""
+    atlas = Image.open(io.BytesIO(shared_texture_bytes())).convert('RGB')
+    tube = Image.new('RGB',(64,64))
+    tube_draw = ImageDraw.Draw(tube)
+    bore = Image.new('RGB',(64,64))
+    bore_draw = ImageDraw.Draw(bore)
+    for y in range(64):
+        angle = math.tau*(y-4.5)/55
+        crown = .5+.5*math.sin(angle)
+        value = round(33+14*crown+9*crown**9)
+        tube_draw.line((0,y,63,y),fill=(round(.72*value),value,round(.36*value)))
+        for x in (8,11,52,56):
+            shade = value-10
+            tube_draw.line((x,y,x+1,y),fill=(round(.72*shade),shade,round(.36*shade)))
+            rim = value+5
+            tube_draw.point((x+2,y),fill=(round(.72*rim),rim,round(.36*rim)))
+        depth = round(12+11*abs(2*y/63-1)**4)
+        bore_draw.line((0,y,63,y),fill=(round(.72*depth),depth,round(.36*depth)))
+    # Molded recess and shallow raised ribs on the visible side of the barrel.
+    tube_draw.rounded_rectangle((21,8,44,16),radius=3,outline=(21,30,11))
+    tube_draw.line((25,10,40,10),fill=(47,64,24))
+    for x in (28,33,38):
+        tube_draw.line((x,12,x+2,14),fill=(22,31,12))
+    atlas.paste(tube,(64,64))
+    atlas.paste(bore,(192,64))
+    output = io.BytesIO()
+    atlas.save(output,format='PNG',compress_level=9)
+    return output.getvalue()
 
 
 def placement(role):
     rotation = np.eye(3)
     if role=='view':
-        # Keep the existing two-handed rifle scale and comfortable hip pose.
+        # A lower hip pose keeps the tube and sights clear of the screen edge.
         scale=(56.49812462925911+9.061456233263016)/100
-        offset=np.array([-13.5,-10.,-7.8])
+        offset=np.array([-8.4,-8.25,-9.4])
     elif role=='pickup':
         scale=.78
         rotation=np.diag([-1.,-1.,1.])
@@ -80,7 +109,7 @@ def build_assets():
         dependencies_sha256={p:sha((ROOT/'tools/assets'/p).read_bytes()) for p in DEPENDENCIES},
         source_archive=originals['source_archive'], method='authored closed primitives; archived rigid poses',
         hand='m16_geometry.add_hands; existing closed molded mittens and forearms',
-        palette='Shared M16 army-man plastic and mitten atlas', models=[])
+        palette='Player-colored molded plastic with tube bands, shading and a tinted bore', models=[])
     for path, role in MODELS.items():
         motion_path = 'models/monsters/soldier/weapon_machinegun.md2' if role=='enemy' else path
         source = None if role=='pickup' else MD2.read(source_bytes(originals,'baseq2/'+motion_path),source_compat=True)

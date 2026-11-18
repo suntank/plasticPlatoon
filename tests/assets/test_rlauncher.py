@@ -13,6 +13,8 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools/assets'))
 import build_rlauncher as builder
+from build_color_variants import material_mask
+from m16_geometry import MATERIALS
 from asset_sources import source_bytes
 from build_m16 import rigid_transforms
 from m16_geometry import build_m16
@@ -201,6 +203,16 @@ class RocketLauncherTests(unittest.TestCase):
                 pigment = (hsv[:, :, 0] >= 45) & (hsv[:, :, 0] <= 125) & (hsv[:, :, 1] >= 45)
                 medians.append(float(np.median(hsv[:, :, 2][pigment])))
         self.assertLessEqual(abs(medians[0] - medians[1]), 3.)
+
+    def test_every_visible_material_accepts_player_color(self):
+        source = builder.TEXTURES[1]
+        with Image.open(io.BytesIO(self.assets[source])) as image:
+            mask, _ = material_mask(image, source, 'player')
+        for material in sorted(set(self.meshes['view']['materials'])):
+            row, column = divmod(MATERIALS.index(material), 4)
+            x, y = column * 64, row * 64
+            with self.subTest(material=material):
+                self.assertEqual(mask.crop((x,y,x+64,y+64)).getextrema(), (255,255))
 
     def test_legacy_pipeline_cannot_restore_the_previous_rocket_launcher(self):
         import build_platoon

@@ -80,9 +80,67 @@
     "muzzle_flash2_ads": { "up": -1 }
     },
 
+    "THUNDERHEAD": {
+      "fire_mode": {
+        "rate_rps": 5,
+        "damage": 3,
+        "spread_base": 1.6,
+        "bloom_per_shot": 1.0,
+        "bloom_recover_rate": 0.6
+      },
+      "ads": {
+        "enabled": true,
+        "accuracy_multiplier": 0.43,
+        "move_speed_scale": 0.45
+      },
+      "muzzle_flash": {
+        "enabled": true,
+        "scale": 2,
+        "duration_ms": 50,
+        "velocity_scale": 0.14,
+        "image": "sprites/muzzleFlashCore.png"
+      },
+      "muzzle_flash_thirdperson": {
+        "enabled": true,
+        "scale": 2,
+        "duration_ms": 50,
+        "velocity_scale": 0.05,
+        "image": "sprites/muzzleFlashSmall.png"
+      }
+    },
+
     "SMG": {
       "fire_mode": {
-        "rate_rps": 12.0,
+        "rate_rps": 15,
+        "damage": 4,
+        "spread_base": 1.85,
+        "bloom_per_shot": 0.24,
+        "bloom_recover_rate": 1.0
+      },
+      "ads": {
+        "enabled": true,
+        "accuracy_multiplier": 0.5,
+        "move_speed_scale": 0.55
+      },
+      "muzzle_flash": {
+        "enabled": true,
+        "scale": 1,
+        "duration_ms": 45,
+        "velocity_scale": 0.15,
+        "image": "sprites/muzzleFlashCore.png"
+      },
+      "muzzle_flash_thirdperson": {
+        "enabled": true,
+        "scale": 1,
+        "duration_ms": 45,
+        "velocity_scale": 0.05,
+        "image": "sprites/muzzleFlashSmall.png"
+      }
+    },
+
+    "M16": {
+      "fire_mode": {
+        "rate_rps": 10,
         "damage": 6,
         "spread_base": 1.25,
         "bloom_per_shot": 0.18,
@@ -92,41 +150,6 @@
         "enabled": true,
         "accuracy_multiplier": 0.5,
         "move_speed_scale": 0.55
-      },
-    "muzzle_flash": {
-      "enabled": true,
-      "forward": 40.0,
-      "right": 40.0,
-      "up": 40.0,
-      "scale": 40,
-      "duration_ms": 150,
-      "velocity_scale": 0.15,
-      "image": "sprites/muzzleFlashCore.png"
-    },
-    "muzzle_flash_thirdperson": {
-      "enabled": true,
-      "forward": 16.0,
-      "right": 5.5,
-      "up": -2.0,
-      "scale": 2,
-      "duration_ms": 50,
-      "velocity_scale": 0.05,
-      "image": "sprites/muzzleFlashSmall.png"
-    }
-    },
-
-    "M16": {
-      "fire_mode": {
-        "rate_rps": 20,
-        "damage": 8,
-        "spread_base": 3,
-        "bloom_per_shot": 0.16,
-        "bloom_recover_rate": 1.6
-      },
-      "ads": {
-        "enabled": true,
-        "accuracy_multiplier": 0.5,
-        "move_speed_scale": 0.5
       },
     "muzzle_flash": {
       "enabled": true,

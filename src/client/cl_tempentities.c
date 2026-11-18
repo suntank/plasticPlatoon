@@ -636,8 +636,9 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 		up_offset += local_split_up_nudge;
 		flash2_up_offset += local_split_up_nudge;
 	}
-	if (!thirdperson && (weapon == MZ_MACHINEGUN || weapon == MZ_BLASTER ||
-		weapon == MZ_SHOTGUN || weapon == MZ_SSHOTGUN || weapon == MZ_ROCKET || weapon == MZ_RAILGUN ||
+	if (!thirdperson && (weapon == MZ_MACHINEGUN || weapon == MZ_SMG || weapon == MZ_BLASTER ||
+		weapon == MZ_SHOTGUN || weapon == MZ_SSHOTGUN || weapon == MZ_THUNDERHEAD ||
+		weapon == MZ_ROCKET || weapon == MZ_RAILGUN ||
 		weapon == MZ_HYPERBLASTER || weapon == MZ_BFG ||
 		weapon == MZ_CHAINGUN1 || weapon == MZ_CHAINGUN2 || weapon == MZ_CHAINGUN3 || launcher_flash))
 	{
@@ -648,6 +649,8 @@ CL_SpawnMuzzleFlashSprite(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up
 		 * zero-based. Decode before reading independent player ADS state. */
 		float blend = CL_GetModelADSBlend(PP_ModelADSSlotForEffectScope(cl_effect_only_slot));
 		pp_model_ads_config_t pose = PP_ModelADSConfig(launcher_flash ? PP_MODEL_ADS_GLAUNCHER :
+			weapon == MZ_SMG ? PP_MODEL_ADS_SMG :
+			weapon == MZ_THUNDERHEAD ? PP_MODEL_ADS_THUNDERHEAD :
 			weapon == MZ_BFG ? PP_MODEL_ADS_MORTAR :
 			weapon == MZ_HYPERBLASTER ? PP_MODEL_ADS_FLAMETHROWER :
 			weapon == MZ_RAILGUN ? PP_MODEL_ADS_SNIPER : weapon == MZ_ROCKET ? PP_MODEL_ADS_RLAUNCHER :

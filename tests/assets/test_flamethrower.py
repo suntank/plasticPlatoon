@@ -15,6 +15,8 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools/assets'))
 import build_flamethrower as builder
+from build_color_variants import material_mask
+from build_m16 import MATERIALS
 from build_m16 import rigid_transforms, texture_bytes as rifle_texture_bytes
 from flamethrower_geometry import (build_flamethrower, combine_meshes, hose_mesh,
                                   HOSE_CONTROLS, INLET)
@@ -83,7 +85,7 @@ class FlamethrowerTests(unittest.TestCase):
     def test_budgets_static_view_and_runtime_skin_references(self):
         self.assertEqual(builder.MODELS, {'models/weapons/g_hyperb/tris.md2': 'pickup',
             'models/weapons/v_hyperb/tris.md2': 'view', 'players/soldier/w_hyperblaster.md2': 'player'})
-        counts = {'view': 804, 'pickup': 648, 'player': 648}
+        counts = {'view': 888, 'pickup': 736, 'player': 736}
         frames = {'view': 1, 'pickup': 1, 'player': 198}
         for entry in self.manifest['models']:
             model = MD2.read(self.assets[entry['path']])
@@ -186,7 +188,7 @@ class FlamethrowerTests(unittest.TestCase):
         backplate = self.part_vertices(self.pack, 'pack_backplate')
         self.assertLess(abs(backplate[:, 0].max() - torso[:, 0].min()), 1.5)
 
-    def test_existing_hands_and_arm_geometry_and_shared_atlas_are_exact(self):
+    def test_existing_hands_and_arm_geometry_and_materials_are_exact(self):
         rifle = build_m16('view')
         prefixes = ('hand_', 'arm_', 'cuff_')
         names = {part['name'] for part in self.view['parts'] if part['name'].startswith(prefixes)}
@@ -195,11 +197,25 @@ class FlamethrowerTests(unittest.TestCase):
             with self.subTest(part=name):
                 np.testing.assert_array_equal(self.part_vertices(self.view, name), self.part_vertices(rifle, name))
         self.assertFalse(any(part['name'].startswith(prefixes) for part in self.assembled['parts']))
-        for path in builder.TEXTURES:
-            self.assertEqual(self.assets[path], rifle_texture_bytes())
-            with Image.open(io.BytesIO(self.assets[path])) as image:
-                self.assertEqual(image.size, (256, 256))
-                self.assertEqual(image.mode, 'RGB')
+        with Image.open(io.BytesIO(rifle_texture_bytes())) as rifle_atlas:
+            for path in builder.TEXTURES:
+                with Image.open(io.BytesIO(self.assets[path])) as image:
+                    self.assertEqual(image.size, (256, 256))
+                    self.assertEqual(image.mode, 'RGB')
+                    for material in ('hand','cuff','fingers'):
+                        row,column = divmod(MATERIALS.index(material),4)
+                        box = (column*64,row*64,(column+1)*64,(row+1)*64)
+                        self.assertEqual(image.crop(box).tobytes(),rifle_atlas.crop(box).tobytes())
+
+    def test_all_visible_materials_take_player_color(self):
+        path = builder.TEXTURES[1]
+        with Image.open(io.BytesIO(self.assets[path])) as image:
+            mask, _ = material_mask(image, path, 'player')
+        for material in sorted(set(self.assembled['materials']) | set(self.view['materials'])):
+            row,column = divmod(MATERIALS.index(material),4)
+            box = (column*64,row*64,(column+1)*64,(row+1)*64)
+            with self.subTest(material=material):
+                self.assertEqual(mask.crop(box).getextrema(),(255,255))
 
     def test_every_wand_tank_hose_hand_and_arm_part_is_closed(self):
         for mesh in (self.assembled, self.view):
@@ -248,7 +264,9 @@ class FlamethrowerTests(unittest.TestCase):
         a = self.part(self.view, 'front_sight')['first_triangle']
         b = a + self.part(self.view, 'front_sight')['triangle_count']
         channel = np.concatenate((triangles[:a], triangles[b:]))
-        self.assertEqual(len(ray_distances(channel, (32., 0., 8.6), (1., 0., 0.), 50.)), 0)
+        rear = np.asarray(self.view['anchors']['rear_sight'])
+        sight_length = self.view['anchors']['front_sight'][0]-rear[0]
+        self.assertEqual(len(ray_distances(channel, rear, (1., 0., 0.), sight_length)), 0)
         part = self.part(self.view, 'nozzle')
         a = part['first_triangle']; b = a + part['triangle_count']
         hits = ray_distances(triangles[a:b], (94., 0., 0.), (-1., 0., 0.))
@@ -257,7 +275,7 @@ class FlamethrowerTests(unittest.TestCase):
         self.assertLess(hits.min() - 2., 6.)
         values = {name: float(value) for name, value in re.findall(
             r'#define PP_FLAMETHROWER_(\w+) \(([-\d.]+)f\)', self.header.decode())}
-        rear = np.asarray(self.view['anchors']['rear_sight']) @ matrix + offset
+        rear = rear @ matrix + offset
         self.assertAlmostEqual(rear[0] + values['ADS_FORWARD'], 9.5, places=6)
         self.assertAlmostEqual(-rear[1] + values['ADS_RIGHT'], 0., places=6)
         self.assertAlmostEqual(rear[2] + values['ADS_UP'], 0., places=6)

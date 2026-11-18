@@ -987,6 +987,9 @@ ReadGame(const char *filename)
 
 	/* we should not trust this value from savegames */
 	int num_items = game.num_items;
+	int knife_index = ITEM_INDEX(FindItem("Knife"));
+	gitem_t *light_bullets = FindItem("Light Bullets");
+	int light_index = ITEM_INDEX(light_bullets);
 
 	if (fread(&game, sizeof(game), 1, f) != 1)
 	{
@@ -995,6 +998,9 @@ ReadGame(const char *filename)
 		return;
 	}
 
+	qboolean predates_knife = game.num_items <= knife_index;
+	qboolean predates_light_bullets = game.num_items <= light_index;
+
 	/* initialize entities and clients arrays */
 	InitAllocations();
 
@@ -1002,7 +1008,25 @@ ReadGame(const char *filename)
 
 	for (i = 0; i < game.maxclients; i++)
 	{
-		ReadClient(f, &game.clients[i], save_ver);
+		gclient_t *client = &game.clients[i];
+		ReadClient(f, client, save_ver);
+
+		if (predates_knife)
+		{
+			client->pers.inventory[knife_index] = 1;
+			client->resp.coop_respawn.inventory[knife_index] = 1;
+		}
+
+		if (predates_light_bullets)
+		{
+			client->pers.inventory[light_index] = light_bullets->quantity;
+			client->resp.coop_respawn.inventory[light_index] = light_bullets->quantity;
+		}
+		if (client->pers.weapon && (client->pers.weapon->weapmodel == WEAP_BLASTER ||
+			client->pers.weapon->weapmodel == WEAP_SMG))
+		{
+			client->ammo_index = light_index;
+		}
 	}
 
 	fclose(f);
@@ -1253,6 +1277,11 @@ ReadLevel(const char *filename)
 	}
 
 	fclose(f);
+
+	/* The server restores saved configstrings before reading the level. */
+	PrecacheAddedWeapons();
+	gitem_t *heavy_bullets = FindItem("Heavy Bullets");
+	gi.configstring(CS_ITEMS + ITEM_INDEX(heavy_bullets), heavy_bullets->pickup_name);
 
 	/* mark all clients as unconnected */
 	for (i = 0; i < maxclients->value; i++)

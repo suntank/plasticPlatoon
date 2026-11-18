@@ -4,8 +4,8 @@
   "dependencies_sha256": {
     "build_projectiles.py": "aa4f558d34392a34036b84e5c6583282c3e30b196585b8170b6bd937737bf555",
     "projectile_geometry.py": "a95e7735a4d34838e91af7ea46390e8aa254f39418c9460abb48dafc46e14f27",
-    "build_ammo.py": "9d306cf17ebcf533d451a8c186bbb341297ce06402d312f3e1f70e2ff9e1386e",
-    "ammo_geometry.py": "38b02b31c2fde871cef7f52ee7e6632894122eaa5686ab2d2a9eb0a0e4fd4dd4",
+    "build_ammo.py": "391c4fa9e8b64f6fd11c9f8cc388b1869d7ec02bb619b8ec74daa447c9ce3594",
+    "ammo_geometry.py": "b8049597918ce85cb929b8a5a1b6baa7b08e88247f25b8c22584ef89fff24cc3",
     "build_m16.py": "3f90819146186a316a6eb11cdf387923158b34bea43cc41eae211d2ef4a69717",
     "m16_geometry.py": "730286d3b6e18f99727689d9b0f9107524d0930cba2b43a45483d051641d578d"
   },

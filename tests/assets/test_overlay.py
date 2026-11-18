@@ -142,7 +142,7 @@ class OverlayVerificationTests(unittest.TestCase):
     def test_release_tuning_preserves_the_audited_laptop_profile(self):
         data = (ROOT / 'baseq2/tuning/default.json').read_bytes()
         self.assertEqual(hashlib.sha256(data).hexdigest(),
-                         '219e0f1ec97fa6b944336f263726564a3eb0a176351f5fd19f805913d24a22ea')
+                         '289b9b1453cf1d07f8b3a1f29b1b299152aea7978ead935faae241c71e55f200')
         fire_mode = json.loads(data)['weapon_overrides']['M60']['fire_mode']
         self.assertEqual(fire_mode['rate_rps'], 35)
         self.assertEqual(fire_mode['spread_standing_hip'], 3)

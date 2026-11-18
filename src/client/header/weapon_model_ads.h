@@ -2,6 +2,8 @@
 #ifndef PP_WEAPON_MODEL_ADS_H
 #define PP_WEAPON_MODEL_ADS_H
 #include "m16_model_ads.h"
+#include "smg_model_ads.h"
+#include "thunderhead_model_ads.h"
 #include "pistol_model_ads.h"
 #include "shotgun_model_ads.h"
 #include "sshotgun_model_ads.h"
@@ -20,7 +22,7 @@ typedef pp_m16_ads_state_t pp_model_ads_state_t;
 typedef struct {
     float forward, right, up;
     float muzzle_forward, muzzle_right, muzzle_up;
-    int animated;
+    int animated; /* Number of authored frames, or zero for a rigid model. */
     float recoil_back; /* ADS travel limit; zero preserves the M16's motion. */
 } pp_model_ads_config_t;
 
@@ -34,7 +36,9 @@ enum {
     PP_MODEL_ADS_RLAUNCHER,
     PP_MODEL_ADS_SNIPER,
     PP_MODEL_ADS_FLAMETHROWER,
-    PP_MODEL_ADS_MORTAR
+    PP_MODEL_ADS_MORTAR,
+    PP_MODEL_ADS_SMG,
+    PP_MODEL_ADS_THUNDERHEAD
 };
 
 static inline pp_model_ads_config_t PP_ModelADSConfig(int weapon)
@@ -45,7 +49,7 @@ static inline pp_model_ads_config_t PP_ModelADSConfig(int weapon)
         PP_PISTOL_ADS_UP, PP_PISTOL_MUZZLE_FORWARD, PP_PISTOL_MUZZLE_RIGHT, PP_PISTOL_MUZZLE_UP, 0, .35f};
     const pp_model_ads_config_t shotgun = {PP_SHOTGUN_ADS_FORWARD, PP_SHOTGUN_ADS_RIGHT,
         PP_SHOTGUN_ADS_UP, PP_SHOTGUN_MUZZLE_FORWARD, PP_SHOTGUN_MUZZLE_RIGHT,
-        PP_SHOTGUN_MUZZLE_UP, 1, .60f};
+        PP_SHOTGUN_MUZZLE_UP, 40, .60f};
     const pp_model_ads_config_t double_barrel = {PP_SSHOTGUN_ADS_FORWARD, PP_SSHOTGUN_ADS_RIGHT,
         PP_SSHOTGUN_ADS_UP, PP_SSHOTGUN_MUZZLE_FORWARD, PP_SSHOTGUN_MUZZLE_RIGHT,
         PP_SSHOTGUN_MUZZLE_UP, 0, .70f};
@@ -66,6 +70,12 @@ static inline pp_model_ads_config_t PP_ModelADSConfig(int weapon)
     const pp_model_ads_config_t mortar = {PP_MORTAR_ADS_FORWARD, PP_MORTAR_ADS_RIGHT,
         PP_MORTAR_ADS_UP, PP_MORTAR_MUZZLE_FORWARD, PP_MORTAR_MUZZLE_RIGHT,
         PP_MORTAR_MUZZLE_UP, 0, .65f};
+    const pp_model_ads_config_t smg = {PP_SMG_ADS_FORWARD, PP_SMG_ADS_RIGHT,
+        PP_SMG_ADS_UP, PP_SMG_MUZZLE_FORWARD, PP_SMG_MUZZLE_RIGHT,
+        PP_SMG_MUZZLE_UP, PP_SMG_VIEW_FRAMES, .40f};
+    const pp_model_ads_config_t thunderhead = {PP_THUNDERHEAD_ADS_FORWARD, PP_THUNDERHEAD_ADS_RIGHT,
+        PP_THUNDERHEAD_ADS_UP, PP_THUNDERHEAD_MUZZLE_FORWARD, PP_THUNDERHEAD_MUZZLE_RIGHT,
+        PP_THUNDERHEAD_MUZZLE_UP, PP_THUNDERHEAD_VIEW_FRAMES, .60f};
     if (weapon == PP_MODEL_ADS_SHOTGUN) return shotgun;
     if (weapon == PP_MODEL_ADS_SSHOTGUN) return double_barrel;
     if (weapon == PP_MODEL_ADS_M60) return m60;
@@ -74,6 +84,8 @@ static inline pp_model_ads_config_t PP_ModelADSConfig(int weapon)
     if (weapon == PP_MODEL_ADS_SNIPER) return sniper;
     if (weapon == PP_MODEL_ADS_FLAMETHROWER) return flamethrower;
     if (weapon == PP_MODEL_ADS_MORTAR) return mortar;
+    if (weapon == PP_MODEL_ADS_SMG) return smg;
+    if (weapon == PP_MODEL_ADS_THUNDERHEAD) return thunderhead;
     return weapon == PP_MODEL_ADS_PISTOL ? sidearm : rifle;
 }
 
@@ -116,11 +128,9 @@ PP_ModelADSConstrainMotion(pp_model_ads_config_t config, float blend, float hip_
     }
 }
 
-/* Only the pump shotgun animates inside its model. Keep the exact server
- * schedule (raise 0–7, shot/pump 8–18, idle 19–36, lower 37–39), while the
- * rigid authored weapons still use the renderer's static geometry cache. */
+/* Animated models use the server's frame schedule. */
 static inline int PP_ModelADSFrame(pp_model_ads_config_t config, int gunframe)
 {
-    return config.animated && gunframe >= 0 && gunframe < 40 ? gunframe : 0;
+    return gunframe >= 0 && gunframe < config.animated ? gunframe : 0;
 }
 #endif

@@ -426,8 +426,7 @@ G_SetStats(edict_t *ent)
 	ent->client->ps.stats[STAT_HEALTH] = (ent->health < -99) ? -99 : ent->health;
 
 	/* ammo */
-	if (!ent->client->ammo_index || (ent->client->pers.weapon &&
-		!strcmp(ent->client->pers.weapon->classname, "weapon_blaster")))
+	if (!ent->client->ammo_index)
 	{
 		/* Negative ammo hides the field on stock, compact and split HUDs. */
 		ent->client->ps.stats[STAT_AMMO_ICON] = 0;

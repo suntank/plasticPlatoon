@@ -2,11 +2,12 @@
   "schema": 1,
   "generator": "tools/assets/build_flamethrower.py",
   "dependencies_sha256": {
-    "build_flamethrower.py": "c689d4cfbdc0755e6e5ceeea8bb6532b2dac39a75115eb452d399bd7a49ba962",
-    "flamethrower_geometry.py": "9d576b6e1646b1774c951586c564f99dbf29b95cfabd286bf42dabddd836db99",
+    "build_flamethrower.py": "2118f7eea690eafef87949bf0232dda839080566ce87570b316021d7d79b08f6",
+    "flamethrower_geometry.py": "9df6fab20d8e410306effbc52188f95c56a002e42c06138e7d180c1bc193fa01",
     "build_m16.py": "3f90819146186a316a6eb11cdf387923158b34bea43cc41eae211d2ef4a69717",
     "m16_geometry.py": "730286d3b6e18f99727689d9b0f9107524d0930cba2b43a45483d051641d578d",
-    "md2_animation.py": "ded6af2787240ac7f2fd5b26edc7a33228699725c22e515f4187ec6485aaec90"
+    "md2_animation.py": "ded6af2787240ac7f2fd5b26edc7a33228699725c22e515f4187ec6485aaec90",
+    "flamethrower_tanks.py": "8ccee6c0556f9a81fc2f7c58f5c88f18bf8942a322120ef6e30793feb980c5c8"
   },
   "source_archive": {
     "path": "tools/assets/sources/platoon-originals.pk3",
@@ -30,7 +31,7 @@
   },
   "method": "authored closed shapes; independent archived gun/backpack motion; endpoint-attached cubic hose",
   "hand": "m16_geometry.add_hands; exact existing molded mittens and forearms",
-  "palette": "Shared M16 army-man plastic and mitten atlas",
+  "palette": "Player-colored plastic with molded nozzle trim and wrapped tank bands",
   "models": [
     {
       "path": "models/weapons/g_hyperb/tris.md2",
@@ -42,9 +43,9 @@
         "file_bytes": 55020
       },
       "after": {
-        "triangles": 648,
-        "position_vertices": 736,
-        "render_vertices": 914,
+        "triangles": 736,
+        "position_vertices": 648,
+        "render_vertices": 910,
         "frames": 1,
         "skin_references": [
           "models/weapons/g_hyperb/skin.png"
@@ -53,12 +54,12 @@
           256,
           256
         ],
-        "gl_command_primitives": 216,
-        "gl_command_triangles": 648,
+        "gl_command_primitives": 214,
+        "gl_command_triangles": 736,
         "duplicate_gl_triangles": 0,
         "unused_bytes_per_frame": 0,
-        "file_bytes": 25528,
-        "sha256": "aed082f0005b6660a9b75812fc113b5aea8749e9f63aee5c95ab4b4bde3a24ea",
+        "file_bytes": 27660,
+        "sha256": "45fdaff1fb3c01ce9eceb8ae9a33d5624f171384fa40d963a7fcecf2f3e2abca",
         "bounds": [
           [
             -38.84000015258789,
@@ -66,16 +67,16 @@
             5.653900146484375
           ],
           [
-            39.24999716877937,
+            38.30495747923851,
             20.39305543899536,
-            37.07999983429909
+            37.06100085377693
           ]
         ]
       },
       "pose_transfer": null,
       "validation": {
-        "max_vertex_quantization_error": 0.163800030191,
-        "minimum_quantized_double_triangle_area": 0.226441895312,
+        "max_vertex_quantization_error": 0.164458172037,
+        "minimum_quantized_double_triangle_area": 0.116538023253,
         "all_frames_nondegenerate": true,
         "outward_normals_clockwise_triangles": true
       },
@@ -88,12 +89,12 @@
         "rear_sight": [
           -4.639999999999999,
           9.025,
-          26.782000000000004
+          26.240499999999997
         ],
         "front_sight": [
           -33.13999999999999,
           9.025,
-          26.782000000000004
+          26.240499999999997
         ],
         "grip": [
           -5.779999999999999,
@@ -130,136 +131,116 @@
         {
           "name": "receiver",
           "first_triangle": 0,
-          "triangle_count": 20
+          "triangle_count": 60
         },
         {
           "name": "grip",
-          "first_triangle": 20,
+          "first_triangle": 60,
           "triangle_count": 20
         },
         {
           "name": "trigger_guard",
-          "first_triangle": 40,
+          "first_triangle": 80,
           "triangle_count": 32
         },
         {
           "name": "fuel_inlet",
-          "first_triangle": 72,
+          "first_triangle": 112,
           "triangle_count": 20
         },
         {
           "name": "handguard",
-          "first_triangle": 92,
+          "first_triangle": 132,
           "triangle_count": 44
         },
         {
           "name": "barrel",
-          "first_triangle": 136,
+          "first_triangle": 176,
           "triangle_count": 28
         },
         {
           "name": "nozzle",
-          "first_triangle": 164,
-          "triangle_count": 60
+          "first_triangle": 204,
+          "triangle_count": 76
         },
         {
           "name": "igniter_pipe",
-          "first_triangle": 224,
+          "first_triangle": 280,
           "triangle_count": 12
         },
         {
           "name": "igniter_tip",
-          "first_triangle": 236,
+          "first_triangle": 292,
           "triangle_count": 12
         },
         {
           "name": "rear_sight_right",
-          "first_triangle": 248,
+          "first_triangle": 304,
           "triangle_count": 12
         },
         {
           "name": "rear_sight_left",
-          "first_triangle": 260,
+          "first_triangle": 316,
           "triangle_count": 12
         },
         {
           "name": "front_sight",
-          "first_triangle": 272,
+          "first_triangle": 328,
           "triangle_count": 12
         },
         {
           "name": "pack_backplate",
-          "first_triangle": 284,
-          "triangle_count": 12
+          "first_triangle": 340,
+          "triangle_count": 28
         },
         {
           "name": "pack_tank_right",
-          "first_triangle": 296,
-          "triangle_count": 60
+          "first_triangle": 368,
+          "triangle_count": 92
         },
         {
           "name": "pack_valve_right",
-          "first_triangle": 356,
-          "triangle_count": 12
-        },
-        {
-          "name": "pack_band_right_lower",
-          "first_triangle": 368,
-          "triangle_count": 12
-        },
-        {
-          "name": "pack_band_right_upper",
-          "first_triangle": 380,
+          "first_triangle": 460,
           "triangle_count": 12
         },
         {
           "name": "pack_shoulder_right",
-          "first_triangle": 392,
+          "first_triangle": 472,
           "triangle_count": 12
         },
         {
           "name": "pack_tank_left",
-          "first_triangle": 404,
-          "triangle_count": 60
+          "first_triangle": 484,
+          "triangle_count": 92
         },
         {
           "name": "pack_valve_left",
-          "first_triangle": 464,
-          "triangle_count": 12
-        },
-        {
-          "name": "pack_band_left_lower",
-          "first_triangle": 476,
-          "triangle_count": 12
-        },
-        {
-          "name": "pack_band_left_upper",
-          "first_triangle": 488,
+          "first_triangle": 576,
           "triangle_count": 12
         },
         {
           "name": "pack_shoulder_left",
-          "first_triangle": 500,
+          "first_triangle": 588,
           "triangle_count": 12
         },
         {
           "name": "pack_pressure_bottle",
-          "first_triangle": 512,
+          "first_triangle": 600,
           "triangle_count": 20
         },
         {
           "name": "pack_manifold",
-          "first_triangle": 532,
+          "first_triangle": 620,
           "triangle_count": 12
         },
         {
           "name": "pack_outlet",
-          "first_triangle": 544,
+          "first_triangle": 632,
           "triangle_count": 12
         },
         {
           "name": "fuel_hose",
-          "first_triangle": 556,
+          "first_triangle": 644,
           "triangle_count": 92
         }
       ]
@@ -274,9 +255,9 @@
         "file_bytes": 78144
       },
       "after": {
-        "triangles": 804,
-        "position_vertices": 680,
-        "render_vertices": 970,
+        "triangles": 888,
+        "position_vertices": 706,
+        "render_vertices": 1050,
         "frames": 1,
         "skin_references": [
           "models/weapons/v_hyperb/skin.png"
@@ -285,193 +266,193 @@
           256,
           256
         ],
-        "gl_command_primitives": 230,
-        "gl_command_triangles": 804,
+        "gl_command_primitives": 246,
+        "gl_command_triangles": 888,
         "duplicate_gl_triangles": 0,
         "unused_bytes_per_frame": 0,
-        "file_bytes": 29892,
-        "sha256": "29629a5fa4642b5fff57ef80bf1517561641fd8cb5913bb50c088a43faadb957",
+        "file_bytes": 32708,
+        "sha256": "b69292e18bbda3b83ed21375ed660a3ba623c866473e365ac47cc51f02c25913",
         "bounds": [
           [
-            -9.071540832519531,
-            -17.344497680664062,
-            -28.084228515625
+            -7.471540451049805,
+            -16.69449806213379,
+            -29.884227752685547
           ],
           [
-            51.31481505930424,
-            2.0923466458916664,
-            -1.899637870490551
+            52.914815440773964,
+            2.742348164319992,
+            -4.433905906975269
           ]
         ]
       },
       "pose_transfer": null,
       "validation": {
-        "max_vertex_quantization_error": 0.124870556598,
-        "minimum_quantized_double_triangle_area": 0.187798745854,
+        "max_vertex_quantization_error": 0.127848194547,
+        "minimum_quantized_double_triangle_area": 0.212283370439,
         "all_frames_nondegenerate": true,
         "outward_normals_clockwise_triangles": true
       },
       "anchors_frame0": {
         "muzzle": [
-          51.31481439352036,
-          -8.5,
-          -7.8
+          52.91481439352036,
+          -7.85,
+          -9.6
         ],
         "rear_sight": [
-          11.97906587600708,
-          -8.5,
-          -2.161876045823097
+          13.57906587600708,
+          -7.85,
+          -4.584692064017057
         ],
         "front_sight": [
-          44.75885630726815,
-          -8.5,
-          -2.161876045823097
+          46.35885630726815,
+          -7.85,
+          -4.584692064017057
         ],
         "grip": [
-          13.290257493257524,
-          -8.5,
-          -13.04476646900177
+          14.890257493257524,
+          -7.85,
+          -14.844766469001769
         ],
         "inlet": [
-          9.356682641506197,
-          -10.204549102425576,
-          -9.438989521563053
+          10.956682641506196,
+          -9.554549102425575,
+          -11.238989521563052
         ],
         "support": [
-          31.646940134763717,
-          -8.5,
-          -9.111191617250443
+          33.24694013476372,
+          -7.85,
+          -10.911191617250442
         ],
         "pack_end": [
-          -8.344404191374778,
-          -15.711553894877433,
-          -27.467874258756638
+          -6.744404191374779,
+          -15.061553894877434,
+          -29.267874258756635
         ],
         "gun_end": [
-          9.356682641506197,
-          -10.204549102425576,
-          -9.438989521563053
+          10.956682641506196,
+          -9.554549102425575,
+          -11.238989521563052
         ]
       },
       "parts": [
         {
           "name": "receiver",
           "first_triangle": 0,
-          "triangle_count": 20
+          "triangle_count": 60
         },
         {
           "name": "grip",
-          "first_triangle": 20,
+          "first_triangle": 60,
           "triangle_count": 20
         },
         {
           "name": "trigger_guard",
-          "first_triangle": 40,
-          "triangle_count": 32
+          "first_triangle": 80,
+          "triangle_count": 40
         },
         {
           "name": "fuel_inlet",
-          "first_triangle": 72,
+          "first_triangle": 120,
           "triangle_count": 20
         },
         {
           "name": "handguard",
-          "first_triangle": 92,
+          "first_triangle": 140,
           "triangle_count": 44
         },
         {
           "name": "barrel",
-          "first_triangle": 136,
+          "first_triangle": 184,
           "triangle_count": 28
         },
         {
           "name": "nozzle",
-          "first_triangle": 164,
-          "triangle_count": 60
+          "first_triangle": 212,
+          "triangle_count": 96
         },
         {
           "name": "igniter_pipe",
-          "first_triangle": 224,
+          "first_triangle": 308,
           "triangle_count": 12
         },
         {
           "name": "igniter_tip",
-          "first_triangle": 236,
+          "first_triangle": 320,
           "triangle_count": 12
         },
         {
           "name": "rear_sight_right",
-          "first_triangle": 248,
+          "first_triangle": 332,
           "triangle_count": 12
         },
         {
           "name": "rear_sight_left",
-          "first_triangle": 260,
+          "first_triangle": 344,
           "triangle_count": 12
         },
         {
           "name": "front_sight",
-          "first_triangle": 272,
+          "first_triangle": 356,
           "triangle_count": 12
         },
         {
           "name": "arm_right",
-          "first_triangle": 284,
+          "first_triangle": 368,
           "triangle_count": 20
         },
         {
           "name": "cuff_right",
-          "first_triangle": 304,
+          "first_triangle": 388,
           "triangle_count": 20
         },
         {
           "name": "hand_right_wrist",
-          "first_triangle": 324,
+          "first_triangle": 408,
           "triangle_count": 20
         },
         {
           "name": "hand_right_palm",
-          "first_triangle": 344,
+          "first_triangle": 428,
           "triangle_count": 76
         },
         {
           "name": "hand_right_thumb",
-          "first_triangle": 420,
+          "first_triangle": 504,
           "triangle_count": 44
         },
         {
           "name": "hand_right_fingers",
-          "first_triangle": 464,
+          "first_triangle": 548,
           "triangle_count": 60
         },
         {
           "name": "arm_left",
-          "first_triangle": 524,
+          "first_triangle": 608,
           "triangle_count": 20
         },
         {
           "name": "cuff_left",
-          "first_triangle": 544,
+          "first_triangle": 628,
           "triangle_count": 20
         },
         {
           "name": "hand_left_palm",
-          "first_triangle": 564,
+          "first_triangle": 648,
           "triangle_count": 60
         },
         {
           "name": "hand_left_fingers",
-          "first_triangle": 624,
+          "first_triangle": 708,
           "triangle_count": 44
         },
         {
           "name": "hand_left_thumb",
-          "first_triangle": 668,
+          "first_triangle": 752,
           "triangle_count": 44
         },
         {
           "name": "fuel_hose",
-          "first_triangle": 712,
+          "first_triangle": 796,
           "triangle_count": 92
         }
       ]
@@ -486,9 +467,9 @@
         "file_bytes": 1077852
       },
       "after": {
-        "triangles": 648,
-        "position_vertices": 736,
-        "render_vertices": 914,
+        "triangles": 736,
+        "position_vertices": 648,
+        "render_vertices": 910,
         "frames": 198,
         "skin_references": [
           "models/weapons/v_hyperb/skin.png"
@@ -497,22 +478,22 @@
           256,
           256
         ],
-        "gl_command_primitives": 216,
-        "gl_command_triangles": 648,
+        "gl_command_primitives": 214,
+        "gl_command_triangles": 736,
         "duplicate_gl_triangles": 0,
         "unused_bytes_per_frame": 0,
-        "file_bytes": 613376,
-        "sha256": "314d8b1b3d7a69bdcddc2acfa82185dd280fe899cbd4a3ad996a074b416119b3",
+        "file_bytes": 546164,
+        "sha256": "15e33b7a99c9f80c6f817ec744b123710c5d255fa5e00d753e6334f9defd4f53",
         "bounds": [
           [
-            -54.253902435302734,
-            -34.12985610961914,
-            -33.82312774658203
+            -54.32942581176758,
+            -34.22893524169922,
+            -33.30989456176758
           ],
           [
-            57.36354734003544,
-            40.889890775084496,
-            42.148075476288795
+            57.39041122794151,
+            40.91414827108383,
+            42.04907938838005
           ]
         ]
       },
@@ -541,8 +522,8 @@
         }
       },
       "validation": {
-        "max_vertex_quantization_error": 0.116085440684,
-        "minimum_quantized_double_triangle_area": 0.0285919328861,
+        "max_vertex_quantization_error": 0.112248875028,
+        "minimum_quantized_double_triangle_area": 0.0192754073716,
         "all_frames_nondegenerate": true,
         "outward_normals_clockwise_triangles": true
       },
@@ -555,12 +536,12 @@
         "rear_sight": [
           9.6,
           -4.75,
-          17.78
+          17.495
         ],
         "front_sight": [
           24.599999999999998,
           -4.75,
-          17.78
+          17.495
         ],
         "grip": [
           10.2,
@@ -597,136 +578,116 @@
         {
           "name": "receiver",
           "first_triangle": 0,
-          "triangle_count": 20
+          "triangle_count": 60
         },
         {
           "name": "grip",
-          "first_triangle": 20,
+          "first_triangle": 60,
           "triangle_count": 20
         },
         {
           "name": "trigger_guard",
-          "first_triangle": 40,
+          "first_triangle": 80,
           "triangle_count": 32
         },
         {
           "name": "fuel_inlet",
-          "first_triangle": 72,
+          "first_triangle": 112,
           "triangle_count": 20
         },
         {
           "name": "handguard",
-          "first_triangle": 92,
+          "first_triangle": 132,
           "triangle_count": 44
         },
         {
           "name": "barrel",
-          "first_triangle": 136,
+          "first_triangle": 176,
           "triangle_count": 28
         },
         {
           "name": "nozzle",
-          "first_triangle": 164,
-          "triangle_count": 60
+          "first_triangle": 204,
+          "triangle_count": 76
         },
         {
           "name": "igniter_pipe",
-          "first_triangle": 224,
+          "first_triangle": 280,
           "triangle_count": 12
         },
         {
           "name": "igniter_tip",
-          "first_triangle": 236,
+          "first_triangle": 292,
           "triangle_count": 12
         },
         {
           "name": "rear_sight_right",
-          "first_triangle": 248,
+          "first_triangle": 304,
           "triangle_count": 12
         },
         {
           "name": "rear_sight_left",
-          "first_triangle": 260,
+          "first_triangle": 316,
           "triangle_count": 12
         },
         {
           "name": "front_sight",
-          "first_triangle": 272,
+          "first_triangle": 328,
           "triangle_count": 12
         },
         {
           "name": "pack_backplate",
-          "first_triangle": 284,
-          "triangle_count": 12
+          "first_triangle": 340,
+          "triangle_count": 28
         },
         {
           "name": "pack_tank_right",
-          "first_triangle": 296,
-          "triangle_count": 60
+          "first_triangle": 368,
+          "triangle_count": 92
         },
         {
           "name": "pack_valve_right",
-          "first_triangle": 356,
-          "triangle_count": 12
-        },
-        {
-          "name": "pack_band_right_lower",
-          "first_triangle": 368,
-          "triangle_count": 12
-        },
-        {
-          "name": "pack_band_right_upper",
-          "first_triangle": 380,
+          "first_triangle": 460,
           "triangle_count": 12
         },
         {
           "name": "pack_shoulder_right",
-          "first_triangle": 392,
+          "first_triangle": 472,
           "triangle_count": 12
         },
         {
           "name": "pack_tank_left",
-          "first_triangle": 404,
-          "triangle_count": 60
+          "first_triangle": 484,
+          "triangle_count": 92
         },
         {
           "name": "pack_valve_left",
-          "first_triangle": 464,
-          "triangle_count": 12
-        },
-        {
-          "name": "pack_band_left_lower",
-          "first_triangle": 476,
-          "triangle_count": 12
-        },
-        {
-          "name": "pack_band_left_upper",
-          "first_triangle": 488,
+          "first_triangle": 576,
           "triangle_count": 12
         },
         {
           "name": "pack_shoulder_left",
-          "first_triangle": 500,
+          "first_triangle": 588,
           "triangle_count": 12
         },
         {
           "name": "pack_pressure_bottle",
-          "first_triangle": 512,
+          "first_triangle": 600,
           "triangle_count": 20
         },
         {
           "name": "pack_manifold",
-          "first_triangle": 532,
+          "first_triangle": 620,
           "triangle_count": 12
         },
         {
           "name": "pack_outlet",
-          "first_triangle": 544,
+          "first_triangle": 632,
           "triangle_count": 12
         },
         {
           "name": "fuel_hose",
-          "first_triangle": 556,
+          "first_triangle": 644,
           "triangle_count": 92
         }
       ]
@@ -734,33 +695,33 @@
   ],
   "ads_header": {
     "path": "src/client/header/flamethrower_model_ads.h",
-    "sha256": "58e1c3cb2360b3e8e7be97ddad6d22a479b08be47cdf1a772ead35901559fd15"
+    "sha256": "53ce06e5b41ae7c3bf18e1ce121a5656f38399b9e942d348fe35f63db5df5ab7"
   },
   "files": [
     {
       "path": "models/weapons/g_hyperb/skin.png",
-      "bytes": 6001,
-      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
+      "bytes": 6035,
+      "sha256": "a9e54a82d82dd48216f25ce44437d00b4ca5ef2ded1564a9a2a54efc0858af32"
     },
     {
       "path": "models/weapons/g_hyperb/tris.md2",
-      "bytes": 25528,
-      "sha256": "aed082f0005b6660a9b75812fc113b5aea8749e9f63aee5c95ab4b4bde3a24ea"
+      "bytes": 27660,
+      "sha256": "45fdaff1fb3c01ce9eceb8ae9a33d5624f171384fa40d963a7fcecf2f3e2abca"
     },
     {
       "path": "models/weapons/v_hyperb/skin.png",
-      "bytes": 6001,
-      "sha256": "89a77e1e3fc96b368bbab7c28592527e475c1cd062dbb4c4a98c557c75e05d6a"
+      "bytes": 6035,
+      "sha256": "a9e54a82d82dd48216f25ce44437d00b4ca5ef2ded1564a9a2a54efc0858af32"
     },
     {
       "path": "models/weapons/v_hyperb/tris.md2",
-      "bytes": 29892,
-      "sha256": "29629a5fa4642b5fff57ef80bf1517561641fd8cb5913bb50c088a43faadb957"
+      "bytes": 32708,
+      "sha256": "b69292e18bbda3b83ed21375ed660a3ba623c866473e365ac47cc51f02c25913"
     },
     {
       "path": "players/soldier/w_hyperblaster.md2",
-      "bytes": 613376,
-      "sha256": "314d8b1b3d7a69bdcddc2acfa82185dd280fe899cbd4a3ad996a074b416119b3"
+      "bytes": 546164,
+      "sha256": "15e33b7a99c9f80c6f817ec744b123710c5d255fa5e00d753e6334f9defd4f53"
     }
   ]
 }

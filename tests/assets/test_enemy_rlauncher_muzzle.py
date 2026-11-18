@@ -10,7 +10,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 # Reviewed outer and inner front lip of the authored launch_tube (canonical X100).
-RIM = (24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 36, 38, 40, 42, 44, 46)
+RIM = (56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 76, 82, 88, 94, 100, 106)
 
 
 def rim_center(raw, frame):

@@ -282,10 +282,11 @@ static centity_t test_entities[4][16];
 
 static void TestAuthoredWeaponADS(void)
 {
-    const char *models[] = {"v_machn", "v_blast", "v_shotg", "v_shotg2", "v_chain", "v_launch", "v_rocket", "v_rail", "v_hyperb", "v_bfg"};
+    const char *models[] = {"v_machn", "v_blast", "v_shotg", "v_shotg2", "v_chain", "v_launch", "v_rocket", "v_rail", "v_hyperb", "v_bfg", "v_smg", "v_thunderhead"};
     const int configs[] = {PP_MODEL_ADS_RIFLE, PP_MODEL_ADS_PISTOL,
         PP_MODEL_ADS_SHOTGUN, PP_MODEL_ADS_SSHOTGUN, PP_MODEL_ADS_M60, PP_MODEL_ADS_GLAUNCHER,
-        PP_MODEL_ADS_RLAUNCHER, PP_MODEL_ADS_SNIPER, PP_MODEL_ADS_FLAMETHROWER, PP_MODEL_ADS_MORTAR};
+        PP_MODEL_ADS_RLAUNCHER, PP_MODEL_ADS_SNIPER, PP_MODEL_ADS_FLAMETHROWER, PP_MODEL_ADS_MORTAR,
+        PP_MODEL_ADS_SMG, PP_MODEL_ADS_THUNDERHEAD};
     ResetEffects();
     cl.frame.playerstate.gunindex=1;
     for (unsigned weapon=0; weapon<sizeof(models)/sizeof(*models); ++weapon) {
@@ -309,14 +310,15 @@ static void TestAuthoredWeaponADS(void)
     assert(!CL_UsesModelADS(&cl.frame.playerstate));
     assert(!strcmp(CL_GetADSOverlayPicName(),"ads_handgrenade.png"));
     assert(!strcmp(SS_GetADSOverlayPicName(&cl.frame.playerstate),"ads_handgrenade.png"));
-    puts("PASS authored weapon ADS: all ten guns select model sights/offsets in single/split views; sniper zoom and hand-grenade overlay remain");
+    puts("PASS authored weapon ADS: all twelve guns select model sights/offsets in single/split views; sniper zoom and hand-grenade overlay remain");
 }
 
 static void TestPlayerMuzzleFlashes(void)
 {
     const int weapons[] = {MZ_BLASTER, MZ_HYPERBLASTER, MZ_MACHINEGUN,
         MZ_CHAINGUN1, MZ_CHAINGUN2, MZ_CHAINGUN3, MZ_SHOTGUN, MZ_SHOTGUN2,
-        MZ_SSHOTGUN, MZ_RAILGUN, MZ_ETF_RIFLE, MZ_ROCKET, MZ_GRENADE, MZ_BFG};
+        MZ_SSHOTGUN, MZ_RAILGUN, MZ_ETF_RIFLE, MZ_ROCKET, MZ_GRENADE, MZ_BFG, MZ_SMG, MZ_SMG2,
+        MZ_THUNDERHEAD};
     byte data[8];
     size_t i;
     int thirdperson;
@@ -337,10 +339,11 @@ static void TestPlayerMuzzleFlashes(void)
     for (i = 0; i < sizeof(weapons)/sizeof(weapons[0]); ++i) {
         for (thirdperson = 0; thirdperson < 2; ++thirdperson) {
             muzzle_flash_config_t *cfg;
+            int effect = weapons[i] == MZ_SMG2 ? MZ_SMG : weapons[i];
             ResetEffects();
             cl_entities = test_entities[0]; cl_numentities = 16;
             memset(test_entities[0], 0, sizeof(test_entities[0]));
-            cfg = CL_GetMuzzleFlashConfig(weapons[i], thirdperson);
+            cfg = CL_GetMuzzleFlashConfig(effect, thirdperson);
             memset(cfg, 0, sizeof(*cfg));
             cfg->enabled = true; cfg->forward = thirdperson ? 20 : 10;
             cfg->scale = 2; cfg->duration_ms = 50;
@@ -355,14 +358,25 @@ static void TestPlayerMuzzleFlashes(void)
                 assert(!strcmp(last_sound_name, "weapons/pp_shotgun_pump.wav"));
                 assert(last_sound_offset == 0.f);
             }
+            if (weapons[i] == MZ_SMG2) {
+                assert(sound_calls == 2 && last_sound_channel == CHAN_AUTO);
+                assert(last_sound_offset == .05f);
+            }
+            if (weapons[i] == MZ_THUNDERHEAD) {
+                assert(sound_calls == 1 && last_sound_channel == CHAN_WEAPON);
+                assert(!strcmp(last_sound_name, "weapons/shotgf1b.wav"));
+            }
             assert(cl_explosions[0].type == (thirdperson ? ex_mflash_billboard : ex_mflash_cone_h));
             if (!thirdperson && (weapons[i]==MZ_BLASTER || weapons[i]==MZ_MACHINEGUN ||
+                effect==MZ_SMG || effect==MZ_THUNDERHEAD ||
                 weapons[i]==MZ_SHOTGUN || weapons[i]==MZ_SSHOTGUN || weapons[i]==MZ_ROCKET || weapons[i]==MZ_RAILGUN ||
                 weapons[i]==MZ_HYPERBLASTER || weapons[i]==MZ_BFG ||
                 weapons[i]==MZ_CHAINGUN1 || weapons[i]==MZ_CHAINGUN2 || weapons[i]==MZ_CHAINGUN3)) {
                 /* Authored weapons share their actual model muzzle with the
                  * renderer, overriding the legacy tuning-only eye offset. */
                 pp_model_ads_config_t pose=PP_ModelADSConfig(weapons[i]==MZ_BFG ? PP_MODEL_ADS_MORTAR :
+                    effect==MZ_SMG ? PP_MODEL_ADS_SMG :
+                    effect==MZ_THUNDERHEAD ? PP_MODEL_ADS_THUNDERHEAD :
                     weapons[i]==MZ_HYPERBLASTER ? PP_MODEL_ADS_FLAMETHROWER :
                     weapons[i]==MZ_RAILGUN ? PP_MODEL_ADS_SNIPER : weapons[i]==MZ_ROCKET ?
                     PP_MODEL_ADS_RLAUNCHER : (weapons[i]==MZ_CHAINGUN1 ||
@@ -641,7 +655,8 @@ static void TestMuzzleModelMatrix(void)
         {"w_sshotgun.md2",MZ_SSHOTGUN},{"w_machinegun.md2",MZ_MACHINEGUN},
         {"w_chaingun.md2",MZ_CHAINGUN1},{"w_glauncher.md2",MZ_GRENADE},
         {"w_rlauncher.md2",MZ_ROCKET},{"w_hyperblaster.md2",MZ_HYPERBLASTER},
-        {"w_railgun.md2",MZ_RAILGUN},{"w_bfg.md2",MZ_BFG},{"weapon.md2",MZ_MACHINEGUN}
+        {"w_railgun.md2",MZ_RAILGUN},{"w_bfg.md2",MZ_BFG},{"w_smg.md2",MZ_SMG},
+        {"w_thunderhead.md2",MZ_THUNDERHEAD},{"weapon.md2",MZ_MACHINEGUN}
     };
     unsigned checks=0;
     ResetEffects();ss_state.session_active=false;
@@ -697,7 +712,8 @@ static void TestAttachedPlayerMuzzleFlashes(void)
         {MZ_CHAINGUN1,"w_chaingun.md2"}, {MZ_CHAINGUN2,"w_chaingun.md2"},
         {MZ_CHAINGUN3,"w_chaingun.md2"}, {MZ_GRENADE,"w_glauncher.md2"},
         {MZ_ROCKET,"w_rlauncher.md2"}, {MZ_HYPERBLASTER,"w_hyperblaster.md2"},
-        {MZ_RAILGUN,"w_railgun.md2"}, {MZ_BFG,"w_bfg.md2"}
+        {MZ_RAILGUN,"w_railgun.md2"}, {MZ_BFG,"w_bfg.md2"}, {MZ_SMG,"w_smg.md2"},
+        {MZ_THUNDERHEAD,"w_thunderhead.md2"}
     };
     byte data[8];
     vec3_t expected, forward, right, up;

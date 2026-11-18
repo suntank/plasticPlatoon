@@ -33,8 +33,8 @@ pp_weapon_profile_t g_weapon_profile;
  * ============================================================================ */
 
 static const char *ammo_names[AMMO_PP_MAX] = {
-	"Light Rounds",
-	"Heavy Rounds",
+	"Light Bullets",
+	"Heavy Bullets",
 	"Sniper Rounds",
 	"Shells",
 	"40mm Rounds",
@@ -173,16 +173,50 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		.frame_deactivate_last = 61
 	},
 
-	/* WEAP_PP_SMG - Replaces Machinegun */
+	/* WEAP_PP_SMG - Compact automatic */
 	{
 		.id = WEAP_PP_SMG,
-		.classname = "weapon_machinegun",
+		.classname = "weapon_smg",
 		.ui_name = "SMG",
 		.ammo_type = AMMO_LIGHT_ROUNDS,
 		.ammo_per_shot = 1,
 		.fire_mode_type = FIRE_MODE_HITSCAN,
 		.hitscan = {
-			.rate_rps = 12.0f,
+			.rate_rps = 15.0f,
+			.damage = 4,
+			.spread_base = 1.85f,
+			.bloom_per_shot = 0.24f,
+			.bloom_recover_rate = 1.0f,
+			.pellet_count = 1,
+			.hspread = DEFAULT_BULLET_HSPREAD,
+			.vspread = DEFAULT_BULLET_VSPREAD
+		},
+		.ads = {
+			.enabled = true,
+			.accuracy_multiplier = 0.5f,
+			.move_speed_scale = 0.55f,
+			.zoom_enabled = false,
+			.zoom_fov = 90.0f,
+			.scope_overlay = false
+		},
+		.bracing = { .enabled = false },
+		.pickup_ammo_amount = 80,
+		.frame_activate_last = 3,
+		.frame_fire_last = 6,
+		.frame_idle_last = 14,
+		.frame_deactivate_last = 18
+	},
+
+	/* WEAP_PP_M16 - M16 profile */
+	{
+		.id = WEAP_PP_M16,
+		.classname = "weapon_machinegun",
+		.ui_name = "M16",
+		.ammo_type = AMMO_HEAVY_ROUNDS,
+		.ammo_per_shot = 1,
+		.fire_mode_type = FIRE_MODE_HITSCAN,
+		.hitscan = {
+			.rate_rps = 10.0f,
 			.damage = 6,
 			.spread_base = 1.25f,
 			.bloom_per_shot = 0.18f,
@@ -200,45 +234,11 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 			.scope_overlay = false
 		},
 		.bracing = { .enabled = false },
-		.pickup_ammo_amount = 80,
+		.pickup_ammo_amount = 60,
 		.frame_activate_last = 3,
 		.frame_fire_last = 5,
 		.frame_idle_last = 45,
 		.frame_deactivate_last = 49
-	},
-
-	/* WEAP_PP_M16 - M16 profile */
-	{
-		.id = WEAP_PP_M16,
-		.classname = "weapon_chaingun",
-		.ui_name = "M16",
-		.ammo_type = AMMO_HEAVY_ROUNDS,
-		.ammo_per_shot = 1,
-		.fire_mode_type = FIRE_MODE_HITSCAN,
-		.hitscan = {
-			.rate_rps = 9.0f,
-			.damage = 8,
-			.spread_base = 0.9f,
-			.bloom_per_shot = 0.08f,
-			.bloom_recover_rate = 1.4f,
-			.pellet_count = 1,
-			.hspread = DEFAULT_BULLET_HSPREAD,
-			.vspread = DEFAULT_BULLET_VSPREAD
-		},
-		.ads = {
-			.enabled = true,
-			.accuracy_multiplier = 0.5f,
-			.move_speed_scale = 0.5f,
-			.zoom_enabled = false,
-			.zoom_fov = 90.0f,
-			.scope_overlay = false
-		},
-		.bracing = { .enabled = false },
-		.pickup_ammo_amount = 60,
-		.frame_activate_last = 4,
-		.frame_fire_last = 31,
-		.frame_idle_last = 61,
-		.frame_deactivate_last = 64
 	},
 
 	/* WEAP_PP_M60 - Replaces Chaingun */
@@ -484,6 +484,34 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
 		.frame_fire_last = 8,
 		.frame_idle_last = 20,
 		.frame_deactivate_last = 24
+	},
+	{
+		.id = WEAP_PP_THUNDERHEAD,
+		.classname = "weapon_thunderhead",
+		.ui_name = "Thunderhead",
+		.ammo_type = AMMO_PP_SHELLS,
+		.ammo_per_shot = 1,
+		.fire_mode_type = FIRE_MODE_SHOTGUN,
+		.hitscan = {
+			.rate_rps = 5.0f,
+			.damage = 3,
+			.spread_base = 1.6f,
+			.bloom_per_shot = 1.0f,
+			.bloom_recover_rate = 0.6f,
+			.pellet_count = 8,
+			.hspread = 500,
+			.vspread = 440
+		},
+		.ads = {
+			.enabled = true,
+			.accuracy_multiplier = 0.43f,
+			.move_speed_scale = 0.45f
+		},
+		.pickup_ammo_amount = 10,
+		.frame_activate_last = 3,
+		.frame_fire_last = 6,
+		.frame_idle_last = 14,
+		.frame_deactivate_last = 18
 	}
 };
 
@@ -649,7 +677,9 @@ PP_Weapon_FromQ2Weapon(int q2_weapmodel)
 		case WEAP_BLASTER:        return WEAP_PP_PISTOL;
 		case WEAP_SHOTGUN:        return WEAP_PP_SHOTGUN;
 		case WEAP_SUPERSHOTGUN:   return WEAP_PP_DOUBLE_BARREL;
-		case WEAP_MACHINEGUN:     return WEAP_PP_SMG;
+		case WEAP_THUNDERHEAD:   return WEAP_PP_THUNDERHEAD;
+		case WEAP_MACHINEGUN:     return WEAP_PP_M16;
+		case WEAP_SMG:            return WEAP_PP_SMG;
 		case WEAP_CHAINGUN:       return WEAP_PP_M60;
 		case WEAP_HYPERBLASTER:   return WEAP_PP_FLAMETHROWER;
 		case WEAP_GRENADELAUNCHER: return WEAP_PP_GRENADE_LAUNCHER;
@@ -685,6 +715,13 @@ PP_Ammo_GetName(pp_ammo_id_t ammo_id)
 /* ============================================================================
  * ADS AND SPREAD CALCULATIONS
  * ============================================================================ */
+
+static qboolean
+PP_ThunderheadBraced(const edict_t *ent)
+{
+	return (ent->client->ps.pmove.pm_flags & PMF_DUCKED) &&
+		ent->client->weapon_state.ads_active;
+}
 
 float
 PP_Weapon_GetSpreadMultiplier(edict_t *ent, pp_weapon_id_t weapon_id)
@@ -728,7 +765,12 @@ PP_Weapon_GetSpreadMultiplier(edict_t *ent, pp_weapon_id_t weapon_id)
 		}
 	}
 
-	/* M60 bracing special case */
+	if (weapon_id == WEAP_PP_THUNDERHEAD && PP_ThunderheadBraced(ent))
+	{
+		/* Crouched ADS keeps the tight pattern throughout the burst. */
+		return spread * params->ads.accuracy_multiplier;
+	}
+
 	if (params->bracing.enabled)
 	{
 		if (is_ads)
@@ -792,6 +834,7 @@ PP_Weapon_AddBloom(edict_t *ent, pp_weapon_id_t weapon_id)
 {
 	const pp_weapon_params_t *params;
 	pp_client_weapon_state_t *ws;
+	float bloom;
 	float max_bloom = 2.0f;  /* Cap bloom at 200% increase */
 
 	if (!ent || !ent->client)
@@ -806,7 +849,13 @@ PP_Weapon_AddBloom(edict_t *ent, pp_weapon_id_t weapon_id)
 	}
 
 	ws = &ent->client->weapon_state;
-	ws->current_bloom += params->hitscan.bloom_per_shot;
+	bloom = params->hitscan.bloom_per_shot;
+	if (weapon_id == WEAP_PP_THUNDERHEAD && ws->ads_active)
+	{
+		/* Standing ADS opens tight and spreads gradually across a burst. */
+		bloom = PP_ThunderheadBraced(ent) ? 0.0f : bloom * 0.36f;
+	}
+	ws->current_bloom += bloom;
 
 	if (ws->current_bloom > max_bloom)
 	{
@@ -1085,6 +1134,7 @@ PP_WeaponNameToId(const char *name)
 	if (strcmp(name, "PISTOL") == 0) return WEAP_PP_PISTOL;
 	if (strcmp(name, "SHOTGUN") == 0) return WEAP_PP_SHOTGUN;
 	if (strcmp(name, "DOUBLE_BARREL_SHOTGUN") == 0) return WEAP_PP_DOUBLE_BARREL;
+	if (strcmp(name, "THUNDERHEAD") == 0) return WEAP_PP_THUNDERHEAD;
 	if (strcmp(name, "SMG") == 0) return WEAP_PP_SMG;
 	if (strcmp(name, "M16") == 0) return WEAP_PP_M16;
 	if (strcmp(name, "M60") == 0) return WEAP_PP_M60;

@@ -29,7 +29,9 @@ sounds, and includes all `baseq2/operation-*.pk3` mission packs. The generated
 interface and support sounds are provisional artwork.
 
 Use WASD, mouse look, left mouse to fire, right mouse to aim, Space to jump,
-and tilde for the console. Test missions are available there:
+and tilde for the console. You start with a knife alongside the pistol. Cycle
+weapons or enter `use Knife` in the console to equip it, then use the attack
+button to slash. Use the console to launch a test mission.
 
 | Console command | Mission |
 | --- | --- |
@@ -40,6 +42,7 @@ and tilde for the console. Test missions are available there:
 | `map pp_garden` | Garden |
 | `exec garden_infiltration_solo.cfg` | Operation Garden Ghost |
 | `map pp_loose_thread` | [Operation Loose Thread / Sewing box](maps/README-loose-thread.md) |
+| `exec smg_test.cfg` | SMG and Thunderhead test range |
 | `exec heavy_test.cfg` | Heavy machine gunner range |
 | `exec rocket_test.cfg` | Rocket soldier range |
 | `exec tank_test.cfg` | Heavy tank range |

@@ -810,6 +810,9 @@ typedef struct
 #define MZ_NUKE2 37
 #define MZ_NUKE4 38
 #define MZ_NUKE8 39
+#define MZ_SMG 40
+#define MZ_SMG2 41
+#define MZ_THUNDERHEAD 42
 
 /* monster muzzle flashes */
 #define MZ2_TANK_BLASTER_1 1
