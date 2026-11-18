@@ -81,7 +81,7 @@ static int initialized;
 static long control_offset;
 /* Test-only screenshot trigger at an observed network weapon frame. */
 static int capture_slot = -1, capture_frame;
-static char capture_label[128];
+static char capture_label[128], capture_model[MAX_QPATH];
 static int recoil_capture_slot = -1;
 static float recoil_capture_threshold;
 static char recoil_capture_label[128];
@@ -526,7 +526,7 @@ static void controls(void)
 		if (text) add_text(text + 1);
 	}
 	else if (!strcmp(op, "captureframe") && add_text &&
-		sscanf(line, "%*s %d %d %127s", &slot, &value, arg) == 3 &&
+		sscanf(line, "%*s %d %d %63s %127s", &slot, &value, capture_model, arg) == 4 &&
 		slot >= 0 && slot < SS_MAX_LOCAL_PLAYERS && value >= 0 && value < 40) {
 		capture_slot = slot;
 		capture_frame = value;
@@ -637,7 +637,7 @@ static void capture_weapon_frame(void)
 	if (capture_slot < 0 || color_cls->state != ca_active || !add_text) return;
 	slot = get_slot(capture_slot);
 	frame = capture_slot && slot ? &slot->frame : &color_cl->frame;
-	if (!strstr(model_name(frame->playerstate.gunindex), "/v_shotg/") ||
+	if (!strstr(model_name(frame->playerstate.gunindex), capture_model) ||
 		frame->playerstate.gunframe != capture_frame) return;
 	fprintf(stderr, "PP_COLOR_FRAME_CAPTURE %s %d %d\n",
 		capture_label, capture_slot, frame->playerstate.gunframe);

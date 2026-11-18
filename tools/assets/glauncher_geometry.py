@@ -13,6 +13,13 @@ FRONT_SIGHT = (83.,0.,9.4)
 GRIP = (34.,0.,-8.)
 BARREL_RADIUS = 3.8
 BORE_RADIUS = 2.6
+DRUM_SIDES = 8
+DRUM_CENTER_Z = -3.5
+DRUM_FIRST_FRAME = 8
+# One complete step between identical resting chamber silhouettes.
+DRUM_STEPS = (0., .18, .63, .93, 1.)
+# The default mittens do not use this atlas tile.
+SIGHT_INSERT_MATERIAL = 'palm'
 
 
 def add_barrel(m):
@@ -33,24 +40,41 @@ def add_barrel(m):
     m.poly(floor,'bore',(1,0,0),group='bore_floor')
 
 
+def add_drum(m):
+    """Beveled drum with one repeating molded panel per chamber."""
+    m.tube('drum', [(36, 0, DRUM_CENTER_Z, 6.9, 6.9),
+                    (37.6, 0, DRUM_CENTER_Z, 8.1, 8.1),
+                    (47.8, 0, DRUM_CENTER_Z, 8.1, 8.1),
+                    (49.4, 0, DRUM_CENTER_Z, 6.9, 6.9)],
+           DRUM_SIDES, 'magazine', caps=(True, True))
+    # The tube helper wraps a single texture around the whole shell. Repeat
+    # the panel on every facet so resting at either end of a step looks equal.
+    start = m.parts[-1]['first_triangle']
+    caps = 6 * DRUM_SIDES
+    for face in m.uvs[start:start + caps]:
+        side_start = min(v for _, v in face)
+        for uv in face:
+            uv[1] = (uv[1] - side_start) * DRUM_SIDES
+    for i in range(start + caps, len(m.faces)):
+        m.materials[i] = 'dark'
+        m.uvs[i] = [[.5, .5]] * 3
+
+
 def build_glauncher(detail='world'):
     if detail not in ('world','view'):
         raise ValueError('Expected world or view')
     m=Mesh()
-    m.profile('stock',[(0,-9.4),(0,2.6),(4,3.4),(22,1.3),(29,2.5),
-                       (31,-2.8),(24,-4.0)],2.7,'plastic','edge')
-    m.profile('butt_plate',[(0,-9.4),(1.2,-9.2),(1.2,2.6),(0,2.6)],
-              2.85,'dark','edge')
+    m.profile('stock',[(1,-9.4),(1,.8),(5,3.1),(22,1.3),(29,2.5),
+                       (31,-2.8),(22,-4.0),(10,-5.2)],2.55,'plastic','edge')
+    m.profile('butt_plate',[(0,-9.4),(0,1.2),(1.6,1.2),(1.6,-9.4)],
+              2.75,'dark','edge')
     m.profile('grip',[(29,-15.1),(25.8,-13.8),(31,-4.3),(36,-4.7),
                       (34,-7.2),(32.8,-15.3)],1.85,'grip','edge')
     m.profile('receiver',[(28,-3.8),(28,4.8),(31,6.4),(51,6.4),
                           (55,4.6),(55,-3.8)],3.2,'receiver','edge')
     m.ring_profile('trigger_guard',[(33.9,-4.2),(43.3,-4.2),(43,-8.5),(33.3,-8.2)],
                    [(35.4,-5.3),(42,-5.3),(41.8,-7.2),(34.7,-7.1)],.72)
-    # Eight broad facets and painted ribs suggest the original rotary drum
-    # without individual round meshes. Keep it behind the support forearm.
-    m.tube('drum',[(37.5,0,-3.,7.5,7.5),(48.,0,-3.,7.5,7.5)],
-           8,'magazine',caps=(True,True))
+    add_drum(m)
     m.box('drum_latch',(48,-3.6,-2.8),(52,-3.,1.5),'dark')
     add_barrel(m)
     m.tube('fore_end',[(55,0,-.4,3.1,3.1),(72,0,-.4,2.7,2.7)],
@@ -58,10 +82,11 @@ def build_glauncher(detail='world'):
     m.profile('fore_grip',[(60,-3.0),(65,-3.0),(66,-10.6),(61,-10.6)],
               1.35,'grip','edge')
     for side in (-1,1):
-        y=side*1.0
+        y=side*1.25
         m.box('rear_sight_'+('left' if side>0 else 'right'),
-              (31,y-.35,6.2),(33,y+.35,10.0),'dark')
-    m.box('front_sight',(82.4,-.4,6.6),(83.6,.4,9.4),'edge')
+              (31,y-.42,6.2),(33,y+.42,9.8),'dark')
+    m.box('front_sight',(82.4,-.46,6.6),(83.6,.46,8.7),'dark')
+    m.box('front_sight_insert',(82.65,-.34,8.66),(83.35,.34,9.4),SIGHT_INSERT_MATERIAL)
     if detail=='view':
         add_hands(m)
     result=m.finish(detail)

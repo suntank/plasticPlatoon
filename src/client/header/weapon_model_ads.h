@@ -17,6 +17,11 @@ typedef pp_m16_ads_state_t pp_model_ads_state_t;
 #define PP_ModelADSUpdate PP_M16ADSUpdate
 #define PP_ModelADSSlotForEffectScope PP_M16ADSSlotForEffectScope
 
+enum {
+    PP_MODEL_ANIM_PUMP = 1,
+    PP_MODEL_ANIM_DRUM
+};
+
 typedef struct {
     float forward, right, up;
     float muzzle_forward, muzzle_right, muzzle_up;
@@ -45,7 +50,7 @@ static inline pp_model_ads_config_t PP_ModelADSConfig(int weapon)
         PP_PISTOL_ADS_UP, PP_PISTOL_MUZZLE_FORWARD, PP_PISTOL_MUZZLE_RIGHT, PP_PISTOL_MUZZLE_UP, 0, .35f};
     const pp_model_ads_config_t shotgun = {PP_SHOTGUN_ADS_FORWARD, PP_SHOTGUN_ADS_RIGHT,
         PP_SHOTGUN_ADS_UP, PP_SHOTGUN_MUZZLE_FORWARD, PP_SHOTGUN_MUZZLE_RIGHT,
-        PP_SHOTGUN_MUZZLE_UP, 1, .60f};
+        PP_SHOTGUN_MUZZLE_UP, PP_MODEL_ANIM_PUMP, .60f};
     const pp_model_ads_config_t double_barrel = {PP_SSHOTGUN_ADS_FORWARD, PP_SSHOTGUN_ADS_RIGHT,
         PP_SSHOTGUN_ADS_UP, PP_SSHOTGUN_MUZZLE_FORWARD, PP_SSHOTGUN_MUZZLE_RIGHT,
         PP_SSHOTGUN_MUZZLE_UP, 0, .70f};
@@ -53,7 +58,7 @@ static inline pp_model_ads_config_t PP_ModelADSConfig(int weapon)
         PP_M60_ADS_UP, PP_M60_MUZZLE_FORWARD, PP_M60_MUZZLE_RIGHT, PP_M60_MUZZLE_UP, 0, .25f};
     const pp_model_ads_config_t launcher = {PP_GLAUNCHER_ADS_FORWARD, PP_GLAUNCHER_ADS_RIGHT,
         PP_GLAUNCHER_ADS_UP, PP_GLAUNCHER_MUZZLE_FORWARD, PP_GLAUNCHER_MUZZLE_RIGHT,
-        PP_GLAUNCHER_MUZZLE_UP, 0, .55f};
+        PP_GLAUNCHER_MUZZLE_UP, PP_MODEL_ANIM_DRUM, .55f};
     const pp_model_ads_config_t rocket = {PP_RLAUNCHER_ADS_FORWARD, PP_RLAUNCHER_ADS_RIGHT,
         PP_RLAUNCHER_ADS_UP, PP_RLAUNCHER_MUZZLE_FORWARD, PP_RLAUNCHER_MUZZLE_RIGHT,
         PP_RLAUNCHER_MUZZLE_UP, 0, .50f};
@@ -116,11 +121,25 @@ PP_ModelADSConstrainMotion(pp_model_ads_config_t config, float blend, float hip_
     }
 }
 
-/* Only the pump shotgun animates inside its model. Keep the exact server
- * schedule (raise 0–7, shot/pump 8–18, idle 19–36, lower 37–39), while the
- * rigid authored weapons still use the renderer's static geometry cache. */
+/* Map the server schedule to each model's authored frames. */
 static inline int PP_ModelADSFrame(pp_model_ads_config_t config, int gunframe)
 {
-    return config.animated && gunframe >= 0 && gunframe < 40 ? gunframe : 0;
+    if (config.animated == PP_MODEL_ANIM_DRUM)
+    {
+        if (gunframe >= PP_GLAUNCHER_DRUM_FIRST_FRAME &&
+            gunframe < PP_GLAUNCHER_DRUM_FIRST_FRAME + PP_GLAUNCHER_DRUM_STEPS)
+            return gunframe - PP_GLAUNCHER_DRUM_FIRST_FRAME + 1;
+        return 0;
+    }
+    return config.animated == PP_MODEL_ANIM_PUMP && gunframe >= 0 && gunframe < 40 ? gunframe : 0;
+}
+
+static inline int PP_ModelADSPreviousFrame(pp_model_ads_config_t config, int oldgunframe, int frame)
+{
+    /* Both ends of one drum step look identical. Blending their vertex
+     * indices would make the drum rotate backward on its way to idle. */
+    if (config.animated == PP_MODEL_ANIM_DRUM && frame == 0)
+        return 0;
+    return PP_ModelADSFrame(config, oldgunframe);
 }
 #endif

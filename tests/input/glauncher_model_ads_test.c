@@ -7,12 +7,16 @@ int main(void)
 {
     pp_model_ads_config_t launcher = PP_ModelADSConfig(PP_MODEL_ADS_GLAUNCHER);
     pp_model_ads_config_t pump = PP_ModelADSConfig(PP_MODEL_ADS_SHOTGUN);
-    assert(!launcher.animated && pump.animated);
+    assert(launcher.animated == PP_MODEL_ANIM_DRUM && pump.animated == PP_MODEL_ANIM_PUMP);
     for (int frame = 0; frame < 64; ++frame)
     {
-        assert(PP_ModelADSFrame(launcher, frame) == 0);
+        assert(PP_ModelADSFrame(launcher, frame) == (frame >= 8 && frame <= 11 ? frame - 7 : 0));
         assert(PP_ModelADSFrame(pump, frame) == (frame < 40 ? frame : 0));
     }
+    assert(PP_ModelADSPreviousFrame(launcher, 7, 1) == 0);
+    assert(PP_ModelADSPreviousFrame(launcher, 10, 4) == 3);
+    assert(PP_ModelADSPreviousFrame(launcher, 11, 0) == 0);
+    assert(PP_ModelADSPreviousFrame(pump, 12, 13) == 12);
     assert(fabsf(launcher.muzzle_right + launcher.right) < .001f);
     assert(launcher.muzzle_forward + launcher.forward > 9.5f);
     assert(launcher.muzzle_up + launcher.up < 0.f);
@@ -28,6 +32,6 @@ int main(void)
     assert(PP_ModelADSAmount(&slots[3]) == 1.f);
     assert(PP_ModelADSUpdate(&slots[3], 1, 1, 99, 1, .7f, 0.f) == 0.f);
     assert(PP_ModelADSUpdate(&slots[3], 0, 1, 99, 1, .8f, .01f) == 0.f);
-    puts("Grenade launcher model ADS/muzzle alignment, rigid pose and independent aiming passed");
+    puts("Grenade launcher model ADS, muzzle alignment, drum indexing and independent aiming passed");
     return 0;
 }

@@ -17,7 +17,7 @@ from asset_sources import source_bytes
 from build_m16 import rigid_transforms
 from m16_geometry import build_m16
 from md2_assets import MD2, normal_table
-from glauncher_geometry import build_glauncher
+from glauncher_geometry import build_glauncher, DRUM_STEPS
 
 
 class GrenadeLauncherTests(unittest.TestCase):
@@ -45,8 +45,8 @@ class GrenadeLauncherTests(unittest.TestCase):
             self.assertEqual(inventory[path]['sha256'], builder.sha(raw))
             self.assertEqual(inventory[path]['bytes'], len(raw))
 
-    def test_reduced_budget_and_single_view_frame_preserve_static_cache(self):
-        frames = {'view': 1, 'pickup': 1, 'player': 198}
+    def test_reduced_budget_and_frame_counts(self):
+        frames = {'view': len(DRUM_STEPS), 'pickup': 1, 'player': 198}
         self.assertEqual(set(builder.MODELS.values()), set(frames))
         self.assertEqual(set(builder.MODELS), {'models/weapons/g_launch/tris.md2',
                          'models/weapons/v_launch/tris.md2', 'players/soldier/w_glauncher.md2'})
@@ -63,6 +63,24 @@ class GrenadeLauncherTests(unittest.TestCase):
                 area = np.linalg.norm(np.cross(triangles[:, :, 1] - triangles[:, :, 0],
                                                triangles[:, :, 2] - triangles[:, :, 0]), axis=2)
                 self.assertGreater(area.min(), 1e-9)
+
+    def test_indexing_moves_only_the_drum_and_returns_to_an_equivalent_pose(self):
+        mesh = self.meshes['view']
+        part = next(part for part in mesh['parts'] if part['name'] == 'drum')
+        start = part['first_triangle']
+        model = MD2.read(self.assets['models/weapons/v_launch/tris.md2'])
+        drum = np.unique(model.faces[start:start + part['triangle_count']])
+        fixed = np.setdiff1d(np.arange(model.positions.shape[1]), drum)
+        position_tolerance = np.linalg.norm(model.scales, axis=1).max() + 1e-5
+        for pose in model.positions[1:]:
+            np.testing.assert_allclose(pose[fixed], model.positions[0, fixed], atol=position_tolerance)
+        middle = model.positions[2, drum]
+        first, last = model.positions[[0, -1]][:, drum]
+        self.assertGreater(np.linalg.norm(middle - first, axis=1).min(), 1.)
+        # One full chamber step is a rotation, so each end vertex occupies
+        # the position of a different vertex from the resting frame.
+        distances = np.linalg.norm(first[:, None] - last[None, :], axis=2)
+        self.assertLessEqual(distances.min(axis=1).max(), position_tolerance)
 
     def test_wide_launcher_barrel_and_large_breech_remain_distinct_from_a_rifle(self):
         rifle = build_m16('world')

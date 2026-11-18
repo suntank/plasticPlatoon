@@ -2797,19 +2797,18 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 	PP_ModelADSConstrainMotion(ads_config, ads_blend, recoil_cfg->recoil_push_back,
 		forward, right, up, base_origin, base_angles, gun.origin, gun.angles);
 
-	/* The shotgun's pump and support hand follow the server animation in
-	 * every viewport; rigid authored weapons retain their static MD2 pose. */
+	/* Play the active slot's articulated weapon parts on the server schedule. */
 	gun.frame = CL_UsesModelADS(ps) ? PP_ModelADSFrame(ads_config, ps->gunframe) : ps->gunframe;
 	gun.oldframe = gun.frame;
 	gun.backlerp = 0.0f;
 	if (ads_config.animated && ps->gunindex == ops->gunindex)
 	{
-		gun.oldframe = PP_ModelADSFrame(ads_config, ops->gunframe);
+		gun.oldframe = PP_ModelADSPreviousFrame(ads_config, ops->gunframe, gun.frame);
 		gun.backlerp = 1.0f - lerp;
 	}
 	if (CL_UsesModelADS(ps))
 	{
-		/* Pump interpolation stays in the resolved weapon's local space.
+		/* Part interpolation stays in the resolved weapon's local space.
 		 * Matching origins also enables the rigid weapons' static cache. */
 		VectorCopy(gun.origin, gun.oldorigin);
 	}

@@ -264,24 +264,21 @@ def main():
         print(dest, flush=True)
         time.sleep(1.)
 
-    def pump_shot(name, frame=13):
-        """Capture the real rendered shotgun at its fully retracted pump pose.
-
-        The two fully-back frames (12/13) allow ordinary interpolation to reach
-        the endpoint before the frame-13 screenshot is queued by the QA shim.
-        """
+    def frame_shot(name, frame, view, slot=0):
+        """Capture an authored pose during real firing at a known gunframe."""
         before = set((base / 'scrnshot').glob('*.png'))
-        action(f'captureframe 0 {frame} {name}')
-        action('attack 0 1')
+        model = WEAPON_MODELS[slot_weapons[slot]]
+        action(f'captureframe {slot} {frame} {model} {name}')
+        action(f'attack {slot} 1')
         path = wait(lambda: next(iter(set((base / 'scrnshot').glob('*.png')) - before), None), name)
-        action('attack 0 0')
+        action(f'attack {slot} 0')
         wait(lambda: path.read_bytes().endswith(b'IEND\xaeB`\x82'), 'PNG complete')
         dest = shots / (name + '.png')
         shutil.copy2(path, dest)
-        captured = state(name)
-        assert captured['clients'][0]['gunframe'] == frame
+        captured = state(name)['clients'][slot]
+        assert captured['gunframe'] == frame and model in captured['gunmodel']
         manifest['views'].append(dict(name=name, screenshot=dest.name, sha256=digest(dest),
-                                      view='pump fully retracted', weapon_frame=frame))
+                                      view=view, weapon_frame=frame, slot=slot))
         print(dest, flush=True)
         time.sleep(.9)
 
@@ -328,6 +325,8 @@ def main():
                     shot('four-mixed-ads', view='slots 1/3 aimed, 2/4 hip')
                     aimed = state('four-mixed-ads')
                     assert [c['model_ads_blend'] for c in aimed['clients']] == [1, 0, 1, 0]
+                    if slot_weapons[1] == 'Grenade Launcher':
+                        frame_shot('four-secondary-drum-hip', 10, 'slot 2 drum indexing at the hip', slot=1)
                     for slot in range(4): action(f'attack {slot} 1')
                     shot('four-mixed-ads-fire', view='four firing, slots 1/3 aimed')
                     for slot in range(4): action(f'attack {slot} 0')
@@ -336,6 +335,8 @@ def main():
                     shot('four-mixed-ads-reversed', view='slots 2/4 aimed, 1/3 hip')
                     aimed = state('four-mixed-ads-reversed')
                     assert [c['model_ads_blend'] for c in aimed['clients']] == [0, 1, 0, 1]
+                    if slot_weapons[1] == 'Grenade Launcher':
+                        frame_shot('four-secondary-drum-ads', 10, 'slot 2 drum indexing while aimed', slot=1)
                     for slot in range(4): action(f'attack {slot} 1')
                     shot('four-mixed-ads-reversed-fire', view='four firing, slots 2/4 aimed')
                     for slot in range(4): action(f'attack {slot} 0')
@@ -347,17 +348,21 @@ def main():
                 if a.weapon in ('Rocket Launcher', 'Sniper Rifle', 'Mortar Cannon') and not a.ads:
                     recoil_shot('fps-fire')
                 if a.weapon == 'Shotgun':
-                    pump_shot('fps-pump-back')
+                    frame_shot('fps-pump-back', 13, 'pump fully retracted')
                     shot('fps-pump-return', view='pump returned to battery')
+                if a.weapon == 'Grenade Launcher':
+                    frame_shot('fps-drum-index', 10, 'drum indexing after firing')
                 if a.ads:
                     action('ads 0 1')
                     time.sleep(.5)
                     shot('ads', view='actual-model sights')
                     assert state('ads')['clients'][0]['model_ads_blend'] == 1
                     if a.weapon == 'Shotgun':
-                        pump_shot('ads-pump-back')
+                        frame_shot('ads-pump-back', 13, 'aimed pump fully retracted')
                         shot('ads-pump-return', view='aimed pump returned to battery')
-                    if a.weapon in ('Rocket Launcher', 'Sniper Rifle', 'Mortar Cannon'):
+                    if a.weapon == 'Grenade Launcher':
+                        frame_shot('ads-fire', 10, 'drum indexing while aimed')
+                    elif a.weapon in ('Rocket Launcher', 'Sniper Rifle', 'Mortar Cannon'):
                         recoil_shot('ads-fire')
                     else:
                         rcon('+attack')

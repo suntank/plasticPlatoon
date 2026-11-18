@@ -24,7 +24,8 @@ def verify(root=ROOT):
     for model in manifest['models']:
         raw = (root/'baseq2'/model['path']).read_bytes()
         h = struct.unpack_from('<17i',raw)
-        frames = {'pickup':1,'view':1,'player':198}[model['role']]
+        frames = {'pickup': 1, 'view': len(manifest['view_animation']['drum_step_fractions']),
+                  'player': 198}[model['role']]
         if h[:2] != (844121161,8) or h[16] != len(raw) or h[10] != frames or h[4] != 40+4*h[6]:
             raise ValueError('Invalid glauncher MD2: '+model['path'])
         for i in range(h[5]):

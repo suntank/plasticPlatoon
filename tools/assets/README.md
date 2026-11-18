@@ -44,6 +44,9 @@ Each skybox uses six 256×256 faces baked from a toy soldier's eye height.
   An oatmeal carpet complements the floor near the horizon.
 - `pp_backyard` frames a grassy yard with the house toward +X, the oak
   and tire swing toward +Y, and a cedar fence around the perimeter.
+- `pp_attic` looks out from 9 cm above worn floorboards, with a dresser toward
+  +X, stacked cartons toward +Y, and a sheet-covered chair and trunk toward −Y.
+  One bare bulb lights the exposed rafters and cobwebs.
 
 On a map with sky surfaces, run `sky pp_backyard` in the console to preview
 the yard, or substitute another name. For the map default, set the `sky`
@@ -57,6 +60,7 @@ original scenes and render their faces again, use Blender with Cycles.
 blender -b -t 8 --python-exit-code 1 --python tools/assets/render_garage_skybox.py
 blender -b -t 8 --python-exit-code 1 --python tools/assets/render_bedroom_skybox.py
 blender -b -t 8 --python-exit-code 1 --python tools/assets/render_backyard_skybox.py
+blender -b -t 8 --python-exit-code 1 --python tools/assets/render_attic_skybox.py
 ```
 
 ### Models and other textures
@@ -91,9 +95,10 @@ single-player and split-screen. Its first-person,
 pickup, player-held and normal/tall enemy-held versions share the authored
 design. See [the M60 notes](../../doc/performance/m60-simple-shapes.md).
 
-The grenade launcher uses 712 first-person triangles including molded hands,
-and 284 triangles for its pickup and player-held versions, with actual model
-sights. See [the grenade-launcher notes](../../doc/performance/glauncher-simple-shapes.md).
+The grenade launcher uses 760 first-person triangles including molded hands,
+and 332 triangles for its pickup and player-held versions. Its drum indexes
+after each shot and aiming uses actual model sights.
+See [the grenade-launcher notes](../../doc/performance/glauncher-simple-shapes.md).
 
 The rocket launcher uses 684 first-person triangles with molded mittens,
 and 256 triangles in each world/held version, with actual model sights.

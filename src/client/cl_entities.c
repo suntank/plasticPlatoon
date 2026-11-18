@@ -1628,11 +1628,10 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 	VectorCopy(gun.origin, base_origin);
 	VectorCopy(gun.angles, base_angles);
 
-	/* Preserve the shotgun's articulated pump/hand frames in both hip and
-	 * aimed views. Whole-weapon recoil and raising remain procedural. */
+	/* Play authored local parts in both hip and aimed views. */
 	gun.frame = PP_ModelADSFrame(ads_config, ps->gunframe);
 	gun.oldframe = ps->gunindex == ops->gunindex ?
-		PP_ModelADSFrame(ads_config, ops->gunframe) : gun.frame;
+		PP_ModelADSPreviousFrame(ads_config, ops->gunframe, gun.frame) : gun.frame;
 
 	/* Procedural viewmodel animation for all weapons */
 	{
