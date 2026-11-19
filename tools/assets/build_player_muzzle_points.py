@@ -24,7 +24,7 @@ SELECTORS = {'w_bfg.md2': {'sha256': '6c4d7e19bf3fc5b04b04ef9a9dfbac16e49e5d6033
  'w_blaster.md2': {'sha256': '91fe5079d1c38aba9552d01886d8f7ba4ac3ada04b8d1dc28b8c8f4cb0af4675',
                    'vertices': [108, 109, 111, 113, 115, 117, 124, 125, 126, 127, 128, 129]},
  'w_chaingun.md2': {'sha256': '401eee1cef39c2bdbffe36dfff61c27dcd68652487a59fa04a54e4ee235b43df', 'vertices': [228, 229, 231, 233, 235, 237, 244, 245, 246, 247, 248, 249]},
- 'w_glauncher.md2': {'sha256': '704da75084590f4ab2048e8eaba4c3fbe953524b847b3a9bd135cc38b6c41253', 'vertices': [182, 183, 185, 187, 189, 191, 193, 195, 204, 205, 208, 210, 212, 214, 216, 218]},
+ 'w_glauncher.md2': {'sha256': '0a9646eaab40303fe096cb84a0c6e4e0d14548d7e755d5c8b32b105a006e7ba1', 'vertices': [202, 203, 205, 207, 209, 211, 213, 215, 224, 225, 228, 230, 232, 234, 236, 238]},
  'w_hyperblaster.md2': {'sha256': '15e33b7a99c9f80c6f817ec744b123710c5d255fa5e00d753e6334f9defd4f53', 'vertices': [200, 201, 202, 203, 204, 205, 206, 207, 218, 219, 225, 229, 233, 237, 241, 245]},
  'w_machinegun.md2': {'sha256': 'f75554cf4ec5bd68be7662845f2a01406cf5cde581a976a05c46664efcde1e99',
                       'vertices': [254, 255, 257, 259, 261, 263, 270, 271, 272, 273, 274, 275]},

@@ -1655,7 +1655,8 @@ CL_AddViewWeapon(player_state_t *ps, player_state_t *ops)
 	gun.oldframe = gun.frame;
 	if (ps->gunindex == ops->gunindex)
 	{
-		gun.oldframe = knife ? ops->gunframe : PP_ModelADSFrame(ads_config, ops->gunframe);
+		gun.oldframe = knife ? ops->gunframe :
+			PP_ModelADSPreviousFrame(ads_config, ops->gunframe, gun.frame);
 	}
 
 	/* Procedural viewmodel animation for all weapons */

@@ -2824,7 +2824,8 @@ SS_AddSlotViewWeapon(int slot_index, const refdef_t *refdef,
 	gun.backlerp = 0.0f;
 	if ((knife || ads_config.animated) && ps->gunindex == ops->gunindex)
 	{
-		gun.oldframe = knife ? ops->gunframe : PP_ModelADSFrame(ads_config, ops->gunframe);
+		gun.oldframe = knife ? ops->gunframe :
+			PP_ModelADSPreviousFrame(ads_config, ops->gunframe, gun.frame);
 		gun.backlerp = 1.0f - lerp;
 	}
 	if (knife || model_ads)

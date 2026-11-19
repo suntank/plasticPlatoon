@@ -3,14 +3,17 @@
 from __future__ import annotations
 import argparse
 import hashlib
+import io
 import json
 from pathlib import Path
 import numpy as np
+from PIL import Image, ImageDraw
 from asset_sources import source_bytes
 from md2_assets import MD2
 from build_m16 import (atlas_uvs, encode_md2, rigid_transforms,
                        texture_bytes as shared_texture_bytes)
-from glauncher_geometry import build_glauncher, GRIP
+from glauncher_geometry import (build_glauncher, DRUM_CENTER_Z, DRUM_FIRST_FRAME,
+                                DRUM_SIDES, DRUM_STEPS, GRIP)
 
 ROOT = Path(__file__).resolve().parents[2]
 BASE = ROOT / 'baseq2'
@@ -31,16 +34,27 @@ def sha(data):
 
 
 def texture_bytes():
-    """Use the existing army-man plastic and painted mitten atlas unchanged."""
-    return shared_texture_bytes()
+    """Keep the molded hands and give each drum facet a readable raised panel."""
+    atlas = Image.open(io.BytesIO(shared_texture_bytes())).convert('RGB')
+    panel = Image.new('RGB', (64, 64), (25, 38, 16))
+    draw = ImageDraw.Draw(panel)
+    draw.rounded_rectangle((19, 9, 45, 54), 5, fill=(37, 53, 23), outline=(15, 24, 10), width=2)
+    draw.line((23, 12, 41, 12), fill=(49, 69, 31), width=2)
+    draw.rounded_rectangle((23, 26, 41, 35), 3, fill=(19, 28, 12))
+    draw.line((25, 36, 39, 36), fill=(46, 65, 26))
+    atlas.paste(panel, (64, 64))
+    atlas.paste((91, 87, 74), (192, 128, 256, 192))
+    output = io.BytesIO()
+    atlas.save(output, format='PNG', compress_level=9)
+    return output.getvalue()
 
 
 def placement(role):
     rotation = np.eye(3)
     if role=='view':
-        # Keep the existing two-handed rifle scale and comfortable hip pose.
+        # Keep the mitten scale and lower the hip pose so the drum reads.
         scale=(56.49812462925911+9.061456233263016)/100
-        offset=np.array([-9.5,-8.5,-7.5])
+        offset=np.array([-5.75,-10.,-10.5])
     elif role=='pickup':
         scale=.56
         rotation=np.diag([-1.,-1.,1.])
@@ -63,8 +77,31 @@ def ads_header(anchors):
 #define PP_GLAUNCHER_MUZZLE_FORWARD (%sf)
 #define PP_GLAUNCHER_MUZZLE_RIGHT (%sf)
 #define PP_GLAUNCHER_MUZZLE_UP (%sf)
+#define PP_GLAUNCHER_DRUM_FIRST_FRAME %d
+#define PP_GLAUNCHER_DRUM_STEPS %d
 #endif
-''' % tuple(f'{v:.8f}' for v in (9.5-rear[0],rear[1],-rear[2],muzzle[0],-muzzle[1],muzzle[2]))).encode()
+''' % (*[f'{v:.8f}' for v in (15.5-rear[0],rear[1],-rear[2],muzzle[0],-muzzle[1],muzzle[2])],
+       DRUM_FIRST_FRAME, len(DRUM_STEPS) - 1)).encode()
+
+
+def view_poses(mesh, matrix, offset):
+    vertices = np.asarray(mesh['vertices'])
+    normals = np.asarray(mesh['normals'])
+    part = next(part for part in mesh['parts'] if part['name'] == 'drum')
+    first = part['first_triangle']
+    drum = np.unique(mesh['faces'][first:first + part['triangle_count']])
+    pivot = np.array([0, 0, DRUM_CENTER_Z])
+    poses, directions = [], []
+    for step in DRUM_STEPS:
+        angle = step * np.pi * 2 / DRUM_SIDES
+        c, s = np.cos(angle), np.sin(angle)
+        rotation = np.array([[1, 0, 0], [0, c, s], [0, -s, c]])
+        posed, rotated = vertices.copy(), normals.copy()
+        posed[drum] = (vertices[drum] - pivot) @ rotation + pivot
+        rotated[drum] = normals[drum] @ rotation
+        poses.append(posed @ matrix + offset)
+        directions.append(rotated)
+    return np.asarray(poses), np.asarray(directions)
 
 
 def build_assets():
@@ -76,23 +113,27 @@ def build_assets():
         dependencies_sha256={p:sha((ROOT/'tools/assets'/p).read_bytes()) for p in DEPENDENCIES},
         source_archive=originals['source_archive'], method='authored closed primitives; archived rigid poses',
         hand='m16_geometry.add_hands; existing closed molded mittens and forearms around trigger and forward grips',
-        palette='Shared M16 army-man plastic and mitten atlas', models=[])
+        palette='Molded army-man plastic, repeating chamber panels and a pale sight insert',
+        view_animation=dict(first_gunframe=DRUM_FIRST_FRAME, drum_step_fractions=list(DRUM_STEPS)), models=[])
     for path, role in MODELS.items():
-        source = None if role == 'pickup' else MD2.read(source_bytes(originals,'baseq2/'+path),source_compat=True)
         mesh = meshes['view' if role == 'view' else 'world']
         matrix, offset, rotation = placement(role)
         posed = np.asarray(mesh['vertices']) @ matrix + offset
         directions = np.asarray(mesh['normals']) @ rotation
         fit = None
         if role=='player':
+            source = MD2.read(source_bytes(originals,'baseq2/'+path),source_compat=True)
             rotations, offsets, errors = rigid_transforms(source)
             positions = np.asarray([posed @ r + t for r,t in zip(rotations,offsets)])
             normal_poses = np.asarray([directions @ r for r in rotations])
             names = source.names
             fit = dict(rms_max=float(f'{errors.max():.12g}'), frames=len(names))
+        elif role == 'view':
+            positions, normal_poses = view_poses(mesh, matrix, offset)
+            names = [f'drum_{i:02}' for i in range(len(DRUM_STEPS))]
         else:
             positions, normal_poses = posed[None], directions[None]
-            names = ['frame_1'] if source is None else [source.names[0]]
+            names = ['frame_1']
         skin = TEXTURES[0] if role == 'pickup' else TEXTURES[1]
         raw, validation = encode_md2(positions, normal_poses, mesh['faces'],atlas_uvs(mesh),[skin],names)
         assets[path] = raw

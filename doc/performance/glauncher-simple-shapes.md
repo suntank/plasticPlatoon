@@ -1,19 +1,21 @@
 # Authored grenade launcher
 
-The grenade launcher uses original simple geometry with a rotary drum,
-foregrip and stock, plus the established army-man plastic palette and molded
-mitten hands. Its barrel ends in a closed cup with a dark recessed floor.
-The first-person model, world pickup and player-held model share the authored
-design. The gun, hands
-and arms use one model and one atlas per camera. The player-held version
-omits first-person hands and follows all 198 original rigid attachment poses.
-The first-person and pickup versions each use one static frame.
+The grenade launcher uses original low-poly geometry with a beveled rotary
+drum, molded chamber panels, a foregrip and a stock. Its barrel ends in a
+closed cup with a dark recessed floor. The first-person model, world pickup
+and player-held model share the design and the army-man palette. First person
+uses the existing molded mittens and lowers the hip pose to show the drum.
+The drum advances by one chamber after every shot. Only the drum moves
+within the first-person model, so the hands, sights and muzzle stay aligned
+as the existing recoil moves the whole weapon. The pickup has one pose and
+the player-held model follows all 198 archived attachment poses.
 
 Aiming pulls the actual sights into the camera's center ray through the shared
-0.18-second transition. Each local split-screen player has independent aiming
-state. `glauncher_model_ads.h` supplies sight and muzzle offsets from the
-geometry. The muzzle table follows the reviewed barrel rim through all held
-poses, and selectable player colors are rebuilt from the new atlases.
+0.18-second transition. The wider rear notch and pale front sight insert
+improve visibility, including with other player colors. Each local split-screen
+player has independent aiming and uses their own firing frames.
+`glauncher_model_ads.h` supplies the sight and muzzle offsets and the drum's
+frame range. The muzzle table follows the barrel rim through all held poses.
 
 The grenade launcher has no enemy attachment model. The rocket launcher and
 its enemy attachment are separate assets. Grenade ammunition and the fired
@@ -23,9 +25,9 @@ projectile models retain their existing geometry and behavior.
 
 | Version | Previous triangles | Current triangles | Reduction | Frames |
 | --- | ---: | ---: | ---: | ---: |
-| First person, including hands and arms | 1,400 | 712 | 49.1% | 1 |
-| Pickup | 800 | 284 | 64.5% | 1 |
-| Player held | 1,742 | 284 | 83.7% | 198 |
+| First person, including hands and arms | 1,400 | 760 | 45.7% | 5 |
+| Pickup | 800 | 332 | 58.5% | 1 |
+| Player held | 1,742 | 332 | 80.9% | 198 |
 
 `tools/assets/glauncher-manifest.json` records exact counts, hashes, bounds,
 sight anchors and all-pose validation. Geometry counts describe asset work;
@@ -79,33 +81,8 @@ python3 tools/performance/capture_m16.py \
 
 Repeat with `--renderer gl3` and a fresh directory for GL3. Add
 `--four --mixed-weapons` to alternate pistol and grenade-launcher players and
-assert independent aim blends. The current control regression switches
-to the authored Rifle and checks its model ADS. Host visual checks establish
-appearance and behavior; target-device frame rates require measurement.
-
-
-The completed Grenade Launcher reviews are recorded in
-`build/glauncher-qa-gl1`, `build/glauncher-qa-gl3` and
-`build/glauncher-qa-four-final`. Each single-view run contains seven views:
-hip fire, real model sights, aimed firing, release, Rocket Launcher overlay,
-player-held and world pickup. Received weapon states confirm the selected
-launcher is restored before the held view. The images were inspected for the
-wide barrel and drum silhouette, existing mitten contact and clear sight ray.
-
-The final four-player run contains five views and confirms independent pistol
-and grenade-launcher aim blends of `[1,0,1,0]` and then `[0,1,0,1]`, with
-firing in both arrangements. The QA tool polls each slot's actual model and
-completed aim transition using unique state labels; this keeps endpoint
-checks reliable when grenade effects slow the offscreen renderer. All three
-launcher runs completed successfully with return code zero.
-
-
-Regression captures are recorded in `build/glauncher-qa-m60-regression`
-(eight views, including the heavy-enemy attachment) and
-`build/glauncher-qa-pump-regression` (eleven views, including received frame 13
-at hip and full aim). Both completed successfully; the M60 held fit and pump
-backstroke were also visually inspected. The ten grenade-launcher asset tests
-validate the decoded recessed bore, broad drum, closed gun/hand solids,
-clear sights, all 198 poses and exact checked outputs. These checks used
-matching source/release packages with SHA-256
-`96c5478f1a74f5ea6c76b86ea0f3e9807e8a1f5e713dc4cd54cfd86416907a86`.
+assert independent aim blends. Single-view runs capture the drum in motion in
+both hip and aimed views at received gunframe 10. They also capture the
+resting hip and aimed views, the world pickup and the player-held model. The
+asset tests check the recessed bore, closed gun and hand geometry, clear
+sights, drum motion, all held poses and exact checked outputs.
