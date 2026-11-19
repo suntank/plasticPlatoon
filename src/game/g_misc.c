@@ -2207,25 +2207,59 @@ SP_misc_heli(edict_t *ent)
  * HIDDEN hides it until activated.
  * speed: units per second (240 default). Uses the existing animated propeller.
  */
+static qboolean
+platoon_dropship_steer(edict_t *self, float yaw, float pitch)
+{
+	const float yaw_step = 140.0f * FRAMETIME;
+	const float pitch_step = 50.0f * FRAMETIME;
+	float current_yaw = anglemod(self->s.angles[YAW]);
+	float yaw_delta = LerpAngle(current_yaw, yaw, 1.0f) - current_yaw;
+	float pitch_delta = pitch - self->s.angles[PITCH];
+	qboolean yaw_aligned = fabsf(yaw_delta) <= yaw_step;
+	qboolean pitch_aligned = fabsf(pitch_delta) <= pitch_step;
+
+	/* The client interpolates these poses and spins the rotor in body space. */
+	self->s.angles[YAW] = yaw_aligned ? yaw :
+		anglemod(current_yaw + Q_clamp(yaw_delta, -yaw_step, yaw_step));
+	self->s.angles[PITCH] = pitch_aligned ? pitch :
+		self->s.angles[PITCH] + Q_clamp(pitch_delta, -pitch_step, pitch_step);
+	return yaw_aligned && pitch_aligned;
+}
+
 void
 platoon_dropship_think(edict_t *self)
 {
 	edict_t *corner;
 	vec3_t direction;
-	float distance;
+	float distance, yaw, pitch;
 
-	if (!self || !(corner = self->movetarget) || !corner->inuse)
+	if (!self)
 	{
-		if (self)
+		return;
+	}
+
+	self->nextthink = level.time + FRAMETIME;
+	corner = self->movetarget;
+	if (!corner)
+	{
+		/* Finish leveling and aligning at the parking spot after arrival. */
+		if ((self->count != 2 && self->count != 4) ||
+			platoon_dropship_steer(self, self->ideal_yaw, 0))
 		{
 			self->nextthink = 0;
 		}
 		return;
 	}
+	if (!corner->inuse)
+	{
+		self->nextthink = 0;
+		return;
+	}
 
-	self->nextthink = level.time + FRAMETIME;
+	yaw = anglemod(self->s.angles[YAW]);
 	if (level.time < self->timestamp)
 	{
+		platoon_dropship_steer(self, yaw, 0);
 		return;
 	}
 
@@ -2233,11 +2267,12 @@ platoon_dropship_think(edict_t *self)
 	distance = VectorNormalize(direction);
 	if (direction[0] || direction[1])
 	{
-		self->s.angles[YAW] = vectoyaw(direction);
+		yaw = vectoyaw(direction);
 	}
-	self->s.angles[PITCH] = -direction[2] * 12;
+	pitch = -direction[2] * 12;
 	if (distance > self->speed * FRAMETIME)
 	{
+		platoon_dropship_steer(self, yaw, pitch);
 		VectorMA(self->s.origin, self->speed * FRAMETIME, direction,
 			self->s.origin);
 		gi.linkentity(self);
@@ -2245,7 +2280,6 @@ platoon_dropship_think(edict_t *self)
 	}
 
 	VectorCopy(corner->s.origin, self->s.origin);
-	self->s.angles[PITCH] = 0;
 	self->timestamp = level.time + (corner->wait > 0 ? corner->wait : 0);
 	self->movetarget = corner->target ? G_PickTarget(corner->target) : NULL;
 	if (self->movetarget && strcmp(self->movetarget->classname, "path_corner"))
@@ -2255,9 +2289,17 @@ platoon_dropship_think(edict_t *self)
 	}
 	if (!self->movetarget)
 	{
-		self->nextthink = 0;
 		/* A parked inbound ship may be used once for its outbound path. */
 		self->count = (self->count == 1) ? 2 : 4;
+		self->ideal_yaw = yaw;
+		if (platoon_dropship_steer(self, yaw, 0))
+		{
+			self->nextthink = 0;
+		}
+	}
+	else
+	{
+		platoon_dropship_steer(self, yaw, corner->wait > 0 ? 0 : pitch);
 	}
 	gi.linkentity(self);
 

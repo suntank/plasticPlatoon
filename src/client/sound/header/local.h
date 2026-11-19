@@ -147,8 +147,8 @@ typedef struct
 	int rate;
 	int width;
 	int channels;
-	int loopstart;
-	int samples;
+	int loopstart; /* frame index, or -1 */
+	int samples;   /* interleaved samples across all channels */
 	int dataofs; /* chunk starts this many bytes from file start */
 } wavinfo_t;
 

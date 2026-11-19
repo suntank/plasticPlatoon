@@ -1219,6 +1219,7 @@ typedef enum
  * can be at most MAX_QPATH characters. */
 #define CS_NAME 0
 #define CS_CDTRACK 1
+#define PP_MISSION_COMPLETE_MUSIC "mission-complete.ogg"
 #define CS_SKY 2
 #define CS_SKYAXIS 3                /* %f %f %f format */
 #define CS_SKYROTATE 4

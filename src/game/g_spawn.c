@@ -117,6 +117,7 @@ void SP_misc_bigviper(edict_t *self);
 void SP_misc_strogg_ship(edict_t *self);
 void SP_misc_teleporter(edict_t *self);
 void SP_misc_platoon_dropship(edict_t *self);
+void SP_misc_platoon_briefing(edict_t *ent);
 void SP_misc_teleporter_dest(edict_t *self);
 void SP_misc_blackhole(edict_t *self);
 void SP_misc_eastertank(edict_t *self);
@@ -267,6 +268,7 @@ static spawn_t spawns[] = {
 	{"misc_strogg_ship", SP_misc_strogg_ship},
 	{"misc_teleporter", SP_misc_teleporter},
 	{"misc_platoon_dropship", SP_misc_platoon_dropship},
+	{"misc_platoon_briefing", SP_misc_platoon_briefing},
 	{"misc_teleporter_dest", SP_misc_teleporter_dest},
 	{"misc_blackhole", SP_misc_blackhole},
 	{"misc_eastertank", SP_misc_eastertank},

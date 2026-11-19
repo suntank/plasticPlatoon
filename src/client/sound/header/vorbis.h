@@ -38,6 +38,8 @@ int OGG_Status(void);
 void OGG_InitTrackList(void);
 void OGG_Init(void);
 void OGG_PlayTrack(const char* track, qboolean cdtrack, qboolean immediate);
+void OGG_PlayMenuMusic(void);
+void OGG_PlayMapMusic(void);
 void OGG_RecoverState(void);
 void OGG_SaveState(void);
 void OGG_Shutdown(void);

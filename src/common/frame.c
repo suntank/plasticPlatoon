@@ -71,6 +71,7 @@ int curtime;
 #ifndef DEDICATED_ONLY
 void Key_Init(void);
 void Key_Shutdown(void);
+void M_Menu_Main_f(void);
 void SCR_EndLoadingPlaque(void);
 #endif
 
@@ -395,28 +396,23 @@ Qcommon_Init(int argc, char **argv)
 	CL_Init();
 #endif
 
-	// Everythings up, let's add + cmds from command line.
-	if (!Cbuf_AddLateCommands())
+	// Honor explicit launch commands, such as +map and +connect.
+	if (Cbuf_AddLateCommands())
 	{
-		if (!dedicated->value)
-		{
-			// Start demo loop...
-			Cbuf_AddText("d1\n");
-		}
-		else
-		{
-			// ...or dedicated server.
-			Cbuf_AddText("dedicated_start\n");
-		}
-
+#ifndef DEDICATED_ONLY
+		SCR_EndLoadingPlaque();
+#endif
+	}
+	else if (dedicated->value)
+	{
+		Cbuf_AddText("dedicated_start\n");
 		Cbuf_Execute();
 	}
 #ifndef DEDICATED_ONLY
 	else
 	{
-		/* the user asked for something explicit
-		   so drop the loading plaque */
 		SCR_EndLoadingPlaque();
+		M_Menu_Main_f();
 	}
 #endif
 

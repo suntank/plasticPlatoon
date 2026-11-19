@@ -291,8 +291,7 @@ Cbuf_AddEarlyCommands(qboolean clear)
  * Commands lead with a + and continue until another + or -
  * quake +developer 1 +map amlev1
  *
- * Returns true if any late commands were added, which
- * will keep the demoloop from immediately starting
+ * Returns true if any late commands were added.
  */
 qboolean
 Cbuf_AddLateCommands(void)

@@ -601,6 +601,13 @@ S_LoadSound(sfx_t *s)
 		return NULL;
 	}
 
+	if (info.rate <= 0 || info.samples <= 0)
+	{
+		Com_Printf("%s has an invalid sample rate or length\n", s->name);
+		FS_FreeFile(data);
+		return NULL;
+	}
+
 	if (S_IsSilencedMuzzleFlash(&info, data, namebuffer))
 	{
 		s->is_silenced_muzzle_flash = true;
@@ -616,9 +623,8 @@ S_LoadSound(sfx_t *s)
 #if USE_OPENAL
 	if (sound_started == SS_OAL)
 	{
-		sc = AL_UploadSfx(s, &info, data + info.dataofs, sound_volume,
-						  begin_length, end_length,
-						  attack_length, fade_length);
+		AL_UploadSfx(s, &info, data + info.dataofs, sound_volume,
+					 begin_length, end_length, attack_length, fade_length);
 	}
 	else
 #endif
@@ -637,7 +643,7 @@ S_LoadSound(sfx_t *s)
 	}
 
 	FS_FreeFile(data);
-	return sc;
+	return s->cache;
 }
 
 /*
@@ -1695,14 +1701,20 @@ S_SoundList(void)
 
 		if (sc)
 		{
-			size = sc->length * sc->width * (sc->stereo + 1);
+			size = sc->length * sc->width;
+#if USE_OPENAL
+			if (sound_started == SS_OAL)
+			{
+				size = sc->size;
+			}
+#endif
 			total += size;
 			Com_Printf("%s(%2db) %8i(%d ch) %s %2.1f dB %.1fs:%.1f..%.1f..%.1f..%.1f\n",
 					sc->loopstart != -1 ? "L" : " ",
 					sc->width * 8, size,
 					(sc->stereo + 1), sfx->name,
 					10 * log10((float)sc->volume / (2 << 15)),
-					(float)sc->length / 1000 / (sc->stereo + 1),
+					(float)sc->length / sc->speed,
 					(float)sc->begin / 1000,
 					(float)sc->attack / 1000,
 					(float)sc->fade / 1000,

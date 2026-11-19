@@ -1335,6 +1335,13 @@ ReadLevel(const char *filename)
 			}
 		}
 
+		if (ent->think == platoon_briefing_think)
+		{
+			/* One-shot sound channels do not survive a load. Replay the brief. */
+			ent->s.frame = 0;
+			ent->nextthink = level.time + FRAMETIME;
+		}
+
 		/* fire any cross-level triggers */
 		if (ent->classname)
 		{

@@ -1342,6 +1342,8 @@ CL_ParseStartSoundPacket(void)
 		return;
 	}
 
+	CL_StartBriefingSubtitles(sound_num);
+
 	if (!cl.sound_precache[sound_num])
 	{
 		return;

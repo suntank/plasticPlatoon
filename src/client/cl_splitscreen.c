@@ -966,8 +966,14 @@ SS_ParseSoundPacket(ss_local_player_t *slot, sizebuf_t *msg)
 		MSG_ReadPos(msg, origin);
 		position = origin;
 	}
-	if (msg->readcount > msg->cursize || sound_num < 0 || sound_num >= MAX_SOUNDS ||
-		!cl.sound_precache[sound_num])
+	if (msg->readcount > msg->cursize || sound_num < 0 || sound_num >= MAX_SOUNDS)
+	{
+		return;
+	}
+
+	CL_StartBriefingSubtitles(sound_num);
+
+	if (!cl.sound_precache[sound_num])
 	{
 		return;
 	}

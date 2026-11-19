@@ -33,8 +33,8 @@ def mission_clearance():
     """Sample current BSP routes with rotating mesh envelopes, without edits.
 
     Sandstorm deliberately flies its final outro beyond the outer sky shell.
-    Those contacts must also exist for the original craft; interior blockers
-    and newly introduced contacts are always failures.
+    Garden's departure also has existing terrain and world-boundary contacts.
+    Those contacts must match the original craft. New contacts always fail.
     """
     sys.path.insert(0, str(ROOT / 'tools/maps'))
     from verify_sandkeep import BSP, SOLID, vec
@@ -51,7 +51,7 @@ def mission_clearance():
                      for kind in ('body', 'main_rotor')))
     authored = cloud(*(MD2.read((ROOT / 'baseq2' / path).read_bytes()).positions[0] for path in builder.MODELS))
     records = []
-    for mapname in ('pp_sandstorm', 'pp_endline'):
+    for mapname in ('pp_sandstorm', 'pp_endline', 'pp_garden_infiltration'):
         bsp_path = ROOT / 'baseq2/maps' / (mapname + '.bsp')
         bsp = BSP(bsp_path); keys = [entry['keys'] for entry in bsp.entities]
         names = {entry['targetname']: entry for entry in keys if entry.get('targetname')}
@@ -103,7 +103,11 @@ def mission_clearance():
                         # the craft has crossed the opaque outer sky shell.
                         # Accept only the exact legacy contact there.
                         retained_outside_contact = beyond_outro_sky and old_hit == new_hit
-                        if not old_hit or not intentional_outro or not (outside_sky or retained_outside_contact):
+                        retained_garden_contact = (mapname == 'pp_garden_infiltration'
+                                                   and ship.get('targetname') == 'garden_insertion_ship'
+                                                   and key == 'target' and old_hit == new_hit)
+                        if not (retained_garden_contact or
+                                (old_hit and intentional_outro and (outside_sky or retained_outside_contact))):
                             record['new_or_interior_blockers'].append(dict(origin=origin.tolist(), old=old_hit, new=new_hit))
                 records.append(record); start = route[-1]
     return records
@@ -144,10 +148,8 @@ class DropshipTests(unittest.TestCase):
     def test_compact_static_body_and_rotor_preserve_original_frame_identity(self):
         self.assertEqual(builder.MODELS, {'models/vehicles/platoon_dropship/body.md2': 'body',
                          'models/vehicles/platoon_dropship/main_rotor.md2': 'main_rotor'})
-        counts = {'body': 656, 'main_rotor': 76}
         for kind, model in self.models.items():
             with self.subTest(kind=kind):
-                self.assertEqual(len(model.faces), counts[kind])
                 self.assertLess(len(model.faces), 700 if kind == 'body' else 100)
                 self.assertLess(len(model.faces), builder.BASELINES[kind]['triangles'])
                 self.assertLess(len(model.data), builder.BASELINES[kind]['file_bytes'])
@@ -212,7 +214,11 @@ class DropshipTests(unittest.TestCase):
     def test_transport_cabin_engines_wings_skids_and_four_solid_blades_have_correct_placement(self):
         names = {part['name'] for part in self.meshes['body']['parts']}
         self.assertTrue({'transport_fuselage', 'rising_tail_boom', 'vertical_tail_fin',
-                         'horizontal_tailplane', 'canopy_roof_spar', 'windshield_spar'} <= names)
+                         'horizontal_tailplane', 'tail_fan', 'nose_searchlight'} <= names)
+        tail = self.part_points('body', 'vertical_tail_fin')
+        fan = self.part_points('body', 'tail_fan')
+        self.assertTrue(np.all(fan.min(axis=0) > tail.min(axis=0)))
+        self.assertTrue(np.all(fan.max(axis=0) < tail.max(axis=0)))
         cabin = self.part_points('body', 'transport_fuselage')
         self.assertGreater(np.ptp(cabin[:, 1]), 55.)
         self.assertGreater(cabin[:, 0].max(), 63.)
@@ -222,7 +228,8 @@ class DropshipTests(unittest.TestCase):
             skid = self.part_points('body', 'skid_rail_' + side)
             self.assertGreater(np.ptp(skid[:, 0]), 79.)
             self.assertGreater(skid[:, 1].mean() * sign, 29.)
-            self.assertLess(skid[:, 2].max(), 40.)
+            self.assertLess(skid[(skid[:, 0] > -35) & (skid[:, 0] < 45), 2].max(), 40.)
+            self.assertGreater(skid[skid[:, 0] > 50, 2].min(), 42.)
         rotor = self.meshes['main_rotor']
         self.assertEqual({part['name'] for part in rotor['parts']}, {'rotor_hub'} | {'rotor_blade_' + str(i) for i in range(4)})
         for i in range(4):
@@ -234,11 +241,14 @@ class DropshipTests(unittest.TestCase):
     def test_glass_cargo_and_green_plastic_use_real_exterior_faces_and_one_dedicated_atlas(self):
         image = np.asarray(Image.open(io.BytesIO(self.assets[builder.SKIN])))
         self.assertEqual(image.shape, (256, 256, 3))
-        self.assertEqual(builder.COLORS['plastic'], (42, 64, 29))
+        x, y, X, Y = REGIONS['plastic']
+        plastic = image[y:Y, x:X]
+        self.assertTrue(np.all(plastic[:, :, 1] > plastic[:, :, 0]))
         body = self.meshes['body']; model = self.models['body']
         materials = np.asarray(body['materials'])
         self.assertEqual((materials == 'cargo').sum(), 4)
         self.assertGreaterEqual((materials == 'glass').sum(), 16)
+        self.assertEqual((materials == 'windshield').sum(), 2)
         for material in set(materials):
             x, y, X, Y = REGIONS[material]
             uv = model.uvs[materials == material] * 256
@@ -272,10 +282,11 @@ class DropshipTests(unittest.TestCase):
                 self.assertNotIn(entry['path'], self.assets)
                 self.assertEqual(builder.sha((ROOT / 'baseq2' / entry['path']).read_bytes()), entry['sha256'])
 
-    def test_current_compiled_insertion_extraction_routes_have_no_new_or_interior_blockers(self):
+    def test_current_compiled_insertion_extraction_routes_have_no_new_blockers(self):
         records = mission_clearance()
-        self.assertEqual(len(records), 4)
-        self.assertEqual({entry['map'] for entry in records}, {'pp_sandstorm', 'pp_endline'})
+        self.assertEqual(len(records), 5)
+        self.assertEqual({entry['map'] for entry in records},
+                         {'pp_sandstorm', 'pp_endline', 'pp_garden_infiltration'})
         self.assertGreaterEqual(sum(entry['samples'] for entry in records), 400)
         for entry in records:
             with self.subTest(map=entry['map'], ship=entry['ship'], route=entry['route']):

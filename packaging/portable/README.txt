@@ -8,13 +8,16 @@ Original project assets use GPL-2.0-or-later too; see ASSET-LICENSE.md and
 asset-provenance.json for the owner's declaration and legacy-content exclusions.
 
 WASD move, mouse look, left mouse fire, space jump, tilde console.
-Level 1 is pp_garden_infiltration; the launcher and new games start here.
+The launcher opens the main menu. New Game starts in the Operation Sandstorm
+briefing room. After the General finishes, walk through the Deploy door to
+enter Level 1, pp_garden_infiltration.
 From the console try:
   exec heavy_test.cfg
   exec rocket_test.cfg
   exec tank_test.cfg
   exec helicopter_test.cfg
   exec bedroom_solo.cfg
+  exec sandstorm_briefing_solo.cfg
   exec sandkeep_solo.cfg
   exec sandwatch_solo.cfg
 

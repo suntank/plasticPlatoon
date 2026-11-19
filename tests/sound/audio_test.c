@@ -23,6 +23,52 @@ ss_local_player_t *SS_GetSlot(int i) { return &slots[i]; }
 cvar_t *Cvar_Get(const char *name, const char *value, int flags) { (void)value; (void)flags; return !strcmp(name,"s_bsp_soundpos") ? &bsp_soundpos : &zero; }
 void Com_Error(int code, const char *fmt, ...) { (void)code; (void)fmt; abort(); }
 void Com_Printf(const char *fmt, ...) { (void)fmt; }
+void *Z_Malloc(int size) { return calloc(1, size); }
+
+static void TestSDLStereoCache(void)
+{
+	sfx_t effect = {.name = "test.wav"};
+	wavinfo_t info = {
+		.rate = 44100, .width = 2, .channels = 2, .samples = 8, .loopstart = 2
+	};
+	short data[] = {
+		LittleShort(1024), LittleShort(-512),
+		LittleShort(2048), LittleShort(1024),
+		LittleShort(-2048), LittleShort(-1024),
+		LittleShort(512), LittleShort(512)
+	};
+	const short expected[] = {256, 1536, -1536, 512};
+	byte data8[] = {64, 128, 128, 192};
+	const signed char expected8[] = {-32, 32};
+
+	sound.speed = 44100;
+	s_loadas8bit = &zero;
+	assert(SDL_Cache(&effect, &info, (byte *)data, 0, 0, 0, 0, 0));
+	assert(effect.cache->length == 4 && effect.cache->loopstart == 2);
+	assert(effect.cache->width == 2 && effect.cache->stereo == 0);
+	assert(!memcmp(effect.cache->data, expected, sizeof(expected)));
+	free(effect.cache);
+
+	sound.speed = 22050;
+	s_loadas8bit = &one;
+	assert(SDL_Cache(&effect, &info, (byte *)data, 0, 0, 0, 0, 0));
+	assert(effect.cache->length == 2 && effect.cache->loopstart == 1);
+	assert(effect.cache->width == 1 && effect.cache->stereo == 0);
+	assert(((signed char *)effect.cache->data)[0] == 1);
+	assert(((signed char *)effect.cache->data)[1] == -6);
+	free(effect.cache);
+
+	sound.speed = 44100;
+	s_loadas8bit = &zero;
+	info.width = 1;
+	info.samples = 4;
+	info.loopstart = -1;
+	assert(SDL_Cache(&effect, &info, data8, 0, 0, 0, 0, 0));
+	assert(effect.cache->length == 2 && effect.cache->loopstart == -1);
+	assert(effect.cache->width == 1 && effect.cache->stereo == 0);
+	assert(!memcmp(effect.cache->data, expected8, sizeof(expected8)));
+	free(effect.cache);
+}
 
 #ifdef USE_OPENAL
 static vec3_t al_position;
@@ -173,6 +219,8 @@ static void TestOpenAL(void)
 
 int main(void)
 {
+	Swap_Init();
+	TestSDLStereoCache();
 	TestOneShots(); TestEntitiesAndPriority(); TestLoops(); TestBrushOrigin();
 #ifdef USE_OPENAL
 	TestOpenAL();

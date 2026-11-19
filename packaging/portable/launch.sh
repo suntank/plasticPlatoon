@@ -3,9 +3,6 @@ set -eu
 
 game_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 cd "$game_dir"
-if [ "$#" -eq 0 ]; then
-    set -- +map pp_garden_infiltration
-fi
 if [ ! -f "$game_dir/baseq2/config.cfg" ]; then
     set -- +set skin soldier/green "$@"
 fi

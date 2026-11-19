@@ -71,6 +71,7 @@ typedef struct _tag_menuframework
 	const char *title;
 	const char *subtitle;
 	int compact_top;
+	int compact_panel_width; /* Zero uses the full window width. */
 } menuframework_s;
 
 typedef struct

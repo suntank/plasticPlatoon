@@ -4,7 +4,7 @@
   "dependencies_sha256": {
     "build_boss_helicopter.py": "e216b2d00d5589a2beaa8451020a4cd1af812c73b3444f42b6afdf3a33ac0fb7",
     "boss_helicopter_geometry.py": "109e6bf6fad50376198e54e0354af0091be14968f41c60d9266554617fa63605",
-    "dropship_geometry.py": "2a53c644719d55c18134eec6201a70c791469c46f297fcd72de060f6c6f3a6a6",
+    "dropship_geometry.py": "ca4cecaf0b0a40b4b910e005f0a6769f14842ef57f06785e34b1090290b66cb5",
     "build_m16.py": "3f90819146186a316a6eb11cdf387923158b34bea43cc41eae211d2ef4a69717",
     "m16_geometry.py": "730286d3b6e18f99727689d9b0f9107524d0930cba2b43a45483d051641d578d"
   },

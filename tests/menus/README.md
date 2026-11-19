@@ -7,7 +7,10 @@ python3 tests/menus/smoke_menus.py --size 240x240 --output /tmp/pp-menus-handhel
 python3 tests/menus/smoke_menus.py --size 1280x720 --output /tmp/pp-menus-desktop
 ```
 
-The script discovers all registered `menu_*` commands, opens each in the actual
+The script captures the main menu at startup and checks that the client has
+loaded no map or demo. It starts a new game through the menu, checks that the
+briefing room loads, discovers all registered
+`menu_*` commands, opens each in the actual
 client, navigates long menus to their last selectable row, and captures binding,
 reserved-save-slot and quit prompts. It retains labeled PNGs, an input script,
 console output, selected-row snapshots and `report.json`. Assertions cover menu

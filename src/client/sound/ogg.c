@@ -46,6 +46,7 @@ static cvar_t *ogg_shuffle;       /* Shuffle playback */
 static cvar_t *ogg_ignoretrack0;  /* Toggle track 0 playing */
 static cvar_t *ogg_volume;        /* Music volume. */
 static int ogg_curfile;           /* Index of currently played file. */
+static char ogg_current_filename[MAX_OSPATH]; /* Name for a non-numbered track. */
 static int ogg_numbufs;           /* Number of buffers for OpenAL */
 static int ogg_numsamples;        /* Number of sambles read from the current file */
 static int ogg_mapcdtrack;        /* Index of current map cdtrack */
@@ -68,6 +69,7 @@ static struct {
 	qboolean saved;
 	int curfile;
 	int numsamples;
+	char filename[MAX_OSPATH];
 } ogg_saved_state;
 
 static void
@@ -268,7 +270,7 @@ OGG_InitTrackList(void)
 	}
 
 	/* if tracks have been found above, we would've returned there */
-	Com_Printf("No Ogg Vorbis music tracks have been found, so there will be no music.\n");
+	Com_DPrintf("No numbered Ogg Vorbis music tracks found.\n");
 }
 
 // --------
@@ -281,6 +283,13 @@ static OGG_Read(void)
 {
 	short samples[4096] = {0};
 	float volume = (ogg_mutemusic == true) ? 0.0f : ogg_volume->value;
+
+	if (!strcmp(ogg_current_filename, "briefing.ogg") ||
+		!strcmp(ogg_current_filename, "infiltration.ogg") ||
+		!strcmp(ogg_current_filename, "sandstorm.ogg"))
+	{
+		volume *= 0.85f;
+	}
 
 	int read_samples = stb_vorbis_get_samples_short_interleaved(ogg_file, ogg_file->channels, samples,
 		ARRLEN(samples));
@@ -304,7 +313,15 @@ static OGG_Read(void)
 		ogg_numbufs = 0;
 		ogg_numsamples = 0;
 
-		OGG_PlayTrack(va("%d", ogg_curfile), false, false);
+		if (!ogg_current_filename[0])
+		{
+			OGG_PlayTrack(va("%d", ogg_curfile), false, false);
+		}
+		else if (ogg_shuffle->value != 1 &&
+			strcmp(ogg_current_filename, PP_MISSION_COMPLETE_MUSIC))
+		{
+			OGG_PlayTrack(ogg_current_filename, false, false);
+		}
 	}
 }
 
@@ -331,7 +348,7 @@ OGG_Stream(void)
 	if (ogg_pausewithgame->modified)
 	{
 		if ((ogg_pausewithgame->value == 0 && ogg_status == PAUSE) ||
-		    (ogg_pausewithgame->value == 1 && ogg_status == PLAY))
+		    (ogg_pausewithgame->value == 1 && ogg_status == PLAY && cls.state == ca_active))
 		{
 			OGG_TogglePlayback();
 		}
@@ -357,7 +374,7 @@ OGG_Stream(void)
 
 			/* active_buffers are all active OpenAL buffers,
 			   buffering normal sfx _and_ ogg/vorbis samples. */
-			while (active_buffers <= ogg_numbufs)
+			while (ogg_status == PLAY && active_buffers <= ogg_numbufs)
 			{
 				OGG_Read();
 			}
@@ -371,7 +388,7 @@ OGG_Stream(void)
 				   were played since the last call to this function.
 				   This keeps the buffer at all times at an "optimal"
 				   fill level. */
-				while (paintedtime + MAX_RAW_SAMPLES - 2048 > s_rawend)
+				while (ogg_status == PLAY && paintedtime + MAX_RAW_SAMPLES - 2048 > s_rawend)
 				{
 					OGG_Read();
 				}
@@ -420,6 +437,11 @@ OGG_PlayTrack(const char *track, qboolean cdtrack, qboolean immediate)
 		return;
 	}
 
+	if (ogg_status != STOP && ogg_current_filename[0] && !strcmp(track, ogg_current_filename))
+	{
+		return;
+	}
+
 	while (1)
 	{
 		int res = 0;
@@ -442,10 +464,7 @@ OGG_PlayTrack(const char *track, qboolean cdtrack, qboolean immediate)
 		}
 
 		/* Check running music. */
-		if (ogg_status == PLAY)
-		{
-			OGG_Stop();
-		}
+		OGG_Stop();
 
 		// fclose is not required on error with close_on_free=true
 		ogg_file = stb_vorbis_open_file(f, true, &res, NULL);
@@ -459,6 +478,14 @@ OGG_PlayTrack(const char *track, qboolean cdtrack, qboolean immediate)
 
 		/* Play file. */
 		ogg_curfile = 0;
+		if (track != ogg_current_filename)
+		{
+			Q_strlcpy(ogg_current_filename, track, sizeof(ogg_current_filename));
+		}
+		if (cdtrack)
+		{
+			ogg_mapcdtrack = 0;
+		}
 		ogg_numsamples = 0;
 		ogg_status = PLAY;
 
@@ -571,7 +598,7 @@ OGG_PlayTrack(const char *track, qboolean cdtrack, qboolean immediate)
 	}
 
 	/* Check running music. */
-	if (ogg_status == PLAY)
+	if (ogg_status != STOP)
 	{
 		if (ogg_curfile == trackNo)
 		{
@@ -618,8 +645,42 @@ OGG_PlayTrack(const char *track, qboolean cdtrack, qboolean immediate)
 
 	/* Play file. */
 	ogg_curfile = trackNo;
+	ogg_current_filename[0] = '\0';
 	ogg_numsamples = 0;
 	ogg_status = PLAY;
+}
+
+void
+OGG_PlayMenuMusic(void)
+{
+	OGG_PlayTrack("plastic-platoon-theme.ogg", false, true);
+}
+
+void
+OGG_PlayMapMusic(void)
+{
+	const char *track = cl.configstrings[CS_CDTRACK];
+	const char *map = cl.configstrings[CS_MODELS + 1];
+
+	/* Keep the soundtrack assignment on the client so existing maps and
+	 * saves still use their original BSP and any explicit track wins. */
+	if (!track[0] || !strcmp(track, "0"))
+	{
+		if (!strcmp(map, "maps/pp_sandstorm_briefing.bsp"))
+		{
+			track = "briefing.ogg";
+		}
+		else if (!strcmp(map, "maps/pp_garden_infiltration.bsp"))
+		{
+			track = "infiltration.ogg";
+		}
+		else if (!strcmp(map, "maps/pp_sandbreak_end.bsp"))
+		{
+			track = PP_MISSION_COMPLETE_MUSIC;
+		}
+	}
+
+	OGG_PlayTrack(track, true, true);
 }
 
 // ----
@@ -630,6 +691,9 @@ OGG_PlayTrack(const char *track, qboolean cdtrack, qboolean immediate)
 static void
 OGG_Info(void)
 {
+	const char *filename = ogg_current_filename[0] ? ogg_current_filename :
+		(ogg_curfile >= 0 ? ogg_tracks[ogg_curfile] : NULL);
+
 	Com_Printf("Tracks:\n");
 
 	for (int i = 2; i <= ogg_maxfileindex; i++)
@@ -650,22 +714,22 @@ OGG_Info(void)
 	{
 		case PLAY:
 			Com_Printf("State: Playing file %d (%s) at %i samples.\n",
-			           ogg_curfile, ogg_tracks[ogg_curfile], stb_vorbis_get_sample_offset(ogg_file));
+			           ogg_curfile, filename, stb_vorbis_get_sample_offset(ogg_file));
 			break;
 
 		case PAUSE:
 			Com_Printf("State: Paused file %d (%s) at %i samples.\n",
-			           ogg_curfile, ogg_tracks[ogg_curfile], stb_vorbis_get_sample_offset(ogg_file));
+			           ogg_curfile, filename, stb_vorbis_get_sample_offset(ogg_file));
 			break;
 
 		case STOP:
-			if (ogg_curfile == -1)
+			if (!filename)
 			{
 				Com_Printf("State: Stopped.\n");
 			}
 			else
 			{
-				Com_Printf("State: Stopped file %d (%s).\n", ogg_curfile, ogg_tracks[ogg_curfile]);
+				Com_Printf("State: Stopped file %d (%s).\n", ogg_curfile, filename);
 			}
 
 			break;
@@ -689,6 +753,11 @@ OGG_Stop(void)
 		AL_UnqueueRawSamples();
 	}
 #endif
+
+	if (sound_started == SS_SDL)
+	{
+		s_rawend = 0;
+	}
 
 	stb_vorbis_close(ogg_file);
 	ogg_status = STOP;
@@ -793,6 +862,7 @@ OGG_SaveState(void)
 	ogg_saved_state.saved = true;
 	ogg_saved_state.curfile = ogg_curfile;
 	ogg_saved_state.numsamples = ogg_numsamples;
+	Q_strlcpy(ogg_saved_state.filename, ogg_current_filename, sizeof(ogg_saved_state.filename));
 }
 
 /*
@@ -812,9 +882,13 @@ OGG_RecoverState(void)
 	int shuffle_state = ogg_shuffle->value;
 	Cvar_SetValue("ogg_shuffle", 0);
 
-	OGG_PlayTrack(va("%d", ogg_saved_state.curfile), false, true);
-	stb_vorbis_seek_frame(ogg_file, ogg_saved_state.numsamples);
-	ogg_numsamples = ogg_saved_state.numsamples;
+	OGG_PlayTrack(ogg_saved_state.filename[0] ? ogg_saved_state.filename :
+		va("%d", ogg_saved_state.curfile), false, true);
+	if (ogg_status == PLAY)
+	{
+		stb_vorbis_seek_frame(ogg_file, ogg_saved_state.numsamples);
+		ogg_numsamples = ogg_saved_state.numsamples;
+	}
 
 	Cvar_SetValue("ogg_shuffle", shuffle_state);
 }
@@ -852,6 +926,7 @@ OGG_Init(void)
 
 	// Global variables
 	ogg_curfile = -1;
+	ogg_current_filename[0] = '\0';
 	ogg_numsamples = 0;
 	ogg_status = STOP;
 

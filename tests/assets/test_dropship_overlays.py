@@ -189,8 +189,10 @@ class DropshipOverlayTests(unittest.TestCase):
         sys.path.insert(0, str(ROOT / 'tools/maps'))
         from dropship_dependencies import dropship_files
         import package_endline
+        import package_garden_infiltration
         import package_sandstorm
         self.assertIs(package_endline.dropship_files, dropship_files)
+        self.assertIs(package_garden_infiltration.dropship_files, dropship_files)
         self.assertIs(package_sandstorm.dropship_files, dropship_files)
         self.assertEqual(set(dropship_files(self.root / 'baseq2')), set(OWNED))
 

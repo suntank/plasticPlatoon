@@ -127,6 +127,18 @@ void CL_ParseScreenImage(cl_screen_image_t *image, sizebuf_t *msg);
 void SCR_DrawScreenImageOverlay(const cl_screen_image_t *image,
 	int x, int y, int width, int height);
 
+#define MAX_BRIEFING_SUBTITLE_CUES 24
+#define MAX_BRIEFING_SUBTITLE_TEXT 128
+
+typedef struct
+{
+	unsigned int start_ms;
+	unsigned int end_ms;
+	char text[MAX_BRIEFING_SUBTITLE_TEXT];
+} cl_subtitle_cue_t;
+
+void CL_StartBriefingSubtitles(int sound_num);
+
 extern char cl_weaponmodels[MAX_CLIENTWEAPONMODELS][MAX_QPATH];
 extern int num_cl_weaponmodels;
 
@@ -207,6 +219,14 @@ typedef struct
 
 	clientinfo_t	clientinfo[MAX_CLIENTS];
 	clientinfo_t	baseclientinfo;
+
+	/* One subtitle track per display, including local split-screen. */
+	struct
+	{
+		unsigned int started_at;
+		int count;
+		cl_subtitle_cue_t cues[MAX_BRIEFING_SUBTITLE_CUES];
+	} briefing_subtitles;
 } client_state_t;
 
 extern	client_state_t	cl;

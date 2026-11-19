@@ -43,6 +43,12 @@ static int model_index(char *name)
 static void no_free(int tag) { (void)tag; }
 static void *allocate(int size, int tag) { (void)tag; return calloc(1, size); }
 static void unlink_entity(edict_t *self) { (void)self; }
+static char music_track[MAX_QPATH];
+static void config_string(int index, char *value)
+{
+    if (index == CS_CDTRACK)
+        Q_strlcpy(music_track, value, sizeof(music_track));
+}
 static void write_byte(int value) { (void)value; }
 static void write_string(char *value) { (void)value; }
 static void unicast(edict_t *ent, qboolean reliable) { (void)ent; (void)reliable; }
@@ -69,6 +75,7 @@ static void reset(void)
     memset(g_edicts, 0, game.maxentities * sizeof(*g_edicts));
     memset(game.clients, 0, game.maxclients * sizeof(*game.clients));
     memset(&level, 0, sizeof(level));
+    music_track[0] = '\0';
     memset(center_calls, 0, sizeof(center_calls));
     memset(center_text, 0, sizeof(center_text));
     memset(model_names,0,sizeof(model_names));model_count=0;
@@ -210,7 +217,10 @@ static void test_flight_vector_speed(void)
     self->use(self,NULL,&g_edicts[1]);tick(self);
     vec3_t expected={30,40,30};VectorNormalize(expected);VectorScale(expected,10,expected);
     for(int axis=0;axis<3;++axis)assert(fabsf(self->s.origin[axis]-expected[axis])<.001f);
-    assert(self->s.angles[YAW]==53); /* Native vectoyaw truncates degrees. */
+    assert(self->s.angles[YAW] > 13 && self->s.angles[YAW] <= 14);
+    assert(self->s.angles[PITCH] == -5);
+    for (int step = 0; step < 3; step++) tick(self);
+    assert(self->s.angles[YAW] == 53); /* Native vectoyaw truncates degrees. */
     assert(fabsf(self->s.angles[PITCH]+30/sqrtf(3400)*12)<.001f);
     assert(VectorLength(self->velocity)==0&&self->nextthink>level.time);
 }
@@ -236,6 +246,7 @@ static void test_flight(void)
     assert(event->count == 98 && self->movetarget == last);
     for (i = 0; i < 3; i++) tick(self);
     assert(self->s.origin[0] == 0);
+    assert(self->s.angles[PITCH] == 0);
     for (i = 0; i < 12; i++) tick(self);
     assert(self->s.origin[0] == 30 && self->s.origin[2] == 30);
     assert(!self->movetarget && !self->nextthink && event->count == 97);
@@ -256,6 +267,32 @@ static void restore(const char *path)
     int i;
     WriteLevel(path); ReadLevel(path);
     for (i = 0; i < game.maxclients; i++) game.clients[i].pers.connected = true;
+}
+static void test_dropship_turn(const char *path)
+{
+    reset();
+    edict_t *event = counter();
+    edict_t *landing = corner("takeoff", NULL, 10, 6, 0);
+    landing->pathtarget = "arrival";
+    edict_t *ship = dropship(0);
+    int ship_index = ship - g_edicts;
+    ship->s.angles[YAW] = 350;
+
+    ship->use(ship, NULL, &g_edicts[1]);
+    tick(ship);
+    /* Take the short arc through zero while continuing along the route. */
+    assert(ship->s.angles[YAW] > 3 && ship->s.angles[YAW] <= 4);
+    assert(ship->s.origin[0] > 0 && ship->s.origin[0] < 10);
+    tick(ship);
+    assert(ship->count == 2 && !ship->movetarget && ship->nextthink);
+    assert(ship->s.angles[YAW] > 17 && ship->s.angles[YAW] <= 18);
+    assert(ship->s.origin[0] == 10 && ship->s.origin[1] == 6 && event->count == 98);
+
+    restore(path);
+    ship = &g_edicts[ship_index];
+    tick(ship);
+    assert(ship->s.angles[YAW] == 30 && !ship->nextthink);
+    assert(ship->s.origin[0] == 10 && ship->s.origin[1] == 6 && event->count == 98);
 }
 static void test_legacy_dropship_media_restore(const char *path)
 {
@@ -306,7 +343,10 @@ static void test_outbound_flight_and_camera(const char *path)
     ship->use(ship, NULL, &g_edicts[1]);
     ship->use(ship, NULL, &g_edicts[2]); /* Cannot start the return while flying. */
     for (i = 0; i < 3; ++i) tick(ship);
-    assert(ship->count == 2 && !ship->nextthink && ship->s.origin[2] == 30);
+    assert(ship->count == 2 && ship->s.origin[2] == 30);
+    assert(ship->s.angles[PITCH] == -5 && ship->nextthink);
+    tick(ship);
+    assert(ship->s.angles[PITCH] == 0 && !ship->nextthink);
 
     /* The parked state, outbound route and callbacks survive save/load. */
     restore(path); ship = &g_edicts[ship_index];
@@ -323,6 +363,7 @@ static void test_outbound_flight_and_camera(const char *path)
 
     reset();
     coop->value = 1;
+    Q_strlcpy(level.mapname, "pp_sandstorm", sizeof(level.mapname));
     event = counter();
     camera = G_Spawn();
     camera->classname = "info_player_intermission";
@@ -340,6 +381,7 @@ static void test_outbound_flight_and_camera(const char *path)
     game.serverflags = SFL_CROSS_TRIGGER_MASK | 0x400;
     scene->use(scene, &g_edicts[1], &g_edicts[1]);
     assert(level.intermissiontime == 17 && !level.exitintermission);
+    assert(!strcmp(music_track, PP_MISSION_COMPLETE_MUSIC));
     assert(game.serverflags == 0x400);
     assert(event->count == 98);
     assert(center_calls[1] == 1 && center_calls[2] == 1);
@@ -373,6 +415,43 @@ static void test_outbound_flight_and_camera(const char *path)
     assert(center_calls[1] == 0 && center_calls[2] == 0);
     coop->value = 0;
     unlink(path);
+}
+static void test_completion_music(void)
+{
+    edict_t *camera, *exit;
+    usercmd_t input = {0};
+
+    reset();
+    Q_strlcpy(level.mapname, "pp_garden_infiltration", sizeof(level.mapname));
+    camera = G_Spawn();
+    camera->classname = "info_player_intermission";
+    exit = G_Spawn();
+    exit->map = "pp_sandbox_assault";
+    BeginIntermission(exit);
+    assert(level.intermissiontime == 10 && !level.exitintermission);
+    assert(!strcmp(music_track, PP_MISSION_COMPLETE_MUSIC));
+    assert(g_edicts[1].client->ps.pmove.pm_type == PM_FREEZE);
+    assert(center_calls[1] == 1 && center_calls[2] == 1);
+    input.buttons = BUTTON_ANY;
+    ClientThink(&g_edicts[1], &input);
+    assert(!level.exitintermission);
+    level.time = 15.1f;
+    ClientThink(&g_edicts[1], &input);
+    assert(level.exitintermission);
+
+    reset();
+    Q_strlcpy(level.mapname, "pp_sandstorm_briefing", sizeof(level.mapname));
+    exit = G_Spawn();
+    exit->map = "pp_garden_infiltration";
+    BeginIntermission(exit);
+    assert(level.exitintermission && !music_track[0]);
+
+    reset();
+    Q_strlcpy(level.mapname, "pp_sandbreak", sizeof(level.mapname));
+    exit = G_Spawn();
+    exit->map = "pp_sandbreak_end";
+    BeginIntermission(exit);
+    assert(level.exitintermission && !music_track[0]);
 }
 static void test_savegame(const char *path)
 {
@@ -416,6 +495,7 @@ int main(int argc, char **argv)
     assert(argc == 2);
     gi.linkentity = link_entity; gi.unlinkentity = unlink_entity;
     gi.setmodel = set_model; gi.modelindex = gi.soundindex = gi.imageindex = model_index;
+    gi.configstring = config_string;
     gi.TagMalloc = allocate; gi.FreeTags = no_free;
     gi.dprintf = print; gi.error = error;
     gi.WriteByte = write_byte; gi.WriteString = write_string; gi.unicast = unicast;
@@ -425,9 +505,12 @@ int main(int argc, char **argv)
     deathmatch = &zero; coop = &cooperative;
     game.clients = calloc(game.maxclients, sizeof(*game.clients));
     g_edicts = calloc(game.maxentities, sizeof(*g_edicts));
+    InitItems();
     test_extraction(); test_dropship_spawn_contract(); test_flight_vector_speed(); test_flight(); test_savegame(argv[1]);
+    test_dropship_turn(argv[1]);
     test_legacy_dropship_media_restore(argv[1]);
     test_outbound_flight_and_camera(argv[1]);
+    test_completion_music();
     puts("Sandstorm extraction, dropship round trip, cinematic camera and save/load passed");
     return 0;
 }

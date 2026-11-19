@@ -6,6 +6,45 @@ four giant ants. Start it with `exec sandstorm_solo.cfg` or
 `exec sandstorm_coop.cfg`; for local split-screen, start co-op first and then
 enter `map pp_sandstorm`.
 
+## Briefing room
+
+Choose New Game to start in the briefing room. You can also use
+`exec sandstorm_briefing_solo.cfg` or `exec sandstorm_briefing_coop.cfg`.
+In a local split-screen co-op session, use `map pp_sandstorm_briefing`.
+
+Approach the low war table to hear the General. Subtitles appear above the
+bottom HUD, with one caption shared across all local split-screen players.
+The table and wall diagram mark the garden drop point, Sandcastle One inside the
+sandbox, and extraction on the far side. The General explains that the first
+stage starts in the garden and leads to the sandbox breach. Once he finishes,
+the objective updates and the Deploy door opens. Walk through it to enter
+`pp_garden_infiltration`. Loading a save made during the briefing replays the
+performance from the beginning.
+
+The editable map is `maps/source/pp_sandstorm_briefing.map`. The mission pack
+`baseq2/operation-sandstorm-briefing.pk3` contains the compiled level, diagrams,
+animated General and the recording from `dialog_briefing1.wav`. The General
+uses the standard soldier's green skin, with a peaked cap and molded rank
+insignia. The pack runs with the current game module and uses
+`operation-garden-infiltration.pk3` for the first mission.
+
+Rebuild with the map compiler, Python with NumPy and Pillow, DejaVu fonts,
+and FFmpeg. The map generator is `tools/maps/build_sandstorm_briefing.py`.
+
+```sh
+python3 tools/maps/build_sandstorm_briefing.py --tool /path/to/q2tool
+```
+
+Use `--voice /path/to/general.wav` to build with a different recording. The build
+converts the clip to mono PCM and regenerates the mouth animation and deployment
+timing from it. The default recording's timed subtitles are in
+`tools/assets/sources/sandstorm-briefing.sub` and ship with that recording.
+Build the subtitle-capable client with `make client` and copy the rebuilt mission
+pack into `release/baseq2` for local play. Use `make game` if the portable game
+module needs to be rebuilt.
+
+## Sandstorm mission map
+
 The latest edited map is `baseq2/maps/pp_sandstorm.map`. It includes the user's
 November 8 geometry and encounter changes; `maps/source/pp_sandstorm.map` is an
 older snapshot and must not replace it. The sandbox WALs are built from the

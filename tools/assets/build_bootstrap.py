@@ -348,7 +348,7 @@ set lookstrafe 0
 set sensitivity 3
 set in_grab 2
 alias d1 "menu_main"
-alias newgame "map pp_garden_infiltration"
+alias newgame "map pp_sandstorm_briefing"
 alias dedicated_start "map pp_garden_infiltration"
 '''
     return assets

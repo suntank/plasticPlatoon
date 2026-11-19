@@ -919,80 +919,65 @@ SDL_Cache(sfx_t *sfx, wavinfo_t *info, byte *data, short volume,
 		  int begin_length, int  end_length,
 		  int attack_length, int fade_length)
 {
-	float stepscale;
+	int src_frames = info->samples / info->channels;
+	int64_t frames = (int64_t)src_frames * sound.speed / info->rate;
+	int width = s_loadas8bit->value ? 1 : info->width;
 	int i;
-	int len;
-	int sample;
 	sfxcache_t *sc;
-	unsigned int samplefrac = 0;
 
-	stepscale = (float)info->rate / sound.speed;
-	len = (int)(info->samples / stepscale);
-
-	if ((info->samples == 0) || (len == 0))
+	if (frames <= 0 || frames > (INT_MAX - (int)sizeof(*sc)) / width)
 	{
-		Com_Printf("WARNING: Zero length sound encountered: %s\n", sfx->name);
+		Com_Printf("WARNING: Invalid sound length: %s\n", sfx->name);
 		return false;
 	}
 
-	len = len * info->width * info->channels;
-	sc = sfx->cache = Z_Malloc(len + sizeof(sfxcache_t));
+	sc = sfx->cache = Z_Malloc(frames * width + sizeof(*sc));
 
 	if (!sc)
 	{
 		return false;
 	}
 
-	sc->loopstart = info->loopstart;
-	sc->stereo = info->channels - 1;
-	sc->length = (int)(info->samples / stepscale);
+	sc->loopstart = -1;
+	sc->stereo = 0;
+	sc->length = frames;
 	sc->speed = sound.speed;
+	sc->width = width;
 	sc->volume = volume;
 	sc->begin = begin_length * 1000 / info->rate;
 	sc->end = end_length * 1000 / info->rate;
 	sc->fade = fade_length * 1000 / info->rate;
 	sc->attack = attack_length * 1000 / info->rate;
 
-	if ((int)(info->samples / stepscale) == 0)
+	if (info->loopstart >= 0 && info->loopstart < src_frames)
 	{
-		Com_Printf("%s: Invalid sound file '%s' (zero length)\n",
-			__func__, sfx->name);
-		Z_Free(sfx->cache);
-		sfx->cache = NULL;
-		return false;
-	}
-
-	if (sc->loopstart != -1)
-	{
-		sc->loopstart = (int)(sc->loopstart / stepscale);
-	}
-
-	if (s_loadas8bit->value)
-	{
-		sc->width = 1;
-	}
-	else
-	{
-		sc->width = info->width;
-	}
-
-	/* resample / decimate to the current source rate */
-	for (i = 0; i < (int)(info->samples / stepscale); i++)
-	{
-		int srcsample;
-
-		srcsample = samplefrac >> 8;
-		samplefrac += (int)(stepscale * 256);
-
-		if (info->width == 2)
+		int loopstart = (int64_t)info->loopstart * sound.speed / info->rate;
+		if (loopstart < sc->length)
 		{
-			sample = LittleShort(((short *)data)[srcsample]);
+			sc->loopstart = loopstart;
 		}
+	}
 
-		else
+	/* Resample whole frames, averaging channels for the spatial mono mixer. */
+	for (i = 0; i < sc->length; i++)
+	{
+		int src_frame = (int64_t)i * info->rate / sound.speed;
+		int src_sample = src_frame * info->channels;
+		int sample = 0;
+		int channel;
+
+		for (channel = 0; channel < info->channels; channel++)
 		{
-			sample = (int)((unsigned char)(data[srcsample]) - 128) << 8;
+			if (info->width == 2)
+			{
+				sample += LittleShort(((short *)data)[src_sample + channel]);
+			}
+			else
+			{
+				sample += (data[src_sample + channel] - 128) * 256;
+			}
 		}
+		sample /= info->channels;
 
 		if (sc->width == 2)
 		{

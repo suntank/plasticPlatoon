@@ -101,7 +101,8 @@ GetWavinfo(char *name, byte *wav, int wavlength)
 {
 	wavinfo_t info;
 	int format;
-	int samples;
+	int frames;
+	int loop_frames = 0;
 
 	memset(&info, 0, sizeof(info));
 
@@ -147,6 +148,12 @@ GetWavinfo(char *name, byte *wav, int wavlength)
 	data_p += 4 + 2;
 	info.width = GetLittleShort() / 8;
 
+	if (info.channels < 1 || (info.width != 1 && info.width != 2))
+	{
+		memset(&info, 0, sizeof(info));
+		return info;
+	}
+
 	/* get cue chunk */
 	FindChunk("cue ");
 
@@ -170,7 +177,7 @@ GetWavinfo(char *name, byte *wav, int wavlength)
 				   but it works with cooledit... */
 				data_p += 24;
 				i = GetLittleLong(); /* samples in loop */
-				info.samples = info.loopstart + i;
+				loop_frames = info.loopstart + i;
 			}
 		}
 	}
@@ -189,21 +196,18 @@ GetWavinfo(char *name, byte *wav, int wavlength)
 	}
 
 	data_p += 4;
-	samples = GetLittleLong() / info.width;
+	frames = GetLittleLong() / (info.width * info.channels);
 
-	if (info.samples)
+	if (loop_frames)
 	{
-		if (samples < info.samples)
+		if (frames < loop_frames)
 		{
 			Com_Error(ERR_DROP, "%s: Sound %s has a bad loop length",
 				__func__, name);
 		}
+		frames = loop_frames;
 	}
-	else
-	{
-		info.samples = samples;
-	}
-
+	info.samples = frames * info.channels;
 	info.dataofs = (int)(data_p - wav);
 
 	return info;

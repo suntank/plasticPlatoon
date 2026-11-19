@@ -75,13 +75,6 @@ Con_ToggleConsole_f(void)
 		return;
 	}
 
-	if (cls.state == ca_disconnected)
-	{
-		/* start the demo loop again */
-		Cbuf_AddText("d1\n");
-		return;
-	}
-
 	Key_ClearTyping();
 	Con_ClearNotify();
 
@@ -92,10 +85,16 @@ Con_ToggleConsole_f(void)
 	}
 #endif
 
-	if (cls.key_dest == key_console)
+	if (cls.key_dest == key_console ||
+		(cls.state == ca_disconnected && cls.key_dest == key_game))
 	{
 		M_ForceMenuOff();
 		Cvar_Set("paused", "0");
+
+		if (cls.state == ca_disconnected)
+		{
+			M_Menu_Main_f();
+		}
 
 		/* play music */
 		if (Cvar_VariableValue("ogg_pausewithgame") == 1 &&

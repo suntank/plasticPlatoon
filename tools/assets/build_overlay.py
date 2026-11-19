@@ -181,12 +181,17 @@ def verify_overlay(source, output):
 
 
 def stage_portable(source, output):
-    """Stage all versioned mission packs, launcher, license and runtime notes."""
+    """Stage mission packs, loose music, launcher, license and runtime notes."""
     source, output = Path(source).resolve(), Path(output).resolve()
     if source != (ROOT / 'baseq2').resolve() or output.parent == source:
         return
     for package in sorted(source.glob('operation-*.pk3')):
         shutil.copyfile(package, output.parent / package.name)
+    # The music player streams Vorbis from disk rather than from archives.
+    for track in sorted((source / 'music').glob('*.ogg')):
+        destination = output.parent / 'music' / track.name
+        destination.parent.mkdir(exist_ok=True)
+        shutil.copyfile(track, destination)
     release = output.parent.parent
     launcher = release / 'play-portable.sh'
     launcher.write_bytes((ROOT / 'packaging/portable/launch.sh').read_bytes())

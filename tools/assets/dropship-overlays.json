@@ -14,6 +14,11 @@
       "untouched_sha256": "a3d2153924027c27fa3f932bfb24eefc4ce79b289a53b60026df49d8923d0cc5"
     },
     {
+      "path": "baseq2/operation-garden-infiltration.pk3",
+      "untouched_members": 46,
+      "untouched_sha256": "4cbdbec705c61f006876e04036d2f9196ca870d428bcfd88775a987405cf23d6"
+    },
+    {
       "path": "baseq2/operation-sandstorm-preview.pk3",
       "peer_owners": {
         "health": [

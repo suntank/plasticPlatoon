@@ -1813,6 +1813,162 @@ SCR_DrawScreenImageOverlay(const cl_screen_image_t *image,
 	SCR_AddDirtyPoint(draw_x + draw_w - 1, draw_y + draw_h - 1);
 }
 
+void
+CL_StartBriefingSubtitles(int sound_num)
+{
+	fileHandle_t file;
+	char data[4096];
+	char *cursor = data;
+	const char *token;
+	int size, count = 0;
+	long previous_end = 0;
+
+	/* Use the same event that starts the voice, even with audio disabled. */
+	if (strcmp(cl.configstrings[CS_SOUNDS + sound_num], "briefing/sandstorm.wav"))
+	{
+		return;
+	}
+
+	cl.briefing_subtitles.count = 0;
+	size = FS_FOpenFile("sound/briefing/sandstorm.sub", &file, false);
+	if (!file)
+	{
+		return;
+	}
+	if (size <= 0 || size >= (int)sizeof(data))
+	{
+		FS_FCloseFile(file);
+		return;
+	}
+	FS_Read(data, size, file);
+	FS_FCloseFile(file);
+	data[size] = '\0';
+
+	while ((token = COM_Parse(&cursor))[0])
+	{
+		cl_subtitle_cue_t *cue;
+		char *end;
+		long start_ms = strtol(token, &end, 10);
+		long end_ms;
+
+		if (*end || start_ms < previous_end || count == MAX_BRIEFING_SUBTITLE_CUES)
+		{
+			return;
+		}
+		token = COM_Parse(&cursor);
+		end_ms = strtol(token, &end, 10);
+		if (*end || end_ms <= start_ms || end_ms > 60000)
+		{
+			return;
+		}
+		token = COM_Parse(&cursor);
+		if (!token[0] || strlen(token) >= MAX_BRIEFING_SUBTITLE_TEXT)
+		{
+			return;
+		}
+
+		cue = &cl.briefing_subtitles.cues[count++];
+		cue->start_ms = start_ms;
+		cue->end_ms = end_ms;
+		Q_strlcpy(cue->text, token, sizeof(cue->text));
+		previous_end = end_ms;
+	}
+
+	cl.briefing_subtitles.started_at = cls.realtime;
+	cl.briefing_subtitles.count = count;
+}
+
+static void
+SCR_DrawBriefingSubtitles(qboolean split_screen)
+{
+	enum { MAX_COLUMNS = 48 };
+	char lines[8][MAX_COLUMNS + 1];
+	const char *text = NULL;
+	unsigned int elapsed = (unsigned int)cls.realtime - cl.briefing_subtitles.started_at;
+	int glyph = Q_max(CHAR_SIZE, viddef.height / 40);
+	float scale = (float)glyph / CHAR_SIZE;
+	int pad = glyph;
+	int columns = Q_min(MAX_COLUMNS, (viddef.width - 4 * pad) / glyph);
+	int hud_inset, x, y, width, height;
+	int line_height = glyph + glyph / 4;
+	int longest = 0, n = 0, i;
+
+	if (cls.state != ca_active || cls.key_dest != key_game || !cl.refresh_prepped ||
+		(cl.frame.playerstate.stats[STAT_LAYOUTS] & 3) || columns < 16)
+	{
+		return;
+	}
+
+	for (i = 0; i < cl.briefing_subtitles.count; ++i)
+	{
+		const cl_subtitle_cue_t *cue = &cl.briefing_subtitles.cues[i];
+
+		if (elapsed >= cue->start_ms && elapsed < cue->end_ms)
+		{
+			text = cue->text;
+			break;
+		}
+	}
+	if (!text)
+	{
+		return;
+	}
+
+	while (*text && n < (int)(sizeof(lines) / sizeof(lines[0])))
+	{
+		int remaining = strlen(text);
+		int length = Q_min(remaining, columns);
+
+		if (remaining > columns)
+		{
+			while (length > 0 && text[length] != ' ')
+			{
+				--length;
+			}
+			if (!length)
+			{
+				length = columns;
+			}
+		}
+		memcpy(lines[n], text, length);
+		lines[n++][length] = '\0';
+		longest = Q_max(length, longest);
+		text += length;
+		while (*text == ' ')
+		{
+			++text;
+		}
+	}
+
+	/* Clear the bottom status rows, including the solo grenade count and
+	 * the item and pickup indicators along the bottom of the split views. */
+	if (split_screen)
+	{
+		hud_inset = 44 * SCR_GetHUDScale();
+	}
+	else if (scr_gamebird_hud && scr_gamebird_hud->value)
+	{
+		hud_inset = 4 + 72 * SCR_GetHUDScale();
+	}
+	else
+	{
+		hud_inset = 88 * SCR_GetHUDScale();
+	}
+	width = longest * glyph + 2 * pad;
+	height = n * line_height + pad;
+	x = (viddef.width - width) / 2;
+	y = viddef.height - hud_inset - pad - height;
+	Draw_Fill(x, y, width, height, 0);
+	SCR_AddDirtyPoint(x, y);
+	SCR_AddDirtyPoint(x + width - 1, y + height - 1);
+	for (i = 0; i < n; ++i)
+	{
+		int line_x = (viddef.width - (int)strlen(lines[i]) * glyph) / 2;
+		DrawStringScaled(line_x, y + (height - ((n - 1) * line_height + glyph)) / 2 +
+			i * line_height, lines[i], scale);
+	}
+}
+
 // ----
 
 static void
@@ -2058,8 +2214,15 @@ SCR_UpdateScreen(void)
 				SCR_DrawCinematic();
 			}
 		}
+		else if (cls.state == ca_disconnected && cls.key_dest == key_menu)
+		{
+			R_EndWorldRenderpass();
+			M_Draw();
+		}
 		else
 		{
+			qboolean split_screen;
+
 			/* make sure the game palette is active */
 			if (cl.cinematicpalette_active)
 			{
@@ -2073,7 +2236,8 @@ SCR_UpdateScreen(void)
 			/* clear any dirty part of the background */
 			SCR_TileClear();
 
-			if (SS_RenderViews(separation[i]))
+			split_screen = SS_RenderViews(separation[i]);
+			if (split_screen)
 			{
 				SS_DrawGameplayHUD();
 
@@ -2130,6 +2294,7 @@ SCR_UpdateScreen(void)
 
 			M_Draw();
 			SS_DrawSessionOverlay();
+			SCR_DrawBriefingSubtitles(split_screen);
 
 			SCR_DrawLoading();
 		}

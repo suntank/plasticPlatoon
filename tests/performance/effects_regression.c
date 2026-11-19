@@ -74,6 +74,7 @@ struct image_s *CL_EnemyModelSkin(const char *path, int skin, int flags) { (void
 struct image_s *CL_PlayerWeaponSkin(const clientinfo_t *ci, const char *path) { (void)ci; (void)path; return NULL; }
 struct image_s *CL_PlayerLinkedWeaponSkin(const clientinfo_t *owner, const clientinfo_t *source, int weapon) { (void)owner; (void)source; (void)weapon; return NULL; }
 struct sfx_s *S_RegisterSound(const char *name) { snprintf(last_sound_name,sizeof(last_sound_name),"%s",name); return (struct sfx_s *)(uintptr_t)1; }
+void CL_StartBriefingSubtitles(int sound_num) { (void)sound_num; }
 void S_StartSound(vec3_t org, int entnum, int channel, struct sfx_s *sfx, float volume, float attenuation, float offset)
 {
     (void)org; (void)entnum; (void)sfx; (void)volume; (void)attenuation;

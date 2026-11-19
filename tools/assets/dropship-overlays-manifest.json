@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "generator": "tools/assets/build_dropship_overlays.py",
-  "config_sha256": "2458e0c57e4e7aae8d0413c897d052091b1715163ee5723397f6d434c25dd0f3",
-  "dropship_manifest_sha256": "754e823b534f7f99a318c3cf432c59732fc876e18186f29df8ee98b2ea26d26e",
+  "config_sha256": "7968c6919983ad5a1044f637b6881d12c17dbf2e939534858d39606e675368dd",
+  "dropship_manifest_sha256": "658c1519cce1df4c357ed93675e4e6546b13b5c7602f36e6c38c4b2d24922be7",
   "archives": [
     {
       "path": "baseq2/operation-endline.pk3",
@@ -10,22 +10,45 @@
       "untouched_sha256": "a3d2153924027c27fa3f932bfb24eefc4ce79b289a53b60026df49d8923d0cc5",
       "managed": {
         "models/vehicles/platoon_dropship/body.md2": {
-          "bytes": 29504,
-          "sha256": "769f45d7893835fd07c8a8de612efccbd1ec9d0b2bcc056328414bccfa13f6e1"
+          "bytes": 29828,
+          "sha256": "dc47a7bfc85d4ff6f1a9cf25f040c3264f683158e359e358094cac897b816c59"
         },
         "models/vehicles/platoon_dropship/green.png": {
-          "bytes": 2154,
-          "sha256": "639008d133f12fe5ce271cad4d0f44bc58177d6bcccfda4d6ca7e19d2d582754"
+          "bytes": 5009,
+          "sha256": "9cf285f073c416df42bc4bae7f368cc7e56d9f7192c72f582add14dfe21c6873"
         },
         "models/vehicles/platoon_dropship/main_rotor.md2": {
-          "bytes": 3672,
-          "sha256": "b30a7873411e97abf1920994e417661ce822d723931a66835fca5f27b887224a"
+          "bytes": 3588,
+          "sha256": "064146136e6024d38e68ff0f65d5cbc90cfa41c29bbba4718b1ebdf1472ffce9"
         }
       },
       "separately_owned": {},
-      "bytes": 3265102,
-      "sha256": "07b3b2080f1c9274875f4defbb2906978fa50998820694b7878b84ea2f6ec42b",
+      "bytes": 3268675,
+      "sha256": "9498febc25ed4da97cb59353b347e4e89769a047c00e20b97b932498e8f5ec43",
       "members": 94
+    },
+    {
+      "path": "baseq2/operation-garden-infiltration.pk3",
+      "untouched_members": 46,
+      "untouched_sha256": "4cbdbec705c61f006876e04036d2f9196ca870d428bcfd88775a987405cf23d6",
+      "managed": {
+        "models/vehicles/platoon_dropship/body.md2": {
+          "bytes": 29828,
+          "sha256": "dc47a7bfc85d4ff6f1a9cf25f040c3264f683158e359e358094cac897b816c59"
+        },
+        "models/vehicles/platoon_dropship/green.png": {
+          "bytes": 5009,
+          "sha256": "9cf285f073c416df42bc4bae7f368cc7e56d9f7192c72f582add14dfe21c6873"
+        },
+        "models/vehicles/platoon_dropship/main_rotor.md2": {
+          "bytes": 3588,
+          "sha256": "064146136e6024d38e68ff0f65d5cbc90cfa41c29bbba4718b1ebdf1472ffce9"
+        }
+      },
+      "separately_owned": {},
+      "bytes": 4664519,
+      "sha256": "346db4a4956474f311d4a8c82dee41b56f83d18cd8fc1236ed372c00e25a3170",
+      "members": 49
     },
     {
       "path": "baseq2/operation-sandstorm-preview.pk3",
@@ -33,16 +56,16 @@
       "untouched_sha256": "6aa9f9a5846943c51fdb19efc1c4de4ab7c07fd1aed2fb1d4e271f283c9d4712",
       "managed": {
         "models/vehicles/platoon_dropship/body.md2": {
-          "bytes": 29504,
-          "sha256": "769f45d7893835fd07c8a8de612efccbd1ec9d0b2bcc056328414bccfa13f6e1"
+          "bytes": 29828,
+          "sha256": "dc47a7bfc85d4ff6f1a9cf25f040c3264f683158e359e358094cac897b816c59"
         },
         "models/vehicles/platoon_dropship/green.png": {
-          "bytes": 2154,
-          "sha256": "639008d133f12fe5ce271cad4d0f44bc58177d6bcccfda4d6ca7e19d2d582754"
+          "bytes": 5009,
+          "sha256": "9cf285f073c416df42bc4bae7f368cc7e56d9f7192c72f582add14dfe21c6873"
         },
         "models/vehicles/platoon_dropship/main_rotor.md2": {
-          "bytes": 3672,
-          "sha256": "b30a7873411e97abf1920994e417661ce822d723931a66835fca5f27b887224a"
+          "bytes": 3588,
+          "sha256": "064146136e6024d38e68ff0f65d5cbc90cfa41c29bbba4718b1ebdf1472ffce9"
         }
       },
       "separately_owned": {

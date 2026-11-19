@@ -284,6 +284,76 @@ SP_target_speaker(edict_t *ent)
 
 /* ========================================================== */
 
+/* QUAKED misc_platoon_briefing (.4 .7 .4) (-16 -16 0) (16 16 72)
+ * Play a one-shot MD2 performance and voice-over together when used.
+ * "model" names an MD2 with a resting pose at frame 0.
+ * "noise" names the voice WAV. "count" is the last performance frame at 10 Hz.
+ * "target" fires when the performance ends.
+ */
+void
+platoon_briefing_think(edict_t *self)
+{
+	int i;
+	qboolean has_listener = false;
+
+	if (self->s.frame == 0)
+	{
+		/* On load the listeners reconnect after the level has been restored. */
+		for (i = 1; i <= game.maxclients; ++i)
+		{
+			edict_t *player = &g_edicts[i];
+			if (player->inuse && player->client && player->client->pers.connected)
+			{
+				has_listener = true;
+				break;
+			}
+		}
+		if (!has_listener)
+		{
+			self->nextthink = level.time + FRAMETIME;
+			return;
+		}
+		gi.positioned_sound(self->s.origin, self, CHAN_VOICE | CHAN_RELIABLE,
+				self->noise_index, 1, ATTN_NONE, 0);
+	}
+	if (self->s.frame < self->count)
+	{
+		self->s.frame++;
+		self->nextthink = level.time + FRAMETIME;
+		return;
+	}
+
+	self->s.frame = 0;
+	self->think = NULL;
+	G_UseTargets(self, self->activator && self->activator->inuse ? self->activator : self);
+}
+
+void
+platoon_briefing_use(edict_t *self, edict_t *other, edict_t *activator)
+{
+	self->use = NULL;
+	self->activator = activator;
+	self->think = platoon_briefing_think;
+	self->nextthink = level.time + FRAMETIME;
+}
+
+void
+SP_misc_platoon_briefing(edict_t *self)
+{
+	if (!self->model || !st.noise || self->count < 1 || self->count > 511)
+	{
+		gi.dprintf("Invalid briefing model, sound or frame count at %s\n", vtos(self->s.origin));
+		G_FreeEdict(self);
+		return;
+	}
+	self->s.modelindex = gi.modelindex(self->model);
+	self->noise_index = gi.soundindex(st.noise);
+	self->use = platoon_briefing_use;
+	gi.linkentity(self);
+}
+
+/* ========================================================== */
+
 static void
 Target_Help_Apply(const char *msg, int is_primary)
 {
@@ -457,7 +527,10 @@ use_target_goal(edict_t *ent, edict_t *other /* unused */, edict_t *activator /*
 
 	if (level.found_goals == level.total_goals)
 	{
-		gi.configstring(CS_CDTRACK, "0");
+		/* Reaching the far eave completes the Attic without a map change. */
+		gi.configstring(CS_CDTRACK,
+			!strcmp(level.mapname, "pp_attic") && ent->targetname &&
+			!strcmp(ent->targetname, "attic_exit") ? PP_MISSION_COMPLETE_MUSIC : "0");
 	}
 
 	G_UseTargets(ent, activator);

@@ -3,8 +3,8 @@
   "files": [
     {
       "path": "default.cfg",
-      "bytes": 1390,
-      "sha256": "f257d74c46dffc66310949793efa5312e59df3ee77eaf3696cc3b1a722c95214"
+      "bytes": 1389,
+      "sha256": "0d17356cff2a23d2f0d3bc0f137abae2162a696101477d5f1652b50b5a41b65c"
     },
     {
       "path": "env/bluesky1bk.png",
@@ -1118,18 +1118,18 @@
     },
     {
       "path": "models/vehicles/platoon_dropship/body.md2",
-      "bytes": 29504,
-      "sha256": "769f45d7893835fd07c8a8de612efccbd1ec9d0b2bcc056328414bccfa13f6e1"
+      "bytes": 29828,
+      "sha256": "dc47a7bfc85d4ff6f1a9cf25f040c3264f683158e359e358094cac897b816c59"
     },
     {
       "path": "models/vehicles/platoon_dropship/green.png",
-      "bytes": 2154,
-      "sha256": "639008d133f12fe5ce271cad4d0f44bc58177d6bcccfda4d6ca7e19d2d582754"
+      "bytes": 5009,
+      "sha256": "9cf285f073c416df42bc4bae7f368cc7e56d9f7192c72f582add14dfe21c6873"
     },
     {
       "path": "models/vehicles/platoon_dropship/main_rotor.md2",
-      "bytes": 3672,
-      "sha256": "b30a7873411e97abf1920994e417661ce822d723931a66835fca5f27b887224a"
+      "bytes": 3588,
+      "sha256": "064146136e6024d38e68ff0f65d5cbc90cfa41c29bbba4718b1ebdf1472ffce9"
     },
     {
       "path": "models/weapons/g_bfg/skin.png",
@@ -3170,6 +3170,16 @@
       "path": "pics/pause.pcx",
       "bytes": 1258,
       "sha256": "43895ba21026c6a9e13fe42d727ef83680999c753cb9d05e98bf388bb00be303"
+    },
+    {
+      "path": "pics/pp_menu_background.jpg",
+      "bytes": 142238,
+      "sha256": "08f156990c0d7f2f68178dffc4e45c717ef2c2052037a9d4ef465f2939184543"
+    },
+    {
+      "path": "pics/pp_menu_background_square.jpg",
+      "bytes": 55736,
+      "sha256": "6fd6d5cc3b1509b9a05039bb07160bee88b6098d7933cbcca1dad44d7d209eb3"
     },
     {
       "path": "pics/quit.pcx",
@@ -5582,6 +5592,6 @@
       "sha256": "289b9b1453cf1d07f8b3a1f29b1b299152aea7978ead935faae241c71e55f200"
     }
   ],
-  "archive_sha256": "7ad30b68bcc463696f5ad7c89ffd7b249ffb6c7541c4723a40ad1efccd3a66b8",
-  "archive_bytes": 63980172
+  "archive_sha256": "e321637aaa6c64475da9eab7255ca6466bd494a4c36c4a3fb157b42ca9a31ece",
+  "archive_bytes": 64181998
 }

@@ -20,7 +20,9 @@ make -j4 all
 ./release/play-portable.sh
 ```
 
-Level 1 is `pp_garden_infiltration`; the launcher and new games start here.
+The launcher opens the main menu. New Game starts in the Operation Sandstorm
+briefing room. After the General finishes, walk through the Deploy door to
+enter Level 1, `pp_garden_infiltration`.
 The game uses only its own data
 directory and keeps settings and saves in `release/baseq2`. Copy the entire `release` folder
 to another compatible machine. No numbered Quake II PAKs are release inputs.
@@ -37,6 +39,7 @@ button to slash. Use the console to launch a test mission.
 | --- | --- |
 | `exec bedroom_solo.cfg` | Operation Nightlight / Bedroom |
 | `exec endline_solo.cfg` | Operation End of the Line / Toy railway |
+| `exec sandstorm_briefing_solo.cfg` | Operation Sandstorm / [Briefing and deployment](maps/README-sandstorm.md) |
 | `exec sandkeep_solo.cfg` | Sandkeep |
 | `exec sandwatch_solo.cfg` | Sandwatch |
 | `map pp_garden` | Garden |
@@ -50,7 +53,7 @@ button to slash. Use the console to launch a test mission.
 | `exec ant_test.cfg` | Giant ant range |
 | `exec spider_test.cfg` | Giant spider range |
 
-The Bedroom, Sandkeep and Sandwatch missions also have `_coop.cfg` launch
+The Bedroom, Sandstorm briefing, Sandkeep and Sandwatch missions also have `_coop.cfg` launch
 configs. See each mission's guide under `maps/` for details. Weapons and muzzle
 flashes use [the versioned tuning profile](baseq2/tuning/README.md).
 

@@ -2,9 +2,10 @@
 
 These files adapt Plastic Platoon to the current Game Bird native-package
 format used alongside Drop Grid. `game.json` launches `launch.sh`; copy
-`gamebird.cfg` into the package's `baseq2/` directory. The default launch starts
-`pp_garden_infiltration`, the official first level. No global SDL, input, boot,
-or root-filesystem changes are needed.
+`gamebird.cfg` into the package's `baseq2/` directory. The launcher opens the
+main menu. New Game starts in the Operation Sandstorm briefing room. The Deploy
+door opens after the General finishes and leads to `pp_garden_infiltration`.
+No global SDL, input, boot, or root-filesystem changes are needed.
 
 ## Installed Pi
 
@@ -279,9 +280,9 @@ restart the shell afterward, including on failure. Merely pausing the shell
 leaves its exclusive input grab in place. Do not run the engine as root.
 
 For direct diagnostics, set `GAMEBIRD_GAME_DIR` and `GAMEBIRD_SAVE_DIR`, then
-run `launch.sh` with extra engine arguments. Explicit arguments replace the
-default map command. `PLASTIC_PLATOON_RENDERER=gles1` selects the alternate
-built renderer; `PLASTIC_PLATOON_MAP` changes the default map.
+run `launch.sh` with extra engine arguments. `PLASTIC_PLATOON_RENDERER=gles1`
+selects the alternate built renderer. `PLASTIC_PLATOON_MAP` launches a map
+directly when no engine arguments are supplied.
 
 ## Pickup distance LOD update (2026-11-12)
 

@@ -83,12 +83,9 @@ Menu_DrawCompactText(int x, int y, const char *text, int maxchars, qboolean acce
 	}
 }
 
-void
-Menu_DrawCompactFrame(const char *title, const char *subtitle)
+static void
+Menu_DrawCompactHeader(const char *title, const char *subtitle)
 {
-	/* Opaque charcoal/teal panels keep scenery from competing with small type.
-	 * Palette indices refer to Plastic Platoon's original RGB-cube palette. */
-	Draw_Fill(0, 0, VID_WIDTH, VID_HEIGHT, 219);
 	Draw_Fill(0, 0, VID_WIDTH, 36, 7);
 	Draw_Fill(8, 8, 2, 20, 140);
 	if (title && !strcmp(title, "PLASTIC PLATOON"))
@@ -105,6 +102,13 @@ Menu_DrawCompactFrame(const char *title, const char *subtitle)
 	}
 	Menu_DrawCompactText(16, 23, subtitle ? subtitle : "FIELD SETTINGS", (VID_WIDTH - 28) / 8, true);
 	Draw_Fill(8, 35, VID_WIDTH - 16, 1, 50);
+}
+
+void
+Menu_DrawCompactFrame(const char *title, const char *subtitle)
+{
+	Draw_Fill(0, 0, VID_WIDTH, VID_HEIGHT, 219);
+	Menu_DrawCompactHeader(title, subtitle);
 }
 
 void
@@ -141,12 +145,25 @@ Menu_DrawCompact(menuframework_s *menu)
 	menucommon_s *focus = Menu_ItemAtCursor(menu);
 	int i, y, bottom = VID_HEIGHT - 34, total = 0, position = 0;
 	int ordinal = 0, choices = 0;
+	int panel_width = VID_WIDTH;
+	int row_width = VID_WIDTH - 20;
 	int columns = (VID_WIDTH - 40) / 8;
 	qboolean full = false;
 	const char *help = focus && focus->statusbar ? focus->statusbar : menu->statusbar;
 	char value[128], count[24];
 
-	Menu_DrawCompactFrame(menu->title, menu->subtitle);
+	if (menu->compact_panel_width > 0)
+	{
+		panel_width = menu->compact_panel_width;
+		columns = (panel_width - 24) / 8;
+		row_width = panel_width - 12;
+		Draw_Fill(0, 36, panel_width, VID_HEIGHT - 36, 219);
+		Menu_DrawCompactHeader(menu->title, menu->subtitle);
+	}
+	else
+	{
+		Menu_DrawCompactFrame(menu->title, menu->subtitle);
+	}
 	if (menu->nitems == 0)
 	{
 		Menu_DrawCompactFooter(help);
@@ -207,7 +224,7 @@ Menu_DrawCompact(menuframework_s *menu)
 			y += height;
 			continue;
 		}
-		Draw_Fill(8, y, VID_WIDTH - 20, height - 2, selected ? 50 : 221);
+		Draw_Fill(8, y, row_width, height - 2, selected ? 50 : 221);
 		if (selected)
 		{
 			Draw_Fill(8, y, 3, height - 2, 140);
@@ -265,7 +282,7 @@ Menu_DrawCompact(menuframework_s *menu)
 		}
 		if (selected && (item->type == MTYPE_SLIDER || item->type == MTYPE_SPINCONTROL))
 		{
-			Menu_DrawCompactText(VID_WIDTH - 32, y + 19, "<>", 2, true);
+			Menu_DrawCompactText(panel_width - 32, y + 19, "<>", 2, true);
 		}
 		y += height;
 	}
@@ -273,14 +290,17 @@ Menu_DrawCompact(menuframework_s *menu)
 	{
 		int track = bottom - 40;
 		int thumb = Q_max(8, track * track / total);
-		Draw_Fill(VID_WIDTH - 6, 40, 2, track, 43);
-		Draw_Fill(VID_WIDTH - 6, 40 + (track - thumb) * Q_min(position, total - track) /
+		Draw_Fill(panel_width - 6, 40, 2, track, 43);
+		Draw_Fill(panel_width - 6, 40 + (track - thumb) * Q_min(position, total - track) /
 			Q_max(1, total - track), 2, thumb, 140);
 	}
-	/* Position is useful on long settings/save lists and doesn't consume a row. */
-	Com_sprintf(count, sizeof(count), "%d/%d", ordinal, choices);
-	Draw_Fill(VID_WIDTH - 64, 22, 56, 10, 7);
-	Menu_DrawCompactText(VID_WIDTH - 64, 23, count, 7, false);
+	if (!menu->compact_panel_width || total > bottom - 40)
+	{
+		/* Position is useful on long settings/save lists and doesn't consume a row. */
+		Com_sprintf(count, sizeof(count), "%d/%d", ordinal, choices);
+		Draw_Fill(VID_WIDTH - 64, 22, 56, 10, 7);
+		Menu_DrawCompactText(VID_WIDTH - 64, 23, count, 7, false);
+	}
 	Menu_DrawCompactFooter(help);
 }
 

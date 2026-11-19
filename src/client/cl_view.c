@@ -341,8 +341,7 @@ CL_PrepRefresh(void)
 	cl.refresh_prepped = true;
 	cl.force_refdef = true; /* make sure we have a valid refdef */
 
-	/* start the cd track */
-	OGG_PlayTrack(cl.configstrings[CS_CDTRACK], true, true);
+	OGG_PlayMapMusic();
 }
 
 float

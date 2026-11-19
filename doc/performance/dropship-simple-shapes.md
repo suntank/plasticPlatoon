@@ -1,10 +1,9 @@
 # Authored friendly green dropship
 
-The player's green transport now has its own original low-poly body and main
-rotor. A broad cabin, dark canopy, twin engine housings, stub wings, raised
-tail and landing skids retain the larger transport silhouette. The molded
-plastic panels use the same visual language as the authored enemy helicopter,
-with green transport markings on one 256 by 256 RGB atlas.
+The player's green transport has an original low-poly body and main rotor.
+The wide troop cabin has framed cockpit glazing, star-marked cargo doors and
+step sponsons. The shrouded tail fan, molded skids and swept main rotor tips
+read from side and overhead views. Both meshes use one 256 by 256 RGB atlas.
 
 Both models use a single static frame. The existing client attachment still
 places and spins the separate rotor around the original axle and body socket.
@@ -16,9 +15,9 @@ behavior keep their existing values.
 
 | Part | Previous triangles | Current triangles | Reduction |
 | --- | ---: | ---: | ---: |
-| Body | 2,580 | 656 | 74.6% |
-| Main rotor | 411 | 76 | 81.5% |
-| Combined | 2,991 | 732 | 75.5% |
+| Body | 2,580 | 680 | 73.6% |
+| Main rotor | 411 | 80 | 80.5% |
+| Combined | 2,991 | 760 | 74.6% |
 
 `dropship-manifest.json` records every output hash, decoded geometry count,
 quantization check, material group, bound and attachment anchor. Geometry
@@ -38,28 +37,27 @@ The old `models/monsters/boss2/` body, rotor and shared skin also serve the
 legacy enemy. They remain unchanged and retain their existing ownership.
 The new owner adds three files, with no legacy model or texture retirement.
 The optional Pi actor overlay covers four other actor bodies and cannot
-restore the former friendly transport. Source-map and archive audits found
-three friendly movers: two in Sandstorm and one in Endline, with no static
-model override requiring a map edit.
+restore the former friendly transport. The mission archives contain four
+friendly movers, with two in Sandstorm and one each in Endline and Garden
+Infiltration.
 
-`build_dropship_overlays.py` appends only the three dedicated files to the
-existing `operation-endline.pk3` and `operation-sandstorm-preview.pk3`.
-All 91 original Endline member contents stay pinned. Sandstorm retains the
-same 55 immutable member fingerprints, including the edited map/BSP,
-materials and old health compatibility atlas. Its separately owned booster
-model/atlas remain under the health archive gate.
+`build_dropship_overlays.py` synchronizes the three dedicated files in
+`operation-endline.pk3`, `operation-garden-infiltration.pk3` and
+`operation-sandstorm-preview.pk3`. It verifies 91 immutable Endline members,
+46 Garden Infiltration members and 55 Sandstorm members. The separate
+health archive gate verifies Sandstorm's booster model and atlas.
 
 Each shared-archive gate excludes only the fixed, registered paths of the
 other owner and verifies its own exact canonical payload plus all immutable
 members. Both gates together verify the five authored payload files. A shared
 receipt deliberately excludes a volatile whole-ZIP hash, allowing either
-owner to update its assets without invalidating the other's proof. Endline's
-receipt also records its complete archive hash. Arbitrary exemption paths,
+owner to update its assets without invalidating the other's proof. The Endline
+and Garden Infiltration receipts also record each complete archive hash. Arbitrary exemption paths,
 unregistered peer paths and exemptions in the wrong archive are rejected.
 
 All archive plans are validated before the first write. Each changed archive
 is installed with a same-directory atomic replacement; there is no claimed
-transaction across both archives. Existing member metadata and archive
+transaction across multiple archives. Existing member metadata and archive
 comments are retained. No map generator, compiler or mission packager runs
 during sync. In particular, older Sandstorm packager defaults must not be
 used to replace the newer edited map. Future mission packaging collects the
@@ -117,6 +115,14 @@ friendly ship's `use` callback. Mission objective and combat gates are bypassed
 for scene setup; this is not a complete mission playthrough. Each report keeps
 the exact engine, game, renderer, core archive, mission archive and BSP hashes,
 plus native ship state, actual rendered attachment transforms and camera state.
+
+The revised transport was captured in the GL3 gallery, on the Sandstorm and
+Endline routes and during Garden Infiltration's departure. Local reports are
+in `build/dropship-final` and `build/dropship-final-garden`. The GL1 gallery
+is in `build/dropship-final-gl1`. Clearance checks sample all three maps
+with the decoded MD2 positions and the full rotor sweep.
+
+### Original transport rollout
 
 Final GL1 and software reports are
 `build/dropship-qa-gl1-final/report.json` and

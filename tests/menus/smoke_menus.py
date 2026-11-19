@@ -88,7 +88,10 @@ def main():
         captures.append(label)
         expectations[label] = menu
 
-    # Running a tiny isolated map exercises the real pause menu and enables Save.
+    capture('startup', 'main', delay=1200)
+    action('key', 'enter')
+    action('top', symbols[MENU_SYMBOLS['game']])
+    action('key', 'enter')
     action('cmd', 'set joy_advanced 1', delay=4000)
     for menu in entries:
         action('open', 'menu_'+menu, delay=250)
@@ -124,7 +127,7 @@ def main():
                '+set', 'r_customheight', str(height), '+set', 'r_menuscale', '-1',
                '+set', 's_initsound', '0', '+set', 'r_vsync', '0',
                '+set', 'allow_download', '0', '+set', 'vid_maxfps', '60',
-               '+set', 'logfile', '2', '+map', 'pp_sandbox_coop1']
+               '+set', 'logfile', '2', '+set', 'developer', '1']
     with (output/'console.log').open('w') as log:
         result = subprocess.run(command, cwd=runtime, env=env, stdout=log,
                                 stderr=subprocess.STDOUT, timeout=180)
@@ -161,6 +164,12 @@ def main():
                     check(state['top'] > 0, f'{label}: long menu failed to scroll')
     check(result.returncode == 0, f'client exited {result.returncode}')
     check('PP_MENU_ERROR' not in log, 'runtime fixture reported an error')
+    startup_log, _, gameplay_log = log.partition('PP_MENU_ACTION key enter')
+    check('SpawnServer:' not in startup_log, 'startup loaded a map or demo')
+    check(re.search(r'loaded: pics/pp_menu_background(?:_square)?\.jpg', startup_log),
+          'startup background did not load')
+    check(re.findall(r'^SpawnServer: (\S+)', gameplay_log, re.M) == ['pp_sandstorm_briefing'],
+          'New Game did not start in the Sandstorm briefing room')
     check(snapshots.get('binding_prompt', {}).get('value') == 'Press a button...', 'binding prompt did not become active')
     check('reserved' in snapshots.get('reserved_save_popup', {}).get('popup', ''), 'reserved-slot popup did not open')
     report = {'returncode': result.returncode, 'size': args.size, 'renderer': args.renderer,

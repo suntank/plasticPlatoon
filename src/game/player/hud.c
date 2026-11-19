@@ -81,6 +81,8 @@ BeginIntermission(edict_t *targ)
 {
 	int i;
 	edict_t *ent;
+	qboolean mission_complete;
+	qboolean new_unit;
 
 	if (!targ)
 	{
@@ -114,8 +116,15 @@ BeginIntermission(edict_t *targ)
 
 	level.intermissiontime = level.time;
 	level.changemap = targ->map;
+	new_unit = strchr(level.changemap, '*') != NULL;
 
-	if (strstr(level.changemap, "*"))
+	/* Deployment and the Sandbreak debrief already have their own flow. */
+	mission_complete = !deathmatch->value && !strncmp(level.mapname, "pp_", 3) &&
+		strcmp(level.mapname, "pp_sandstorm_briefing") &&
+		strcmp(level.mapname, "pp_sandbreak_end") &&
+		strcmp(level.changemap, "pp_sandbreak_end");
+
+	if (new_unit)
 	{
 		if (coop->value)
 		{
@@ -144,16 +153,17 @@ BeginIntermission(edict_t *targ)
 			}
 		}
 	}
-	else
+	else if (!deathmatch->value && !mission_complete)
 	{
-		if (!deathmatch->value)
-		{
-			level.exitintermission = 1; /* go immediately to the next level */
-			return;
-		}
+		level.exitintermission = 1; /* go immediately to the next level */
+		return;
 	}
 
 	level.exitintermission = 0;
+	if (mission_complete)
+	{
+		gi.configstring(CS_CDTRACK, PP_MISSION_COMPLETE_MUSIC);
+	}
 
 	/* find an intermission spot */
 	ent = G_Find(NULL, FOFS(classname), "info_player_intermission");
@@ -210,6 +220,10 @@ BeginIntermission(edict_t *targ)
 		}
 
 		MoveClientToIntermission(client);
+		if (mission_complete && !new_unit && client->client->pers.connected)
+		{
+			gi.centerprintf(client, "MISSION COMPLETE\nPress a button after five seconds.");
+		}
 	}
 }
 

@@ -774,6 +774,8 @@ extern void Use_Target_Help ( edict_t * ent , edict_t * other , edict_t * activa
 extern void Target_Help_Think ( edict_t * ent );
 extern void SP_target_speaker ( edict_t * ent ) ;
 extern void Use_Target_Speaker ( edict_t * ent , edict_t * other , edict_t * activator ) ;
+extern void platoon_briefing_think ( edict_t * self ) ;
+extern void platoon_briefing_use ( edict_t * self , edict_t * other , edict_t * activator ) ;
 extern void SP_target_temp_entity ( edict_t * ent ) ;
 extern void Use_Target_Tent ( edict_t * ent , edict_t * other , edict_t * activator ) ;
 extern void ServerCommand ( void ) ;

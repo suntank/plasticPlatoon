@@ -243,7 +243,7 @@ M_PushMenu(menuframework_s* menu)
 #endif
 
 	/* pause music */
-	if (Cvar_VariableValue("ogg_pausewithgame") == 1 &&
+	if (cls.state == ca_active && Cvar_VariableValue("ogg_pausewithgame") == 1 &&
 		OGG_Status() == PLAY && cl.attractloop == false)
 	{
 		Cbuf_AddText("ogg toggle\n");
@@ -689,7 +689,7 @@ static menubitmap_s s_multiplayer;
 static menubitmap_s s_options;
 static menubitmap_s s_video;
 static menubitmap_s s_quit;
-static menuaction_s s_compact_main[6];
+static menuaction_s s_main_actions[6];
 
 static void
 ResumeGameFunc(void *unused)
@@ -749,11 +749,11 @@ InitMainMenu(void)
 		0
 	};
 
-	if (Menu_IsCompact())
+	if (Menu_IsCompact() || cls.state == ca_disconnected)
 	{
 		static const char *labels[] = {
 			"Resume mission", "New game / saves", "Multiplayer",
-			"Options & controls", "Display settings", "Return to Game Bird"
+			"Options & controls", "Display settings", "Quit"
 		};
 		static const char *help[] = {
 			"Return to the action", "Difficulty, load & save",
@@ -765,16 +765,16 @@ InitMainMenu(void)
 		};
 
 		memset(&s_main, 0, sizeof(s_main));
-		memset(s_compact_main, 0, sizeof(s_compact_main));
+		memset(s_main_actions, 0, sizeof(s_main_actions));
 		s_main.title = "PLASTIC PLATOON";
 		s_main.subtitle = cls.state == ca_active ? "MISSION PAUSED" : "FIELD COMMAND";
 		for (i = cls.state == ca_active ? 0 : 1; i < 6; i++)
 		{
-			s_compact_main[i].generic.type = MTYPE_ACTION;
-			s_compact_main[i].generic.name = labels[i];
-			s_compact_main[i].generic.statusbar = help[i];
-			s_compact_main[i].generic.callback = callbacks[i];
-			Menu_AddItem(&s_main, &s_compact_main[i]);
+			s_main_actions[i].generic.type = MTYPE_ACTION;
+			s_main_actions[i].generic.name = labels[i];
+			s_main_actions[i].generic.statusbar = help[i];
+			s_main_actions[i].generic.callback = callbacks[i];
+			Menu_AddItem(&s_main, &s_main_actions[i]);
 		}
 		return;
 	}
@@ -877,27 +877,57 @@ InitMainMenu(void)
 	Menu_Center(&s_main);
 }
 
+static void
+M_Main_DrawTitle(void)
+{
+	float scale = SCR_GetMenuScale();
+	int x = viddef.width / 12;
+	int row_height = 22 * scale;
+	int title_height = 38 * scale;
+	int y = (viddef.height - title_height - row_height * s_main.nitems) / 2;
+
+	DrawAltStringScaled(x, y, s_main.title, scale * 2);
+	y += title_height;
+	for (int i = 0; i < s_main.nitems; i++, y += row_height)
+	{
+		const menucommon_s *item = s_main.items[i];
+		int text_x = x + 12 * scale;
+		int text_y = y + 6 * scale;
+
+		if (i == s_main.cursor)
+		{
+			Draw_Fill(x, y, 164 * scale, row_height - 2, 7);
+			Draw_Fill(x, y, 2 * scale, row_height - 2, 140);
+			DrawAltStringScaled(text_x, text_y, item->name, scale);
+		}
+		else
+		{
+			DrawStringScaled(text_x, text_y, item->name, scale);
+		}
+	}
+}
 
 static void
 M_Main_Draw(void)
 {
-	const menucommon_s * item = NULL;
-	int x = 0;
-	int y = 0;
+	const menucommon_s *item = Menu_ItemAtCursor(&s_main);
+	qboolean compact = Menu_IsCompact();
 
-	item = ( menucommon_s * )s_main.items[s_main.cursor];
-
-	if (item)
+	if (!compact && item && item->type == MTYPE_ACTION)
 	{
-		x = item->x;
-		y = item->y;
+		M_Main_DrawTitle();
+		return;
 	}
 
 	s_main.title = "PLASTIC PLATOON";
+	/* Leave an illustrated strip beside the handheld title menu. */
+	s_main.compact_panel_width = cls.state == ca_disconnected && viddef.width >= 224 ? 168 : 0;
 	Menu_Draw(&s_main);
-	if (Menu_IsCompact()) return;
-	M_DrawCursor(x - m_cursor_width, y,
-		( int )(cls.realtime / 100) % NUM_CURSOR_FRAMES);
+	if (!compact && item)
+	{
+		M_DrawCursor(item->x - m_cursor_width, item->y,
+			(cls.realtime / 100) % NUM_CURSOR_FRAMES);
+	}
 }
 
 static const char *
@@ -932,6 +962,10 @@ M_Menu_Main_f(void)
 	s_main.key  = M_Main_Key;
 
 	M_PushMenu(&s_main);
+	if (cls.state == ca_disconnected && cls.key_dest == key_menu)
+	{
+		OGG_PlayMenuMusic();
+	}
 }
 
 /*
@@ -2899,7 +2933,11 @@ EnableOGGMusic(void *unused)
 
 		if (cls.state == ca_active)
 		{
-			OGG_PlayTrack(cl.configstrings[CS_CDTRACK], true, true);
+			OGG_PlayMapMusic();
+		}
+		else if (cls.state == ca_disconnected)
+		{
+			OGG_PlayMenuMusic();
 		}
 	}
 	else
@@ -7476,6 +7514,31 @@ M_Init(void)
 	}
 }
 
+static void
+M_DrawMenuBackground(void)
+{
+	const char *pic = viddef.width * 3 < viddef.height * 4 ?
+		"pp_menu_background_square.jpg" : "pp_menu_background.jpg";
+	int width, height, draw_width, draw_height;
+
+	Draw_GetPicSize(&width, &height, pic);
+	if (width <= 0 || height <= 0)
+	{
+		Draw_Fill(0, 0, viddef.width, viddef.height, 0);
+		return;
+	}
+
+	/* Fit the art inside the screen, including on the software renderer. */
+	draw_width = Q_min(viddef.width, viddef.height * width / height);
+	draw_height = Q_min(viddef.height, viddef.width * height / width);
+	if (draw_width != viddef.width || draw_height != viddef.height)
+	{
+		Draw_Fill(0, 0, viddef.width, viddef.height, 0);
+	}
+	Draw_StretchPic((viddef.width - draw_width) / 2, (viddef.height - draw_height) / 2,
+		draw_width, draw_height, pic);
+}
+
 void
 M_Draw(void)
 {
@@ -7487,12 +7550,14 @@ M_Draw(void)
 	/* repaint everything next frame */
 	SCR_DirtyScreen();
 
-	/* dim everything behind it down */
 	if (cl.cinematictime > 0)
 	{
 		Draw_Fill(0, 0, viddef.width, viddef.height, 0);
 	}
-
+	else if (cls.state == ca_disconnected)
+	{
+		M_DrawMenuBackground();
+	}
 	else
 	{
 		Draw_FadeScreen();

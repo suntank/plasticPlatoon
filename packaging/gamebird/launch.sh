@@ -47,11 +47,15 @@ fi
 
 cd "$game_dir"
 if [ "$#" -eq 0 ]; then
-    set -- +map "${PLASTIC_PLATOON_MAP:-pp_garden_infiltration}"
+    if [ -n "${PLASTIC_PLATOON_MAP:-}" ]; then
+        set -- +map "$PLASTIC_PLATOON_MAP"
+    else
+        set -- +menu_main
+    fi
 fi
 
 # Keep renderer selection/resolution early: SDL creates its context before
-# executing config files. Extra arguments replace the default map command.
+# executing config files.
 exec "$game_dir/quake2" -datadir "$game_dir" -cfgdir "$config_dir" \
     +set s_initsound 1 +set s_openal 0 +set s_sdldriver alsa \
     +set vid_renderer "${PLASTIC_PLATOON_RENDERER:-gl1}" \

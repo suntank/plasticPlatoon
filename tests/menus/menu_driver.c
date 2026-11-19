@@ -84,6 +84,8 @@ static void snapshot(char *text)
 static void run_action(action_t *action)
 {
     char command[512];
+    /* Keep the redirected engine log ordered with the fixture markers. */
+    fflush(stdout);
     fprintf(stderr, "PP_MENU_ACTION %s %s\n", action->op, action->text);
     if (!strcmp(action->op, "cmd")) {
         snprintf(command, sizeof(command), "%s\n", action->text);

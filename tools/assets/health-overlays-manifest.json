@@ -2,7 +2,7 @@
   "schema": 1,
   "generator": "tools/assets/build_health_overlays.py",
   "config_sha256": "8e8a0634867fdf30b3059d4b2b187abf777c0406eaef0b8dbbf21e29b0edee78",
-  "health_manifest_sha256": "5f8013d75b8316c9a2e6b2e89b9398ea0f22009cec9f5ee7d90c0cb0e4087bc0",
+  "health_manifest_sha256": "a0703f2b5ae43827a6600a503e85db158ce6036544b2b42386afc84d9dab8f22",
   "archives": [
     {
       "path": "baseq2/operation-sandstorm-preview.pk3",

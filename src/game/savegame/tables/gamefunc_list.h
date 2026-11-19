@@ -773,6 +773,8 @@
 {"Target_Help_Think", (byte *)Target_Help_Think},
 {"SP_target_speaker", (byte *)SP_target_speaker},
 {"Use_Target_Speaker", (byte *)Use_Target_Speaker},
+{"platoon_briefing_think", (byte *)platoon_briefing_think},
+{"platoon_briefing_use", (byte *)platoon_briefing_use},
 {"SP_target_screen_image", (byte *)SP_target_screen_image},
 {"Use_Target_Screen_Image", (byte *)Use_Target_Screen_Image},
 {"SP_target_temp_entity", (byte *)SP_target_temp_entity},
