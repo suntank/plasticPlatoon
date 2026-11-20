@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "config_sha256": "7c005a70d39a0c21d57871d722704fff2329b39b0946171761b376d4ac194c7d",
+  "config_sha256": "c0c11f26bf450b792d9361e51111c21d603173d2b07cea5b12508d06dfc4ec1a",
   "generator_sha256": "f33bc6916de1e03f3fedeae9f324f5ad3805f968663be4fcd5fedc72dfd73797",
   "helper_sha256": {
     "tools/assets/md2_assets.py": "894c26ea6d87858bfea877267657a97addad6b238cbb89f1f112a591d0062c2b",
@@ -36,7 +36,7 @@
       "canonical": "models/items/ammo/bullets/medium/tris.md2",
       "lod": "models/items/ammo/bullets/medium/lod1.md2",
       "skin": "models/items/ammo/bullets/medium/skin.png",
-      "skin_sha256": "54c6c186eb5d8e6002e636593dc22e4ad01cbd9c297451cf6244a81b5c5d9865",
+      "skin_sha256": "04fe1cb7dfbb7066823bc91511a79a9aea9c64a31d4db40bb9eae50666c6fc33",
       "recipe": "authored_ammo",
       "design": "Use the exact low-poly ammo pickup owned by build_ammo.py at every distance; preserve its full authored silhouette, atlas, lattice and frame identity.",
       "before": {

@@ -2,7 +2,7 @@
   "schema": 1,
   "generator": "tools/assets/build_projectile_overlays.py",
   "config_sha256": "f17ecc64a971795eaa468df52f624e5a450415b04fcbdc5ab18f8e56454e22aa",
-  "projectile_manifest_sha256": "5ec14deca7d43c52f6e834e599fcc586918c699a543b604a535282b179dae823",
+  "projectile_manifest_sha256": "c252e0dd97a22e2fcbcca98d86d388f03f6ce2a57706dd08dba7c41b0c6bfcbc",
   "archives": [
     {
       "path": "baseq2/operation-tank-test.pk3",
