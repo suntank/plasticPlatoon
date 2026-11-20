@@ -4,8 +4,8 @@
 briefing room, and the Deploy door leads here after the General finishes.
 It is a mission version of `pp_garden`.
 The original Garden source and BSP are retained as a separate map. The mission
-source includes later manual terrain, cover and encounter edits; its original
-four player starts remain intact. The generator's initial additive version
+source includes later manual terrain, cover and encounter edits; it retains
+the original player starts. The generator's initial additive version
 preserved all original brushes and entities, but regenerating would discard the
 later manual edits.
 
@@ -31,6 +31,12 @@ The current local build uses the `pp_backyard` skybox. The
 MAPs, design metadata, translation receipt and BSP/VIS/RAD build receipt.
 Exact source, BSP and package hashes are recorded in
 `maps/garden-infiltration-status.json`.
+
+The build from commit `77f8218` includes the authored secret pickups and trigger
+volumes. The translated compile copy uses `sandkeep/trim` on two invisible
+triggers whose editor faces use `__TB_empty` and explicit Valve 220 texture
+axes to preserve alignment on diagonal faces. The editable MAP matches the
+GitHub source. The legacy mission audit targets the exterior-rally layout.
 
 The preceding map revision averaged 33.78 FPS on normal and 32.50 FPS on hard
 in native four-player Pi combat tests with players in separate regions.
@@ -65,9 +71,8 @@ texture shifts compensated. This rigid translation changes no shape, distance
 or route. The editable authoring source and original Garden remain unchanged;
 the archive also contains the translated runtime MAP for direct inspection.
 
-Rebuild the manually edited mission with
-`python3 tools/maps/build_garden_infiltration.py --edited-source`, then package
-with `python3 tools/maps/package_garden_infiltration.py`. The build performs
+The exterior-rally build used `tools/maps/build_garden_infiltration.py
+--edited-source` and `tools/maps/package_garden_infiltration.py`. The build performs
 full BSP, full VIS, baked lighting, and independent mission/route/collision
 verification. The edited-source audit reports original-preservation drift;
 the default audit still requires the generator's strict additive contract.

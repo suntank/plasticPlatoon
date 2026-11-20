@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generator": "tools/assets/build_dropship_overlays.py",
-  "config_sha256": "7968c6919983ad5a1044f637b6881d12c17dbf2e939534858d39606e675368dd",
+  "config_sha256": "bb3ec5842acd838e4fdf8d8ab05df0f4e7c16d4401f019ecd85e36d13782818f",
   "dropship_manifest_sha256": "658c1519cce1df4c357ed93675e4e6546b13b5c7602f36e6c38c4b2d24922be7",
   "archives": [
     {
@@ -29,8 +29,8 @@
     },
     {
       "path": "baseq2/operation-garden-infiltration.pk3",
-      "untouched_members": 46,
-      "untouched_sha256": "4cbdbec705c61f006876e04036d2f9196ca870d428bcfd88775a987405cf23d6",
+      "untouched_members": 56,
+      "untouched_sha256": "4806f648f05091074ae591d0f58b60448a60c4c57698ab2c75dc8eea19f4f4cd",
       "managed": {
         "models/vehicles/platoon_dropship/body.md2": {
           "bytes": 29828,
@@ -46,9 +46,9 @@
         }
       },
       "separately_owned": {},
-      "bytes": 4664519,
-      "sha256": "346db4a4956474f311d4a8c82dee41b56f83d18cd8fc1236ed372c00e25a3170",
-      "members": 49
+      "bytes": 4870559,
+      "sha256": "6e11666a3e66e4d41d33858d6a8542814c639a09409e3ea37e46ba9c94a78280",
+      "members": 59
     },
     {
       "path": "baseq2/operation-sandstorm-preview.pk3",

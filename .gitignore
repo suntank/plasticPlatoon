@@ -47,4 +47,7 @@ __pycache__/
 /stuff/icon/
 /.codex-attachments/
 /maps/source/autosave/
+/maps/source/pp_garden_infiltration-crash.log
+/maps/source/pp_garden_infiltration-crash.map
+/maps/source/pp_garden_infiltration-crash.txt
 /tools/performance/pi_bench/input_driver*.so
