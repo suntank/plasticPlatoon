@@ -2,13 +2,13 @@
   "map": "pp_garden_infiltration",
   "published": {
     "archive": "baseq2/operation-garden-infiltration.pk3",
-    "archive_sha256": "6e11666a3e66e4d41d33858d6a8542814c639a09409e3ea37e46ba9c94a78280",
+    "archive_sha256": "5c5c826641c1053b005c0512571ab222389e0a60d59e9f51eaaec218cbc6ee7c",
     "source": "maps/source/pp_garden_infiltration.map",
     "source_inside_archive": "maps/pp_garden_infiltration.map",
-    "source_sha256": "ca546f74bbbd989f1bc2ea80bd22f22426117e3345ff7d544e86839d30472eb2",
+    "source_sha256": "951cb59a9a0f8d054a462287a95b6e71d50dfd69e6f738e82436f574638143b2",
     "bsp": "baseq2/maps/pp_garden_infiltration.bsp",
-    "bsp_sha256": "dcbae19acb8f422a8ed748bea45a2ecd7c907bc6844269ebda13a1e31e600d6a",
-    "runtime_source_sha256": "1255bfd1b11893798f8598fb9d08e2feabdb03baef56359c8a3c661dd1b97d31",
+    "bsp_sha256": "f691b7472d750f5c7d4d0608ae5c8bdd5f895a253e30f6d4893589b2eca15bfe",
+    "runtime_source_sha256": "25b093f663f7bac9dfcdab3b6e27e332131e2a1b66dd71945cb9b96165d541d9",
     "full_bsp_vis_rad_passed": true,
     "build_receipt_inside_archive": "maps/garden-infiltration-build.json",
     "compile": {
@@ -17,9 +17,15 @@
       "rad_ambient": 16,
       "tool_sha256": "b144f37c50cf41079a851ab872000db65928e983a156a296daf389db6e3ead18"
     },
-    "validation": "Full BSP/VIS/RAD build from the GitHub main source, with source translation, compiled gameplay entities, texture projections, vertex bounds, player starts and Sandbox exit checked.",
+    "validation": "Added and checked eight point pickups on top of the full BSP/VIS/RAD build. Every existing gameplay entity and non-entity lump matches the base build.",
     "sky": "pp_backyard",
-    "source_commit": "77f82186c20f29dceb2c5c744470f1f4ee2b6c68"
+    "base_source_commit": "77f82186c20f29dceb2c5c744470f1f4ee2b6c68",
+    "sprues": {
+      "main_route_pickups": 5,
+      "main_route_total": 60,
+      "hidden_stashes": 3,
+      "hidden_total": 135
+    }
   },
   "pi_deployment": {
     "deployed": true,

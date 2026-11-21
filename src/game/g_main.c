@@ -421,7 +421,7 @@ ExitLevel(void)
 	Com_sprintf(command, sizeof(command), "gamemap \"%s\"\n", level.changemap);
 	gi.AddCommandString(command);
 	level.changemap = NULL;
-	level.exitintermission = 0;
+	level.intermission_state = INTERMISSION_WAITING;
 	level.intermissiontime = 0;
 	ClientEndServerFrames();
 
@@ -464,7 +464,20 @@ G_RunFrame(void)
 	AI_SetSightClient();
 
 	/* exit intermissions */
-	if (level.exitintermission)
+	if (QM_IsOpen())
+	{
+		if (QM_Frame())
+		{
+			ExitLevel();
+		}
+		else
+		{
+			ClientEndServerFrames();
+		}
+		return;
+	}
+
+	if (level.intermission_state == INTERMISSION_EXIT)
 	{
 		ExitLevel();
 		return;

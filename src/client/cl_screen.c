@@ -25,6 +25,8 @@
  * =======================================================================
  */
 
+#include <stdint.h>
+
 #include "header/client.h"
 #include "header/performance.h"
 #include "cl_splitscreen.h"
@@ -1088,17 +1090,10 @@ SCR_TouchPics(void)
 }
 
 static void
-SCR_ExecuteLayoutString(char *s)
+SCR_ExecuteViewportLayout(char *s, int left, int top, int width, int height,
+	float scale)
 {
 	int x, y;
-	float scale;
-
-	scale = SCR_GetHUDScale();
-	if (scr_gamebird_hud && scr_gamebird_hud->value)
-	{
-		/* Help/objective layouts use a 320x240 canvas, too. */
-		scale = fminf(scale, fminf(viddef.width / 320.0f, viddef.height / 240.0f));
-	}
 
 	if ((cls.state != ca_active) || !cl.refresh_prepped)
 	{
@@ -1110,8 +1105,8 @@ SCR_ExecuteLayoutString(char *s)
 		return;
 	}
 
-	x = 0;
-	y = 0;
+	x = left;
+	y = top;
 
 	while (s)
 	{
@@ -1122,42 +1117,42 @@ SCR_ExecuteLayoutString(char *s)
 		if (!strcmp(token, "xl"))
 		{
 			token = COM_Parse(&s);
-			x = scale * (int)strtol(token, (char **)NULL, 10);
+			x = left + scale * (int)strtol(token, (char **)NULL, 10);
 			continue;
 		}
 
 		if (!strcmp(token, "xr"))
 		{
 			token = COM_Parse(&s);
-			x = viddef.width + scale * (int)strtol(token, (char **)NULL, 10);
+			x = left + width + scale * (int)strtol(token, (char **)NULL, 10);
 			continue;
 		}
 
 		if (!strcmp(token, "xv"))
 		{
 			token = COM_Parse(&s);
-			x = viddef.width / 2 - scale * 160 + scale * (int)strtol(token, (char **)NULL, 10);
+			x = left + width / 2 - scale * 160 + scale * (int)strtol(token, (char **)NULL, 10);
 			continue;
 		}
 
 		if (!strcmp(token, "yt"))
 		{
 			token = COM_Parse(&s);
-			y = scale * (int)strtol(token, (char **)NULL, 10);
+			y = top + scale * (int)strtol(token, (char **)NULL, 10);
 			continue;
 		}
 
 		if (!strcmp(token, "yb"))
 		{
 			token = COM_Parse(&s);
-			y = viddef.height + scale * (int)strtol(token, (char **)NULL, 10);
+			y = top + height + scale * (int)strtol(token, (char **)NULL, 10);
 			continue;
 		}
 
 		if (!strcmp(token, "yv"))
 		{
 			token = COM_Parse(&s);
-			y = viddef.height / 2 - scale * 120 + scale * (int)strtol(token, (char **)NULL, 10);
+			y = top + height / 2 - scale * 120 + scale * (int)strtol(token, (char **)NULL, 10);
 			continue;
 		}
 
@@ -1207,9 +1202,9 @@ SCR_ExecuteLayoutString(char *s)
 			clientinfo_t *ci;
 
 			token = COM_Parse(&s);
-			x = viddef.width / 2 - scale * 160 + scale * (int)strtol(token, (char **)NULL, 10);
+			x = left + width / 2 - scale * 160 + scale * (int)strtol(token, (char **)NULL, 10);
 			token = COM_Parse(&s);
-			y = viddef.height / 2 - scale * 120 + scale * (int)strtol(token, (char **)NULL, 10);
+			y = top + height / 2 - scale * 120 + scale * (int)strtol(token, (char **)NULL, 10);
 			SCR_AddDirtyPoint(x, y);
 			SCR_AddDirtyPoint(x + scale * 159, y + scale * 31);
 
@@ -1256,9 +1251,9 @@ SCR_ExecuteLayoutString(char *s)
 			char block[80];
 
 			token = COM_Parse(&s);
-			x = viddef.width / 2 - scale * 160 + scale*(int)strtol(token, (char **)NULL, 10);
+			x = left + width / 2 - scale * 160 + scale*(int)strtol(token, (char **)NULL, 10);
 			token = COM_Parse(&s);
-			y = viddef.height / 2 - scale * 120 + scale*(int)strtol(token, (char **)NULL, 10);
+			y = top + height / 2 - scale * 120 + scale*(int)strtol(token, (char **)NULL, 10);
 			SCR_AddDirtyPoint(x, y);
 			SCR_AddDirtyPoint(x + scale * 159, y + scale * 31);
 
@@ -1543,6 +1538,89 @@ SCR_DrawGrenadeHUD(const player_state_t *ps, int right, int y, float scale)
 	Draw_PicScaled(icon_x, y, icon, scale);
 }
 
+void
+SCR_DrawSpruesHUD(const player_state_t *ps, int right, int y, float scale)
+{
+	int index = ps->stats[STAT_SPRUES_ICON];
+	const char *icon;
+	const char *text;
+	uint32_t balance;
+	int icon_w, icon_h, width, height, left;
+	float icon_scale, text_scale;
+
+	if (scale <= 0 || index <= 0 || index >= MAX_IMAGES)
+	{
+		return;
+	}
+
+	icon = cl.configstrings[CS_IMAGES + index];
+	if (strcmp(icon, PP_SPRUES_ICON))
+	{
+		return;
+	}
+
+	Draw_GetPicSize(&icon_w, &icon_h, icon);
+	if (icon_w <= 0 || icon_h <= 0)
+	{
+		return;
+	}
+
+	balance = ((uint32_t)(uint16_t)ps->stats[STAT_SPRUES_HIGH] << 16) |
+		(uint16_t)ps->stats[STAT_SPRUES_LOW];
+	text = va("%u", (unsigned)balance);
+	icon_scale = 24 * scale / icon_h;
+	text_scale = 1.5f * scale;
+	width = (int)(12 * scale + strlen(text) * 8 * text_scale + icon_w * icon_scale);
+	height = (int)(26 * scale);
+	left = right - width;
+
+	SCR_AddDirtyPoint(left, y);
+	SCR_AddDirtyPoint(right - 1, y + height - 1);
+	Draw_Fill(left, y, width, height, 0);
+	Draw_PicScaled(left + (int)(4 * scale), y + (int)scale, icon, icon_scale);
+	DrawStringScaled(left + (int)(8 * scale + icon_w * icon_scale),
+		y + (height - (int)(8 * text_scale)) / 2, text, text_scale);
+}
+
+static void
+SCR_ExecuteLayoutString(char *s)
+{
+	float scale;
+
+	scale = SCR_GetHUDScale();
+	if (scr_gamebird_hud && scr_gamebird_hud->value)
+	{
+		/* Help/objective layouts use a 320x240 canvas, too. */
+		scale = fminf(scale, fminf(viddef.width / 320.0f, viddef.height / 240.0f));
+	}
+
+	SCR_ExecuteViewportLayout(s, 0, 0, viddef.width, viddef.height, scale);
+}
+
+void
+SCR_DrawQuartermaster(char *layout, int left, int top, int width, int height)
+{
+	static const char prefix[] = "quartermaster ";
+	float scale = fminf(width / 320.0f, height / 240.0f);
+	int x = left + width / 2 - (int)(152 * scale);
+	int y = top + height / 2 - (int)(112 * scale);
+
+	if (strncmp(layout, prefix, sizeof(prefix) - 1))
+	{
+		return;
+	}
+
+	Draw_Fill(x, y, (int)(304 * scale), (int)(224 * scale), 8);
+	Draw_Fill(x + (int)(2 * scale), y + (int)(2 * scale),
+		(int)(300 * scale), (int)(220 * scale), 0);
+	Draw_Fill(x + (int)(8 * scale), y + (int)(46 * scale),
+		(int)(288 * scale), Q_max(1, (int)scale), 8);
+	Draw_Fill(x + (int)(8 * scale), y + (int)(182 * scale),
+		(int)(288 * scale), Q_max(1, (int)scale), 8);
+
+	SCR_ExecuteViewportLayout(layout + sizeof(prefix) - 1, left, top, width, height, scale);
+}
+
 static const char *
 SCR_GameBirdStatIcon(const player_state_t *ps, int stat, const char *fallback)
 {
@@ -1615,6 +1693,7 @@ SCR_DrawGameBirdStats(void)
 			ammo_color, 4, scale, margin);
 	}
 	SCR_DrawGrenadeHUD(ps, viddef.width - margin, margin, scale);
+	SCR_DrawSpruesHUD(ps, viddef.width - margin, margin + (int)(36 * scale), scale);
 
 	/* Keep transient status information above the bottom row. */
 	if (ps->stats[STAT_TIMER] > 0)
@@ -1678,10 +1757,10 @@ SCR_DrawStats(void)
 
 		SCR_DrawGrenadeHUD(&cl.frame.playerstate, viddef.width / 2 + (int)(122 * scale),
 			viddef.height - (int)(84 * scale), scale);
+		SCR_DrawSpruesHUD(&cl.frame.playerstate, viddef.width - (int)(8 * scale),
+			(int)(22 * scale), scale);
 	}
 }
-
-#define STAT_LAYOUTS 13
 
 static void
 SCR_DrawLayout(void)
@@ -2252,29 +2331,38 @@ SCR_UpdateScreen(void)
 				}
 
 				SCR_DrawNet();
-				SCR_CheckDrawCenterString();
+				if (!(cl.frame.playerstate.stats[STAT_LAYOUTS] & LAYOUT_QUARTERMASTER))
+				{
+					SCR_CheckDrawCenterString();
+				}
 			}
 			else
 			{
 				V_RenderView(separation[i]);
-				SCR_DrawADSOverlay();
-
-				SCR_DrawStats();
-				SCR_DrawSpeed();
-
-				if (cl.frame.playerstate.stats[STAT_LAYOUTS] & 1)
+				if (cl.frame.playerstate.stats[STAT_LAYOUTS] & LAYOUT_QUARTERMASTER)
 				{
-					SCR_DrawLayout();
+					SCR_DrawQuartermaster(cl.layout, 0, 0, viddef.width, viddef.height);
 				}
-
-				if (cl.frame.playerstate.stats[STAT_LAYOUTS] & 2)
+				else
 				{
-					CL_DrawInventory();
-				}
+					SCR_DrawADSOverlay();
+					SCR_DrawStats();
+					SCR_DrawSpeed();
 
-				SCR_DrawScreenImageOverlay(&cl.screen_image, 0, 0, viddef.width, viddef.height);
+					if (cl.frame.playerstate.stats[STAT_LAYOUTS] & 1)
+					{
+						SCR_DrawLayout();
+					}
+
+					if (cl.frame.playerstate.stats[STAT_LAYOUTS] & 2)
+					{
+						CL_DrawInventory();
+					}
+
+					SCR_DrawScreenImageOverlay(&cl.screen_image, 0, 0, viddef.width, viddef.height);
+					SCR_CheckDrawCenterString();
+				}
 				SCR_DrawNet();
-				SCR_CheckDrawCenterString();
 			}
 
 			if (scr_timegraph->value)

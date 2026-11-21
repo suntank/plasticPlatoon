@@ -390,11 +390,13 @@ set(Game-Source
 	${GAME_SRC_DIR}/monster/mutant/mutant.c
 	${GAME_SRC_DIR}/monster/parasite/parasite.c
 	${GAME_SRC_DIR}/monster/soldier/soldier.c
+	${GAME_SRC_DIR}/monster/soldier/melted.c
 	${GAME_SRC_DIR}/monster/supertank/supertank.c
 	${GAME_SRC_DIR}/monster/tank/tank.c
 	${GAME_SRC_DIR}/player/client.c
 	${GAME_SRC_DIR}/player/aim_assist.c
 	${GAME_SRC_DIR}/player/hud.c
+	${GAME_SRC_DIR}/player/quartermaster.c
 	${GAME_SRC_DIR}/player/trail.c
 	${GAME_SRC_DIR}/player/view.c
 	${GAME_SRC_DIR}/player/weapon.c

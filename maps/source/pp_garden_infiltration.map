@@ -1753,9 +1753,9 @@
 }
 // brush 174
 {
-( 4528 4928 168 ) ( 4528 4864 168 ) ( 4488 4928 168 ) sandbox/sand1 72 -8 0 1 1
 ( 4480 4864 168 ) ( 4480 4864 160 ) ( 4480 4928 168 ) sandbox/sand1 8 -8 0 1 1
 ( 4720 4928 152 ) ( 4720 4864 168 ) ( 4848 4864 168 ) sandbox/sand1 72 -8 0 1 1
+( 4528 4928 168 ) ( 4528 4864 168 ) ( 4488 4928 168 ) sandbox/sand1 72 -8 0 1 1
 ( 4488 4928 168 ) ( 4488 4928 160 ) ( 4528 4928 168 ) sandbox/sand1 72 -8 0 1 1
 ( 4720 4928 168 ) ( 4720 4928 160 ) ( 4720 4864 168 ) sandbox/sand1 8 -8 0 1 1
 }
@@ -6479,106 +6479,101 @@
 }
 // entity 88
 {
-"classname" "ammo_shells"
-"origin" "4272 2096 24.25"
-}
-// entity 89
-{
 "classname" "monster_soldier_light"
 "origin" "3792 2010 56"
 "angle" "75"
 "spawnflags" "1"
 }
-// entity 90
+// entity 89
 {
 "classname" "monster_soldier_light"
 "origin" "2604 3610 56"
 "angle" "330"
 "spawnflags" "1"
 }
-// entity 91
+// entity 90
 {
 "classname" "monster_soldier_light"
 "origin" "3212 3442 56"
 "angle" "330"
 "spawnflags" "0"
 }
-// entity 92
+// entity 91
 {
 "classname" "monster_soldier_light"
 "origin" "2820 3498 152"
 "angle" "330"
 "spawnflags" "0"
 }
-// entity 93
+// entity 92
 {
 "classname" "monster_soldier_light"
 "origin" "2760 2288 56"
 "angle" "0"
 "spawnflags" "1"
 }
-// entity 94
+// entity 93
 {
 "classname" "ammo_grenades"
 "origin" "3360 3688 136"
 }
-// entity 95
+// entity 94
 {
 "classname" "monster_soldier"
 "origin" "3490 3264 56"
 "angle" "120"
 "spawnflags" "0"
 }
-// entity 96
+// entity 95
 {
 "classname" "monster_soldier"
 "origin" "2714 3280 56"
 "angle" "105"
 "spawnflags" "1"
 }
-// entity 97
+// entity 96
 {
 "classname" "item_health"
 "origin" "2938 3582 128"
 }
-// entity 98
+// entity 97
 {
 "classname" "ammo_shells"
 "origin" "3606 3546 48"
 }
-// entity 99
+// entity 98
 {
 "classname" "ammo_shells"
 "origin" "2334 3274 48"
 }
-// entity 100
+// entity 99
 {
 "classname" "ammo_shells"
 "origin" "2350 3306 48"
 }
-// entity 101
+// entity 100
 {
 "classname" "monster_ant"
 "origin" "2272 3400 64"
 "angle" "60"
 "spawnflags" "1"
 }
-// entity 102
+// entity 101
 {
 "classname" "item_health_small"
 "origin" "2192 3880 64"
 }
-// entity 103
+// entity 102
 {
 "classname" "item_health_small"
 "origin" "2192 3928 64"
 }
-// entity 104
+// entity 103
 {
 "classname" "item_health_small"
 "origin" "2192 3976 64"
 }
-// entity 105
+// entity 104
 {
 "classname" "target_help"
 "origin" "3964 -868 48"
@@ -6586,14 +6581,14 @@
 "spawnflags" "1"
 "message" "Make your way to the enemy sandbox and breach the wall to gain entry."
 }
-// entity 106
+// entity 105
 {
 "classname" "trigger_relay"
 "origin" "4008 -968 48"
 "targetname" "garden_mission_start"
 "message" "OPERATION GARDEN GHOST\nMove quietly through the gardens.\nReach the sandbox. Hold outside."
 }
-// entity 107
+// entity 106
 {
 "classname" "trigger_relay"
 "origin" "3992 -1036 48"
@@ -6601,7 +6596,7 @@
 "target" "garden_insertion_ship"
 "delay" "5"
 }
-// entity 108
+// entity 107
 {
 "classname" "misc_platoon_dropship"
 "origin" "3680 -816 36"
@@ -6611,303 +6606,303 @@
 "angle" "90"
 "_garden_logic" "friendly-insertion"
 }
-// entity 109
+// entity 108
 {
 "classname" "path_corner"
 "origin" "3680 -816 230"
 "targetname" "garden_insertion_lift"
 "target" "garden_insertion_depart"
 }
-// entity 110
+// entity 109
 {
 "classname" "path_corner"
 "origin" "6560 240 582"
 "targetname" "garden_insertion_depart"
 "pathtarget" "garden_insertion_gone"
 }
-// entity 111
+// entity 110
 {
 "classname" "trigger_relay"
 "origin" "4120 -696 256"
 "targetname" "garden_insertion_gone"
 "killtarget" "garden_insertion_ship"
 }
-// entity 112
+// entity 111
 {
 "classname" "item_health_small"
 "origin" "2192 4024 64"
 }
-// entity 113
+// entity 112
 {
 "classname" "light"
 "origin" "2676 4744 80"
 "light" "180"
 "_color" "1 .94 .80"
 }
-// entity 114
+// entity 113
 {
 "classname" "misc_explobox"
 "origin" "4424 4928 24"
 }
-// entity 115
+// entity 114
 {
 "classname" "misc_explobox"
 "origin" "4424 4888 24"
 }
-// entity 116
+// entity 115
 {
 "classname" "monster_ant"
 "origin" "3384 1096 32.25"
 }
-// entity 117
+// entity 116
 {
 "classname" "monster_ant"
 "origin" "2728 888 32.25"
 }
-// entity 118
+// entity 117
 {
 "classname" "ammo_grenades"
 "origin" "3872 4640 160.25"
 }
-// entity 119
+// entity 118
 {
 "classname" "misc_explobox"
 "origin" "2632 4736 32"
 }
-// entity 120
+// entity 119
 {
 "classname" "misc_explobox"
 "origin" "2568 3584 32"
 }
-// entity 121
+// entity 120
 {
 "classname" "misc_explobox"
 "origin" "3688 3248 16"
 }
-// entity 122
+// entity 121
 {
 "classname" "misc_explobox"
 "origin" "3672 3296 16"
 }
-// entity 123
+// entity 122
 {
 "classname" "ammo_shells"
 "origin" "3646 3250 48"
 }
-// entity 124
+// entity 123
 {
 "classname" "ammo_grenades"
 "origin" "3848 4600 160.25"
 }
-// entity 125
+// entity 124
 {
 "classname" "item_armor_jacket"
 "origin" "3608 5104 160"
 }
-// entity 126
+// entity 125
 {
 "classname" "ammo_shells"
 "origin" "4320 5224 208"
 }
-// entity 127
+// entity 126
 {
 "classname" "ammo_shells"
 "origin" "4272 5176 208"
 }
-// entity 128
+// entity 127
 {
 "classname" "ammo_shells"
 "origin" "3376 4432 48"
 }
-// entity 129
+// entity 128
 {
 "classname" "ammo_shells"
 "origin" "3424 4416 48"
 }
-// entity 130
+// entity 129
 {
 "classname" "misc_explobox"
 "origin" "2632 4776 32"
 }
-// entity 131
+// entity 130
 {
 "classname" "item_armor_shard"
 "origin" "4200 4272 24"
 }
-// entity 132
+// entity 131
 {
 "classname" "item_armor_shard"
 "origin" "4240 4280 24"
 }
-// entity 133
+// entity 132
 {
 "classname" "item_armor_shard"
 "origin" "4280 4296 24"
 }
-// entity 134
+// entity 133
 {
 "classname" "item_armor_shard"
 "origin" "4224 4320 24"
 }
-// entity 135
+// entity 134
 {
 "classname" "item_health_small"
 "origin" "3760 5040 40"
 }
-// entity 136
+// entity 135
 {
 "classname" "item_health_small"
 "origin" "3744 5096 40"
 }
-// entity 137
+// entity 136
 {
 "classname" "item_health_small"
 "origin" "3800 5088 40"
 }
-// entity 138
+// entity 137
 {
 "classname" "item_health"
 "origin" "3760 4536 24"
 }
-// entity 139
+// entity 138
 {
 "classname" "item_health"
 "origin" "4064 5416 104"
 }
-// entity 140
+// entity 139
 {
 "classname" "item_armor_shard"
 "origin" "2968 2520 24.25"
 }
-// entity 141
+// entity 140
 {
 "classname" "item_armor_shard"
 "origin" "2968 2480 24.25"
 }
-// entity 142
+// entity 141
 {
 "classname" "monster_soldier_ss"
 "origin" "4096 4544 216"
 "angle" "180"
 }
-// entity 143
+// entity 142
 {
 "classname" "item_armor_shard"
 "origin" "2072 4512 48"
 }
-// entity 144
+// entity 143
 {
 "classname" "item_armor_shard"
 "origin" "2064 4568 48"
 }
-// entity 145
+// entity 144
 {
 "classname" "item_armor_shard"
 "origin" "2056 4624 48"
 }
-// entity 146
+// entity 145
 {
 "classname" "item_armor_shard"
 "origin" "2056 4680 48"
 }
-// entity 147
+// entity 146
 {
 "classname" "item_health"
 "origin" "2480 4584 24.25"
 }
-// entity 148
+// entity 147
 {
 "classname" "ammo_grenades"
 "origin" "2072 4984 24.25"
 }
-// entity 149
+// entity 148
 {
 "classname" "item_armor_shard"
 "origin" "2712 3728 24.25"
 }
-// entity 150
+// entity 149
 {
 "classname" "item_armor_shard"
 "origin" "2672 3728 24.25"
 }
-// entity 151
+// entity 150
 {
 "classname" "item_armor_shard"
 "origin" "2688 3688 24.25"
 }
-// entity 152
+// entity 151
 {
 "classname" "light"
 "origin" "4300 -900 320"
 "target" "garden_sun_direction"
 }
-// entity 153
+// entity 152
 {
 "classname" "monster_ant"
 "origin" "2696 4744 56"
 "angle" "180"
 "spawnflags" "1"
 }
-// entity 154
+// entity 153
 {
 "classname" "monster_soldier_ss"
 "origin" "4272 5224 216"
 "angle" "180"
 }
-// entity 155
+// entity 154
 {
 "classname" "misc_explobox"
 "origin" "3232 4744 24"
 }
-// entity 156
+// entity 155
 {
 "classname" "misc_explobox"
 "origin" "3264 4704 24"
 }
-// entity 157
+// entity 156
 {
 "classname" "monster_soldier"
 "origin" "3224 4712 32.25"
 "angle" "315"
 "spawnflags" "4"
 }
-// entity 158
+// entity 157
 {
 "classname" "monster_soldier"
 "origin" "3576 4632 32.25"
 "angle" "105"
 "spawnflags" "4"
 }
-// entity 159
+// entity 158
 {
 "classname" "monster_soldier"
 "origin" "3496 5424 32.25"
 "angle" "315"
 "spawnflags" "4"
 }
-// entity 160
+// entity 159
 {
 "classname" "monster_soldier"
 "origin" "4000 4976 32.25"
 "angle" "315"
 "spawnflags" "4"
 }
-// entity 161
+// entity 160
 {
 "classname" "misc_explobox"
 "origin" "3560 4976 24"
 }
-// entity 162
+// entity 161
 {
 "classname" "misc_explobox"
 "origin" "3472 5280 24"
 }
-// entity 163
+// entity 162
 {
 "classname" "misc_explobox"
 "origin" "4032 5008 24"
 }
-// entity 164
+// entity 163
 {
 "classname" "func_group"
 "_tb_type" "_tb_group"
@@ -7365,7 +7360,7 @@
 ( 2321.9439999999995 4560.1253 124 ) ( 2305.9672 4521.554 124 ) ( 2305.9672 4521.554 133 ) sandkeep/garden_clay 27 7 0 1 1 134217728 0 0
 }
 }
-// entity 165
+// entity 164
 {
 "classname" "trigger_once"
 "target" "pot"
@@ -7379,19 +7374,19 @@
 ( 2255 4622 29 ) ( 2255 4622 30 ) ( 2255 4623 29 ) __TB_empty 11 0 0 1 1
 }
 }
-// entity 166
+// entity 165
 {
 "classname" "target_secret"
 "origin" "2207 4582 176.25"
 "message" "You have found a secret."
 "targetname" "pot"
 }
-// entity 167
+// entity 166
 {
 "classname" "weapon_smg"
 "origin" "2217 4582 127"
 }
-// entity 168
+// entity 167
 {
 "classname" "func_explosive"
 "dmg" "0"
@@ -7420,18 +7415,18 @@
 ( 3456 3216 48 ) ( 3456 3216 64 ) ( 3456 3344 64 ) sandbox/wood1 104 0 0 1 -1
 }
 }
-// entity 169
+// entity 168
 {
 "classname" "light"
 "origin" "3420 3116 36"
 "light" "200"
 }
-// entity 170
+// entity 169
 {
 "classname" "item_health_mega"
 "origin" "3420 3088 32"
 }
-// entity 171
+// entity 170
 {
 "classname" "trigger_once"
 "target" "secret_boots"
@@ -7445,13 +7440,13 @@
 ( 3436 3164 12 ) ( 3436 3164 13 ) ( 3436 3165 12 ) sandkeep/soil 0 0 0 1 1
 }
 }
-// entity 172
+// entity 171
 {
 "classname" "target_secret"
 "origin" "3408 3184 16"
 "targetname" "secret_boots"
 }
-// entity 173
+// entity 172
 {
 "classname" "func_explosive"
 "health" "10"
@@ -7465,17 +7460,17 @@
 ( 3336 -8 168 ) ( 3336 -4 168 ) ( 3336 -8 108 ) sandbox/wood1 0 0 0 1 1
 }
 }
-// entity 174
+// entity 173
 {
 "classname" "weapon_rocketlauncher"
 "origin" "3312 36 128"
 }
-// entity 175
+// entity 174
 {
 "classname" "ammo_rockets"
 "origin" "3316 28 128"
 }
-// entity 176
+// entity 175
 {
 "classname" "trigger_once"
 "target" "rkl"
@@ -7489,10 +7484,40 @@
 ( 3335 94 45 ) ( 3335 94 46 ) ( 3335 95 45 ) __TB_empty -5 16 0 1 1
 }
 }
-// entity 177
+// entity 176
 {
 "classname" "target_secret"
 "origin" "3319 30 136.25"
 "message" "You have found a secret."
 "targetname" "rkl"
+}
+// entity 177
+{
+"classname" "item_sprues"
+"origin" "3616 860 138"
+"count" "12"
+}
+// entity 178
+{
+"classname" "item_sprues"
+"origin" "4248 2104 42"
+"count" "12"
+}
+// entity 179
+{
+"classname" "item_sprues"
+"origin" "3208 3252 154"
+"count" "14"
+}
+// entity 180
+{
+"classname" "item_sprues"
+"origin" "3416 3124 36"
+"count" "45"
+}
+// entity 181
+{
+"classname" "item_sprues"
+"origin" "3450 5465 128"
+"count" "55"
 }

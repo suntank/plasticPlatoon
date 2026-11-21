@@ -37,6 +37,13 @@ void Draw_PicScaled(int x, int y, const char *name, float scale)
     if (index >= 0) { icon_x[index] = x; icon_y[index] = y; }
 }
 
+void Draw_Fill(int x, int y, int w, int h, int c)
+{
+    (void)c;
+    if (check_bounds)
+        assert(x >= 0 && y >= 0 && x + w <= viddef.width && y + h <= viddef.height);
+}
+
 void Draw_CharScaled(int x, int y, int c, float scale)
 {
     if (check_text_bounds)

@@ -897,6 +897,7 @@ InitClientPersistant(gclient_t *client)
 	}
 
 	memset(&client->pers, 0, sizeof(client->pers));
+	memset(&client->quartermaster, 0, sizeof(client->quartermaster));
 
 	item = FindItem("Blaster");
 	client->pers.selected_item = ITEM_INDEX(item);
@@ -1569,6 +1570,7 @@ PutClientInServer(edict_t *ent)
 	int i;
 	client_persistant_t saved;
 	client_respawn_t resp;
+	quartermaster_progress_t progress;
 
 	/* find a spawn point do it before setting
 	   health back up, so farthest ranging
@@ -1610,6 +1612,7 @@ PutClientInServer(edict_t *ent)
 
 	/* clear everything but the persistant data */
 	saved = client->pers;
+	progress = client->quartermaster.progress;
 	memset(client, 0, sizeof(*client));
 	client->pers = saved;
 
@@ -1617,6 +1620,7 @@ PutClientInServer(edict_t *ent)
 	{
 		InitClientPersistant(client);
 	}
+	client->quartermaster.progress = progress;
 
 	client->resp = resp;
 
@@ -1815,13 +1819,20 @@ ClientBegin(edict_t *ent)
 		/* a spawn point will completely reinitialize the entity
 		   except for the persistant data that was initialized at
 		   ClientConnect() time */
-		gitem_t *light_bullets = FindItem("Light Bullets");
-		ent->client->pers.inventory[ITEM_INDEX(light_bullets)] = light_bullets->quantity;
+		if (!QM_Campaign())
+		{
+			gitem_t *light_bullets = FindItem("Light Bullets");
+			ent->client->pers.inventory[ITEM_INDEX(light_bullets)] = light_bullets->quantity;
+		}
+		ent->client->quartermaster.progress.kills_earned = 0;
+		ent->client->quartermaster.progress.discoveries_earned = 0;
 		G_InitEdict(ent);
 		ent->classname = "player";
 		InitClientResp(ent->client);
 		PutClientInServer(ent);
 	}
+
+	QM_ClampStock(ent);
 
 	if (level.intermissiontime)
 	{
@@ -2161,11 +2172,20 @@ ClientThink(edict_t *ent, usercmd_t *ucmd)
 	{
 		client->ps.pmove.pm_type = PM_FREEZE;
 
+		if (level.intermission_state == INTERMISSION_QUARTERMASTER)
+		{
+			if (QM_IsOpen())
+			{
+				QM_Input(ent, ucmd);
+			}
+			return;
+		}
+
 		/* can exit intermission after five seconds */
 		if ((level.time > level.intermissiontime + 5.0) &&
 			(ucmd->buttons & BUTTON_ANY))
 		{
-			level.exitintermission = true;
+			level.intermission_state = INTERMISSION_EXIT;
 		}
 
 		return;

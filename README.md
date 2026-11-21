@@ -44,7 +44,9 @@ button to slash. Use the console to launch a test mission.
 | `exec sandwatch_solo.cfg` | Sandwatch |
 | `map pp_garden` | Garden |
 | `exec garden_infiltration_solo.cfg` | Operation Garden Ghost |
+| `exec quartermaster_test.cfg` | Quartermaster test range |
 | `map pp_loose_thread` | [Operation Loose Thread / Sewing box](maps/README-loose-thread.md) |
+| `map pp_attic` | [Attic / The Rooms Remember](maps/attic-level-design.md) |
 | `exec smg_test.cfg` | SMG and Thunderhead test range |
 | `exec heavy_test.cfg` | Heavy machine gunner range |
 | `exec rocket_test.cfg` | Rocket soldier range |
@@ -79,6 +81,33 @@ See [the Tile Tide guide](maps/README-tile-tide.md) for routes and source.
 End of the Line also has `endline_easy.cfg`, `endline_hard.cfg`, and
 `endline_coop.cfg`. Its shared objectives, double-barrel introduction, alternate
 routes and original railway assets are described in [the mission guide](maps/README-endline.md).
+
+## Mission Complete Quartermaster
+
+Campaign kills and secrets award Sprues. In co-op, every connected squad
+member earns the full reward and spends from their own wallet. Sprues and
+upgrades carry forward with the campaign save. The amber model-kit frame
+in the HUD shows your balance and matches the Sprues pickups.
+
+At the Quartermaster, move forward/back to select a row, press your jump
+binding to switch between **Upgrades** and **Resupply**, and press your fire
+binding to purchase. Each upgrade has four tiers. Resupply prices adjust to
+the amount you can carry. Select **Ready** to deploy. In co-op, every player
+must select **Ready**, and you can unready while the rest of the squad shops.
+
+Map authors can place an `item_sprues` pickup with a `count` value to award the
+squad that many Sprues. The default is 20.
+
+Run `exec quartermaster_test.cfg` for a fresh solo run or
+`exec quartermaster_test_coop.cfg` to host network co-op. For split-screen,
+choose cooperative rules and `pp_quartermaster_test`. The staging area has
+1,200 Sprues, including three 300-Sprue pickups straight ahead. The blue
+opening leads to an optional fight with three soldiers. Walk through the green
+**Backyard Exit** on the right whenever you're ready to shop. **Ready** takes
+you to Garden Infiltration, where you can check your purchases.
+
+Rebuild the editable test map and its operation pack with
+`python3 tools/maps/build_quartermaster_test.py`.
 
 ## Local split-screen
 

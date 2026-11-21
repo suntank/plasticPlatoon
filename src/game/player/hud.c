@@ -24,6 +24,8 @@
  * =======================================================================
  */
 
+#include <stdint.h>
+
 #include "../header/local.h"
 
 void
@@ -69,7 +71,11 @@ MoveClientToIntermission(edict_t *ent)
 	gi.linkentity(ent);
 
 	/* add the layout */
-	if (deathmatch->value || coop->value)
+	if (level.intermission_state == INTERMISSION_QUARTERMASTER)
+	{
+		QM_Enter(ent);
+	}
+	else if (deathmatch->value || coop->value)
 	{
 		DeathmatchScoreboardMessage(ent, NULL);
 		gi.unicast(ent, true);
@@ -119,10 +125,10 @@ BeginIntermission(edict_t *targ)
 	new_unit = strchr(level.changemap, '*') != NULL;
 
 	/* Deployment and the Sandbreak debrief already have their own flow. */
-	mission_complete = !deathmatch->value && !strncmp(level.mapname, "pp_", 3) &&
-		strcmp(level.mapname, "pp_sandstorm_briefing") &&
-		strcmp(level.mapname, "pp_sandbreak_end") &&
-		strcmp(level.changemap, "pp_sandbreak_end");
+	mission_complete = QM_Campaign() &&
+		Q_stricmp(level.mapname, "pp_sandstorm_briefing") &&
+		Q_stricmp(level.mapname, "pp_sandbreak_end") &&
+		Q_stricmp(level.changemap, "pp_sandbreak_end");
 
 	if (new_unit)
 	{
@@ -155,11 +161,12 @@ BeginIntermission(edict_t *targ)
 	}
 	else if (!deathmatch->value && !mission_complete)
 	{
-		level.exitintermission = 1; /* go immediately to the next level */
+		level.intermission_state = INTERMISSION_EXIT; /* go immediately to the next level */
 		return;
 	}
 
-	level.exitintermission = 0;
+	level.intermission_state = mission_complete ? INTERMISSION_QUARTERMASTER :
+		INTERMISSION_WAITING;
 	if (mission_complete)
 	{
 		gi.configstring(CS_CDTRACK, PP_MISSION_COMPLETE_MUSIC);
@@ -220,10 +227,6 @@ BeginIntermission(edict_t *targ)
 		}
 
 		MoveClientToIntermission(client);
-		if (mission_complete && !new_unit && client->client->pers.connected)
-		{
-			gi.centerprintf(client, "MISSION COMPLETE\nPress a button after five seconds.");
-		}
 	}
 }
 
@@ -429,10 +432,28 @@ G_SetStats(edict_t *ent)
 	gitem_t *item;
 	int index, cells = 0;
 	int power_armor_type;
+	short *stats;
 
 	if (!ent)
 	{
 		return;
+	}
+
+	stats = ent->client->ps.stats;
+	if (QM_Campaign() && !ent->client->resp.spectator)
+	{
+		uint32_t balance = ent->client->quartermaster.progress.sprues;
+
+		stats[STAT_SPRUES_ICON] = gi.imageindex(PP_SPRUES_ICON);
+		/* Each player-state stat travels as a 16-bit word. */
+		stats[STAT_SPRUES_LOW] = (short)(balance & 0xffffu);
+		stats[STAT_SPRUES_HIGH] = (short)(balance >> 16);
+	}
+	else
+	{
+		stats[STAT_SPRUES_ICON] = 0;
+		stats[STAT_SPRUES_LOW] = 0;
+		stats[STAT_SPRUES_HIGH] = 0;
 	}
 
 	/* health */
@@ -560,7 +581,11 @@ G_SetStats(edict_t *ent)
 	/* layouts */
 	ent->client->ps.stats[STAT_LAYOUTS] = 0;
 
-	if (deathmatch->value)
+	if (QM_IsOpen() && ent->client->quartermaster.squad_size > 0)
+	{
+		ent->client->ps.stats[STAT_LAYOUTS] = LAYOUT_QUARTERMASTER;
+	}
+	else if (deathmatch->value)
 	{
 		if ((ent->client->pers.health <= 0) || level.intermissiontime ||
 			ent->client->showscores)
@@ -661,6 +686,7 @@ G_SetSpectatorStats(edict_t *ent)
 	}
 
 	cl->ps.stats[STAT_SPECTATOR] = 1;
+	cl->ps.stats[STAT_SPRUES_ICON] = 0;
 
 	/* layouts are independant in spectator */
 	cl->ps.stats[STAT_LAYOUTS] = 0;

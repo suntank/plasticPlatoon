@@ -75,6 +75,7 @@
 #define FL_NO_KNOCKBACK 0x00000800
 #define FL_POWER_ARMOR 0x00001000 /* power armor (if any) is active */
 #define FL_COOP_TAKEN 0x00002000 /* Another client has already taken it */
+#define FL_FIRE_ONLY 0x00004000
 #define FL_RESPAWN 0x80000000 /* used for item respawning */
 
 #define FRAMETIME 0.1
@@ -110,7 +111,8 @@ typedef enum
 	AMMO_CELLS,
 	AMMO_SLUGS,
 	AMMO_GL_ROUNDS,
-	AMMO_LIGHT_BULLETS
+	AMMO_LIGHT_BULLETS,
+	AMMO_MORTAR
 } ammo_t;
 
 /* Plastic Platoon ammo types are defined in pp_weapon_tuning.h */
@@ -300,6 +302,13 @@ typedef struct
 	qboolean autosaved;
 } game_locals_t;
 
+enum
+{
+	INTERMISSION_WAITING,
+	INTERMISSION_EXIT,
+	INTERMISSION_QUARTERMASTER
+};
+
 /* this structure is cleared as each map is entered
    it is read/written to the level.sav file for savegames */
 typedef struct
@@ -314,7 +323,7 @@ typedef struct
 	/* intermission state */
 	float intermissiontime; /* time the intermission was started */
 	char *changemap;
-	int exitintermission;
+	int intermission_state;
 	vec3_t intermission_origin;
 	vec3_t intermission_angle;
 
@@ -831,6 +840,20 @@ void DeathmatchScoreboardMessage(edict_t *client, edict_t *killer);
 void HelpComputerMessage(edict_t *client);
 void InventoryMessage(edict_t *client);
 
+/* quartermaster.c */
+qboolean QM_Campaign(void);
+qboolean QM_IsOpen(void);
+void QM_Enter(edict_t *ent);
+void QM_Input(edict_t *ent, const usercmd_t *cmd);
+qboolean QM_Frame(void);
+void QM_KillReward(const edict_t *monster);
+void QM_AwardSprues(int amount, qboolean discovery);
+int QM_AmmoCap(const gclient_t *client, int ammo_tag);
+int QM_ArmorCap(const gclient_t *client);
+int QM_ArmorPoints(edict_t *ent);
+void QM_AddArmor(edict_t *ent, int amount);
+void QM_ClampStock(edict_t *ent);
+
 /* g_pweapon.c */
 void PlayerNoise(edict_t *who, vec3_t where, int type);
 
@@ -929,6 +952,37 @@ typedef struct
 	qboolean spectator; /* client is a spectator */
 } client_respawn_t;
 
+enum
+{
+	QM_HEALTH,
+	QM_ARMOR,
+	QM_BANDOLIER,
+	QM_DEMOLITION,
+	QM_ORDNANCE,
+	QM_UPGRADE_COUNT
+};
+
+typedef struct
+{
+	int sprues;
+	int kills_earned;
+	int discoveries_earned;
+	byte tier[QM_UPGRADE_COUNT];
+} quartermaster_progress_t;
+
+typedef struct
+{
+	quartermaster_progress_t progress;
+	int page;
+	int row;
+	unsigned int input;
+	int ready_count;
+	int squad_size;
+	qboolean ready;
+	qboolean redraw;
+	char feedback[40];
+} quartermaster_t;
+
 /* this structure is cleared on each PutClientInServer(),
    except for 'client->pers' */
 struct gclient_s
@@ -1021,6 +1075,9 @@ struct gclient_s
 	float burn_damage_time;      /* next time to apply burn damage */
 	float burn_end_time;         /* when burning stops */
 	edict_t *burn_attacker;      /* who set us on fire */
+
+	/* Keep at the end so old saves can read the original client block. */
+	quartermaster_t quartermaster;
 };
 
 struct edict_s

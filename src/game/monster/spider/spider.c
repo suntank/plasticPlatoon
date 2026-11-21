@@ -178,7 +178,10 @@ SP_monster_spider(edict_t *self)
 	self->s.modelindex = gi.modelindex("models/monsters/spider/tris.md2");
 	VectorSet(self->mins, -32, -32, -24);
 	VectorSet(self->maxs, 32, 32, 24);
-	self->health = 300;
+	if (self->health <= 0)
+	{
+		self->health = 300;
+	}
 	self->gib_health = -120;
 	self->mass = 350;
 	self->pain = spider_pain;

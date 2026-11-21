@@ -1,0 +1,380 @@
+// Quartermaster Test Range. Spawn and supplies are south; the optional fight is north.
+{
+"classname" "worldspawn"
+"message" "Quartermaster Test Range"
+"sky" "unit1_"
+"sounds" "0"
+{
+( -336 -352 -40 ) ( -336 656 0 ) ( -336 -352 0 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( 336 -352 -40 ) ( 336 656 0 ) ( 336 656 -40 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -336 -352 -40 ) ( 336 -352 0 ) ( 336 -352 -40 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -336 656 -40 ) ( 336 656 0 ) ( -336 656 0 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -336 -352 -40 ) ( 336 656 -40 ) ( -336 656 -40 ) sandkeep/sand 0 0 0 1 1 0 0 0
+( -336 -352 0 ) ( 336 656 0 ) ( 336 -352 0 ) sandkeep/sand 0 0 0 1 1 0 0 0
+}
+{
+( -336 -352 240 ) ( -336 656 272 ) ( -336 -352 272 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( 336 -352 240 ) ( 336 656 272 ) ( 336 656 240 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -336 -352 240 ) ( 336 -352 272 ) ( 336 -352 240 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -336 656 240 ) ( 336 656 272 ) ( -336 656 272 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -336 -352 240 ) ( 336 656 240 ) ( -336 656 240 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+( -336 -352 272 ) ( 336 656 272 ) ( 336 -352 272 ) sandkeep/wood_end 0 0 0 1 1 0 0 0
+}
+{
+( -336 -352 0 ) ( -336 656 240 ) ( -336 -352 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 -352 0 ) ( -304 656 240 ) ( -304 656 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -336 -352 0 ) ( -304 -352 240 ) ( -304 -352 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -336 656 0 ) ( -304 656 240 ) ( -336 656 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -336 -352 0 ) ( -304 656 0 ) ( -336 656 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -336 -352 240 ) ( -304 656 240 ) ( -304 -352 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( 304 -352 0 ) ( 304 656 240 ) ( 304 -352 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 336 -352 0 ) ( 336 656 240 ) ( 336 656 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 304 -352 0 ) ( 336 -352 240 ) ( 336 -352 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 304 656 0 ) ( 336 656 240 ) ( 304 656 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 304 -352 0 ) ( 336 656 0 ) ( 304 656 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 304 -352 240 ) ( 336 656 240 ) ( 336 -352 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( -304 -352 0 ) ( -304 -320 240 ) ( -304 -352 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 304 -352 0 ) ( 304 -320 240 ) ( 304 -320 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 -352 0 ) ( 304 -352 240 ) ( 304 -352 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 -320 0 ) ( 304 -320 240 ) ( -304 -320 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 -352 0 ) ( 304 -320 0 ) ( -304 -320 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 -352 240 ) ( 304 -320 240 ) ( 304 -352 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( -304 624 0 ) ( -304 656 240 ) ( -304 624 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 304 624 0 ) ( 304 656 240 ) ( 304 656 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 624 0 ) ( 304 624 240 ) ( 304 624 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 656 0 ) ( 304 656 240 ) ( -304 656 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 624 0 ) ( 304 656 0 ) ( -304 656 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 624 240 ) ( 304 656 240 ) ( 304 624 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( -304 0 0 ) ( -304 32 240 ) ( -304 0 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -76 0 0 ) ( -76 32 240 ) ( -76 32 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 0 0 ) ( -76 0 240 ) ( -76 0 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 32 0 ) ( -76 32 240 ) ( -304 32 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 0 0 ) ( -76 32 0 ) ( -304 32 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( -304 0 240 ) ( -76 32 240 ) ( -76 0 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( 76 0 0 ) ( 76 32 240 ) ( 76 0 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 304 0 0 ) ( 304 32 240 ) ( 304 32 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 76 0 0 ) ( 304 0 240 ) ( 304 0 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 76 32 0 ) ( 304 32 240 ) ( 76 32 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 76 0 0 ) ( 304 32 0 ) ( 76 32 0 ) sandkeep/wood 0 0 0 1 1 0 0 0
+( 76 0 240 ) ( 304 32 240 ) ( 304 0 240 ) sandkeep/wood 0 0 0 1 1 0 0 0
+}
+{
+( -76 0 125 ) ( -76 32 240 ) ( -76 0 240 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 76 0 125 ) ( 76 32 240 ) ( 76 32 125 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -76 0 125 ) ( 76 0 240 ) ( 76 0 125 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -76 32 125 ) ( 76 32 240 ) ( -76 32 240 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -76 0 125 ) ( 76 32 125 ) ( -76 32 125 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -76 0 240 ) ( 76 32 240 ) ( 76 0 240 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+}
+{
+( -88 -12 0 ) ( -88 41 125 ) ( -88 -12 125 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -76 -12 0 ) ( -76 41 125 ) ( -76 41 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -88 -12 0 ) ( -76 -12 125 ) ( -76 -12 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -88 41 0 ) ( -76 41 125 ) ( -88 41 125 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -88 -12 0 ) ( -76 41 0 ) ( -88 41 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -88 -12 125 ) ( -76 41 125 ) ( -76 -12 125 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+}
+{
+( 76 -12 0 ) ( 76 41 125 ) ( 76 -12 125 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 88 -12 0 ) ( 88 41 125 ) ( 88 41 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 76 -12 0 ) ( 88 -12 125 ) ( 88 -12 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 76 41 0 ) ( 88 41 125 ) ( 76 41 125 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 76 -12 0 ) ( 88 41 0 ) ( 76 41 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 76 -12 125 ) ( 88 41 125 ) ( 88 -12 125 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+}
+{
+( 159 -47 0 ) ( 159 -15 122 ) ( 159 -47 122 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 174 -47 0 ) ( 174 -15 122 ) ( 174 -15 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 159 -47 0 ) ( 174 -47 122 ) ( 174 -47 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 159 -15 0 ) ( 174 -15 122 ) ( 159 -15 122 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 159 -47 0 ) ( 174 -15 0 ) ( 159 -15 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 159 -47 122 ) ( 174 -15 122 ) ( 174 -47 122 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( 275 -47 0 ) ( 275 -15 122 ) ( 275 -47 122 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 290 -47 0 ) ( 290 -15 122 ) ( 290 -15 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 275 -47 0 ) ( 290 -47 122 ) ( 290 -47 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 275 -15 0 ) ( 290 -15 122 ) ( 275 -15 122 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 275 -47 0 ) ( 290 -15 0 ) ( 275 -15 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 275 -47 122 ) ( 290 -15 122 ) ( 290 -47 122 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( 159 -47 104 ) ( 159 -15 122 ) ( 159 -47 122 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 290 -47 104 ) ( 290 -15 122 ) ( 290 -15 104 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 159 -47 104 ) ( 290 -47 122 ) ( 290 -47 104 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 159 -15 104 ) ( 290 -15 122 ) ( 159 -15 122 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 159 -47 104 ) ( 290 -15 104 ) ( 159 -15 104 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 159 -47 122 ) ( 290 -15 122 ) ( 290 -47 122 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( 174 -47 0 ) ( 174 -10 4 ) ( 174 -47 4 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 275 -47 0 ) ( 275 -10 4 ) ( 275 -10 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 174 -47 0 ) ( 275 -47 4 ) ( 275 -47 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 174 -10 0 ) ( 275 -10 4 ) ( 174 -10 4 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 174 -47 0 ) ( 275 -10 0 ) ( 174 -10 0 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+( 174 -47 4 ) ( 275 -10 4 ) ( 275 -47 4 ) sandkeep/plastic_green_smooth 0 0 0 1 1 0 0 0
+}
+{
+( -235 168 0 ) ( -235 215 56 ) ( -235 168 56 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -70 168 0 ) ( -70 215 56 ) ( -70 215 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -235 168 0 ) ( -70 168 56 ) ( -70 168 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -235 215 0 ) ( -70 215 56 ) ( -235 215 56 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -235 168 0 ) ( -70 215 0 ) ( -235 215 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( -235 168 56 ) ( -70 215 56 ) ( -70 168 56 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+}
+{
+( 70 262 0 ) ( 70 315 56 ) ( 70 262 56 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 235 262 0 ) ( 235 315 56 ) ( 235 315 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 70 262 0 ) ( 235 262 56 ) ( 235 262 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 70 315 0 ) ( 235 315 56 ) ( 70 315 56 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 70 262 0 ) ( 235 315 0 ) ( 70 315 0 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+( 70 262 56 ) ( 235 315 56 ) ( 235 262 56 ) sandkeep/plastic_blue_smooth 0 0 0 1 1 0 0 0
+}
+{
+( -71 389 0 ) ( -71 440 48 ) ( -71 389 48 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( 71 389 0 ) ( 71 440 48 ) ( 71 440 0 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -71 389 0 ) ( 71 389 48 ) ( 71 389 0 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -71 440 0 ) ( 71 440 48 ) ( -71 440 48 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -71 389 0 ) ( 71 440 0 ) ( -71 440 0 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+( -71 389 48 ) ( 71 440 48 ) ( 71 389 48 ) sandkeep/plastic_red 0 0 0 1 1 0 0 0
+}
+{
+( 161 -52 122 ) ( 161 -47 186 ) ( 161 -52 186 ) sandkeep/iron 0 0 0 1 1 134217728 0 0
+( 289 -52 122 ) ( 289 -47 186 ) ( 289 -47 122 ) sandkeep/iron 0 0 0 1 1 134217728 0 0
+( 161 -52 122 ) ( 289 -52 186 ) ( 289 -52 122 ) endline/sign_exit -322 372 0 0.5 0.5 134217728 0 0
+( 161 -47 122 ) ( 289 -47 186 ) ( 161 -47 186 ) sandkeep/iron 0 0 0 1 1 134217728 0 0
+( 161 -52 122 ) ( 289 -47 122 ) ( 161 -47 122 ) sandkeep/iron 0 0 0 1 1 134217728 0 0
+( 161 -52 186 ) ( 289 -47 186 ) ( 289 -52 186 ) sandkeep/iron 0 0 0 1 1 134217728 0 0
+}
+}
+{
+"classname" "info_player_start"
+"origin" "0 -276 24"
+"angle" "90"
+}
+{
+"classname" "info_player_coop"
+"origin" "-80 -276 24"
+"angle" "90"
+}
+{
+"classname" "info_player_coop"
+"origin" "80 -276 24"
+"angle" "90"
+}
+{
+"classname" "info_player_coop"
+"origin" "160 -276 24"
+"angle" "90"
+}
+{
+"classname" "info_player_intermission"
+"origin" "14 -295 126"
+"angles" "20 54 0"
+}
+{
+"classname" "item_sprues"
+"origin" "0 -217 32"
+"count" "300"
+}
+{
+"classname" "item_sprues"
+"origin" "0 -147 32"
+"count" "300"
+}
+{
+"classname" "item_sprues"
+"origin" "0 -77 32"
+"count" "300"
+}
+{
+"classname" "item_sprues"
+"origin" "-88 -147 32"
+"count" "100"
+}
+{
+"classname" "item_sprues"
+"origin" "88 -147 32"
+"count" "100"
+}
+{
+"classname" "item_sprues"
+"origin" "-177 -147 32"
+"count" "100"
+}
+{
+"classname" "weapon_smg"
+"origin" "0 -182 32"
+}
+{
+"classname" "ammo_light_bullets"
+"origin" "0 -112 32"
+}
+{
+"classname" "ammo_light_bullets"
+"origin" "-88 -217 32"
+}
+{
+"classname" "ammo_light_bullets"
+"origin" "88 -217 32"
+}
+{
+"classname" "weapon_shotgun"
+"origin" "-179 -216 32"
+}
+{
+"classname" "ammo_shells"
+"origin" "-236 -216 32"
+}
+{
+"classname" "item_armor_jacket"
+"origin" "-235 -147 32"
+}
+{
+"classname" "item_health_large"
+"origin" "-234 143 32"
+}
+{
+"classname" "ammo_grenades"
+"origin" "93 -78 32"
+}
+{
+"classname" "weapon_rocketlauncher"
+"origin" "146 -201 32"
+}
+{
+"classname" "ammo_rockets"
+"origin" "200 -201 32"
+}
+{
+"classname" "weapon_grenadelauncher"
+"origin" "147 -261 32"
+}
+{
+"classname" "ammo_gl_rounds"
+"origin" "222 -261 32"
+}
+{
+"classname" "monster_soldier_light"
+"origin" "-156 337 32"
+"angle" "270"
+"spawnflags" "2"
+"targetname" "range_enemies"
+}
+{
+"classname" "monster_soldier"
+"origin" "158 420 32"
+"angle" "270"
+"spawnflags" "2"
+"targetname" "range_enemies"
+}
+{
+"classname" "monster_soldier_heavy"
+"origin" "0 536 32"
+"angle" "270"
+"spawnflags" "2"
+"targetname" "range_enemies"
+}
+{
+"classname" "light"
+"origin" "-180 -200 194"
+"light" "330"
+"_color" "1 .94 .84"
+}
+{
+"classname" "light"
+"origin" "0 -210 194"
+"light" "365"
+"_color" "1 .94 .84"
+}
+{
+"classname" "light"
+"origin" "173 -190 194"
+"light" "350"
+"_color" ".82 .92 1"
+}
+{
+"classname" "light"
+"origin" "224 -81 194"
+"light" "295"
+"_color" ".72 1 .76"
+}
+{
+"classname" "light"
+"origin" "-176 128 194"
+"light" "305"
+"_color" ".87 .93 1"
+}
+{
+"classname" "light"
+"origin" "132 172 194"
+"light" "300"
+"_color" ".87 .93 1"
+}
+{
+"classname" "light"
+"origin" "-162 379 194"
+"light" "310"
+"_color" "1 .91 .8"
+}
+{
+"classname" "light"
+"origin" "172 464 194"
+"light" "335"
+"_color" "1 .91 .8"
+}
+{
+"classname" "light"
+"origin" "0 557 194"
+"light" "340"
+"_color" ".86 .92 1"
+}
+{
+"classname" "trigger_once"
+"target" "range_enemies"
+{
+( -72 51 0 ) ( -72 105 118 ) ( -72 51 118 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( 72 51 0 ) ( 72 105 118 ) ( 72 105 0 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( -72 51 0 ) ( 72 51 118 ) ( 72 51 0 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( -72 105 0 ) ( 72 105 118 ) ( -72 105 118 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( -72 51 0 ) ( 72 105 0 ) ( -72 105 0 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( -72 51 118 ) ( 72 105 118 ) ( 72 51 118 ) sandkeep/trim 0 0 0 1 1 0 0 0
+}
+}
+{
+"classname" "trigger_once"
+"target" "quartermaster_exit"
+{
+( 174 -40 3 ) ( 174 -11 104 ) ( 174 -40 104 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( 275 -40 3 ) ( 275 -11 104 ) ( 275 -11 3 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( 174 -40 3 ) ( 275 -40 104 ) ( 275 -40 3 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( 174 -11 3 ) ( 275 -11 104 ) ( 174 -11 104 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( 174 -40 3 ) ( 275 -11 3 ) ( 174 -11 3 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( 174 -40 104 ) ( 275 -11 104 ) ( 275 -40 104 ) sandkeep/trim 0 0 0 1 1 0 0 0
+}
+}
+{
+"classname" "target_changelevel"
+"targetname" "quartermaster_exit"
+"map" "pp_garden_infiltration"
+}
+{
+"classname" "target_help"
+"targetname" "range_help"
+"spawnflags" "1"
+"message" "QUARTERMASTER TEST RANGE\nCollect Sprues from the staging area.\nThe blue lane starts an optional fight.\nWalk through the green BACKYARD EXIT to shop and deploy to Garden Infiltration."
+}
+{
+"classname" "trigger_always"
+"target" "range_help"
+}

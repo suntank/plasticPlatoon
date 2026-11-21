@@ -1160,6 +1160,7 @@ typedef enum
 #define STAT_HELPICON 11
 #define STAT_SELECTED_ITEM 12
 #define STAT_LAYOUTS 13
+#define LAYOUT_QUARTERMASTER 4
 #define STAT_FRAGS 14
 #define STAT_FLASHES 15                 /* cleared each frame, 1 = health, 2 = armor */
 #define STAT_CHASE 16
@@ -1171,6 +1172,10 @@ typedef enum
 #define STAT_AIMASSIST_YAW 22
 #define STAT_AIMASSIST_HIP_PITCH 23  /* Actual hip-fire aim offset, degrees * 100. */
 #define STAT_AIMASSIST_HIP_YAW 24
+#define STAT_SPRUES_ICON 25
+#define STAT_SPRUES_LOW 26
+#define STAT_SPRUES_HIGH 27
+#define PP_SPRUES_ICON "i_sprues"
 #define AIMASSIST_ACTIVE 1
 #define AIMASSIST_TARGET 2
 #define AIMASSIST_CLOSE_TARGET 4

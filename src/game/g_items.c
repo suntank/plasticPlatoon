@@ -328,6 +328,38 @@ Pickup_AncientHead(edict_t *ent, edict_t *other)
 	return true;
 }
 
+static qboolean
+Pickup_CampaignAmmoPack(edict_t *player, qboolean backpack)
+{
+	static const char *const supplies[] = {
+		"Heavy Bullets", "Shells", "Napalm", "Grenades", "Rockets", "Sniper Rounds"
+	};
+	int i, count = backpack ? ARRLEN(supplies) : 2;
+	qboolean added = false;
+
+	for (i = 0; i < count; ++i)
+	{
+		gitem_t *item = FindItem(supplies[i]);
+		if (item && Add_Ammo(player, item, item->quantity))
+		{
+			added = true;
+		}
+	}
+	return added;
+}
+
+static qboolean
+Pickup_Sprues(edict_t *ent, edict_t *other /* unused */)
+{
+	if (!QM_Campaign() || level.intermissiontime)
+	{
+		return false;
+	}
+
+	QM_AwardSprues(ent->count > 0 ? ent->count : 20, true);
+	return true;
+}
+
 qboolean
 Pickup_Bandolier(edict_t *ent, edict_t *other)
 {
@@ -337,6 +369,11 @@ Pickup_Bandolier(edict_t *ent, edict_t *other)
 	if (!ent || !other)
 	{
 		return false;
+	}
+
+	if (QM_Campaign())
+	{
+		return Pickup_CampaignAmmoPack(other, false);
 	}
 
 	if (other->client->pers.max_bullets < 999)
@@ -406,6 +443,11 @@ Pickup_Pack(edict_t *ent, edict_t *other)
 	if (!ent || !other)
 	{
 		return false;
+	}
+
+	if (QM_Campaign())
+	{
+		return Pickup_CampaignAmmoPack(other, true);
 	}
 
 	if (other->client->pers.max_bullets < 999)
@@ -702,6 +744,33 @@ Pickup_Key(edict_t *ent, edict_t *other)
 
 /* ====================================================================== */
 
+static int
+LegacyAmmoCap(const gclient_t *client, int tag)
+{
+	switch (tag)
+	{
+		case AMMO_BULLETS:
+		case AMMO_MORTAR:
+			return client->pers.max_bullets;
+		case AMMO_LIGHT_BULLETS:
+			return AMMO_CAP_LIGHT_ROUNDS;
+		case AMMO_SHELLS:
+			return client->pers.max_shells;
+		case AMMO_ROCKETS:
+			return client->pers.max_rockets;
+		case AMMO_GRENADES:
+			return client->pers.max_grenades;
+		case AMMO_CELLS:
+			return client->pers.max_cells;
+		case AMMO_SLUGS:
+			return client->pers.max_slugs;
+		case AMMO_GL_ROUNDS:
+			return client->pers.max_gl_rounds;
+		default:
+			return 0;
+	}
+}
+
 qboolean
 Add_Ammo(edict_t *ent, gitem_t *item, int count)
 {
@@ -713,57 +782,20 @@ Add_Ammo(edict_t *ent, gitem_t *item, int count)
 		return false;
 	}
 
-	if (item->tag == AMMO_BULLETS)
+	max = QM_AmmoCap(ent->client, item->tag);
+	if (!max)
 	{
-		max = ent->client->pers.max_bullets;
+		max = LegacyAmmoCap(ent->client, item->tag);
 	}
-	else if (item->tag == AMMO_LIGHT_BULLETS)
-	{
-		max = AMMO_CAP_LIGHT_ROUNDS;
-	}
-	else if (item->tag == AMMO_SHELLS)
-	{
-		max = ent->client->pers.max_shells;
-	}
-	else if (item->tag == AMMO_ROCKETS)
-	{
-		max = ent->client->pers.max_rockets;
-	}
-	else if (item->tag == AMMO_GRENADES)
-	{
-		max = ent->client->pers.max_grenades;
-	}
-	else if (item->tag == AMMO_CELLS)
-	{
-		max = ent->client->pers.max_cells;
-	}
-	else if (item->tag == AMMO_SLUGS)
-	{
-		max = ent->client->pers.max_slugs;
-	}
-	else if (item->tag == AMMO_GL_ROUNDS)
-	{
-		max = ent->client->pers.max_gl_rounds;
-	}
-	else
-	{
-		return false;
-	}
-
 	index = ITEM_INDEX(item);
 
-	if (ent->client->pers.inventory[index] == max)
+	if (ent->client->pers.inventory[index] >= max)
 	{
 		return false;
 	}
 
-	ent->client->pers.inventory[index] += count;
-
-	if (ent->client->pers.inventory[index] > max)
-	{
-		ent->client->pers.inventory[index] = max;
-	}
-
+	ent->client->pers.inventory[index] = Q_min(max,
+		ent->client->pers.inventory[index] + count);
 	return true;
 }
 
@@ -887,27 +919,28 @@ MegaHealth_think(edict_t *self)
 qboolean
 Pickup_Health(edict_t *ent, edict_t *other)
 {
+	int cap;
+
 	if (!ent || !other)
 	{
 		return false;
 	}
 
-	if (!(ent->style & HEALTH_IGNORE_MAX))
+	cap = other->max_health;
+	if (ent->style & HEALTH_IGNORE_MAX)
 	{
-		if (other->health >= other->max_health)
-		{
-			return false;
-		}
+		cap = QM_Campaign() ? cap + 100 : 0;
+	}
+
+	if (cap && other->health >= cap)
+	{
+		return false;
 	}
 
 	other->health += ent->count;
-
-	if (!(ent->style & HEALTH_IGNORE_MAX))
+	if (cap)
 	{
-		if (other->health > other->max_health)
-		{
-			other->health = other->max_health;
-		}
+		other->health = Q_min(other->health, cap);
 	}
 
 	if (ent->style & HEALTH_TIMED)
@@ -958,6 +991,28 @@ ArmorIndex(edict_t *ent)
 	return 0;
 }
 
+int
+QM_ArmorPoints(edict_t *ent)
+{
+	int index = ArmorIndex(ent);
+
+	return index ? ent->client->pers.inventory[index] : 0;
+}
+
+void
+QM_AddArmor(edict_t *ent, int amount)
+{
+	int index = ArmorIndex(ent);
+	int cap = QM_ArmorCap(ent->client);
+	int *inventory = ent->client->pers.inventory;
+
+	if (!index)
+	{
+		index = jacket_armor_index;
+	}
+	inventory[index] = Q_min(cap, inventory[index] + amount);
+}
+
 qboolean
 Pickup_Armor(edict_t *ent, edict_t *other)
 {
@@ -967,6 +1022,7 @@ Pickup_Armor(edict_t *ent, edict_t *other)
 	int newcount;
 	float salvage;
 	int salvagecount;
+	int campaign_cap;
 
 	if (!ent || !other)
 	{
@@ -977,11 +1033,20 @@ Pickup_Armor(edict_t *ent, edict_t *other)
 	newinfo = (gitem_armor_t *)ent->item->info;
 
 	old_armor_index = ArmorIndex(other);
+	campaign_cap = QM_ArmorCap(other->client);
 
 	/* handle armor shards specially */
 	if (ent->item->tag == ARMOR_SHARD)
 	{
-		if (!old_armor_index)
+		if (campaign_cap)
+		{
+			if (QM_ArmorPoints(other) >= campaign_cap)
+			{
+				return false;
+			}
+			QM_AddArmor(other, 2);
+		}
+		else if (!old_armor_index)
 		{
 			other->client->pers.inventory[jacket_armor_index] = 2;
 		}
@@ -1019,10 +1084,7 @@ Pickup_Armor(edict_t *ent, edict_t *other)
 						   other->client->pers.inventory[old_armor_index];
 			newcount = newinfo->base_count + salvagecount;
 
-			if (newcount > newinfo->max_count)
-			{
-				newcount = newinfo->max_count;
-			}
+			newcount = Q_min(newcount, campaign_cap ? campaign_cap : newinfo->max_count);
 
 			/* zero count of old armor so it goes away */
 			other->client->pers.inventory[old_armor_index] = 0;
@@ -1038,10 +1100,7 @@ Pickup_Armor(edict_t *ent, edict_t *other)
 			newcount = other->client->pers.inventory[old_armor_index] +
 					   salvagecount;
 
-			if (newcount > oldinfo->max_count)
-			{
-				newcount = oldinfo->max_count;
-			}
+			newcount = Q_min(newcount, campaign_cap ? campaign_cap : oldinfo->max_count);
 
 			/* if we're already maxed out then we don't need the new armor */
 			if (other->client->pers.inventory[old_armor_index] >= newcount)
@@ -1659,6 +1718,12 @@ SpawnItem(edict_t *ent, gitem_t *item)
 		return;
 	}
 
+	if (item->pickup == Pickup_Sprues && !QM_Campaign())
+	{
+		G_FreeEdict(ent);
+		return;
+	}
+
 	PrecacheItem(item);
 
 	if (ent->spawnflags)
@@ -2273,7 +2338,7 @@ static const gitem_t gameitemlist[] = {
 		IT_AMMO,
 		0,
 		NULL,
-		0,
+		AMMO_MORTAR,
 		""
 	},
 
@@ -2791,6 +2856,29 @@ static const gitem_t gameitemlist[] = {
 		NULL,
 		0,
 		"weapons/shotgf1b.wav"
+	},
+
+	/* QUAKED item_sprues (.3 .3 1) (-8 -8 -8) (8 8 8)
+	   Awards the squad "count" Sprues (default 20). */
+	{
+		"item_sprues",
+		Pickup_Sprues,
+		NULL,
+		NULL,
+		NULL,
+		"items/pkup.wav",
+		"models/items/sprues/tris.md2", EF_ROTATE,
+		NULL,
+		PP_SPRUES_ICON,
+		"Sprues",
+		3,
+		0,
+		NULL,
+		0,
+		0,
+		NULL,
+		0,
+		""
 	},
 
 	/* end of list marker */

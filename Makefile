@@ -1029,11 +1029,13 @@ GAME_OBJS_ = \
 	src/game/monster/mutant/mutant.o \
 	src/game/monster/parasite/parasite.o \
 	src/game/monster/soldier/soldier.o \
+	src/game/monster/soldier/melted.o \
 	src/game/monster/supertank/supertank.o \
 	src/game/monster/tank/tank.o \
 	src/game/player/client.o \
 	src/game/player/aim_assist.o \
 	src/game/player/hud.o \
+	src/game/player/quartermaster.o \
 	src/game/player/trail.o \
 	src/game/player/view.o \
 	src/game/player/weapon.o \

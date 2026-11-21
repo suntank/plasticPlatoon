@@ -26,6 +26,10 @@ soldiers, with shotgun soldiers guarding the narrow passes and final bunker.
 Supplies are limited to hand grenades, the shotgun, shells, small/regular health,
 armor shards and 25-point jacket armor. Ammunition and health are shared.
 
+Five small Sprue pickups are scattered along the main route. Three larger
+stashes reward checking behind cover and following side passages. Pickups
+award Sprues to the whole squad in co-op.
+
 The current local build uses the `pp_backyard` skybox. The
 `operation-garden-infiltration.pk3` archive includes the editable and runtime
 MAPs, design metadata, translation receipt and BSP/VIS/RAD build receipt.
@@ -35,7 +39,7 @@ Exact source, BSP and package hashes are recorded in
 The build from commit `77f8218` includes the authored secret pickups and trigger
 volumes. The translated compile copy uses `sandkeep/trim` on two invisible
 triggers whose editor faces use `__TB_empty` and explicit Valve 220 texture
-axes to preserve alignment on diagonal faces. The editable MAP matches the
+axes to preserve alignment on diagonal faces. That build used the
 GitHub source. The legacy mission audit targets the exterior-rally layout.
 
 The preceding map revision averaged 33.78 FPS on normal and 32.50 FPS on hard

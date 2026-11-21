@@ -522,6 +522,16 @@
       "sha256": "a822841e30ad7f499a67c14ffc5f1d5214ad9632de05db80b183fdd1ae7127b1"
     },
     {
+      "path": "models/items/sprues/skin.png",
+      "bytes": 982,
+      "sha256": "bd509d9f6c1d987e390c8bf9273bf809a1a3def22275a1bc97ef85e8f278bbe1"
+    },
+    {
+      "path": "models/items/sprues/tris.md2",
+      "bytes": 11344,
+      "sha256": "4de34145860d2c462667ac3ef6b0bd74e8d2a24ef2c03d66c38c828da76d91ee"
+    },
+    {
       "path": "models/monsters/ant/colors/tris_red.png",
       "bytes": 4976,
       "sha256": "236d1edd86573ac2349d88ee7fb0f419838aedfd4ada01304970f2e791c1c4ca"
@@ -2900,6 +2910,11 @@
       "path": "pics/i_jacketarmor.png",
       "bytes": 1457,
       "sha256": "5ea9335ab2fa43eb157b451909d5f5d61846b15d9f6ddb93975d4bf09c115fdb"
+    },
+    {
+      "path": "pics/i_sprues.png",
+      "bytes": 2138,
+      "sha256": "e1fef3d0585478a1097161f828dbed766658557e433236050f694511689ad4e5"
     },
     {
       "path": "pics/inventory.pcx",
@@ -5592,6 +5607,6 @@
       "sha256": "289b9b1453cf1d07f8b3a1f29b1b299152aea7978ead935faae241c71e55f200"
     }
   ],
-  "archive_sha256": "e321637aaa6c64475da9eab7255ca6466bd494a4c36c4a3fb157b42ca9a31ece",
-  "archive_bytes": 64181998
+  "archive_sha256": "ec24b5f4371a778b88678361df4d8eabc43c7f9f8a1c8fcf38d7de50ced100f3",
+  "archive_bytes": 64189241
 }

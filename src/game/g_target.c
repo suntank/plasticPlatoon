@@ -468,6 +468,7 @@ use_target_secret(edict_t *ent, edict_t *other /* unused */, edict_t *activator 
 	gi.sound(ent, CHAN_VOICE, ent->noise_index, 1, ATTN_NORM, 0);
 
 	level.found_secrets++;
+	QM_AwardSprues(20, true);
 
 	G_UseTargets(ent, activator);
 	G_FreeEdict(ent);
@@ -527,7 +528,7 @@ use_target_goal(edict_t *ent, edict_t *other /* unused */, edict_t *activator /*
 
 	if (level.found_goals == level.total_goals)
 	{
-		/* Reaching the far eave completes the Attic without a map change. */
+		/* Escaping the Attic hatch completes the mission in place. */
 		gi.configstring(CS_CDTRACK,
 			!strcmp(level.mapname, "pp_attic") && ent->targetname &&
 			!strcmp(ent->targetname, "attic_exit") ? PP_MISSION_COMPLETE_MUSIC : "0");
@@ -740,7 +741,7 @@ platoon_intermission_use(edict_t *self, edict_t *other, edict_t *activator)
 	 * preserving unrelated server flags. */
 	game.serverflags &= ~SFL_CROSS_TRIGGER_MASK;
 	BeginIntermission(self);
-	if (!level.intermissiontime || level.exitintermission)
+	if (!level.intermissiontime || level.intermission_state == INTERMISSION_EXIT)
 	{
 		return;
 	}
@@ -754,8 +755,13 @@ platoon_intermission_use(edict_t *self, edict_t *other, edict_t *activator)
 	{
 		duration = 120;
 	}
-	/* ClientThink normally permits an exit five seconds after this time. */
-	level.intermissiontime = level.time + duration - 5;
+	/* Let the extraction finish before opening the Quartermaster. */
+	level.intermissiontime = level.time + duration;
+	if (level.intermission_state != INTERMISSION_QUARTERMASTER)
+	{
+		/* The normal any-button exit adds five seconds in ClientThink. */
+		level.intermissiontime -= 5;
+	}
 	for (i = 1; i <= game.maxclients; ++i)
 	{
 		edict_t *player = &g_edicts[i];

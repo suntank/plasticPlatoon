@@ -135,6 +135,11 @@ Killed(edict_t *targ, edict_t *inflictor, edict_t *attacker,
 		{
 			level.killed_monsters++;
 
+			if (attacker->client)
+			{
+				QM_KillReward(targ);
+			}
+
 			if (coop->value && attacker->client)
 			{
 				attacker->client->resp.score++;
@@ -563,6 +568,23 @@ T_Damage(edict_t *targ, edict_t *inflictor, edict_t *attacker,
 
 	meansOfDeath = mod;
 
+	if ((targ->flags & FL_FIRE_ONLY) && (mod & ~MOD_FRIENDLY_FIRE) != MOD_FLAME &&
+		(mod & ~MOD_FRIENDLY_FIRE) != MOD_FLAME_SPLASH)
+	{
+		if (damage > 0)
+		{
+			SpawnDamage(TE_SPARKS, point, normal);
+
+			if (attacker->client && !(attacker->flags & FL_NOTARGET))
+			{
+				M_ReactToDamage(targ, attacker);
+				targ->pain(targ, attacker, 0, damage);
+			}
+		}
+
+		return;
+	}
+
 	/* easy mode takes half damage */
 	if ((skill->value == SKILL_EASY) && (deathmatch->value == 0) && targ->client)
 	{
@@ -673,7 +695,10 @@ T_Damage(edict_t *targ, edict_t *inflictor, edict_t *attacker,
 
 	if (targ->svflags & SVF_MONSTER)
 	{
-		M_ReactToDamage(targ, attacker);
+		if (!(targ->flags & FL_FIRE_ONLY) || attacker->client)
+		{
+			M_ReactToDamage(targ, attacker);
+		}
 
 		if (!(targ->monsterinfo.aiflags & AI_DUCKED) && (take))
 		{

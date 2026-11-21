@@ -126,6 +126,7 @@ typedef struct
 void CL_ParseScreenImage(cl_screen_image_t *image, sizebuf_t *msg);
 void SCR_DrawScreenImageOverlay(const cl_screen_image_t *image,
 	int x, int y, int width, int height);
+void SCR_DrawQuartermaster(char *layout, int left, int top, int width, int height);
 
 #define MAX_BRIEFING_SUBTITLE_CUES 24
 #define MAX_BRIEFING_SUBTITLE_TEXT 128

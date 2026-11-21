@@ -10,9 +10,10 @@ extern void platoon_dropship_think(edict_t *self);
 extern void SP_trigger_counter(edict_t *self);
 extern void SP_target_platoon_intermission(edict_t *self);
 
-static cvar_t clients, zero, cooperative;
+static cvar_t clients, entities, zero, cooperative;
 static int center_calls[3];
 static char center_text[3][128];
+static char layouts[3][1024], layout_message[1024];
 static char model_names[64][MAX_QPATH];
 static int model_count;
 static int capture_media_rebind, capture_ship_index, media_rebind_calls;
@@ -50,8 +51,13 @@ static void config_string(int index, char *value)
         Q_strlcpy(music_track, value, sizeof(music_track));
 }
 static void write_byte(int value) { (void)value; }
-static void write_string(char *value) { (void)value; }
-static void unicast(edict_t *ent, qboolean reliable) { (void)ent; (void)reliable; }
+static void write_string(char *value) { Q_strlcpy(layout_message, value, sizeof(layout_message)); }
+static void unicast(edict_t *ent, qboolean reliable)
+{
+    int index = ent - g_edicts;
+    assert(index > 0 && index <= 2);
+    Q_strlcpy(layouts[index], layout_message, sizeof(layouts[index]));
+}
 static void center_print(edict_t *ent, const char *format, ...)
 {
     int index = ent - g_edicts;
@@ -63,6 +69,7 @@ static void center_print(edict_t *ent, const char *format, ...)
     va_end(args);
 }
 static void print(const char *fmt, ...) { (void)fmt; }
+static void client_print(edict_t *ent, int level, const char *fmt, ...) { (void)fmt; }
 static YQ2_ATTR_NORETURN void error(const char *fmt, ...)
 {
     va_list args;
@@ -78,6 +85,7 @@ static void reset(void)
     music_track[0] = '\0';
     memset(center_calls, 0, sizeof(center_calls));
     memset(center_text, 0, sizeof(center_text));
+    memset(layouts, 0, sizeof(layouts));
     memset(model_names,0,sizeof(model_names));model_count=0;
     capture_media_rebind=capture_ship_index=media_rebind_calls=0;
     globals.num_edicts = game.maxclients + 1;
@@ -89,6 +97,7 @@ static void reset(void)
         g_edicts[i].inuse = true;
         g_edicts[i].classname = "player";
         g_edicts[i].health = 100;
+        g_edicts[i].max_health = 100;
         g_edicts[i].client = &game.clients[i - 1];
         game.clients[i - 1].pers.connected = true;
         VectorSet(g_edicts[i].s.origin, 0, i * 32, 24);
@@ -380,7 +389,7 @@ static void test_outbound_flight_and_camera(const char *path)
     assert(scene->use); /* Savegame function table covers the new callback. */
     game.serverflags = SFL_CROSS_TRIGGER_MASK | 0x400;
     scene->use(scene, &g_edicts[1], &g_edicts[1]);
-    assert(level.intermissiontime == 17 && !level.exitintermission);
+    assert(level.intermissiontime == 22 && !QM_IsOpen());
     assert(!strcmp(music_track, PP_MISSION_COMPLETE_MUSIC));
     assert(game.serverflags == 0x400);
     assert(event->count == 98);
@@ -395,15 +404,15 @@ static void test_outbound_flight_and_camera(const char *path)
         assert(!(g_edicts[i].client->ps.stats[STAT_LAYOUTS] & 1));
     }
     restore(path);
-    assert(level.intermissiontime == 17 && !level.exitintermission);
+    assert(level.intermissiontime == 22 && !QM_IsOpen());
     memset(&input, 0, sizeof(input));
     input.buttons = BUTTON_ANY;
     level.time = 21.9f;
     ClientThink(&g_edicts[1], &input);
-    assert(!level.exitintermission);
+    assert(!QM_IsOpen());
     level.time = 22.1f;
     ClientThink(&g_edicts[2], &input);
-    assert(level.exitintermission);
+    assert(QM_IsOpen() && !QM_Frame());
     reset();
     camera = G_Spawn();
     camera->classname = "info_player_intermission";
@@ -416,42 +425,117 @@ static void test_outbound_flight_and_camera(const char *path)
     coop->value = 0;
     unlink(path);
 }
-static void test_completion_music(void)
+static void shop_input(edict_t *player, short move, short jump, int buttons)
+{
+    usercmd_t input = {.forwardmove = move, .upmove = jump, .buttons = buttons};
+    usercmd_t released = {0};
+    ClientThink(player, &input);
+    ClientThink(player, &released);
+}
+
+static void test_quartermaster(const char *path)
 {
     edict_t *camera, *exit;
-    usercmd_t input = {0};
+    edict_t *first = &g_edicts[1], *second = &g_edicts[2];
+    gitem_t *light = FindItem("Light Bullets");
+    edict_t specialist = {.max_health = 180};
+    edict_t heavy = {.max_health = 500};
+    gitem_t *sprues = FindItemByClassname("item_sprues");
+    edict_t cache = {.item = sprues, .count = 20};
 
     reset();
+    coop->value = 1;
     Q_strlcpy(level.mapname, "pp_garden_infiltration", sizeof(level.mapname));
+    edict_t *saved_pickup = G_Spawn();
+    int pickup_index = saved_pickup - g_edicts;
+    saved_pickup->classname = "item_sprues";
+    saved_pickup->item = sprues;
+    saved_pickup->count = 37;
+    saved_pickup->s.modelindex = gi.modelindex("models/items/armor/shard/tris.md2");
+    restore(path);
+    saved_pickup = &g_edicts[pickup_index];
+    assert(saved_pickup->count == 37);
+    assert(!strcmp(model_names[saved_pickup->s.modelindex], "models/items/sprues/tris.md2"));
+    G_FreeEdict(saved_pickup);
+
+    assert(Add_Ammo(first, light, 200));
+    assert(first->client->pers.inventory[ITEM_INDEX(light)] == 150);
+    assert(!Add_Ammo(first, light, 1));
+    QM_KillReward(&specialist);
+    QM_KillReward(&heavy);
+    assert(sprues->pickup(&cache, second));
+    assert(first->client->quartermaster.progress.sprues == 40);
+    assert(second->client->quartermaster.progress.sprues == 40);
+    QM_AwardSprues(900, false);
+    first->health = 62;
     camera = G_Spawn();
     camera->classname = "info_player_intermission";
     exit = G_Spawn();
     exit->map = "pp_sandbox_assault";
     BeginIntermission(exit);
-    assert(level.intermissiontime == 10 && !level.exitintermission);
+    assert(level.intermissiontime == 10 && QM_IsOpen());
     assert(!strcmp(music_track, PP_MISSION_COMPLETE_MUSIC));
-    assert(g_edicts[1].client->ps.pmove.pm_type == PM_FREEZE);
-    assert(center_calls[1] == 1 && center_calls[2] == 1);
-    input.buttons = BUTTON_ANY;
-    ClientThink(&g_edicts[1], &input);
-    assert(!level.exitintermission);
-    level.time = 15.1f;
-    ClientThink(&g_edicts[1], &input);
-    assert(level.exitintermission);
+    assert(first->client->ps.pmove.pm_type == PM_FREEZE);
+    assert(!QM_Frame());
+    assert(strstr(layouts[1], "940 Sprues") && strstr(layouts[1], "20 found"));
+    shop_input(first, 0, 0, BUTTON_ATTACK); /* Held fire on entry is ignored. */
+    for (int i = 0; i < 5; ++i)
+        shop_input(first, 0, 0, BUTTON_ATTACK);
+    assert(first->health == 162 && first->max_health == 200);
+    assert(first->client->quartermaster.progress.tier[QM_HEALTH] == 4);
+    assert(first->client->quartermaster.progress.sprues == 90);
+    shop_input(first, 0, 200, 0); /* Resupply tab. */
+    shop_input(first, 0, 0, BUTTON_ATTACK);
+    assert(first->health == 187 && first->client->quartermaster.progress.sprues == 75);
+    shop_input(first, 0, 0, BUTTON_ATTACK);
+    assert(first->health == 200 && first->client->quartermaster.progress.sprues == 67);
+    shop_input(first, 0, 0, BUTTON_ATTACK);
+    assert(first->client->quartermaster.progress.sprues == 67);
+    shop_input(first, 200, 0, 0); /* Up wraps from Health to Ready. */
+    shop_input(first, 0, 0, BUTTON_ATTACK);
+    shop_input(second, 0, 0, BUTTON_ANY); /* Any-key exit must stay disabled. */
+    assert(!QM_Frame() && strstr(layouts[2], "Squad ready 1/2"));
+    assert(strstr(layouts[1], "67 Sprues") && strstr(layouts[2], "940 Sprues"));
+    assert(strstr(layouts[1], "FIRE SELECT")); /* All resupply rows fit in the layout message. */
+    shop_input(first, 0, 0, BUTTON_ATTACK); /* Unready while the squad shops. */
+    assert(!QM_Frame() && strstr(layouts[2], "Squad ready 0/2"));
+    shop_input(first, 0, 0, BUTTON_ATTACK);
+    second->client->pers.connected = false;
+    assert(QM_Frame()); /* A departed player cannot hold up the squad. */
+    second->client->pers.connected = true;
+    shop_input(second, -200, 0, 0); /* Vest. */
+    shop_input(second, 0, 0, BUTTON_ATTACK);
+    assert(QM_ArmorCap(second->client) == 125 && QM_ArmorPoints(second) == 25);
+    shop_input(second, -200, 0, 0); /* Bandolier. */
+    shop_input(second, 0, 0, BUTTON_ATTACK);
+    assert(QM_AmmoCap(second->client, AMMO_LIGHT_BULLETS) == 200);
+    shop_input(second, 0, 200, 0);
+    shop_input(second, 200, 0, 0);
+    shop_input(second, 0, 0, BUTTON_ATTACK);
+    assert(QM_Frame()); /* Both co-op players are ready. */
+
+    WriteGame(path, false);
+    ReadGame(path);
+    assert(game.clients[0].quartermaster.progress.sprues == 67);
+    assert(game.clients[0].pers.health == 200 && game.clients[0].pers.max_health == 200);
+    assert(game.clients[1].quartermaster.progress.tier[QM_BANDOLIER] == 1);
+    assert(game.clients[1].quartermaster.progress.tier[QM_ARMOR] == 1);
+    unlink(path);
 
     reset();
-    Q_strlcpy(level.mapname, "pp_sandstorm_briefing", sizeof(level.mapname));
+    coop->value = 0;
+    Q_strlcpy(level.mapname, "PP_SANDSTORM_BRIEFING", sizeof(level.mapname));
     exit = G_Spawn();
     exit->map = "pp_garden_infiltration";
     BeginIntermission(exit);
-    assert(level.exitintermission && !music_track[0]);
+    assert(level.intermission_state == INTERMISSION_EXIT && !music_track[0]);
 
     reset();
     Q_strlcpy(level.mapname, "pp_sandbreak", sizeof(level.mapname));
     exit = G_Spawn();
     exit->map = "pp_sandbreak_end";
     BeginIntermission(exit);
-    assert(level.exitintermission && !music_track[0]);
+    assert(level.intermission_state == INTERMISSION_EXIT && !music_track[0]);
 }
 static void test_savegame(const char *path)
 {
@@ -500,17 +584,20 @@ int main(int argc, char **argv)
     gi.dprintf = print; gi.error = error;
     gi.WriteByte = write_byte; gi.WriteString = write_string; gi.unicast = unicast;
     gi.centerprintf = center_print;
+    gi.cprintf = client_print;
     game.maxclients = 2; game.maxentities = 96;
     clients.value = 2; maxclients = &clients;
+    entities.value = 96; maxentities = &entities;
     deathmatch = &zero; coop = &cooperative;
     game.clients = calloc(game.maxclients, sizeof(*game.clients));
     g_edicts = calloc(game.maxentities, sizeof(*g_edicts));
     InitItems();
+    SetItemNames();
     test_extraction(); test_dropship_spawn_contract(); test_flight_vector_speed(); test_flight(); test_savegame(argv[1]);
     test_dropship_turn(argv[1]);
     test_legacy_dropship_media_restore(argv[1]);
     test_outbound_flight_and_camera(argv[1]);
-    test_completion_music();
-    puts("Sandstorm extraction, dropship round trip, cinematic camera and save/load passed");
+    test_quartermaster(argv[1]);
+    puts("Sandstorm extraction, cinematic camera, Quartermaster purchases, co-op ready and save/load passed");
     return 0;
 }

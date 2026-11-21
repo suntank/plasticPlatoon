@@ -19,18 +19,24 @@ static void unicast(edict_t *ent, qboolean reliable) { assert(reliable); recipie
 static void no_free(int tag) {}
 static void *allocate(int bytes, int tag) { return calloc(1, bytes); }
 static void link_entity(edict_t *ent) {}
+static void config_string(int index, char *value) { (void)index; (void)value; }
+static int asset_index(char *name) { (void)name; return 1; }
 static YQ2_ATTR_NORETURN void error(const char *fmt, ...) { va_list ap; va_start(ap, fmt); vfprintf(stderr, fmt, ap); va_end(ap); abort(); }
 
 int main(int argc, char **argv)
 {
-    cvar_t max = {0};
+    cvar_t max = {0}, zero = {0};
     edict_t *target;
     assert(argc == 2);
     gi.WriteByte = write_byte; gi.WriteString = write_string; gi.WriteShort = write_short;
     gi.unicast = unicast; gi.FreeTags = no_free; gi.TagMalloc = allocate;
     gi.linkentity = link_entity; gi.error = error;
+    gi.configstring = config_string;
+    gi.modelindex = gi.soundindex = gi.imageindex = asset_index;
+    coop = deathmatch = &zero;
     game.maxclients = 2; game.maxentities = 4;
     max.value = 2; maxclients = &max;
+    InitItems();
     game.clients = calloc(2, sizeof(*game.clients));
     g_edicts = calloc(4, sizeof(*g_edicts));
     globals.num_edicts = 4;

@@ -64,15 +64,13 @@
  * system and architecture are in the hands of the user.
  */
 
+#include <stddef.h>
+
 #include "../../common/header/common.h" // YQ2ARCH
 #include "../header/local.h"
 #include "savegame.h"
-/*
- * When ever the savegame version is changed, q2 will refuse to
- * load older savegames. This should be bumped if the files
- * in tables/ are changed, otherwise strange things may happen.
- */
-#define SAVEGAMEVER "YQ2-5"
+/* Keep the version readers in sync with changes to saved fields. */
+#define SAVEGAMEVER "YQ2-6"
 
 #ifndef BUILD_DATE
 #define BUILD_DATE __DATE__
@@ -788,8 +786,15 @@ static void
 ReadClient(FILE *f, gclient_t *client, short save_ver)
 {
 	field_t *field;
+	size_t size = sizeof(*client);
 
-	if (fread(client, sizeof(*client), 1, f) != 1)
+	if (save_ver < 6)
+	{
+		size = offsetof(gclient_t, quartermaster);
+		memset(&client->quartermaster, 0, sizeof(client->quartermaster));
+	}
+
+	if (fread(client, size, 1, f) != 1)
 	{
 		fclose(f);
 		gi.error("%s: can't read client", __func__);
@@ -905,6 +910,7 @@ ReadGame(const char *filename)
 		{"YQ2-3", 3},
 		{"YQ2-4", 4},
 		{"YQ2-5", 5},
+		{"YQ2-6", 6},
 	};
 
 	for (i=0; i < ARRLEN(version_mappings); ++i)
@@ -1281,6 +1287,7 @@ ReadLevel(const char *filename)
 	/* The server restores saved configstrings before reading the level. */
 	PrecacheAddedWeapons();
 	gitem_t *heavy_bullets = FindItem("Heavy Bullets");
+	gitem_t *sprues = FindItem("Sprues");
 	gi.configstring(CS_ITEMS + ITEM_INDEX(heavy_bullets), heavy_bullets->pickup_name);
 
 	/* mark all clients as unconnected */
@@ -1315,6 +1322,11 @@ ReadLevel(const char *filename)
 			ent->s.modelindex = gi.modelindex("models/monsters/plastic_boss/body.md2");
 			if (ent->s.modelindex2)
 				ent->s.modelindex2 = gi.modelindex("models/monsters/plastic_boss/main_rotor.md2");
+		}
+
+		if (sprues && ent->item == sprues && ent->s.modelindex && !ent->model)
+		{
+			ent->s.modelindex = gi.modelindex(sprues->world_model);
 		}
 
 		/* Older saves predate the insects' idle and alert callbacks. Keep

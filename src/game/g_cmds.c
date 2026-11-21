@@ -1931,6 +1931,11 @@ ClientCommand(edict_t *ent)
 		return;
 	}
 
+	if (level.intermission_state == INTERMISSION_QUARTERMASTER)
+	{
+		return;
+	}
+
 	if (Q_stricmp(cmd, "score") == 0)
 	{
 		Cmd_Score_f(ent);

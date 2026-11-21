@@ -1811,6 +1811,11 @@ SS_ShouldShowSharedScoreboard(void)
 {
 	int i;
 
+	if (cl.frame.playerstate.stats[STAT_LAYOUTS] & LAYOUT_QUARTERMASTER)
+	{
+		return false;
+	}
+
 	for (i = 0; i < SS_GetSlotCount(); ++i)
 	{
 		const ss_local_player_t *slot = &ss_state.slots[i];
@@ -3631,6 +3636,13 @@ SS_DrawViewportHUD(int slot_index)
 		return;
 	}
 
+	if (ps->stats[STAT_LAYOUTS] & LAYOUT_QUARTERMASTER)
+	{
+		char *layout = slot_index == 0 ? cl.layout : ss_state.slots[slot_index].layout;
+		SCR_DrawQuartermaster(layout, viewport->x, viewport->y, viewport->w, viewport->h);
+		return;
+	}
+
 	ads_active = SS_DrawViewportADSOverlay(slot_index, viewport, ps);
 	inventory_open = SS_IsSlotInventoryOpen(slot_index);
 	scale = SS_GetViewportScale(viewport, SCR_GetHUDScale());
@@ -3726,6 +3738,9 @@ SS_DrawViewportHUD(int slot_index)
 
 	SCR_DrawGrenadeHUD(ps, right_x,
 		viewport->y + margin + header_height + 2 * line_height, scale);
+	SCR_DrawSpruesHUD(ps, right_x,
+		viewport->y + margin + header_height + 2 * line_height + (int)(36 * scale),
+		scale);
 
 	if (ps->stats[STAT_SELECTED_ICON] > 0)
 	{

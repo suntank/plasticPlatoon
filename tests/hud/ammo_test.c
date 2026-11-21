@@ -3,7 +3,11 @@
 #include <assert.h>
 
 static cvar_t zero;
-static int image_index(char *name) { assert(name && name[0]); return 1; }
+static int image_index(char *name)
+{
+    assert(name && name[0]);
+    return !strcmp(name, PP_SPRUES_ICON) ? 2 : 1;
+}
 static void config_string(int index, char *value) { (void)index; (void)value; }
 
 int main(void)
@@ -53,5 +57,19 @@ int main(void)
     G_SetStats(&player);
     assert(client.ps.stats[STAT_AMMO] == -1 && !client.ps.stats[STAT_AMMO_ICON]);
     puts("Shared Light Bullets HUD and pickup cap, separate Heavy Bullets, and knife HUD passed");
+
+    Q_strlcpy(level.mapname, "PP_QUARTERMASTER_TEST", sizeof(level.mapname));
+    G_SetStats(&player);
+    assert(client.ps.stats[STAT_SPRUES_ICON] == 2);
+    assert(!client.ps.stats[STAT_SPRUES_LOW] && !client.ps.stats[STAT_SPRUES_HIGH]);
+    client.quartermaster.progress.sprues = 0x1234fedc;
+    G_SetStats(&player);
+    assert((unsigned short)client.ps.stats[STAT_SPRUES_LOW] == 0xfedc);
+    assert(client.ps.stats[STAT_SPRUES_HIGH] == 0x1234);
+    level.mapname[0] = '\0';
+    G_SetStats(&player);
+    assert(!client.ps.stats[STAT_SPRUES_ICON] && !client.ps.stats[STAT_SPRUES_LOW] &&
+        !client.ps.stats[STAT_SPRUES_HIGH]);
+    puts("Sprues HUD displays zero and full wallet balances on campaign maps");
     return 0;
 }

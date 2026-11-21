@@ -81,8 +81,26 @@ static void test_adrenaline(void)
     assert(!Pickup_Adrenaline(NULL,player)&&!Pickup_Adrenaline(pickup,NULL));
     puts("PASS adrenaline: permanent +1 max outside DM, refill without trimming overheal, unchanged 60-second DM respawn");
 }
+
+static void test_campaign_mega_ceiling(void)
+{
+    edict_t *pickup = reset(100, HEALTH_IGNORE_MAX | HEALTH_TIMED, 250);
+    edict_t *player = &entities[1];
+    Q_strlcpy(level.mapname, "pp_garden_infiltration", sizeof(level.mapname));
+    player->max_health = 200;
+    assert(Pickup_Health(pickup, player) && player->health == 300);
+    assert(!Pickup_Health(pickup, player) && player->health == 300);
+    player->health = 201;
+    level.time = 25;
+    pickup->think(pickup);
+    assert(player->health == 200);
+    puts("PASS campaign Mega Health caps at 300 for Tier IV and decays to 200");
+}
+
 int main(void)
 {
     gi.linkentity=link_entity;gi.unlinkentity=unlink_entity;
-    test_regular_health_and_caps();test_deathmatch_respawn();test_mega_decay();test_adrenaline();return 0;
+    test_regular_health_and_caps();test_deathmatch_respawn();test_mega_decay();test_adrenaline();
+    test_campaign_mega_ceiling();
+    return 0;
 }

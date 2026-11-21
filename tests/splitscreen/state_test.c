@@ -6,6 +6,7 @@ static int freed_entities;
 static int event_gamepad, loopback_slot, sent_slot, transmitted;
 static char sent_command[128];
 client_static_t cls;
+client_state_t cl;
 char *keybindings[K_LAST];
 static cvar_t move_speed = {.value = 200}, turn_speed = {.value = 140};
 static cvar_t pitch_speed = {.value = 150}, run = {.value = 1}, light = {.value = 128};

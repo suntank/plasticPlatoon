@@ -95,6 +95,7 @@ static int point_contents(vec3_t point) { return solid_floor && point[2] < 0 ? C
 static void write_byte(int value) { (void)value; }
 static void write_short(int value) { (void)value; }
 static void write_vector(vec3_t value) { (void)value; }
+static void config_string(int index, char *value) { (void)index; (void)value; }
 static void multicast(vec3_t point, multicast_t destination)
 {
     (void)point; (void)destination; blood_multicasts++;
@@ -115,7 +116,7 @@ static YQ2_ATTR_NORETURN void error(const char *fmt, ...)
 static void test_player_pain(edict_t *ent, edict_t *other, float kick, int damage)
 { (void)ent; (void)other; (void)kick; (void)damage; }
 
-static edict_t *spawn_spider(void)
+static edict_t *spawn_spider_with_health(int health)
 {
     edict_t *spider = &g_edicts[2], *enemy = &g_edicts[1];
     memset(g_edicts, 0, game.maxentities * sizeof(*g_edicts));
@@ -137,10 +138,16 @@ static edict_t *spawn_spider(void)
     link_entity(enemy);
     spider->inuse = true;
     spider->classname = "monster_spider";
+    spider->health = health;
     VectorSet(spider->s.origin, 0, 0, 24);
     ED_CallSpawn(spider);
     spider->enemy = enemy;
     return spider;
+}
+
+static edict_t *spawn_spider(void)
+{
+    return spawn_spider_with_health(0);
 }
 
 static void assert_spider_gib_burst(edict_t *spider)
@@ -170,6 +177,7 @@ int main(int argc, char **argv)
     int i, bite_count = 0;
     assert(argc == 2);
     gi.modelindex = model_index; gi.setmodel = set_model; gi.soundindex = sound_index; gi.sound = sound_effect;
+    gi.configstring = config_string; gi.imageindex = model_index;
     gi.linkentity = link_entity; gi.unlinkentity = unlink_entity;
     gi.BoxEdicts = box_edicts; gi.trace = trace_world; gi.pointcontents = point_contents;
     gi.WriteByte = write_byte; gi.WriteShort = write_short; gi.WritePosition = write_vector;
@@ -182,6 +190,8 @@ int main(int argc, char **argv)
     game.maxclients = 1; game.maxentities = 64;
     game.clients = calloc(game.maxclients, sizeof(*game.clients));
     g_edicts = calloc(game.maxentities, sizeof(*g_edicts));
+    InitItems();
+    assert(spawn_spider_with_health(76)->max_health == 76);
     check_insect_sounds(spawn_spider, "spider", 8, argv[1]);
     spider = spawn_spider(); enemy = spider->enemy;
     assert(spider->svflags & SVF_MONSTER);

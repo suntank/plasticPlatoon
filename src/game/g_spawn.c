@@ -135,6 +135,8 @@ void SP_monster_gladiator(edict_t *self);
 void SP_monster_gunner(edict_t *self);
 void SP_monster_infantry(edict_t *self);
 void SP_monster_soldier_light(edict_t *self);
+void SP_monster_melted(edict_t *self);
+void SP_info_melted_path(edict_t *self);
 void SP_monster_soldier(edict_t *self);
 void SP_monster_soldier_ss(edict_t *self);
 void SP_monster_soldier_heavy(edict_t *self);
@@ -252,6 +254,7 @@ static spawn_t spawns[] = {
 	{"func_group", SP_info_null},
 	{"info_notnull", SP_info_notnull},
 	{"path_corner", SP_path_corner},
+	{"info_melted_path", SP_info_melted_path},
 	{"point_combat", SP_point_combat},
 
 	{"misc_explobox", SP_misc_explobox},
@@ -286,6 +289,7 @@ static spawn_t spawns[] = {
 	{"monster_gunner", SP_platoon_legacy_heavy},
 	{"monster_infantry", SP_monster_infantry},
 	{"monster_soldier_light", SP_monster_soldier_light},
+	{"monster_melted", SP_monster_melted},
 	{"monster_soldier", SP_monster_soldier},
 	{"monster_soldier_ss", SP_monster_soldier_ss},
 	{"monster_soldier_heavy", SP_monster_soldier_heavy},
@@ -989,6 +993,10 @@ SP_worldspawn(edict_t *ent)
 	/* help icon for statusbar */
 	gi.imageindex("i_help");
 	level.pic_health = gi.imageindex("i_health");
+	if (QM_Campaign())
+	{
+		gi.imageindex(PP_SPRUES_ICON);
+	}
 	gi.imageindex("help");
 	gi.imageindex("field_3");
 
