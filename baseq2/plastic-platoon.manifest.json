@@ -4277,6 +4277,11 @@
       "sha256": "aac67ef660786357591fefd2d2a8fb78e4d75ffa7cc3ceec972bc87b08adac7a"
     },
     {
+      "path": "sound/briefing/general_2.wav",
+      "bytes": 1361886,
+      "sha256": "a32f0ab960b97173fdfd328be2efa01ac8c150a721e070442db15315e656f9c8"
+    },
+    {
       "path": "sound/endline/wheels.wav",
       "bytes": 70604,
       "sha256": "01c47d1c4445900b541f7b0f4b2f9a3b9c4500057684651c6b03297cba4b2c6e"
@@ -5552,6 +5557,16 @@
       "sha256": "e8348171fed5a213f7c4864cb273be3855b41843e84a1c21d0ecc7827f8949c4"
     },
     {
+      "path": "textures/sandbox/manual_pages.png",
+      "bytes": 192,
+      "sha256": "fef6ce528e7994aa9423e3e8b44d1d291a407284454473ce89531bdfbcf4f848"
+    },
+    {
+      "path": "textures/sandbox/manual_pages.wal",
+      "bytes": 5540,
+      "sha256": "fd7fefc164f0e2148f9ea750e383f9279b81d573994a80dcf219a225fdc78a28"
+    },
+    {
       "path": "textures/sandbox/plastic1.png",
       "bytes": 573818,
       "sha256": "ade35ec472a821cba6d41c47c7189c94164b862cbfef97d812338fb1192ec256"
@@ -5560,6 +5575,36 @@
       "path": "textures/sandbox/plastic1.wal",
       "bytes": 348260,
       "sha256": "6d08c5541f2a9056d1905ffe12a9e44bb3a43083a59ed18c2cda48effbacc78c"
+    },
+    {
+      "path": "textures/sandbox/printer_checklist.png",
+      "bytes": 7323,
+      "sha256": "4b98f79ae128d40dffe0f3e8c7b24dbb6f26ef470b97f4b4784b95ae049073fa"
+    },
+    {
+      "path": "textures/sandbox/printer_checklist.wal",
+      "bytes": 87140,
+      "sha256": "cd0b81fff6486457bab6976ce4ea494a479db817921e76a7213bfabc21e5f269"
+    },
+    {
+      "path": "textures/sandbox/printer_dispatch.png",
+      "bytes": 7606,
+      "sha256": "e8215b60120e531811fc85fd21a404d22ab63f67b88741f6488aafdc6a5620c0"
+    },
+    {
+      "path": "textures/sandbox/printer_dispatch.wal",
+      "bytes": 87140,
+      "sha256": "b36ed5c1ce01a138f8df465ea99866a2095c07e3c10a1348f8e190b82ad6910e"
+    },
+    {
+      "path": "textures/sandbox/printer_manual.png",
+      "bytes": 8636,
+      "sha256": "5704b53986ae0dbdbefba103ebd9f5edca1b1dc2fedb47cdfc18de331236c0f4"
+    },
+    {
+      "path": "textures/sandbox/printer_manual.wal",
+      "bytes": 87140,
+      "sha256": "03a8961461b261379927df3cba4296940e3a10432d789d8666ee231cfa781667"
     },
     {
       "path": "textures/sandbox/sand1.tga",
@@ -5607,6 +5652,6 @@
       "sha256": "289b9b1453cf1d07f8b3a1f29b1b299152aea7978ead935faae241c71e55f200"
     }
   ],
-  "archive_sha256": "ec24b5f4371a778b88678361df4d8eabc43c7f9f8a1c8fcf38d7de50ced100f3",
-  "archive_bytes": 64189241
+  "archive_sha256": "d4bc053142439f62272220849a081ef23f2edbf29d88e00490433e0f64f769f1",
+  "archive_bytes": 65338338
 }

@@ -1899,17 +1899,27 @@ CL_StartBriefingSubtitles(int sound_num)
 	char data[4096];
 	char *cursor = data;
 	const char *token;
+	const char *sound = cl.configstrings[CS_SOUNDS + sound_num];
+	const char *subtitle_path;
 	int size, count = 0;
 	long previous_end = 0;
 
 	/* Use the same event that starts the voice, even with audio disabled. */
-	if (strcmp(cl.configstrings[CS_SOUNDS + sound_num], "briefing/sandstorm.wav"))
+	if (!strcmp(sound, "briefing/sandstorm.wav"))
+	{
+		subtitle_path = "sound/briefing/sandstorm.sub";
+	}
+	else if (!strcmp(sound, "briefing/general_2.wav"))
+	{
+		subtitle_path = "sound/briefing/general_2.sub";
+	}
+	else
 	{
 		return;
 	}
 
 	cl.briefing_subtitles.count = 0;
-	size = FS_FOpenFile("sound/briefing/sandstorm.sub", &file, false);
+	size = FS_FOpenFile(subtitle_path, &file, false);
 	if (!file)
 	{
 		return;
