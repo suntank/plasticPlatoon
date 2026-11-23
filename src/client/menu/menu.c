@@ -1189,6 +1189,7 @@ char *bindnames[][2] =
 	{"+movedown", "down / crouch"},
 	{"inven", "inventory"},
 	{"invuse", "use item"},
+	{"+use", "revive teammate"},
 	{"invdrop", "drop item"},
 	{"invprev", "prev item"},
 	{"invnext", "next item"},
@@ -1717,6 +1718,7 @@ char *controller_bindnames[][2] =
 	{"centerview", "center view"},
 	{"inven", "inventory"},
 	{"invuse", "use item"},
+	{"+use", "revive teammate"},
 	{"invdrop", "drop item"},
 	{"invprev", "prev item"},
 	{"invnext", "next item"},
@@ -2834,6 +2836,7 @@ static menulist_s s_options_invertmouse_box;
 static menulist_s s_options_lookstrafe_box;
 static menulist_s s_options_crosshair_box;
 static menuslider_s s_options_sfxvolume_slider;
+static menuslider_s s_options_voicevolume_slider;
 static menulist_s s_options_oggshuffle_box;
 static menuslider_s s_options_oggvolume_slider;
 static menulist_s s_options_oggenable_box;
@@ -3056,6 +3059,14 @@ Options_MenuInit(void)
 	s_options_sfxvolume_slider.minvalue = 0.0f;
 	s_options_sfxvolume_slider.maxvalue = 1.0f;
 
+	s_options_voicevolume_slider.generic.type = MTYPE_SLIDER;
+	s_options_voicevolume_slider.generic.x = 0;
+	s_options_voicevolume_slider.generic.y = (y += 10);
+	s_options_voicevolume_slider.generic.name = "voice volume";
+	s_options_voicevolume_slider.cvar = "s_voice_volume";
+	s_options_voicevolume_slider.minvalue = 0.0f;
+	s_options_voicevolume_slider.maxvalue = S_MAX_VOICE_VOLUME;
+
 	s_options_oggvolume_slider.generic.type = MTYPE_SLIDER;
 	s_options_oggvolume_slider.generic.x = 0;
 	s_options_oggvolume_slider.generic.y = (y += 10);
@@ -3167,7 +3178,7 @@ Options_MenuInit(void)
 	ControlsSetMenuItemValues();
 
 	Menu_AddItem(&s_options_menu, (void *)&s_options_sfxvolume_slider);
-
+	Menu_AddItem(&s_options_menu, (void *)&s_options_voicevolume_slider);
 	Menu_AddItem(&s_options_menu, (void *)&s_options_oggvolume_slider);
 	Menu_AddItem(&s_options_menu, (void *)&s_options_oggenable_box);
 	Menu_AddItem(&s_options_menu, (void *)&s_options_oggshuffle_box);

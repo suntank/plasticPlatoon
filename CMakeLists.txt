@@ -394,6 +394,7 @@ set(Game-Source
 	${GAME_SRC_DIR}/monster/supertank/supertank.c
 	${GAME_SRC_DIR}/monster/tank/tank.c
 	${GAME_SRC_DIR}/player/client.c
+	${GAME_SRC_DIR}/player/coop_rescue.c
 	${GAME_SRC_DIR}/player/aim_assist.c
 	${GAME_SRC_DIR}/player/hud.c
 	${GAME_SRC_DIR}/player/quartermaster.c

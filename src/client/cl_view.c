@@ -615,6 +615,13 @@ V_RenderView(float stereo_separation)
 	R_RenderFrame(&cl.refdef);
 	CL_PerfEndView(0, &cl.refdef);
 
+	int rescue_target = cl.frame.playerstate.stats[STAT_COOP_TEAMMATE];
+	if (rescue_target > 0 && rescue_target < cl_numentities)
+	{
+		SCR_DrawRescueMarker(&cl.refdef, &cl_entities[rescue_target],
+			cl.frame.serverframe, cl.lerpfrac, SCR_GetHUDScale());
+	}
+
 	if (cl_stats->value)
 	{
 		Com_Printf("ent:%i  lt:%i  part:%i\n", r_numentities,

@@ -3,8 +3,8 @@
   "files": [
     {
       "path": "default.cfg",
-      "bytes": 1389,
-      "sha256": "0d17356cff2a23d2f0d3bc0f137abae2162a696101477d5f1652b50b5a41b65c"
+      "bytes": 1401,
+      "sha256": "b5f959d8b02bf4819b08bd21d391babf48f10ab2ec53d97b5dcf3f040cd173bb"
     },
     {
       "path": "env/bluesky1bk.png",
@@ -2285,6 +2285,11 @@
       "path": "pics/backtile.pcx",
       "bytes": 1153,
       "sha256": "e85a198e6a7d0215698beffce67a18b5035a75df2aee5abdc81647e5f5510ff5"
+    },
+    {
+      "path": "pics/briefing_general.png",
+      "bytes": 62052,
+      "sha256": "3c251182e0f87a95c7c491ebcb67c854e6890a33ea9a765b0687deaded27d3f6"
     },
     {
       "path": "pics/ch1.pcx",
@@ -5652,6 +5657,6 @@
       "sha256": "289b9b1453cf1d07f8b3a1f29b1b299152aea7978ead935faae241c71e55f200"
     }
   ],
-  "archive_sha256": "d4bc053142439f62272220849a081ef23f2edbf29d88e00490433e0f64f769f1",
-  "archive_bytes": 65338338
+  "archive_sha256": "c4208d70323a171ea18019a5c4cbe952bb166d070c00117fce4adbbcd05e958f",
+  "archive_bytes": 65400543
 }

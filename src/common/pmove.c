@@ -58,6 +58,7 @@ pml_t pml;
 float pm_stopspeed = 100;
 float pm_maxspeed = 300;
 float pm_duckspeed = 100;
+#define COOP_CRAWL_SPEED 60.0f
 float pm_accelerate = 10;
 float pm_airaccelerate = 0;
 float pm_wateraccelerate = 10;
@@ -548,6 +549,7 @@ PM_WaterMove(void)
 	vec3_t wishvel;
 	float wishspeed;
 	vec3_t wishdir;
+	float maxspeed = (pm->s.pm_flags & PMF_COOP_DOWNED) ? COOP_CRAWL_SPEED : pm_maxspeed;
 
 	/* user intentions */
 	for (i = 0; i < 3; i++)
@@ -570,10 +572,9 @@ PM_WaterMove(void)
 	VectorCopy(wishvel, wishdir);
 	wishspeed = VectorNormalize(wishdir);
 
-	if (wishspeed > pm_maxspeed)
+	if (wishspeed > maxspeed)
 	{
-		VectorScale(wishvel, pm_maxspeed / wishspeed, wishvel);
-		wishspeed = pm_maxspeed;
+		wishspeed = maxspeed;
 	}
 
 	wishspeed *= 0.5;
@@ -610,6 +611,10 @@ PM_AirMove(void)
 
 	/* clamp to server defined max speed */
 	maxspeed = (pm->s.pm_flags & PMF_DUCKED) ? pm_duckspeed : pm_maxspeed;
+	if (pm->s.pm_flags & PMF_COOP_DOWNED)
+	{
+		maxspeed = COOP_CRAWL_SPEED;
+	}
 
 	if (wishspeed > maxspeed)
 	{
@@ -1050,7 +1055,7 @@ PM_CheckDuck(void)
 
 	pm->mins[2] = -24;
 
-	if (pm->s.pm_type == PM_DEAD)
+	if (pm->s.pm_type == PM_DEAD || (pm->s.pm_flags & PMF_COOP_DOWNED))
 	{
 		pm->s.pm_flags |= PMF_DUCKED;
 	}
@@ -1410,7 +1415,14 @@ Pmove(pmove_t *pmove)
 		PM_DeadMove();
 	}
 
-	PM_CheckSpecialMovement();
+	if (pm->s.pm_flags & PMF_COOP_DOWNED)
+	{
+		pm->cmd.upmove = 0;
+	}
+	else
+	{
+		PM_CheckSpecialMovement();
+	}
 
 	/* drop timing counter */
 	if (pm->s.pm_time)

@@ -294,6 +294,7 @@ bind w +forward
 bind s +back
 bind a +moveleft
 bind d +moveright
+bind e +use
 bind SPACE +moveup
 bind CTRL +movedown
 bind SHIFT +speed

@@ -1582,6 +1582,126 @@ SCR_DrawSpruesHUD(const player_state_t *ps, int right, int y, float scale)
 		y + (height - (int)(8 * text_scale)) / 2, text, text_scale);
 }
 
+void
+SCR_DrawRescueHUD(const player_state_t *ps, int x, int y, int w, int h, float scale)
+{
+	int state = ps->stats[STAT_COOP_RESCUE];
+	int seconds = ps->stats[STAT_COOP_BLEEDOUT];
+	int progress = ps->stats[STAT_COOP_REVIVE];
+	int teammate = ps->stats[STAT_COOP_TEAMMATE];
+	char title[32], name[11];
+	const char *hint = "";
+	int glyph, pad, columns, width, height, bar;
+
+	if (scale <= 0)
+	{
+		return;
+	}
+
+	switch (state)
+	{
+		case COOP_RESCUE_DOWNED:
+			Com_sprintf(title, sizeof(title), "DOWNED %ds", seconds);
+			hint = progress ? "BEING REVIVED" : "";
+			break;
+		case COOP_RESCUE_WAITING:
+			Q_strlcpy(title, "REDEPLOY", sizeof(title));
+			hint = "AT SAFE POINT";
+			break;
+		case COOP_RESCUE_TEAMMATE_DOWN:
+		case COOP_RESCUE_IN_REACH:
+			if (teammate < 1 || teammate > MAX_CLIENTS || seconds < 1)
+			{
+				return;
+			}
+			if (w < 160)
+			{
+				Com_sprintf(name, sizeof(name), "P%d", teammate);
+			}
+			else
+			{
+				Q_strlcpy(name, cl.configstrings[CS_PLAYERSKINS + teammate - 1], sizeof(name));
+				name[strcspn(name, "\\")] = '\0';
+			}
+			Com_sprintf(title, sizeof(title), "+ %s %ds", name[0] ? name : "ALLY", seconds);
+			if (state == COOP_RESCUE_IN_REACH)
+			{
+				hint = progress ? "REVIVING" :
+					(scr_gamebird_hud && scr_gamebird_hud->value ? "HOLD MOD + B" : "HOLD USE");
+			}
+			break;
+		default:
+			return;
+	}
+
+	/* Keep the panel readable even in a 120x120 handheld quadrant. */
+	columns = Q_max((int)strlen(title), (int)strlen(hint));
+	glyph = Q_max(1, Q_min((w - 8) / columns, (int)(8 * Q_max(1.0f, scale))));
+	scale = glyph / 8.0f;
+	pad = Q_max(2, glyph / 2);
+	width = columns * glyph + 2 * pad;
+	height = glyph + 2 * pad + (*hint ? glyph + 2 : 0) + (progress ? pad + 3 : 0);
+	x += (w - width) / 2;
+	y += h * 7 / 10 - height / 2;
+
+	Draw_Fill(x, y, width, height, 0);
+	SCR_AddDirtyPoint(x, y);
+	SCR_AddDirtyPoint(x + width - 1, y + height - 1);
+	DrawStringScaled(x + (width - (int)strlen(title) * glyph) / 2, y + pad, title, scale);
+	if (*hint)
+	{
+		DrawStringScaled(x + (width - (int)strlen(hint) * glyph) / 2,
+			y + pad + glyph + 2, hint, scale);
+	}
+	if (progress)
+	{
+		bar = width - 2 * pad;
+		Draw_Fill(x + pad, y + height - pad - 3, bar, 3, 6);
+		Draw_Fill(x + pad, y + height - pad - 3,
+			Q_max(1, bar * Q_clamp(progress - 1, 0, 100) / 100), 3, 140);
+	}
+}
+
+void
+SCR_DrawRescueMarker(const refdef_t *view, const centity_t *teammate,
+	int serverframe, float lerp, float scale)
+{
+	vec3_t origin, delta, forward, right, up;
+	float depth, horizontal, vertical;
+	int x, y, glyph;
+
+	if (scale <= 0 || teammate->serverframe != serverframe || !teammate->current.modelindex)
+	{
+		return;
+	}
+	VectorSubtract(teammate->current.origin, teammate->prev.origin, delta);
+	VectorMA(teammate->prev.origin, lerp, delta, origin);
+	origin[2] += 18;
+	VectorSubtract(origin, view->vieworg, delta);
+	AngleVectors(view->viewangles, forward, right, up);
+	depth = DotProduct(delta, forward);
+	if (depth <= 1)
+	{
+		return;
+	}
+	horizontal = DotProduct(delta, right) / (depth * tanf(view->fov_x * (M_PI / 360)));
+	vertical = DotProduct(delta, up) / (depth * tanf(view->fov_y * (M_PI / 360)));
+	if (fabsf(horizontal) >= 0.95f || fabsf(vertical) >= 0.95f)
+	{
+		return;
+	}
+	glyph = Q_max(8, (int)(8 * scale));
+	x = view->x + (1 + horizontal) * view->width / 2 - glyph / 2;
+	y = view->y + (1 - vertical) * view->height / 2 - glyph / 2;
+	if (x < view->x || x + glyph > view->x + view->width ||
+		y < view->y || y + glyph > view->y + view->height)
+	{
+		return;
+	}
+	Draw_Fill(x, y, glyph, glyph, 0);
+	DrawStringScaled(x, y, "+", glyph / 8.0f);
+}
+
 static void
 SCR_ExecuteLayoutString(char *s)
 {
@@ -1743,6 +1863,11 @@ SCR_DrawGameBirdStats(void)
 static void
 SCR_DrawStats(void)
 {
+	if (cls.state == ca_active && cl.refresh_prepped)
+	{
+		SCR_DrawRescueHUD(&cl.frame.playerstate, 0, 0, viddef.width, viddef.height,
+			SCR_GetHUDScale());
+	}
 	if (scr_gamebird_hud && scr_gamebird_hud->value)
 	{
 		SCR_DrawGameBirdStats();
@@ -1901,6 +2026,7 @@ CL_StartBriefingSubtitles(int sound_num)
 	const char *token;
 	const char *sound = cl.configstrings[CS_SOUNDS + sound_num];
 	const char *subtitle_path;
+	unsigned int portrait_duration_ms = 0;
 	int size, count = 0;
 	long previous_end = 0;
 
@@ -1912,12 +2038,16 @@ CL_StartBriefingSubtitles(int sound_num)
 	else if (!strcmp(sound, "briefing/general_2.wav"))
 	{
 		subtitle_path = "sound/briefing/general_2.sub";
+		/* Keep the portrait visible for the full WAV, including subtitle gaps. */
+		portrait_duration_ms = 15440;
 	}
 	else
 	{
 		return;
 	}
 
+	cl.briefing_subtitles.started_at = cls.realtime;
+	cl.briefing_subtitles.portrait_duration_ms = portrait_duration_ms;
 	cl.briefing_subtitles.count = 0;
 	size = FS_FOpenFile(subtitle_path, &file, false);
 	if (!file)
@@ -1963,14 +2093,14 @@ CL_StartBriefingSubtitles(int sound_num)
 		previous_end = end_ms;
 	}
 
-	cl.briefing_subtitles.started_at = cls.realtime;
 	cl.briefing_subtitles.count = count;
 }
 
 static void
-SCR_DrawBriefingSubtitles(qboolean split_screen)
+SCR_DrawBriefing(qboolean split_screen)
 {
 	enum { MAX_COLUMNS = 48 };
+	static const char portrait_pic[] = "briefing_general.png";
 	char lines[8][MAX_COLUMNS + 1];
 	const char *text = NULL;
 	unsigned int elapsed = (unsigned int)cls.realtime - cl.briefing_subtitles.started_at;
@@ -1978,7 +2108,10 @@ SCR_DrawBriefingSubtitles(qboolean split_screen)
 	float scale = (float)glyph / CHAR_SIZE;
 	int pad = glyph;
 	int columns = Q_min(MAX_COLUMNS, (viddef.width - 4 * pad) / glyph);
-	int hud_inset, x, y, width, height;
+	int hud_inset, bottom, caption_x = 0, x, y, width, height;
+	int portrait_size = 7 * glyph;
+	int portrait_columns = Q_min(MAX_COLUMNS, (viddef.width - 5 * pad - portrait_size) / glyph);
+	qboolean show_portrait;
 	int line_height = glyph + glyph / 4;
 	int longest = 0, n = 0, i;
 
@@ -1998,12 +2131,18 @@ SCR_DrawBriefingSubtitles(qboolean split_screen)
 			break;
 		}
 	}
-	if (!text)
+	show_portrait = elapsed < cl.briefing_subtitles.portrait_duration_ms &&
+		portrait_columns >= 16 && Draw_FindPic(portrait_pic);
+	if (!text && !show_portrait)
 	{
 		return;
 	}
+	if (show_portrait)
+	{
+		columns = portrait_columns;
+	}
 
-	while (*text && n < (int)(sizeof(lines) / sizeof(lines[0])))
+	while (text && *text && n < (int)(sizeof(lines) / sizeof(lines[0])))
 	{
 		int remaining = strlen(text);
 		int length = Q_min(remaining, columns);
@@ -2043,16 +2182,37 @@ SCR_DrawBriefingSubtitles(qboolean split_screen)
 	{
 		hud_inset = 88 * SCR_GetHUDScale();
 	}
+	bottom = viddef.height - hud_inset - pad;
+	if (show_portrait)
+	{
+		int text_width = columns * glyph + 2 * pad;
+		int portrait_x = (viddef.width - (portrait_size + pad + text_width)) / 2;
+		int portrait_y = bottom - portrait_size;
+
+		Draw_StretchPic(portrait_x, portrait_y, portrait_size, portrait_size, portrait_pic);
+		SCR_AddDirtyPoint(portrait_x, portrait_y);
+		SCR_AddDirtyPoint(portrait_x + portrait_size - 1, bottom - 1);
+		caption_x = portrait_x + portrait_size + pad;
+	}
+	if (!n)
+	{
+		return;
+	}
+
 	width = longest * glyph + 2 * pad;
 	height = n * line_height + pad;
-	x = (viddef.width - width) / 2;
-	y = viddef.height - hud_inset - pad - height;
+	x = show_portrait ? caption_x : (viddef.width - width) / 2;
+	y = bottom - height;
+	if (show_portrait)
+	{
+		y -= Q_max(0, (portrait_size - height) / 2);
+	}
 	Draw_Fill(x, y, width, height, 0);
 	SCR_AddDirtyPoint(x, y);
 	SCR_AddDirtyPoint(x + width - 1, y + height - 1);
 	for (i = 0; i < n; ++i)
 	{
-		int line_x = (viddef.width - (int)strlen(lines[i]) * glyph) / 2;
+		int line_x = show_portrait ? x + pad : (viddef.width - (int)strlen(lines[i]) * glyph) / 2;
 		DrawStringScaled(line_x, y + (height - ((n - 1) * line_height + glyph)) / 2 +
 			i * line_height, lines[i], scale);
 	}
@@ -2392,7 +2552,7 @@ SCR_UpdateScreen(void)
 
 			M_Draw();
 			SS_DrawSessionOverlay();
-			SCR_DrawBriefingSubtitles(split_screen);
+			SCR_DrawBriefing(split_screen);
 
 			SCR_DrawLoading();
 		}
@@ -2454,7 +2614,9 @@ SCR_DrawCrosshair(void)
 	float scale;
 	float assist_x, assist_y;
 
-	if (!crosshair->value || (CL_UsesModelADS(&cl.frame.playerstate) && CL_IsADSActive()))
+	if (!crosshair->value || (cl.frame.playerstate.pmove.pm_flags & PMF_COOP_DOWNED) ||
+		cl.frame.playerstate.stats[STAT_COOP_RESCUE] == COOP_RESCUE_WAITING ||
+		(CL_UsesModelADS(&cl.frame.playerstate) && CL_IsADSActive()))
 	{
 		return;
 	}

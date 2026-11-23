@@ -114,6 +114,10 @@ BeginIntermission(edict_t *targ)
 			continue;
 		}
 
+		if (Coop_RescueActive())
+		{
+			Coop_PrepareTransition(client);
+		}
 		if (client->health <= 0)
 		{
 			respawn(client);
@@ -440,6 +444,7 @@ G_SetStats(edict_t *ent)
 	}
 
 	stats = ent->client->ps.stats;
+	Coop_RescueStats(ent);
 	if (QM_Campaign() && !ent->client->resp.spectator)
 	{
 		uint32_t balance = ent->client->quartermaster.progress.sprues;
@@ -683,6 +688,10 @@ G_SetSpectatorStats(edict_t *ent)
 	if (!cl->chase_target)
 	{
 		G_SetStats(ent);
+	}
+	else
+	{
+		Coop_RescueStats(ent);
 	}
 
 	cl->ps.stats[STAT_SPECTATOR] = 1;

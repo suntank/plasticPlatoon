@@ -614,14 +614,15 @@ G_TouchTriggers(edict_t *ent)
 {
 	int i, num;
 	edict_t *touch[MAX_EDICTS], *hit;
+	qboolean downed;
 
 	if (!ent)
 	{
 		return;
 	}
 
-	/* dead things don't activate triggers! */
-	if ((ent->client || (ent->svflags & SVF_MONSTER)) && (ent->health <= 0))
+	downed = ent->client && ent->client->coop_rescue.bleedout_frame;
+	if (!downed && (ent->client || (ent->svflags & SVF_MONSTER)) && (ent->health <= 0))
 	{
 		return;
 	}
@@ -640,7 +641,8 @@ G_TouchTriggers(edict_t *ent)
 			continue;
 		}
 
-		if (!hit->touch)
+		if (!hit->touch || (ent->client && ent->client->coop_rescue.bleedout_frame &&
+			strcmp(hit->classname, "trigger_hurt")))
 		{
 			continue;
 		}

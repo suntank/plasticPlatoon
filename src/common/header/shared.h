@@ -648,6 +648,7 @@ typedef enum
 #define PMF_TIME_LAND 16        /* pm_time is time before rejump */
 #define PMF_TIME_TELEPORT 32    /* pm_time is non-moving time */
 #define PMF_NO_PREDICTION 64    /* temporarily disables prediction (used for grappling hook) */
+#define PMF_COOP_DOWNED 128
 
 /* this structure needs to be communicated bit-accurate/
  * from the server to the client to guarantee that
@@ -1175,6 +1176,19 @@ typedef enum
 #define STAT_SPRUES_ICON 25
 #define STAT_SPRUES_LOW 26
 #define STAT_SPRUES_HIGH 27
+#define STAT_COOP_RESCUE 28
+#define STAT_COOP_BLEEDOUT 29
+#define STAT_COOP_REVIVE 30
+#define STAT_COOP_TEAMMATE 31
+
+enum
+{
+	COOP_RESCUE_NONE,
+	COOP_RESCUE_DOWNED,
+	COOP_RESCUE_WAITING,
+	COOP_RESCUE_TEAMMATE_DOWN,
+	COOP_RESCUE_IN_REACH
+};
 #define PP_SPRUES_ICON "i_sprues"
 #define AIMASSIST_ACTIVE 1
 #define AIMASSIST_TARGET 2

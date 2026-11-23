@@ -60,7 +60,9 @@ static int playpos = 0;
 static int samplesize = 0;
 static int snd_inited = 0;
 static int snd_scaletable[32][256];
+static int snd_voice_scaletable[32][256];
 static int snd_vol;
+static int snd_voice_vol;
 static int soundtime;
 
 /* ------------------------------------------------------------------ */
@@ -335,7 +337,8 @@ SDL_TransferPaintBuffer(int endtime)
 static void
 SDL_PaintChannelFrom8(channel_t *ch, sfxcache_t *sc, int count, int offset)
 {
-	int *lscale, *rscale;
+	int (*scaletable)[256] = ch->sfx->is_voice ? snd_voice_scaletable : snd_scaletable;
+	const int *lscale, *rscale;
 	unsigned char *sfx;
 	int i;
 	portable_samplepair_t *samp;
@@ -350,8 +353,8 @@ SDL_PaintChannelFrom8(channel_t *ch, sfxcache_t *sc, int count, int offset)
 		ch->rightvol = 255;
 	}
 
-	lscale = snd_scaletable[ch->leftvol >> 3];
-	rscale = snd_scaletable[ch->rightvol >> 3];
+	lscale = scaletable[ch->leftvol >> 3];
+	rscale = scaletable[ch->rightvol >> 3];
 	sfx = sc->data + ch->pos;
 
 	samp = &paintbuffer[offset];
@@ -374,13 +377,14 @@ SDL_PaintChannelFrom8(channel_t *ch, sfxcache_t *sc, int count, int offset)
 static void
 SDL_PaintChannelFrom16(channel_t *ch, sfxcache_t *sc, int count, int offset)
 {
+	int gain = ch->sfx->is_voice ? snd_voice_vol : snd_vol;
 	int leftvol, rightvol;
 	signed short *sfx;
 	int i;
 	portable_samplepair_t *samp;
 
-	leftvol = ch->leftvol * snd_vol;
-	rightvol = ch->rightvol * snd_vol;
+	leftvol = ch->leftvol * gain;
+	rightvol = ch->rightvol * gain;
 	sfx = (signed short *)sc->data + ch->pos;
 
 	samp = &paintbuffer[offset];
@@ -391,8 +395,8 @@ SDL_PaintChannelFrom16(channel_t *ch, sfxcache_t *sc, int count, int offset)
 		int left, right;
 
 		data = sfx[i];
-		left = (data * leftvol) >> 8;
-		right = (data * rightvol) >> 8;
+		left = ((int64_t)data * leftvol) >> 8;
+		right = ((int64_t)data * rightvol) >> 8;
 		samp->left += left;
 		samp->right += right;
 	}
@@ -414,6 +418,7 @@ SDL_PaintChannels(int endtime)
 	playsound_t *ps;
 
 	snd_vol = (int)(s_volume->value * 256);
+	snd_voice_vol = (int)(S_VoiceVolume() * 256);
 
 	while (paintedtime < endtime)
 	{
@@ -881,10 +886,25 @@ SDL_UpdateSoundtime(void)
  * based on current volume setting.
  */
 static void
-SDL_UpdateScaletable(void)
+SDL_BuildScaletable(int table[32][256], float volume)
 {
 	int i;
 
+	for (i = 0; i < 32; i++)
+	{
+		int j;
+		int scale = (int)(i * 8 * 256 * volume);
+
+		for (j = 0; j < 256; j++)
+		{
+			table[i][j] = ((j < 128) ? j : j - 0xff) * scale;
+		}
+	}
+}
+
+static void
+SDL_UpdateScaletables(void)
+{
 	if (s_volume->value > 2.0f)
 	{
 		Cvar_Set("s_volume", "2");
@@ -895,18 +915,9 @@ SDL_UpdateScaletable(void)
 	}
 
 	s_volume->modified = false;
-
-	for (i = 0; i < 32; i++)
-	{
-		int j, scale;
-
-		scale = (int)(i * 8 * 256 * s_volume->value);
-
-		for (j = 0; j < 256; j++)
-		{
-			snd_scaletable[i][j] = ((j < 128) ? j : j - 0xff) * scale;
-		}
-	}
+	s_voice_volume->modified = false;
+	SDL_BuildScaletable(snd_scaletable, s_volume->value);
+	SDL_BuildScaletable(snd_voice_scaletable, S_VoiceVolume());
 }
 
 /*
@@ -1123,9 +1134,9 @@ SDL_Update(void)
 
 	/* rebuild scale tables if
 	   volume is modified */
-	if (s_volume->modified)
+	if (s_volume->modified || s_voice_volume->modified)
 	{
-		SDL_UpdateScaletable();
+		SDL_UpdateScaletables();
 	}
 
 	/* update spatialization
@@ -1461,7 +1472,7 @@ SDL_BackendInit(void)
 	s_underwater_gain_hf->modified = true;
 	lpf_initialize(&lpf_context, lpf_default_gain_hf, backend->speed);
 
-	SDL_UpdateScaletable();
+	SDL_UpdateScaletables();
 	SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(stream));
 
 	Com_Printf("SDL audio initialized.\n");
@@ -1625,7 +1636,7 @@ SDL_BackendInit(void)
 	s_underwater_gain_hf->modified = true;
 	lpf_initialize(&lpf_context, lpf_default_gain_hf, backend->speed);
 
-	SDL_UpdateScaletable();
+	SDL_UpdateScaletables();
 	SDL_PauseAudio(0);
 
 	Com_Printf("SDL audio initialized.\n");

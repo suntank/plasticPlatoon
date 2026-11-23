@@ -87,6 +87,9 @@ typedef struct
 	int			fly_stoptime;
 } centity_t;
 
+void SCR_DrawRescueMarker(const refdef_t *view, const centity_t *teammate,
+	int serverframe, float lerp, float scale);
+
 typedef struct
 {
 	char	name[MAX_QPATH];
@@ -221,10 +224,11 @@ typedef struct
 	clientinfo_t	clientinfo[MAX_CLIENTS];
 	clientinfo_t	baseclientinfo;
 
-	/* One subtitle track per display, including local split-screen. */
+	/* One briefing overlay per display, including local split-screen. */
 	struct
 	{
 		unsigned int started_at;
+		unsigned int portrait_duration_ms;
 		int count;
 		cl_subtitle_cue_t cues[MAX_BRIEFING_SUBTITLE_CUES];
 	} briefing_subtitles;

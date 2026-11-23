@@ -1948,7 +1948,7 @@ ClientCommand(edict_t *ent)
 		return;
 	}
 
-	if (level.intermissiontime)
+	if (level.intermissiontime || Coop_IsIncapacitated(ent))
 	{
 		return;
 	}

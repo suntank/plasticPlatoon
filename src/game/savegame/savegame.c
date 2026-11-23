@@ -70,7 +70,7 @@
 #include "../header/local.h"
 #include "savegame.h"
 /* Keep the version readers in sync with changes to saved fields. */
-#define SAVEGAMEVER "YQ2-6"
+#define SAVEGAMEVER "YQ2-7"
 
 #ifndef BUILD_DATE
 #define BUILD_DATE __DATE__
@@ -238,6 +238,7 @@ InitGame(void)
 	maxspectators = gi.cvar("maxspectators", "4", CVAR_SERVERINFO);
 	deathmatch = gi.cvar("deathmatch", "0", CVAR_LATCH);
 	coop = gi.cvar("coop", "0", CVAR_LATCH);
+	Coop_RescueInit();
 	coop_pickup_weapons = gi.cvar("coop_pickup_weapons", "1", CVAR_ARCHIVE);
 	coop_elevator_delay = gi.cvar("coop_elevator_delay", "1.0", CVAR_ARCHIVE);
 	skill = gi.cvar("skill", "1", CVAR_LATCH);
@@ -762,6 +763,11 @@ WriteClient(FILE *f, gclient_t *client)
 
 	/* all of the ints, floats, and vectors stay as they are */
 	temp = *client;
+	if (temp.coop_rescue.awaiting_redeploy)
+	{
+		/* The chase target is reacquired from the connected squad. */
+		temp.chase_target = NULL;
+	}
 
 	/* change the pointers to indexes */
 	for (field = clientfields; field->name; field++)
@@ -788,6 +794,13 @@ ReadClient(FILE *f, gclient_t *client, short save_ver)
 	field_t *field;
 	size_t size = sizeof(*client);
 
+	if (save_ver < 7)
+	{
+		size = offsetof(gclient_t, quartermaster) + sizeof(client->quartermaster);
+		/* The v6 block included the original gclient_t tail padding. */
+		size = (size + _Alignof(gclient_t) - 1) / _Alignof(gclient_t) * _Alignof(gclient_t);
+	}
+
 	if (save_ver < 6)
 	{
 		size = offsetof(gclient_t, quartermaster);
@@ -799,6 +812,10 @@ ReadClient(FILE *f, gclient_t *client, short save_ver)
 		fclose(f);
 		gi.error("%s: can't read client", __func__);
 		return;
+	}
+	if (save_ver < 7)
+	{
+		memset(&client->coop_rescue, 0, sizeof(client->coop_rescue));
 	}
 
 	for (field = clientfields; field->name; field++)
@@ -911,6 +928,7 @@ ReadGame(const char *filename)
 		{"YQ2-4", 4},
 		{"YQ2-5", 5},
 		{"YQ2-6", 6},
+		{"YQ2-7", 7},
 	};
 
 	for (i=0; i < ARRLEN(version_mappings); ++i)

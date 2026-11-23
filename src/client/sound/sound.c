@@ -148,6 +148,7 @@ static playsound_t s_freeplays;
 playsound_t s_pendingplays;
 
 cvar_t *s_volume;
+cvar_t *s_voice_volume;
 cvar_t *s_testsound;
 cvar_t *s_loadas8bit;
 cvar_t *s_khz;
@@ -177,6 +178,13 @@ static qboolean s_registering;
 qboolean s_active;
 
 qboolean snd_is_underwater;
+
+float
+S_VoiceVolume(void)
+{
+	return fminf(fmaxf(s_voice_volume->value, 0.0f), S_MAX_VOICE_VOLUME);
+}
+
 /* ----------------------------------------------------------------- */
 
 static qboolean
@@ -568,6 +576,9 @@ S_LoadSound(sfx_t *s)
 	{
 		Com_sprintf(namebuffer, sizeof(namebuffer), "sound/%s", name);
 	}
+
+	s->is_voice = !Q_strncasecmp(namebuffer, "sound/briefing/", sizeof("sound/briefing/") - 1) ||
+		!Q_strncasecmp(namebuffer, "sound/soldier/callouts/", sizeof("sound/soldier/callouts/") - 1);
 
 	S_LoadVorbis(namebuffer, &info, (void **)&data);
 
@@ -1159,8 +1170,7 @@ S_IssuePlaysound(playsound_t *ps)
 #if USE_OPENAL
 	if (sound_started == SS_OAL)
 	{
-		/* This is clamped to 1.0 in AL_PlayChannel() */
-		ch->oal_vol = ps->volume * (s_volume->value);
+		ch->oal_vol = ps->volume * (ch->sfx->is_voice ? 1.0f : s_volume->value);
 		AL_PlayChannel(ch);
 	}
 	else
@@ -1792,6 +1802,7 @@ S_Init(void)
 
 	Com_Printf("\n------- sound initialization -------\n");
 
+	s_voice_volume = Cvar_Get("s_voice_volume", "0.7", CVAR_ARCHIVE);
 	cv = Cvar_Get("s_initsound", "1", 0);
 
 	if (!cv->value)

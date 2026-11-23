@@ -32,6 +32,8 @@ void Cbuf_AddText(char *text)
 
 void Com_Printf(const char *fmt, ...) {}
 
+qboolean CL_IsKnifeEquipped(const player_state_t *ps) { return false; }
+
 static void key(void (*handler)(void), int number)
 {
     snprintf(key_arg, sizeof(key_arg), "%d", number);

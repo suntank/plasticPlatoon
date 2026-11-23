@@ -763,6 +763,11 @@ player_die(edict_t *self, edict_t *inflictor, edict_t *attacker,
 		return;
 	}
 
+	if (Coop_DownPlayer(self))
+	{
+		return;
+	}
+
 	VectorClear(self->avelocity);
 
 	self->takedamage = DAMAGE_YES;
@@ -959,7 +964,7 @@ SaveClientData(void)
 			continue;
 		}
 
-		game.clients[i].pers.health = ent->health;
+		game.clients[i].pers.health = Coop_IsIncapacitated(ent) ? ent->max_health : ent->health;
 		game.clients[i].pers.max_health = ent->max_health;
 		game.clients[i].pers.savedFlags =
 			(ent->flags & (FL_GODMODE | FL_NOTARGET | FL_POWER_ARMOR));
@@ -1548,12 +1553,62 @@ spectator_respawn(edict_t *ent)
 
 /* ============================================================== */
 
-/*
- * Called when a player connects to
- * a server or respawns in a deathmatch.
- */
-void
-PutClientInServer(edict_t *ent)
+static qboolean
+SpawnSpaceClear(edict_t *ent, vec3_t origin, vec3_t mins, vec3_t maxs)
+{
+	vec3_t point;
+	trace_t trace;
+
+	VectorCopy(origin, point);
+	point[2] += 1; /* Same origin used by the standing player hull. */
+	trace = gi.trace(point, mins, maxs, point, ent, MASK_PLAYERSOLID);
+	return !trace.startsolid && !trace.allsolid;
+}
+
+static void
+FindRetrySpace(edict_t *ent, vec3_t origin, vec3_t mins, vec3_t maxs)
+{
+	static const int offsets[][2] = {
+		{1, 0}, {0, 1}, {-1, 0}, {0, -1},
+		{1, 1}, {-1, 1}, {-1, -1}, {1, -1}
+	};
+	int distance, i;
+
+	if (SpawnSpaceClear(ent, origin, mins, maxs))
+	{
+		return;
+	}
+	/* Some maps have fewer co-op starts than players. Spread out at
+	 * the mission start instead of downing the teammate who spawned first. */
+	for (distance = 48; distance <= 144; distance += 48)
+	{
+		for (i = 0; i < ARRLEN(offsets); ++i)
+		{
+			vec3_t point, floor;
+			trace_t trace;
+
+			VectorCopy(origin, point);
+			point[0] += distance * offsets[i][0];
+			point[1] += distance * offsets[i][1];
+			if (!SpawnSpaceClear(ent, point, mins, maxs))
+			{
+				continue;
+			}
+			VectorCopy(point, floor);
+			floor[2] -= 40;
+			trace = gi.trace(point, mins, maxs, floor, ent, MASK_PLAYERSOLID);
+			if (!trace.startsolid && trace.fraction < 1 && trace.plane.normal[2] >= 0.7f &&
+				!(gi.pointcontents(trace.endpos) & (CONTENTS_LAVA | CONTENTS_SLIME)))
+			{
+				VectorCopy(point, origin);
+				return;
+			}
+		}
+	}
+}
+
+static void
+PutClientAtSpawn(edict_t *ent, const vec3_t origin, const vec3_t angles)
 {
 	char userinfo[MAX_INFO_STRING];
 
@@ -1571,11 +1626,22 @@ PutClientInServer(edict_t *ent)
 	client_persistant_t saved;
 	client_respawn_t resp;
 	quartermaster_progress_t progress;
+	qboolean recovering = Coop_IsIncapacitated(ent);
 
-	/* find a spawn point do it before setting
-	   health back up, so farthest ranging
-	   doesn't count this client */
-	SelectSpawnPoint(ent, spawn_origin, spawn_angles);
+	/* Choose the spawn before restoring health. */
+	if (origin)
+	{
+		VectorCopy(origin, spawn_origin);
+		VectorCopy(angles, spawn_angles);
+	}
+	else
+	{
+		SelectSpawnPoint(ent, spawn_origin, spawn_angles);
+		if (recovering)
+		{
+			FindRetrySpace(ent, spawn_origin, mins, maxs);
+		}
+	}
 
 	index = ent - g_edicts - 1;
 	client = ent->client;
@@ -1592,9 +1658,17 @@ PutClientInServer(edict_t *ent)
 	{
 		resp = client->resp;
 		memcpy(userinfo, client->pers.userinfo, sizeof(userinfo));
-		resp.coop_respawn.game_helpchanged = client->pers.game_helpchanged;
-		resp.coop_respawn.helpchanged = client->pers.helpchanged;
-		client->pers = resp.coop_respawn;
+		if (recovering)
+		{
+			client->pers.health = ent->max_health;
+			client->pers.max_health = ent->max_health;
+		}
+		else
+		{
+			resp.coop_respawn.game_helpchanged = client->pers.game_helpchanged;
+			resp.coop_respawn.helpchanged = client->pers.helpchanged;
+			client->pers = resp.coop_respawn;
+		}
 		ClientUserinfoChanged(ent, userinfo);
 
 		if (resp.score > client->pers.score)
@@ -1629,6 +1703,10 @@ PutClientInServer(edict_t *ent)
 
 	/* clear entity values */
 	ent->groundentity = NULL;
+	if (recovering)
+	{
+		ent->enemy = NULL;
+	}
 	ent->client = &game.clients[index];
 	ent->takedamage = DAMAGE_AIM;
 	ent->movetype = MOVETYPE_WALK;
@@ -1726,7 +1804,7 @@ PutClientInServer(edict_t *ent)
 		client->resp.spectator = false;
 	}
 
-	if (!KillBox(ent))
+	if (!origin && !recovering && !KillBox(ent))
 	{
 		/* could't spawn in? */
 	}
@@ -1736,6 +1814,27 @@ PutClientInServer(edict_t *ent)
 	/* force the current weapon up */
 	client->newweapon = client->pers.weapon;
 	ChangeWeapon(ent);
+}
+
+void
+PutClientInServer(edict_t *ent)
+{
+	PutClientAtSpawn(ent, NULL, NULL);
+}
+
+void
+Coop_RedeployAt(edict_t *ent, edict_t *spot)
+{
+	vec3_t mins = {-16, -16, -24}, maxs = {16, 16, 32}, origin;
+
+	VectorCopy(spot->s.origin, origin);
+	origin[2] += 9; /* Same offset as SelectSpawnPoint. */
+	if (!SpawnSpaceClear(ent, origin, mins, maxs))
+	{
+		return;
+	}
+	PutClientAtSpawn(ent, origin, spot->s.angles);
+	ent->s.event = EV_PLAYER_TELEPORT;
 }
 
 /*
@@ -2011,6 +2110,7 @@ ClientConnect(edict_t *ent, char *userinfo)
 	   just take it, otherwise spawn one from scratch */
 	if (ent->inuse == false)
 	{
+		memset(&ent->client->coop_rescue, 0, sizeof(ent->client->coop_rescue));
 		/* clear the respawning variables */
 		InitClientResp(ent->client);
 
@@ -2027,7 +2127,7 @@ ClientConnect(edict_t *ent, char *userinfo)
 		gi.dprintf("%s connected\n", ent->client->pers.netname);
 	}
 
-	ent->svflags = 0; /* make sure we start with known default */
+	ent->svflags = ent->client->coop_rescue.awaiting_redeploy ? SVF_NOCLIENT : 0;
 	ent->client->pers.connected = true;
 	return true;
 }
@@ -2066,6 +2166,23 @@ ClientDisconnect(edict_t *ent)
 	ent->classname = "disconnected";
 	ent->client->pers.connected = false;
 
+	if (Coop_RescueActive())
+	{
+		int i;
+
+		Coop_InterruptRevive(ent);
+		memset(&ent->client->coop_rescue, 0, sizeof(ent->client->coop_rescue));
+		ent->client->chase_target = NULL;
+		for (i = 1; i <= game.maxclients; ++i)
+		{
+			edict_t *viewer = &g_edicts[i];
+			if (viewer->inuse && viewer->client->chase_target == ent)
+			{
+				viewer->client->chase_target = NULL;
+			}
+		}
+	}
+
 	playernum = ent - g_edicts - 1;
 	gi.configstring(CS_PLAYERSKINS + playernum, "");
 }
@@ -2081,7 +2198,7 @@ static edict_t *pm_passent;
 static trace_t
 PM_trace(vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end)
 {
-	if (pm_passent->health > 0)
+	if (pm_passent->health > 0 || (pm_passent->client->ps.pmove.pm_flags & PMF_COOP_DOWNED))
 	{
 		return gi.trace(start, mins, maxs, end, pm_passent, MASK_PLAYERSOLID);
 	}
@@ -2193,6 +2310,28 @@ ClientThink(edict_t *ent, usercmd_t *ucmd)
 
 	pm_passent = ent;
 
+	if (client->coop_rescue.awaiting_redeploy)
+	{
+		for (i = 0; i < 3; ++i)
+		{
+			client->resp.cmd_angles[i] = SHORT2ANGLE(ucmd->angles[i]);
+		}
+		if (ucmd->upmove >= 10 && !(client->ps.pmove.pm_flags & PMF_JUMP_HELD) &&
+			client->chase_target)
+		{
+			ChaseNext(ent);
+		}
+		if (ucmd->upmove >= 10)
+		{
+			client->ps.pmove.pm_flags |= PMF_JUMP_HELD;
+		}
+		else
+		{
+			client->ps.pmove.pm_flags &= ~PMF_JUMP_HELD;
+		}
+		return;
+	}
+
 	if (ent->client->chase_target)
 	{
 		client->resp.cmd_angles[0] = SHORT2ANGLE(ucmd->angles[0]);
@@ -2241,7 +2380,7 @@ ClientThink(edict_t *ent, usercmd_t *ucmd)
 		pm.cmd = *ucmd;
 
 		/* Plastic Platoon: Apply ADS movement speed reduction */
-		if ((ucmd->buttons & BUTTON_ADS) && client->pers.weapon &&
+		if (!(pm.s.pm_flags & PMF_COOP_DOWNED) && (ucmd->buttons & BUTTON_ADS) && client->pers.weapon &&
 			client->pers.weapon->weapmodel != WEAP_KNIFE)
 		{
 			pp_weapon_id_t weap_id = PP_Weapon_FromQ2Weapon(client->pers.weapon->weapmodel);
@@ -2324,6 +2463,11 @@ ClientThink(edict_t *ent, usercmd_t *ucmd)
 			G_TouchTriggers(ent);
 		}
 
+		if (Coop_IsIncapacitated(ent) || (level.intermissiontime && Coop_RescueActive()))
+		{
+			return;
+		}
+
 		/* touch other objects */
 		for (i = 0; i < pm.numtouch; i++)
 		{
@@ -2348,7 +2492,16 @@ ClientThink(edict_t *ent, usercmd_t *ucmd)
 			}
 
 			other->touch(other, ent, NULL, NULL);
+			if (Coop_IsIncapacitated(ent))
+			{
+				return;
+			}
 		}
+	}
+
+	if (Coop_RescueActive())
+	{
+		Coop_RescueInput(ent, ucmd);
 	}
 
 	client->oldbuttons = client->buttons;
@@ -2425,7 +2578,8 @@ ClientThink(edict_t *ent, usercmd_t *ucmd)
 	{
 		other = g_edicts + i;
 
-		if (other->inuse && (other->client->chase_target == ent))
+		if (other->inuse && (other->client->chase_target == ent) &&
+			!other->client->coop_rescue.awaiting_redeploy)
 		{
 			UpdateChaseCam(other);
 		}
@@ -2454,6 +2608,11 @@ ClientBeginServerFrame(edict_t *ent)
 	}
 
 	client = ent->client;
+
+	if (Coop_IsIncapacitated(ent))
+	{
+		return;
+	}
 
 	if (deathmatch->value &&
 		(client->pers.spectator != client->resp.spectator) &&

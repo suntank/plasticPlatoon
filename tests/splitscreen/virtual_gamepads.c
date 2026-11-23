@@ -81,12 +81,17 @@ static void snapshot(const char *label)
             menu_depth ? *menu_depth : -1, connected_pads);
     for (int i = 0; i < state->requested_players; i++) {
         ss_local_player_t *slot = &state->slots[i];
-        fprintf(stderr, "%s{\"device\":%d,\"ready\":%d,\"connection\":%d,\"snapshot\":%d,\"forward\":%d,\"side\":%d,\"attack\":%d,\"buttons\":%d,\"up\":%d}",
+        const player_state_t *ps = i ? &slot->frame.playerstate : &primary->frame.playerstate;
+        const short *stats = ps->stats;
+        fprintf(stderr, "%s{\"device\":%d,\"ready\":%d,\"connection\":%d,\"snapshot\":%d,\"forward\":%d,\"side\":%d,\"attack\":%d,\"buttons\":%d,\"up\":%d,\"health\":%d,\"rescue\":%d,\"bleedout\":%d,\"progress\":%d,\"teammate\":%d,\"origin\":[%d,%d,%d]}",
                 i ? "," : "", slot->device_index, slot->ready, slot->connection_state,
                 slot->snapshot_valid, i ? slot->cmd.forwardmove : primary->cmd.forwardmove,
                 i ? slot->cmd.sidemove : primary->cmd.sidemove, slot->attack_down,
                 i ? slot->cmd.buttons : primary->cmd.buttons,
-                i ? slot->cmd.upmove : primary->cmd.upmove);
+                i ? slot->cmd.upmove : primary->cmd.upmove,
+                stats[STAT_HEALTH], stats[STAT_COOP_RESCUE], stats[STAT_COOP_BLEEDOUT],
+                stats[STAT_COOP_REVIVE], stats[STAT_COOP_TEAMMATE],
+                ps->pmove.origin[0] / 8, ps->pmove.origin[1] / 8, ps->pmove.origin[2] / 8);
     }
     fprintf(stderr, "]}\n");
     fflush(stderr);
@@ -158,6 +163,11 @@ int SDL_PollEvent(SDL_Event *event)
     /* A software-rendered screenshot can take seconds. Never replay several
      * overdue actions before the engine has consumed the preceding input. */
     if (next_action < action_count && elapsed >= next_due) {
+        action_t *action = &actions[next_action];
+        if (!strcmp(action->op, "wait_rescue") &&
+            primary->frame.playerstate.stats[STAT_COOP_RESCUE] != atoi(action->a) &&
+            elapsed - next_due < 25000)
+            return 0;
         unsigned previous_time = actions[next_action].time;
         run_action(&actions[next_action++]);
         if (next_action < action_count)

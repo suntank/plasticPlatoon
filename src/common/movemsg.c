@@ -26,6 +26,7 @@
 
 #include "header/common.h"
 #include <limits.h>
+#include <stdint.h>
 
 vec3_t bytedirs[NUMVERTEXNORMALS] = {
 	{-0.525731, 0.000000, 0.850651},
@@ -1056,10 +1057,9 @@ MSG_ReadLong(sizebuf_t *msg_read)
 
 	else
 	{
-		c = msg_read->data[msg_read->readcount]
-			+ (msg_read->data[msg_read->readcount + 1] << 8)
-			+ (msg_read->data[msg_read->readcount + 2] << 16)
-			+ (msg_read->data[msg_read->readcount + 3] << 24);
+		const byte *data = msg_read->data + msg_read->readcount;
+		c = (int)((uint32_t)data[0] | ((uint32_t)data[1] << 8) |
+			((uint32_t)data[2] << 16) | ((uint32_t)data[3] << 24));
 	}
 
 	msg_read->readcount += 4;

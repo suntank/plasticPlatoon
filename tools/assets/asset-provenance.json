@@ -18,6 +18,14 @@
       "tool": "OpenAI ImageGen",
       "prompt": "Create the full-bleed widescreen static main-menu background art for an original PC and handheld video game, Plastic Platoon, about green molded plastic toy soldiers in oversized everyday spaces. Landscape 16:9 composition. Show an outdoor backyard at toy-eye level: coarse grains of sand, towering blades of grass, a weathered wooden sandbox lip and soft late-afternoon light. Put the main visual beat around 70% across the frame, a small squad of unmistakably toy-green plastic soldiers peeking over the sandbox lip, one clearly readable helmet silhouette and shoulders in the foreground, two smaller figures farther back. They should look like classic solid-green miniature figurines with mold seams, lightly scuffed satin surfaces and simplified features. Behind them, hazy garden foliage and a tipped terracotta pot establish huge scale. Original stylized 3D game key art with tactile diorama materials, earthy olives and warm amber, dark muted shadows, an adventurous toy-scale mood. Keep the left half and the central-left area visually quiet and dark with softly out-of-focus soil and wood so existing centrally placed controls stay readable, with the strongest detail near the right. Keep the lead soldier fully within the central 70% of the frame so a square crop will retain the helmet silhouette. No typography, UI, logos, real people, blood, muzzle flashes or framing borders.",
       "notes": "One generated image with no external image inputs, packaged as a widescreen rendition and a square handheld crop."
+    },
+    {
+      "files": [
+        "baseq2/pics/briefing_general.png"
+      ],
+      "tool": "OpenAI ImageGen",
+      "prompt": "Create one square in-game radio portrait for Plastic Platoon, using the attached render of the actual Sandstorm briefing character model as the identity and design reference. Show the same General as a monochrome green molded-plastic toy officer, with green face, squared jaw, angular peaked cap with a dark visor and a single raised green diamond badge, green shoulder boards, jacket lapels and three molded chest bars. Keep the low-poly proportions and subtle facets of the reference. Frame his head and shoulders tightly in a slightly turned front view, with the whole hat visible and the face large enough to read at 56 pixels. Use clear soft directional light, readable forest-green midtones and restrained satin plastic highlights. Place him against a simple near-black green radio-display background with a thin muted green edge. Sharp silhouette and restrained retro game rendering. No lettering, UI symbols, real-world insignia, weapons or extra objects.",
+      "notes": "The reference was rendered from models/briefing/general/tris.md2 and its skin in operation-sandstorm-briefing.pk3. The resulting image was resized to 256 × 256 for the in-game Sandbox Assault radio portrait."
     }
   ],
   "excluded": [

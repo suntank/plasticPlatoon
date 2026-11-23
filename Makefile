@@ -528,6 +528,7 @@ assets:
 	python3 tools/assets/build_dropship_overlays.py --verify
 	python3 tools/assets/build_overlay.py --output "$(BINDIR)/baseq2/plastic-platoon.pk3"
 	cp baseq2/operation-heavy-test.pk3 baseq2/operation-rocket-test.pk3 baseq2/operation-tank-test.pk3 baseq2/operation-helicopter-test.pk3 "$(BINDIR)/baseq2/"
+	cp baseq2/operation-quartermaster-test.pk3 "$(BINDIR)/baseq2/"
 
 # ----------
 
@@ -1033,6 +1034,7 @@ GAME_OBJS_ = \
 	src/game/monster/supertank/supertank.o \
 	src/game/monster/tank/tank.o \
 	src/game/player/client.o \
+	src/game/player/coop_rescue.o \
 	src/game/player/aim_assist.o \
 	src/game/player/hud.o \
 	src/game/player/quartermaster.o \

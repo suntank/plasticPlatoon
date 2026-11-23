@@ -77,7 +77,7 @@ static qboolean
 QM_IsPlayer(const edict_t *ent)
 {
 	return ent->inuse && ent->client && ent->client->pers.connected &&
-		!ent->client->resp.spectator;
+		(!ent->client->resp.spectator || ent->client->coop_rescue.awaiting_redeploy);
 }
 
 void

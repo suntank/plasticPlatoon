@@ -57,6 +57,10 @@
 #define QAL_EFX_MAX 1
 #define QAL_REVERB_EFFECT 0
 
+#ifndef AL_GAIN_LIMIT_SOFT
+#define AL_GAIN_LIMIT_SOFT 0x200E
+#endif
+
 /* Globals */
 int active_buffers;
 
@@ -70,6 +74,7 @@ static ALuint ReverbEffect[QAL_EFX_MAX] = {0};
 static ALuint ReverbEffectSlot[QAL_EFX_MAX] = {0};
 static int lastreverteffect = -1; /* just some invalid index value */
 static qboolean snd_is_underwater_enabled = false;
+static float al_voice_gain_limit = 1.0f;
 
 /* ----------------------------------------------------------------- */
 
@@ -595,10 +600,14 @@ AL_ApplyReverb(void)
 static void
 AL_Spatialize(channel_t *ch)
 {
+	float gain = ch->sfx->is_voice ? fminf(ch->oal_vol * S_VoiceVolume(), al_voice_gain_limit) :
+		Q_min(ch->oal_vol, 1.0f);
 	vec3_t origin;
 	vec3_t velocity;
 	vec3_t position;
 	const sound_listener_t *listener;
+
+	qalSourcef(ch->srcnum, AL_GAIN, gain);
 
 	if ((ch->entnum == -1) || S_IsLocalEntity(ch->entnum) || !ch->dist_mult)
 	{
@@ -641,8 +650,6 @@ AL_Spatialize(channel_t *ch)
 		{
 			return;
 		}
-		qalSourcef(ch->srcnum, AL_GAIN, Q_min(ch->oal_vol, 1.0f));
-
 		if (s_doppler->value && s_numlisteners == 1 && !ch->fixed_origin) {
 			S_GetEntitySoundVelocity(ch->entnum, velocity);
 			VectorScale(velocity, AL_METER_OF_Q2_UNIT, velocity);
@@ -672,7 +679,7 @@ AL_Spatialize(channel_t *ch)
 
 				final = 1.0 - ((dist / 1000) * (1.0 - s_occlusion_strength->value));
 
-				qalSourcef(ch->srcnum, AL_GAIN, Q_min(ch->oal_vol, 1.0f) * Q_min(Q_max(final, 0), 1));
+				qalSourcef(ch->srcnum, AL_GAIN, gain * Q_min(Q_max(final, 0), 1));
 
 				qalSourcei(ch->srcnum, AL_DIRECT_FILTER, underwaterFilter);
 
@@ -726,20 +733,11 @@ void
 AL_PlayChannel(channel_t *ch)
 {
 	sfxcache_t *sc;
-	float vol;
 
 	/* Debug */
 	if (s_show->value > 1)
 	{
 		Com_Printf("%s: %s\n", __func__, ch->sfx->name);
-	}
-
-	/* Clamp volume */
-	vol = ch->oal_vol;
-
-	if (vol > 1.0f)
-	{
-		vol = 1.0f;
 	}
 
 	sc = ch->sfx->cache;
@@ -749,7 +747,11 @@ AL_PlayChannel(channel_t *ch)
 	qalSourcef(ch->srcnum, AL_REFERENCE_DISTANCE, SOUND_FULLVOLUME);
 	qalSourcef(ch->srcnum, AL_MAX_DISTANCE, 8192);
 	qalSourcef(ch->srcnum, AL_ROLLOFF_FACTOR, ch->dist_mult * (8192 - SOUND_FULLVOLUME));
-	qalSourcef(ch->srcnum, AL_GAIN, vol);
+	if (al_voice_gain_limit > 1.0f)
+	{
+		/* A source can be reused by either volume control. */
+		qalSourcef(ch->srcnum, AL_MAX_GAIN, ch->sfx->is_voice ? al_voice_gain_limit : 1.0f);
+	}
  	qalSourcei(ch->srcnum, AL_BUFFER, sc->bufnum);
 	qalSourcei(ch->srcnum, AL_LOOPING, ch->autosound ? AL_TRUE : AL_FALSE);
 
@@ -936,10 +938,8 @@ AL_AddLoopSounds(void)
 		ch->dist_mult = SOUND_LOOPATTENUATE;
 		ch->end = paintedtime + sc->length;
 
-		/* it seems like looped sounds are always played at full volume
-		 * see SDL_AddLoopSounds() which calls SDL_SpatializeOrigin() with volume 255.0f
-		 * so set it to full volume (1.0 * s_volume). */
-		ch->oal_vol = s_volume->value;
+		/* The mixer gives looped sounds full volume before applying their gain. */
+		ch->oal_vol = sfx->is_voice ? 1.0f : s_volume->value;
 
 		AL_PlayChannel(ch);
 	}
@@ -1376,6 +1376,9 @@ AL_Init(void)
 		QAL_Shutdown();
 		return false;
 	}
+
+	al_voice_gain_limit = qalIsExtensionPresent("AL_SOFT_gain_clamp_ex") ?
+		fminf(qalGetFloat(AL_GAIN_LIMIT_SOFT), S_MAX_VOICE_VOLUME) : 1.0f;
 
 	/* generate source names */
 	qalGetError();

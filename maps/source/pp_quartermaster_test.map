@@ -368,6 +368,49 @@
 "targetname" "quartermaster_exit"
 "map" "pp_garden_infiltration"
 }
+// One-shot co-op checkpoint in the southwest staging area, before the live range.
+{
+"classname" "trigger_once"
+"target" "range_checkpoint"
+"spawnflags" "2048"
+{
+( -286 -108 0 ) ( -286 -72 96 ) ( -286 -108 96 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( -218 -108 0 ) ( -218 -72 96 ) ( -218 -72 0 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( -286 -108 0 ) ( -218 -108 96 ) ( -218 -108 0 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( -286 -72 0 ) ( -218 -72 96 ) ( -286 -72 96 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( -286 -108 0 ) ( -218 -72 0 ) ( -286 -72 0 ) sandkeep/trim 0 0 0 1 1 0 0 0
+( -286 -108 96 ) ( -286 -72 96 ) ( -218 -72 96 ) sandkeep/trim 0 0 0 1 1 0 0 0
+}
+}
+{
+"classname" "target_platoon_checkpoint"
+"targetname" "range_checkpoint"
+"target" "range_checkpoint_pad"
+}
+{
+"classname" "info_notnull"
+"targetname" "range_checkpoint_pad"
+"origin" "-256 -43 24"
+"angle" "270"
+}
+{
+"classname" "info_notnull"
+"targetname" "range_checkpoint_pad"
+"origin" "-208 -43 24"
+"angle" "270"
+}
+{
+"classname" "info_notnull"
+"targetname" "range_checkpoint_pad"
+"origin" "-160 -43 24"
+"angle" "270"
+}
+{
+"classname" "info_notnull"
+"targetname" "range_checkpoint_pad"
+"origin" "-112 -43 24"
+"angle" "270"
+}
 {
 "classname" "target_help"
 "targetname" "range_help"

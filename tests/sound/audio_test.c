@@ -17,6 +17,7 @@ static ss_local_player_t slots[SS_MAX_LOCAL_PLAYERS];
 static qboolean split_active;
 static cvar_t zero = {.value = 0}, one = {.value = 1}, minus_one = {.value = -1};
 static cvar_t bsp_soundpos = {.value = 0};
+static cvar_t voice_volume = {.value = 1};
 cvar_t *cl_paused = &zero, *cl_audiopaused = &zero;
 qboolean SS_IsSessionActive(void) { return split_active; }
 ss_local_player_t *SS_GetSlot(int i) { return &slots[i]; }
@@ -70,9 +71,51 @@ static void TestSDLStereoCache(void)
 	free(effect.cache);
 }
 
+static void TestSDLVoiceVolume(void)
+{
+	sfx_t effect = {0}, voice = {.is_voice = true};
+	wavinfo_t info = {.rate = 44100, .width = 2, .channels = 1, .samples = 1, .loopstart = -1};
+	short sample = LittleShort(32767);
+	channel_t ch = {.leftvol = 255, .rightvol = 255, .sfx = &voice};
+
+	s_voice_volume = &voice_volume;
+	sound.speed = 44100;
+	s_loadas8bit = &zero;
+	assert(SDL_Cache(&voice, &info, (byte *)&sample, 0, 0, 0, 0, 0));
+	snd_vol = 0;
+	voice_volume.value = 2.0f;
+	snd_voice_vol = (int)(S_VoiceVolume() * 256);
+	memset(paintbuffer, 0, sizeof(paintbuffer));
+	SDL_PaintChannelFrom16(&ch, voice.cache, 1, 0);
+	assert(paintbuffer[0].left == 32767 * 510 && paintbuffer[0].right == 32767 * 510);
+	ch.sfx = &effect;
+	ch.pos = 0;
+	SDL_PaintChannelFrom16(&ch, voice.cache, 1, 0);
+	assert(paintbuffer[0].left == 32767 * 510);
+	free(voice.cache);
+
+	info.width = 1;
+	byte sample8 = 192; /* Stored as signed 64 by SDL_Cache. */
+	assert(SDL_Cache(&voice, &info, &sample8, 0, 0, 0, 0, 0));
+	SDL_BuildScaletable(snd_scaletable, 0.5f);
+	voice_volume.value = 0.0f;
+	SDL_BuildScaletable(snd_voice_scaletable, S_VoiceVolume());
+	ch.sfx = &voice;
+	ch.pos = 0;
+	memset(paintbuffer, 0, sizeof(paintbuffer));
+	SDL_PaintChannelFrom8(&ch, voice.cache, 1, 0);
+	assert(paintbuffer[0].left == 0 && ch.pos == 1);
+	ch.sfx = &effect;
+	ch.pos = 0;
+	SDL_PaintChannelFrom8(&ch, voice.cache, 1, 0);
+	assert(paintbuffer[0].left == 64 * 248 * 128);
+	free(voice.cache);
+}
+
 #ifdef USE_OPENAL
 static vec3_t al_position;
 static int al_relative;
+static float al_gain;
 static void Source3f(ALuint source, ALenum param, ALfloat x, ALfloat y, ALfloat z)
 {
 	(void)source;
@@ -83,7 +126,11 @@ static void Sourcei(ALuint source, ALenum param, ALint value)
 	(void)source;
 	if (param == AL_SOURCE_RELATIVE) al_relative=value;
 }
-static void Sourcef(ALuint source, ALenum param, ALfloat value) { (void)source; (void)param; (void)value; }
+static void Sourcef(ALuint source, ALenum param, ALfloat value)
+{
+	(void)source;
+	if (param == AL_GAIN) { al_gain = value; }
+}
 static void Source3i(ALuint source, ALenum param, ALint a, ALint b, ALint c) { (void)source; (void)param; (void)a; (void)b; (void)c; }
 static void SourceStop(ALuint source) { (void)source; }
 trace_t CM_BoxTrace(const vec3_t a, const vec3_t b, const vec3_t c, const vec3_t d, int h, int m)
@@ -203,7 +250,8 @@ static void TestBrushOrigin(void)
 #ifdef USE_OPENAL
 static void TestOpenAL(void)
 {
-	channel_t ch={.entnum=8,.fixed_origin=true,.origin={5000,50,0},.dist_mult=0.001f,.oal_vol=1};
+	sfx_t effect = {0};
+	channel_t ch={.sfx=&effect,.entnum=8,.fixed_origin=true,.origin={5000,50,0},.dist_mult=0.001f,.oal_vol=1};
 	Reset(); Split();
 	VectorCopy(s_listeners[0].origin,listener_origin);
 	VectorCopy(s_listeners[0].forward,listener_forward);
@@ -215,15 +263,44 @@ static void TestOpenAL(void)
 	ch.entnum=2; AL_Spatialize(&ch); assert(al_relative==AL_TRUE);
 	assert(al_position[0]==0 && al_position[1]==0 && al_position[2]==0);
 }
+
+static void TestOpenALVoiceVolume(void)
+{
+	sfx_t voice = {.is_voice = true}, effect = {0};
+	channel_t ch = {.sfx = &voice, .oal_vol = 1.0f};
+
+	Reset();
+	s_voice_volume = &voice_volume;
+	al_voice_gain_limit = S_MAX_VOICE_VOLUME;
+	voice_volume.value = 1.5f;
+	AL_Spatialize(&ch);
+	assert(al_gain == 1.5f && al_relative == AL_TRUE);
+	voice_volume.value = 0.0f;
+	AL_Spatialize(&ch);
+	assert(al_gain == 0.0f);
+	ch.sfx = &effect;
+	ch.oal_vol = 0.7f;
+	AL_Spatialize(&ch);
+	assert(al_gain == 0.7f);
+
+	ch.sfx = &voice;
+	ch.oal_vol = 1.0f;
+	al_voice_gain_limit = 1.0f;
+	voice_volume.value = 2.0f;
+	AL_Spatialize(&ch);
+	assert(al_gain == 1.0f);
+}
 #endif
 
 int main(void)
 {
 	Swap_Init();
 	TestSDLStereoCache();
+	TestSDLVoiceVolume();
 	TestOneShots(); TestEntitiesAndPriority(); TestLoops(); TestBrushOrigin();
 #ifdef USE_OPENAL
 	TestOpenAL();
+	TestOpenALVoiceVolume();
 #endif
 	puts("Shared-listener audio regressions passed");
 	return 0;

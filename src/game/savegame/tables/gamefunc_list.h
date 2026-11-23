@@ -184,6 +184,7 @@
 {"InitClientResp", (byte *)InitClientResp},
 {"InitClientPersistant", (byte *)InitClientPersistant},
 {"player_die", (byte *)player_die},
+{"platoon_checkpoint_use", (byte *)platoon_checkpoint_use},
 {"LookAtKiller", (byte *)LookAtKiller},
 {"TossClientWeapon", (byte *)TossClientWeapon},
 {"ClientObituary", (byte *)ClientObituary},

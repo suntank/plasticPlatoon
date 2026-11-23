@@ -103,6 +103,7 @@ shell's exclusive controller grab before executing the game.
 | Modifier + D-pad left/right | Previous/next weapon |
 | Modifier + D-pad down | Toggle crouch |
 | Modifier + D-pad up | Toggle help/objectives (F1) |
+| Hold Modifier + B | Revive a teammate when the co-op prompt appears |
 | Select | Quick grenade |
 | Start | Game menu; use Quit to return to Game Bird |
 

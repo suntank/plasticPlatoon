@@ -185,6 +185,7 @@ extern void SaveClientData ( void ) ;
 extern void InitClientResp ( gclient_t * client ) ;
 extern void InitClientPersistant ( gclient_t * client ) ;
 extern void player_die ( edict_t * self , edict_t * inflictor , edict_t * attacker , int damage , vec3_t point ) ;
+extern void platoon_checkpoint_use ( edict_t * self , edict_t * other , edict_t * activator ) ;
 extern void LookAtKiller ( edict_t * self , edict_t * inflictor , edict_t * attacker ) ;
 extern void TossClientWeapon ( edict_t * self ) ;
 extern void ClientObituary ( edict_t * self , edict_t * inflictor , edict_t * attacker ) ;

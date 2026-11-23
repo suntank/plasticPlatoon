@@ -228,6 +228,7 @@ static spawn_t spawns[] = {
 	{"target_speaker", SP_target_speaker},
 	{"target_explosion", SP_target_explosion},
 	{"target_changelevel", SP_target_changelevel},
+	{"target_platoon_checkpoint", SP_target_platoon_checkpoint},
 	{"target_platoon_intermission", SP_target_platoon_intermission},
 	{"target_secret", SP_target_secret},
 	{"target_goal", SP_target_goal},

@@ -399,6 +399,17 @@ static void test_secondary_gamebird_controls(void)
 	SS_BuildSlotCmd(p2);
 	assert(!p2->gb_crouched && p2->cmd.upmove > 0);
 	assert(SS_HandleGameplayKey(K_BTN_EAST, false));
+	p2->snapshot_valid = true;
+	p2->frame.playerstate.stats[STAT_COOP_RESCUE] = COOP_RESCUE_IN_REACH;
+	assert(SS_HandleGameplayKey(K_BTN_WEST, true));
+	assert(SS_HandleGameplayKey(K_BTN_EAST, true));
+	SS_BuildSlotCmd(p2);
+	assert((p2->cmd.buttons & BUTTON_USE) && p2->cmd.upmove == 0);
+	assert(!p1->use_down && !p1->jump_down);
+	assert(SS_HandleGameplayKey(K_BTN_EAST, false));
+	SS_BuildSlotCmd(p2);
+	assert(!(p2->cmd.buttons & BUTTON_USE));
+	p2->frame.playerstate.stats[STAT_COOP_RESCUE] = COOP_RESCUE_NONE;
 	assert(SS_HandleGameplayKey(K_BTN_WEST, true));
 	assert(SS_HandleGameplayKey(K_DPAD_DOWN, true));
 	assert(p2->gb_crouched);

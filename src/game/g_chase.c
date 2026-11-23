@@ -26,6 +26,16 @@
 
 #include "header/local.h"
 
+static qboolean
+CanChase(const edict_t *viewer, const edict_t *target)
+{
+	if (viewer->client->coop_rescue.awaiting_redeploy)
+	{
+		return Coop_IsStanding(target);
+	}
+	return target->inuse && !target->client->resp.spectator;
+}
+
 void
 UpdateChaseCam(edict_t *ent)
 {
@@ -42,8 +52,7 @@ UpdateChaseCam(edict_t *ent)
 	}
 
 	/* is our chase target gone? */
-	if (!ent->client->chase_target->inuse ||
-		ent->client->chase_target->client->resp.spectator)
+	if (!CanChase(ent, ent->client->chase_target))
 	{
 		edict_t *old = ent->client->chase_target;
 		ChaseNext(ent);
@@ -51,7 +60,10 @@ UpdateChaseCam(edict_t *ent)
 		if (ent->client->chase_target == old)
 		{
 			ent->client->chase_target = NULL;
-			ent->client->ps.pmove.pm_flags &= ~PMF_NO_PREDICTION;
+			if (!ent->client->coop_rescue.awaiting_redeploy)
+			{
+				ent->client->ps.pmove.pm_flags &= ~PMF_NO_PREDICTION;
+			}
 			return;
 		}
 	}
@@ -174,12 +186,7 @@ ChaseNext(edict_t *ent)
 
 		e = g_edicts + i;
 
-		if (!e->inuse)
-		{
-			continue;
-		}
-
-		if (!e->client->resp.spectator)
+		if (CanChase(ent, e))
 		{
 			break;
 		}
@@ -219,12 +226,7 @@ ChasePrev(edict_t *ent)
 
 		e = g_edicts + i;
 
-		if (!e->inuse)
-		{
-			continue;
-		}
-
-		if (!e->client->resp.spectator)
+		if (CanChase(ent, e))
 		{
 			break;
 		}
@@ -250,7 +252,7 @@ GetChaseTarget(edict_t *ent)
 	{
 		other = g_edicts + i;
 
-		if (other->inuse && !other->client->resp.spectator)
+		if (CanChase(ent, other))
 		{
 			ent->client->chase_target = other;
 			ent->client->update_chase = true;
@@ -259,5 +261,8 @@ GetChaseTarget(edict_t *ent)
 		}
 	}
 
-	gi.centerprintf(ent, "No other players to chase.");
+	if (!ent->client->coop_rescue.awaiting_redeploy)
+	{
+		gi.centerprintf(ent, "No other players to chase.");
+	}
 }

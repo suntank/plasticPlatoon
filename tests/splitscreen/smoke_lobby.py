@@ -32,6 +32,8 @@ def main():
                         help='open multiplayer after the normal solo map launch')
     parser.add_argument('--check-back', action='store_true',
                         help='use host cancel to revisit match settings and reenter')
+    parser.add_argument('--rescue', action='store_true',
+                        help='exercise campaign rescue input and HUD after launch')
     args = parser.parse_args()
     width, height = map(int, args.size.split('x'))
     output = (args.output or Path(tempfile.mkdtemp(prefix='pp-lobby-smoke-'))).resolve()
@@ -47,8 +49,13 @@ def main():
                          (ROOT/'baseq2/plastic-platoon.pk3', base/'plastic-platoon.pk3')]:
         shutil.copy2(source, dest)
     # Prefer a tiny known map over every user's loose maps/mission archives.
-    (base/'maps.lst').write_text('pp_sandbox_coop1 "Sandbox coop"\n')
-    (base/'autoexec.cfg').write_text('bind F12 "screenshot png 0"\nbind BTN_NORTH "screenshot png 0"\nbind F9 "menu_multiplayer"\n')
+    startmap = 'pp_quartermaster_test' if args.rescue else 'pp_sandbox_coop1'
+    (base/'maps.lst').write_text(f'{startmap} "Test range"\n')
+    bindings = 'bind F12 "screenshot png 0"\nbind BTN_NORTH "screenshot png 0"\nbind F9 "menu_multiplayer"\n'
+    if args.rescue:
+        shutil.copy2(ROOT/'baseq2/operation-quartermaster-test.pk3', base)
+        bindings += 'bind SHOULDR_RIGHT "kill"\nbind BTN_WEST "+use"\n'
+    (base/'autoexec.cfg').write_text(bindings)
     symbols = subprocess.check_output(['nm', str(runtime/'quake2')], text=True)
     match = re.search(r'^([0-9a-fA-F]+) [bd] ss_state$', symbols, re.M)
     client = re.search(r'^([0-9a-fA-F]+) [bdB] cl$', symbols, re.M)
@@ -130,6 +137,28 @@ def main():
         button(0, 6)
     now += 7000
     shot('started', gameplay=True)
+    if args.rescue:
+        if args.players == 4:
+            action('axis', 1, 2, 32767, delay=560)
+            action('axis', 1, 2, 0)
+        button(0, 10)
+        shot('downed', gameplay=True)
+        action('button', 1, 2, 1, delay=800)
+        shot('partial_revive', gameplay=True)
+        action('button', 1, 2, 0)
+        shot('released', gameplay=True)
+        action('button', 1, 2, 1, delay=2400)
+        action('button', 1, 2, 0)
+        shot('revived', gameplay=True)
+        if args.players == 2:
+            button(0, 10)
+            action('wait_rescue', 2)
+            shot('spectating', gameplay=True)
+            action('axis', 1, 0, -32768, delay=570)
+            action('axis', 1, 0, 0)
+            action('axis', 1, 1, -32768, delay=660)
+            action('axis', 1, 1, 0)
+            shot('checkpoint', gameplay=True)
     action('axis', 0, 1, -32768)
     action('axis', 1, 0, 32767, delay=700)
     shot('moving', gameplay=True)
@@ -156,7 +185,9 @@ def main():
                '+set', 's_initsound', '0', '+set', 'r_vsync', '0',
                '+set', 'allow_download', '0',
                '+set', 'vid_maxfps', '120', '+set', 'logfile', '2',
-               *(['+map', 'pp_sandbox_coop1'] if args.from_match else ['+menu_multiplayer'])]
+               *(['+set', 'coop', '1', '+set', 'deathmatch', '0', '+set', 'pp_coop_bleedout_seconds', '8',
+                  '+set', 'con_notifytime', '0'] if args.rescue else []),
+               *(['+map', startmap] if args.from_match else ['+menu_multiplayer'])]
     env = {**os.environ, 'SDL_VIDEODRIVER': 'offscreen', 'SDL_AUDIODRIVER': 'dummy',
            'LIBGL_ALWAYS_SOFTWARE': '1', 'LP_NUM_THREADS': '2',
            'SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS': '1',
@@ -215,6 +246,31 @@ def main():
     check(all(s['buttons'] & 1 and s['buttons'] & 4 and s['up'] > 0
               for s in state('controls')['slots'][:2]),
           'simultaneous attack/ADS/jump did not reach both players')
+    if args.rescue:
+        downed = state('downed')['slots']
+        partial = state('partial_revive')['slots']
+        released = state('released')['slots']
+        revived = state('revived')['slots']
+        if min(map(len, (downed, partial, released, revived))) >= 2:
+            check(downed[0]['health'] == 0 and downed[0]['rescue'] == 1,
+                  'host did not enter Downed')
+            check(partial[0]['progress'] == partial[1]['progress'] > 1 and
+                  partial[1]['teammate'] == 1, 'rescuer and patient did not get matching progress')
+            check(all(s['progress'] == 0 for s in partial[2:]),
+                  'revive progress leaked into another viewport')
+            check(released[0]['rescue'] == 1 and released[0]['progress'] == released[1]['progress'] == 0,
+                  'releasing guest Use did not cancel the revive')
+            check(revived[0]['health'] == 30 and all(s['rescue'] == 0 for s in revived),
+                  'holding guest Use did not revive the host to 30 HP')
+        if args.players == 2:
+            waiting = state('spectating')['slots']
+            checkpoint = state('checkpoint')['slots']
+            if waiting and checkpoint:
+                check(waiting[0]['rescue'] == 2 and waiting[0]['health'] == 100,
+                      'host did not enter living teammate chase mode after bleed-out')
+                check(checkpoint[0]['rescue'] == 0 and checkpoint[0]['health'] == 100 and
+                      checkpoint[0]['origin'][0] < -110 and checkpoint[0]['origin'][1] == -43,
+                      'guest did not redeploy the host at a checkpoint pad')
     check(result.returncode == 0, f'client exited {result.returncode}')
     check(len(report['screenshots']) == len(screenshot_labels), 'missing rendered screenshots')
     report['errors'] = errors

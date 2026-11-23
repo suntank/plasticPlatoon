@@ -665,6 +665,11 @@ T_Damage(edict_t *targ, edict_t *inflictor, edict_t *attacker,
 	/* treat cheat/powerup savings the same as armor */
 	asave += save;
 
+	if (client && Coop_RescueActive() && (take > 0 || asave > save || psave > 0))
+	{
+		Coop_InterruptRevive(targ);
+	}
+
 	/* do the damage */
 	if (take)
 	{
@@ -679,9 +684,12 @@ T_Damage(edict_t *targ, edict_t *inflictor, edict_t *attacker,
 			SpawnDamage(te_sparks, point, normal);
 		}
 
-		targ->health = targ->health - take;
+		if (!client || !client->coop_rescue.bleedout_frame)
+		{
+			targ->health -= take;
+		}
 
-		if (targ->health <= 0)
+		if (targ->health <= 0 && (!client || !client->coop_rescue.bleedout_frame))
 		{
 			if ((targ->svflags & SVF_MONSTER) || (client))
 			{

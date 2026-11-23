@@ -3051,6 +3051,7 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	float look_x;
 	float look_y;
 	qboolean ads_held;
+	qboolean rescue_use;
 	float left_deadzone = Cvar_VariableValue("joy_left_deadzone");
 	float right_deadzone = Cvar_VariableValue("joy_right_deadzone");
 	usercmd_t *cmd;
@@ -3150,7 +3151,9 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 	cmd->sidemove += move_x * Cvar_VariableValue("m_side") *
 		Cvar_VariableValue("joy_sidesensitivity") * cl_sidespeed->value * 2.0f;
 
-	if (slot->jump_down)
+	rescue_use = slot->gb_modifier_down && slot->jump_down && slot->snapshot_valid &&
+		slot->frame.playerstate.stats[STAT_COOP_RESCUE] == COOP_RESCUE_IN_REACH;
+	if (slot->jump_down && !rescue_use)
 	{
 		cmd->upmove += cl_upspeed->value;
 	}
@@ -3170,7 +3173,7 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 		cmd->buttons |= BUTTON_ATTACK;
 	}
 
-	if (slot->use_down)
+	if (slot->use_down || rescue_use)
 	{
 		cmd->buttons |= BUTTON_USE;
 	}
@@ -3589,6 +3592,19 @@ SS_RenderSlotView(int slot_index, float stereo_separation)
 	CL_PerfBeginView(slot_index);
 	R_RenderFrame(&refdef);
 	CL_PerfEndView(slot_index, &refdef);
+	int rescue_target = ps->stats[STAT_COOP_TEAMMATE];
+	if (rescue_target > 0)
+	{
+		centity_t *entities = slot_index == 0 ? cl_entities : slot->entities;
+		int count = slot_index == 0 ? cl_numentities : slot->entity_count;
+		int serverframe = slot_index == 0 ? cl.frame.serverframe : slot->frame.serverframe;
+
+		if (rescue_target < count)
+		{
+			SCR_DrawRescueMarker(&refdef, &entities[rescue_target],
+				serverframe, SS_GetSlotViewLerp(slot), SS_GetViewportScale(viewport, SCR_GetHUDScale()));
+		}
+	}
 	ss_frame_entities += refdef.num_entities;
 	ss_frame_lights += refdef.num_dlights;
 	ss_frame_particles += refdef.num_particles;
@@ -3780,7 +3796,9 @@ SS_DrawViewportHUD(int slot_index)
 			viewport->y + margin + header_height, "LOW", true, scale);
 	}
 
-	if (!ads_active && !inventory_open)
+	if (!ads_active && !inventory_open &&
+		!(ps->pmove.pm_flags & PMF_COOP_DOWNED) &&
+		ps->stats[STAT_COOP_RESCUE] != COOP_RESCUE_WAITING)
 	{
 		SS_DrawViewportCrosshair(viewport, ps, scale);
 	}
@@ -3789,6 +3807,8 @@ SS_DrawViewportHUD(int slot_index)
 	{
 		SS_DrawViewportInventory(slot_index, viewport, scale);
 	}
+
+	SCR_DrawRescueHUD(ps, viewport->x, viewport->y, viewport->w, viewport->h, scale);
 
 	SCR_DrawScreenImageOverlay(slot_index == 0 ? &cl.screen_image :
 		&ss_state.slots[slot_index].screen_image,

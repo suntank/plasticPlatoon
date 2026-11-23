@@ -799,6 +799,11 @@ CL_InitInput(void)
 		Key_SetBinding((int)'g', (char *)"quickgrenade");
 	}
 
+	if (!keybindings[(int)'e'] || !keybindings[(int)'e'][0])
+	{
+		Key_SetBinding((int)'e', (char *)"+use");
+	}
+
 	/* Saved configs unbind everything before restoring their old bindings.
 	 * Upgrade the stock controller layout once, after those configs load.
 	 * Archive the version so later user remaps (including unbinds) survive. */
@@ -978,6 +983,14 @@ CL_FinalizeCmd(void)
 	}
 
 	in_use.state &= ~2;
+
+	/* Game Bird's modifier plus Jump can hold Use at a revive prompt. */
+	if ((in_gb_modifier.state & 1) && (in_up.state & 1) &&
+		cl.frame.playerstate.stats[STAT_COOP_RESCUE] == COOP_RESCUE_IN_REACH)
+	{
+		cmd->upmove = Q_min(0, cmd->upmove);
+		cmd->buttons |= BUTTON_USE;
+	}
 
 	if (in_ads.state & 3)
 	{

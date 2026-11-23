@@ -842,6 +842,18 @@ void InventoryMessage(edict_t *client);
 
 /* quartermaster.c */
 qboolean QM_Campaign(void);
+void Coop_RescueInit(void);
+qboolean Coop_RescueActive(void);
+qboolean Coop_IsStanding(const edict_t *ent);
+qboolean Coop_IsIncapacitated(const edict_t *ent);
+qboolean Coop_DownPlayer(edict_t *ent);
+void Coop_RescueInput(edict_t *ent, const usercmd_t *cmd);
+void Coop_InterruptRevive(edict_t *ent);
+void Coop_RescueFrame(void);
+void Coop_RescueStats(edict_t *ent);
+void Coop_PrepareTransition(edict_t *ent);
+void Coop_RedeployAt(edict_t *ent, edict_t *spot);
+void SP_target_platoon_checkpoint(edict_t *ent);
 qboolean QM_IsOpen(void);
 void QM_Enter(edict_t *ent);
 void QM_Input(edict_t *ent, const usercmd_t *cmd);
@@ -983,6 +995,17 @@ typedef struct
 	char feedback[40];
 } quartermaster_t;
 
+typedef struct
+{
+	int bleedout_frame;
+	qboolean awaiting_redeploy;
+	int revive_target; /* client edict number, or zero */
+	int revive_start;
+	int revive_frames;
+	int last_use_frame;
+	qboolean require_use_release;
+} coop_rescue_t;
+
 /* this structure is cleared on each PutClientInServer(),
    except for 'client->pers' */
 struct gclient_s
@@ -1076,8 +1099,9 @@ struct gclient_s
 	float burn_end_time;         /* when burning stops */
 	edict_t *burn_attacker;      /* who set us on fire */
 
-	/* Keep at the end so old saves can read the original client block. */
+	/* Appended fields have versioned save readers. */
 	quartermaster_t quartermaster;
+	coop_rescue_t coop_rescue;
 };
 
 struct edict_s

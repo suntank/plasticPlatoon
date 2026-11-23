@@ -540,6 +540,8 @@ G_RunFrame(void)
 	/* see if it is time to end a deathmatch */
 	CheckDMRules();
 
+	Coop_RescueFrame();
+
 	/* see if needpass needs updated */
 	CheckNeedPass();
 

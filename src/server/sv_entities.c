@@ -160,7 +160,7 @@ SV_WritePlayerstateToClient(client_frame_t *from, client_frame_t *to,
 	int pflags;
 	player_state_t *ps, *ops;
 	player_state_t dummy;
-	int statbits;
+	unsigned int statbits;
 
 	ps = &to->ps;
 
@@ -381,7 +381,7 @@ SV_WritePlayerstateToClient(client_frame_t *from, client_frame_t *to,
 	{
 		if (ps->stats[i] != ops->stats[i])
 		{
-			statbits |= 1 << i;
+			statbits |= 1u << i;
 		}
 	}
 
@@ -389,7 +389,7 @@ SV_WritePlayerstateToClient(client_frame_t *from, client_frame_t *to,
 
 	for (i = 0; i < MAX_STATS; i++)
 	{
-		if (statbits & (1 << i))
+		if (statbits & (1u << i))
 		{
 			MSG_WriteShort(msg, ps->stats[i]);
 		}
