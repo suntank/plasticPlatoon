@@ -259,6 +259,30 @@ GL3_DrawFrameBufferObject(int x, int y, int w, int h, GLuint fboTexture, const f
 	drawTexturedRectangle(x, y, w, h, 0, 1, 1, 0);
 }
 
+static float ui_opacity = 1.0f;
+
+Q2_DLL_EXPORTED void
+R_SetUIOpacity(float opacity)
+{
+	GLuint program = gl3state.si2D.shaderProgram;
+
+	if (ui_opacity == opacity)
+	{
+		return;
+	}
+	ui_opacity = opacity;
+	GL3_UseProgram(program);
+	glUniform1f(glGetUniformLocation(program, "uiFade"), 1.0f - opacity);
+	if (opacity < 1.0f)
+	{
+		glEnable(GL_BLEND);
+	}
+	else
+	{
+		glDisable(GL_BLEND);
+	}
+}
+
 /*
  * Fills a box of pixels with a single color
  */
@@ -291,7 +315,7 @@ GL3_Draw_Fill(int x, int y, int w, int h, int c)
 	{
 		gl3state.uniCommonData.color.Elements[i] = color.v[i] * (1.0f/255.0f);
 	}
-	gl3state.uniCommonData.color.A = 1.0f;
+	gl3state.uniCommonData.color.A = ui_opacity;
 
 	GL3_UpdateUBOCommon();
 

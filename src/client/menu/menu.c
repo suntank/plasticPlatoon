@@ -37,10 +37,6 @@
 #include "../sound/header/local.h"
 #include "header/qmenu.h"
 
-/* Number of the frames of the spinning quake logo */
-#define NUM_CURSOR_FRAMES 15
-static int m_cursor_width = 0;
-
 /* Signals the file system to start the demo loop. */
 qboolean menu_startdemoloop;
 
@@ -485,36 +481,6 @@ M_DrawPic(int x, int y, char *pic)
 			   (y + ((viddef.height - 240) >> 1)) * scale, pic, scale);
 }
 
-/*
- * Draws an animating cursor with the point at
- * x,y. The pic will extend to the left of x,
- * and both above and below y.
- */
-static void
-M_DrawCursor(int x, int y, int f)
-{
-	char cursorname[80];
-	static qboolean cached;
-	float scale = SCR_GetMenuScale();
-
-	if (!cached)
-	{
-		int i;
-
-		for (i = 0; i < NUM_CURSOR_FRAMES; i++)
-		{
-			Com_sprintf(cursorname, sizeof(cursorname), "m_cursor%d", i);
-
-			Draw_FindPic(cursorname);
-		}
-
-		cached = true;
-	}
-
-	Com_sprintf(cursorname, sizeof(cursorname), "m_cursor%d", f);
-	Draw_PicScaled(x * scale, y * scale, cursorname, scale);
-}
-
 static void
 M_DrawTextBox(int x, int y, int width, int lines)
 {
@@ -682,13 +648,6 @@ M_Popup(void)
  */
 
 static menuframework_s s_main;
-static menubitmap_s s_plaque;
-static menubitmap_s s_logo;
-static menubitmap_s s_game;
-static menubitmap_s s_multiplayer;
-static menubitmap_s s_options;
-static menubitmap_s s_video;
-static menubitmap_s s_quit;
 static menuaction_s s_main_actions[6];
 
 static void
@@ -732,201 +691,86 @@ QuitFunc(void *unused)
 static void
 InitMainMenu(void)
 {
-	float scale = SCR_GetMenuScale();
-	int i = 0;
-	int x = 0;
-	int y = 0;
-	int w = 0;
-	int h = 0;
-	int widest = -1;
-
-	char * names[] = {
-		"m_main_game",
-		"m_main_multiplayer",
-		"m_main_options",
-		"m_main_video",
-		"m_main_quit",
-		0
+	static const struct
+	{
+		const char *label;
+		const char *help;
+		void (*callback)(void *);
+	} actions[] = {
+		{"Resume mission", "Return to the action", ResumeGameFunc},
+		{"New game / saves", "Difficulty & saves", GameFunc},
+		{"Multiplayer", "Local & network play", MultiplayerFunc},
+		{"Options & controls", "Sound, input & aim", OptionsFunc},
+		{"Display settings", "Video & performance", VideoFunc},
+		{"Quit", "Close Plastic Platoon", QuitFunc}
 	};
+	int first = cls.state == ca_active ? 0 : 1;
 
-	if (Menu_IsCompact() || cls.state == ca_disconnected)
+	memset(&s_main, 0, sizeof(s_main));
+	s_main.title = "PLASTIC PLATOON";
+	memset(s_main_actions, 0, sizeof(s_main_actions));
+	for (int i = first; i < ARRLEN(actions); i++)
 	{
-		static const char *labels[] = {
-			"Resume mission", "New game / saves", "Multiplayer",
-			"Options & controls", "Display settings", "Quit"
-		};
-		static const char *help[] = {
-			"Return to the action", "Difficulty, load & save",
-			"Local co-op & network play", "Sound, input & aiming",
-			"Video & performance", "Close Plastic Platoon"
-		};
-		void (*callbacks[])(void *) = {
-			ResumeGameFunc, GameFunc, MultiplayerFunc, OptionsFunc, VideoFunc, QuitFunc
-		};
+		menucommon_s *item = &s_main_actions[i].generic;
 
-		memset(&s_main, 0, sizeof(s_main));
-		memset(s_main_actions, 0, sizeof(s_main_actions));
-		s_main.title = "PLASTIC PLATOON";
-		s_main.subtitle = cls.state == ca_active ? "MISSION PAUSED" : "FIELD COMMAND";
-		for (i = cls.state == ca_active ? 0 : 1; i < 6; i++)
-		{
-			s_main_actions[i].generic.type = MTYPE_ACTION;
-			s_main_actions[i].generic.name = labels[i];
-			s_main_actions[i].generic.statusbar = help[i];
-			s_main_actions[i].generic.callback = callbacks[i];
-			Menu_AddItem(&s_main, &s_main_actions[i]);
-		}
-		return;
-	}
-
-	for (i = 0; names[i] != 0; i++)
-	{
-		Draw_GetPicSize(&w, &h, names[i]);
-
-		if (w > widest)
-		{
-			widest = w;
-		}
-	}
-
-	x = (viddef.width / scale - widest + 70) / 2;
-	y = (viddef.height / (2 * scale) - 110);
-
-	memset(&s_main, 0, sizeof( menuframework_s ));
-
-	Draw_GetPicSize(&w, &h, "m_main_plaque");
-
-	s_plaque.generic.type = MTYPE_BITMAP;
-	s_plaque.generic.flags = QMF_LEFT_JUSTIFY | QMF_INACTIVE;
-	s_plaque.generic.x = (x - (m_cursor_width + 5) - w);
-	s_plaque.generic.y = y;
-	s_plaque.generic.name = "m_main_plaque";
-	s_plaque.generic.callback = 0;
-	s_plaque.focuspic = 0;
-
-	s_logo.generic.type = MTYPE_BITMAP;
-	s_logo.generic.flags = QMF_LEFT_JUSTIFY | QMF_INACTIVE;
-	s_logo.generic.x = (x - (m_cursor_width + 5) - w);
-	s_logo.generic.y = y + h + 5;
-	s_logo.generic.name = "m_main_logo";
-	s_logo.generic.callback = 0;
-	s_logo.focuspic = 0;
-
-	y += 10;
-
-	s_game.generic.type = MTYPE_BITMAP;
-	s_game.generic.flags = QMF_LEFT_JUSTIFY | QMF_HIGHLIGHT_IF_FOCUS;
-	s_game.generic.x = x;
-	s_game.generic.y = y;
-	s_game.generic.name = "m_main_game";
-	s_game.generic.callback = GameFunc;
-	s_game.focuspic = "m_main_game_sel";
-
-	Draw_GetPicSize(&w, &h, ( char * )s_game.generic.name);
-	y += h + 8;
-
-	s_multiplayer.generic.type = MTYPE_BITMAP;
-	s_multiplayer.generic.flags = QMF_LEFT_JUSTIFY | QMF_HIGHLIGHT_IF_FOCUS;
-	s_multiplayer.generic.x = x;
-	s_multiplayer.generic.y = y;
-	s_multiplayer.generic.name = "m_main_multiplayer";
-	s_multiplayer.generic.callback = MultiplayerFunc;
-	s_multiplayer.focuspic = "m_main_multiplayer_sel";
-
-	Draw_GetPicSize(&w, &h, ( char * )s_multiplayer.generic.name);
-	y += h + 8;
-
-	s_options.generic.type = MTYPE_BITMAP;
-	s_options.generic.flags = QMF_LEFT_JUSTIFY | QMF_HIGHLIGHT_IF_FOCUS;
-	s_options.generic.x = x;
-	s_options.generic.y = y;
-	s_options.generic.name = "m_main_options";
-	s_options.generic.callback = OptionsFunc;
-	s_options.focuspic = "m_main_options_sel";
-
-	Draw_GetPicSize(&w, &h, ( char * )s_options.generic.name);
-	y += h + 8;
-
-	s_video.generic.type = MTYPE_BITMAP;
-	s_video.generic.flags = QMF_LEFT_JUSTIFY | QMF_HIGHLIGHT_IF_FOCUS;
-	s_video.generic.x = x;
-	s_video.generic.y = y;
-	s_video.generic.name = "m_main_video";
-	s_video.generic.callback = VideoFunc;
-	s_video.focuspic = "m_main_video_sel";
-
-	Draw_GetPicSize(&w, &h, ( char * )s_video.generic.name);
-	y += h + 8;
-
-	s_quit.generic.type = MTYPE_BITMAP;
-	s_quit.generic.flags = QMF_LEFT_JUSTIFY | QMF_HIGHLIGHT_IF_FOCUS;
-	s_quit.generic.x = x;
-	s_quit.generic.y = y;
-	s_quit.generic.name = "m_main_quit";
-	s_quit.generic.callback = QuitFunc;
-	s_quit.focuspic = "m_main_quit_sel";
-
-	Menu_AddItem(&s_main, (void *)&s_plaque);
-	Menu_AddItem(&s_main, (void *)&s_logo);
-	Menu_AddItem(&s_main, (void *)&s_game);
-	Menu_AddItem(&s_main, (void *)&s_multiplayer);
-	Menu_AddItem(&s_main, (void *)&s_options);
-	Menu_AddItem(&s_main, (void *)&s_video);
-	Menu_AddItem(&s_main, (void *)&s_quit);
-
-	Menu_Center(&s_main);
-}
-
-static void
-M_Main_DrawTitle(void)
-{
-	float scale = SCR_GetMenuScale();
-	int x = viddef.width / 12;
-	int row_height = 22 * scale;
-	int title_height = 38 * scale;
-	int y = (viddef.height - title_height - row_height * s_main.nitems) / 2;
-
-	DrawAltStringScaled(x, y, s_main.title, scale * 2);
-	y += title_height;
-	for (int i = 0; i < s_main.nitems; i++, y += row_height)
-	{
-		const menucommon_s *item = s_main.items[i];
-		int text_x = x + 12 * scale;
-		int text_y = y + 6 * scale;
-
-		if (i == s_main.cursor)
-		{
-			Draw_Fill(x, y, 164 * scale, row_height - 2, 7);
-			Draw_Fill(x, y, 2 * scale, row_height - 2, 140);
-			DrawAltStringScaled(text_x, text_y, item->name, scale);
-		}
-		else
-		{
-			DrawStringScaled(text_x, text_y, item->name, scale);
-		}
+		item->type = MTYPE_ACTION;
+		item->name = actions[i].label;
+		item->statusbar = actions[i].help;
+		item->callback = actions[i].callback;
+		Menu_AddItem(&s_main, item);
 	}
 }
 
 static void
 M_Main_Draw(void)
 {
-	const menucommon_s *item = Menu_ItemAtCursor(&s_main);
+	const menucommon_s *focus = Menu_ItemAtCursor(&s_main);
 	qboolean compact = Menu_IsCompact();
+	qboolean paused = cls.state == ca_active;
+	float scale = compact ? 1.0f : fmaxf(1.25f, SCR_GetMenuScale());
+	int glyph;
+	int x, y, panel, row_height;
+	float title_scale;
 
-	if (!compact && item && item->type == MTYPE_ACTION)
+	scale = fminf(scale, fminf(viddef.width / (compact ? 238.0f : 400.0f),
+		viddef.height / 224.0f));
+	glyph = Q_max(1, (int)(scale * 8));
+	scale = glyph / 8.0f;
+	title_scale = (compact ? 2.0f : 3.0f) * scale;
+	panel = 21 * glyph;
+	row_height = (compact ? 19 : 24) * scale;
+	x = compact ? 10 * scale : viddef.width / 15;
+	y = (viddef.height - (int)(88 * scale) - s_main.nitems * row_height) / 2;
+
+	Draw_Fill(x, y, 22 * scale, Q_max(1, (int)(2 * scale)), PP_UI_BRASS);
+	if (paused)
 	{
-		M_Main_DrawTitle();
-		return;
+		DrawAltStringScaled(x + 30 * scale, y - 3 * scale, "MISSION PAUSED", scale);
+	}
+	DrawStringScaled(x, y + 12 * scale, "PLASTIC", title_scale);
+	DrawStringScaled(x, y + (compact ? 34 : 38) * scale, "PLATOON", title_scale);
+	y += (compact ? 62 : 70) * scale;
+
+	for (int i = 0; i < s_main.nitems; i++, y += row_height)
+	{
+		const menucommon_s *item = s_main.items[i];
+		qboolean selected = item == focus;
+		int row_gap = Q_max(1, (int)(2 * scale));
+
+		Draw_Fill(x, y, panel, row_height - row_gap, selected ? PP_UI_FOCUS : PP_UI_ROW);
+		if (selected)
+		{
+			Draw_Fill(x, y, Q_max(1, (int)(2 * scale)), row_height - row_gap, PP_UI_BRASS);
+			DrawAltStringScaled(x + panel - 12 * scale, y + (row_height - glyph) / 2, ">", scale);
+		}
+		DrawStringScaled(x + 7 * scale, y + (row_height - glyph) / 2, item->name, scale);
 	}
 
-	s_main.title = "PLASTIC PLATOON";
-	/* Leave an illustrated strip beside the handheld title menu. */
-	s_main.compact_panel_width = cls.state == ca_disconnected && viddef.width >= 224 ? 168 : 0;
-	Menu_Draw(&s_main);
-	if (!compact && item)
+	if (focus && focus->statusbar)
 	{
-		M_DrawCursor(item->x - m_cursor_width, item->y,
-			(cls.realtime / 100) % NUM_CURSOR_FRAMES);
+		int hint_y = y + (int)(8 * scale);
+
+		DrawAltStringScaled(x, hint_y, focus->statusbar, scale);
 	}
 }
 
@@ -940,23 +784,6 @@ void
 M_Menu_Main_f(void)
 {
 	InitMainMenu();
-
-	// force first available item to have focus
-	while (s_main.cursor >= 0 && s_main.cursor < s_main.nitems)
-	{
-		const menucommon_s * item = NULL;
-
-		item = ( menucommon_s * )s_main.items[s_main.cursor];
-
-		if ((item->flags & (QMF_INACTIVE)))
-		{
-			s_main.cursor++;
-		}
-		else
-		{
-			break;
-		}
-	}
 
 	s_main.draw = M_Main_Draw;
 	s_main.key  = M_Main_Key;
@@ -7472,10 +7299,6 @@ M_Menu_Quit_f(void)
 void
 M_Init(void)
 {
-	char cursorname[MAX_QPATH];
-	int w = 0;
-	int h = 0;
-
 	Cmd_AddCommand("playermodels", ListModels_f);
 
 	Cmd_AddCommand("menu_main", M_Menu_Main_f);
@@ -7510,29 +7333,21 @@ M_Init(void)
 		Com_sprintf(buffer, sizeof(buffer), "adr%d", index);
 		Cvar_Get(buffer, "", CVAR_ARCHIVE);
 	}
-
-	// cache the cursor frames
-	for (int i = 0; i < NUM_CURSOR_FRAMES; i++)
-	{
-		Com_sprintf(cursorname, sizeof(cursorname), "m_cursor%d", i);
-		Draw_FindPic(cursorname);
-		Draw_GetPicSize(&w, &h, cursorname);
-
-		if (w > m_cursor_width)
-		{
-			m_cursor_width = w;
-		}
-	}
 }
 
 static void
 M_DrawMenuBackground(void)
 {
-	const char *pic = viddef.width * 3 < viddef.height * 4 ?
-		"pp_menu_background_square.jpg" : "pp_menu_background.jpg";
+	qboolean compact = viddef.width * 3 < viddef.height * 4;
+	const char *pic = compact ? "pp_menu_backyard_compact.jpg" : "pp_menu_backyard_wide.jpg";
 	int width, height, draw_width, draw_height;
 
 	Draw_GetPicSize(&width, &height, pic);
+	if (width <= 0 || height <= 0)
+	{
+		pic = compact ? "pp_menu_background_square.jpg" : "pp_menu_background.jpg";
+		Draw_GetPicSize(&width, &height, pic);
+	}
 	if (width <= 0 || height <= 0)
 	{
 		Draw_Fill(0, 0, viddef.width, viddef.height, 0);
@@ -7568,6 +7383,10 @@ M_Draw(void)
 	else if (cls.state == ca_disconnected)
 	{
 		M_DrawMenuBackground();
+		if (m_active.draw != M_Main_Draw && !Menu_IsCompact())
+		{
+			Draw_FadeScreen();
+		}
 	}
 	else
 	{

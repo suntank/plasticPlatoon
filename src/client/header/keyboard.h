@@ -287,6 +287,7 @@ extern qboolean	chat_team;
 qboolean IN_NumpadIsOn();
 void Char_Event(int key);
 void Key_Event(int key, qboolean down, qboolean special);
+const char *Key_QuartermasterCommand(int key);
 void Key_SetEventGamepadIndex(int gamepad_index);
 int Key_GetEventGamepadIndex(void);
 void Key_SetInputGamepad(int gamepad_index);

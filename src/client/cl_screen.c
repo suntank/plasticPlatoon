@@ -31,6 +31,7 @@
 #include "header/performance.h"
 #include "cl_splitscreen.h"
 #include "input/header/aim_assist.h"
+#include "sound/header/vorbis.h"
 
 static float scr_con_current; /* aproaches scr_conlines at scr_conspeed */
 static float scr_conlines; /* 0.0 to 1.0 lines of console to display */
@@ -38,6 +39,40 @@ static float scr_conlines; /* 0.0 to 1.0 lines of console to display */
 static qboolean scr_initialized; /* ready to draw */
 
 static int scr_draw_loading;
+enum
+{
+	QM_CAMERA_HOLD = 2000,
+	QM_CAMERA_FADE = 1000,
+	/* Accents from the shipped mission-complete.ogg, in milliseconds. */
+	QM_TITLE_OPEN = QM_CAMERA_HOLD + QM_CAMERA_FADE,
+	QM_TITLE_SECOND_WORD = QM_TITLE_OPEN + 1000,
+	QM_TITLE_HIT = 4200,
+	QM_TITLE_SECOND_WORD_FADE = QM_TITLE_HIT - QM_TITLE_SECOND_WORD,
+	QM_TITLE_HOLD = 2000,
+	QM_TITLE_END = QM_TITLE_HIT + QM_TITLE_HOLD,
+	QM_TITLE_OUTRO = 360,
+	QM_BACKDROP_FADE = 450,
+	QM_BACKDROP_HOLD = 2000,
+	QM_MENU_DELAY = QM_BACKDROP_FADE + QM_BACKDROP_HOLD,
+	QM_MENU_FADE = 400
+};
+
+static struct
+{
+	int start;
+	int server;
+	int time;
+	int skip_at;
+	qboolean active;
+	qboolean music;
+	qboolean skipped;
+} quartermaster_intro;
+
+static struct
+{
+	qboolean fire;
+	qboolean block_fire;
+} quartermaster_buttons[SS_MAX_LOCAL_PLAYERS];
 
 vrect_t scr_vrect; /* position of render window on screen */
 
@@ -481,7 +516,7 @@ SCR_DrawPause(void)
 		return;
 	}
 
-	if (!cl_paused->value)
+	if (!cl_paused->value || (cl.frame.playerstate.stats[STAT_LAYOUTS] & LAYOUT_QUARTERMASTER))
 	{
 		return;
 	}
@@ -574,7 +609,8 @@ SCR_DrawConsole(void)
 	}
 	else
 	{
-		if ((cls.key_dest == key_game) || (cls.key_dest == key_message))
+		if (cls.key_dest == key_message || (cls.key_dest == key_game &&
+			!(cl.frame.playerstate.stats[STAT_LAYOUTS] & LAYOUT_QUARTERMASTER)))
 		{
 			Con_DrawNotify(); /* only draw notify in game */
 		}
@@ -1717,18 +1753,12 @@ SCR_ExecuteLayoutString(char *s)
 	SCR_ExecuteViewportLayout(s, 0, 0, viddef.width, viddef.height, scale);
 }
 
-void
-SCR_DrawQuartermaster(char *layout, int left, int top, int width, int height)
+static void
+SCR_DrawLegacyQuartermaster(char *layout, int left, int top, int width, int height)
 {
-	static const char prefix[] = "quartermaster ";
 	float scale = fminf(width / 320.0f, height / 240.0f);
 	int x = left + width / 2 - (int)(152 * scale);
 	int y = top + height / 2 - (int)(112 * scale);
-
-	if (strncmp(layout, prefix, sizeof(prefix) - 1))
-	{
-		return;
-	}
 
 	Draw_Fill(x, y, (int)(304 * scale), (int)(224 * scale), 8);
 	Draw_Fill(x + (int)(2 * scale), y + (int)(2 * scale),
@@ -1738,7 +1768,731 @@ SCR_DrawQuartermaster(char *layout, int left, int top, int width, int height)
 	Draw_Fill(x + (int)(8 * scale), y + (int)(182 * scale),
 		(int)(288 * scale), Q_max(1, (int)scale), 8);
 
-	SCR_ExecuteViewportLayout(layout + sizeof(prefix) - 1, left, top, width, height, scale);
+	SCR_ExecuteViewportLayout(layout, left, top, width, height, scale);
+}
+
+enum
+{
+	QM_ART_TIERS = 4,
+	QM_RESUPPLY_ROWS = 11
+};
+
+/* Upgrade order in the server's qmup layout. */
+static const char *const qm_art_keys[] = {"body", "vest", "bandolier", "demolition", "ordnance"};
+static const char *const qm_art_tiers[] = {"I", "II", "III", "IV"};
+
+typedef struct
+{
+	char text[64];
+	qboolean selected;
+} quartermaster_line_t;
+
+typedef struct
+{
+	quartermaster_line_t rows[QM_RESUPPLY_ROWS];
+	quartermaster_line_t ready;
+	char balance[24];
+	char earnings[64];
+	char preview[2][48];
+	char feedback[48];
+	char controls[48];
+	int focus;
+	qm_page_t page;
+	qboolean has_weapons;
+	char weapon_heading[24];
+	char supply_art[16];
+} quartermaster_panel_t;
+
+typedef struct
+{
+	int x, y;
+	float scale, y_scale;
+	qboolean pixel_text;
+} quartermaster_canvas_t;
+
+static void
+SCR_QMFill(const quartermaster_canvas_t *canvas, int x, int y, int w, int h, int color)
+{
+	int sx = (int)(x * canvas->scale);
+	int sy = (int)(y * canvas->y_scale);
+
+	Draw_Fill(canvas->x + sx, canvas->y + sy,
+		Q_max(1, (int)((x + w) * canvas->scale) - sx),
+		Q_max(1, (int)((y + h) * canvas->y_scale) - sy), color);
+}
+
+static void
+SCR_QMPicture(const quartermaster_canvas_t *canvas, int x, int y, int w, int h,
+	const char *picture)
+{
+	int pic_width, pic_height;
+
+	Draw_GetPicSize(&pic_width, &pic_height, picture);
+	if (pic_width > 0 && pic_height > 0)
+	{
+		Draw_StretchPic(canvas->x + (int)(x * canvas->scale),
+			canvas->y + (int)(y * canvas->y_scale), (int)(w * canvas->scale),
+			(int)(h * canvas->y_scale), picture);
+	}
+}
+
+static void
+SCR_QMText(const quartermaster_canvas_t *canvas, int x, int y, const char *text,
+	int max_chars, float size, qboolean accent)
+{
+	int sy = canvas->y + (int)(y * canvas->y_scale);
+	float font_scale = size * canvas->scale;
+	float advance = 8 * font_scale;
+
+	if (canvas->pixel_text)
+	{
+		/* Retain the font's one-pixel strokes on a 240x240 display. */
+		font_scale = size <= 1.25f ? 1 : 2;
+		advance = fmaxf(advance, 6 * font_scale - 1);
+	}
+	max_chars = Q_min(max_chars, (int)(((312 - x) * canvas->scale -
+		8 * font_scale) / advance) + 1);
+
+	for (int i = 0; i < max_chars && text[i]; i++)
+	{
+		int glyph = (unsigned char)text[i] ^ (accent ? 0x80 : 0);
+
+		Draw_CharScaled(canvas->x + (int)(x * canvas->scale + i * advance), sy, glyph,
+			font_scale);
+	}
+}
+
+static void
+SCR_QMTab(const quartermaster_canvas_t *canvas, int x, int width, const char *name,
+	qboolean active)
+{
+	SCR_QMFill(canvas, x, 83, width, 16, active ? PP_UI_FOCUS : PP_UI_ROW);
+	if (active)
+	{
+		SCR_QMFill(canvas, x, 98, width, 1, PP_UI_BRASS);
+	}
+	SCR_QMText(canvas, x + 8, 87, name, 9, 1.0f, active);
+}
+
+static void
+SCR_QMRow(const quartermaster_canvas_t *canvas, int y, int stride, qboolean selected)
+{
+	SCR_QMFill(canvas, 12, y, 296, stride - 1, selected ? PP_UI_FOCUS : PP_UI_ROW);
+	if (selected)
+	{
+		SCR_QMFill(canvas, 12, y, 2, stride - 1, PP_UI_BRASS);
+	}
+}
+
+static void
+SCR_QMUpgrade(const quartermaster_canvas_t *canvas, int y, const char *line, int tier,
+	qboolean selected)
+{
+	const char *price = strlen(line) >= 30 ? line + 30 : "";
+
+	while (*price == ' ')
+	{
+		price++;
+	}
+	SCR_QMRow(canvas, y, 13, selected);
+	SCR_QMText(canvas, 20, y + 2, line, 22, 1.0f, selected);
+	for (int i = 0; i < QM_ART_TIERS; i++)
+	{
+		int x = 198 + i * 13;
+
+		SCR_QMFill(canvas, x, y + 4, 10, 5, i < tier ? PP_UI_BRASS : PP_UI_EDGE);
+		if (selected && i == tier)
+		{
+			SCR_QMFill(canvas, x + 1, y + 5, 8, 3, PP_UI_FOCUS);
+		}
+	}
+	SCR_QMText(canvas, 302 - Q_min(6, (int)strlen(price)) * 8, y + 2, price, 6, 1.0f, selected);
+}
+
+static qboolean
+SCR_QMReadPanel(char *layout, quartermaster_panel_t *panel, qm_page_t page)
+{
+	const char *end = layout + strlen(layout);
+	int stride = page == QM_PAGE_UPGRADES ? 13 : 10;
+	int rows = page == QM_PAGE_WEAPONS ? QM_WEAPON_VISIBLE_ROWS :
+		page == QM_PAGE_RESUPPLY ? QM_RESUPPLY_ROWS : ARRLEN(qm_art_keys);
+
+	memset(panel, 0, sizeof(*panel));
+	panel->page = page;
+	panel->has_weapons = page == QM_PAGE_WEAPONS;
+	panel->focus = -1;
+
+	/* The game sends the same positioned strings to older clients. */
+	if (strcmp(COM_Parse(&layout), "xv"))
+	{
+		return false;
+	}
+	COM_Parse(&layout);
+	while (layout && layout < end)
+	{
+		const char *token = COM_Parse(&layout);
+		const char *kind, *line;
+		int y;
+		qboolean selected;
+
+		if (!strcmp(token, "qmweapons"))
+		{
+			panel->has_weapons = true;
+			continue;
+		}
+		if (page == QM_PAGE_RESUPPLY && !strcmp(token, "qmsupply"))
+		{
+			const char *art = COM_Parse(&layout);
+			size_t len = strlen(art);
+
+			if (len < sizeof(panel->supply_art) &&
+				strspn(art, "abcdefghijklmnopqrstuvwxyz") == len)
+			{
+				Q_strlcpy(panel->supply_art, art, sizeof(panel->supply_art));
+			}
+			continue;
+		}
+		if (strcmp(token, "yv"))
+		{
+			break;
+		}
+		y = (int)strtol(COM_Parse(&layout), NULL, 10);
+		kind = COM_Parse(&layout);
+		selected = !strcmp(kind, "string2");
+
+		if (!selected && strcmp(kind, "string"))
+		{
+			return false;
+		}
+		line = COM_Parse(&layout);
+		if (y >= 78 && y < 78 + stride * rows && (y - 78) % stride == 0)
+		{
+			int row = (y - 78) / stride;
+
+			Q_strlcpy(panel->rows[row].text, line, sizeof(panel->rows[row].text));
+			panel->rows[row].selected = selected;
+			if (selected)
+			{
+				panel->focus = row;
+			}
+			continue;
+		}
+		switch (y)
+		{
+			case 32:
+				Q_strlcpy(panel->balance, line, sizeof(panel->balance));
+				break;
+			case 44:
+				Q_strlcpy(panel->earnings, line, sizeof(panel->earnings));
+				break;
+			case 61:
+				if (page == QM_PAGE_WEAPONS)
+				{
+					Q_strlcpy(panel->weapon_heading, line, sizeof(panel->weapon_heading));
+				}
+				break;
+			case 155:
+			case 167:
+				if (page != QM_PAGE_RESUPPLY)
+				{
+					int index = y == 155 ? 0 : 1;
+
+					Q_strlcpy(panel->preview[index], line, sizeof(panel->preview[index]));
+				}
+				break;
+			case 192:
+				Q_strlcpy(panel->ready.text, line, sizeof(panel->ready.text));
+				panel->ready.selected = selected;
+				break;
+			case 206:
+				Q_strlcpy(panel->feedback, line, sizeof(panel->feedback));
+				break;
+			case 220:
+				Q_strlcpy(panel->controls, line, sizeof(panel->controls));
+				break;
+		}
+	}
+	return true;
+}
+
+static const char *
+SCR_QMArtName(int upgrade, int tier)
+{
+	return va("pp_qm_%s_%d.jpg", qm_art_keys[upgrade], tier);
+}
+
+static void
+SCR_QMInspect(const quartermaster_canvas_t *canvas, const quartermaster_panel_t *panel,
+	int upgrade, int equipped, int preview, const char *portrait, const char *tier_label)
+{
+	int i;
+
+	SCR_QMFill(canvas, 0, 0, 172, 215, PP_UI_EDGE);
+	SCR_QMFill(canvas, 1, 1, 170, 213, PP_UI_SURFACE);
+	SCR_QMFill(canvas, 1, 35, 170, 1, PP_UI_BRASS);
+	SCR_QMText(canvas, 9, 9, panel->rows[upgrade].text + 2, 20, 0.9375f, false);
+	SCR_QMText(canvas, 9, 23, tier_label, 20, 0.875f, true);
+
+	SCR_QMFill(canvas, 24, 40, 124, 124, PP_UI_ROW);
+	SCR_QMPicture(canvas, 24, 40, 124, 124, portrait);
+	SCR_QMFill(canvas, 24, 40, 13, 1, PP_UI_BRASS);
+	SCR_QMFill(canvas, 24, 41, 1, 12, PP_UI_BRASS);
+	SCR_QMFill(canvas, 135, 163, 13, 1, PP_UI_BRASS);
+	SCR_QMFill(canvas, 147, 151, 1, 12, PP_UI_BRASS);
+
+	for (i = 0; i < QM_ART_TIERS; i++)
+	{
+		const char *label = qm_art_tiers[i];
+		int x = 8 + i * 40;
+		int tier = i + 1;
+
+		SCR_QMFill(canvas, x, 169, 36, 42, tier == preview ? PP_UI_FOCUS : PP_UI_ROW);
+		SCR_QMPicture(canvas, x + 3, 171, 30, 30, SCR_QMArtName(upgrade, tier));
+		if (tier <= equipped || tier == preview)
+		{
+			SCR_QMFill(canvas, x, tier <= equipped ? 209 : 169, 36, 1, PP_UI_BRASS);
+		}
+		SCR_QMText(canvas, x + 18 - (int)strlen(label) * 3, 203, label, 3,
+			0.75f, tier <= equipped || tier == preview);
+	}
+}
+
+static void
+SCR_QMInspectPickup(const quartermaster_canvas_t *canvas, const char *name, int name_width,
+	const char *portrait, const char *subtitle)
+{
+	SCR_QMFill(canvas, 0, 0, 172, 215, PP_UI_EDGE);
+	SCR_QMFill(canvas, 1, 1, 170, 213, PP_UI_SURFACE);
+	SCR_QMText(canvas, 9, subtitle ? 9 : 16, name, name_width, 0.875f, false);
+	if (subtitle)
+	{
+		SCR_QMText(canvas, 9, 23, subtitle, 20, 0.875f, true);
+	}
+	SCR_QMFill(canvas, 1, 35, 170, 1, PP_UI_BRASS);
+	SCR_QMFill(canvas, 9, 44, 154, 154, PP_UI_ROW);
+	SCR_QMPicture(canvas, 9, 44, 154, 154, portrait);
+	SCR_QMFill(canvas, 9, 44, 14, 1, PP_UI_BRASS);
+	SCR_QMFill(canvas, 149, 197, 14, 1, PP_UI_BRASS);
+}
+
+static void
+SCR_QMHeader(const quartermaster_canvas_t *canvas, qboolean wide, const char *portrait,
+	const char *tier_label)
+{
+	qboolean show_portrait = !wide && *portrait;
+
+	SCR_QMFill(canvas, 8, 6, 304, 48, 0);
+	if (show_portrait)
+	{
+		int side = Q_max(1, (int)(44 * canvas->y_scale));
+		int x = canvas->x + (int)(306 * canvas->scale) - side;
+		int y = canvas->y + (int)(8 * canvas->y_scale);
+
+		Draw_StretchPic(x, y, side, side, portrait);
+	}
+	else if (!wide)
+	{
+		SCR_QMPicture(canvas, 8, 6, 304, 48, "pp_quartermaster_banner.jpg");
+	}
+
+	SCR_QMFill(canvas, 8, 53, 304, 1, PP_UI_BRASS);
+	SCR_QMText(canvas, 20, 13, "MISSION COMPLETE", 16, 1.0f, true);
+	SCR_QMText(canvas, 20, show_portrait ? 25 : 29, "QUARTERMASTER", 13,
+		show_portrait ? 1.625f : 1.75f, false);
+	if (show_portrait)
+	{
+		SCR_QMText(canvas, 20, 44, tier_label, 20, 0.875f, true);
+	}
+}
+
+static void
+SCR_DrawQuartermasterPanel(const quartermaster_panel_t *panel, int left, int top,
+	int width, int height, qboolean wide, const char *tiers, const char *weapon)
+{
+	int upgrade = panel->page == QM_PAGE_UPGRADES ? panel->focus : -1;
+	int equipped = upgrade >= 0 ? tiers[upgrade] - '0' : 0;
+	int preview = Q_min(equipped + 1, QM_ART_TIERS);
+	char portrait[MAX_QPATH] = "";
+	char tier_label[24] = "";
+	const char *squad = strstr(panel->ready.text, "Squad ready");
+	int w, h;
+	quartermaster_canvas_t canvas;
+
+	if (upgrade >= 0)
+	{
+		Q_strlcpy(portrait, SCR_QMArtName(upgrade, preview), sizeof(portrait));
+		Com_sprintf(tier_label, sizeof(tier_label),
+			equipped == preview ? "Tier %s equipped" : "Next tier %s",
+			qm_art_tiers[preview - 1]);
+	}
+	else if (weapon && panel->focus >= 0)
+	{
+		Com_sprintf(portrait, sizeof(portrait), "pp_qm_%s.jpg", weapon);
+		Q_strlcpy(tier_label, "MISSED PICKUP", sizeof(tier_label));
+	}
+	else if (panel->page == QM_PAGE_RESUPPLY && panel->focus >= 0 && panel->supply_art[0])
+	{
+		Com_sprintf(portrait, sizeof(portrait), "pp_qm_supply_%s.jpg", panel->supply_art);
+		Com_sprintf(tier_label, sizeof(tier_label), "%.13s", panel->rows[panel->focus].text + 2);
+	}
+	if (portrait[0])
+	{
+		int art_width, art_height;
+
+		Draw_GetPicSize(&art_width, &art_height, portrait);
+		if (art_width <= 0 || art_height <= 0)
+		{
+			portrait[0] = '\0';
+		}
+	}
+	canvas.scale = fminf(width * (wide ? 0.59f : 1.0f) / 320.0f, height / 246.0f);
+	canvas.pixel_text = width >= 224 && width < 320 && height >= 234;
+	canvas.y_scale = canvas.pixel_text ? fminf(1.0f, height / 246.0f) : canvas.scale;
+	w = (int)(320 * canvas.scale);
+	h = (int)(246 * canvas.y_scale);
+	canvas.x = left + (wide ? width / 25 : (width - w) / 2);
+	canvas.y = top + (height - h) / 2;
+
+	SCR_QMFill(&canvas, 7, 5, 306, 236, PP_UI_EDGE);
+	SCR_QMFill(&canvas, 8, 6, 304, 234, PP_UI_SURFACE);
+	SCR_QMHeader(&canvas, wide, portrait, tier_label);
+	SCR_QMPicture(&canvas, 20, 57, 14, 14, "i_sprues.png");
+	SCR_QMText(&canvas, 40, 58, panel->balance, 20, 1.25f, false);
+	SCR_QMText(&canvas, 20, 73, panel->earnings, 42, 0.8125f, true);
+	if (panel->has_weapons)
+	{
+		SCR_QMTab(&canvas, 12, 96, "UPGRADES", panel->page == QM_PAGE_UPGRADES);
+		SCR_QMTab(&canvas, 112, 96, "RESUPPLY", panel->page == QM_PAGE_RESUPPLY);
+		SCR_QMTab(&canvas, 212, 96, "WEAPONS", panel->page == QM_PAGE_WEAPONS);
+	}
+	else
+	{
+		SCR_QMTab(&canvas, 12, 87, "UPGRADES", panel->page == QM_PAGE_UPGRADES);
+		SCR_QMTab(&canvas, 101, 87, "RESUPPLY", panel->page == QM_PAGE_RESUPPLY);
+		SCR_QMFill(&canvas, 190, 98, 118, 1, PP_UI_EDGE);
+	}
+
+	if (panel->page == QM_PAGE_RESUPPLY)
+	{
+		SCR_QMText(&canvas, 20, 103, "SUPPLY", 6, 1.0f, true);
+		SCR_QMText(&canvas, 148, 103, "STOCK", 5, 1.0f, true);
+		SCR_QMText(&canvas, 220, 103, "ADD", 3, 1.0f, true);
+		SCR_QMText(&canvas, 260, 103, "COST", 4, 1.0f, true);
+
+		for (int i = 0; i < QM_RESUPPLY_ROWS && panel->rows[i].text[0]; i++)
+		{
+			int y = 113 + i * 8;
+			const quartermaster_line_t *row = &panel->rows[i];
+
+			SCR_QMRow(&canvas, y, 8, row->selected);
+			SCR_QMText(&canvas, 20, y, row->text, 36, 1.0f, row->selected);
+		}
+	}
+	else if (panel->page == QM_PAGE_WEAPONS)
+	{
+		int rows = 0;
+
+		SCR_QMText(&canvas, 20, 103, panel->weapon_heading, 24, 1.0f, true);
+		SCR_QMText(&canvas, 252, 103, "COST", 4, 1.0f, true);
+
+		for (; rows < QM_WEAPON_VISIBLE_ROWS && panel->rows[rows].text[0]; rows++)
+		{
+			int y = 113 + rows * 9;
+			const quartermaster_line_t *row = &panel->rows[rows];
+
+			SCR_QMRow(&canvas, y, 9, row->selected);
+			SCR_QMText(&canvas, 20, y, row->text, 36, 1.0f, row->selected);
+		}
+		if (panel->preview[0][0])
+		{
+			int y = 116 + rows * 9;
+
+			SCR_QMFill(&canvas, 12, y, 296, 16, PP_UI_ROW);
+			SCR_QMText(&canvas, 20, y + 4, panel->preview[0], 36, 1.0f, false);
+		}
+	}
+	else
+	{
+		SCR_QMText(&canvas, 20, 103, "EQUIPMENT", 9, 1.0f, true);
+		SCR_QMText(&canvas, 198, 103, "TIER", 4, 1.0f, true);
+		SCR_QMText(&canvas, 272, 103, "COST", 4, 1.0f, true);
+
+		for (int i = 0; i < ARRLEN(qm_art_keys); i++)
+		{
+			const quartermaster_line_t *row = &panel->rows[i];
+
+			SCR_QMUpgrade(&canvas, 113 + i * 13, row->text, tiers[i] - '0', row->selected);
+		}
+		if (upgrade >= 0)
+		{
+			SCR_QMFill(&canvas, 12, 179, 296, 22, PP_UI_ROW);
+			SCR_QMFill(&canvas, 12, 179, 2, 22, PP_UI_BRASS);
+			SCR_QMText(&canvas, 20, 181, panel->preview[0], 35, 1.0f, false);
+			SCR_QMText(&canvas, 20, 192, panel->preview[1], 35, 1.0f, false);
+		}
+	}
+
+	SCR_QMRow(&canvas, 204, 15, panel->ready.selected);
+	SCR_QMText(&canvas, 20, 208, panel->ready.text, 16, 1.0f, panel->ready.selected);
+	if (squad)
+	{
+		SCR_QMText(&canvas, 302 - Q_min(19, (int)strlen(squad)) * 8,
+			208, squad, 19, 1.0f, true);
+	}
+	SCR_QMText(&canvas, 20, 221, panel->feedback, 36, 1.0f, true);
+	SCR_QMText(&canvas, 20, 232, !Key_UsingGamepad() && !SS_IsSessionActive() ?
+		"UP/DN ROW  A/D OR 1-3 TAB  FIRE" : panel->controls, 38, 0.875f, false);
+
+	if (wide && portrait[0])
+	{
+		int available = width - w - 2 * (width / 25);
+		float scale = fminf(canvas.scale, available / 172.0f);
+		quartermaster_canvas_t inspect = {
+			.x = canvas.x + w + (available - (int)(172 * scale)) / 2,
+			.y = top + (height - (int)(215 * scale)) / 2,
+			.scale = scale,
+			.y_scale = scale
+		};
+
+		if (upgrade >= 0)
+		{
+			SCR_QMInspect(&inspect, panel, upgrade, equipped, preview, portrait, tier_label);
+		}
+		else
+		{
+			qboolean resupply = panel->page == QM_PAGE_RESUPPLY;
+
+			SCR_QMInspectPickup(&inspect, panel->rows[panel->focus].text + 2,
+				resupply ? 13 : 23, portrait, resupply ? NULL : "MISSED PICKUP");
+		}
+	}
+}
+
+static void
+SCR_QMDrawMenu(char *layout, int left, int top, int width, int height, qboolean wide)
+{
+	char *data;
+	char tiers[ARRLEN(qm_art_keys) + 1];
+	const char *page;
+	quartermaster_panel_t panel;
+
+	data = layout;
+	page = COM_Parse(&data);
+	if (!strcmp(page, "qmres") && SCR_QMReadPanel(data, &panel, QM_PAGE_RESUPPLY))
+	{
+		SCR_DrawQuartermasterPanel(&panel, left, top, width, height, wide, NULL, NULL);
+		return;
+	}
+	if (!strcmp(page, "qmweap"))
+	{
+		char weapon[32] = "";
+		const char *classname = COM_Parse(&data);
+		size_t len = strlen(classname);
+
+		if (len > 7 && len < sizeof(weapon) && !strncmp(classname, "weapon_", 7) &&
+			strspn(classname + 7, "abcdefghijklmnopqrstuvwxyz0123456789_") == len - 7)
+		{
+			Q_strlcpy(weapon, classname, sizeof(weapon));
+		}
+		if (SCR_QMReadPanel(data, &panel, QM_PAGE_WEAPONS))
+		{
+			SCR_DrawQuartermasterPanel(&panel, left, top, width, height, wide, NULL,
+				weapon[0] ? weapon : NULL);
+			return;
+		}
+	}
+	if (!strcmp(page, "qmup"))
+	{
+		const char *values = COM_Parse(&data);
+
+		if (strlen(values) == sizeof(tiers) - 1 && strspn(values, "01234") == sizeof(tiers) - 1)
+		{
+			Q_strlcpy(tiers, values, sizeof(tiers));
+			if (SCR_QMReadPanel(data, &panel, QM_PAGE_UPGRADES))
+			{
+				SCR_DrawQuartermasterPanel(&panel, left, top, width, height, wide, tiers, NULL);
+				return;
+			}
+		}
+	}
+
+	SCR_DrawLegacyQuartermaster(layout, left, top, width, height);
+}
+
+static float
+SCR_QMFade(float phase)
+{
+	float t = Q_clamp(phase, 0.0f, 1.0f);
+
+	return t * t * (3.0f - 2.0f * t);
+}
+
+static void
+SCR_QMUpdateIntro(void)
+{
+	qboolean active = cls.state == ca_active &&
+		(cl.frame.playerstate.stats[STAT_LAYOUTS] & LAYOUT_QUARTERMASTER);
+	int elapsed, music_time;
+
+	if (!active)
+	{
+		quartermaster_intro.active = false;
+		return;
+	}
+
+	music_time = OGG_MissionCompleteTime();
+	if (!quartermaster_intro.active || quartermaster_intro.server != cl.servercount)
+	{
+		quartermaster_intro.active = true;
+		quartermaster_intro.start = cls.realtime;
+		quartermaster_intro.server = cl.servercount;
+		quartermaster_intro.music = music_time >= 0 && music_time < 1200;
+		quartermaster_intro.skipped = false;
+		quartermaster_intro.time = 0;
+	}
+
+	elapsed = cls.realtime - quartermaster_intro.start;
+	if (quartermaster_intro.skipped)
+	{
+		elapsed = QM_TITLE_END + cls.realtime - quartermaster_intro.skip_at;
+	}
+	else if (quartermaster_intro.music && music_time >= 0 &&
+		elapsed < QM_TITLE_END + QM_MENU_DELAY + QM_MENU_FADE + 2000)
+	{
+		elapsed = music_time;
+	}
+
+	/* Buffer restarts and music toggles must never replay an earlier phase. */
+	quartermaster_intro.time = Q_max(quartermaster_intro.time, elapsed);
+}
+
+void
+SCR_QuartermasterInput(int slot, const player_state_t *ps, usercmd_t *cmd)
+{
+	qboolean fire = (cmd->buttons & BUTTON_ATTACK) != 0;
+	qboolean in_shop = (ps->stats[STAT_LAYOUTS] & LAYOUT_QUARTERMASTER) != 0;
+	qboolean showing_intro = !quartermaster_intro.active ||
+		quartermaster_intro.time < QM_TITLE_END + QM_MENU_DELAY + QM_MENU_FADE;
+
+	if (!fire || !in_shop)
+	{
+		quartermaster_buttons[slot].block_fire = false;
+	}
+	else if (showing_intro)
+	{
+		if (!quartermaster_buttons[slot].fire && cls.key_dest == key_game &&
+			quartermaster_intro.active && !quartermaster_intro.skipped &&
+			quartermaster_intro.time < QM_TITLE_END)
+		{
+			quartermaster_intro.skipped = true;
+			quartermaster_intro.skip_at = cls.realtime;
+		}
+		quartermaster_buttons[slot].block_fire = true;
+	}
+
+	if (quartermaster_buttons[slot].block_fire)
+	{
+		cmd->buttons &= ~BUTTON_ATTACK;
+	}
+	quartermaster_buttons[slot].fire = fire;
+}
+
+static void
+SCR_QMTitleWord(int center, int y, const char *word, float scale, float entrance, float leave)
+{
+	int advance = (int)(scale * (8 + 1.5f * (1 - entrance)));
+	int x = center - ((int)strlen(word) * advance) / 2;
+
+	if (entrance <= 0.0f || leave <= 0.0f)
+	{
+		return;
+	}
+
+	Draw_SetUIOpacity(entrance * leave);
+	for (int i = 0; word[i]; i++, x += advance)
+	{
+		Draw_CharScaled(x, y + (int)(10 * scale * (1 - entrance)), word[i], scale);
+	}
+	Draw_SetUIOpacity(1.0f);
+}
+
+static void
+SCR_QMDrawTitle(int left, int top, int width, int height, int time)
+{
+	float entrance = SCR_QMFade((time - QM_TITLE_OPEN) / 700.0f);
+	float second = SCR_QMFade((float)(time - QM_TITLE_SECOND_WORD) / QM_TITLE_SECOND_WORD_FADE);
+	float leave = 1.0f - SCR_QMFade((float)(time - QM_TITLE_END) / QM_TITLE_OUTRO);
+	float rise = Q_clamp((float)(time - QM_TITLE_OPEN) / (QM_TITLE_HIT - QM_TITLE_OPEN), 0.0f, 1.0f);
+	float hit = time >= QM_TITLE_HIT ? 1.0f - SCR_QMFade((time - QM_TITLE_HIT) / 550.0f) : 0.0f;
+	float size = fminf(width / 107.0f, height / 63.0f);
+	float text_scale = size * (0.94f + rise * 0.06f + hit * 0.085f);
+	int center = left + width / 2;
+	int baseline = top + height / 2;
+	int rule_width = (int)(size * (44 + rise * 32));
+	int thickness = Q_max(1, (int)(size / 3));
+
+	if (entrance <= 0.0f)
+	{
+		return;
+	}
+
+	Draw_SetUIOpacity(entrance * leave);
+	Draw_Fill(center - rule_width / 2, baseline - (int)(16 * size), rule_width, thickness, PP_UI_EDGE);
+	Draw_SetUIOpacity(1.0f);
+
+	SCR_QMTitleWord(center, baseline - (int)(10 * size), "MISSION", text_scale, entrance, leave);
+	SCR_QMTitleWord(center, baseline + (int)(1.75f * size), "COMPLETE!", text_scale, second, leave);
+}
+
+void
+SCR_DrawQuartermaster(char *layout, int left, int top, int width, int height)
+{
+	static const char prefix[] = "quartermaster ";
+	qboolean wide = width >= 560 && width >= height * 1.48f;
+	const char *depot = wide ? "pp_quartermaster_depot.jpg" : "pp_quartermaster_depot_compact.jpg";
+	int elapsed = quartermaster_intro.active ? quartermaster_intro.time - QM_TITLE_END :
+		QM_MENU_DELAY + QM_MENU_FADE;
+	float blackout = elapsed < 0 ?
+		SCR_QMFade((float)(quartermaster_intro.time - QM_CAMERA_HOLD) / QM_CAMERA_FADE) : 1.0f;
+	int pic_width, pic_height;
+
+	if (width <= 0 || height <= 0 || blackout <= 0.0f)
+	{
+		return;
+	}
+
+	Draw_SetUIOpacity(blackout);
+	Draw_Fill(left, top, width, height, 0);
+	Draw_SetUIOpacity(1.0f);
+	SCR_AddDirtyPoint(left, top);
+	SCR_AddDirtyPoint(left + width - 1, top + height - 1);
+	if (elapsed < 0)
+	{
+		SCR_QMDrawTitle(left, top, width, height, quartermaster_intro.time);
+		return;
+	}
+
+	Draw_GetPicSize(&pic_width, &pic_height, depot);
+	if (pic_width > 0 && pic_height > 0)
+	{
+		int art_width = wide ? Q_min(width, height * pic_width * 6 / (pic_height * 5)) : width;
+
+		Draw_SetUIOpacity(SCR_QMFade((float)elapsed / QM_BACKDROP_FADE));
+		Draw_StretchPic(left + width - art_width, top, art_width, height, depot);
+		Draw_SetUIOpacity(1.0f);
+	}
+	if (!quartermaster_intro.skipped && elapsed < QM_TITLE_OUTRO)
+	{
+		SCR_QMDrawTitle(left, top, width, height, quartermaster_intro.time);
+	}
+	if (elapsed < QM_MENU_DELAY || strncmp(layout, prefix, sizeof(prefix) - 1))
+	{
+		return;
+	}
+
+	Draw_SetUIOpacity(SCR_QMFade((float)(elapsed - QM_MENU_DELAY) / QM_MENU_FADE));
+	SCR_QMDrawMenu(layout + sizeof(prefix) - 1, left, top, width, height, wide);
+	Draw_SetUIOpacity(1.0f);
 }
 
 static const char *
@@ -2394,6 +3148,8 @@ SCR_UpdateScreen(void)
 	{
 		return; /* not initialized yet */
 	}
+
+	SCR_QMUpdateIntro();
 
 	CL_PerfBeginDisplay();
 	if (gl1_stereo->value && !SS_IsSessionActive())

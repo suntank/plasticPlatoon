@@ -166,7 +166,8 @@ def main():
     check('PP_MENU_ERROR' not in log, 'runtime fixture reported an error')
     startup_log, _, gameplay_log = log.partition('PP_MENU_ACTION key enter')
     check('SpawnServer:' not in startup_log, 'startup loaded a map or demo')
-    check(re.search(r'loaded: pics/pp_menu_background(?:_square)?\.jpg', startup_log),
+    background = 'compact' if width * 3 < height * 4 else 'wide'
+    check(f'loaded: pics/pp_menu_backyard_{background}.jpg' in startup_log,
           'startup background did not load')
     check(re.findall(r'^SpawnServer: (\S+)', gameplay_log, re.M) == ['pp_sandstorm_briefing'],
           'New Game did not start in the Sandstorm briefing room')

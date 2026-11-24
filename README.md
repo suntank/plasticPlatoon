@@ -89,11 +89,17 @@ member earns the full reward and spends from their own wallet. Sprues and
 upgrades carry forward with the campaign save. The amber model-kit frame
 in the HUD shows your balance and matches the Sprues pickups.
 
-At the Quartermaster, move forward/back to select a row, press your jump
-binding to switch between **Upgrades** and **Resupply**, and press your fire
-binding to purchase. Each upgrade has four tiers. Resupply prices adjust to
-the amount you can carry. Select **Ready** to deploy. In co-op, every player
-must select **Ready**, and you can unready while the rest of the squad shops.
+At the Quartermaster, use Up/Down or forward/back to select a row. Use A/D,
+Left/Right, or Jump to cycle tabs. Keys 1, 2, and 3 open **Upgrades**,
+**Resupply**, and **Weapons** respectively. Press your fire binding to
+purchase or confirm **Ready**. In co-op, every player must select **Ready**.
+
+Each upgrade has four tiers. Resupply offers ammo for your current weapons and
+hand grenades for quick throws. Prices scale with the amount you can carry.
+
+Weapons lists pickups placed in the completed mission that are missing from your
+inventory. Offers cost 175–250 Sprues and include a starter ammo bundle, up to
+your ammo cap. Each player shops from their own balance and inventory.
 
 Map authors can place an `item_sprues` pickup with a `count` value to award the
 squad that many Sprues. The default is 20.

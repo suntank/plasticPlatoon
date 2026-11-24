@@ -3202,6 +3202,246 @@
       "sha256": "6fd6d5cc3b1509b9a05039bb07160bee88b6098d7933cbcca1dad44d7d209eb3"
     },
     {
+      "path": "pics/pp_menu_backyard_compact.jpg",
+      "bytes": 70951,
+      "sha256": "5cf47dc4b1e8659b65bab6a004f552928d8f4665277f4187f1e952bb7bf4ab1d"
+    },
+    {
+      "path": "pics/pp_menu_backyard_wide.jpg",
+      "bytes": 201212,
+      "sha256": "f7a6a0a71f7a9638e77074e374c86d0f468d601d68c2da2b776d2c1b80b283c4"
+    },
+    {
+      "path": "pics/pp_qm_bandolier_1.jpg",
+      "bytes": 14919,
+      "sha256": "e1eecc946d18ef0a0072c627f2b86f06b21f1644d3dd053d3f41681635b8fc49"
+    },
+    {
+      "path": "pics/pp_qm_bandolier_2.jpg",
+      "bytes": 16569,
+      "sha256": "21bba243d61dd4329ed8a1a32ae0813beb7f353ed114090cb1f10635f7a2be11"
+    },
+    {
+      "path": "pics/pp_qm_bandolier_3.jpg",
+      "bytes": 20563,
+      "sha256": "01c1a18c7e01d090f26f077f7bf53bc2badfba798109674d44ea593fddc74ca2"
+    },
+    {
+      "path": "pics/pp_qm_bandolier_4.jpg",
+      "bytes": 23645,
+      "sha256": "a8414a6d11aadc3e8f6dddbd7375ac852c8fa3b74be1287905e8fe24a9057a19"
+    },
+    {
+      "path": "pics/pp_qm_body_1.jpg",
+      "bytes": 11394,
+      "sha256": "d8fc72d37a864a56faf8f0c33f81160f4e2214b91d872a71140ff3d52ed2cde3"
+    },
+    {
+      "path": "pics/pp_qm_body_2.jpg",
+      "bytes": 18600,
+      "sha256": "e5d0a73144ccd8ae8fad9812001cef725dee72fb3d9eb625357b2582b81b53a9"
+    },
+    {
+      "path": "pics/pp_qm_body_3.jpg",
+      "bytes": 20638,
+      "sha256": "c0adda70713ce40901dceb434bfe60820e5ab0663fdbfda55658eed8a8d173a6"
+    },
+    {
+      "path": "pics/pp_qm_body_4.jpg",
+      "bytes": 23550,
+      "sha256": "178509a5126af7d31b37646a1149c1e7a498b3112a02198f937e2d11dc5bc6bc"
+    },
+    {
+      "path": "pics/pp_qm_demolition_1.jpg",
+      "bytes": 10702,
+      "sha256": "224479a460c9aae703de8f326b950ef68a0d8ef3e402ed0816a12157a14d472a"
+    },
+    {
+      "path": "pics/pp_qm_demolition_2.jpg",
+      "bytes": 13377,
+      "sha256": "4cd95b2f774dbc3958910450f6156d030b0fc8f858b1a71e11a00baca2bca006"
+    },
+    {
+      "path": "pics/pp_qm_demolition_3.jpg",
+      "bytes": 16924,
+      "sha256": "91953db7ca138848b1668e2cc96ea39b0a659594dca0cccd685ea17abd46158f"
+    },
+    {
+      "path": "pics/pp_qm_demolition_4.jpg",
+      "bytes": 20019,
+      "sha256": "4d23b8c2b04d48647daaa32c0a3f11cd7be6365b1116c8b2b78b3875827531a9"
+    },
+    {
+      "path": "pics/pp_qm_ordnance_1.jpg",
+      "bytes": 12342,
+      "sha256": "e524975eefc345c5d74294eb5af43a3e8aaabe0543be9c2929395ce59626c9e7"
+    },
+    {
+      "path": "pics/pp_qm_ordnance_2.jpg",
+      "bytes": 16519,
+      "sha256": "09c4b550ab45f5aa3f806e09512b3b20404ec1a87316f2e0687ad218e9fe4fc4"
+    },
+    {
+      "path": "pics/pp_qm_ordnance_3.jpg",
+      "bytes": 19094,
+      "sha256": "c2cc111958989c8fba08f103611b04fc709662483b473c936253218a978a75fc"
+    },
+    {
+      "path": "pics/pp_qm_ordnance_4.jpg",
+      "bytes": 24020,
+      "sha256": "061c44ea71f9f23e449d7d59db0e80a2b43b62c0f1ace1fb32a030fa7127c436"
+    },
+    {
+      "path": "pics/pp_qm_supply_armor.jpg",
+      "bytes": 19648,
+      "sha256": "3a5af0e2bced7df0cc753e1e6f5d9fe0cca98a1b7cf63d5a3a00b6a0af867e85"
+    },
+    {
+      "path": "pics/pp_qm_supply_gl.jpg",
+      "bytes": 17612,
+      "sha256": "0d0ab313b79d75274153a49cf61e168e96af12750d9ae432c232979df223c1ae"
+    },
+    {
+      "path": "pics/pp_qm_supply_grenades.jpg",
+      "bytes": 22700,
+      "sha256": "015523b57954487523e628b83cf4a268d0115eec6233052005c6efe38b9ef8c2"
+    },
+    {
+      "path": "pics/pp_qm_supply_health.jpg",
+      "bytes": 17173,
+      "sha256": "b633b9c23203a2bc08b3fc5e8317a5951164b425df1b19ebce3a51a954e68bd8"
+    },
+    {
+      "path": "pics/pp_qm_supply_heavy.jpg",
+      "bytes": 24493,
+      "sha256": "fde684756c52fb9caecd80bcdfa21ced427e3936dc4270889f0c3367184069c4"
+    },
+    {
+      "path": "pics/pp_qm_supply_light.jpg",
+      "bytes": 19753,
+      "sha256": "969c16926a119a89afe1422d7c3bc0d396c0bcdee81f3e6a5b721df99fda0d0b"
+    },
+    {
+      "path": "pics/pp_qm_supply_mortar.jpg",
+      "bytes": 21441,
+      "sha256": "09284e42618722b986515d313b29dc6632bc5bdef6aa0c599552f002d84a6bd8"
+    },
+    {
+      "path": "pics/pp_qm_supply_napalm.jpg",
+      "bytes": 20446,
+      "sha256": "de8ed6890a195de9cbb3fad4ea07ca3b561846f6d65f9cb088648515573af6a6"
+    },
+    {
+      "path": "pics/pp_qm_supply_rockets.jpg",
+      "bytes": 23282,
+      "sha256": "bcf69e5d698790d8fe809ae01afa4fc0c278bdfb1405abb3913acf3de27717ca"
+    },
+    {
+      "path": "pics/pp_qm_supply_shells.jpg",
+      "bytes": 20574,
+      "sha256": "09f2341e506fda21ee81bfdf04ec9f168aef45808b0250fccd295493168761f8"
+    },
+    {
+      "path": "pics/pp_qm_supply_sniper.jpg",
+      "bytes": 26739,
+      "sha256": "06baba659387717597e08cc4c0083d81026507755771a5f18b99f0a8c8cda4fa"
+    },
+    {
+      "path": "pics/pp_qm_vest_1.jpg",
+      "bytes": 13752,
+      "sha256": "f189d56d65c511dfb93e554ce71f086c1883004e183dd144a91f92eec92cdd8a"
+    },
+    {
+      "path": "pics/pp_qm_vest_2.jpg",
+      "bytes": 15374,
+      "sha256": "9c13b2585ccff2f5e9cb7c8c307ca903f33a1ae4faf5e33ce0d53415a4bd152f"
+    },
+    {
+      "path": "pics/pp_qm_vest_3.jpg",
+      "bytes": 16456,
+      "sha256": "d2a35db8217dbe5e302dd263d5ce6f2618205973f05b62baa906c16d8763d571"
+    },
+    {
+      "path": "pics/pp_qm_vest_4.jpg",
+      "bytes": 20575,
+      "sha256": "1ad39b530f4e14392c2d2db776a622094afc1f9e92cdb2b51482c75fcea1e7e1"
+    },
+    {
+      "path": "pics/pp_qm_weapon_bfg.jpg",
+      "bytes": 16513,
+      "sha256": "6db11654c81bceb447b0c27483f25159eb7b98799bf0a204fd1d0bdbe70a0602"
+    },
+    {
+      "path": "pics/pp_qm_weapon_chaingun.jpg",
+      "bytes": 17794,
+      "sha256": "997f5d17b90619ac68a72143215c108265682056481efbe22aff576b8773adee"
+    },
+    {
+      "path": "pics/pp_qm_weapon_grenadelauncher.jpg",
+      "bytes": 16852,
+      "sha256": "97bc5dfb2a5ee58de1c7ec0c3572ad01d5047eff7b251f9a2b811a4741230c52"
+    },
+    {
+      "path": "pics/pp_qm_weapon_hyperblaster.jpg",
+      "bytes": 16518,
+      "sha256": "f2a5a286f1bb349d65d058d15c73420f56f3a82be8c3c1eb99b1c8e2493eae87"
+    },
+    {
+      "path": "pics/pp_qm_weapon_knife.jpg",
+      "bytes": 12340,
+      "sha256": "d5b06790ce99e647c65e39c3d359014cb59941c887c46048346945f0300ab621"
+    },
+    {
+      "path": "pics/pp_qm_weapon_machinegun.jpg",
+      "bytes": 15365,
+      "sha256": "555c7565e5a3eceb24643b01cc6782e1d1746789fc7e9d6d5c78ebacf3906b2d"
+    },
+    {
+      "path": "pics/pp_qm_weapon_railgun.jpg",
+      "bytes": 14155,
+      "sha256": "85729fec51a2939c0f1037a2234607ef9f5dfa239ee8b251316e1239a91762da"
+    },
+    {
+      "path": "pics/pp_qm_weapon_rocketlauncher.jpg",
+      "bytes": 15331,
+      "sha256": "c16b8b69e7ec9877c434625759d49556b2946a30c5e35b043890e2f3a11e1a6e"
+    },
+    {
+      "path": "pics/pp_qm_weapon_shotgun.jpg",
+      "bytes": 12110,
+      "sha256": "9306d980ff3ff5d152afb9d89520f0534c317e15e9b519984d3f2fd7dec76e80"
+    },
+    {
+      "path": "pics/pp_qm_weapon_smg.jpg",
+      "bytes": 15440,
+      "sha256": "216da74db264cab1b56a7a09e9229f7080feafec97340cbab83e6d6868cde645"
+    },
+    {
+      "path": "pics/pp_qm_weapon_supershotgun.jpg",
+      "bytes": 13328,
+      "sha256": "3e888eac4a0ab1fa40fd2aa219bd48647c318bee86f06386d28daf6e61d41acc"
+    },
+    {
+      "path": "pics/pp_qm_weapon_thunderhead.jpg",
+      "bytes": 14569,
+      "sha256": "f22fa6d5827a5dac8915e992b7ac8447679c27026bde0b354a92e77707f70fa8"
+    },
+    {
+      "path": "pics/pp_quartermaster_banner.jpg",
+      "bytes": 33457,
+      "sha256": "83504b730dc6f5a4e775f84bab97c7b79a3c454a1f0b0a328fa586f987ff25c1"
+    },
+    {
+      "path": "pics/pp_quartermaster_depot.jpg",
+      "bytes": 174303,
+      "sha256": "d3acde32e9f585ff25773721c17b49868ffa739c0b9f6864fd763e9e35e8f52d"
+    },
+    {
+      "path": "pics/pp_quartermaster_depot_compact.jpg",
+      "bytes": 97150,
+      "sha256": "989c53cda1fefa1b166e86233a5d9ad2175a57ea0af9c6f4c5b18f4635c66728"
+    },
+    {
       "path": "pics/quit.pcx",
       "bytes": 2393,
       "sha256": "81ce0913692d2da79bf77243c432c91132693bfeaa87837d07499b73bf64613c"
@@ -5657,6 +5897,6 @@
       "sha256": "289b9b1453cf1d07f8b3a1f29b1b299152aea7978ead935faae241c71e55f200"
     }
   ],
-  "archive_sha256": "c4208d70323a171ea18019a5c4cbe952bb166d070c00117fce4adbbcd05e958f",
-  "archive_bytes": 65400543
+  "archive_sha256": "32fe3bd4c1d8329b80b4cd3fba185767934af5b5e6d6dc14e7ce8375cc3c8e6c",
+  "archive_bytes": 66745253
 }

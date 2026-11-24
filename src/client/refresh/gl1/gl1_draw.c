@@ -27,6 +27,31 @@
 #include "header/local.h"
 
 image_t *draw_chars;
+static float ui_opacity = 1.0f;
+
+Q2_DLL_EXPORTED void
+R_SetUIOpacity(float opacity)
+{
+	if (ui_opacity == opacity)
+	{
+		return;
+	}
+	R_ApplyGLBuffer();
+	ui_opacity = opacity;
+	if (opacity < 1.0f)
+	{
+		glDisable(GL_ALPHA_TEST);
+		glEnable(GL_BLEND);
+		R_TexEnv(GL_MODULATE);
+	}
+	else
+	{
+		glEnable(GL_ALPHA_TEST);
+		glDisable(GL_BLEND);
+		R_TexEnv(GL_REPLACE);
+	}
+	glColor4f(1, 1, 1, opacity);
+}
 
 extern qboolean scrap_dirty;
 void Scrap_Upload(void);
@@ -230,7 +255,7 @@ RDraw_Fill(int x, int y, int w, int h, int c)
 
 	color.c = d_8to24table[c];
 	glColor4f(color.v [ 0 ] / 255.0, color.v [ 1 ] / 255.0,
-			   color.v [ 2 ] / 255.0, 1);
+			   color.v [ 2 ] / 255.0, ui_opacity);
 
 	GLfloat vtx[] = {
 		x, y,
@@ -246,7 +271,7 @@ RDraw_Fill(int x, int y, int w, int h, int c)
 
 	glDisableClientState( GL_VERTEX_ARRAY );
 
-	glColor4f( 1, 1, 1, 1 );
+	glColor4f(1, 1, 1, ui_opacity);
 	glEnable(GL_TEXTURE_2D);
 }
 

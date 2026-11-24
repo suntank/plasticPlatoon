@@ -82,6 +82,7 @@ static void reset(void)
     memset(g_edicts, 0, game.maxentities * sizeof(*g_edicts));
     memset(game.clients, 0, game.maxclients * sizeof(*game.clients));
     memset(&level, 0, sizeof(level));
+    QM_ClearMapWeapons();
     music_track[0] = '\0';
     memset(center_calls, 0, sizeof(center_calls));
     memset(center_text, 0, sizeof(center_text));
@@ -477,6 +478,7 @@ static void test_quartermaster(const char *path)
     assert(!strcmp(music_track, PP_MISSION_COMPLETE_MUSIC));
     assert(first->client->ps.pmove.pm_type == PM_FREEZE);
     assert(!QM_Frame());
+    assert(strstr(layouts[1], "qmup 00000"));
     assert(strstr(layouts[1], "940 Sprues") && strstr(layouts[1], "20 found"));
     shop_input(first, 0, 0, BUTTON_ATTACK); /* Held fire on entry is ignored. */
     for (int i = 0; i < 5; ++i)
@@ -484,7 +486,10 @@ static void test_quartermaster(const char *path)
     assert(first->health == 162 && first->max_health == 200);
     assert(first->client->quartermaster.progress.tier[QM_HEALTH] == 4);
     assert(first->client->quartermaster.progress.sprues == 90);
+    assert(!QM_Frame() && strstr(layouts[1], "qmup 40000"));
+    assert(strstr(layouts[1], "Capacity   200"));
     shop_input(first, 0, 200, 0); /* Resupply tab. */
+    assert(!QM_Frame() && strstr(layouts[1], "qmres"));
     shop_input(first, 0, 0, BUTTON_ATTACK);
     assert(first->health == 187 && first->client->quartermaster.progress.sprues == 75);
     shop_input(first, 0, 0, BUTTON_ATTACK);
@@ -574,6 +579,118 @@ static void test_savegame(const char *path)
     restore(path); assert(!g_edicts[index].nextthink);
     unlink(path);
 }
+static void test_quartermaster_weapons(const char *path)
+{
+    edict_t *first = &g_edicts[1], *second = &g_edicts[2];
+    gitem_t *shotgun = FindItem("Shotgun"), *smg = FindItem("SMG");
+    gitem_t *rockets = FindItem("Rocket Launcher"), *light = FindItem("Light Bullets");
+    int smg_index = ITEM_INDEX(smg), shotgun_index = ITEM_INDEX(shotgun);
+    int light_index = ITEM_INDEX(light);
+
+    reset();
+    coop->value = 1;
+    Q_strlcpy(level.mapname, "pp_quartermaster_test", sizeof(level.mapname));
+    QM_RecordMapWeapon(shotgun);
+    QM_RecordMapWeapon(shotgun);
+    QM_RecordMapWeapon(smg);
+    QM_RecordMapWeapon(rockets);
+    QM_RecordMapWeapon(light);
+    first->client->pers.inventory[shotgun_index] = 1;
+    first->client->pers.inventory[ITEM_INDEX(rockets)] = 1;
+    second->client->pers.inventory[ITEM_INDEX(rockets)] = 1;
+    first->client->pers.inventory[light_index] = 145;
+    first->client->quartermaster.progress.sprues = 174;
+    second->client->quartermaster.progress.sprues = 350;
+    G_Spawn()->classname = "info_player_intermission";
+    edict_t *exit = G_Spawn();
+    exit->map = "pp_garden_infiltration";
+    BeginIntermission(exit);
+
+    for (int i = 1; i <= 2; i++)
+    {
+        shop_input(&g_edicts[i], 0, 0, 0);
+        shop_input(&g_edicts[i], 0, 200, 0);
+        shop_input(&g_edicts[i], 0, 200, 0);
+    }
+    assert(!QM_Frame());
+    assert(strstr(layouts[1], "qmweap weapon_smg") && strstr(layouts[1], "Includes 5 Light Bullets"));
+    assert(!strstr(layouts[1], "Shotgun") && !strstr(layouts[1], "Rocket Launcher"));
+    assert(!strstr(layouts[1], "Rifle"));
+    assert(strstr(layouts[2], "qmweap weapon_shotgun"));
+
+    shop_input(first, 0, 0, BUTTON_ATTACK);
+    assert(first->client->quartermaster.progress.sprues == 174);
+    assert(first->client->pers.inventory[smg_index] == 0);
+    first->client->quartermaster.progress.sprues = 175;
+    shop_input(first, 0, 0, BUTTON_ATTACK);
+    assert(first->client->quartermaster.progress.sprues == 0);
+    assert(first->client->pers.inventory[smg_index] == 1);
+    assert(first->client->pers.inventory[light_index] == 150);
+    assert(!QM_Frame() && strstr(layouts[1], "No missed weapons this mission"));
+    assert(strstr(layouts[2], "SMG") && !second->client->pers.inventory[smg_index]);
+
+    shop_input(second, 0, 0, BUTTON_ATTACK);
+    assert(!QM_Frame() && strstr(layouts[2], "qmweap weapon_smg"));
+    assert(second->client->pers.inventory[shotgun_index] == 1);
+    shop_input(first, 0, 0, BUTTON_ATTACK);
+    assert(!QM_Frame() && strstr(layouts[2], "Squad ready 1/2"));
+    shop_input(second, 0, 0, BUTTON_ATTACK);
+    assert(second->client->quartermaster.progress.sprues == 0);
+    assert(second->client->pers.inventory[smg_index] == 1);
+    shop_input(second, 0, 0, BUTTON_ATTACK);
+    assert(QM_Frame());
+
+    WriteGame(path, false);
+    ReadGame(path);
+    assert(game.clients[0].pers.inventory[smg_index] == 1);
+    assert(game.clients[1].pers.inventory[shotgun_index] == 1);
+    unlink(path);
+}
+
+static void test_quartermaster_resupply(void)
+{
+    edict_t *first = &g_edicts[1], *second = &g_edicts[2];
+    gitem_t *mortar = FindItem("Mortar Rounds");
+    const char *classes[] = {"weapon_blaster", "weapon_machinegun", "weapon_shotgun",
+        "weapon_railgun", "weapon_grenadelauncher", "weapon_rocketlauncher",
+        "weapon_hyperblaster", "weapon_bfg"};
+
+    reset();
+    coop->value = 1;
+    Q_strlcpy(level.mapname, "pp_quartermaster_test", sizeof(level.mapname));
+    first->client->pers.inventory[ITEM_INDEX(FindItemByClassname("weapon_blaster"))] = 1;
+    first->client->pers.inventory[ITEM_INDEX(FindItem("Rockets"))] = 5;
+    for (int i = 0; i < ARRLEN(classes); i++)
+    {
+        second->client->pers.inventory[ITEM_INDEX(FindItemByClassname(classes[i]))] = 1;
+    }
+    second->client->quartermaster.progress.sprues = 300;
+    G_Spawn()->classname = "info_player_intermission";
+    edict_t *exit = G_Spawn();
+    exit->map = "pp_garden_infiltration";
+    BeginIntermission(exit);
+
+    QM_Shortcut(first, "prev");
+    QM_Shortcut(second, "2");
+    assert(!QM_Frame() && strstr(layouts[1], "qmweap") && strstr(layouts[2], "qmres"));
+    QM_Shortcut(first, "next");
+    QM_Shortcut(first, "2");
+    QM_Shortcut(first, "down");
+    QM_Shortcut(first, "down");
+    assert(!QM_Frame() && strstr(layouts[1], "qmsupply light"));
+    assert(strstr(layouts[1], "Grenades") && !strstr(layouts[1], "Rockets"));
+    assert(!strstr(layouts[1], "Mortar Rounds") && !strstr(layouts[1], "Shells"));
+    assert(strstr(layouts[2], "Mortar Rounds") && strstr(layouts[2], "FIRE SELECT"));
+    QM_Shortcut(second, "up"); /* Ready. */
+    QM_Shortcut(second, "up"); /* Mortar is the last supply. */
+    assert(!QM_Frame() && strstr(layouts[2], "qmsupply mortar"));
+    assert(strstr(layouts[2], " 300"));
+    shop_input(second, 0, 0, 0);
+    shop_input(second, 0, 0, BUTTON_ATTACK);
+    assert(second->client->quartermaster.progress.sprues == 0);
+    assert(second->client->pers.inventory[ITEM_INDEX(mortar)] == mortar->quantity);
+}
+
 int main(int argc, char **argv)
 {
     assert(argc == 2);
@@ -598,6 +715,8 @@ int main(int argc, char **argv)
     test_legacy_dropship_media_restore(argv[1]);
     test_outbound_flight_and_camera(argv[1]);
     test_quartermaster(argv[1]);
+    test_quartermaster_weapons(argv[1]);
+    test_quartermaster_resupply();
     puts("Sandstorm extraction, cinematic camera, Quartermaster purchases, co-op ready and save/load passed");
     return 0;
 }

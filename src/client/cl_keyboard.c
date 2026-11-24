@@ -1344,6 +1344,24 @@ Char_Event(int key)
  * This is only for movement and special characters,
  * anything else is handled by Char_Event().
  */
+const char *
+Key_QuartermasterCommand(int key)
+{
+	switch (key)
+	{
+		case K_UPARROW: return "qm_nav up";
+		case K_DOWNARROW: return "qm_nav down";
+		case K_LEFTARROW:
+		case 'a': return "qm_nav prev";
+		case K_RIGHTARROW:
+		case 'd': return "qm_nav next";
+		case '1': return "qm_nav 1";
+		case '2': return "qm_nav 2";
+		case '3': return "qm_nav 3";
+		default: return NULL;
+	}
+}
+
 void
 Key_Event(int key, qboolean down, qboolean special)
 {
@@ -1632,6 +1650,17 @@ Key_Event(int key, qboolean down, qboolean special)
 			((cls.key_dest == key_game) && ((cls.state == ca_active) ||
 			  !consolekeys[key])))
 	{
+		if (cls.key_dest == key_game && cls.state == ca_active && key_event_gamepad_index < 0 &&
+			(cl.frame.playerstate.stats[STAT_LAYOUTS] & LAYOUT_QUARTERMASTER))
+		{
+			const char *shop = Key_QuartermasterCommand(key);
+
+			if (shop)
+			{
+				Cbuf_AddText(va("cmd %s\n", shop));
+				return;
+			}
+		}
 		kb = keybindings[key];
 
 		if (kb)

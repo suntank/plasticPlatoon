@@ -297,6 +297,7 @@ refexport_t	re;
 
 // Handle / pointer the the loaded renderer DLL.
 void *reflib_handle = NULL;
+static void (*draw_ui_opacity)(float opacity);
 
 // Is a renderer loaded and active?
 qboolean ref_active = false;
@@ -378,6 +379,7 @@ VID_ShutdownRenderer(void)
 		GLimp_ShutdownGraphics();
 		Sys_FreeLibrary(reflib_handle);
 		reflib_handle = NULL;
+		draw_ui_opacity = NULL;
 		memset(&re, 0, sizeof(re));
 
 		CL_ClearTEntModels();
@@ -486,6 +488,9 @@ VID_LoadRenderer(void)
 
 		return false;
 	}
+
+	/* Older renderer modules can still draw the UI without its animated fade. */
+	draw_ui_opacity = (void (*)(float))Sys_GetProcAddress(reflib_handle, "R_SetUIOpacity");
 
 	/* Ensure that all key states are cleared */
 	Key_MarkAllUp();
@@ -757,6 +762,15 @@ Draw_FadeScreen(void)
 	if (ref_active)
 	{
 		re.DrawFadeScreen();
+	}
+}
+
+void
+Draw_SetUIOpacity(float opacity)
+{
+	if (ref_active && draw_ui_opacity)
+	{
+		draw_ui_opacity(Q_clamp(opacity, 0.0f, 1.0f));
 	}
 }
 

@@ -54,6 +54,8 @@ static ogg_status_t ogg_status;   /* Status indicator. */
 static stb_vorbis *ogg_file;      /* Ogg Vorbis file. */
 static qboolean ogg_started;      /* Initialization flag. */
 static qboolean ogg_mutemusic;    /* Mute music */
+static qboolean ogg_mission_active;
+static int ogg_mission_start_frame = -1;
 
 enum { MAX_NUM_OGGTRACKS = 128 };
 static char* ogg_tracks[MAX_NUM_OGGTRACKS];
@@ -296,6 +298,11 @@ static OGG_Read(void)
 
 	if (read_samples > 0)
 	{
+		if (!ogg_numsamples && sound_started == SS_SDL &&
+			!strcmp(ogg_current_filename, PP_MISSION_COMPLETE_MUSIC))
+		{
+			ogg_mission_start_frame = Q_max(s_rawend, paintedtime);
+		}
 		ogg_numsamples += read_samples;
 
 		S_RawSamples(read_samples, ogg_file->sample_rate, sizeof(short), ogg_file->channels,
@@ -488,6 +495,7 @@ OGG_PlayTrack(const char *track, qboolean cdtrack, qboolean immediate)
 		}
 		ogg_numsamples = 0;
 		ogg_status = PLAY;
+		ogg_mission_active = !strcmp(ogg_current_filename, PP_MISSION_COMPLETE_MUSIC);
 
 		return;
 	}
@@ -683,6 +691,33 @@ OGG_PlayMapMusic(void)
 	OGG_PlayTrack(track, true, true);
 }
 
+int
+OGG_MissionCompleteTime(void)
+{
+	if (!ogg_started || !ogg_mission_active || !ogg_enabled->value ||
+		ogg_mutemusic || ogg_volume->value <= 0 || ogg_status == PAUSE)
+	{
+		return -1;
+	}
+
+	/* The decoder reads ahead. Query the samples reaching the output device. */
+#ifdef USE_OPENAL
+	if (sound_started == SS_OAL)
+	{
+		return (int)(AL_RawPlaybackSeconds() * 1000.0f);
+	}
+#endif
+	if (sound_started == SS_SDL && sound.speed > 0)
+	{
+		int frames = ogg_mission_start_frame < 0 ? 0 :
+			Q_max(0, SDL_RawPlaybackFrame() - ogg_mission_start_frame);
+
+		return (int)(1000LL * frames / sound.speed);
+	}
+
+	return -1;
+}
+
 // ----
 
 /*
@@ -742,7 +777,12 @@ OGG_Info(void)
 void
 OGG_Stop(void)
 {
-	if (ogg_status == STOP)
+	qboolean ended_mission = ogg_mission_active && ogg_status == STOP;
+
+	ogg_mission_active = false;
+	ogg_mission_start_frame = -1;
+
+	if (ogg_status == STOP && !ended_mission)
 	{
 		return;
 	}
@@ -759,7 +799,10 @@ OGG_Stop(void)
 		s_rawend = 0;
 	}
 
-	stb_vorbis_close(ogg_file);
+	if (ogg_status != STOP)
+	{
+		stb_vorbis_close(ogg_file);
+	}
 	ogg_status = STOP;
 	ogg_numbufs = 0;
 }

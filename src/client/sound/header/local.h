@@ -286,6 +286,7 @@ qboolean SDL_Cache(sfx_t *sfx, wavinfo_t *info, byte *data, short volume,
  * the buffer
  */
 void SDL_Update(void);
+int SDL_RawPlaybackFrame(void);
 
 /*
  * Queues raw samples for
@@ -371,6 +372,7 @@ void AL_RawSamples(int samples, int rate, int width,
  * still in flight
  */
 void AL_UnqueueRawSamples();
+float AL_RawPlaybackSeconds(void);
 
 void AL_Underwater();
 void AL_Overwater();

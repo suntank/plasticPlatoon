@@ -64,6 +64,24 @@ It can be clipped to the top of the screen to allow the console to be
 smoothly scrolled off.
 ================
 */
+static int ui_opacity = 16;
+
+Q2_DLL_EXPORTED void
+R_SetUIOpacity(float opacity)
+{
+	ui_opacity = (int)(opacity * 16 + 0.5f);
+}
+
+static qboolean
+Draw_UIPixelVisible(int x, int y)
+{
+	static const byte bayer[4][4] = {
+		{0, 8, 2, 10}, {12, 4, 14, 6}, {3, 11, 1, 9}, {15, 7, 13, 5}
+	};
+
+	return ui_opacity > bayer[y & 3][x & 3];
+}
+
 void
 RE_Draw_CharScaled(int x, int y, int c, float scale)
 {
@@ -129,7 +147,8 @@ RE_Draw_CharScaled(int x, int y, int c, float scale)
 		fstep = (width << SHIFT16XYZ) / (scale * draw_chars->asset_width);
 		for (u=0 ; u < (8 * iscale) ; u++)
 		{
-			if (source[f>>16] != TRANSPARENT_COLOR)
+			if (source[f>>16] != TRANSPARENT_COLOR &&
+				(ui_opacity == 16 || Draw_UIPixelVisible(x + u, y + v)))
 			{
 				dest[u] = source[f>>16];
 			}
@@ -201,7 +220,24 @@ RE_Draw_StretchPicImplementation (int x, int y, int w, int h, const image_t *pic
 	pic_width = w;
 	pic_pixels = Get_BestImageSize(pic, &pic_width, &pic_height);
 
-	if (!pic->transparent)
+	if (ui_opacity < 16)
+	{
+		for (int v = 0; v < height; v++, dest += vid_buffer_width)
+		{
+			source = pic_pixels + (skip + v) * pic_height / h * pic_width;
+			for (int u = 0; u < w; u++)
+			{
+				byte pixel = source[u * pic_width / w];
+
+				if (Draw_UIPixelVisible(x + u, y + v) &&
+					(!pic->transparent || pixel != TRANSPARENT_COLOR))
+				{
+					dest[u] = pixel;
+				}
+			}
+		}
+	}
+	else if (!pic->transparent)
 	{
 		if (w == pic_width)
 		{
@@ -488,7 +524,22 @@ RE_Draw_Fill (int x, int y, int w, int h, int c)
 
 	dest = vid_buffer + y * vid_buffer_width + x;
 	for (v=0 ; v<h ; v++, dest += vid_buffer_width)
-		memset(dest, c, w);
+	{
+		if (ui_opacity == 16)
+		{
+			memset(dest, c, w);
+		}
+		else
+		{
+			for (int u = 0; u < w; u++)
+			{
+				if (Draw_UIPixelVisible(x + u, y + v))
+				{
+					dest[u] = c;
+				}
+			}
+		}
+	}
 }
 //=============================================================================
 

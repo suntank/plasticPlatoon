@@ -1933,6 +1933,10 @@ ClientCommand(edict_t *ent)
 
 	if (level.intermission_state == INTERMISSION_QUARTERMASTER)
 	{
+		if (!strcmp(cmd, "qm_nav") && gi.argc() == 2)
+		{
+			QM_Shortcut(ent, gi.argv(1));
+		}
 		return;
 	}
 

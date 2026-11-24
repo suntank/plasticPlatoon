@@ -65,6 +65,12 @@ static int snd_vol;
 static int snd_voice_vol;
 static int soundtime;
 
+int
+SDL_RawPlaybackFrame(void)
+{
+	return soundtime;
+}
+
 /* ------------------------------------------------------------------ */
 
 typedef struct {

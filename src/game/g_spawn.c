@@ -669,6 +669,7 @@ SpawnEntities(const char *mapname, char *entities, const char *spawnpoint)
 
 	memset(&level, 0, sizeof(level));
 	memset(g_edicts, 0, game.maxentities * sizeof(g_edicts[0]));
+	QM_ClearMapWeapons();
 
 	Q_strlcpy(level.mapname, mapname, sizeof(level.mapname));
 	Q_strlcpy(game.spawnpoint, spawnpoint, sizeof(game.spawnpoint));
@@ -755,6 +756,10 @@ SpawnEntities(const char *mapname, char *entities, const char *spawnpoint)
 		}
 
 		ED_CallSpawn(ent);
+		if (ent->inuse && ent->item)
+		{
+			QM_RecordMapWeapon(ent->item);
+		}
 	}
 
 	/* in case the last entity in the entstring has spawntemp fields */

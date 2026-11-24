@@ -86,8 +86,8 @@ Menu_DrawCompactText(int x, int y, const char *text, int maxchars, qboolean acce
 static void
 Menu_DrawCompactHeader(const char *title, const char *subtitle)
 {
-	Draw_Fill(0, 0, VID_WIDTH, 36, 7);
-	Draw_Fill(8, 8, 2, 20, 140);
+	Draw_Fill(0, 0, VID_WIDTH, 36, PP_UI_ROW);
+	Draw_Fill(8, 8, 2, 20, PP_UI_BRASS);
 	if (title && !strcmp(title, "PLASTIC PLATOON"))
 	{
 		int i;
@@ -101,13 +101,13 @@ Menu_DrawCompactHeader(const char *title, const char *subtitle)
 		Menu_DrawCompactText(16, 8, title ? title : "PLASTIC PLATOON", (VID_WIDTH - 28) / 8, false);
 	}
 	Menu_DrawCompactText(16, 23, subtitle ? subtitle : "FIELD SETTINGS", (VID_WIDTH - 28) / 8, true);
-	Draw_Fill(8, 35, VID_WIDTH - 16, 1, 50);
+	Draw_Fill(8, 35, VID_WIDTH - 16, 1, PP_UI_EDGE);
 }
 
 void
 Menu_DrawCompactFrame(const char *title, const char *subtitle)
 {
-	Draw_Fill(0, 0, VID_WIDTH, VID_HEIGHT, 219);
+	Draw_Fill(0, 0, VID_WIDTH, VID_HEIGHT, PP_UI_SURFACE);
 	Menu_DrawCompactHeader(title, subtitle);
 }
 
@@ -117,8 +117,8 @@ Menu_DrawCompactFooter(const char *help)
 	extern qboolean japanese_confirm;
 	int top = VID_HEIGHT - 30;
 
-	Draw_Fill(0, top, VID_WIDTH, 30, 7);
-	Draw_Fill(8, top, VID_WIDTH - 16, 1, 50);
+	Draw_Fill(0, top, VID_WIDTH, 30, PP_UI_ROW);
+	Draw_Fill(8, top, VID_WIDTH - 16, 1, PP_UI_EDGE);
 	Menu_DrawCompactText(8, top + 5, help ? help : "D-PAD: MOVE / CHANGE", (VID_WIDTH - 16) / 8, true);
 	Menu_DrawCompactText(8, top + 18, japanese_confirm ? "B: SELECT   A: BACK" : "A: SELECT   B: BACK",
 		(VID_WIDTH - 16) / 8, false);
@@ -157,7 +157,7 @@ Menu_DrawCompact(menuframework_s *menu)
 		panel_width = menu->compact_panel_width;
 		columns = (panel_width - 24) / 8;
 		row_width = panel_width - 12;
-		Draw_Fill(0, 36, panel_width, VID_HEIGHT - 36, 219);
+		Draw_Fill(0, 36, panel_width, VID_HEIGHT - 36, PP_UI_SURFACE);
 		Menu_DrawCompactHeader(menu->title, menu->subtitle);
 	}
 	else
@@ -224,10 +224,10 @@ Menu_DrawCompact(menuframework_s *menu)
 			y += height;
 			continue;
 		}
-		Draw_Fill(8, y, row_width, height - 2, selected ? 50 : 221);
+		Draw_Fill(8, y, row_width, height - 2, selected ? PP_UI_FOCUS : PP_UI_ROW);
 		if (selected)
 		{
-			Draw_Fill(8, y, 3, height - 2, 140);
+			Draw_Fill(8, y, 3, height - 2, PP_UI_BRASS);
 		}
 		Menu_DrawCompactText(16, y + (height == 26 ? 8 : 4),
 			item->name, columns, selected);
@@ -248,10 +248,10 @@ Menu_DrawCompact(menuframework_s *menu)
 			fraction = (slider->maxvalue > slider->minvalue) ?
 				(number - slider->minvalue) / (slider->maxvalue - slider->minvalue) : 0;
 			fraction = Q_clamp(fraction, 0, 1);
-			Draw_Fill(24, y + 22, 80, 4, 7);
+			Draw_Fill(24, y + 22, 80, 4, PP_UI_ROW);
 			if (fraction > 0)
 			{
-				Draw_Fill(24, y + 22, Q_max(1, (int)(80 * fraction)), 4, 140);
+				Draw_Fill(24, y + 22, Q_max(1, (int)(80 * fraction)), 4, PP_UI_BRASS);
 			}
 			snprintf(value, sizeof(value), slider->printformat ? slider->printformat : "%.1f", number);
 			Menu_DrawCompactText(120, y + 19, value, columns - 13, false);
@@ -273,7 +273,7 @@ Menu_DrawCompact(menuframework_s *menu)
 			Q_strlcpy(value, field->buffer + offset, Q_min(sizeof(value), (size_t)visible + 1));
 			if (selected && ((Sys_Milliseconds() / 400) & 1))
 			{
-				Draw_Fill(24 + (field->cursor - offset) * 8, y + 28, 6, 1, 140);
+				Draw_Fill(24 + (field->cursor - offset) * 8, y + 28, 6, 1, PP_UI_BRASS);
 			}
 		}
 		if (value[0])
@@ -290,15 +290,15 @@ Menu_DrawCompact(menuframework_s *menu)
 	{
 		int track = bottom - 40;
 		int thumb = Q_max(8, track * track / total);
-		Draw_Fill(panel_width - 6, 40, 2, track, 43);
+		Draw_Fill(panel_width - 6, 40, 2, track, PP_UI_EDGE);
 		Draw_Fill(panel_width - 6, 40 + (track - thumb) * Q_min(position, total - track) /
-			Q_max(1, total - track), 2, thumb, 140);
+			Q_max(1, total - track), 2, thumb, PP_UI_BRASS);
 	}
 	if (!menu->compact_panel_width || total > bottom - 40)
 	{
 		/* Position is useful on long settings/save lists and doesn't consume a row. */
 		Com_sprintf(count, sizeof(count), "%d/%d", ordinal, choices);
-		Draw_Fill(VID_WIDTH - 64, 22, 56, 10, 7);
+		Draw_Fill(VID_WIDTH - 64, 22, 56, 10, PP_UI_ROW);
 		Menu_DrawCompactText(VID_WIDTH - 64, 23, count, 7, false);
 	}
 	Menu_DrawCompactFooter(help);

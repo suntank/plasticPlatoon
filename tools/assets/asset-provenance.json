@@ -14,6 +14,150 @@
   ],
   "generated_assets": [
     {
+      "files": [
+        "baseq2/pics/pp_qm_supply_health.jpg",
+        "baseq2/pics/pp_qm_supply_armor.jpg",
+        "baseq2/pics/pp_qm_supply_light.jpg",
+        "baseq2/pics/pp_qm_supply_heavy.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Original Plastic Platoon video game Quartermaster resupply artwork. Create a square 2-by-2 atlas with four separate miniature, inert molded-plastic toy kit accessories against a matching near-black pine green studio background (#101713). Exact uniform quadrants, no edge frames, no gutters, no lettering, numbers, logos or application UI. Each centered subject has at least 10% padding within its quadrant for four independent square crops. Bold distinct silhouettes, warm amber rim light, soft olive fill, subtle injection molding seams and scuffs, polished simple product photography. Every prop is clearly fictional and toy-scale, solid sculpted plastic with no real components, no people or hands. Top-left: small olive first-aid kit with a raised ivory plus and a single roll of miniature toy bandage. Top-right: one molded olive torso vest with a broad ochre chest plate and extra tiny plate leaning alongside. Bottom-left: small shallow opened toy plastic box of short, slim, blunt molded golden play ammunition pieces in an orderly row. Bottom-right: larger open forest-green toy box with a row of taller, chunky olive-and-ochre blunt plastic play ammunition pieces.",
+      "notes": "Selected atlas quadrants exported as individual Resupply portraits."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_qm_supply_shells.jpg",
+        "baseq2/pics/pp_qm_supply_sniper.jpg",
+        "baseq2/pics/pp_qm_supply_grenades.jpg",
+        "baseq2/pics/pp_qm_supply_gl.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Original Plastic Platoon video game Quartermaster resupply artwork. Create a square 2-by-2 atlas with four separate miniature, inert molded-plastic toy kit accessories against a matching near-black pine green studio background (#101713). Exact uniform quadrants, no edge frames, no gutters, no lettering, numbers, logos or application UI. Each centered subject has at least 10% padding within its quadrant for four independent square crops. Bold distinct silhouettes, warm amber rim light, soft olive fill, subtle injection molding seams and scuffs, polished simple product photography. Every prop is clearly fictional and toy-scale, solid sculpted plastic with no real components, no people or hands. Top-left: small opened green toy box with conspicuous amber-and-rust-red straight cylindrical play shotgun shells standing together. Top-right: narrow, ribbed olive toy case with three distinct long blunt brass-and-green molded play ammunition pieces. Bottom-left: pair of solid toy hand grenade props with round oval pineapple-textured sage plastic bodies and simple chunky amber caps. Bottom-right: low olive molded storage tray holding five fat stubby bright ochre toy cylinders with flat dark olive tops.",
+      "notes": "Selected atlas quadrants exported as individual Resupply portraits."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_qm_supply_rockets.jpg",
+        "baseq2/pics/pp_qm_supply_napalm.jpg",
+        "baseq2/pics/pp_qm_supply_mortar.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Original Plastic Platoon video game Quartermaster resupply artwork. Create a square 2-by-2 atlas with four separate miniature, inert molded-plastic toy kit accessories against a matching near-black pine green studio background (#101713). Exact uniform quadrants, no edge frames, no gutters, no lettering, numbers, logos or application UI. Each centered subject has at least 10% padding within its quadrant for four independent square crops. Bold distinct silhouettes, warm amber rim light, soft olive fill, subtle injection molding seams and scuffs, polished simple product photography. Every prop is clearly fictional and toy-scale, solid sculpted plastic with no real components, no people or hands. Top-left: two oversized solid plastic model-kit rocket props with blunt sage noses, toy fins, and ochre details in a green carrier. Top-right: two little dark olive molded toy refill canisters with contrasting warm red bands and heavy ochre caps. Bottom-left: one substantial molded olive toy mortar-round prop with broad fins, round blunt tip, reinforced gold faceted body, resting diagonal on a little base. Bottom-right: closed neutral dark green utility supply box, simply molded, with thin brass fittings.",
+      "notes": "Selected atlas quadrants exported as individual Resupply portraits."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_qm_weapon_smg.jpg",
+        "baseq2/pics/pp_qm_weapon_shotgun.jpg",
+        "baseq2/pics/pp_qm_weapon_supershotgun.jpg",
+        "baseq2/pics/pp_qm_weapon_machinegun.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Create a square 2-by-2 sprite sheet of four separate original miniature toy prop product illustrations for the Quartermaster of the video game Plastic Platoon. Exact uniform grid, top-left, top-right, bottom-left, bottom-right, no gutters, frames, labels, text, numerals or logos. Each item fully isolated and centered within its own quadrant with about 10% padding for exact midpoint crops. Same near-black deep pine green studio background in every quarter (#101713), warm amber light from upper right, subtle scuffs, rounded casting seams, moss/khaki injection-molded plastic. Stylistically matches collectible toy-kit equipment from Plastic Platoon: plain simple bold silhouettes, toy-scale molded single pieces, no people or hands, no harm or action and no real components. All sculpted toy launcher and blaster tubes appear as solid blunt molded plastic caps, toy-like. Side-on macro product angle, clear silhouettes, each centered a little diagonal to fill its square. Top-left: compact SMG-shaped toy with a squared receiver, long straight molded magazine and narrow skeletal stock. Top-right: long single-barrel pump-shotgun-shaped toy with a ribbed fore-end and olive solid stock. Bottom-left: classic chunky two-barrel shotgun-shaped toy, twin side-by-side stubby tubes, toy olive and ochre stock. Bottom-right: standard rifle-shaped toy with a long carry handle across top, olive body and green box magazine.",
+      "notes": "Four atlas quadrants exported as separate in-game weapon shop portraits."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_qm_weapon_chaingun.jpg",
+        "baseq2/pics/pp_qm_weapon_grenadelauncher.jpg",
+        "baseq2/pics/pp_qm_weapon_rocketlauncher.jpg",
+        "baseq2/pics/pp_qm_weapon_railgun.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Create a square 2-by-2 sprite sheet of four separate original miniature toy prop product illustrations for the Quartermaster of the video game Plastic Platoon. Exact uniform grid, top-left, top-right, bottom-left, bottom-right, no gutters, frames, labels, text, numerals or logos. Each item fully isolated and centered within its own quadrant with about 10% padding for exact midpoint crops. Same near-black deep pine green studio background in every quarter (#101713), warm amber light from upper right, subtle scuffs, rounded casting seams, moss/khaki injection-molded plastic. Stylistically matches collectible toy-kit equipment from Plastic Platoon: plain simple bold silhouettes, toy-scale molded single pieces, no people or hands, no harm or action and no real components. All sculpted toy launcher and blaster tubes appear as solid blunt molded plastic caps, toy-like. Side-on macro product angle, clear silhouettes, each centered a little diagonal to fill its square. Top-left: heavy machinegun-shaped toy with a wide molded receiver, integrated carry handle and distinctive square brass-colored storage box underneath. Top-right: revolving launcher-shaped toy with a very bulky, ribbed toy cylinder around the center and distinctive olive grip. Bottom-left: long dark-olive toy launcher tube, flared end, tan protective cap and rectangular carrying strap mount. Bottom-right: long scoped sniper rifle-shaped toy with an oversized smooth olive telescope, sage molded stock and simple long thick toy barrel.",
+      "notes": "Four atlas quadrants exported as separate in-game weapon shop portraits."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_qm_weapon_hyperblaster.jpg",
+        "baseq2/pics/pp_qm_weapon_bfg.jpg",
+        "baseq2/pics/pp_qm_weapon_thunderhead.jpg",
+        "baseq2/pics/pp_qm_weapon_knife.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Create a square 2-by-2 sprite sheet of four separate original miniature toy prop product illustrations for the Quartermaster of the video game Plastic Platoon. Exact uniform grid, top-left, top-right, bottom-left, bottom-right, no gutters, frames, labels, text, numerals or logos. Each item fully isolated and centered within its own quadrant with about 10% padding for exact midpoint crops. Same near-black deep pine green studio background in every quarter (#101713), warm amber light from upper right, subtle scuffs, rounded casting seams, moss/khaki injection-molded plastic. Stylistically matches collectible toy-kit equipment from Plastic Platoon: plain simple bold silhouettes, toy-scale molded single pieces, no people or hands, no harm or action and no real components. All sculpted toy launcher and blaster tubes appear as solid blunt molded plastic caps, toy-like. Side-on macro product angle, clear silhouettes, each centered a little diagonal to fill its square. Top-left: M1 flamethrower-shaped toy with a stubby blocky green hand unit connected by one thick curved molded hose to a small twin-cylinder backpack. Top-right: Mortar Cannon-shaped toy with a big, short upward-angled blocky olive tube on a little plastic toy base, brass rim. Bottom-left: compact automatic Thunderhead shotgun-shaped toy with short green body, a broad solid toy stock, gold ring at the thick blunt tip and a circular olive drum underneath. Bottom-right: blunt olive molded plastic toy field knife with rounded tip and ochre textured handle, side-on.",
+      "notes": "Four atlas quadrants exported as separate in-game weapon shop portraits."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_qm_body_1.jpg",
+        "baseq2/pics/pp_qm_body_2.jpg",
+        "baseq2/pics/pp_qm_body_3.jpg",
+        "baseq2/pics/pp_qm_body_4.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Create a square 2 by 2 sprite sheet of four separate equipment illustrations for the Quartermaster upgrade screen in the original indie game Plastic Platoon. Category is Reinforced Body: a field first-aid kit with a simple molded plus embossed without lettering, increasing protection and recovery capacity across tiers. This is miniature injection-molded toy kit photography, each panel shows a single coherent item isolated on the same nearly black green studio background (#101713). Exact uniform grid, no gutters, no dividers, no frames, no text, no letters, no numerals, no UI and no watermark. Every object is fully inside its own quadrant; leave about 12% negative space on every edge of each quadrant so the exact midpoint crop is safe. Simple readable silhouettes, each object centered and consistently framed at three-quarter angle from slightly above, matching warm amber rim light from upper right, soft pale green fill and restrained dark shadows. Four progressively more substantial designs and clear visual contrasts at thumbnail size. Top-left Tier I: one small moss-green snap-top injection-molded first-aid box with a cream molded plus and one roll of toy bandage. Top-right Tier II: a larger reinforced olive first-aid case with brass corner clips and two cream toy bandage rolls. Bottom-left Tier III: a substantial military-green trauma case with ribbed plastic shell, warm brass edge guards, and a small molded recovery canister. Bottom-right Tier IV: a premium double-stack dark-olive field medical case with tan reinforced framing, multiple brass latches, and a prominent ivory molded plus. No people, hands or environment props, just the accessory or the specified associated little storage pieces. High-end macro render of tactile scuffed molded plastic, subtle seam lines, palette moss green, warm ochre and muted sand.",
+      "notes": "Four sprite-sheet quadrants exported in Tier I–IV order as separate in-game portraits."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_qm_vest_1.jpg",
+        "baseq2/pics/pp_qm_vest_2.jpg",
+        "baseq2/pics/pp_qm_vest_3.jpg",
+        "baseq2/pics/pp_qm_vest_4.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Create a square 2 by 2 sprite sheet of four separate equipment illustrations for the Quartermaster upgrade screen in the original indie game Plastic Platoon. Category is Reinforced Vest: progressively reinforced olive-green torso protective vests for a little plastic toy soldier, empty flat-lay collectibles. This is miniature injection-molded toy kit photography, each panel shows a single coherent item isolated on the same nearly black green studio background (#101713). Exact uniform grid, no gutters, no dividers, no frames, no text, no letters, no numerals, no UI and no watermark. Every object is fully inside its own quadrant; leave about 12% negative space on every edge of each quadrant so the exact midpoint crop is safe. Simple readable silhouettes, each object centered and consistently framed at three-quarter angle from slightly above, matching warm amber rim light from upper right, soft pale green fill and restrained dark shadows. Four progressively more substantial designs and clear visual contrasts at thumbnail size. Top-left Tier I: a simple short molded olive vest with a plain padded front and canvas-like molded finish. Top-right Tier II: a heavier ribbed olive vest with a sand-colored chest insert and two olive utility pouches. Bottom-left Tier III: a dark moss armored vest with a broad charcoal central plate and bulky molded shoulder pads. Bottom-right Tier IV: a premium layered dark olive vest with large pale-ochre modular panels, thick molded shoulder plates and waist protection. No people, hands or environment props, just the accessory or the specified associated little storage pieces. High-end macro render of tactile scuffed molded plastic, subtle seam lines, palette moss green, warm ochre and muted sand.",
+      "notes": "Four sprite-sheet quadrants exported in Tier I–IV order as separate in-game portraits."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_qm_bandolier_1.jpg",
+        "baseq2/pics/pp_qm_bandolier_2.jpg",
+        "baseq2/pics/pp_qm_bandolier_3.jpg",
+        "baseq2/pics/pp_qm_bandolier_4.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Create a square 2 by 2 sprite sheet of four separate equipment illustrations for the Quartermaster upgrade screen in the original indie game Plastic Platoon. Category is Bandolier: four progressively higher-capacity miniature accessory harnesses for a plastic toy character, shaped as a loop, blocky toy-scale objects. This is miniature injection-molded toy kit photography, each panel shows a single coherent item isolated on the same nearly black green studio background (#101713). Exact uniform grid, no gutters, no dividers, no frames, no text, no letters, no numerals, no UI and no watermark. Every object is fully inside its own quadrant; leave about 12% negative space on every edge of each quadrant so the exact midpoint crop is safe. Simple readable silhouettes, each object centered and consistently framed at three-quarter angle from slightly above, matching warm amber rim light from upper right, soft pale green fill and restrained dark shadows. Four progressively more substantial designs and clear visual contrasts at thumbnail size. Top-left Tier I: one ochre fabric-textured molded shoulder strap with three olive rectangular storage cells. Top-right Tier II: a thicker looped dark olive shoulder strap with two staggered rows of little ochre rectangular storage cells. Bottom-left Tier III: a crossed double field harness with olive green strap loops, tan molded storage and darker hinges. Bottom-right Tier IV: a wide heavy-duty moss green cross-body harness with a row of large removable rectangular brass-yellow molded storage modules and dark buckles. No people, hands or environment props, just the accessory or the specified associated little storage pieces. High-end macro render of tactile scuffed molded plastic, subtle seam lines, palette moss green, warm ochre and muted sand.",
+      "notes": "Four sprite-sheet quadrants exported in Tier I–IV order as separate in-game portraits."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_qm_demolition_1.jpg",
+        "baseq2/pics/pp_qm_demolition_2.jpg",
+        "baseq2/pics/pp_qm_demolition_3.jpg",
+        "baseq2/pics/pp_qm_demolition_4.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Create a square 2 by 2 sprite sheet of four separate equipment illustrations for the Quartermaster upgrade screen in the original indie game Plastic Platoon. Category is Demolition Pouch: toy-soldier miniature toy demolitions utility pouch progression, focused on the closed storage item, fantasy molded accessory. This is miniature injection-molded toy kit photography, each panel shows a single coherent item isolated on the same nearly black green studio background (#101713). Exact uniform grid, no gutters, no dividers, no frames, no text, no letters, no numerals, no UI and no watermark. Every object is fully inside its own quadrant; leave about 12% negative space on every edge of each quadrant so the exact midpoint crop is safe. Simple readable silhouettes, each object centered and consistently framed at three-quarter angle from slightly above, matching warm amber rim light from upper right, soft pale green fill and restrained dark shadows. Four progressively more substantial designs and clear visual contrasts at thumbnail size. Top-left Tier I: a single compact olive green snap-flap utility pouch with a squared base and one tan fastener. Top-right Tier II: two olive utility pouch compartments side by side on a tan molded belt with small amber clips. Bottom-left Tier III: a broader dark olive three-pouch utility belt with heavy ribbed snap flaps and molded ochre webbing. Bottom-right Tier IV: a heavy modular dark moss utility belt with four contrast olive/ochre storage pouches and a substantial tan quick-release buckle. No people, hands or environment props, just the accessory or the specified associated little storage pieces. High-end macro render of tactile scuffed molded plastic, subtle seam lines, palette moss green, warm ochre and muted sand.",
+      "notes": "Four sprite-sheet quadrants exported in Tier I–IV order as separate in-game portraits."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_qm_ordnance_1.jpg",
+        "baseq2/pics/pp_qm_ordnance_2.jpg",
+        "baseq2/pics/pp_qm_ordnance_3.jpg",
+        "baseq2/pics/pp_qm_ordnance_4.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Create a square 2 by 2 sprite sheet of four separate equipment illustrations for the Quartermaster upgrade screen in the original indie game Plastic Platoon. Category is Heavy Ordnance Pack: progressively higher-capacity model-kit toy cargo backpacks with simple chunky decorative cylinders clipped to the exterior, fantasy miniature collectible storage. This is miniature injection-molded toy kit photography, each panel shows a single coherent item isolated on the same nearly black green studio background (#101713). Exact uniform grid, no gutters, no dividers, no frames, no text, no letters, no numerals, no UI and no watermark. Every object is fully inside its own quadrant; leave about 12% negative space on every edge of each quadrant so the exact midpoint crop is safe. Simple readable silhouettes, each object centered and consistently framed at three-quarter angle from slightly above, matching warm amber rim light from upper right, soft pale green fill and restrained dark shadows. Four progressively more substantial designs and clear visual contrasts at thumbnail size. Top-left Tier I: a slim boxy olive toy backpack with one small flat tan vertical molded cylinder clipped on. Top-right Tier II: a larger expedition backpack with framed green plastic shell, one pair of sand-colored stubby external molded cylinders. Bottom-left Tier III: a ribbed dark olive framed supply backpack with chunky amber side clips and three short external toy storage cylinders. Bottom-right Tier IV: a heavy model-kit cargo backpack with a distinctive tall tan frame, wide green shell, brass clips and four orderly dark olive storage cylinders. No people, hands or environment props, just the accessory or the specified associated little storage pieces. High-end macro render of tactile scuffed molded plastic, subtle seam lines, palette moss green, warm ochre and muted sand.",
+      "notes": "Four sprite-sheet quadrants exported in Tier I–IV order as separate in-game portraits."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_menu_backyard_wide.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Use case: stylized-concept. Asset: wide 16:9 full-bleed key art for the main menu of the original indie game Plastic Platoon. Generate a cinematic macro photograph of a hand-built backyard diorama at toy scale. A small patrol of green molded plastic army-men figures with helmet shapes, mold seams and attached little bases sits in the right-hand half, one hero in the right third and two smaller toys among terra-cotta garden pots, leaves towering overhead and a painted blue toy block. The toys are recognizably injection-molded, fantasy backyard play, no real people, no real violence, no action or muzzle flashes. Polished collectible toy photography with subtle grain, worn semi-gloss green plastic, deep pine shadows, muted blue and a warm ochre edge light from the garden. Foreground is a rough wooden ledge and gritty earth, very shallow depth of field at the far back only. Leftmost 42% is an intentionally quiet, almost black forest-green defocused shadow with very little detail, ready for an interactive menu overlay. Right artwork readable but restrained, dramatic intentional lighting, thoughtful detail, coherent art direction. No type, letters, logos, UI elements, borders, or watermarks. Compose in a truly wide landscape frame with core subjects between 55% and 90% horizontally and away from the very top/bottom."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_menu_backyard_compact.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Use case: stylized-concept. Asset: square cover art for the handheld main menu of the original indie game Plastic Platoon, matching a cinematic macro backyard diorama. A single green injection-molded toy soldier, helmet and flat base and visible plastic seams, is framed in the rightmost third, between a small terra-cotta garden pot, gritty earth and an oversized leaf. The toy is a collectible fantasy figure, no real people, no real violence or action. Quiet, crafted, moody analog toy photography, dark forest-green shadows, restrained warm ochre sunlight and a muted slate-blue accent. Composition for a 240x240 display: the leftmost 60% must remain clean, nearly black green shadow suitable for crisp overlaid UI. Concentrate the hero silhouette on the right, safe within the rightmost edge, with no strong forms crossing into the left side. No text, UI, borders, lettering, logos, or watermarks."
+    },
+    {
+      "files": [
+        "baseq2/pics/pp_quartermaster_depot.jpg",
+        "baseq2/pics/pp_quartermaster_banner.jpg",
+        "baseq2/pics/pp_quartermaster_depot_compact.jpg"
+      ],
+      "tool": "OpenAI ImageGen (built-in)",
+      "prompt": "Use case: cinematic game UI illustration. Create a wide landscape key art photograph of a toy-soldier quartermaster's workshop that will be cropped to a wide horizontal banner at the top of a native game upgrade screen. Original Plastic Platoon art direction: realistic macro photograph of a miniature diorama, moss-green molded plastic, warm amber light and deep green-black shadows. On the right half of the frame, an open small olive drab molded plastic supply case with oversized brass-yellow injection-molded sprue frames, simple molded pouches and a miniature toy helmet on a workbench, separated strongly from the background, with raking light and neat toy-model detail. Anchor the readable open case and the amber sprues in the middle horizontal band, around 68% to 90% width and 32% to 65% height so they survive a shallow banner crop. Leftmost 48% extremely quiet dark pine shadow reserved for bright game text overlay. Utilitarian miniature field supply depot, tactile molded-plastic surfaces, subdued colors, warm glints from a tiny lamp, grounded prop photography. No writing, lettering, UI, logo, watermark, characters or violence.",
+      "notes": "The banner and full-height square backdrop are crops of the same depot art for compact viewports."
+    },
+    {
       "files": ["baseq2/pics/pp_menu_background.jpg", "baseq2/pics/pp_menu_background_square.jpg"],
       "tool": "OpenAI ImageGen",
       "prompt": "Create the full-bleed widescreen static main-menu background art for an original PC and handheld video game, Plastic Platoon, about green molded plastic toy soldiers in oversized everyday spaces. Landscape 16:9 composition. Show an outdoor backyard at toy-eye level: coarse grains of sand, towering blades of grass, a weathered wooden sandbox lip and soft late-afternoon light. Put the main visual beat around 70% across the frame, a small squad of unmistakably toy-green plastic soldiers peeking over the sandbox lip, one clearly readable helmet silhouette and shoulders in the foreground, two smaller figures farther back. They should look like classic solid-green miniature figurines with mold seams, lightly scuffed satin surfaces and simplified features. Behind them, hazy garden foliage and a tipped terracotta pot establish huge scale. Original stylized 3D game key art with tactile diorama materials, earthy olives and warm amber, dark muted shadows, an adventurous toy-scale mood. Keep the left half and the central-left area visually quiet and dark with softly out-of-focus soil and wood so existing centrally placed controls stay readable, with the strongest detail near the right. Keep the lead soldier fully within the central 70% of the frame so a square crop will retain the helmet silhouette. No typography, UI, logos, real people, blood, muzzle flashes or framing borders.",

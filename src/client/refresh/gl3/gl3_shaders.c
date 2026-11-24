@@ -204,6 +204,7 @@ static const char* fragmentSrc2D = MULTILINE_STRING(
 		};
 
 		uniform sampler2D tex;
+		uniform float uiFade;
 
 		out vec4 outColor;
 
@@ -219,7 +220,7 @@ static const char* fragmentSrc2D = MULTILINE_STRING(
 			// apply gamma correction and intensity
 			texel.rgb *= intensity2D;
 			outColor.rgb = pow(texel.rgb, vec3(gamma));
-			outColor.a = texel.a; // I think alpha shouldn't be modified by gamma and intensity
+			outColor.a = texel.a * (1.0 - uiFade);
 		}
 );
 

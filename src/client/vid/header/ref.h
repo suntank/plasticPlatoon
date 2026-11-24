@@ -286,6 +286,7 @@ void Draw_CharScaled(int x, int y, int num, float scale);
 void Draw_TileClear(int x, int y, int w, int h, const char *name);
 void Draw_Fill(int x, int y, int w, int h, int c);
 void Draw_FadeScreen(void);
+void Draw_SetUIOpacity(float opacity);
 void Draw_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int bits);
 //int R_Init(void *hinstance, void *hWnd);
 //void R_Shutdown(void);

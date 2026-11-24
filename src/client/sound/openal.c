@@ -66,6 +66,7 @@ int active_buffers;
 
 /* Locals */
 static qboolean streamPlaying;
+static double stream_played_seconds;
 static ALuint s_srcnums[MAX_CHANNELS - 1];
 static ALuint streamSource;
 static int s_framecount;
@@ -93,6 +94,7 @@ AL_StreamDie(void)
 	}
 
 	streamPlaying = false;
+	stream_played_seconds = 0.0;
 	qalSourceStop(streamSource);
 
 	/* Un-queue any buffers, and delete them */
@@ -131,7 +133,17 @@ AL_StreamUpdate(void)
 		while (numBuffers--)
 		{
 			ALuint buffer;
+			ALint bytes, bits, channels, rate;
+
 			qalSourceUnqueueBuffers(streamSource, 1, &buffer);
+			qalGetBufferi(buffer, AL_SIZE, &bytes);
+			qalGetBufferi(buffer, AL_BITS, &bits);
+			qalGetBufferi(buffer, AL_CHANNELS, &channels);
+			qalGetBufferi(buffer, AL_FREQUENCY, &rate);
+			if (bits > 0 && channels > 0 && rate > 0)
+			{
+				stream_played_seconds += bytes * 8.0 / (bits * channels * (double)rate);
+			}
 			qalDeleteBuffers(1, &buffer);
 			active_buffers--;
 		}
@@ -1016,6 +1028,19 @@ void
 AL_UnqueueRawSamples()
 {
 	AL_StreamDie();
+}
+
+float
+AL_RawPlaybackSeconds(void)
+{
+	ALfloat offset = 0.0f;
+
+	if (streamPlaying)
+	{
+		qalGetSourcef(streamSource, AL_SEC_OFFSET, &offset);
+	}
+
+	return stream_played_seconds + offset;
 }
 
 static void

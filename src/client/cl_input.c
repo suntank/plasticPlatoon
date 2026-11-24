@@ -1010,6 +1010,7 @@ CL_FinalizeCmd(void)
 
 	// Set light level for muzzle flash
 	cmd->lightlevel = (byte)cl_lightlevel->value;
+	SCR_QuartermasterInput(0, &cl.frame.playerstate, cmd);
 }
 
 void

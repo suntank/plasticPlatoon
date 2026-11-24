@@ -27,6 +27,16 @@
 #ifndef CL_SCREEN_H
 #define CL_SCREEN_H
 
+/* Plastic Platoon's colormap uses a gray ramp and an RGB cube. */
+enum
+{
+	PP_UI_SURFACE = 217,
+	PP_UI_ROW = 219,
+	PP_UI_FOCUS = 223,
+	PP_UI_EDGE = 226,
+	PP_UI_BRASS = 163
+};
+
 void	SCR_Init(void);
 
 void	SCR_UpdateScreen(void);

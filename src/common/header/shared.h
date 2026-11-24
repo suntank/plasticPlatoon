@@ -1162,6 +1162,16 @@ typedef enum
 #define STAT_SELECTED_ITEM 12
 #define STAT_LAYOUTS 13
 #define LAYOUT_QUARTERMASTER 4
+#define QM_WEAPON_VISIBLE_ROWS 7
+
+typedef enum
+{
+	QM_PAGE_UPGRADES,
+	QM_PAGE_RESUPPLY,
+	QM_PAGE_WEAPONS,
+	QM_PAGE_COUNT
+} qm_page_t;
+
 #define STAT_FRAGS 14
 #define STAT_FLASHES 15                 /* cleared each frame, 1 = health, 2 = armor */
 #define STAT_CHASE 16

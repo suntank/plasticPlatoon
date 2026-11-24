@@ -3196,6 +3196,7 @@ SS_BuildSlotCmd(ss_local_player_t *slot)
 
 	cmd->msec = ms;
 	cmd->lightlevel = (byte)cl_lightlevel->value;
+	SCR_QuartermasterInput(slot->local_index, &slot->frame.playerstate, cmd);
 	slot->cmd = *cmd;
 }
 
@@ -4756,6 +4757,19 @@ SS_HandleGameplayKey(int key, qboolean down)
 	if (slot->loopback_slot <= 0 || slot->menu_open)
 	{
 		return false;
+	}
+
+	if (device_index == 1 && down)
+	{
+		const char *shop = Key_QuartermasterCommand(key);
+		const player_state_t *ps;
+
+		if (shop && SS_GetSlotPlayerState(slot->local_index, NULL, &ps) &&
+			(ps->stats[STAT_LAYOUTS] & LAYOUT_QUARTERMASTER))
+		{
+			SS_SendSlotStringCmdNow(slot, shop);
+			return true;
+		}
 	}
 
 	/* Use the same binding table as the primary player. Running bindings in

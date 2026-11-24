@@ -35,6 +35,7 @@ typedef enum
 } ogg_status_t;
 
 int OGG_Status(void);
+int OGG_MissionCompleteTime(void);
 void OGG_InitTrackList(void);
 void OGG_Init(void);
 void OGG_PlayTrack(const char* track, qboolean cdtrack, qboolean immediate);
