@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 
 import bpy
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bake_room_skybox import (bake, beam, box, current_object, match_edge_texels, material,
@@ -57,14 +57,16 @@ def castle_arch(x, y, z, m):
                     [m["castle_lit"] if section % 3 else m["castle"]])
 
 
-def sandbox(m):
-    x, y = .08, -2.19
+def sandbox(m, *, center=(.08, -2.19), gate_yaw=0, castle_scale=(1, 1, 1)):
+    x, y = center
     top = bordered_bed("Timber sandbox", x, y, 3.22, 2.74, .33, m["sandbox_wood"], m["sand"])
     for dx in (-1.61, 1.61):
         for dy in (-1.37, 1.37):
             box("Square sandbox corner cap", (x + dx, y + dy, .332),
                 (.241, .237, .077), m["fence_light"], .014)
     cx, cy = x - .24, y + .01
+    place_castle = gate_yaw or castle_scale != (1, 1, 1)
+    before_castle = set(bpy.context.scene.objects) if place_castle else None
     for dx in (-.628, .612):
         for dy in (-.68, .68):
             castle_tower("Corner sand tower", cx + dx, cy + dy, top, .53, .196, m)
@@ -82,6 +84,14 @@ def sandbox(m):
     mesh_object("Red sandbox pennant",
                 [(*flag, top + 1.121), (flag[0] - .03, flag[1] + .293, top + 1.044),
                  (*flag, top + .990)], [(0,1,2)], [m["flower_red"]])
+    if place_castle:
+        # Place the complete fort on the sand, keeping the timber frame fixed.
+        pivot = Vector((cx, cy, top))
+        turn = Matrix.Rotation(gate_yaw, 4, "Z")
+        transform = Matrix.Translation(pivot) @ turn @ Matrix.Diagonal((*castle_scale, 1)) @ Matrix.Translation(-pivot)
+        bpy.context.view_layer.update()
+        for obj in set(bpy.context.scene.objects) - before_castle:
+            obj.matrix_world = transform @ obj.matrix_world
     bpy.ops.mesh.primitive_cone_add(vertices=18, radius1=.139, radius2=.183,
                                    depth=.254, location=(x + 1.13, y - .886, top + .122))
     current_object("Upside-down bucket mold", m["flower_red"])
@@ -212,10 +222,7 @@ def neighborhood(m):
         puff("Trimmed border shrubs", (x,y,height*.40), (1.31,.63,height*.66), m["leaf_mid"])
 
 
-def build_scene(samples):
-    scene = new_scene(samples, bounces=3, exposure=-.14)
-    scene.view_settings.view_transform = "Standard"
-    scene.cycles.adaptive_threshold = .049
+def window_yard_materials():
     m = yard_materials()
     swatches = {
         "sandbox_wood": ("ad8354","be9466",4),
@@ -237,6 +244,14 @@ def build_scene(samples):
         "neighbor_gray_roof": ("626967",),
     }
     m.update({name: material(name, *values) for name, values in swatches.items()})
+    return m
+
+
+def build_scene(samples):
+    scene = new_scene(samples, bounces=3, exposure=-.14)
+    scene.view_settings.view_transform = "Standard"
+    scene.cycles.adaptive_threshold = .049
+    m = window_yard_materials()
     summer_sky(scene)
     grass(m, paving=DRIVEWAY)
     fencing(m, front_open_at=5.79)

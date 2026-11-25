@@ -94,8 +94,9 @@ Left/Right, or Jump to cycle tabs. Keys 1, 2, and 3 open **Upgrades**,
 **Resupply**, and **Weapons** respectively. Press your fire binding to
 purchase or confirm **Ready**. In co-op, every player must select **Ready**.
 
-Each upgrade has four tiers. Resupply offers ammo for your current weapons and
-hand grenades for quick throws. Prices scale with the amount you can carry.
+Each upgrade has four tiers. Resupply offers ammo for your current weapons,
+hand grenades, and proximity mines. Each Demolition Pouch tier adds two slots
+to the capacity of each throwable. Prices scale with the amount you can carry.
 
 Weapons lists pickups placed in the completed mission that are missing from your
 inventory. Offers cost 175–250 Sprues and include a starter ammo bundle, up to
@@ -103,6 +104,14 @@ your ammo cap. Each player shops from their own balance and inventory.
 
 Map authors can place an `item_sprues` pickup with a `count` value to award the
 squad that many Sprues. The default is 20.
+
+Place `ammo_prox_mines` for a proximity mine pickup. It gives two mines by
+default. Set `count` to override the bundle. Mines stick to the surface they
+hit and arm after half a second. The detector turns red when armed and
+triggers on nearby enemies within line of sight. Use **H** and **G** on
+keyboard to cycle and throw, or **Modifier + Select** and
+**Select** on Game Bird. A standard gamepad uses **R3** to cycle and **RB**
+to throw.
 
 Run `exec quartermaster_test.cfg` for a fresh solo run or
 `exec quartermaster_test_coop.cfg` to host network co-op. For split-screen,

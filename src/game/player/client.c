@@ -436,6 +436,9 @@ ClientObituary(edict_t *self, edict_t *inflictor /* unused */,
 				case MOD_HELD_GRENADE:
 					message = "tried to put the pin back in";
 					break;
+				case MOD_PROX_MINE:
+					message = "got caught in their own mine blast";
+					break;
 				case MOD_HG_SPLASH:
 				case MOD_G_SPLASH:
 
@@ -578,6 +581,10 @@ ClientObituary(edict_t *self, edict_t *inflictor /* unused */,
 				case MOD_HG_SPLASH:
 					message = "didn't see";
 					message2 = "'s handgrenade";
+					break;
+				case MOD_PROX_MINE:
+					message = "triggered";
+					message2 = "'s proximity mine";
 					break;
 				case MOD_HELD_GRENADE:
 					message = "feels";
@@ -903,6 +910,7 @@ InitClientPersistant(gclient_t *client)
 
 	memset(&client->pers, 0, sizeof(client->pers));
 	memset(&client->quartermaster, 0, sizeof(client->quartermaster));
+	client->weapon_state.selected_throwable = AMMO_THROWABLE_GRENADE;
 
 	item = FindItem("Blaster");
 	client->pers.selected_item = ITEM_INDEX(item);
@@ -1626,6 +1634,7 @@ PutClientAtSpawn(edict_t *ent, const vec3_t origin, const vec3_t angles)
 	client_persistant_t saved;
 	client_respawn_t resp;
 	quartermaster_progress_t progress;
+	pp_ammo_id_t selected_throwable;
 	qboolean recovering = Coop_IsIncapacitated(ent);
 
 	/* Choose the spawn before restoring health. */
@@ -1687,8 +1696,10 @@ PutClientAtSpawn(edict_t *ent, const vec3_t origin, const vec3_t angles)
 	/* clear everything but the persistant data */
 	saved = client->pers;
 	progress = client->quartermaster.progress;
+	selected_throwable = client->weapon_state.selected_throwable;
 	memset(client, 0, sizeof(*client));
 	client->pers = saved;
+	client->weapon_state.selected_throwable = selected_throwable;
 
 	if (client->pers.health <= 0)
 	{
@@ -2152,6 +2163,7 @@ ClientDisconnect(edict_t *ent)
 	}
 
 	gi.bprintf(PRINT_HIGH, "%s disconnected\n", ent->client->pers.netname);
+	PP_RemoveOwnedMines(ent);
 
 	/* send effect */
 	gi.WriteByte(svc_muzzleflash);

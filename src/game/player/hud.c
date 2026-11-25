@@ -480,8 +480,7 @@ G_SetStats(edict_t *ent)
 			ent->client->pers.inventory[ent->client->ammo_index];
 	}
 
-	/* Quick throws use hand grenades regardless of the current weapon. */
-	item = FindItem("Grenades");
+	item = PP_SelectedThrowable(ent->client);
 	if (item && !ent->client->resp.spectator)
 	{
 		ent->client->ps.stats[STAT_GRENADE_ICON] = gi.imageindex(item->icon);

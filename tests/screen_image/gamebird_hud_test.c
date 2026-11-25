@@ -33,7 +33,7 @@ void Draw_PicScaled(int x, int y, const char *name, float scale)
     if (!strcmp(name, "i_health")) index = 0;
     if (!strcmp(name, "i_jacketarmor")) index = 1;
     if (!strcmp(name, "a_bullets")) index = 2;
-    if (!strcmp(name, "a_grenades")) index = 3;
+    if (!strcmp(name, "a_grenades") || !strcmp(name, "a_throwable_mine")) index = 3;
     if (index >= 0) { icon_x[index] = x; icon_y[index] = y; }
 }
 
@@ -96,6 +96,11 @@ int main(void)
     assert(icon_x[1] - icon_x[0] == 80 && icon_x[2] - icon_x[1] == 80);
     assert(icon_y[0] == icon_y[1] && icon_y[1] == icon_y[2]);
     assert(icon_y[0] > 200 && icon_y[3] == 4 && icon_x[3] > 200);
+    setup(240, 240);
+    Q_strlcpy(cl.configstrings[CS_IMAGES + 4], "a_throwable_mine", MAX_QPATH);
+    cl.frame.playerstate.stats[STAT_GRENADES] = 2;
+    SCR_DrawStats();
+    assert(icon_y[3] == 4 && icon_x[3] > 200);
     /* Ammo-less pistol leaves its column empty, without a zero or flash. */
     setup(240, 240);
     cl.frame.playerstate.stats[STAT_AMMO] = -1;

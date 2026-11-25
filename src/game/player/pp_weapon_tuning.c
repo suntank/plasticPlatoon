@@ -520,20 +520,20 @@ static const pp_weapon_params_t default_weapons[WEAP_PP_MAX] = {
  * ============================================================================ */
 
 static const pp_throwable_params_t default_throwable_grenade = {
-	.speed = 650.0f,
+	.speed = 600.0f,
 	.fuse_time_sec = 2.5f,
 	.arm_delay_sec = 0.0f,
-	.damage = 120,
-	.radius = 160,
+	.damage = 125,
+	.radius = 165,
 	.bounce = true
 };
 
 static const pp_throwable_params_t default_throwable_mine = {
-	.speed = 550.0f,
+	.speed = 650.0f,
 	.fuse_time_sec = 0.0f,
-	.arm_delay_sec = 0.6f,
-	.damage = 160,
-	.radius = 200,
+	.arm_delay_sec = 0.5f,
+	.damage = 150,
+	.radius = 160,
 	.bounce = false
 };
 
@@ -899,88 +899,20 @@ PP_Weapon_UpdateBloom(edict_t *ent, pp_weapon_id_t weapon_id, float frametime)
  * THROWABLE MANAGEMENT
  * ============================================================================ */
 
-void
-PP_Throwable_Select(edict_t *ent, pp_ammo_id_t throwable_type)
+const pp_throwable_params_t *
+PP_Throwable_GetParams(pp_ammo_id_t throwable_type)
 {
-	if (!ent || !ent->client)
-	{
-		return;
-	}
-
-	/* Validate throwable type */
-	if (throwable_type != AMMO_THROWABLE_GRENADE &&
-		throwable_type != AMMO_THROWABLE_MINE &&
-		throwable_type != AMMO_THROWABLE_SATCHEL)
-	{
-		return;
-	}
-
-	ent->client->weapon_state.selected_throwable = throwable_type;
-}
-
-qboolean
-PP_Throwable_CanThrow(edict_t *ent)
-{
-	pp_client_weapon_state_t *ws;
-
-	if (!ent || !ent->client)
-	{
-		return false;
-	}
-
-	ws = &ent->client->weapon_state;
-
-	/* Check cooldown */
-	if (level.time < ws->throw_cooldown_end)
-	{
-		return false;
-	}
-
-	/* Check ammo - would need inventory access */
-	/* This will be implemented when we integrate with the inventory system */
-
-	return true;
-}
-
-void
-PP_Throwable_Throw(edict_t *ent)
-{
-	pp_client_weapon_state_t *ws;
-	const pp_throwable_params_t *params;
-
-	if (!ent || !ent->client)
-	{
-		return;
-	}
-
-	if (!PP_Throwable_CanThrow(ent))
-	{
-		return;
-	}
-
-	ws = &ent->client->weapon_state;
-
-	/* Get throwable params based on selected type */
-	switch (ws->selected_throwable)
+	switch (throwable_type)
 	{
 		case AMMO_THROWABLE_GRENADE:
-			params = &g_weapon_profile.throwable_grenade;
-			break;
+			return &g_weapon_profile.throwable_grenade;
 		case AMMO_THROWABLE_MINE:
-			params = &g_weapon_profile.throwable_mine;
-			break;
+			return &g_weapon_profile.throwable_mine;
 		case AMMO_THROWABLE_SATCHEL:
-			params = &g_weapon_profile.throwable_satchel;
-			break;
+			return &g_weapon_profile.throwable_satchel;
 		default:
-			return;
+			return NULL;
 	}
-
-	/* Set cooldown */
-	ws->throw_cooldown_end = level.time + g_weapon_profile.throw_cooldown_sec;
-
-	/* Actual throwing logic will be implemented in weapon.c */
-	/* This function sets up the state, the actual projectile spawn is elsewhere */
 }
 
 /* ============================================================================

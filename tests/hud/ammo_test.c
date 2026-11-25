@@ -6,9 +6,49 @@ static cvar_t zero;
 static int image_index(char *name)
 {
     assert(name && name[0]);
-    return !strcmp(name, PP_SPRUES_ICON) ? 2 : 1;
+    if (!strcmp(name, PP_SPRUES_ICON)) return 2;
+    if (!strcmp(name, "a_throwable_mine")) return 3;
+    return 1;
 }
 static void config_string(int index, char *value) { (void)index; (void)value; }
+
+static void test_mine_resupply(edict_t *player)
+{
+    gclient_t *client = player->client;
+    gitem_t *mines = FindItemByClassname("ammo_prox_mines");
+    assert(mines && mines->quantity == 2);
+    int index = ITEM_INDEX(mines);
+    quartermaster_t *shop = &client->quartermaster;
+    const usercmd_t release = {0}, buy = {.buttons = BUTTON_ATTACK};
+
+    Q_strlcpy(level.mapname, "pp_quartermaster_test", sizeof(level.mapname));
+    level.intermission_state = INTERMISSION_QUARTERMASTER;
+    player->inuse = client->pers.connected = true;
+    shop->progress.sprues = 500;
+    QM_Enter(player);
+    QM_Shortcut(player, "2");
+    QM_Shortcut(player, "down"); /* armor */
+    QM_Shortcut(player, "down"); /* grenades */
+    QM_Shortcut(player, "down"); /* mines */
+    QM_Input(player, &release);
+    QM_Input(player, &buy);
+    assert(shop->progress.sprues == 375 && client->pers.inventory[index] == 2);
+    assert(QM_AmmoCap(client, AMMO_PROX_MINES) == 4);
+
+    QM_Shortcut(player, "1");
+    for (int i = 0; i < QM_DEMOLITION; i++) QM_Shortcut(player, "down");
+    QM_Input(player, &release);
+    QM_Input(player, &buy);
+    assert(shop->progress.sprues == 275 && shop->progress.tier[QM_DEMOLITION] == 1);
+    assert(QM_AmmoCap(client, AMMO_PROX_MINES) == 6 && QM_AmmoCap(client, AMMO_GRENADES) == 6);
+    assert(Add_Ammo(player, mines, 99) && client->pers.inventory[index] == 6);
+
+    assert(PP_SelectedThrowable(client) == FindItem("Grenades"));
+    client->weapon_state.selected_throwable = AMMO_THROWABLE_MINE;
+    G_SetStats(player);
+    assert(client->ps.stats[STAT_GRENADES] == 6 && client->ps.stats[STAT_GRENADE_ICON] == 3);
+    puts("Mine resupply, shared Demolition Pouch upgrade, inventory cap and selected-item HUD passed");
+}
 
 int main(void)
 {
@@ -71,5 +111,6 @@ int main(void)
     assert(!client.ps.stats[STAT_SPRUES_ICON] && !client.ps.stats[STAT_SPRUES_LOW] &&
         !client.ps.stats[STAT_SPRUES_HIGH]);
     puts("Sprues HUD displays zero and full wallet balances on campaign maps");
+    test_mine_resupply(&player);
     return 0;
 }

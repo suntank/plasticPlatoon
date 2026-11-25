@@ -675,6 +675,8 @@
 {"fire_grenade", (byte *)fire_grenade},
 {"Grenade_Touch", (byte *)Grenade_Touch},
 {"Grenade_Explode", (byte *)Grenade_Explode},
+{"ProximityMine_Touch", (byte *)ProximityMine_Touch},
+{"ProximityMine_Think", (byte *)ProximityMine_Think},
 {"fire_blaster", (byte *)fire_blaster},
 {"blaster_touch", (byte *)blaster_touch},
 {"fire_shotgun", (byte *)fire_shotgun},

@@ -3,8 +3,8 @@
   "files": [
     {
       "path": "default.cfg",
-      "bytes": 1401,
-      "sha256": "b5f959d8b02bf4819b08bd21d391babf48f10ab2ec53d97b5dcf3f040cd173bb"
+      "bytes": 1451,
+      "sha256": "751ccac3f78eae150aff82b28fbf522bda75489de989230e805aa98e6f14eb13"
     },
     {
       "path": "env/bluesky1bk.png",
@@ -95,6 +95,36 @@
       "path": "env/pp_backyardup.png",
       "bytes": 62036,
       "sha256": "530c0501d79a9b9c1b4704cc10dad202313bc89f6dadd160b04045c2acb21d73"
+    },
+    {
+      "path": "env/pp_extractionbk.png",
+      "bytes": 69083,
+      "sha256": "ddeeda4af558c7a18c8dc9b86bdbcfcf13641b12abd790561c3f1f9c2b836f93"
+    },
+    {
+      "path": "env/pp_extractiondn.png",
+      "bytes": 53414,
+      "sha256": "7142b7809c6843e63a7cf1c4bfa14ead1b00f3fe657c690a1352fa2f24855d18"
+    },
+    {
+      "path": "env/pp_extractionft.png",
+      "bytes": 72900,
+      "sha256": "456eaae7a029e213e760c04c4fb2405f0b1611ec5e52297cbb0cde3f44a01837"
+    },
+    {
+      "path": "env/pp_extractionlf.png",
+      "bytes": 71669,
+      "sha256": "2bdca516281e7563c6b114b8b39964118a56c5461ff0b8cafa7f03d49360b330"
+    },
+    {
+      "path": "env/pp_extractionrt.png",
+      "bytes": 74986,
+      "sha256": "2b2678b5a052246250321ac2a168c83dd8e08348eadf4e59a4166bce9af64e2a"
+    },
+    {
+      "path": "env/pp_extractionup.png",
+      "bytes": 57154,
+      "sha256": "6bce1c6ff659cb163e2aae7e42754cbdc409955c1c63441adc8b0f1b52b7986b"
     },
     {
       "path": "env/pp_garagebk.png",
@@ -380,6 +410,11 @@
       "path": "models/items/ammo/light_bullets/tris.md2",
       "bytes": 7928,
       "sha256": "212c62ab14d998a7daa801a09184493eefb17e2b48820d38b636f8157c080ca8"
+    },
+    {
+      "path": "models/items/ammo/prox_mines/tris.md2",
+      "bytes": 7712,
+      "sha256": "bd911edfff4195c10587a63ca9c3e42700c0cf5a99a02bccfe79ce24ba66d9a2"
     },
     {
       "path": "models/items/ammo/rockets/medium/skin.png",
@@ -1110,6 +1145,21 @@
       "path": "models/objects/laser/tris.md2",
       "bytes": 1808,
       "sha256": "02ec9413dc0648af7e5fa7fda3c6b716b74bc44885d6427c20b729470ed56918"
+    },
+    {
+      "path": "models/objects/prox_mine/armed.png",
+      "bytes": 1274,
+      "sha256": "c965ffd7fa1e17c52fedc6b02a9d94f779a32ffc1563f6000de588286f9dee52"
+    },
+    {
+      "path": "models/objects/prox_mine/skin.png",
+      "bytes": 1235,
+      "sha256": "b671f02b564c906fe5090860df9c9d9a57545175bc90c2173f77860dac416d2a"
+    },
+    {
+      "path": "models/objects/prox_mine/tris.md2",
+      "bytes": 5180,
+      "sha256": "4039e4edf169ebcc513dff0d135c127a5e76904577697fa9598f4f11a702115e"
     },
     {
       "path": "models/objects/rocket/skin.png",
@@ -2170,6 +2220,11 @@
       "path": "pics/a_slugs.png",
       "bytes": 1992,
       "sha256": "4e3db0ef73e30464be40dea25edcdfaa0a14d883641bf153f0c0ab1b4f6aa3a2"
+    },
+    {
+      "path": "pics/a_throwable_mine.png",
+      "bytes": 1906,
+      "sha256": "8fc7bd554cefd911bc0a06d26a5b0056a5cee21c9c0cc20f08c41eeb4df248b7"
     },
     {
       "path": "pics/ads_blaster.png",
@@ -3320,6 +3375,11 @@
       "path": "pics/pp_qm_supply_light.jpg",
       "bytes": 19753,
       "sha256": "969c16926a119a89afe1422d7c3bc0d396c0bcdee81f3e6a5b721df99fda0d0b"
+    },
+    {
+      "path": "pics/pp_qm_supply_mines.jpg",
+      "bytes": 14195,
+      "sha256": "368198adea4c0d40152c8efce9f467469e6c3a18ad761e17f654484075768260"
     },
     {
       "path": "pics/pp_qm_supply_mortar.jpg",
@@ -5897,6 +5957,6 @@
       "sha256": "289b9b1453cf1d07f8b3a1f29b1b299152aea7978ead935faae241c71e55f200"
     }
   ],
-  "archive_sha256": "32fe3bd4c1d8329b80b4cd3fba185767934af5b5e6d6dc14e7ce8375cc3c8e6c",
-  "archive_bytes": 66745253
+  "archive_sha256": "ae97cb2255d40db81005de5c172b637cd96f6a457f9623d1cc457d37ca32587c",
+  "archive_bytes": 67168168
 }

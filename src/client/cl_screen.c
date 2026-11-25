@@ -1552,7 +1552,7 @@ SCR_DrawGrenadeHUD(const player_state_t *ps, int right, int y, float scale)
 
 	/* Other game modules may use this stat slot for a different purpose. */
 	icon = cl.configstrings[CS_IMAGES + index];
-	if (strcmp(icon, "a_grenades"))
+	if (strcmp(icon, "a_grenades") && strncmp(icon, "a_throwable_", sizeof("a_throwable_") - 1))
 	{
 		return;
 	}

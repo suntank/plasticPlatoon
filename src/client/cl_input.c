@@ -72,6 +72,7 @@ kbutton_t in_strafe;
 /* Separate buttons let a held D-pad change modes without rebinding keys or
  * losing the release that belongs to its original press. */
 static kbutton_t in_gb_up, in_gb_down, in_gb_left, in_gb_right, in_gb_modifier;
+static kbutton_t in_gb_grenade;
 static qboolean gb_crouched;
 
 static int in_impulse;
@@ -398,6 +399,7 @@ CL_ReleaseGameBirdKeys(void)
 	memset(&in_gb_left, 0, sizeof(in_gb_left));
 	memset(&in_gb_right, 0, sizeof(in_gb_right));
 	memset(&in_gb_modifier, 0, sizeof(in_gb_modifier));
+	memset(&in_gb_grenade, 0, sizeof(in_gb_grenade));
 }
 
 void
@@ -413,6 +415,18 @@ static void IN_GameBirdLeftUp(void) { KeyUp(&in_gb_left); }
 static void IN_GameBirdRightUp(void) { KeyUp(&in_gb_right); }
 static void IN_GameBirdModifierDown(void) { KeyDown(&in_gb_modifier); }
 static void IN_GameBirdModifierUp(void) { KeyUp(&in_gb_modifier); }
+static void IN_GameBirdGrenadeUp(void) { KeyUp(&in_gb_grenade); }
+
+static void
+IN_GameBirdGrenadeDown(void)
+{
+	qboolean held = (in_gb_grenade.state & 1) != 0;
+	KeyDown(&in_gb_grenade);
+	if (!held)
+	{
+		Cbuf_AddText((in_gb_modifier.state & 1) ? "cyclegrenade\n" : "quickgrenade\n");
+	}
+}
 
 static void
 IN_GameBirdUpDown(void)
@@ -778,6 +792,8 @@ CL_InitInput(void)
 	Cmd_AddCommand("-gb_right", IN_GameBirdRightUp);
 	Cmd_AddCommand("+gb_modifier", IN_GameBirdModifierDown);
 	Cmd_AddCommand("-gb_modifier", IN_GameBirdModifierUp);
+	Cmd_AddCommand("+gb_grenade", IN_GameBirdGrenadeDown);
+	Cmd_AddCommand("-gb_grenade", IN_GameBirdGrenadeUp);
 	CL_MFlashTune_RegisterCommands();
 
 	cl_nodelta = Cvar_Get("cl_nodelta", "0", 0);
@@ -857,6 +873,19 @@ CL_InitInput(void)
 			}
 		}
 		Cvar_Set("pp_controller_bindings", "2");
+	}
+
+	if (Cvar_Get("pp_controller_bindings", "0", CVAR_ARCHIVE)->value < 3)
+	{
+		if (!keybindings[K_STICK_RIGHT] || !keybindings[K_STICK_RIGHT][0])
+		{
+			Key_SetBinding(K_STICK_RIGHT, (char *)"cyclegrenade");
+		}
+		if (!keybindings[(int)'h'] || !keybindings[(int)'h'][0])
+		{
+			Key_SetBinding((int)'h', (char *)"cyclegrenade");
+		}
+		Cvar_Set("pp_controller_bindings", "3");
 	}
 }
 

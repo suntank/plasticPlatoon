@@ -1807,73 +1807,128 @@ Cmd_PrefWeap_f(edict_t *ent)
 	}
 }
 
-/*
- * Quick grenade throw - Modern Warfare style
- * Instantly throws a grenade without switching weapons
- */
-void
-Cmd_QuickGrenade_f(edict_t *ent)
+static qboolean
+ThrowFrag(edict_t *ent, vec3_t start, vec3_t aimdir, const pp_throwable_params_t *params, int damage)
 {
-	gitem_t *grenade_item;
-	int grenade_index;
+	fire_grenade2(ent, start, aimdir, damage, params->speed, params->fuse_time_sec, params->radius, false);
+	return true;
+}
+
+typedef struct
+{
+	const char *classname;
+	int tag;
+	pp_ammo_id_t ammo_id;
+	qboolean (*throw)(edict_t *, vec3_t, vec3_t, const pp_throwable_params_t *, int);
+} quick_throwable_t;
+
+static const quick_throwable_t quick_throwables[] = {
+	{"ammo_grenades", AMMO_GRENADES, AMMO_THROWABLE_GRENADE, ThrowFrag},
+	{"ammo_prox_mines", AMMO_PROX_MINES, AMMO_THROWABLE_MINE, fire_proximity_mine}
+};
+
+static int
+QuickThrowableIndex(const gclient_t *client)
+{
+	for (int i = 0; i < ARRLEN(quick_throwables); i++)
+	{
+		if (quick_throwables[i].ammo_id == client->weapon_state.selected_throwable)
+		{
+			return i;
+		}
+	}
+	return 0;
+}
+
+gitem_t *
+PP_SelectedThrowable(const gclient_t *client)
+{
+	return FindItemByClassname(quick_throwables[QuickThrowableIndex(client)].classname);
+}
+
+static void
+Cmd_CycleGrenade_f(edict_t *ent)
+{
+	gclient_t *client = ent->client;
+	int selected = QuickThrowableIndex(client);
+
+	if (ent->health <= 0 || client->resp.spectator)
+	{
+		return;
+	}
+
+	for (int step = 1; step <= ARRLEN(quick_throwables); step++)
+	{
+		int index = (selected + step) % ARRLEN(quick_throwables);
+		gitem_t *item = FindItemByClassname(quick_throwables[index].classname);
+
+		if (item && client->pers.inventory[ITEM_INDEX(item)] > 0)
+		{
+			client->weapon_state.selected_throwable = quick_throwables[index].ammo_id;
+			return;
+		}
+	}
+	gi.cprintf(ent, PRINT_HIGH, "No throwables available\n");
+}
+
+void
+PP_ThrowQuickGrenade(edict_t *ent, const gitem_t *item)
+{
+	const quick_throwable_t *type = NULL;
+	const pp_throwable_params_t *params;
+	int index;
+	int damage;
+	qboolean quad;
 	vec3_t offset;
 	vec3_t forward, right;
 	vec3_t start;
-	int damage = 125;
-	float radius;
-	float timer = 2.5; /* 2.5 second fuse */
-	int speed = 600;   /* Medium-fast throw */
 
-	if (!ent || !ent->client)
+	if (!item || ent->health <= 0 || ent->client->resp.spectator)
 	{
 		return;
 	}
 
-	/* Can't throw if dead */
-	if (ent->health <= 0)
+	for (int i = 0; i < ARRLEN(quick_throwables); i++)
+	{
+		if (item->tag == quick_throwables[i].tag)
+		{
+			type = &quick_throwables[i];
+			break;
+		}
+	}
+
+	if (!type)
 	{
 		return;
 	}
+	params = PP_Throwable_GetParams(type->ammo_id);
 
-	/* Find grenades in inventory */
-	grenade_item = FindItem("Grenades");
-
-	if (!grenade_item)
+	index = ITEM_INDEX(item);
+	if (ent->client->pers.inventory[index] < 1)
 	{
+		gi.cprintf(ent, PRINT_HIGH, "Out of %s\n", item->pickup_name);
 		return;
 	}
 
-	grenade_index = ITEM_INDEX(grenade_item);
+	quad = ent->client->quad_framenum > level.framenum;
+	damage = quad ? params->damage * 4 : params->damage;
 
-	/* Check if player has grenades */
-	if (ent->client->pers.inventory[grenade_index] < 1)
-	{
-		gi.cprintf(ent, PRINT_HIGH, "No grenades!\n");
-		return;
-	}
-
-	/* Calculate throw parameters */
-	radius = damage + 40;
-
-	/* Quad damage boost */
-	if (ent->client->quad_framenum > level.framenum)
-	{
-		damage *= 4;
-		gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage3.wav"), 1, ATTN_NORM, 0);
-	}
-
-	/* Get throw direction and position */
 	VectorSet(offset, 8, 8, ent->viewheight - 8);
 	AngleVectors(ent->client->v_angle, forward, right, NULL);
 	G_ProjectSource(ent->s.origin, offset, forward, right, start);
 
-	/* Fire the grenade */
-	fire_grenade2(ent, start, forward, damage, speed, timer, radius, false);
+	if (!type->throw(ent, start, forward, params, damage))
+	{
+		return;
+	}
+	if (quad)
+	{
+		gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage3.wav"), 1, ATTN_NORM, 0);
+	}
 
-	/* Consume ammo */
 	if (!((int)dmflags->value & DF_INFINITE_AMMO))
 	{
-		ent->client->pers.inventory[grenade_index]--;
+		ent->client->pers.inventory[index]--;
 	}
 
 	/* Play throw animation on player model */
@@ -2071,7 +2126,11 @@ ClientCommand(edict_t *ent)
 	}
 	else if (Q_stricmp(cmd, "quickgrenade") == 0)
 	{
-		Cmd_QuickGrenade_f(ent);
+		PP_ThrowQuickGrenade(ent, PP_SelectedThrowable(ent->client));
+	}
+	else if (Q_stricmp(cmd, "cyclegrenade") == 0)
+	{
+		Cmd_CycleGrenade_f(ent);
 	}
 	else /* anything that doesn't match a command will be a chat */
 	{

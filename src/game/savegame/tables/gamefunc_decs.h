@@ -676,6 +676,8 @@ extern void fire_grenade2 ( edict_t * self , vec3_t start , vec3_t aimdir , int 
 extern void fire_grenade ( edict_t * self , vec3_t start , vec3_t aimdir , int damage , int speed , float timer , float damage_radius ) ;
 extern void Grenade_Touch ( edict_t * ent , edict_t * other , cplane_t * plane , csurface_t * surf ) ;
 extern void Grenade_Explode ( edict_t * ent ) ;
+extern void ProximityMine_Touch(edict_t *mine, edict_t *other, cplane_t *plane, csurface_t *surface);
+extern void ProximityMine_Think(edict_t *mine);
 extern void fire_blaster ( edict_t * self , vec3_t start , vec3_t dir , int damage , int speed , int effect , qboolean hyper ) ;
 extern void blaster_touch ( edict_t * self , edict_t * other , cplane_t * plane , csurface_t * surf ) ;
 extern void fire_shotgun ( edict_t * self , vec3_t start , vec3_t aimdir , int damage , int kick , int hspread , int vspread , int count , int mod ) ;

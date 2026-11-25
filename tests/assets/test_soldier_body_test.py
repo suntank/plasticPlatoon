@@ -49,6 +49,6 @@ class SoldierTrialTests(unittest.TestCase):
         self.assertIn('IT_AMMO,',grenade);self.assertNotIn('IT_WEAPON',grenade)
         weapon=(ROOT/'src/game/player/weapon.c').read_text()
         self.assertIn('if (item->weapmodel == WEAP_GRENADES)',weapon)
-        self.assertIn('Cmd_QuickGrenade_f(ent);',weapon)
+        self.assertIn('PP_ThrowQuickGrenade(ent, item);',weapon)
 
 if __name__=='__main__':unittest.main()

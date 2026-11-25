@@ -997,6 +997,7 @@ char *bindnames[][2] =
 	{"+attack", "attack"},
 	{"+ads", "aim down sights"},
 	{"quickgrenade", "quick grenade"},
+	{"cyclegrenade", "cycle throwables"},
 	{"weapnext", "next weapon"},
 	{"weapprev", "previous weapon"},
 	{"+forward", "walk forward"},
@@ -1524,6 +1525,8 @@ GamepadMenu_StatusPrompt(menuframework_s *m)
 char *controller_bindnames[][2] =
 {
 	{"+attack", "attack"},
+	{"quickgrenade", "quick grenade"},
+	{"cyclegrenade", "cycle throwables"},
 	{"+moveup", "up / jump"},
 	{"+movedown", "down / crouch"},
 	{"weapnext", "next weapon"},
@@ -1707,6 +1710,8 @@ M_Menu_ControllerButtons_f(void)
 
 char *controller_alt_bindnames[][2] =
 {
+	{"quickgrenade", "quick grenade"},
+	{"cyclegrenade", "cycle throwables"},
 	{"weapnext", "next weapon"},
 	{"weapprev", "previous weapon"},
 	{"cycleweap weapon_plasmabeam weapon_boomer weapon_chaingun weapon_etf_rifle"

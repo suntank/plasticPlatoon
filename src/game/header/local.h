@@ -112,8 +112,12 @@ typedef enum
 	AMMO_SLUGS,
 	AMMO_GL_ROUNDS,
 	AMMO_LIGHT_BULLETS,
-	AMMO_MORTAR
+	AMMO_MORTAR,
+	AMMO_PROX_MINES
 } ammo_t;
+
+#define PP_PROX_MINE_PICKUP "models/items/ammo/prox_mines/tris.md2"
+#define PP_PROX_MINE_MODEL "models/objects/prox_mine/tris.md2"
 
 /* Plastic Platoon ammo types are defined in pp_weapon_tuning.h */
 /* pp_ammo_id_t provides the new ammo system */
@@ -511,6 +515,7 @@ extern int gibsthisframe;
 #define MOD_BURNING 36
 #define MOD_KNIFE 37
 #define MOD_THUNDERHEAD 38
+#define MOD_PROX_MINE 39
 #define MOD_FRIENDLY_FIRE 0x8000000
 
 /* Easier handling of AI skill levels */
@@ -642,7 +647,8 @@ void Soldier_RefreshDimensions(edict_t *ent);
 /* g_cmds.c */
 void Cmd_Help_f(edict_t *ent);
 void ClientCommand(edict_t *ent);
-void Cmd_QuickGrenade_f(edict_t *ent);
+gitem_t *PP_SelectedThrowable(const gclient_t *client);
+void PP_ThrowQuickGrenade(edict_t *ent, const gitem_t *item);
 
 /* g_items.c */
 void PrecacheItem(gitem_t *it);
@@ -788,6 +794,9 @@ void fire_grenade(edict_t *self, vec3_t start, vec3_t aimdir, int damage,
 		int speed, float timer, float damage_radius);
 void fire_grenade2(edict_t *self, vec3_t start, vec3_t aimdir, int damage,
 		int speed, float timer, float damage_radius, qboolean held);
+qboolean fire_proximity_mine(edict_t *self, vec3_t start, vec3_t aimdir,
+		const pp_throwable_params_t *params, int damage);
+void PP_RemoveOwnedMines(edict_t *owner);
 void fire_mortar(edict_t *self, vec3_t start, vec3_t aimdir, int damage,
 		int speed, float timer, float damage_radius);
 void fire_rocket(edict_t *self, vec3_t start, vec3_t dir, int damage,

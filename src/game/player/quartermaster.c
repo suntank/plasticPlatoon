@@ -37,6 +37,7 @@ static const quartermaster_ammo_t ammo_stock[] = {
 	{"Sniper Rounds", "Sniper", "sniper", AMMO_SLUGS, QM_BANDOLIER, 15, 5, 65},
 	{"GL Ammo", "40mm", "gl", AMMO_GL_ROUNDS, QM_ORDNANCE, 30, 5, 90},
 	{"Grenades", "Grenades", "grenades", AMMO_GRENADES, QM_DEMOLITION, 4, 2, 110},
+	{"Proximity Mines", "Mines", "mines", AMMO_PROX_MINES, QM_DEMOLITION, 4, 2, 125},
 	{"Rockets", "Rockets", "rockets", AMMO_ROCKETS, QM_ORDNANCE, 30, 3, 180},
 	{"Napalm", "Napalm", "napalm", AMMO_CELLS, QM_ORDNANCE, 100, 0, 225},
 	{"Mortar Rounds", "Mortar", "mortar", AMMO_MORTAR, QM_ORDNANCE, 6, 1, 300}
@@ -423,8 +424,8 @@ QM_ResupplyRows(const edict_t *ent, int *refills)
 
 	for (int i = 0; i < ARRLEN(ammo_stock); i++)
 	{
-		/* The quick-grenade binding works with any loadout. */
-		if (available[i] || ammo_stock[i].tag == AMMO_GRENADES)
+		/* Throwables can be used with any loadout. */
+		if (available[i] || ammo_stock[i].upgrade == QM_DEMOLITION)
 		{
 			refills[rows++] = i + 2;
 		}

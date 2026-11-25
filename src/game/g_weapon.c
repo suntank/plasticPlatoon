@@ -667,16 +667,11 @@ fire_blaster(edict_t *self, vec3_t start, vec3_t dir, int damage,
 	}
 }
 
-void
-Grenade_Explode(edict_t *ent)
+static void
+Grenade_Blast(edict_t *ent, int direct_mod, int splash_mod)
 {
 	vec3_t origin;
-	int mod;
-
-	if (!ent)
-	{
-		return;
-	}
+	qboolean surface_blast = ent->groundentity || splash_mod == MOD_PROX_MINE;
 
 	if (ent->owner && ent->owner->client)
 	{
@@ -695,40 +690,18 @@ Grenade_Explode(edict_t *ent)
 		points = ent->dmg - 0.5 * VectorLength(v);
 		VectorSubtract(ent->enemy->s.origin, ent->s.origin, dir);
 
-		if (ent->spawnflags & 1)
-		{
-			mod = MOD_HANDGRENADE;
-		}
-		else
-		{
-			mod = MOD_GRENADE;
-		}
-
 		T_Damage(ent->enemy, ent, ent->owner, dir, ent->s.origin, vec3_origin,
-				(int)points, (int)points, DAMAGE_RADIUS, mod);
+				(int)points, (int)points, DAMAGE_RADIUS, direct_mod);
 	}
 
-	if (ent->spawnflags & 2)
-	{
-		mod = MOD_HELD_GRENADE;
-	}
-	else if (ent->spawnflags & 1)
-	{
-		mod = MOD_HG_SPLASH;
-	}
-	else
-	{
-		mod = MOD_G_SPLASH;
-	}
-
-	T_RadiusDamage(ent, ent->owner, ent->dmg, ent->enemy, ent->dmg_radius, mod);
+	T_RadiusDamage(ent, ent->owner, ent->dmg, ent->enemy, ent->dmg_radius, splash_mod);
 
 	VectorMA(ent->s.origin, -0.02, ent->velocity, origin);
 	gi.WriteByte(svc_temp_entity);
 
 	if (ent->waterlevel)
 	{
-		if (ent->groundentity)
+		if (surface_blast)
 		{
 			gi.WriteByte(TE_GRENADE_EXPLOSION_WATER);
 		}
@@ -739,7 +712,7 @@ Grenade_Explode(edict_t *ent)
 	}
 	else
 	{
-		if (ent->groundentity)
+		if (surface_blast)
 		{
 			gi.WriteByte(TE_GRENADE_EXPLOSION);
 		}
@@ -753,6 +726,17 @@ Grenade_Explode(edict_t *ent)
 	gi.multicast(ent->s.origin, MULTICAST_PHS);
 
 	G_FreeEdict(ent);
+}
+
+void
+Grenade_Explode(edict_t *ent)
+{
+	if (ent)
+	{
+		qboolean hand = (ent->spawnflags & 1) != 0;
+		Grenade_Blast(ent, hand ? MOD_HANDGRENADE : MOD_GRENADE,
+			(ent->spawnflags & 2) ? MOD_HELD_GRENADE : (hand ? MOD_HG_SPLASH : MOD_G_SPLASH));
+	}
 }
 
 void
@@ -900,6 +884,213 @@ fire_grenade2(edict_t *self, vec3_t start, vec3_t aimdir, int damage,
 		gi.sound(self, CHAN_WEAPON, gi.soundindex(
 						"weapons/hgrent1a.wav"), 1, ATTN_NORM, 0);
 		gi.linkentity(grenade);
+	}
+}
+
+#define PROX_MINE_TRIGGER_RADIUS 108.0f
+
+static qboolean
+ProximityMine_Hostile(const edict_t *mine, edict_t *target)
+{
+	if (!target->inuse || target == mine->owner || target->health <= 0 ||
+		!target->takedamage)
+	{
+		return false;
+	}
+
+	if (target->client)
+	{
+		return deathmatch->value && !target->client->resp.spectator &&
+			!OnSameTeam(mine->owner, target);
+	}
+
+	return (target->svflags & SVF_MONSTER) && !(target->monsterinfo.aiflags & AI_GOOD_GUY);
+}
+
+static qboolean
+ProximityMine_UpdateMount(edict_t *mine)
+{
+	edict_t *surface = mine->target_ent;
+	vec3_t forward, right, up, normal;
+
+	if (!surface)
+	{
+		return true;
+	}
+	if (!surface->inuse || surface->solid != SOLID_BSP || surface->s.modelindex != mine->count)
+	{
+		return false;
+	}
+
+	AngleVectors(surface->s.angles, forward, right, up);
+	VectorCopy(surface->s.origin, mine->s.origin);
+	VectorMA(mine->s.origin, mine->pos1[0], forward, mine->s.origin);
+	VectorMA(mine->s.origin, mine->pos1[1], right, mine->s.origin);
+	VectorMA(mine->s.origin, mine->pos1[2], up, mine->s.origin);
+	VectorScale(forward, mine->pos2[0], normal);
+	VectorMA(normal, mine->pos2[1], right, normal);
+	VectorMA(normal, mine->pos2[2], up, normal);
+	vectoangles(normal, mine->s.angles);
+	gi.linkentity(mine);
+	return true;
+}
+
+void
+ProximityMine_Think(edict_t *mine)
+{
+	edict_t *nearby[MAX_EDICTS];
+	vec3_t mins, maxs;
+	int count;
+
+	if (!mine->owner || !mine->owner->inuse || !ProximityMine_UpdateMount(mine))
+	{
+		G_FreeEdict(mine);
+		return;
+	}
+
+	mine->nextthink = level.time + FRAMETIME;
+	if (level.time < mine->delay)
+	{
+		return;
+	}
+
+	/* The second model skin lights the detector when the mine is armed. */
+	mine->s.skinnum = 1;
+	for (int i = 0; i < 3; i++)
+	{
+		mins[i] = mine->s.origin[i] - PROX_MINE_TRIGGER_RADIUS;
+		maxs[i] = mine->s.origin[i] + PROX_MINE_TRIGGER_RADIUS;
+	}
+	count = gi.BoxEdicts(mins, maxs, nearby, ARRLEN(nearby), AREA_SOLID);
+	for (int i = 0; i < count; i++)
+	{
+		edict_t *target = nearby[i];
+		vec3_t offset;
+
+		if (!ProximityMine_Hostile(mine, target))
+		{
+			continue;
+		}
+		VectorAdd(target->mins, target->maxs, offset);
+		VectorMA(target->s.origin, 0.5f, offset, offset);
+		VectorSubtract(offset, mine->s.origin, offset);
+		if (DotProduct(offset, offset) <= PROX_MINE_TRIGGER_RADIUS * PROX_MINE_TRIGGER_RADIUS &&
+			CanDamage(target, mine))
+		{
+			mine->waterlevel = (gi.pointcontents(mine->s.origin) & MASK_WATER) != 0;
+			Grenade_Blast(mine, MOD_PROX_MINE, MOD_PROX_MINE);
+			return;
+		}
+	}
+}
+
+void
+ProximityMine_Touch(edict_t *mine, edict_t *other, cplane_t *plane, csurface_t *surface)
+{
+	if (surface && (surface->flags & SURF_SKY))
+	{
+		G_FreeEdict(mine);
+		return;
+	}
+	if (!plane || VectorCompare(plane->normal, vec3_origin) || other == mine->owner)
+	{
+		return;
+	}
+
+	/* The model's mounting face is perpendicular to local X. Leave a little
+	 * clearance so the detector and the blast traces start outside the brush. */
+	VectorMA(mine->s.origin, 0.5f, plane->normal, mine->s.origin);
+	vectoangles(plane->normal, mine->s.angles);
+	VectorClear(mine->velocity);
+	VectorClear(mine->avelocity);
+	mine->movetype = MOVETYPE_NONE;
+	mine->solid = SOLID_NOT;
+	mine->touch = NULL;
+	mine->delay = level.time + mine->wait;
+	mine->nextthink = level.time + FRAMETIME;
+	mine->think = ProximityMine_Think;
+
+	if (other && other != g_edicts && other->solid == SOLID_BSP)
+	{
+		vec3_t forward, right, up, offset;
+
+		mine->target_ent = other;
+		mine->count = other->s.modelindex;
+		AngleVectors(other->s.angles, forward, right, up);
+		VectorSubtract(mine->s.origin, other->s.origin, offset);
+		VectorSet(mine->pos1, DotProduct(offset, forward), DotProduct(offset, right),
+			DotProduct(offset, up));
+		VectorSet(mine->pos2, DotProduct(plane->normal, forward), DotProduct(plane->normal, right),
+			DotProduct(plane->normal, up));
+	}
+
+	gi.linkentity(mine);
+	gi.sound(mine, CHAN_VOICE, gi.soundindex("weapons/hgrenb1a.wav"), 1, ATTN_NORM, 0);
+}
+
+qboolean
+fire_proximity_mine(edict_t *owner, vec3_t start, vec3_t aimdir,
+		const pp_throwable_params_t *params, int damage)
+{
+	vec3_t eye;
+	trace_t trace;
+	edict_t *mine;
+
+	VectorCopy(owner->s.origin, eye);
+	eye[2] += owner->viewheight;
+	trace = gi.trace(eye, NULL, NULL, start, owner, MASK_SOLID);
+	if (trace.startsolid)
+	{
+		return false;
+	}
+
+	mine = G_SpawnOptional();
+	if (!mine)
+	{
+		return false;
+	}
+
+	mine->classname = "proximity_mine";
+	mine->owner = owner;
+	mine->dmg = damage;
+	mine->dmg_radius = params->radius;
+	mine->wait = params->arm_delay_sec;
+	mine->s.modelindex = gi.modelindex(PP_PROX_MINE_MODEL);
+	mine->solid = SOLID_BBOX;
+	mine->movetype = MOVETYPE_TOSS;
+	mine->clipmask = MASK_SOLID;
+	mine->touch = ProximityMine_Touch;
+	mine->think = G_FreeEdict;
+	mine->nextthink = level.time + 8.0f;
+	VectorCopy(trace.endpos, mine->s.origin);
+	VectorCopy(trace.endpos, mine->s.old_origin);
+	VectorScale(aimdir, params->speed, mine->velocity);
+	mine->velocity[2] += 140;
+	VectorSet(mine->avelocity, 480, 120, 240);
+	gi.sound(owner, CHAN_WEAPON, gi.soundindex("weapons/hgrent1a.wav"), 1, ATTN_NORM, 0);
+
+	if (trace.fraction < 1.0f)
+	{
+		ProximityMine_Touch(mine, trace.ent, &trace.plane, trace.surface);
+	}
+	else
+	{
+		gi.linkentity(mine);
+	}
+	return true;
+}
+
+void
+PP_RemoveOwnedMines(edict_t *owner)
+{
+	edict_t *mine = NULL;
+
+	while ((mine = G_Find(mine, FOFS(classname), "proximity_mine")) != NULL)
+	{
+		if (mine->owner == owner)
+		{
+			G_FreeEdict(mine);
+		}
 	}
 }
 

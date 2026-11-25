@@ -100,6 +100,7 @@ typedef struct
 	qboolean gb_left_down;
 	qboolean gb_right_down;
 	qboolean gb_modifier_down;
+	qboolean gb_grenade_down;
 	qboolean gb_crouched;
 	pp_ads_level_t gb_autolevel;
 	qboolean ads_active;

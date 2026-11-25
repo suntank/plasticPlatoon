@@ -39,13 +39,15 @@ class ControllerMigrationTest(unittest.TestCase):
             self.assertIn('"TRIG_LEFT" = "+ads"', output)
             self.assertIn('"SHOULDR_RIGHT" = "quickgrenade"', output)
             saved = config.read_text()
-            self.assertIn('set pp_controller_bindings "2"', saved)
+            self.assertIn('set pp_controller_bindings "3"', saved)
             self.assertIn('bind TRIG_RIGHT "+attack"', saved)
+            self.assertIn('bind h "cyclegrenade"', saved)
             for key, command in {
                 'TRIG_RIGHT': '+attack', 'BTN_SOUTH': '+moveup',
                 'BTN_EAST': '+movedown', 'BTN_WEST': '+use',
                 'BTN_NORTH': 'quickgrenade', 'SHOULDR_LEFT': 'weapprev',
-                'STICK_LEFT': '+speed', 'DP_UP': 'invuse', 'DP_DOWN': 'inven',
+                'STICK_LEFT': '+speed', 'STICK_RIGHT': 'cyclegrenade',
+                'DP_UP': 'invuse', 'DP_DOWN': 'inven',
                 'DP_LEFT': 'weapprev', 'DP_RIGHT': 'weapnext', 'BTN_BACK': 'score',
             }.items():
                 self.assertIn(f'bind {key} "{command}"', saved)
@@ -77,10 +79,14 @@ class ControllerMigrationTest(unittest.TestCase):
             self.assertNotIn('"TRIG_LEFT" = "+ads"', output)
             # An existing custom layout is also preserved on first upgrade.
             config.write_text('unbindall\nbind TRIG_LEFT "+moveup"\n'
-                              'bind SHOULDR_RIGHT "+moveright"\n')
+                              'bind SHOULDR_RIGHT "+moveright"\n'
+                              'bind STICK_RIGHT "+movedown"\nbind h "help"\n')
             output = launch()
             self.assertIn('"TRIG_LEFT" = "+moveup"', output)
             self.assertIn('"SHOULDR_RIGHT" = "+moveright"', output)
+            saved = config.read_text()
+            self.assertIn('bind STICK_RIGHT "+movedown"', saved)
+            self.assertIn('bind h "help"', saved)
 
 
 if __name__ == '__main__':

@@ -324,10 +324,7 @@ float PP_Weapon_GetMoveSpeedScale(edict_t *ent, pp_weapon_id_t weapon_id);
 void PP_Weapon_AddBloom(edict_t *ent, pp_weapon_id_t weapon_id);
 void PP_Weapon_UpdateBloom(edict_t *ent, pp_weapon_id_t weapon_id, float frametime);
 
-/* Throwable management */
-void PP_Throwable_Select(edict_t *ent, pp_ammo_id_t throwable_type);
-void PP_Throwable_Throw(edict_t *ent);
-qboolean PP_Throwable_CanThrow(edict_t *ent);
+const pp_throwable_params_t *PP_Throwable_GetParams(pp_ammo_id_t throwable_type);
 
 /* Utility */
 pp_weapon_id_t PP_Weapon_FromQ2Weapon(int q2_weapmodel);

@@ -7,7 +7,11 @@ static int event_gamepad, loopback_slot, sent_slot, transmitted;
 static char sent_command[128];
 client_static_t cls;
 client_state_t cl;
+server_static_t svs;
+server_t sv;
 char *keybindings[K_LAST];
+static cvar_t no_server_clients;
+cvar_t *maxclients = &no_server_clients;
 static cvar_t move_speed = {.value = 200}, turn_speed = {.value = 140};
 static cvar_t pitch_speed = {.value = 150}, run = {.value = 1}, light = {.value = 128};
 static float pad_pitch_speed = 120, pad_yaw_speed = 160, pad_deadzone = 0.16f;
@@ -37,6 +41,9 @@ void Com_Printf(const char *fmt, ...) {}
 void Com_Error(int code, const char *fmt, ...) { abort(); }
 void Z_Free(void *ptr) { ++freed_entities; free(ptr); }
 int Key_GetEventGamepadIndex(void) { return event_gamepad; }
+const char *Key_QuartermasterCommand(int key) { return NULL; }
+void SCR_QuartermasterInput(int slot, const player_state_t *ps, usercmd_t *cmd) {}
+qboolean NET_CompareAdr(netadr_t a, netadr_t b) { return false; }
 int NET_GetLoopbackSlot(netsrc_t sock) { return loopback_slot; }
 void NET_SetLoopbackSlot(netsrc_t sock, int slot) { loopback_slot = slot; }
 void MSG_WriteByte(sizebuf_t *buf, int value) {}
@@ -323,6 +330,18 @@ static void test_secondary_gamebird_controls(void)
 	keybindings[K_BTN_WEST] = "+gb_modifier";
 	keybindings[K_BTN_NORTH] = "+ads";
 	keybindings[K_BTN_EAST] = "+moveup";
+	keybindings[K_BTN_BACK] = "+gb_grenade";
+	before = transmitted;
+	assert(SS_HandleGameplayKey(K_BTN_BACK, true));
+	assert(transmitted == before + 1 && sent_slot == 1 && !strcmp(sent_command, "quickgrenade"));
+	assert(SS_HandleGameplayKey(K_BTN_WEST, true));
+	assert(SS_HandleGameplayKey(K_BTN_BACK, true) && transmitted == before + 1);
+	assert(SS_HandleGameplayKey(K_BTN_BACK, false));
+	assert(SS_HandleGameplayKey(K_BTN_BACK, true));
+	assert(transmitted == before + 2 && sent_slot == 1 && !strcmp(sent_command, "cyclegrenade"));
+	assert(!p1->gb_modifier_down && !p1->gb_grenade_down);
+	assert(SS_HandleGameplayKey(K_BTN_BACK, false));
+	assert(SS_HandleGameplayKey(K_BTN_WEST, false));
 	assert(SS_HandleGameplayKey(K_DPAD_UP, true));
 	assert(SS_HandleGameplayKey(K_DPAD_LEFT, true));
 	SS_BuildSlotCmd(p2);

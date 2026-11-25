@@ -760,6 +760,8 @@ LegacyAmmoCap(const gclient_t *client, int tag)
 			return client->pers.max_rockets;
 		case AMMO_GRENADES:
 			return client->pers.max_grenades;
+		case AMMO_PROX_MINES:
+			return PP_Weapon_GetAmmoCap(AMMO_THROWABLE_MINE);
 		case AMMO_CELLS:
 			return client->pers.max_cells;
 		case AMMO_SLUGS:
@@ -1683,6 +1685,7 @@ PrecacheAddedWeapons(void)
 	gitem_t *smg = FindItem("SMG");
 	gitem_t *thunderhead = FindItem("Thunderhead");
 	gitem_t *light_bullets = FindItem("Light Bullets");
+	gitem_t *mines = FindItemByClassname("ammo_prox_mines");
 
 	gi.configstring(CS_ITEMS + ITEM_INDEX(knife), knife->pickup_name);
 	PrecacheItem(knife);
@@ -1691,6 +1694,8 @@ PrecacheAddedWeapons(void)
 	gi.configstring(CS_ITEMS + ITEM_INDEX(thunderhead), thunderhead->pickup_name);
 	PrecacheItem(thunderhead);
 	gi.configstring(CS_ITEMS + ITEM_INDEX(light_bullets), light_bullets->pickup_name);
+	gi.configstring(CS_ITEMS + ITEM_INDEX(mines), mines->pickup_name);
+	PrecacheItem(mines);
 
 	if (coop->value || deathmatch->value)
 	{
@@ -2879,6 +2884,29 @@ static const gitem_t gameitemlist[] = {
 		NULL,
 		0,
 		""
+	},
+
+	/* QUAKED ammo_prox_mines (.3 .3 1) (-16 -16 -16) (16 16 16)
+	   Proximity mines for the quick-throw slot. "count" overrides the default of 2. */
+	{
+		"ammo_prox_mines",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		PP_PROX_MINE_PICKUP, EF_ROTATE,
+		NULL,
+		"a_throwable_mine",
+		"Proximity Mines",
+		2,
+		2,
+		NULL,
+		IT_AMMO,
+		0,
+		NULL,
+		AMMO_PROX_MINES,
+		PP_PROX_MINE_MODEL " weapons/hgrent1a.wav weapons/hgrenb1a.wav"
 	},
 
 	/* end of list marker */

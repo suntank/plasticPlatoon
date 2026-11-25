@@ -99,12 +99,13 @@ shell's exclusive controller grab before executing the game.
 | SDL A | Fire |
 | SDL B | Jump |
 | Physical north (SDL X / west) | Hold to aim down sights |
-| Physical east (SDL Y / north) | Hold for weapon/crouch/help controls |
+| Physical east (SDL Y / north) | Modifier |
 | Modifier + D-pad left/right | Previous/next weapon |
 | Modifier + D-pad down | Toggle crouch |
 | Modifier + D-pad up | Toggle help/objectives (F1) |
 | Hold Modifier + B | Revive a teammate when the co-op prompt appears |
-| Select | Quick grenade |
+| Modifier + Select | Cycle through carried throwables |
+| Select | Throw the selected item |
 | Start | Game menu; use Quit to return to Game Bird |
 
 Jump also ends crouching. **Options → gamepad → invert pitch** reverses
@@ -113,8 +114,10 @@ suppresses D-pad movement/looking while selecting weapons or toggling crouch.
 The native game uses SDL button names, which differ from physical positions
 on this handheld. The profile swaps ADS/modifier to match those positions.
 
-`scr_gamebird_hud 1` selects the compact handheld HUD: grenades in the upper
-right and health, armor, and ammo in three evenly spaced bottom columns.
+`scr_gamebird_hud 1` selects the compact handheld HUD. The selected throwable
+and its count appear in the upper right, with health, armor, and ammo along
+the bottom. On a full-size controller, click the right stick to cycle
+throwables. On a keyboard, use **H** to cycle and **G** to throw.
 
 ## Aiming and weapon update
 

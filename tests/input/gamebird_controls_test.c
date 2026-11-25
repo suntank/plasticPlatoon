@@ -90,6 +90,25 @@ static void reset(void)
     cls.key_dest = key_game;
 }
 
+static void test_throwable_chord(void)
+{
+    reset();
+    key(IN_GameBirdGrenadeDown, 121);
+    key(IN_GameBirdModifierDown, 120);
+    key(IN_GameBirdGrenadeDown, 121);
+    assert(!strcmp(commands, "quickgrenade\n"));
+
+    key(IN_GameBirdGrenadeUp, 121);
+    key(IN_GameBirdGrenadeDown, 121);
+    key(IN_GameBirdModifierUp, 120);
+    key(IN_GameBirdGrenadeDown, 121);
+    assert(!strcmp(commands, "quickgrenade\ncyclegrenade\n"));
+
+    CL_ReleaseGameBirdKeys();
+    key(IN_GameBirdGrenadeDown, 121);
+    assert(!strcmp(commands, "quickgrenade\ncyclegrenade\nquickgrenade\n"));
+}
+
 static void test_movement_and_aim(void)
 {
     usercmd_t cmd;
@@ -362,9 +381,10 @@ int main(void)
 {
     test_movement_and_aim();
     test_modifier_and_crouch();
+    test_throwable_chord();
     test_held_direction_and_reset();
     test_death_and_keyboard();
     test_ads_slowdown_and_linear_return();
-    puts("Game Bird movement, ADS inversion, modifier, crouch, jump and reset passed");
+    puts("Game Bird movement, ADS inversion, modifier, throwable chord, crouch, jump and reset passed");
     return 0;
 }

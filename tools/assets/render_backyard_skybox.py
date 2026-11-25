@@ -327,7 +327,7 @@ def tree_and_swing(m, *, swing_yaw=0):
         (center[0], center[1], 1.472), .061, m["rope"])
 
 
-def grass(m, *, paving=None):
+def grass(m, *, paving=None, eye=EYE):
     box("Grassy yard", (0.0, 0.0, -.102), (200, 200, .2), m["ground"])
     visible = [m[c] for c in ("grass_dark", "grass", "grass_lit", "grass_young")]
     rng = random.Random(421)
@@ -336,11 +336,11 @@ def grass(m, *, paving=None):
     for index in range(120):
         angle = math.tau * rng.random()
         radius = .69 + 3.37 * rng.random() ** 1.32
-        tufts.append((EYE[0] + radius * math.cos(angle), EYE[1] + radius * math.sin(angle),
+        tufts.append((eye[0] + radius * math.cos(angle), eye[1] + radius * math.sin(angle),
                       rng.uniform(.071, .193)))
     for index in range(265):
         x, y = rng.uniform(-7.15, 6.5), rng.uniform(-6.32, 6.19)
-        if math.hypot(x - EYE[0], y - EYE[1]) > 2.6:
+        if math.hypot(x - eye[0], y - eye[1]) > 2.6:
             tufts.append((x, y, rng.uniform(.072, .23)))
     for x, y, height in tufts:
         if paving is not None and paving[0] <= x <= paving[1] and paving[2] <= y <= paving[3]:

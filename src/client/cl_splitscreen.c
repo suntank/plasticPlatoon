@@ -3998,6 +3998,7 @@ SS_ClearSlotDeviceInput(ss_local_player_t *slot)
 	slot->gb_left_down = false;
 	slot->gb_right_down = false;
 	slot->gb_modifier_down = false;
+	slot->gb_grenade_down = false;
 	slot->exit_hold_active = false;
 	slot->exit_hold_start = 0;
 }
@@ -4783,6 +4784,15 @@ SS_HandleGameplayKey(int key, qboolean down)
 
 	/* Handheld mode controls remain per player, including their toggle and
 	 * one-shot actions. They must never enter the primary command buffer. */
+	if (!strcmp(binding, "+gb_grenade"))
+	{
+		if (down && !slot->gb_grenade_down)
+		{
+			SS_SendSlotStringCmdNow(slot, slot->gb_modifier_down ? "cyclegrenade" : "quickgrenade");
+		}
+		slot->gb_grenade_down = down;
+		return true;
+	}
 	if (!strcmp(binding, "+gb_up"))
 	{
 		if (down && !slot->gb_up_down && slot->gb_modifier_down)
@@ -4859,6 +4869,7 @@ SS_HandleGameplayKey(int key, qboolean down)
 
 	if (!strcmp(binding, "weapprev") || !strcmp(binding, "weapnext") ||
 		!strcmp(binding, "weaplast") || !strcmp(binding, "quickgrenade") ||
+		!strcmp(binding, "cyclegrenade") ||
 		!strcmp(binding, "inven") || !strcmp(binding, "invuse") ||
 		!strcmp(binding, "invdrop") || !strcmp(binding, "invprev") ||
 		!strcmp(binding, "invnext") || !strcmp(binding, "help") ||

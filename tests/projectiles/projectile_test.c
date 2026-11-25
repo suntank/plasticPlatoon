@@ -20,6 +20,18 @@ static int bytes[16], byte_count, short_value, multicasts;
 static int direct_calls, direct_damage, direct_mod, splash_calls, splash_mod;
 static float splash_damage, splash_radius;
 static edict_t *splash_ignore, *damage_attacker;
+static qboolean mine_target_visible, mine_same_team;
+
+qboolean CanDamage(edict_t *target, edict_t *inflictor) { return mine_target_visible; }
+qboolean OnSameTeam(edict_t *one, edict_t *two) { return mine_same_team; }
+static int point_contents(vec3_t origin) { return 0; }
+static int mine_targets(vec3_t mins, vec3_t maxs, edict_t **list, int max, int area)
+{
+    assert(area == AREA_SOLID && max >= 2);
+    list[0] = &entities[1];
+    list[1] = &entities[2];
+    return 2;
+}
 
 int randk(void) { return 16384; }
 float frandk(void) { return .5f; }
@@ -183,11 +195,101 @@ static void test_contacts_fuses_and_explosions(void)
     assert(splash_damage==500&&splash_radius==480&&splash_mod==MOD_BFG_BLAST&&bytes[1]==TE_MORTAR_EXPLOSION);
     puts("PASS impacts/fuses: owner and sky handling, bouncing, direct/splash damage, cooked/held grenades, water and mortar explosions");
 }
+
+static void test_proximity_mine(void)
+{
+    const pp_throwable_params_t params = {.speed = 650, .arm_delay_sec = 0.5f, .radius = 160};
+    vec3_t start = {0, 0, 0}, dir = {1, 0, 0};
+    const vec3_t normals[] = {{0, 0, 1}, {0, 1, 0}, {0, 0, -1}};
+    gclient_t guest = {0};
+    gi.pointcontents = point_contents;
+    gi.BoxEdicts = mine_targets;
+
+    for (int i = 0; i < ARRLEN(normals); ++i)
+    {
+        edict_t *owner = reset(true);
+        assert(fire_proximity_mine(owner, start, dir, &params, 150));
+        edict_t *mine = last_projectile();
+        near(mine->velocity[0], 650);
+        assert(mine->movetype == MOVETYPE_TOSS && mine->clipmask == MASK_SOLID);
+        assert(!strcmp(models[mine->s.modelindex], PP_PROX_MINE_MODEL));
+        cplane_t plane = {0};
+        vec3_t facing;
+        VectorCopy(normals[i], plane.normal);
+        mine->touch(mine, &entities[0], &plane, NULL);
+        AngleVectors(mine->s.angles, facing, NULL, NULL);
+        near(DotProduct(facing, plane.normal), 1);
+        near(DotProduct(mine->s.origin, plane.normal), 0.5f);
+        assert(mine->solid == SOLID_NOT && mine->movetype == MOVETYPE_NONE && !mine->touch);
+
+        edict_t *target = &entities[2];
+        target->health = 100;
+        target->takedamage = DAMAGE_AIM;
+        target->svflags = SVF_MONSTER;
+        mine_target_visible = true;
+        mine->think(mine);
+        assert(mine->inuse && !mine->s.skinnum && !splash_calls);
+
+        level.time = mine->delay;
+        target->monsterinfo.aiflags = AI_GOOD_GUY;
+        mine->think(mine);
+        assert(mine->inuse && mine->s.skinnum == 1);
+        target->monsterinfo.aiflags = 0;
+        mine_target_visible = false;
+        mine->think(mine);
+        assert(mine->inuse);
+        mine_target_visible = true;
+        target->client = &guest;
+        coop = &one;
+        mine->think(mine);
+        assert(mine->inuse);
+        if (i == 0)
+        {
+            coop = &zero;
+            deathmatch = &one;
+            mine_same_team = true;
+            mine->think(mine);
+            assert(mine->inuse);
+            mine_same_team = false;
+        }
+        else
+        {
+            target->client = NULL;
+        }
+        VectorSet(target->s.origin, 140, 0, 0);
+        mine->think(mine);
+        assert(mine->inuse);
+        VectorClear(target->s.origin);
+        mine->think(mine);
+        assert(!mine->inuse && splash_calls == 1 && !direct_calls);
+        assert(splash_mod == MOD_PROX_MINE && damage_attacker == owner);
+        near(splash_radius, 160);
+    }
+
+    edict_t *owner = reset(true);
+    assert(fire_proximity_mine(owner, start, dir, &params, 150));
+    edict_t *mine = last_projectile();
+    edict_t *door = &entities[3];
+    door->solid = SOLID_BSP;
+    cplane_t wall = {.normal = {1, 0, 0}};
+    mine->touch(mine, door, &wall, NULL);
+    VectorSet(door->s.origin, 100, 200, 0);
+    door->s.angles[YAW] = 90;
+    mine->think(mine);
+    near(mine->s.origin[0], 100);
+    near(mine->s.origin[1], 200.5f);
+    near(mine->s.angles[YAW], 90);
+    PP_RemoveOwnedMines(owner);
+    assert(!mine->inuse);
+    puts("PASS proximity mines: surface alignment, moving brushes, arming, hostile-only detection, occlusion and cleanup");
+}
+
 int main(void)
 {
     gi.modelindex=model_index;gi.soundindex=sound_index;gi.sound=sound_effect;
     gi.linkentity=link_entity;gi.unlinkentity=unlink_entity;gi.trace=trace_world;gi.error=error;
     gi.WriteByte=write_byte;gi.WriteShort=write_short;gi.WritePosition=write_position;gi.multicast=multicast;
     test_spawn_and_orientation();test_player_and_monster_callers();test_contacts_fuses_and_explosions();
+    test_proximity_mine();
     return 0;
 }

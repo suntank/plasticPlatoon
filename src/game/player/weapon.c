@@ -614,7 +614,7 @@ Use_Weapon(edict_t *ent, gitem_t *item)
 	/* Hand grenades are thrown with quickgrenade, keeping the gun equipped. */
 	if (item->weapmodel == WEAP_GRENADES)
 	{
-		Cmd_QuickGrenade_f(ent);
+		PP_ThrowQuickGrenade(ent, item);
 		return;
 	}
 

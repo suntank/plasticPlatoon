@@ -5,6 +5,7 @@ import argparse
 from math import cos, pi, sin, tau
 from pathlib import Path
 from random import Random
+from shutil import copyfile
 
 from PIL import ImageDraw
 
@@ -413,6 +414,10 @@ def main():
     for name,make in PREFABS.items():
         data=HEADER+'{\n"classname" "worldspawn"\n'+make()+'}\n'
         (args.output/f'garden_{name}.map').write_text(data,encoding='ascii')
+    for source in (BASE.parent / 'maps/prefabs').glob('garden_*.map'):
+        destination = args.output / source.name
+        if source.resolve() != destination.resolve():
+            copyfile(source, destination)
 
 
 if __name__=='__main__':
