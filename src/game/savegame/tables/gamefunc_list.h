@@ -279,6 +279,8 @@
 {"SP_monster_soldier", (byte *)SP_monster_soldier},
 {"SP_monster_soldier_light", (byte *)SP_monster_soldier_light},
 {"SP_monster_soldier_x", (byte *)SP_monster_soldier_x},
+{"soldier_parachute_think", (byte *)soldier_parachute_think},
+{"soldier_parachute_use", (byte *)soldier_parachute_use},
 {"soldier_footstep", (byte *)soldier_footstep},
 {"soldier_die", (byte *)soldier_die},
 {"soldier_dead", (byte *)soldier_dead},

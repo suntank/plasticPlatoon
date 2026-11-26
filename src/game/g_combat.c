@@ -701,6 +701,12 @@ T_Damage(edict_t *targ, edict_t *inflictor, edict_t *attacker,
 		}
 	}
 
+	/* Paratroopers can take damage and die, but react only once on the ground. */
+	if (targ->monsterinfo.aiflags & AI_PARACHUTING)
+	{
+		return;
+	}
+
 	if (targ->svflags & SVF_MONSTER)
 	{
 		if (!(targ->flags & FL_FIRE_ONLY) || attacker->client)

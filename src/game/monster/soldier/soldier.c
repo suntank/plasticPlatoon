@@ -81,6 +81,61 @@ static int soldier_weapon_model_machinegun;
 #define SOLDIER_WEAPON_MODEL_BLASTER "models/monsters/soldier/tall/weapon_blaster.md2"
 #define SOLDIER_WEAPON_MODEL_SHOTGUN "models/monsters/soldier/tall/weapon_shotgun.md2"
 #define SOLDIER_WEAPON_MODEL_MACHINEGUN "models/monsters/soldier/tall/weapon_machinegun.md2"
+#define SOLDIER_PARACHUTE_MODEL "models/objects/parachute/tris.md2"
+#define SOLDIER_PARACHUTE 16
+#define SOLDIER_DESCENT_SPEED 105
+
+void monster_use(edict_t *self, edict_t *other, edict_t *activator);
+void walkmonster_start_go(edict_t *self);
+
+void
+soldier_parachute_think(edict_t *self)
+{
+	edict_t *activator;
+
+	if (!self->groundentity)
+	{
+		self->velocity[2] = -SOLDIER_DESCENT_SPEED;
+		self->nextthink = level.time + FRAMETIME;
+		return;
+	}
+
+	activator = self->activator;
+	self->activator = NULL;
+	self->monsterinfo.aiflags &= ~AI_PARACHUTING;
+	self->flags &= ~FL_NO_KNOCKBACK;
+	self->spawnflags &= ~(SOLDIER_PARACHUTE | 2);
+	self->s.modelindex3 = 0;
+	self->movetype = MOVETYPE_STEP;
+	self->use = monster_use;
+	walkmonster_start_go(self);
+
+	if (activator && activator->inuse && activator->client &&
+		activator->health > 0 && visible(self, activator))
+	{
+		monster_use(self, NULL, activator);
+	}
+}
+
+void
+soldier_parachute_use(edict_t *self, edict_t *other /* unused */,
+		edict_t *activator)
+{
+	self->activator = activator;
+	self->use = NULL;
+	self->think = soldier_parachute_think;
+	self->nextthink = level.time + FRAMETIME;
+	self->svflags &= ~SVF_NOCLIENT;
+	self->monsterinfo.aiflags |= AI_PARACHUTING;
+	self->flags |= FL_NO_KNOCKBACK;
+	self->s.frame = FRAME_stand101;
+	self->s.modelindex3 = gi.modelindex(SOLDIER_PARACHUTE_MODEL);
+	self->takedamage = DAMAGE_AIM;
+	self->solid = SOLID_BBOX;
+	self->movetype = MOVETYPE_FLY;
+	self->velocity[2] = -SOLDIER_DESCENT_SPEED;
+	gi.linkentity(self);
+}
 
 static void
 soldier_precache_weapon_models(void)
@@ -164,6 +219,10 @@ Soldier_RefreshDimensions(edict_t *self)
 	soldier_weapon_model_blaster = soldier_weapon_model_shotgun =
 		soldier_weapon_model_machinegun = 0;
 	soldier_set_weapon_model(self);
+	if (self->monsterinfo.aiflags & AI_PARACHUTING)
+	{
+		self->s.modelindex3 = gi.modelindex(SOLDIER_PARACHUTE_MODEL);
+	}
 }
 
 
@@ -1673,8 +1732,9 @@ soldier_die(edict_t *self, edict_t *inflictor /* unused */,
 	int n;
 
 	/* check for gib */
-	if (self->health <= self->gib_health)
+	if (self->health <= self->gib_health || self->think == soldier_parachute_think)
 	{
+		self->s.modelindex3 = 0;
 		gi.sound(self, CHAN_VOICE, gi.soundindex("soldier/player/death4.wav"), 1, ATTN_NORM, 0);
 
 		for (n = 0; n < 3; n++)
@@ -1801,10 +1861,32 @@ SP_monster_soldier_x(edict_t *self)
 	self->monsterinfo.stand(self);
 
 	walkmonster_start(self);
+
+	if (self->spawnflags & SOLDIER_PARACHUTE)
+	{
+		gi.modelindex(SOLDIER_PARACHUTE_MODEL);
+		if (self->targetname)
+		{
+			self->svflags |= SVF_NOCLIENT;
+			self->solid = SOLID_NOT;
+			self->takedamage = DAMAGE_NO;
+			self->movetype = MOVETYPE_NONE;
+			self->think = NULL;
+			self->nextthink = 0;
+			self->use = soldier_parachute_use;
+			gi.linkentity(self);
+		}
+		else
+		{
+			soldier_parachute_use(self, NULL, NULL);
+		}
+	}
 }
 
 /*
- * QUAKED monster_soldier_light (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+ * QUAKED monster_soldier_light (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight x Parachute
+ * Place Parachute soldiers above clear ground. A targetname holds the drop
+ * until triggered. The soldier can take damage in the air and fights on landing.
  */
 void
 SP_monster_soldier_light(edict_t *self)
@@ -1843,7 +1925,7 @@ SP_monster_soldier_light(edict_t *self)
 }
 
 /*
- * QUAKED monster_soldier (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+ * QUAKED monster_soldier (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight x Parachute
  */
 void
 SP_monster_soldier(edict_t *self)
@@ -1877,7 +1959,7 @@ SP_monster_soldier(edict_t *self)
 }
 
 /*
- * QUAKED monster_soldier_ss (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+ * QUAKED monster_soldier_ss (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight x Parachute
  */
 void
 SP_monster_soldier_ss(edict_t *self)

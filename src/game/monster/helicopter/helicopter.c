@@ -313,6 +313,11 @@ plastic_helicopter_hover(edict_t *self, float dist)
 	{
 		return;
 	}
+	if ((self->monsterinfo.aiflags & AI_COMBAT_POINT) && self->goalentity)
+	{
+		M_MoveToGoal(self, dist);
+		return;
+	}
 	if (!helicopter_live_enemy(self))
 	{
 		if (self->movetarget)
@@ -636,6 +641,7 @@ plastic_helicopter_die(edict_t *self, edict_t *inflictor, edict_t *attacker,
  * Tan molded toy helicopter, 500 health. Four paired machinegun shots per
  * burst; two rockets per salvo. Place airborne with room for 184-unit rotors.
  * Crashes under gravity, then explodes on contact. Supports normal triggers.
+ * Use a combattarget to fly to a point_combat before engaging.
  */
 void
 SP_monster_plastic_helicopter(edict_t *self)

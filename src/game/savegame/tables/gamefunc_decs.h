@@ -280,6 +280,8 @@ extern void SP_monster_soldier_ss ( edict_t * self ) ;
 extern void SP_monster_soldier ( edict_t * self ) ;
 extern void SP_monster_soldier_light ( edict_t * self ) ;
 extern void SP_monster_soldier_x ( edict_t * self ) ;
+extern void soldier_parachute_think ( edict_t * self ) ;
+extern void soldier_parachute_use ( edict_t * self, edict_t * other, edict_t * activator ) ;
 extern void soldier_footstep( edict_t *self ) ;
 extern void soldier_die ( edict_t * self , edict_t * inflictor , edict_t * attacker , int damage , vec3_t point ) ;
 extern void soldier_dead ( edict_t * self ) ;

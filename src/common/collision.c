@@ -1530,7 +1530,12 @@ CMod_LoadBrushSides(lump_t *l)
 
 	for (i = 0; i < count; i++, in++, out++)
 	{
-		num = LittleShort(in->planenum);
+		num = LittleShort(in->planenum) & 0xFFFF;
+
+		if (num >= numplanes)
+		{
+			Com_Error(ERR_DROP, "Bad brushside planenum %d", num);
+		}
 		out->plane = &map_planes[num];
 		j = LittleShort(in->texinfo);
 

@@ -518,7 +518,7 @@ Mod_LoadFaces(model_t *loadmodel, byte *mod_base, lump_t *l)
 		out->flags = 0;
 		out->polys = NULL;
 
-		planenum = LittleShort(in->planenum);
+		planenum = LittleShort(in->planenum) & 0xFFFF;
 		side = LittleShort(in->side);
 
 		if (side)
@@ -526,7 +526,7 @@ Mod_LoadFaces(model_t *loadmodel, byte *mod_base, lump_t *l)
 			out->flags |= SURF_PLANEBACK;
 		}
 
-		if (planenum < 0 || planenum >= loadmodel->numplanes)
+		if (planenum >= loadmodel->numplanes)
 		{
 			Com_Error(ERR_DROP, "%s: Incorrect %d planenum.",
 					__func__, planenum);
