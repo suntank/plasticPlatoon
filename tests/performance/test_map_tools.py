@@ -18,6 +18,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/performance"))
+from compile_map import lock_stage
 from map_inventory import bsp_inventory, decompress_vis, map_inventory
 
 LUMP_NAMES = ("entities planes vertexes visibility nodes texinfo faces lighting "
@@ -101,8 +102,16 @@ if mode == 'leak_log' and stage == 'bsp':
     print('**** leaked ****')
 if mode == 'leak_file' and stage == 'bsp':
     target.with_suffix('.lin').write_text('0 0 0\n')
+if mode == 'leak_pts' and stage == 'bsp':
+    target.with_suffix('.pts').write_text('0 0 0\n')
+if '-onlyents' in args:
+    if mode == 'changed_geometry':
+        target.with_suffix('.bsp').write_bytes((Path(os.environ['FAKE_FIXTURES']) / 'preview.bsp').read_bytes())
+    sys.exit(0)
 if mode != 'no_output':
     fixture = {'bsp': 'preview', 'vis': 'vis', 'rad': 'full'}[stage]
+    if stage == 'vis' and mode == 'incomplete_full_vis':
+        fixture = 'absent_rows'
     if stage == 'rad' and mode in ('bad_vis', 'missing_vis', 'missing_light'):
         fixture = mode
     target.with_suffix('.bsp').write_bytes((Path(os.environ['FAKE_FIXTURES']) / (fixture + '.bsp')).read_bytes())
@@ -229,7 +238,8 @@ class PublicationTests(unittest.TestCase):
         for name, data in {
             "preview": fixture_bsp(vis=False, light=False), "vis": fixture_bsp(light=False),
             "full": fixture_bsp(), "bad_vis": fixture_bsp(bad_row=True),
-            "missing_vis": fixture_bsp(vis=False), "missing_light": fixture_bsp(light=False)
+            "missing_vis": fixture_bsp(vis=False), "missing_light": fixture_bsp(light=False),
+            "absent_rows": fixture_bsp(light=False, absent_rows=True),
         }.items():
             (self.fixtures / (name + ".bsp")).write_bytes(data)
         self.tool = self.root / "compiler directory" / "fake q2tool"
@@ -286,6 +296,15 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual([c[0] for c in self.actions()], ["-bsp", "-vis", "-rad"])
 
+    def test_gpu_rad_flag_only_reaches_rad_stage(self):
+        result = self.run_compile('--profile', 'preview', '--rad-gpu')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        calls = self.actions()
+        self.assertEqual([c[0] for c in calls], ['-bsp', '-vis', '-rad'])
+        self.assertNotIn('-rad-gpu', calls[0])
+        self.assertNotIn('-rad-gpu', calls[1])
+        self.assertIn('-rad-gpu', calls[2])
+
     def test_each_compiler_stage_failure_preserves_old_publication(self):
         for stage in ["bsp", "vis", "rad"]:
             with self.subTest(stage=stage):
@@ -297,7 +316,7 @@ class PublicationTests(unittest.TestCase):
                 self.assertIn("error", manifest)
 
     def test_leak_log_or_pointfile_blocks_publication(self):
-        for mode in ["leak_log", "leak_file"]:
+        for mode in ["leak_log", "leak_file", "leak_pts"]:
             with self.subTest(mode=mode):
                 self.assert_preserved(self.run_compile(mode=mode))
                 self.assertFalse(self.manifest()["published"])
@@ -340,6 +359,17 @@ class PublicationTests(unittest.TestCase):
         self.assert_preserved(self.run_compile(mode="failed"))
         self.assertEqual(self.actions(), [])
 
+    def test_concurrent_build_cannot_write_to_locked_stage(self):
+        self.stage.mkdir(parents=True)
+        with lock_stage(self.stage):
+            result = self.run_compile('--reuse-bsp-vis')
+            self.assert_preserved(result)
+            self.assertEqual(self.actions(), [])
+            self.assertFalse((self.stage / 'manifest.json').exists())
+        result = self.run_compile('--reuse-bsp-vis')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([c[0] for c in self.actions()], ['-bsp', '-vis', '-rad'])
+
     def test_malformed_source_records_failure_without_traceback_or_publication(self):
         self.source.write_text(MAP_TEXT[:-2])
         result = self.run_compile()
@@ -348,6 +378,79 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(self.actions(), [])
         self.assertFalse(self.manifest()["published"])
         self.assertIn("error", self.manifest())
+
+    def test_cache_refreshes_edited_light_and_reuses_exact_source(self):
+        light = '\n{\n"classname" "light"\n"targetname" "switchable"\n"origin" "12 24 32"\n"light" "40"\n}\n'
+        self.source.write_text(MAP_TEXT + light)
+        result = self.run_compile('--reuse-bsp-vis')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.manifest()['bsp_vis_cache'], 'miss')
+
+        self.action_log.unlink()
+        result = self.run_compile('--reuse-bsp-vis', '--rad-ambient', '24')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([c[0] for c in self.actions()], ['-rad'])
+        self.assertEqual(self.manifest()['bsp_vis_cache'], 'hit')
+
+        self.action_log.unlink()
+        self.source.write_text(MAP_TEXT + light.replace('"40"', '"45"'))
+        result = self.run_compile('--reuse-bsp-vis')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([s['name'] for s in self.manifest()['stages']], ['entities', 'rad'])
+        self.assertIn('-onlyents', self.actions()[0])
+        self.assertEqual(self.manifest()['bsp_vis_cache'], 'hit')
+
+        self.action_log.unlink()
+        result = self.run_compile('--reuse-bsp-vis')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([c[0] for c in self.actions()], ['-rad'])
+
+        self.action_log.unlink()
+        self.source.write_text(MAP_TEXT + light.replace('"40"', '"50"'))
+        result = self.run_compile('--reuse-bsp-vis', mode='changed_geometry')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([s['name'] for s in self.manifest()['stages']], ['entities', 'bsp', 'vis', 'rad'])
+        self.assertEqual(self.manifest()['bsp_vis_cache'], 'miss')
+
+    def test_cache_invalidates_topology_assets_and_options(self):
+        light = '\n{\n"classname" "light_spot"\n"target" "aim"\n"origin" "12 24 32"\n"light" "40"\n}\n'
+        self.source.write_text(MAP_TEXT + light)
+        modes = [(), (), (), ('--large-bounds',), ('--large-bounds', '--threads', '3'),
+                 ('--large-bounds', '--threads', '3')]
+        for i, extra in enumerate(modes):
+            with self.subTest(step=i):
+                if i == 1:
+                    # An entity movement can change BSP's leak test starting leaf.
+                    self.source.write_text(MAP_TEXT + light.replace('12 24 32', '12 24 48'))
+                if i == 2:
+                    texture = self.basedir / 'textures/sandbox/sand1.wal'
+                    texture.parent.mkdir(parents=True)
+                    texture.write_bytes(b'changed compile texture')
+                if i == 5:
+                    self.tool.write_text(FAKE_COMPILER + '\n# new build\n')
+                self.action_log.unlink(missing_ok=True)
+                result = self.run_compile('--reuse-bsp-vis', *extra)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual([c[0] for c in self.actions()], ['-bsp', '-vis', '-rad'])
+                self.assertEqual(self.manifest()['bsp_vis_cache'], 'miss')
+
+    def test_cache_requires_sealed_full_vis_and_recovers_from_corruption(self):
+        cache = self.stage / '.bsp-vis-cache.zip'
+        for mode in ('leak_pts', 'incomplete_full_vis'):
+            with self.subTest(mode=mode):
+                self.assert_preserved(self.run_compile('--reuse-bsp-vis', mode=mode))
+                self.assertFalse(cache.exists())
+        result = self.run_compile('--reuse-bsp-vis', '--profile', 'preview')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(cache.exists())
+        result = self.run_compile('--reuse-bsp-vis', '--profile', 'preview', '--vis')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue(cache.exists())
+        cache.write_bytes(b'corrupt')
+        self.action_log.unlink()
+        result = self.run_compile('--reuse-bsp-vis')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([c[0] for c in self.actions()], ['-bsp', '-vis', '-rad'])
 
 
 if __name__ == "__main__":

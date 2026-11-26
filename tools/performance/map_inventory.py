@@ -97,7 +97,7 @@ def decompress_vis(data, offset, size):
             raise ValueError('visibility row overflow')
     return bytes(out)
 
-def bsp_inventory(path, require_release=False):
+def bsp_inventory(path, require_release=False, *, require_full_vis=False):
     raw = Path(path).read_bytes()
     if len(raw) < 160 or struct.unpack_from('<4si', raw) != (b'IBSP', 38):
         raise ValueError('expected Quake II IBSP version 38')
@@ -128,8 +128,8 @@ def bsp_inventory(path, require_release=False):
         for cluster in range(clusters):
             for kind in range(2):
                 offset, = struct.unpack_from('<i', vis, 4 + 8 * cluster + 4 * kind)
-                if require_release and offset == -1:
-                    raise ValueError('release BSP has missing visibility rows')
+                if (require_release or require_full_vis) and offset == -1:
+                    raise ValueError('BSP has missing visibility rows')
                 if offset != -1 and offset < 4 + 8 * clusters:
                     raise ValueError('visibility offset overlaps cluster table')
                 row = decompress_vis(vis, offset, (clusters + 7) // 8)
@@ -141,6 +141,8 @@ def bsp_inventory(path, require_release=False):
                 raise ValueError('leaf references invalid visibility cluster')
     if require_release and (not vis or not lumps['lighting']):
         raise ValueError('release BSP requires nonempty validated VIS and baked lighting lumps')
+    if require_full_vis and not vis:
+        raise ValueError('BSP requires nonempty validated VIS')
     return {'source': Path(path).name, 'sha256': hashlib.sha256(raw).hexdigest(),
             'file_bytes': len(raw), 'lumps': info, 'clusters': clusters,
             'pvs_visible_clusters_mean': sum(visible) / len(visible) if visible else None,

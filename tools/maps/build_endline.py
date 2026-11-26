@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+from io import BytesIO
 import json
 import os
 from pathlib import Path
@@ -72,6 +73,23 @@ def material_closure(source):
     return sorted(seen)
 
 
+def stage_compile_asset(data, destination):
+    """Write a private asset copy, routing RGB PNGs through the safe decoder."""
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if destination.suffix == '.png':
+        with Image.open(BytesIO(data)) as image:
+            if image.mode == 'RGB':
+                image.convert('RGBA').save(destination)
+                with Image.open(destination) as copy:
+                    if copy.mode != 'RGBA' or copy.convert('RGB').tobytes() != image.tobytes():
+                        raise ValueError(f'RGB preservation check failed: {destination}')
+                    if copy.getextrema()[3] != (255, 255):
+                        raise ValueError(f'Nonopaque converted material: {destination}')
+                return True
+    destination.write_bytes(data)
+    return False
+
+
 def prepare_assets(source=SOURCE, staging=STAGING):
     """Create private inputs and verify that conversion preserves exact color."""
     names = material_closure(source)
@@ -83,21 +101,7 @@ def prepare_assets(source=SOURCE, staging=STAGING):
             'textures/'+name+suffix for name in names for suffix in ('.wal', '.png', '.tga')
             if (BASE/'textures'/(name+suffix)).is_file()]:
         src, dest = BASE/relative, staging/relative
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        converted = False
-        if src.suffix == '.png':
-            with Image.open(src) as im:
-                if im.mode == 'RGB':
-                    original = im.tobytes()
-                    im.convert('RGBA').save(dest)
-                    with Image.open(dest) as copy:
-                        if copy.mode != 'RGBA' or copy.convert('RGB').tobytes() != original:
-                            raise ValueError('RGB preservation check failed: '+relative)
-                        if copy.getextrema()[3] != (255, 255):
-                            raise ValueError('Nonopaque converted material: '+relative)
-                    converted = True
-        if not converted:
-            shutil.copyfile(src, dest)
+        converted = stage_compile_asset(src.read_bytes(), dest)
         files.append({'path':relative, 'source_sha256':sha(src), 'compile_sha256':sha(dest),
                       'rgb_to_opaque_rgba':converted})
     # Remove stale copies for selected names when an authored format disappears;
