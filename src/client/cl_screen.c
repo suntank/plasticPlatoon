@@ -459,7 +459,7 @@ SCR_Sky_f(void)
 		axis[2] = 1;
 	}
 
-	R_SetSky(Cmd_Argv(1), rotate, axis);
+	CL_SetSkyOverride(Cmd_Argv(1), rotate, axis);
 }
 
 void

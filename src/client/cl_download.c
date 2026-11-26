@@ -65,14 +65,15 @@ static qboolean dont_restart_texture_stage;
 static qboolean gamedirForFilelist;
 
 static const char *env_suf[6] = {"rt", "bk", "lf", "ft", "up", "dn"};
-static const char *sky_exts[] = {"pcx", "tga", "png"};
+static const char *sky_exts[] = {"tga", "pcx", "png"};
 static const char *texture_exts[] = {"wal", "png", "tga"};
 
 #define PLAYER_MULT 5
 
 /* ENV_CNT is map load, ENV_CNT+1 is first env map */
 #define ENV_CNT (CS_PLAYERSKINS + MAX_CLIENTS * PLAYER_MULT)
-#define TEXTURE_CNT (ENV_CNT + 13)
+#define SKY_FILES_PER_BOX ((int)(ARRLEN(env_suf) * ARRLEN(sky_exts)))
+#define TEXTURE_CNT (ENV_CNT + 1 + 2 * SKY_FILES_PER_BOX)
 
 static qboolean
 CL_HasFileVariant(const char *basepath, const char *const *exts, size_t num_exts)
@@ -460,7 +461,7 @@ CL_RequestNextDownload(void)
 #endif
 
 	/* precache phase completed */
-	if (!dont_restart_texture_stage)
+	if (!dont_restart_texture_stage || precache_check == ENV_CNT)
 	{
 		precache_check = ENV_CNT + 1;
 	}
@@ -476,35 +477,46 @@ CL_RequestNextDownload(void)
 
 	if ((precache_check > ENV_CNT) && (precache_check < TEXTURE_CNT))
 	{
+		if (precache_check == ENV_CNT + 1)
+		{
+			CL_LoadSkyRegion();
+		}
+
 		if (allow_download->value && allow_download_maps->value)
 		{
-			while (precache_check < TEXTURE_CNT)
+			for (; precache_check < TEXTURE_CNT; ++precache_check)
 			{
 				char skybase[MAX_OSPATH];
-				int n = precache_check++ - ENV_CNT - 1;
-				int sky_index = n / 2;
+				int n = precache_check - ENV_CNT - 1;
+				int index = n % SKY_FILES_PER_BOX;
+				qboolean alternate = n >= SKY_FILES_PER_BOX;
+				const char *sky = alternate ? CL_SkyRegionName() : cl.configstrings[CS_SKY];
+				size_t variant = index % ARRLEN(sky_exts);
 
+				if (!*sky)
+				{
+					precache_check += SKY_FILES_PER_BOX - 1 - index;
+					continue;
+				}
 				Com_sprintf(skybase, sizeof(skybase), "env/%s%s",
-						cl.configstrings[CS_SKY], env_suf[sky_index]);
+						sky, env_suf[index / ARRLEN(sky_exts)]);
 
 				if (CL_HasFileVariant(skybase, sky_exts, ARRLEN(sky_exts)))
 				{
 					continue;
 				}
 
-				if (n & 1)
+				/* The additional sky uses PNGs in the project's asset packs. */
+				if (alternate)
 				{
-					Com_sprintf(fn, sizeof(fn), "env/%s%s.pcx",
-							cl.configstrings[CS_SKY], env_suf[sky_index]);
+					variant = (variant + ARRLEN(sky_exts) - 1) % ARRLEN(sky_exts);
 				}
-				else
-				{
-					Com_sprintf(fn, sizeof(fn), "env/%s%s.tga",
-							cl.configstrings[CS_SKY], env_suf[sky_index]);
-				}
+				Com_sprintf(fn, sizeof(fn), "%s.%s", skybase, sky_exts[variant]);
 
 				if (!CL_CheckOrDownloadFile(fn))
 				{
+					/* Resume at this variant after UDP completes or skips it. */
+					dont_restart_texture_stage = true;
 					return;
 				}
 			}

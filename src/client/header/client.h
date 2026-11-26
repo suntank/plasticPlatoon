@@ -558,6 +558,10 @@ struct sfx_s *CL_RandomFootstepSfx (void);
 struct model_s *CL_PowerScreenModel (void);
 
 void CL_PrepRefresh (void);
+void CL_LoadSkyRegion(void);
+const char *CL_SkyRegionName(void);
+void CL_UpdateSkyForView(const vec3_t origin);
+void CL_SetSkyOverride(const char *name, float rotate, vec3_t axis);
 void CL_RegisterSounds (void);
 
 void CL_Quit_f (void);

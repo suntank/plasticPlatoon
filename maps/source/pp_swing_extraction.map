@@ -6,6 +6,7 @@
 "classname" "worldspawn"
 "message" "Operation Garden Ghost"
 "sky" "pp_backyard"
+"_sky_region" "pp_extraction -1024 672 -1300 1760 2720 896"
 "sounds" "0"
 "_sun" "garden_sun_direction"
 "_sun_light" "70"

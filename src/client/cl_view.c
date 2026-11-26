@@ -232,6 +232,113 @@ V_TestLights(void)
 	}
 }
 
+static struct
+{
+	char name[MAX_QPATH];
+	vec3_t mins, maxs;
+	qboolean selected;
+} sky_region;
+
+static float map_sky_rotate;
+static vec3_t map_sky_axis;
+
+/* Worldspawn format: "_sky_region" "skyname minx miny minz maxx maxy maxz". */
+void
+CL_LoadSkyRegion(void)
+{
+	char *entities = CM_EntityString();
+
+	memset(&sky_region, 0, sizeof(sky_region));
+	if (strcmp(COM_Parse(&entities), "{"))
+	{
+		return;
+	}
+
+	while (entities)
+	{
+		const char *key = COM_Parse(&entities);
+		if (!*key || !strcmp(key, "}"))
+		{
+			return;
+		}
+
+		qboolean is_region = !strcmp(key, "_sky_region");
+		const char *value = COM_Parse(&entities);
+		if (!is_region)
+		{
+			continue;
+		}
+
+		size_t length = strcspn(value, " \t\r\n");
+		char extra;
+		if (!length || length > MAX_QPATH - sizeof("env/ft.png") ||
+			strspn(value, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-") != length ||
+			sscanf(value + length, "%f %f %f %f %f %f %c",
+				&sky_region.mins[0], &sky_region.mins[1], &sky_region.mins[2],
+				&sky_region.maxs[0], &sky_region.maxs[1], &sky_region.maxs[2], &extra) != 6)
+		{
+			return;
+		}
+
+		for (int i = 0; i < 3; ++i)
+		{
+			if (!isfinite(sky_region.mins[i]) || !isfinite(sky_region.maxs[i]) ||
+				sky_region.mins[i] >= sky_region.maxs[i])
+			{
+				return;
+			}
+		}
+
+		memcpy(sky_region.name, value, length);
+		return;
+	}
+}
+
+const char *
+CL_SkyRegionName(void)
+{
+	return sky_region.name;
+}
+
+void
+CL_UpdateSkyForView(const vec3_t origin)
+{
+	if (!sky_region.name[0])
+	{
+		return;
+	}
+
+	qboolean inside = true;
+	for (int i = 0; i < 3; ++i)
+	{
+		if (origin[i] < sky_region.mins[i] || origin[i] >= sky_region.maxs[i])
+		{
+			inside = false;
+			break;
+		}
+	}
+
+	if (inside != sky_region.selected)
+	{
+		sky_region.selected = inside;
+		if (inside)
+		{
+			R_SetSky(sky_region.name, 0, map_sky_axis);
+		}
+		else
+		{
+			R_SetSky(cl.configstrings[CS_SKY], map_sky_rotate, map_sky_axis);
+		}
+	}
+}
+
+void
+CL_SetSkyOverride(const char *name, float rotate, vec3_t axis)
+{
+	sky_region.name[0] = '\0';
+	R_SetSky(name, rotate, axis);
+}
+
 /*
  * Call before entering a new level, or after changing dlls
  */
@@ -241,8 +348,6 @@ CL_PrepRefresh(void)
 	char mapname[MAX_QPATH];
 	int i;
 	char *name;
-	float rotate;
-	vec3_t axis;
 
 	if (!cl.configstrings[CS_MODELS + 1][0])
 	{
@@ -325,9 +430,16 @@ CL_PrepRefresh(void)
 	/* set sky textures and speed */
 	Com_Printf("sky\r");
 	SCR_UpdateScreen();
-	rotate = (float)strtod(cl.configstrings[CS_SKYROTATE], (char **)NULL);
-	sscanf(cl.configstrings[CS_SKYAXIS], "%f %f %f", &axis[0], &axis[1], &axis[2]);
-	R_SetSky(cl.configstrings[CS_SKY], rotate, axis);
+	map_sky_rotate = strtof(cl.configstrings[CS_SKYROTATE], NULL);
+	VectorSet(map_sky_axis, 0, 0, 1);
+	sscanf(cl.configstrings[CS_SKYAXIS], "%f %f %f",
+		&map_sky_axis[0], &map_sky_axis[1], &map_sky_axis[2]);
+	CL_LoadSkyRegion();
+	if (sky_region.name[0])
+	{
+		R_SetSky(sky_region.name, 0, map_sky_axis);
+	}
+	R_SetSky(cl.configstrings[CS_SKY], map_sky_rotate, map_sky_axis);
 
 	Com_Printf("                                     \r");
 

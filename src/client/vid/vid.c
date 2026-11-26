@@ -686,6 +686,10 @@ R_RenderFrame(refdef_t *fd)
 {
 	if (ref_active)
 	{
+		if (cl.refresh_prepped && !(fd->rdflags & RDF_NOWORLDMODEL))
+		{
+			CL_UpdateSkyForView(fd->vieworg);
+		}
 		re.RenderFrame(fd);
 	}
 }
