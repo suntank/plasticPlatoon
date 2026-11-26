@@ -94,6 +94,7 @@ static int point_contents(vec3_t point) { return solid_floor && point[2] < 0 ? C
 static void write_byte(int value) { (void)value; }
 static void write_short(int value) { (void)value; }
 static void write_vector(vec3_t value) { (void)value; }
+static void config_string(int index, char *value) { (void)index; (void)value; }
 static void multicast(vec3_t point, multicast_t destination)
 {
     (void)point; (void)destination;
@@ -151,6 +152,7 @@ int main(int argc, char **argv)
     int i, bite_count = 0;
     assert(argc == 2);
     gi.modelindex = model_index; gi.setmodel = set_model; gi.soundindex = sound_index; gi.sound = sound_effect;
+    gi.configstring = config_string; gi.imageindex = model_index;
     gi.linkentity = link_entity; gi.unlinkentity = unlink_entity;
     gi.BoxEdicts = box_edicts; gi.trace = trace_world; gi.pointcontents = point_contents;
     gi.WriteByte = write_byte; gi.WriteShort = write_short; gi.WritePosition = write_vector;
@@ -163,11 +165,12 @@ int main(int argc, char **argv)
     game.maxclients = 1; game.maxentities = 64;
     game.clients = calloc(game.maxclients, sizeof(*game.clients));
     g_edicts = calloc(game.maxentities, sizeof(*g_edicts));
+    InitItems();
     check_insect_sounds(spawn_ant, "ant", 10, argv[1]);
     ant = spawn_ant(); enemy = ant->enemy;
     assert(ant->svflags & SVF_MONSTER);
     assert(!strcmp(models[ant->s.modelindex], "models/monsters/ant/tris.md2"));
-    assert(ant->maxs[2] - ant->mins[2] == 40 && ant->health == 120);
+    assert(ant->maxs[2] - ant->mins[2] == 40 && ant->health == 60);
     assert(ant->monsterinfo.melee && !ant->monsterinfo.attack);
     ant->monsterinfo.melee(ant);
     attack = ant->monsterinfo.currentmove;

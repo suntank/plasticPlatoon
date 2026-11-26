@@ -186,7 +186,7 @@ SP_monster_ant(edict_t *self)
 	self->s.modelindex = gi.modelindex("models/monsters/ant/tris.md2");
 	VectorSet(self->mins, -24, -24, -24);
 	VectorSet(self->maxs, 24, 24, 16);
-	self->health = 120;
+	self->health = 60;
 	self->gib_health = -100;
 	self->mass = 200;
 	self->pain = ant_pain;
